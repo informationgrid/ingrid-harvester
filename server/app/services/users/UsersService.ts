@@ -24,7 +24,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import {Service} from "@tsed/common";
 import {MemoryStorage} from "../storage/MemoryStorage.js";
-import {IUser} from "../../model/User.js";
+import type {IUser} from "../../model/User.js";
 import { sha512 } from 'js-sha512';
 import * as fs from "fs";
 

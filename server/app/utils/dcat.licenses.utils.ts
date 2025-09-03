@@ -26,8 +26,8 @@ import * as xpath from 'xpath';
 import log4js from 'log4js';
 import { namespaces } from '../importer/namespaces.js';
 import { DOMParser } from '@xmldom/xmldom';
-import { License } from '@shared/license.model.js';
-import { XPathElementSelect } from './xpath.utils.js';
+import type { License } from '@shared/license.model.js';
+import type { XPathElementSelect } from './xpath.utils.js';
 
 export class DcatLicensesUtils {
 

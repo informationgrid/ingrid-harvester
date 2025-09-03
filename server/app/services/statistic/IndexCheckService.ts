@@ -24,10 +24,10 @@
 import log4js from 'log4js';
 import { elasticsearchMapping } from '../../statistic/index_check.mapping.js';
 import { ConfigService } from '../config/ConfigService.js';
-import { ElasticQueries } from '../../persistence/elastic.queries.js';
+import type { ElasticQueries } from '../../persistence/elastic.queries.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
-import { IndexSettings } from '../../persistence/elastic.setting.js';
+import type { IndexSettings } from '../../persistence/elastic.setting.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { Service } from '@tsed/di';
 import { Summary } from '../../model/summary.js';

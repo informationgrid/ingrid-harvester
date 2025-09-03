@@ -23,10 +23,11 @@
 
 import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import * as MiscUtils from '../../../utils/misc.utils.js';
-import { DateRange } from '../../../model/dateRange.js';
-import { Distribution } from '../../../model/distribution.js';
-import { Geometries, Geometry, GeometryCollection, Point } from '@turf/helpers';
-import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model.js';
+import type { DateRange } from '../../../model/dateRange.js';
+import type { Distribution } from '../../../model/distribution.js';
+import type { Geometries, Geometry, GeometryCollection, Point } from '@turf/helpers';
+import type { PluDocType, ProcessStep } from '../../../model/dcatApPlu.model.js';
+import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType } from '../../../model/dcatApPlu.model.js';
 import { WfsMapper } from '../wfs.mapper.js';
 
 export class FisWfsMapper extends WfsMapper {

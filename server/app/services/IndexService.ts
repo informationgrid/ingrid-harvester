@@ -22,13 +22,14 @@
  */
 
 import log4js from 'log4js';
-import { Index } from '@shared/index.model.js';
+import type { Index } from '@shared/index.model.js';
 import { Service } from '@tsed/di';
 import * as fs from "fs";
 import { Summary } from '../model/summary.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
-import { IndexConfiguration } from '../persistence/elastic.setting.js';
-import { BulkResponse, ElasticsearchUtils } from '../persistence/elastic.utils.js';
+import type { IndexConfiguration } from '../persistence/elastic.setting.js';
+import { ElasticsearchUtils } from '../persistence/elastic.utils.js';
+import type { BulkResponse } from '../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from './config/ConfigService.js';
 import { Readable } from 'stream';

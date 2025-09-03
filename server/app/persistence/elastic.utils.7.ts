@@ -22,12 +22,13 @@
  */
 
 import log4js from 'log4js';
-import { BulkResponse, ElasticsearchUtils, EsOperation } from './elastic.utils.js';
+import type { BulkResponse, EsOperation } from './elastic.utils.js';
+import { ElasticsearchUtils } from './elastic.utils.js';
 import { Client } from 'elasticsearch7';
-import { Index } from '@shared/index.model.js';
-import { IndexConfiguration, IndexSettings } from './elastic.setting.js';
+import type { Index } from '@shared/index.model.js';
+import type { IndexConfiguration, IndexSettings } from './elastic.setting.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
-import { Summary } from '../model/summary.js';
+import type { Summary } from '../model/summary.js';
 
 const log = log4js.getLogger(import.meta.filename);
 

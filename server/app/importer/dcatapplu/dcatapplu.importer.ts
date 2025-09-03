@@ -22,21 +22,24 @@
  */
 
 import * as MiscUtils from '../../utils/misc.utils.js';
-import { defaultDCATAPPLUSettings, DcatappluSettings } from './dcatapplu.settings.js';
+import type { DcatappluSettings } from './dcatapplu.settings.js';
+import { defaultDCATAPPLUSettings } from './dcatapplu.settings.js';
 import log4js from 'log4js';
 import { namespaces } from '../../importer/namespaces.js';
-import { Catalog } from '../../model/dcatApPlu.model.js';
+import type { Catalog } from '../../model/dcatApPlu.model.js';
 import { DcatappluMapper } from './dcatapplu.mapper.js';
-import { DOMParser } from '@xmldom/xmldom';
+import type { DOMParser } from '@xmldom/xmldom';
 import { Importer} from '../importer.js';
-import { ImportLogMessage, ImportResult} from '../../model/import.result.js';
-import { IndexDocument } from '../../model/index.document.js';
-import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../profiles/profile.factory.js';
+import type { ImportLogMessage} from '../../model/import.result.js';
+import { ImportResult} from '../../model/import.result.js';
+import type { IndexDocument } from '../../model/index.document.js';
+import type { Observer } from 'rxjs';
+import type { ProfileFactory } from '../../profiles/profile.factory.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
-import { RecordEntity } from '../../model/entity.js';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils.js';
-import { Summary } from '../../model/summary.js';
+import type { RecordEntity } from '../../model/entity.js';
+import type { RequestOptions } from '../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import type { Summary } from '../../model/summary.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');

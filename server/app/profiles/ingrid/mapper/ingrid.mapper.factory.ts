@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {ingridMapper} from "./ingrid.mapper.js";
+import type {ingridMapper} from "./ingrid.mapper.js";
 import {ingridCswMapper} from "./ingrid.csw.mapper.js";
 
 export class ingridMapperFactory {

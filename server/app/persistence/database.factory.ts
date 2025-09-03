@@ -21,10 +21,10 @@
  * ==================================================
  */
 
-import { DatabaseConfiguration } from '@shared/general-config.settings.js';
-import { DatabaseUtils } from './database.utils.js';
+import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
+import type { DatabaseUtils } from './database.utils.js';
 import { PostgresUtils } from './postgres.utils.js';
-import { Summary } from '../model/summary.js';
+import type { Summary } from '../model/summary.js';
 
 export class DatabaseFactory {
 

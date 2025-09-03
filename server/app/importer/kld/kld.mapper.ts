@@ -27,15 +27,15 @@
 import * as MiscUtils from '../../utils/misc.utils.js';
 import log4js from 'log4js';
 import { BaseMapper } from '../../importer/base.mapper.js';
-import { Contact, Organization, Person } from '../../model/agent.js';
-import { DateRange } from '../../model/dateRange.js';
-import { Geometries } from '@turf/helpers';
-import { ImporterSettings } from '../../importer.settings.js';
-import { KldSettings } from './kld.settings.js';
-import { License } from '@shared/license.model.js';
-import { LvrDateRange, Media, Relation } from '../../profiles/lvr/model/index.document.js';
-import { ObjectResponse, RelatedObject, Document, getDocumentUrl, RelationType, MediaType } from './kld.api.js';
-import { Summary } from '../../model/summary.js';
+import type { Contact, Organization, Person } from '../../model/agent.js';
+import type { Geometries } from '@turf/helpers';
+import type { ImporterSettings } from '../../importer.settings.js';
+import type { KldSettings } from './kld.settings.js';
+import type { License } from '@shared/license.model.js';
+import type { LvrDateRange, Media, Relation } from '../../profiles/lvr/model/index.document.js';
+import type { ObjectResponse, RelatedObject, Document} from './kld.api.js';
+import { getDocumentUrl, RelationType, MediaType } from './kld.api.js';
+import type { Summary } from '../../model/summary.js';
 
 export class KldMapper extends BaseMapper {
 

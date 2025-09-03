@@ -23,16 +23,18 @@
 
 import * as MiscUtils from '../../utils/misc.utils.js';
 import log4js from 'log4js';
-import { defaultExcelSparseSettings, ExcelSparseSettings } from './excelsparse.settings.js';
+import type { ExcelSparseSettings } from './excelsparse.settings.js';
+import { defaultExcelSparseSettings } from './excelsparse.settings.js';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { ExcelSparseMapper } from './excelsparse.mapper.js';
 import { Importer } from '../importer.js';
-import { ImportLogMessage, ImportResult } from '../../model/import.result.js';
-import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../profiles/profile.factory.js';
+import type { ImportLogMessage} from '../../model/import.result.js';
+import { ImportResult } from '../../model/import.result.js';
+import type { Observer } from 'rxjs';
+import type { ProfileFactory } from '../../profiles/profile.factory.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
-import { RecordEntity } from '../../model/entity.js';
-import { Summary } from '../../model/summary.js';
+import type { RecordEntity } from '../../model/entity.js';
+import type { Summary } from '../../model/summary.js';
 import exceljs from 'exceljs';
 
 const log = log4js.getLogger(import.meta.filename);

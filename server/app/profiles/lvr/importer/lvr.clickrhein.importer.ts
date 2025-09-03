@@ -23,9 +23,9 @@
 
 import { JsonImporter } from '../../../importer/json/json.importer.js';
 import { JsonMapper } from '../../../importer/json/json.mapper.js';
-import { JsonSettings } from '../../../importer/json/json.settings.js';
+import type { JsonSettings } from '../../../importer/json/json.settings.js';
 import { RequestDelegate } from '../../../utils/http-request.utils.js';
-import { Summary } from '../../../model/summary.js';
+import type { Summary } from '../../../model/summary.js';
 
 export class LvrClickRheinImporter extends JsonImporter {
 

@@ -22,7 +22,7 @@
  */
 
 import { mcloudMapper } from './mcloud.mapper.js';
-import { CswMapper } from '../../../importer/csw/csw.mapper.js';
+import type { CswMapper } from '../../../importer/csw/csw.mapper.js';
 
 export class mcloudCswMapper extends mcloudMapper<CswMapper> {
 

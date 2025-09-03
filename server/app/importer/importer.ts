@@ -24,16 +24,18 @@
 import log4js from 'log4js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
-import { DatabaseUtils } from '../persistence/database.utils.js';
+import type { DatabaseUtils } from '../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
-import { ElasticsearchUtils } from '../persistence/elastic.utils.js';
+import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import { FilterUtils } from '../utils/filter.utils.js';
-import { GeneralSettings } from '@shared/general-config.settings.js';
-import { ImporterSettings } from '../importer.settings.js';
-import { ImportLogMessage, ImportResult } from '../model/import.result.js';
-import { IndexConfiguration } from '../persistence/elastic.setting.js';
+import type { GeneralSettings } from '@shared/general-config.settings.js';
+import type { ImporterSettings } from '../importer.settings.js';
+import type { ImportLogMessage} from '../model/import.result.js';
+import { ImportResult } from '../model/import.result.js';
+import type { IndexConfiguration } from '../persistence/elastic.setting.js';
 import { MailServer } from '../utils/nodemailer.utils.js';
-import { Observable, Observer } from 'rxjs';
+import type { Observer } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Summary } from '../model/summary.js';
 
 const log = log4js.getLogger(import.meta.filename)

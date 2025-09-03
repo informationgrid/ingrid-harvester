@@ -23,18 +23,20 @@
 
 import * as MiscUtils from '../../utils/misc.utils.js';
 import log4js from 'log4js';
-import { BulkResponse } from '../../persistence/elastic.utils.js';
+import type { BulkResponse } from '../../persistence/elastic.utils.js';
 import { Importer } from '../importer.js';
-import { ImportLogMessage, ImportResult } from '../../model/import.result.js';
-import { IndexDocument } from '../../model/index.document.js';
+import type { ImportLogMessage} from '../../model/import.result.js';
+import { ImportResult } from '../../model/import.result.js';
+import type { IndexDocument } from '../../model/index.document.js';
 import { JsonMapper } from './json.mapper.js';
-import { JsonSettings } from './json.settings.js';
-import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../profiles/profile.factory.js';
+import type { JsonSettings } from './json.settings.js';
+import type { Observer } from 'rxjs';
+import type { ProfileFactory } from '../../profiles/profile.factory.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
-import { RecordEntity } from '../../model/entity.js';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils.js';
-import { Summary } from '../../model/summary.js';
+import type { RecordEntity } from '../../model/entity.js';
+import type { RequestOptions } from '../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import type { Summary } from '../../model/summary.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');

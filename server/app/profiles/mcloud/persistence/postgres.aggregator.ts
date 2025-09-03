@@ -22,11 +22,11 @@
  */
 
 import { createEsId } from '../mcloud.utils.js';
-import { mcloudIndexDocument } from '../model/index.document.js';
-import { Bucket } from '../../../persistence/postgres.utils.js';
-import { Distribution } from '../../../model/distribution.js';
-import { EsOperation } from '../../../persistence/elastic.utils.js';
-import { PostgresAggregator as AbstractPostgresAggregator } from '../../../persistence/postgres.aggregator.js';
+import type { mcloudIndexDocument } from '../model/index.document.js';
+import type { Bucket } from '../../../persistence/postgres.utils.js';
+import type { Distribution } from '../../../model/distribution.js';
+import type { EsOperation } from '../../../persistence/elastic.utils.js';
+import type { PostgresAggregator as AbstractPostgresAggregator } from '../../../persistence/postgres.aggregator.js';
 
 export class PostgresAggregator implements AbstractPostgresAggregator<mcloudIndexDocument> {
 

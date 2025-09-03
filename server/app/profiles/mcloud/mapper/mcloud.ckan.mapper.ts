@@ -22,9 +22,9 @@
  */
 
 import { mcloudMapper } from './mcloud.mapper.js';
-import { CkanMapper } from '../../../importer/ckan/ckan.mapper.js';
-import { Person } from '../../../model/agent.js';
-import { ProviderField } from '../../../importer/ckan/ckan.settings.js';
+import type { CkanMapper } from '../../../importer/ckan/ckan.mapper.js';
+import type { Person } from '../../../model/agent.js';
+import type { ProviderField } from '../../../importer/ckan/ckan.settings.js';
 
 export class mcloudCkanMapper extends mcloudMapper<CkanMapper> {
     getCategories() {

@@ -22,13 +22,14 @@
  */
 
 import { uniqBy } from 'lodash-es';
-import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model.js';
-import { Contact, Organization, Person } from '../../../model/agent.js';
+import type { Catalog, ProcessStep } from '../../../model/dcatApPlu.model.js';
+import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType } from '../../../model/dcatApPlu.model.js';
+import type { Contact, Organization, Person } from '../../../model/agent.js';
 import { CswMapper } from '../../../importer/csw/csw.mapper.js';
-import { DateRange } from '../../../model/dateRange.js';
+import type { DateRange } from '../../../model/dateRange.js';
 import { DiplanungMapper } from './diplanung.mapper.js';
-import { Distribution } from '../../../model/distribution.js';
-import { Geometry, GeometryCollection, Point } from '@turf/helpers';
+import type { Distribution } from '../../../model/distribution.js';
+import type { Geometry, GeometryCollection, Point } from '@turf/helpers';
 
 const alternateTitleBlacklist = ['B-Plan', 'F-Plan'];
 

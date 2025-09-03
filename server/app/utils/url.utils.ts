@@ -25,7 +25,8 @@ import * as fs from 'fs';
 import fetch from 'node-fetch';
 import log4js from 'log4js';
 import { ConfigService } from '../services/config/ConfigService.js';
-import { RequestDelegate, RequestOptions } from './http-request.utils.js';
+import type { RequestOptions } from './http-request.utils.js';
+import { RequestDelegate } from './http-request.utils.js';
 
 const log = log4js.getLogger(import.meta.filename);
 

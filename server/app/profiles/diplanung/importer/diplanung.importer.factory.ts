@@ -26,8 +26,8 @@ import { DcatappluImporter } from '../../../importer/dcatapplu/dcatapplu.importe
 import { DiplanungCswImporter } from './diplanung.csw.importer.js';
 import { ExcelSparseImporter } from '../../../importer/excelsparse/excelsparse.importer.js';
 import { FisWfsImporter } from '../../../importer/wfs/fis/fis.wfs.importer.js';
-import { Harvester } from '@shared/harvester.js';
-import { Importer } from '../../../importer/importer.js';
+import type { Harvester } from '@shared/harvester.js';
+import type { Importer } from '../../../importer/importer.js';
 import { ImporterFactory } from '../../../importer/importer.factory.js';
 import { MsWfsImporter } from '../../../importer/wfs/ms/ms.wfs.importer.js';
 import { XplanSynWfsImporter } from '../../../importer/wfs/xplan/syn/xplan.syn.wfs.importer.js';

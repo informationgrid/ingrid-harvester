@@ -21,8 +21,8 @@
  * ==================================================
  */
 
-import {Summary} from '../../app/model/summary.js';
-import {IndexConfiguration} from '../../app/persistence/elastic.setting.js';
+import type {Summary} from '../../app/model/summary.js';
+import type {IndexConfiguration} from '../../app/persistence/elastic.setting.js';
 import { ElasticsearchFactory } from '../../app/persistence/elastic.factory.js';
 
 

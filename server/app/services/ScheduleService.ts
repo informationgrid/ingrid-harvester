@@ -26,7 +26,7 @@ import {Service} from '@tsed/di';
 import {ConfigService} from './config/ConfigService.js';
 import {ImportSocketService} from '../sockets/import.socket.service.js';
 import {CronJob} from 'cron';
-import {CronData} from '../importer.settings.js';
+import type {CronData} from '../importer.settings.js';
 import {UrlCheckService} from "./statistic/UrlCheckService.js";
 import {IndexCheckService} from "./statistic/IndexCheckService.js";
 import {IndexService} from "./IndexService.js";

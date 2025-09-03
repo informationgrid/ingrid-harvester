@@ -24,8 +24,8 @@
 import { Service } from '@tsed/di';
 import { Summary } from '../../model/summary.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
-import { ElasticQueries } from '../../persistence/elastic.queries.js';
-import { IndexSettings } from '../../persistence/elastic.setting.js';
+import type { ElasticQueries } from '../../persistence/elastic.queries.js';
+import type { IndexSettings } from '../../persistence/elastic.setting.js';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { elasticsearchMapping } from '../../statistic/statistic.mapping.js';

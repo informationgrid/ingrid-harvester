@@ -23,11 +23,12 @@
 
 import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import * as MiscUtils from '../../../utils/misc.utils.js';
-import { DateRange } from '../../../model/dateRange.js';
-import { Distribution} from '../../../model/distribution.js';
+import type { DateRange } from '../../../model/dateRange.js';
+import type { Distribution} from '../../../model/distribution.js';
 import { DocTypeMapping, PlanTypeMapping, ProcedureTypeMapping } from './xplan.codelist.mappings.js';
-import { Geometries, Geometry } from '@turf/helpers';
-import { PluDocType, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model.js';
+import type { Geometries, Geometry } from '@turf/helpers';
+import type { PluProcedureState, ProcessStep } from '../../../model/dcatApPlu.model.js';
+import { PluDocType, PluPlanType, PluProcedureType } from '../../../model/dcatApPlu.model.js';
 import { WfsMapper } from '../wfs.mapper.js';
 
 export class XplanWfsMapper extends WfsMapper {

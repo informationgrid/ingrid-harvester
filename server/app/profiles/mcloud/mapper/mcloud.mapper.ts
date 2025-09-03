@@ -21,19 +21,19 @@
  * ==================================================
  */
 
-import { mcloudIndexDocument } from '../model/index.document.js';
-import { Agent, Contact, Organization, Person } from '../../../model/agent.js';
-import { CkanMapper } from '../../../importer/ckan/ckan.mapper.js';
-import { CswMapper } from '../../../importer/csw/csw.mapper.js';
-import { DateRange } from '../../../model/dateRange.js';
-import { DcatMapper } from '../../../importer/dcat/dcat.mapper.js';
-import { Distribution } from '../../../model/distribution.js';
-import { ExcelMapper } from '../../../importer/excel/excel.mapper.js';
-import { IndexDocumentFactory } from '../../../model/index.document.factory.js';
-import { License } from '@shared/license.model.js';
-import { MetadataSource } from '../../../model/index.document.js';
-import { OaiMapper } from '../../../importer/oai/iso19139/oai.mapper.js';
-import { SparqlMapper } from '../../../importer/sparql/sparql.mapper.js';
+import type { mcloudIndexDocument } from '../model/index.document.js';
+import type { Agent, Contact, Organization, Person } from '../../../model/agent.js';
+import type { CkanMapper } from '../../../importer/ckan/ckan.mapper.js';
+import type { CswMapper } from '../../../importer/csw/csw.mapper.js';
+import type { DateRange } from '../../../model/dateRange.js';
+import type { DcatMapper } from '../../../importer/dcat/dcat.mapper.js';
+import type { Distribution } from '../../../model/distribution.js';
+import type { ExcelMapper } from '../../../importer/excel/excel.mapper.js';
+import type { IndexDocumentFactory } from '../../../model/index.document.factory.js';
+import type { License } from '@shared/license.model.js';
+import type { MetadataSource } from '../../../model/index.document.js';
+import type { OaiMapper } from '../../../importer/oai/iso19139/oai.mapper.js';
+import type { SparqlMapper } from '../../../importer/sparql/sparql.mapper.js';
 
 export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper> implements IndexDocumentFactory<mcloudIndexDocument> {
 

@@ -25,7 +25,7 @@ import { Emit, Input, Namespace, Nsp, Socket, SocketService, SocketSession } fro
 import { CronJob } from 'cron';
 import log4js from 'log4js';
 import * as SocketIO from 'socket.io';
-import { ImportLogMessage } from '../model/import.result.js';
+import type { ImportLogMessage } from '../model/import.result.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from '../services/config/ConfigService.js';

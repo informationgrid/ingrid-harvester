@@ -24,8 +24,8 @@
 import log4js from 'log4js';
 import { cloneDeep, merge as lodashMerge, trim } from 'lodash-es';
 import { imageSize } from 'image-size';
-import { Dimensions } from '../model/dimensions.js';
-import { Distribution } from '../model/distribution.js';
+import type { Dimensions } from '../model/dimensions.js';
+import type { Distribution } from '../model/distribution.js';
 import { DOMParser } from '@xmldom/xmldom';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 import dayjs from "dayjs";

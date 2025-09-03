@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import { GeneralSettings } from '@shared/general-config.settings.js';
-import { Harvester } from '@shared/harvester.js';
-import { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
+import type { GeneralSettings } from '@shared/general-config.settings.js';
+import type { Harvester } from '@shared/harvester.js';
+import type { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
 import * as fs from 'fs';
 import log4js from 'log4js';
 import { defaultCKANSettings } from '../../importer/ckan/ckan.settings.js';
@@ -32,7 +32,7 @@ import { defaultDCATSettings } from '../../importer/dcat/dcat.settings.js';
 import { defaultExcelSettings } from '../../importer/excel/excel.settings.js';
 import { defaultKldSettings } from '../../importer/kld/kld.settings.js';
 import { defaultOAISettings } from '../../importer/oai/oai.settings.js';
-import { Catalog } from '../../model/dcatApPlu.model.js';
+import type { Catalog } from '../../model/dcatApPlu.model.js';
 import { DatabaseFactory } from '../../persistence/database.factory.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';

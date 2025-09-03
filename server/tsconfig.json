@@ -14,6 +14,7 @@
     "experimentalDecorators":true,
     "emitDecoratorMetadata": true,
     "allowSyntheticDefaultImports": true,
+    "verbatimModuleSyntax": true,
     "resolveJsonModule": true,
     "sourceMap": false,
     "baseUrl": "./app",

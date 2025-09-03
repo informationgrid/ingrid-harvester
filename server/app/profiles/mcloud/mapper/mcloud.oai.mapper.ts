@@ -22,7 +22,7 @@
  */
 
 import {mcloudMapper} from "./mcloud.mapper.js";
-import {OaiMapper} from "../../../importer/oai/iso19139/oai.mapper.js";
+import type {OaiMapper} from "../../../importer/oai/iso19139/oai.mapper.js";
 
 export class mcloudOaiMapper extends mcloudMapper<OaiMapper> {
     getCategories(): string[] {

@@ -24,7 +24,7 @@
 import log4js from 'log4js';
 import {ingridMapper} from "./ingrid.mapper.js";
 import {CswMapper} from "../../../importer/csw/csw.mapper.js";
-import {Distribution} from "../../../model/distribution.js";
+import type {Distribution} from "../../../model/distribution.js";
 
 const log = log4js.getLogger(import.meta.filename);
 

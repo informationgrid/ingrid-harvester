@@ -21,11 +21,11 @@
  * ==================================================
  */
 
-import { Catalog } from '../model/dcatApPlu.model.js';
-import { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
-import { DatabaseConfiguration } from '@shared/general-config.settings.js';
-import { ElasticsearchUtils } from './elastic.utils.js';
-import { Summary } from '../model/summary.js';
+import type { Catalog } from '../model/dcatApPlu.model.js';
+import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
+import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
+import type { ElasticsearchUtils } from './elastic.utils.js';
+import type { Summary } from '../model/summary.js';
 
 export interface BulkResponse {
     queued: boolean;

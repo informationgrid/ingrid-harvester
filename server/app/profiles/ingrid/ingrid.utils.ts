@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { IngridIndexDocument } from './model/index.document.js';
+import type { IngridIndexDocument } from './model/index.document.js';
 
 export function createEsId(document: IngridIndexDocument): string {
     return document.uuid;

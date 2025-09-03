@@ -21,9 +21,10 @@
  * ==================================================
  */
 
-import { Contact, Organization, Person } from '../../model/agent.js';
-import { DefaultImporterSettings, ImporterSettings } from '../../importer.settings.js';
-import { PluPlanState } from '../../model/dcatApPlu.model.js';
+import type { Contact, Organization, Person } from '../../model/agent.js';
+import type { ImporterSettings } from '../../importer.settings.js';
+import { DefaultImporterSettings } from '../../importer.settings.js';
+import type { PluPlanState } from '../../model/dcatApPlu.model.js';
 
 export type WfsSettings = {
     version: "2.0.0" | "1.1.0",

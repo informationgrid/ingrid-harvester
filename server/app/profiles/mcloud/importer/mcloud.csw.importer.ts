@@ -23,10 +23,10 @@
 
 import * as MiscUtils from '../../../utils/misc.utils.js';
 import log4js from 'log4js';
-import { Bucket } from '../../../persistence/postgres.utils.js';
+import type { Bucket } from '../../../persistence/postgres.utils.js';
 import { CswImporter } from '../../../importer/csw/csw.importer.js';
-import { EsOperation } from '../../../persistence/elastic.utils.js';
-import { RequestDelegate } from '../../../utils/http-request.utils.js';
+import type { EsOperation } from '../../../persistence/elastic.utils.js';
+import type { RequestDelegate } from '../../../utils/http-request.utils.js';
 
 const log = log4js.getLogger(import.meta.filename);
 

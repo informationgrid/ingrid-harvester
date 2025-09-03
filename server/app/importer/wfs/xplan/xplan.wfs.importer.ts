@@ -22,10 +22,10 @@
  */
 
 import * as MiscUtils from '../../../utils/misc.utils.js';
-import { Harvester } from '@shared/harvester.js';
-import { RequestDelegate } from '../../../utils/http-request.utils.js';
+import type { Harvester } from '@shared/harvester.js';
+import type { RequestDelegate } from '../../../utils/http-request.utils.js';
 import { WfsImporter } from '../wfs.importer.js';
-import { WfsMapper } from '../wfs.mapper.js';
+import type { WfsMapper } from '../wfs.mapper.js';
 import { XplanWfsMapper } from './xplan.wfs.mapper.js';
 
 export class XplanWfsImporter extends WfsImporter {

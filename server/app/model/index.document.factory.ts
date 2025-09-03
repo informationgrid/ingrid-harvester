@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { IndexDocument } from './index.document.js';
+import type { IndexDocument } from './index.document.js';
 
 export abstract class IndexDocumentFactory<T extends IndexDocument> {
 

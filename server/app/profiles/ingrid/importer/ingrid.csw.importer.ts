@@ -25,7 +25,7 @@ import log4js from 'log4js';
 import { ConfigService } from '../../../services/config/ConfigService.js';
 import { CswImporter } from '../../../importer/csw/csw.importer.js';
 import { INGRID_META_INDEX } from '../profile.factory.js';
-import { RequestDelegate } from '../../../utils/http-request.utils.js';
+import type { RequestDelegate } from '../../../utils/http-request.utils.js';
 
 const log = log4js.getLogger(import.meta.filename);
 

@@ -24,16 +24,17 @@
 import * as MiscUtils from '../../utils/misc.utils.js';
 import log4js from 'log4js';
 import { BaseMapper } from '../base.mapper.js';
-import { Catalog } from '../../model/dcatApPlu.model.js';
-import { Columns } from './excelsparse.importer.js';
-import { DateRange } from '../../model/dateRange.js';
-import { Distribution } from '../../model/distribution.js';
-import { ExcelSparseSettings } from './excelsparse.settings.js';
-import { ImporterSettings } from '../../importer.settings.js';
-import { MetadataSource } from '../../model/index.document.js';
-import { Contact, Organization, Person } from '../../model/agent.js';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils.js';
-import { Summary } from '../../model/summary.js';
+import type { Catalog } from '../../model/dcatApPlu.model.js';
+import type { Columns } from './excelsparse.importer.js';
+import type { DateRange } from '../../model/dateRange.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { ExcelSparseSettings } from './excelsparse.settings.js';
+import type { ImporterSettings } from '../../importer.settings.js';
+import type { MetadataSource } from '../../model/index.document.js';
+import type { Contact, Organization, Person } from '../../model/agent.js';
+import type { RequestOptions } from '../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import type { Summary } from '../../model/summary.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 
 export class ExcelSparseMapper extends BaseMapper {

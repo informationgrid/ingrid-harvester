@@ -22,7 +22,7 @@
  */
 
 import { mcloudMapper } from './mcloud.mapper.js';
-import { ExcelMapper } from '../../../importer/excel/excel.mapper.js';
+import type { ExcelMapper } from '../../../importer/excel/excel.mapper.js';
 
 export class mcloudExcelMapper extends mcloudMapper<ExcelMapper> {
     getCategories(): any {

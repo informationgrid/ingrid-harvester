@@ -23,19 +23,21 @@
 
 import * as GeoJsonUtils from '../../utils/geojson.utils.js';
 import log4js from 'log4js';
-import { Catalog, PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../model/dcatApPlu.model.js';
+import type { Catalog, PluDocType, PluPlanType, PluProcedureType, ProcessStep } from '../../model/dcatApPlu.model.js';
+import { PluPlanState, PluProcedureState } from '../../model/dcatApPlu.model.js';
 import { throwError } from 'rxjs';
 import { BaseMapper } from '../base.mapper.js';
-import { Contact, Organization, Person } from '../../model/agent.js';
-import { DateRange } from '../../model/dateRange.js';
-import { Distribution } from '../../model/distribution.js';
-import { Geometry, GeometryCollection, Point } from '@turf/helpers';
-import { ImporterSettings } from '../../importer.settings.js';
-import { MetadataSource } from '../../model/index.document.js';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils.js';
-import { Summary } from '../../model/summary.js';
-import { WfsSettings } from './wfs.settings.js';
-import { XPathNodeSelect } from '../../utils/xpath.utils.js';
+import type { Contact, Organization, Person } from '../../model/agent.js';
+import type { DateRange } from '../../model/dateRange.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { Geometry, GeometryCollection, Point } from '@turf/helpers';
+import type { ImporterSettings } from '../../importer.settings.js';
+import type { MetadataSource } from '../../model/index.document.js';
+import type { RequestOptions } from '../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import type { Summary } from '../../model/summary.js';
+import type { WfsSettings } from './wfs.settings.js';
+import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
 
 export abstract class WfsMapper extends BaseMapper {
 

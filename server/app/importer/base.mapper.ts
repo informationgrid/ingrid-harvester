@@ -22,10 +22,10 @@
  */
 
 import 'dayjs/locale/de.js';
-import { ImporterSettings } from '../importer.settings.js';
-import { Logger } from 'log4js';
-import { MetadataSource } from '../model/index.document.js';
-import { Summary } from '../model/summary.js';
+import type { ImporterSettings } from '../importer.settings.js';
+import type { Logger } from 'log4js';
+import type { MetadataSource } from '../model/index.document.js';
+import type { Summary } from '../model/summary.js';
 import dayjs from "dayjs";
 dayjs.locale('de');
 

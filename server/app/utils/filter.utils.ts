@@ -22,7 +22,7 @@
  */
 
 import log4js from 'log4js';
-import {ImporterSettings} from "../importer.settings.js";
+import type {ImporterSettings} from "../importer.settings.js";
 
 const log = log4js.getLogger(import.meta.filename);
 

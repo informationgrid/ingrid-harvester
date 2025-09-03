@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Distribution } from "./distribution.js";
+import type { Distribution } from "./distribution.js";
 
 export interface Entity {
     id?: string

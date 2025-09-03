@@ -22,8 +22,8 @@
  */
 
 import log4js from 'log4js';
-import { Harvester } from '@shared/harvester.js';
-import { Importer } from '../../../importer/importer.js';
+import type { Harvester } from '@shared/harvester.js';
+import type { Importer } from '../../../importer/importer.js';
 import { ImporterFactory } from '../../../importer/importer.factory.js';
 import {IngridCswImporter} from "./ingrid.csw.importer.js";
 

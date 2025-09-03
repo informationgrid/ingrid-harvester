@@ -21,8 +21,8 @@
  * ==================================================
  */
 
-import { DateRange } from './dateRange.js';
-import { Geometries, Geometry, GeometryCollection, Point } from '@turf/helpers';
+import type { DateRange } from './dateRange.js';
+import type { Geometries, Geometry, GeometryCollection, Point } from '@turf/helpers';
 
 export type IngridIndexDocument = {
     id: string,

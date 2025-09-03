@@ -23,18 +23,18 @@
 
 import { createRequire } from 'module';
 import log4js from 'log4js';
-import { BaseMapper } from '../importer/base.mapper.js';
-import { ImporterFactory } from '../importer/importer.factory.js';
-import { Catalog } from '../model/dcatApPlu.model.js';
-import { IndexDocument } from '../model/index.document.js';
-import { IndexDocumentFactory } from '../model/index.document.factory.js';
+import type { BaseMapper } from '../importer/base.mapper.js';
+import type { ImporterFactory } from '../importer/importer.factory.js';
+import type { Catalog } from '../model/dcatApPlu.model.js';
+import type { IndexDocument } from '../model/index.document.js';
+import type { IndexDocumentFactory } from '../model/index.document.factory.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
-import { DatabaseUtils } from '../persistence/database.utils.js';
+import type { DatabaseUtils } from '../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
-import { ElasticQueries } from '../persistence/elastic.queries.js';
-import { IndexSettings } from '../persistence/elastic.setting.js';
-import { ElasticsearchUtils } from '../persistence/elastic.utils.js';
-import { PostgresAggregator } from '../persistence/postgres.aggregator.js';
+import type { ElasticQueries } from '../persistence/elastic.queries.js';
+import type { IndexSettings } from '../persistence/elastic.setting.js';
+import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
+import type { PostgresAggregator } from '../persistence/postgres.aggregator.js';
 import { PostgresQueries } from '../persistence/postgres.queries.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import * as MiscUtils from '../utils/misc.utils.js';

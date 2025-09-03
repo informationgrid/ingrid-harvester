@@ -27,7 +27,7 @@ import {configure, getLogger} from "log4js";
 import * as sinon from "sinon";
 import {TestUtils} from "../utils/test-utils.js";
 import {IndexDocument} from '../../app/model/index.document.js';
-import {OaiSettings} from "../../app/importer/oai/oai.settings.js";
+import type {OaiSettings} from "../../app/importer/oai/oai.settings.js";
 import {OaiImporter} from "../../app/importer/oai/oai.importer.js";
 import {ProfileFactoryLoader} from "../../app/profiles/profile.factory.loader.js";
 import {mcloudDocument} from "../../app/profiles/mcloud/model/index.document.js";

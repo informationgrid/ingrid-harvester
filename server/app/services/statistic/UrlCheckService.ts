@@ -21,16 +21,17 @@
  * ==================================================
  */
 
-import fetch, { RequestInit } from 'node-fetch';
+import fetch from 'node-fetch';
+import type { RequestInit } from 'node-fetch';
 import log4js from 'log4js';
 import { elasticsearchMapping } from '../../statistic/url_check.mapping.js';
 import { Agent } from 'https';
 import { ConfigService } from '../config/ConfigService.js';
-import { ElasticQueries } from '../../persistence/elastic.queries.js';
+import type { ElasticQueries } from '../../persistence/elastic.queries.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
-import { IndexSettings } from '../../persistence/elastic.setting.js';
-import { GeneralSettings } from '@shared/general-config.settings.js';
+import type { IndexSettings } from '../../persistence/elastic.setting.js';
+import type { GeneralSettings } from '@shared/general-config.settings.js';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { Service } from '@tsed/di';

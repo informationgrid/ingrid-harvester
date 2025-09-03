@@ -22,12 +22,12 @@
  */
 
 import * as MiscUtils from '../../../utils/misc.utils.js';
-import { Catalog, ProcessStep, Record } from '../../../model/dcatApPlu.model.js';
+import type { Catalog, ProcessStep, Record } from '../../../model/dcatApPlu.model.js';
 import { ConfigService } from '../../../services/config/ConfigService.js';
-import { Contact, Organization, Person } from '../../../model/agent.js';
-import { DateRange } from '../../../model/dateRange.js';
-import { DiplanungIndexDocument } from './index.document.js';
-import { Distribution } from '../../../model/distribution.js';
+import type { Contact, Organization, Person } from '../../../model/agent.js';
+import type { DateRange } from '../../../model/dateRange.js';
+import type { DiplanungIndexDocument } from './index.document.js';
+import type { Distribution } from '../../../model/distribution.js';
 import esc from "xml-escape";
 
 function optional(wrapper: string | Function, variable: any | any[], ...remainder: any) {

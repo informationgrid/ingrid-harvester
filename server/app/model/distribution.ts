@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { DateRange } from './dateRange.js';
+import type { DateRange } from './dateRange.js';
 
 export interface Distribution {
     format?: string[];

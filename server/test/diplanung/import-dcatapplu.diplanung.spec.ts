@@ -27,7 +27,7 @@ import * as sinon from "sinon";
 import { configure, getLogger } from "log4js";
 import { isomorphic } from 'rdf-isomorphic';
 import { DcatappluImporter } from '../../app/importer/dcatapplu/dcatapplu.importer.js';
-import { DcatappluSettings } from '../../app/importer/dcatapplu/dcatapplu.settings.js';
+import type { DcatappluSettings } from '../../app/importer/dcatapplu/dcatapplu.settings.js';
 import { DiPlanungDocument } from "../../app/profiles/diplanung/model/index.document.js";
 import { RdfXmlParser } from 'rdfxml-streaming-parser';
 import { TestUtils } from "../utils/test-utils.js";

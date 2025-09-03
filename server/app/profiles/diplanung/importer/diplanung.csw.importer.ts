@@ -25,10 +25,10 @@ import * as MiscUtils from '../../../utils/misc.utils.js';
 import log4js from 'log4js';
 import { generateXplanWmsDistributions } from '../diplanung.utils.js';
 import { CswImporter } from '../../../importer/csw/csw.importer.js';
-import { DiplanungIndexDocument } from '../model/index.document.js';
-import { Distribution } from '../../../model/distribution.js';
-import { PluPlanType } from '../../../model/dcatApPlu.model.js';
-import { RecordEntity } from '../../../model/entity.js';
+import type { DiplanungIndexDocument } from '../model/index.document.js';
+import type { Distribution } from '../../../model/distribution.js';
+import type { PluPlanType } from '../../../model/dcatApPlu.model.js';
+import type { RecordEntity } from '../../../model/entity.js';
 // import { RequestDelegate } from '../../../utils/http-request.utils';
 // import { WmsXPath } from './wms.xpath';
 

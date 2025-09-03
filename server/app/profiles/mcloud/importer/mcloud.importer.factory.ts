@@ -24,9 +24,9 @@
 import log4js from 'log4js';
 import { DcatImporter } from '../../../importer/dcat/dcat.importer.js';
 import { ExcelImporter } from '../../../importer/excel/excel.importer.js';
-import { Importer } from '../../../importer/importer.js';
+import type { Importer } from '../../../importer/importer.js';
 import { ImporterFactory } from '../../../importer/importer.factory.js';
-import { Harvester } from '@shared/harvester.js';
+import type { Harvester } from '@shared/harvester.js';
 import { McloudCkanImporter } from './mcloud.ckan.importer.js';
 import { McloudCswImporter } from './mcloud.csw.importer.js';
 import { OaiImporter } from '../../../importer/oai/oai.importer.js';

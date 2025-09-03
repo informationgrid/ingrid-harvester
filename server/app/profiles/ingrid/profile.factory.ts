@@ -22,22 +22,21 @@
  */
 
 import log4js from 'log4js';
-import { CswMapper } from '../../importer/csw/csw.mapper.js';
-import { ImporterFactory } from '../../importer/importer.factory.js';
-import { Catalog } from '../../model/dcatApPlu.model.js';
-import { IndexDocumentFactory } from '../../model/index.document.factory.js';
+import type { CswMapper } from '../../importer/csw/csw.mapper.js';
+import type { ImporterFactory } from '../../importer/importer.factory.js';
+import type { Catalog } from '../../model/dcatApPlu.model.js';
+import type { IndexDocumentFactory } from '../../model/index.document.factory.js';
 import { DatabaseFactory } from '../../persistence/database.factory.js';
-import { DatabaseUtils } from '../../persistence/database.utils.js';
+import type { DatabaseUtils } from '../../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
-import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
-import { IndexSettings } from '../../persistence/elastic.setting.js';
-import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
-import { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
+import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
+import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import type { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
 import { ProfileFactory } from '../profile.factory.js';
 import { IngridImporterFactory } from './importer/ingrid.importer.factory.js';
 import { ingridCswMapper } from './mapper/ingrid.csw.mapper.js';
-import { IngridIndexDocument } from './model/index.document.js';
+import type { IngridIndexDocument } from './model/index.document.js';
 import { ElasticQueries } from './persistence/elastic.queries.js';
 import { PostgresAggregator } from './persistence/postgres.aggregator.js';
 import mappings from './persistence/ingrid-meta-mapping.json' with { type: 'json' };

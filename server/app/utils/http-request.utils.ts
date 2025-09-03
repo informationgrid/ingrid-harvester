@@ -22,7 +22,8 @@
  */
 
 import * as MiscUtils from './misc.utils.js';
-import fetch, { HeadersInit, RequestInit, Response } from 'node-fetch';
+import type { HeadersInit, RequestInit, Response } from 'node-fetch';
+import fetch from 'node-fetch';
 import log4js from 'log4js';
 import { Agent } from 'https';
 import { HttpsProxyAgent } from 'https-proxy-agent';

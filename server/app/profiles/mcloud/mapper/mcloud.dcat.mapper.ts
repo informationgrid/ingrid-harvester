@@ -22,7 +22,7 @@
  */
 
 import {mcloudMapper} from "./mcloud.mapper.js";
-import {DcatMapper} from "../../../importer/dcat/dcat.mapper.js";
+import type {DcatMapper} from "../../../importer/dcat/dcat.mapper.js";
 
 export class mcloudDcatMapper extends mcloudMapper<DcatMapper> {
     getCategories(): string[] {

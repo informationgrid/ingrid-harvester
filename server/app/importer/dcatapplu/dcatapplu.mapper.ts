@@ -29,17 +29,18 @@ import * as MiscUtils from '../../utils/misc.utils.js';
 import log4js from 'log4js';
 import { namespaces } from '../../importer/namespaces.js';
 import { throwError } from 'rxjs';
-import { Agent, Contact } from '../../model/agent.js';
+import type { Agent, Contact } from '../../model/agent.js';
 import { BaseMapper } from '../base.mapper.js';
-import { DateRange } from '../../model/dateRange.js';
-import { DcatappluSettings } from './dcatapplu.settings.js';
-import { Distribution } from '../../model/distribution.js';
-import { Geometry, Point } from '@turf/helpers';
-import { ImporterSettings } from '../../importer.settings.js';
-import { MetadataSource } from '../../model/index.document.js';
-import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep, PluProcessStepType, Catalog } from '../../model/dcatApPlu.model.js';
-import { Summary } from '../../model/summary.js';
-import { XPathElementSelect } from '../../utils/xpath.utils.js';
+import type { DateRange } from '../../model/dateRange.js';
+import type { DcatappluSettings } from './dcatapplu.settings.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { Geometry, Point } from '@turf/helpers';
+import type { ImporterSettings } from '../../importer.settings.js';
+import type { MetadataSource } from '../../model/index.document.js';
+import type { ProcessStep, Catalog } from '../../model/dcatApPlu.model.js';
+import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, PluProcessStepType } from '../../model/dcatApPlu.model.js';
+import type { Summary } from '../../model/summary.js';
+import type { XPathElementSelect } from '../../utils/xpath.utils.js';
 
 export class DcatappluMapper extends BaseMapper {
 

@@ -22,11 +22,11 @@
  */
 
 import log4js from 'log4js';
-import { DatabaseConfiguration, ElasticsearchConfiguration, GeneralSettings } from '@shared/general-config.settings.js';
-import { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
+import type { DatabaseConfiguration, ElasticsearchConfiguration, GeneralSettings } from '@shared/general-config.settings.js';
+import type { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
 import { BodyParams, Controller, Delete, Get, PathParams, Post, Put, QueryParams, UseAuth } from '@tsed/common';
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
-import { Catalog } from '../model/dcatApPlu.model.js';
+import type { Catalog } from '../model/dcatApPlu.model.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import { ElasticsearchUtils } from '../persistence/elastic.utils.js';

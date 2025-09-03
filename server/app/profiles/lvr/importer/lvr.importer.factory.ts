@@ -22,15 +22,15 @@
  */
 
 import log4js from 'log4js';
-import { Harvester } from '@shared/harvester.js';
-import { Importer } from '../../../importer/importer.js';
+import type { Harvester } from '@shared/harvester.js';
+import type { Importer } from '../../../importer/importer.js';
 import { ImporterFactory } from '../../../importer/importer.factory.js';
-import { JsonSettings } from '../../../importer/json/json.settings.js';
+import type { JsonSettings } from '../../../importer/json/json.settings.js';
 import { KldImporter } from '../../../importer/kld/kld.importer.js';
-import { KldSettings } from '../../../importer/kld/kld.settings.js';
+import type { KldSettings } from '../../../importer/kld/kld.settings.js';
 import { LvrClickRheinImporter } from './lvr.clickrhein.importer.js';
 import { OaiImporter } from '../../../importer/oai/oai.importer.js';
-import { OaiSettings } from '../../../importer/oai/oai.settings.js';
+import type { OaiSettings } from '../../../importer/oai/oai.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 

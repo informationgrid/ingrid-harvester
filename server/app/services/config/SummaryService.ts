@@ -22,7 +22,7 @@
  */
 
 import {existsSync, mkdirSync, readFileSync, writeFileSync} from 'fs';
-import {ImportLogMessage} from '../../model/import.result.js';
+import type {ImportLogMessage} from '../../model/import.result.js';
 import {Service} from '@tsed/di';
 import {CronJob} from 'cron';
 import {ConfigService} from './ConfigService.js';

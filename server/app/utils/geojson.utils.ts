@@ -50,7 +50,7 @@ import flip from '@turf/flip';
 import rewind from '@turf/rewind';
 import simplify from '@turf/simplify';
 import { firstElementChild } from './xpath.utils.js';
-import { AllGeoJSON, Feature, FeatureCollection, Geometries, Geometry, GeometryCollection, MultiPoint, MultiLineString, MultiPolygon, Point } from '@turf/helpers';
+import type { AllGeoJSON, Feature, FeatureCollection, Geometries, Geometry, GeometryCollection, MultiPoint, MultiLineString, MultiPolygon, Point } from '@turf/helpers';
 import turfFlatten from "@turf/flatten";
 import deepEqual from "deep-equal";
 import proj4 from "proj4";

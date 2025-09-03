@@ -27,7 +27,7 @@ import * as sinon from "sinon";
 import {configure, getLogger} from "log4js";
 import {TestUtils} from "../utils/test-utils.js";
 import {ExcelImporter} from '../../app/importer/excel/excel.importer.js';
-import {ExcelSettings} from '../../app/importer/excel/excel.settings.js';
+import type {ExcelSettings} from '../../app/importer/excel/excel.settings.js';
 import {ExcelMapper} from '../../app/importer/excel/excel.mapper.js';
 import {ProfileFactoryLoader} from "../../app/profiles/profile.factory.loader.js";
 import {mcloudDocument} from "../../app/profiles/mcloud/model/index.document.js";

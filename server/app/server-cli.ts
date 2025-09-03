@@ -22,13 +22,14 @@
  */
 
 import log4js from 'log4js';
-import { concat, Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { concat } from 'rxjs';
 import { jsonLayout } from './utils/log4js.json.layout.js';
 import { merge } from './utils/misc.utils.js';
 import { ConfigService } from './services/config/ConfigService.js';
-import { ImportLogMessage } from './model/import.result.js';
+import type { ImportLogMessage } from './model/import.result.js';
 import { ProfileFactoryLoader} from './profiles/profile.factory.loader.js';
-import { Summary } from './model/summary.js';
+import type { Summary } from './model/summary.js';
 import process from 'node:process'; 
 
 let config = ConfigService.get(),

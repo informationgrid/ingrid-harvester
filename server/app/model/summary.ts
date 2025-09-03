@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {ImporterSettings} from '../importer.settings.js';
+import type {ImporterSettings} from '../importer.settings.js';
 
 export class Summary {
 

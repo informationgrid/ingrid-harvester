@@ -21,8 +21,8 @@
  * ==================================================
  */
 
-import { DiplanungIndexDocument } from './model/index.document.js';
-import { Distribution } from '../../model/distribution.js';
+import type { DiplanungIndexDocument } from './model/index.document.js';
+import type { Distribution } from '../../model/distribution.js';
 import { PluPlanType } from '../../model/dcatApPlu.model.js';
 
 export function generateXplanWmsDistributions(stateAbbrev: string, planName: string, planType: PluPlanType): Distribution {

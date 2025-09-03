@@ -21,13 +21,13 @@
  * ==================================================
  */
 
-import { ElasticsearchUtils } from './elastic.utils.js';
+import type { ElasticsearchUtils } from './elastic.utils.js';
 import { ElasticsearchUtils6 } from './elastic.utils.6.js';
 import { ElasticsearchUtils7 } from './elastic.utils.7.js';
 import { ElasticsearchUtils8 } from './elastic.utils.8.js';
 import { ElasticsearchUtils9 } from "./elastic.utils.9.js";
-import { IndexConfiguration } from './elastic.setting.js';
-import { Summary } from '../model/summary.js';
+import type { IndexConfiguration } from './elastic.setting.js';
+import type { Summary } from '../model/summary.js';
 
 export class ElasticsearchFactory {
 

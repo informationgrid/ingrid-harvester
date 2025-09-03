@@ -26,7 +26,7 @@ import * as chaiAsPromised from "chai-as-promised";
 import {configure, getLogger} from "log4js";
 import * as sinon from "sinon";
 import {TestUtils} from "../utils/test-utils.js";
-import {CswSettings} from '../../app/importer/csw/csw.settings.js';
+import type {CswSettings} from '../../app/importer/csw/csw.settings.js';
 import {CswImporter} from '../../app/importer/csw/csw.importer.js';
 import {ProfileFactoryLoader} from "../../app/profiles/profile.factory.loader.js";
 import {IndexDocument} from "../../app/model/index.document.js";

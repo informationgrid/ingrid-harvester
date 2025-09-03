@@ -21,8 +21,8 @@
  * ==================================================
  */
 
-import { Harvester } from '@shared/harvester.js';
-import { Importer } from './importer.js';
+import type { Harvester } from '@shared/harvester.js';
+import type { Importer } from './importer.js';
 
 export * from "./importer.js"
 

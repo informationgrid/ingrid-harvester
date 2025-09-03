@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Geometries } from '@turf/helpers';
+import type { Geometries } from '@turf/helpers';
 
 /**
  * KuLaDig API definitions

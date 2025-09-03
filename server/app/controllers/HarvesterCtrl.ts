@@ -22,7 +22,7 @@
  */
 
 import log4js from 'log4js';
-import { Harvester } from '@shared/harvester.js';
+import type { Harvester } from '@shared/harvester.js';
 import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '@tsed/common';
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';

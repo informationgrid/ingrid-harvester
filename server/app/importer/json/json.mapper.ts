@@ -23,10 +23,9 @@
 
 import log4js from 'log4js';
 import { BaseMapper } from '../base.mapper.js';
-import { ImporterSettings } from '../../importer.settings.js';
-import { MetadataSource } from '../../model/index.document.js';
-import { JsonSettings } from './json.settings.js';
-import { Summary } from '../../model/summary.js';
+import type { MetadataSource } from '../../model/index.document.js';
+import type { JsonSettings } from './json.settings.js';
+import type { Summary } from '../../model/summary.js';
 
 export class JsonMapper extends BaseMapper {
 

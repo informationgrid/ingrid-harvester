@@ -24,12 +24,12 @@
 import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import 'dayjs/locale/de.js';
 import { convertBBCode } from '../lvr.utils.js';
-import { GeometryInformation, Temporal } from '../../../model/index.document.js';
-import { Keyword } from '../../../model/ingrid.index.document.js';
-import { KldMapper } from '../../../importer/kld/kld.mapper.js';
-import { License } from '@shared/license.model.js';
+import type { GeometryInformation, Temporal } from '../../../model/index.document.js';
+import type { Keyword } from '../../../model/ingrid.index.document.js';
+import type { KldMapper } from '../../../importer/kld/kld.mapper.js';
+import type { License } from '@shared/license.model.js';
 import { LvrMapper } from './lvr.mapper.js';
-import { LvrDateRange, Media, Person, Relation, Source } from '../model/index.document.js';
+import type { LvrDateRange, Media, Person, Relation, Source } from '../model/index.document.js';
 import dayjs from "dayjs";
 dayjs.locale('de');
 

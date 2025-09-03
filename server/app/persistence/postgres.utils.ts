@@ -22,18 +22,19 @@
  */
 
 import log4js from 'log4js';
-import { DatabaseConfiguration } from '@shared/general-config.settings.js';
+import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
 import pg from 'pg';
-import { Catalog } from '../model/dcatApPlu.model.js';
-import { Distribution } from '../model/distribution.js';
-import { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
-import { IndexDocument } from '../model/index.document.js';
-import { Summary } from '../model/summary.js';
+import type { Catalog } from '../model/dcatApPlu.model.js';
+import type { Distribution } from '../model/distribution.js';
+import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
+import type { IndexDocument } from '../model/index.document.js';
+import type { Summary } from '../model/summary.js';
 import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
-import { BulkResponse, DatabaseUtils } from './database.utils.js';
-import { ElasticsearchUtils } from './elastic.utils.js';
-import { PostgresQueries } from './postgres.queries.js';
+import type { BulkResponse} from './database.utils.js';
+import { DatabaseUtils } from './database.utils.js';
+import type { ElasticsearchUtils } from './elastic.utils.js';
+import type { PostgresQueries } from './postgres.queries.js';
 import Cursor from "pg-cursor";
 
 const log = log4js.getLogger(import.meta.filename);

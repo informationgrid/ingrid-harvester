@@ -21,7 +21,8 @@
  * ==================================================
  */
 
-import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings.js';
+import type { ImporterSettings} from '../../importer.settings.js';
+import {DefaultImporterSettings} from '../../importer.settings.js';
 
 export const defaultDCATAPPLUSettings: DcatappluSettings = {
     ...DefaultImporterSettings
