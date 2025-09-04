@@ -1,0 +1,12 @@
+{
+  "exec": "node --import @swc-node/register/esm-register --enable-source-maps app/index.ts",
+  "env": {
+    "TS_NODE_DEV": "this is set to convince `@tsed/components-scan/lib/esm/isTsEnv.js` that we are in a TS environment"
+  },
+  "watch": [
+    "app/**/*.ts"
+  ],
+  "events": {
+    "start": "echo 'Starting project with nodemon...'"
+  }
+}

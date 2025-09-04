@@ -5,21 +5,19 @@
   "type": "module",
   "exports": "./app/index.js",
   "scripts": {
-    "start": "NODE_ENV=production ts-node -r tsconfig-paths/register --transpile-only app/index.ts",
+    "start": "cross-env NODE_ENV=production node --import @swc-node/register/esm-register --enable-source-maps app/index.ts",
     "start-cli": "pm2 start ./app/server-cli.js --no-autorestart",
-    "start-dev": "ts-node-dev --ignore-watch mappings.json app/index.ts --profile=mcloud",
-    "start-diplanung": "cross-env ELASTIC_PREFIX=diplan- ELASTIC_INDEX=harvester && ts-node-dev --poll --ignore-watch mappings.json app/index.ts --profile=diplanung",
-    "start-lvr": "cross-env ELASTIC_PREFIX=lvr- ELASTIC_INDEX=harvester && ts-node-dev --poll --ignore-watch mappings.json app/index.ts --profile=lvr",
-    "start-ingrid": "ts-node-dev --ignore-watch mappings.json app/index.ts --profile=ingrid --config_dir=./config/ingrid",
-    "start-dev-16-inspect": "ts-node-dev --inspect --poll --ignore-watch mappings.json app/index.ts",
-    "start-cli-dev": "ts-node app/server-cli.ts",
+    "start-dev": "cross-env IMPORTER_PROFILE=mcloud nodemon",
+    "start-diplanung": "cross-env IMPORTER_PROFILE=diplanung ELASTIC_PREFIX=diplan- ELASTIC_INDEX=harvester nodemon",
+    "start-lvr": "cross-env IMPORTER_PROFILE=lvr ELASTIC_PREFIX=lvr- ELASTIC_INDEX=harvester nodemon",
+    "start-ingrid": "cross-env IMPORTER_PROFILE=ingrid nodemon --config_dir=./config/ingrid",
     "build-with-tests": "tsc --outDir build",
     "build": "tsc --outDir build -p ./tsconfig.build.json",
     "postbuild": "copyfiles './*.json' 'app/**/*.json' 'app/**/*.sql' 'app/**/*.xml' 'app/**/*.md' build/server",
     "install-production": "NODE_ENV=production npm ci",
-    "test": "mocha -r ts-node/register test/**/*.ts  --profile=mcloud",
-    "test-jenkins": "mocha -r ts-node/register test/mcloud/*.spec.ts --colors --reporter mocha-jenkins-reporter --reporter-options junit_report_path=report.xml  --profile=mcloud",
-    "test-jenkins-diplanung": "mocha -r ts-node/register test/diplanung/*.spec.ts --colors --reporter mocha-jenkins-reporter --reporter-options junit_report_path=report.xml  --profile=diplanung"
+    "test": "cross-env IMPORTER_PROFILE=mcloud mocha test/**/*.spec.ts",
+    "test-jenkins": "cross-env IMPORTER_PROFILE=mcloud mocha test/mcloud/*.spec.ts --colors --reporter mocha-jenkins-reporter --reporter-options junit_report_path=report.xml",
+    "test-jenkins-diplanung": "cross-env IMPORTER_PROFILE=diplanung mocha test/diplanung/*.spec.ts --colors --reporter mocha-jenkins-reporter --reporter-options junit_report_path=report.xml"
   },
   "author": "andre.wallat@wemove.com",
   "license": "EUPL",
@@ -90,6 +88,7 @@
     "xpath": "^0.0.32"
   },
   "devDependencies": {
+    "@swc-node/register": "^1.11.1",
     "@types/chai": "^4.2.7",
     "@types/chai-as-promised": "^7.1.2",
     "@types/cron": "^1.7.1",
@@ -110,12 +109,11 @@
     "eslint": "^8.34.0",
     "mocha": "^10.2.0",
     "mocha-jenkins-reporter": "^0.4.2",
+    "nodemon": "^3.1.10",
     "rdf-data-factory": "^1.1.2",
     "rdf-isomorphic": "^1.3.1",
     "rdfxml-streaming-parser": "^2.2.3",
     "sinon": "^8.0.2",
-    "ts-node-dev": "^2.0.0",
-    "tsconfig-paths": "^4.1.0",
     "typescript": "^5.8.3"
   },
   "pkg": {
