@@ -23,11 +23,10 @@
 
 import * as GeoJsonUtils from '../../utils/geojson.utils';
 import { getLogger } from 'log4js';
-import { Catalog, PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../model/dcatApPlu.model';
 import { throwError } from 'rxjs';
 import { BaseMapper } from '../base.mapper';
+import { Catalog } from '../../model/dcatApPlu.model';
 import { Contact, Organization, Person } from '../../model/agent';
-import { DateRange } from '../../model/dateRange';
 import { Distribution } from '../../model/distribution';
 import { Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { ImporterSettings } from '../../importer.settings';
@@ -37,33 +36,35 @@ import { Summary } from '../../model/summary';
 import { WfsSettings } from './wfs.settings';
 import { XPathNodeSelect } from '../../utils/xpath.utils';
 
-export abstract class WfsMapper extends BaseMapper {
+export class WfsMapper extends BaseMapper {
 
     log = getLogger();
 
-    protected readonly feature: Node & Element;
-    private harvestTime: any;
+    readonly featureOrFeatureType: Node & Element;
+    readonly featureTypeDescription: Node & Element;
+    readonly fetched: any;
+    readonly settings: WfsSettings;
+    readonly uuid: string;
 
-    private settings: WfsSettings;
-    protected readonly uuid: string;
+    private harvestTime: any;
     private summary: Summary;
 
-    protected fetched: any = {
-        boundingBox: null,
-        contactPoint: null,
-        keywords: {},
-        themes: null
-    };
+    select: XPathNodeSelect;
 
-    protected select: XPathNodeSelect;
-
-    constructor(settings, feature, harvestTime, summary, generalInfo) {
+    constructor(settings, featureOrFeatureType, harvestTime, summary, generalInfo) {
         super();
         this.settings = settings;
-        this.feature = feature;
+        this.featureOrFeatureType = featureOrFeatureType;
+        this.featureTypeDescription = generalInfo['featureTypeDescription'];
         this.harvestTime = harvestTime;
         this.summary = summary;
-        this.fetched = {...this.fetched, ...generalInfo};
+        this.fetched = {
+            boundingBox: null,
+            contactPoint: null,
+            keywords: {},
+            themes: null,
+            ...generalInfo
+        };
         this.select = (...args: any[]) => {
             try {
                 return generalInfo['select'](...args);
@@ -73,7 +74,8 @@ export abstract class WfsMapper extends BaseMapper {
                 return undefined;
             }
         };
-        this.uuid = this.getTextContent(`./*/@gml:id`);
+        let path = this.isFeatureType() ? './wfs:Name' : './*/@gml:id';
+        this.uuid = this.getTextContent(path);
 
         super.init();
     }
@@ -98,13 +100,36 @@ export abstract class WfsMapper extends BaseMapper {
         return undefined
     }
 
-    abstract getTitle(): string;
+    getTitle(): string {
+        return this.fetched.title;
+        // if (this.isFeatureType()) {
+        //     return this.select('./wfs:Title', this.featureOrFeatureType, true)?.textContent;
+        // }
+        // else {
+        //     return this.getTextContent('./*/*[local-name()="name"]|./*/@gml:id')?.trim();
+        // }
+    }
 
-    abstract getDescription(): string;
+    getDescription(): string {
+        if (this.isFeatureType()) {
+            return this.select('./wfs:Abstract', this.featureOrFeatureType, true)?.textContent;
+        }
+        else {
+            return undefined;
+        }
+    }
 
-    abstract getDistributions(): Promise<Distribution[]>;
+    getDistributions(): Promise<Distribution[]> {
+        return undefined;
+    }
 
-    abstract getPlanName(): string;
+    isFeatureType(): boolean {
+        return this.featureOrFeatureType.localName == 'FeatureType';
+    }
+
+    getNumberOfFeatures(): number {
+        return this.fetched.numFeatures;
+    }
 
     getGeneratedId(): string {
         return this.uuid;
@@ -122,7 +147,9 @@ export abstract class WfsMapper extends BaseMapper {
         };
     }
 
-    abstract getIssued(): Date;
+    getIssued(): Date {
+        return undefined;
+    }
 
     // TODO
     getModifiedDate(): Date {
@@ -130,15 +157,41 @@ export abstract class WfsMapper extends BaseMapper {
         // return new Date(this.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.feature, true).textContent);
     }
 
-    getProcedureImportDate(): Date {
+    getBoundingBox(): Geometry {
+        let obbox = this.getOriginalBoundingBox();
+        return GeoJsonUtils.getBoundingBox(obbox.lowerCorner, obbox.upperCorner, obbox.crs);
+    }
+
+    getOriginalBoundingBox(): Record<string, string> {
+        let lowerCorner: string, upperCorner: string, crs: string;
+        if (this.isFeatureType()) {
+            let bbox = this.select('./ows:WGS84BoundingBox', this.featureOrFeatureType, true);
+            if (!bbox) {
+                return null;
+            }
+            lowerCorner = this.select('./ows:LowerCorner', bbox, true)?.textContent;
+            upperCorner = this.select('./ows:UpperCorner', bbox, true)?.textContent;
+            crs = 'WGS84';
+        }
+        else {
+            let bbox = this.select('./*/gml:boundedBy/gml:Envelope', this.featureOrFeatureType, true);
+            if (!bbox) {
+                return null;
+            }
+            lowerCorner = this.select('./gml:lowerCorner', bbox, true)?.textContent;
+            upperCorner = this.select('./gml:upperCorner', bbox, true)?.textContent;
+            crs = (<Element>bbox).getAttribute('srsName') || this.fetched['defaultCrs'];
+        }
+        return { lowerCorner, upperCorner, crs };
+    }
+
+    getSpatial(): Geometry | GeometryCollection {
         return undefined;
     }
 
-    abstract getBoundingBox(): Geometry;
-
-    abstract getSpatial(): Geometry | GeometryCollection;
-
-    abstract getSpatialText(): string;
+    getSpatialText(): string {
+        return undefined;
+    }
 
     getCentroid(): Point {
         let spatial = this.getSpatial() ?? this.getBoundingBox();
@@ -153,44 +206,8 @@ export abstract class WfsMapper extends BaseMapper {
         return this.fetched.catalog;
     }
 
-    getPluDevelopmentFreezePeriod(): DateRange {
-        return undefined;
-    }
-
-    abstract getPluDocType(code: string): PluDocType;
-
-    getPluPlanState(): PluPlanState {
-        return this.settings.pluPlanState;
-    }
-
-    abstract getPluPlanType(): PluPlanType;
-
-    abstract getPluPlanTypeFine(): string;
-
-    // Source of mapping -> https://www.dev.diplanung.de/DefaultCollection/EfA%20DiPlanung/_workitems/edit/20548
-    getPluProcedureState(): PluProcedureState {
-        switch (this.getPluPlanState()) {
-            case PluPlanState.SIMULIERT: return PluProcedureState.SIMULIERT;
-            case PluPlanState.IN_AUFST: return PluProcedureState.LAUFEND;
-            case PluPlanState.FESTGES: return PluProcedureState.ABGESCHLOSSEN;
-            case PluPlanState.GANZ_AUFGEHOBEN: return PluProcedureState.GANZ_AUFGEHOBEN;
-            case PluPlanState.EINGESTELLT: return PluProcedureState.EINGESTELLT;
-            default: return PluProcedureState.UNBEKANNT;
-        }
-    }
-
-    abstract getPluProcedureType(): PluProcedureType;
-
-    abstract getPluProcessSteps(): ProcessStep[];
-
-    abstract getPluProcedurePeriod(): DateRange;
-
-    getAdmsIdentifier(): string {
-        return undefined;
-    }
-
     getHarvestedData(): string {
-        return this.feature.toString();
+        return this.featureOrFeatureType.toString();
     }
 
     getHarvestingDate(): Date {
@@ -220,12 +237,18 @@ export abstract class WfsMapper extends BaseMapper {
         return config;
     }
 
-    protected getTextContent(xpathStr: string, searchNode: Node = this.feature) {
-        return (<Element>this.select(xpathStr, searchNode, true))?.textContent;
+    getTextContent(xpathStr: string, searchNode: Node = this.featureOrFeatureType) {
+        return this.select(xpathStr, searchNode, true)?.textContent;
     }
 
-    protected getTypename(toLowerCase: boolean = true): string {
-        let typename = (<Element>this.select('./*', this.feature, true))?.localName;
+    getTypename(toLowerCase: boolean = false): string {
+        let typename: string;
+        if (this.isFeatureType()) {
+            typename = this.select('./wfs:Name', this.featureOrFeatureType, true)?.textContent;
+        }
+        else {
+            typename = (this.select('./*', this.featureOrFeatureType, true) as Element)?.localName;
+        }
         return toLowerCase ? typename.toLowerCase() : typename;
     }
 

@@ -29,9 +29,7 @@ import { Distribution } from '../../../model/distribution';
 import { Geometry, GeometryCollection, Point } from '@turf/helpers';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
 
-const alternateTitleBlacklist = ['B-Plan', 'F-Plan'];
-
-export class DiplanungWfsMapper extends DiplanungMapper<WfsMapper> {
+export abstract class DiplanungWfsMapper extends DiplanungMapper<WfsMapper> {
 
     constructor(baseMapper: WfsMapper) {
         super(baseMapper);
@@ -49,48 +47,48 @@ export class DiplanungWfsMapper extends DiplanungMapper<WfsMapper> {
         return this.baseMapper.getGeneratedId();
     }
 
-    getAdmsIdentifier(): string {
-        return this.baseMapper.getAdmsIdentifier();
-    }
-
     getTitle(): string {
         return this.baseMapper.getTitle();
     }
 
     getPluDevelopmentFreezePeriod(): DateRange {
-        return this.baseMapper.getPluDevelopmentFreezePeriod();
+        return undefined;
     }
 
     getPluPlanName(): string {
-        return this.baseMapper.getPlanName();
+        return undefined;
     }
 
     getPluPlanState(): PluPlanState {
-        return this.baseMapper.getPluPlanState();
+        return undefined;
     }
 
     getPluPlanType(): PluPlanType {
-        return this.baseMapper.getPluPlanType();
+        return undefined;
     }
 
     getPluPlanTypeFine(): string {
-        return this.baseMapper.getPluPlanTypeFine();
+        return undefined;
     }
 
     getPluProcedurePeriod(): DateRange {
-        return this.baseMapper.getPluProcedurePeriod();
+        return undefined;
     }
 
     getPluProcedureState(): PluProcedureState {
-        return this.baseMapper.getPluProcedureState();
+        switch (this.getPluPlanState()) {
+            case PluPlanState.FESTGES: return PluProcedureState.ABGESCHLOSSEN;
+            case PluPlanState.IN_AUFST: return PluProcedureState.LAUFEND;
+            default: return PluProcedureState.UNBEKANNT;
+        }
     }
 
     getPluProcedureType(): PluProcedureType {
-        return this.baseMapper.getPluProcedureType();
+        return undefined;
     }
 
     getPluProcessSteps(): ProcessStep[] {
-        return this.baseMapper.getPluProcessSteps();
+        return undefined;
     }
 
     getPluNotification(): string {
@@ -146,6 +144,10 @@ export class DiplanungWfsMapper extends DiplanungMapper<WfsMapper> {
     }
 
     getProcedureImportDate(): Date {
-        return this.baseMapper.getProcedureImportDate();
+        return undefined;
+    }
+
+    getAdmsIdentifier(): string {
+        return undefined;
     }
 }

@@ -27,20 +27,19 @@ import { DiplanungCswMapper } from './mapper/diplanung.csw.mapper';
 import { DiplanungDcatappluMapper } from './mapper/diplanung.dcatapplu.mapper';
 import { DiplanungImporterFactory } from './importer/diplanung.importer.factory';
 import { DiplanungIndexDocument } from './model/index.document';
-import { DiplanungWfsMapper } from './mapper/diplanung.wfs.mapper';
 import { ElasticQueries } from './persistence/elastic.queries';
 import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
 import { ExcelSparseMapper } from '../../importer/excelsparse/excelsparse.mapper';
-import { FisWfsMapper } from '../../importer/wfs/fis/fis.wfs.mapper';
+import { FisWfsMapper } from './mapper/wfs/fis.wfs.mapper';
 import { ImporterFactory } from '../../importer/importer.factory';
 import { IndexDocumentFactory } from '../../model/index.document.factory';
-import { MsWfsMapper } from '../../importer/wfs/ms/ms.wfs.mapper';
+import { MsWfsMapper } from './mapper/wfs/ms.wfs.mapper';
 import { PostgresAggregator } from './persistence/postgres.aggregator';
 import { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator';
 import { ProfileFactory } from '../profile.factory';
 import { WfsMapper } from '../../importer/wfs/wfs.mapper';
-import { XplanSynWfsMapper } from '../../importer/wfs/xplan/syn/xplan.syn.wfs.mapper';
-import { XplanWfsMapper } from '../../importer/wfs/xplan/xplan.wfs.mapper';
+import { XplanSynWfsMapper } from './mapper/wfs/xplan.syn.wfs.mapper';
+import { XplanWfsMapper } from './mapper/wfs/xplan.wfs.mapper';
 
 export class DiplanungFactory extends ProfileFactory<CswMapper | DcatappluMapper | ExcelSparseMapper | WfsMapper> {
 
@@ -62,11 +61,10 @@ export class DiplanungFactory extends ProfileFactory<CswMapper | DcatappluMapper
         switch (mapper.constructor.name) {
             case 'CswMapper': return new DiplanungCswMapper(<CswMapper>mapper);
             case 'DcatappluMapper': return new DiplanungDcatappluMapper(<DcatappluMapper>mapper);
-            // case 'ExcelSparseMapper': return new DiplanungExcelSparseMapper(mapper);
-            case 'FisWfsMapper': return new DiplanungWfsMapper(<FisWfsMapper>mapper);
-            case 'MsWfsMapper': return new DiplanungWfsMapper(<MsWfsMapper>mapper);
-            case 'XplanSynWfsMapper': return new DiplanungWfsMapper(<XplanSynWfsMapper>mapper);
-            case 'XplanWfsMapper': return new DiplanungWfsMapper(<XplanWfsMapper>mapper);
+            case 'FisWfsMapper': return new FisWfsMapper(<WfsMapper>mapper);
+            case 'MsWfsMapper': return new MsWfsMapper(<WfsMapper>mapper);
+            case 'XplanSynWfsMapper': return new XplanSynWfsMapper(<WfsMapper>mapper);
+            case 'XplanWfsMapper': return new XplanWfsMapper(<WfsMapper>mapper);
         }
     }
 

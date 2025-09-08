@@ -25,7 +25,7 @@ import * as MiscUtils from '../../../../utils/misc.utils';
 import { generateXplanWmsDistributions } from '../../../../profiles/diplanung/diplanung.utils';
 import { Distribution} from '../../../../model/distribution';
 import { PluDocType } from '../../../../model/dcatApPlu.model';
-import { XplanWfsMapper } from '../xplan.wfs.mapper';
+import { XplanWfsMapper } from './xplan.wfs.mapper';
 
 
 const distributionTags = {
@@ -49,14 +49,14 @@ export class XplanSynWfsMapper extends XplanWfsMapper {
             distributions.push(...this.getSpecificDistributions(tagName, tagDescription));
         });
         // add xplan-specific WMS distributions
-        let wmsDist = generateXplanWmsDistributions(this.getCatalog().identifier, this.getPlanName(), this.getPluPlanType());
+        let wmsDist = generateXplanWmsDistributions(this.baseMapper.getCatalog().identifier, this.getPlanName(), this.getPluPlanType());
         distributions.push(wmsDist);
         return distributions;
     }
 
     private getSpecificDistributions(tagName: string, tagDescription: string): Distribution[] {
         let distributions = [];
-        let externalReferences = this.select(`./*/xplan:${tagName}`, this.feature, true)?.textContent ?? '';
+        let externalReferences = this.baseMapper.select(`./*/xplan:${tagName}`, this.baseMapper.featureOrFeatureType, true)?.textContent ?? '';
         let externalReferencesIt = externalReferences.matchAll(/\[(?<accessURL>.*?) \| (?<description>.*?)\]/g);
         for (let reference of externalReferencesIt) {
             let { accessURL, description } = reference.groups;
@@ -84,7 +84,7 @@ export class XplanSynWfsMapper extends XplanWfsMapper {
     }
 
     getPlanName(): string {
-        let planName = this.getTextContent('./*/xplan:xpPlanName')?.trim();
+        let planName = this.baseMapper.getTextContent('./*/xplan:xpPlanName')?.trim();
         return planName ?? undefined;
     }
 
@@ -95,7 +95,7 @@ export class XplanSynWfsMapper extends XplanWfsMapper {
      * @returns
      */
     getSpatialText(): string {
-        let xpgemeinde = this.select('./*/xplan:gemeinde', this.feature, true)?.textContent;
+        let xpgemeinde = this.baseMapper.select('./*/xplan:gemeinde', this.baseMapper.featureOrFeatureType, true)?.textContent;
         if (xpgemeinde) {
             let { ags, gemeinde, ortsteil } = xpgemeinde.match(/^\[Gemeindeschlüssel: (?<ags>.*?)\s?(?:\|\s?Gemeinde: (?<gemeinde>.*?))?\s?(?:\|\s?Ortsteil: (?<ortsteil>.*?))?\]$/)?.groups ?? {};
             if (ags) {
@@ -125,7 +125,7 @@ export class XplanSynWfsMapper extends XplanWfsMapper {
                 }
             }
             else {
-                this.log.warn('Could not parse xpgemeinde into existing RS: ', xpgemeinde);
+                this.baseMapper.log.warn('Could not parse xpgemeinde into existing RS: ', xpgemeinde);
                 return gemeinde;
             }
         }

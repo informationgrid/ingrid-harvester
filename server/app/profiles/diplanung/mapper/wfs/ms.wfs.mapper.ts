@@ -21,29 +21,29 @@
  * ==================================================
  */
 
-import * as GeoJsonUtils from '../../../utils/geojson.utils';
-import * as MiscUtils from '../../../utils/misc.utils';
-import { generatePlanDigitalWmsDistribution } from '../../../profiles/diplanung/diplanung.utils';
-import { DateRange } from '../../../model/dateRange';
-import { Distribution} from '../../../model/distribution';
-import { DocTypeMapping, PlanTypeMapping, ProcedureTypeMapping } from '../xplan/xplan.codelist.mappings';
+import * as GeoJsonUtils from '../../../../utils/geojson.utils';
+import * as MiscUtils from '../../../../utils/misc.utils';
+import { generatePlanDigitalWmsDistribution } from '../../diplanung.utils';
+import { DateRange } from '../../../../model/dateRange';
+import { DiplanungWfsMapper } from '../diplanung.wfs.mapper';
+import { Distribution} from '../../../../model/distribution';
+import { DocTypeMapping, PlanTypeMapping, ProcedureTypeMapping } from './xplan.codelist.mappings';
 import { Geometries, Geometry } from '@turf/helpers';
-import { PluDocType, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
-import { WfsMapper } from '../wfs.mapper';
+import { PluDocType, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../../model/dcatApPlu.model';
 
-export class MsWfsMapper extends WfsMapper {
+export class MsWfsMapper extends DiplanungWfsMapper {
 
     getStelleId(): string {
-        return this.getTextContent('./*/ms:stelle_id');
+        return this.baseMapper.getTextContent('./*/ms:stelle_id');
     }
 
     getDescription(): string {
-        return this.getTextContent('./*/ms:beschreibung');
+        return this.baseMapper.getTextContent('./*/ms:beschreibung');
     }
 
     async getDistributions(): Promise<Distribution[]> {
         let distributions = [];
-        let msExterneReferenz = this.getTextContent('./*/ms:externereferenz_dt');
+        let msExterneReferenz = this.baseMapper.getTextContent('./*/ms:externereferenz_dt');
         if (msExterneReferenz) {
             let externeReferenzList = JSON.parse('[' + msExterneReferenz + ']');
             for (let externeReferenzObj of externeReferenzList) {
@@ -59,42 +59,37 @@ export class MsWfsMapper extends WfsMapper {
         return distributions;
     }
 
-    getTitle(): string {
-        let title = this.getTextContent('./*/ms:name')?.trim();
-        return title ?? undefined;
-    }
-
     getPlanName(): string {
-        let planName = this.getTextContent('./*/ms:plan_name')?.trim();
+        let planName = this.baseMapper.getTextContent('./*/ms:plan_name')?.trim();
         return planName ?? undefined;
     }
 
     getBoundingBox(): Geometry {
-        let envelope = this.select('./*/gml:boundedBy/gml:Envelope', this.feature, true);
+        let envelope = this.baseMapper.select('./*/gml:boundedBy/gml:Envelope', this.baseMapper.featureOrFeatureType, true);
         if (envelope) {
-            let lowerCorner = this.getTextContent('./gml:lowerCorner', envelope);
-            let upperCorner = this.getTextContent('./gml:upperCorner', envelope);
+            let lowerCorner = this.baseMapper.getTextContent('./gml:lowerCorner', envelope);
+            let upperCorner = this.baseMapper.getTextContent('./gml:upperCorner', envelope);
             if (lowerCorner && upperCorner) {
                 let crs = (<Element>envelope).getAttribute('srsName');
                 return GeoJsonUtils.getBoundingBox(lowerCorner, upperCorner, crs);
             }
         }
         // if spatial exists, create bbox from it
-        else if (this.select('./*/ms:msGeometry', this.feature, true)) {
+        else if (this.baseMapper.select('./*/ms:msGeometry', this.baseMapper.featureOrFeatureType, true)) {
             return GeoJsonUtils.getBbox(this.getSpatial());
         }
         return undefined;
     }
 
     getSpatial(): Geometry | Geometries {
-        let spatialContainer = this.select('./*/ms:msGeometry/*', this.feature, true);
+        let spatialContainer = this.baseMapper.select('./*/ms:msGeometry/*', this.baseMapper.featureOrFeatureType, true);
         if (!spatialContainer) {
             // use bounding box as fallback
             return this.getBoundingBox();
         }
-        let crs = (<Element>spatialContainer).getAttribute('srsName') ?? this.fetched.defaultCrs;
+        let crs = (<Element>spatialContainer).getAttribute('srsName') ?? this.baseMapper.fetched.defaultCrs;
         crs = crs.replace('urn:ogc:def:crs:EPSG::', '').replace('EPSG:', '');
-        let geojson = GeoJsonUtils.parse(spatialContainer, { crs }, this.fetched.nsMap);
+        let geojson = GeoJsonUtils.parse(spatialContainer, { crs }, this.baseMapper.fetched.nsMap);
         return geojson;
     }
 
@@ -104,7 +99,7 @@ export class MsWfsMapper extends WfsMapper {
      * @returns 
      */
     getSpatialText(): string {
-        let msGemeinde = this.getTextContent('./*/ms:gemeinde_dt');
+        let msGemeinde = this.baseMapper.getTextContent('./*/ms:gemeinde_dt');
         if (msGemeinde) {
             let gemeindeObj = JSON.parse(msGemeinde);
             return gemeindeObj?.rs ?? gemeindeObj?.rs;
@@ -118,36 +113,32 @@ export class MsWfsMapper extends WfsMapper {
     }
 
     getPluPlanType(): PluPlanType {
-        let typename = this.getTypename();
-        let planart = this.getTextContent('./*/ms:planart');
+        let typename = this.baseMapper.getTypename();
+        let planart = this.baseMapper.getTextContent('./*/ms:planart');
         if (typename in PlanTypeMapping) {
             return PlanTypeMapping[typename][planart]?.[0] ?? PluPlanType.UNBEKANNT;//PlanTypeMapping[typename].default[0];
         }
-        this.log.debug('No pluPlanType available for typename ', typename);
+        this.baseMapper.log.debug('No pluPlanType available for typename ', typename);
         return PluPlanType.UNBEKANNT;
     }
 
     getPluPlanTypeFine(): string {
-        let typename = this.getTypename();
-        let planart = this.getTextContent('./*/ms:planart');
+        let typename = this.baseMapper.getTypename();
+        let planart = this.baseMapper.getTextContent('./*/ms:planart');
         if (typename in PlanTypeMapping) {
             return PlanTypeMapping[typename][planart]?.[1] ?? undefined;//PlanTypeMapping[typename].default[1];
         }
-        this.log.debug('No pluPlanTypeFine available for typename ', typename);
+        this.baseMapper.log.debug('No pluPlanTypeFine available for typename ', typename);
         return undefined;
     }
 
-    getPluProcedureState(): PluProcedureState {
-        return super.getPluProcedureState();
-    }
-
     getPluProcedureType(): PluProcedureType {
-        let typename = this.getTypename();
-        let procedureType = this.getTextContent('./*/ms:verfahren');
+        let typename = this.baseMapper.getTypename();
+        let procedureType = this.baseMapper.getTextContent('./*/ms:verfahren');
         if (typename in ProcedureTypeMapping) {
             return ProcedureTypeMapping[typename][procedureType] ?? PluProcedureType.UNBEKANNT;//ProcedureTypeMapping[typename].default;
         }
-        this.log.debug('No pluProcedureType available for ms:verfahren ', procedureType);
+        this.baseMapper.log.debug('No pluProcedureType available for ms:verfahren ', procedureType);
         return PluProcedureType.UNBEKANNT;
     }
 
@@ -156,21 +147,17 @@ export class MsWfsMapper extends WfsMapper {
     }
 
     getPluProcedurePeriod(): DateRange {
-        let procedureStartDate = this.getTextContent('./*/ms:aufstellungsbeschlussdatum');
+        let procedureStartDate = this.baseMapper.getTextContent('./*/ms:aufstellungsbeschlussdatum');
         return { gte: MiscUtils.normalizeDateTime(procedureStartDate) };
     }
 
     getIssued(): Date {
-        let issued = this.getTextContent('./*/ms:technherstelldatum');
+        let issued = this.baseMapper.getTextContent('./*/ms:technherstelldatum');
         return MiscUtils.normalizeDateTime(issued);
     }
 
     getModifiedDate(): Date {
-        let modified = this.getTextContent('./*/ms:updated_at');
+        let modified = this.baseMapper.getTextContent('./*/ms:updated_at');
         return MiscUtils.normalizeDateTime(modified);
-    }
-
-    getHarvestingDate(): Date {
-        return new Date(Date.now());
     }
 }

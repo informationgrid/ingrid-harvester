@@ -652,5 +652,38 @@
     "sourceURL": "https://www.kuladig.de/api/public/",
     "id": 23,
     "description": "KuLaDig (Kultur. Landschaft. Digital.)"
+  },
+  {
+    "id": 24,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "type": "WFS",
+    "description": "wfs-test-1",
+    "priority": null,
+    "iPlugId": "zdm",
+    "partner": null,
+    "provider": null,
+    "datatype": null,
+    "dataSourceName": null,
+    "boost": null,
+    "defaultDCATCategory": null,
+    "defaultMcloudSubgroup": null,
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "maxRecords": 200,
+    "startPosition": 0,
+    "catalogId": "zdm",
+    "customCode": null,
+    "httpMethod": "GET",
+    "sourceURL": "https://www.kuestendaten.de/DE/dynamisch/tideelbe_ogc/bs",
+    "featuresFilter": null,
+    "version": "1.1.0",
+    "typename": "Fahrrinne1999",
+    "pluPlanState": "unknown",
+    "contactCswUrl": null,
+    "contactMetadata": null,
+    "maintainer": null,
+    "featureLimit": "50"
   }
 ]

@@ -21,20 +21,13 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../../utils/misc.utils';
+import * as MiscUtils from '../../../utils/misc.utils';
 import { Harvester } from '@shared/harvester';
-import { RequestDelegate } from '../../../../utils/http-request.utils';
-import { XplanSynWfsMapper } from './xplan.syn.wfs.mapper';
-import { XplanWfsImporter } from '../xplan.wfs.importer';
-import { XplanWfsMapper } from '../xplan.wfs.mapper';
+import { WfsImporter } from '../../../importer/wfs/wfs.importer';
 
-export class XplanSynWfsImporter extends XplanWfsImporter {
+export class FisWfsImporter extends WfsImporter {
 
-    constructor(settings: Harvester, requestDelegate?: RequestDelegate) {
-        super(MiscUtils.merge(settings, { memberElement: 'wfs:member'}));
-    }
-
-    getMapper(settings: Harvester, feature, harvestTime, summary, generalInfo): XplanWfsMapper {
-        return new XplanSynWfsMapper(settings, feature, harvestTime, summary, generalInfo);
+    constructor(settings: Harvester) {
+        super(MiscUtils.merge(settings, { memberElement: 'gml:featureMember'}));
     }
 }
