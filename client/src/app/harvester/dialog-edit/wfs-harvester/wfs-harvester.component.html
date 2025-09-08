@@ -97,15 +97,14 @@
     @if (profile == 'zdm') {
     <mat-card-content>
       <div class="flex-row gap-20 space-between">
-        <mat-form-field class="flex-30">
+        <mat-form-field class="flex-50">
           <mat-label>Feature-Limit</mat-label>
           <input matInput formControlName="featureLimit">
         </mat-form-field>
-        <!-- <mat-form-field class="flex-50">
-          <mat-checkbox class="flex-50" color="primary" formControlName="harvestTypes">
-            <mat-label>FeatureType statt Features harvesten</mat-label>
-          </mat-checkbox>
-        </mat-form-field> -->
+        <mat-form-field class="flex-50 ">
+          <mat-label>Anzahl paralleler Abfragen</mat-label>
+          <input matInput type="number" min="1" formControlName="maxConcurrent" required>
+        </mat-form-field>
       </div>
     </mat-card-content>
     }

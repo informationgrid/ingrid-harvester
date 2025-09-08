@@ -118,65 +118,12 @@ export class WfsImporter extends Importer {
         this.numItems = numFeatureTypes;
 
         // for each FeatureType, get all Features
-        for (let featureTypeName in featureTypes) {
-            let numFeatures = await this.getNumFeatures(featureTypeName);
-            log.info(`Found ${numFeatures} features at ${this.settings.sourceURL} for FeatureType "${featureTypeName}"`);
-            let featureTypeDescriptionNode = await this.getTypeDescription(featureTypeName);
+        const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
+        const limit = pLimit(this.settings.maxConcurrent);
+        await Promise.allSettled(Object.keys(featureTypes).map(featureTypeName => 
+            limit(() => this.extractCompleteFeatureType(featureTypeName, featureTypes[featureTypeName]))
+        ));
 
-            // if harvesting FeatureTypes, do it here (to include the feature names)
-            if (this.settings.harvestTypes) {
-                try {
-                    await this.extractFeatureType(featureTypeName, featureTypes[featureTypeName], featureTypeDescriptionNode, numFeatures);
-                }
-                catch (e) {
-                    const message = `Error while fetching FeatureType "${featureTypeName}"\n  ${e.toString()}.`;
-                    log.warn(message);
-                    this.summary.warnings.push(message.split('\n  '));
-                    continue;
-                }
-            }
-            // skip harvesting features if numFeatures is above limit
-            if (this.settings.featureLimit && numFeatures > this.settings.featureLimit) {
-                log.info(`This exceeds the limit of ${this.settings.featureLimit} features; skipping feature harvesting`);
-                continue;
-            }
-            while (true) {
-                log.info(`Requesting next features for FeatureType ${featureTypeName}`);
-                let requestConfig = WfsImporter.createRequestConfig({
-                    ...this.settings,
-                    typename: featureTypeName
-                });
-                let harvestTime = new Date(Date.now());
-                let requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(this.settings));
-                // let response = await requestDelegate.doRequest();
-                // let responseDom = this.domParser.parseFromString(response);
-                let responseDom: Document;
-                try {
-                    let responseDom = await this.getDom(requestDelegate);
-                    // let resultsNode = responseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
-                    await this.extractFeatures(responseDom, harvestTime);
-                }
-                catch (e) {
-                    const message = `Error while fetching WFS Features for FeatureType ${featureTypeName}. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom?.toString())}.`;
-                    log.error(message);
-                    this.summary.appErrors.push(message);
-                }
-                requestDelegate.incrementStartRecordIndex();
-                /*
-                * startRecord was already incremented in the last step, so we can
-                * directly use it to check if we need to continue.
-                *
-                * If there is a problem with the first request, then numMatched is
-                * still 0. This will result in no records being harvested. If this
-                * behaviour is not desired then the following check should be
-                * updated. The easiest solution would be to set numMatched to
-                * maxRecords * numRetries
-                */
-                if (!this.supportsPaging || numFeatures < requestDelegate.getStartRecordIndex()) {
-                    break;
-                }
-            }
-        }
         log.info(`Finished requests`);
         await this.database.sendBulkData();
 
@@ -191,6 +138,66 @@ export class WfsImporter extends Importer {
      */
     async prepareImport(generalInfo: any, capabilitiesDom: Node, select: XPathNodeSelect) {
         return generalInfo;
+    }
+
+    async extractCompleteFeatureType(featureTypeName: string, featureTypeNode: Node): Promise<void> {
+        let numFeatures = await this.getNumFeatures(featureTypeName);
+        log.info(`Found ${numFeatures} features at ${this.settings.sourceURL} for FeatureType "${featureTypeName}"`);
+        let featureTypeDescriptionNode = await this.getTypeDescription(featureTypeName);
+
+        // if harvesting FeatureTypes, do it here (to include the feature names)
+        if (this.settings.harvestTypes) {
+            try {
+                await this.extractFeatureType(featureTypeName, featureTypeNode, featureTypeDescriptionNode, numFeatures);
+            }
+            catch (e) {
+                const message = `Error while fetching FeatureType "${featureTypeName}"\n  ${e.toString()}.`;
+                log.warn(message);
+                this.summary.warnings.push(message.split('\n  '));
+                return;
+            }
+        }
+        // skip harvesting features if numFeatures is above limit
+        if (this.settings.featureLimit && numFeatures > this.settings.featureLimit) {
+            log.info(`This exceeds the limit of ${this.settings.featureLimit} features; skipping feature harvesting`);
+            return;
+        }
+        while (true) {
+            log.info(`Requesting next features for FeatureType ${featureTypeName}`);
+            let requestConfig = WfsImporter.createRequestConfig({
+                ...this.settings,
+                typename: featureTypeName
+            });
+            let harvestTime = new Date(Date.now());
+            let requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(this.settings));
+            // let response = await requestDelegate.doRequest();
+            // let responseDom = this.domParser.parseFromString(response);
+            let responseDom: Document;
+            try {
+                let responseDom = await this.getDom(requestDelegate);
+                // let resultsNode = responseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
+                await this.extractFeatures(responseDom, harvestTime);
+            }
+            catch (e) {
+                const message = `Error while fetching WFS Features for FeatureType ${featureTypeName}. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom?.toString())}.`;
+                log.error(message);
+                this.summary.appErrors.push(message);
+            }
+            requestDelegate.incrementStartRecordIndex();
+            /*
+            * startRecord was already incremented in the last step, so we can
+            * directly use it to check if we need to continue.
+            *
+            * If there is a problem with the first request, then numMatched is
+            * still 0. This will result in no records being harvested. If this
+            * behaviour is not desired then the following check should be
+            * updated. The easiest solution would be to set numMatched to
+            * maxRecords * numRetries
+            */
+            if (!this.supportsPaging || numFeatures < requestDelegate.getStartRecordIndex()) {
+                break;
+            }
+        }
     }
 
     async extractFeatureType(featureTypeName: string, featureTypeNode: Node, featureTypeDescriptionNode: Node, numFeatures: number) {

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { AbstractControl, UntypedFormControl, UntypedFormGroup, ValidationErrors } from '@angular/forms';
+import { AbstractControl, FormControl, UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Component, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { ConfigService } from '../../../config/config.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
@@ -86,6 +86,7 @@ export class WfsHarvesterComponent implements OnInit, OnDestroy {
     this.form.addControl('featuresFilter', new UntypedFormControl(this.model.featureFilter));
     this.form.addControl('version', new UntypedFormControl(this.model.version));
     this.form.addControl('typename', new UntypedFormControl(this.model.typename));
+    this.form.addControl('maxConcurrent', new FormControl(this.model.maxConcurrent, Validators.min(1))),
     // diplanung
     this.form.addControl('pluPlanState', new UntypedFormControl(this.model.pluPlanState));
     this.form.addControl('contactCswUrl', new UntypedFormControl(this.model.contactCswUrl));
