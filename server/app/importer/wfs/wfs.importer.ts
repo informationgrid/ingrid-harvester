@@ -247,7 +247,7 @@ export class WfsImporter extends Importer {
 
             // TODO use ID-property from settings (tbi)
             const uuid = firstElementChild(features[i]).getAttributeNS(nsMap['gml'], 'id');
-            if (!this.filterUtils.isIdAllowed(uuid)) {
+            if (!uuid || !this.filterUtils.isIdAllowed(uuid)) {
                 this.summary.skippedDocs.push(uuid);
                 continue;
             }
