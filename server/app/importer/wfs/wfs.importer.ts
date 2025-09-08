@@ -115,6 +115,7 @@ export class WfsImporter extends Importer {
         }
         let numFeatureTypes = Object.keys(featureTypes).length;
         log.info(`Processing ${numFeatureTypes} FeatureTypes after filtering`);
+        this.numItems = numFeatureTypes;
 
         // for each FeatureType, get all Features
         for (let featureTypeName in featureTypes) {
