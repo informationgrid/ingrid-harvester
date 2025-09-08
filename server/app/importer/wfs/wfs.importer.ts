@@ -119,12 +119,20 @@ export class WfsImporter extends Importer {
         // for each FeatureType, get all Features
         for (let featureTypeName in featureTypes) {
             let numFeatures = await this.getNumFeatures(featureTypeName);
-            log.info(`Found ${numFeatures} features at ${this.settings.sourceURL} for FeatureType ${featureTypeName}`);
+            log.info(`Found ${numFeatures} features at ${this.settings.sourceURL} for FeatureType "${featureTypeName}"`);
             let featureTypeDescriptionNode = await this.getTypeDescription(featureTypeName);
 
             // if harvesting FeatureTypes, do it here (to include the feature names)
             if (this.settings.harvestTypes) {
-                await this.extractFeatureType(featureTypeName, featureTypes[featureTypeName], featureTypeDescriptionNode, numFeatures);
+                try {
+                    await this.extractFeatureType(featureTypeName, featureTypes[featureTypeName], featureTypeDescriptionNode, numFeatures);
+                }
+                catch (e) {
+                    const message = `Error while fetching FeatureType "${featureTypeName}"\n  ${e.toString()}.`;
+                    log.warn(message);
+                    this.summary.warnings.push(message.split('\n  '));
+                    continue;
+                }
             }
             // skip harvesting features if numFeatures is above limit
             if (this.settings.featureLimit && numFeatures > this.settings.featureLimit) {
@@ -191,11 +199,7 @@ export class WfsImporter extends Importer {
         this.generalInfo['title'] = select('./wfs:Title', featureTypeNode, true)?.textContent;
         this.generalInfo['featureTypeDescription'] = featureTypeDescriptionNode;
         let mapper = this.getFeatureTypeMapper(this.settings, featureTypeNode, Date.now(), this.summary, this.generalInfo);
-        let doc: any = await this.profile.getIndexDocumentFactory(mapper).create().catch(e => {
-            log.error('Error creating index document', e);
-            this.summary.appErrors.push(e.toString());
-            mapper.skipped = true;
-        });
+        let doc: any = await this.profile.getIndexDocumentFactory(mapper).create();
         if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
             let entity: RecordEntity = {
                 identifier: featureTypeName,
