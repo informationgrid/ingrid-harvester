@@ -23,4 +23,4 @@ FROM
 WHERE
     source = $1
 ORDER BY
-    identifier, anchor_id
+    anchor_id, identifier
