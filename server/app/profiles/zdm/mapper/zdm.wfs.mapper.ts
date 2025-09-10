@@ -21,12 +21,12 @@
  * ==================================================
  */
 
-import * as GeojsonUtils from '../../../utils/geojson.utils';
-import { IdfGenerator } from './idf.generator';
-import { MetadataSource } from '../../../model/index.document';
-import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
-import { ZdmIndexDocument } from '../model/index.document';
-import { ZdmMapper } from './zdm.mapper';
+import * as GeojsonUtils from '../../../utils/geojson.utils.js';
+import { IdfGenerator } from './idf.generator.js';
+import type { MetadataSource } from '../../../model/index.document.js';
+import { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
+import type { ZdmIndexDocument } from '../model/index.document.js';
+import { ZdmMapper } from './zdm.mapper.js';
 
 export class ZdmWfsMapper extends ZdmMapper<WfsMapper> {
 

@@ -21,11 +21,12 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../utils/misc.utils';
-import { WfsImporter } from '../../../importer/wfs/wfs.importer';
-import { WfsSettings } from '../../../importer/wfs/wfs.settings';
+import log4js from 'log4js';
+import * as MiscUtils from '../../../utils/misc.utils.js';
+import { WfsImporter } from '../../../importer/wfs/wfs.importer.js';
+import type { WfsSettings } from '../../../importer/wfs/wfs.settings.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export class ZdmWfsImporter extends WfsImporter {
 

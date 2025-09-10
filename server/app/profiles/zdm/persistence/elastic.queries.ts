@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import { ElasticQueries as IElasticQueries } from '../../../persistence/elastic.queries';
-
-const dayjs = require('dayjs');
+import type { ElasticQueries as IElasticQueries } from '../../../persistence/elastic.queries.js';
+import dayjs from 'dayjs';
+dayjs.locale('de');
 
 
 // fields potentially occurring in CSW that should be overwritten by WFS data

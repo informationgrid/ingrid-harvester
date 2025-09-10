@@ -28,7 +28,7 @@ import { ImporterFactory } from '../../../importer/importer.factory.js';
 import type { WfsSettings } from '../../../importer/wfs/wfs.settings.js';
 import { ZdmWfsImporter } from './zdm.wfs.importer.js';
 
-const log = log4js.getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export class ZdmImporterFactory extends ImporterFactory{
 

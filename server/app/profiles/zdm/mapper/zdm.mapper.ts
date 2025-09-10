@@ -22,10 +22,10 @@
  */
 
 import { Geometry } from '@turf/helpers';
-import { IndexDocumentFactory } from '../../../model/index.document.factory';
-import { MetadataSource } from '../../../model/index.document';
-import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
-import { ZdmIndexDocument } from '../model/index.document';
+import { IndexDocumentFactory } from '../../../model/index.document.factory.js';
+import type { MetadataSource } from '../../../model/index.document.js';
+import { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
+import type { ZdmIndexDocument } from '../model/index.document.js';
 
 export abstract class ZdmMapper<M extends WfsMapper> implements IndexDocumentFactory<ZdmIndexDocument> {
 

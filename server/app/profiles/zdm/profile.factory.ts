@@ -21,26 +21,27 @@
  * ==================================================
  */
 
-import { Catalog } from '../../model/dcatApPlu.model';
-import { ConfigService } from '../../services/config/ConfigService';
-import { DatabaseFactory } from '../../persistence/database.factory';
-import { DatabaseUtils } from '../../persistence/database.utils';
-import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
-import { ElasticQueries } from './persistence/elastic.queries';
-import { ElasticsearchFactory } from '../../persistence/elastic.factory';
-import { ElasticsearchUtils } from '../../persistence/elastic.utils';
-import { ImporterFactory } from '../../importer/importer.factory';
-import { IndexDocumentFactory } from '../../model/index.document.factory';
-import { INGRID_META_INDEX } from '../../profiles/ingrid/profile.factory';
-import { PostgresAggregator } from './persistence/postgres.aggregator';
-import { PostgresAggregator as AbstractPostgresAggregator} from '../../persistence/postgres.aggregator';
-import { ProfileFactory } from '../profile.factory';
-import { WfsMapper } from '../../importer/wfs/wfs.mapper';
-import { ZdmImporterFactory } from './importer/zdm.importer.factory';
-import { ZdmIndexDocument } from './model/index.document';
-import { ZdmWfsMapper } from './mapper/zdm.wfs.mapper';
+import log4js from 'log4js';
+import type { Catalog } from '../../model/dcatApPlu.model.js';
+import { ConfigService } from '../../services/config/ConfigService.js';
+import { DatabaseFactory } from '../../persistence/database.factory.js';
+import { DatabaseUtils } from '../../persistence/database.utils.js';
+import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
+import { ElasticQueries } from './persistence/elastic.queries.js';
+import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
+import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import { ImporterFactory } from '../../importer/importer.factory.js';
+import { IndexDocumentFactory } from '../../model/index.document.factory.js';
+import { INGRID_META_INDEX } from '../../profiles/ingrid/profile.factory.js';
+import { PostgresAggregator } from './persistence/postgres.aggregator.js';
+import type { PostgresAggregator as AbstractPostgresAggregator} from '../../persistence/postgres.aggregator.js';
+import { ProfileFactory } from '../profile.factory.js';
+import { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
+import { ZdmImporterFactory } from './importer/zdm.importer.factory.js';
+import type { ZdmIndexDocument } from './model/index.document.js';
+import { ZdmWfsMapper } from './mapper/zdm.wfs.mapper.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export class ZdmFactory extends ProfileFactory<WfsMapper> {
 

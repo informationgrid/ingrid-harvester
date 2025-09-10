@@ -21,11 +21,11 @@
  * ==================================================
  */
 
-import { createEsId } from '../zdm.utils';
-import { Bucket } from '../../../persistence/postgres.utils';
-import { EsOperation } from '../../../persistence/elastic.utils';
-import { ZdmIndexDocument } from '../model/index.document';
-import { PostgresAggregator as AbstractPostgresAggregator } from '../../../persistence/postgres.aggregator';
+import { createEsId } from '../zdm.utils.js';
+import type { Bucket } from '../../../persistence/postgres.utils.js';
+import type { EsOperation } from '../../../persistence/elastic.utils.js';
+import type { ZdmIndexDocument } from '../model/index.document.js';
+import type { PostgresAggregator as AbstractPostgresAggregator } from '../../../persistence/postgres.aggregator.js';
 
 export class PostgresAggregator implements AbstractPostgresAggregator<ZdmIndexDocument> {
 
