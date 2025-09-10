@@ -21,7 +21,6 @@
  * ==================================================
  */
 
-import * as fs from 'fs';
 import * as xpath from 'xpath';
 import * as GeoJsonUtils from '../../utils/geojson.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
@@ -31,14 +30,11 @@ import { defaultWfsSettings } from './wfs.settings.js';
 import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
 import { firstElementChild, getExtendedNsMap, getNsMap } from '../../utils/xpath.utils.js';
 import log4js from 'log4js';
-import { getProxyConfig } from '../../utils/service.utils.js';
 import { namespaces } from '../../importer/namespaces.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
-import type { Contact, Organization, Person } from '../../model/agent.js';
-import { CswMapper } from '../../importer/csw/csw.mapper.js';
 import type { DOMParser } from '@xmldom/xmldom';
 import { Importer } from '../importer.js';
-import type { ImportLogMessage} from '../../model/import.result.js';
+import type { ImportLogMessage } from '../../model/import.result.js';
 import { ImportResult } from '../../model/import.result.js';
 import type { Observer } from 'rxjs';
 import type { ProfileFactory } from '../../profiles/profile.factory.js';
@@ -46,44 +42,33 @@ import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { RecordEntity } from '../../model/entity.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import type { Response } from 'node-fetch';
-import type { WfsMapper } from './wfs.mapper.js';
-import type { WfsParameters} from '../../utils/http-request.utils.js';
+import { WfsMapper } from './wfs.mapper.js';
+import type { WfsParameters } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
 
-export abstract class WfsImporter extends Importer {
+export class WfsImporter extends Importer {
 
     protected domParser: DOMParser;
     protected profile: ProfileFactory<WfsMapper>;
-    protected requestDelegate: RequestDelegate;
     protected settings: WfsSettings;
 
-    private totalFeatures = 0;
+    private numItems = 0;
     private numIndexDocs = 0;
 
     private generalInfo: object = {};
-    private nsMap: {};
+    protected nsMap: {};
 
     protected supportsPaging: boolean = false;
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
+    constructor(settings: WfsSettings) {
         super(settings);
-
         this.profile = ProfileFactoryLoader.get();
         this.domParser = MiscUtils.getDomParser();
-
         // merge default settings with configured ones
-        settings = MiscUtils.merge(defaultWfsSettings, settings);
-
-        if (requestDelegate) {
-            this.requestDelegate = requestDelegate;
-        } else {
-            let requestConfig = WfsImporter.createRequestConfig(settings);
-            this.requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(settings));
-        }
-        this.settings = settings;
+        this.settings = MiscUtils.merge(defaultWfsSettings, settings);
     }
 
     // only here for documentation - use the "default" exec function
@@ -115,155 +100,138 @@ export abstract class WfsImporter extends Importer {
             throw new Error(`Could not retrieve WFS_Capabilities from ${capabilitiesRequestDelegate.getFullURL()}: ${responseBody}`);
         }
 
-        // default CRS
-        let featureTypes = select('/*[local-name()="WFS_Capabilities"]/*[local-name()="FeatureTypeList"]/*[local-name()="FeatureType"]', capabilitiesResponseDom);
-        for (let featureType of featureTypes) {
-            let typename = select('./*[local-name()="Name"]', featureType, true).textContent;
-            if (!this.settings.typename.split(',').includes(typename)) {
-                continue;
-            }
-            let defaultCrs = select('./*[local-name()="DefaultCRS" or local-name()="DefaultSRS"]', featureType, true)?.textContent;
-            this.generalInfo['defaultCrs'] = defaultCrs.replace('urn:ogc:def:crs:EPSG::', '').replace('EPSG:', '');
-            break;
-        }
-
-        // Regionalschlüssel
-        const rs_data = fs.readFileSync('regionalschluessel.json', { encoding: 'utf8', flag: 'r' });
-        this.generalInfo['regionalschluessel'] = JSON.parse(rs_data);
-
-        // general metadata contacts
-        // role -> contact
-        let contacts: Map<string, Contact> = new Map();
-        if (this.settings.contactCswUrl) {
-            let response = await RequestDelegate.doRequest({
-                uri: this.settings.contactCswUrl,
-                accept: 'text/xml',
-                ...getProxyConfig()
-            });
-            let responseDom = this.domParser.parseFromString(response);
-            let metadata = CswMapper.select('./csw:GetRecordByIdResponse/gmd:MD_Metadata', responseDom, true);
-            let xpaths = [
-                // for now, only use gmd:contact as pointOfContact (the sparsely populated entry of the two listed below)
-                './gmd:contact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue="pointOfContact"]',
-                // './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue="pointOfContact"]',
-                './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue="custodian"]'
-            ];
-            for (let xpath of xpaths) {
-                let pointOfContact = CswMapper.select(xpath, metadata, true);
-                let role = CswMapper.select('./gmd:role/gmd:CI_RoleCode', pointOfContact, true).getAttribute('codeListValue');
-                let contactInfo = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact', pointOfContact, true);
-                let address = CswMapper.select('./gmd:address/gmd:CI_Address', contactInfo, true);
-                let contact = {
-                    fn: CswMapper.getCharacterStringContent(pointOfContact, 'individualName'),
-                    hasCountryName: CswMapper.getCharacterStringContent(address, 'country'),
-                    hasLocality: CswMapper.getCharacterStringContent(address, 'city'),
-                    hasPostalCode: CswMapper.getCharacterStringContent(address, 'postalCode'),
-                    hasRegion: CswMapper.getCharacterStringContent(address, 'administrativeArea'),
-                    hasStreetAddress: CswMapper.getCharacterStringContent(contactInfo, 'deliveryPoint'),
-                    hasEmail: CswMapper.getCharacterStringContent(address, 'electronicMailAddress'),
-                    hasOrganizationName: CswMapper.getCharacterStringContent(pointOfContact, 'organisationName'),
-                    hasTelephone: CswMapper.getCharacterStringContent(contactInfo, 'phone/gmd:CI_Telephone/gmd:voice'),
-                    hasURL: CswMapper.getCharacterStringContent(contactInfo, 'onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL')
-                };
-                Object.keys(contact).filter(k => contact[k] == null).forEach(k => delete contact[k]);
-                if (!contact.fn?.trim()) {
-                    contact.fn = contact.hasOrganizationName;
-                }
-                contacts.set(role, contact);
-            }
-        }
-
-        // general contact
-        let pointOfContact: Contact = contacts.get('pointOfContact');
-        // fallbacks
-        if (!pointOfContact?.fn?.trim()) {
-            if (this.settings.contactMetadata) {
-                pointOfContact = this.settings.contactMetadata;
-            }
-            else {
-                pointOfContact = {
-                    fn: ''
-                };
-            }
-        }
-        this.generalInfo['contactPoint'] = pointOfContact;
-
-        // general maintainer
-        let maintainer: Person | Organization = { organization: contacts.get('custodian')?.hasOrganizationName };
-        // fallbacks
-        if (!maintainer.organization?.trim()) {
-            if (contacts.get('custodian')?.fn?.trim()) {
-                maintainer = { name: contacts.get('custodian')?.fn };
-            }
-            else if (pointOfContact.hasOrganizationName?.trim()) {
-                maintainer = { organization: pointOfContact.hasOrganizationName };
-            }
-            else if (pointOfContact.fn?.trim()) {
-                maintainer = { name: pointOfContact.fn };
-            }
-            else if (this.settings.maintainer?.['name'] || this.settings.maintainer?.['organization']) {
-                maintainer = this.settings.maintainer;
-            }
-            else {
-                maintainer = {
-                    name: '',
-                    type: ''
-                };
-            }
-        }
-        this.generalInfo['maintainer'] = maintainer;
+        this.generalInfo = await this.prepareImport(this.generalInfo, capabilitiesResponseDom, select);
 
         // retrieve catalog info from database
         let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId);
         this.generalInfo['catalog'] = catalog;
 
-        let hitsRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, maxRecords: undefined, resultType: 'hits' });
-        let hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
-        let hitsResponse = await hitsRequestDelegate.doRequest();
-        let hitsResponseDom = this.domParser.parseFromString(hitsResponse);
-        let hitsResultsNode = hitsResponseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
-        this.totalFeatures = parseInt(hitsResultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures'));
-        log.info(`Found ${this.totalFeatures} features at ${this.settings.sourceURL}`);
-
-        while (true) {
-            log.info('Requesting next features');
-            let response = await this.requestDelegate.doRequest();
-            let harvestTime = new Date(Date.now());
-
-            let responseDom = this.domParser.parseFromString(response);
-            let resultsNode = responseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
-
-            if (resultsNode) {
-                await this.extractFeatures(response, harvestTime)
-            } else {
-                const message = `Error while fetching WFS Features. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
-                log.error(message);
-                this.summary.appErrors.push(message);
-            }
-            this.requestDelegate.incrementStartRecordIndex();
-            /*
-              * startRecord was already incremented in the last step, so we can
-              * directly use it to check if we need to continue.
-              *
-              * If there is a problem with the first request, then numMatched is
-              * still 0. This will result in no records being harvested. If this
-              * behaviour is not desired then the following check should be
-              * updated. The easiest solution would be to set numMatched to
-              * maxRecords * numRetries
-              */
-            if (!this.supportsPaging || this.totalFeatures < this.requestDelegate.getStartRecordIndex()) {
-                break;
+        // get all FeatureTypes and filter by given
+        let featureTypesNodes = select('/*[local-name()="WFS_Capabilities"]/*[local-name()="FeatureTypeList"]/*[local-name()="FeatureType"]', capabilitiesResponseDom);
+        log.info(`Found ${featureTypesNodes.length} FeatureTypes at ${this.settings.sourceURL}`);
+        let featureTypes = {};
+        let requestedTypes = this.settings.typename ? this.settings.typename.split(',').map(t => t.trim()) : null;
+        for (let featureType of featureTypesNodes) {
+            let typename = select('./*[local-name()="Name"]', featureType, true).textContent;
+            if (!requestedTypes || requestedTypes.includes(typename)) {
+                featureTypes[typename] = featureType;
             }
         }
+        let numFeatureTypes = Object.keys(featureTypes).length;
+        log.info(`Processing ${numFeatureTypes} FeatureTypes after filtering`);
+        this.numItems = numFeatureTypes;
+
+        // for each FeatureType, get all Features
+        const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
+        const limit = pLimit(this.settings.maxConcurrent);
+        await Promise.allSettled(Object.keys(featureTypes).map(featureTypeName =>
+            limit(() => this.extractCompleteFeatureType(featureTypeName, featureTypes[featureTypeName]))
+        ));
+
         log.info(`Finished requests`);
         await this.database.sendBulkData();
 
         return this.numIndexDocs;
     }
 
-    async extractFeatures(getFeatureResponse, harvestTime) {
+    /**
+     * generalInfo might need to be adapted to a specific profile; this can be done here
+     *
+     * @param generalInfo
+     * @returns
+     */
+    async prepareImport(generalInfo: any, capabilitiesDom: Node, select: XPathNodeSelect) {
+        return generalInfo;
+    }
+
+    async extractCompleteFeatureType(featureTypeName: string, featureTypeNode: Node): Promise<void> {
+        let numFeatures = await this.getNumFeatures(featureTypeName);
+        log.info(`Found ${numFeatures} features at ${this.settings.sourceURL} for FeatureType "${featureTypeName}"`);
+        let featureTypeDescriptionNode = await this.getTypeDescription(featureTypeName);
+
+        // if harvesting FeatureTypes, do it here (to include the feature names)
+        if (this.settings.harvestTypes) {
+            try {
+                await this.extractFeatureType(featureTypeName, featureTypeNode, featureTypeDescriptionNode, numFeatures);
+            }
+            catch (e) {
+                const message = `Error while fetching FeatureType "${featureTypeName}"\n  ${e.toString()}.`;
+                log.warn(message);
+                this.summary.warnings.push(message.split('\n  '));
+                return;
+            }
+        }
+        // skip harvesting features if numFeatures is above limit
+        if (this.settings.featureLimit && numFeatures > this.settings.featureLimit) {
+            log.info(`This exceeds the limit of ${this.settings.featureLimit} features; skipping feature harvesting`);
+            return;
+        }
+        while (true) {
+            log.info(`Requesting next features for FeatureType ${featureTypeName}`);
+            let requestConfig = WfsImporter.createRequestConfig({
+                ...this.settings,
+                typename: featureTypeName
+            });
+            let harvestTime = new Date(Date.now());
+            let requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(this.settings));
+            // let response = await requestDelegate.doRequest();
+            // let responseDom = this.domParser.parseFromString(response);
+            let responseDom: Document;
+            try {
+                let responseDom = await this.getDom(requestDelegate);
+                // let resultsNode = responseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
+                await this.extractFeatures(responseDom, harvestTime);
+            }
+            catch (e) {
+                const message = `Error while fetching WFS Features for FeatureType ${featureTypeName}. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom?.toString())}.`;
+                log.error(message);
+                this.summary.appErrors.push(message);
+            }
+            requestDelegate.incrementStartRecordIndex();
+            /*
+            * startRecord was already incremented in the last step, so we can
+            * directly use it to check if we need to continue.
+            *
+            * If there is a problem with the first request, then numMatched is
+            * still 0. This will result in no records being harvested. If this
+            * behaviour is not desired then the following check should be
+            * updated. The easiest solution would be to set numMatched to
+            * maxRecords * numRetries
+            */
+            if (!this.supportsPaging || numFeatures < requestDelegate.getStartRecordIndex()) {
+                break;
+            }
+        }
+    }
+
+    async extractFeatureType(featureTypeName: string, featureTypeNode: Node, featureTypeDescriptionNode: Node, numFeatures: number) {
+        let select = <XPathNodeSelect>xpath.useNamespaces(this.nsMap);
+        this.generalInfo['select'] = select;
+        this.generalInfo['numFeatures'] = numFeatures;
+        this.generalInfo['title'] = select('./wfs:Title', featureTypeNode, true)?.textContent;
+        this.generalInfo['featureTypeDescription'] = featureTypeDescriptionNode;
+        let mapper = this.getFeatureTypeMapper(this.settings, featureTypeNode, Date.now(), this.summary, this.generalInfo);
+        let doc: any = await this.profile.getIndexDocumentFactory(mapper).create();
+        if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+            let entity: RecordEntity = {
+                identifier: featureTypeName,
+                source: this.settings.sourceURL,
+                collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
+                dataset: doc,
+                original_document: mapper.getHarvestedData()
+            };
+            await this.database.addEntityToBulk(entity);
+        }
+        else {
+            this.summary.skippedDocs.push(featureTypeName);
+        }
+        if (this.settings.harvestTypes) {
+            this.observer.next(ImportResult.running(++this.numIndexDocs, this.numItems));
+        }
+    }
+
+    async extractFeatures(xml: Document, harvestTime: Date) {
         let promises = [];
-        let xml = this.domParser.parseFromString(getFeatureResponse, 'application/xml');
 
         // extend nsmap with the namespaces from the FeatureCollection response
         // this.nsMap = { ...XPathUtils.getNsMap(xml), ...XPathUtils.getExtendedNsMap(xml) };
@@ -289,8 +257,9 @@ export abstract class WfsImporter extends Importer {
         for (let i = 0; i < features.length; i++) {
             this.summary.numDocs++;
 
+            // TODO use ID-property from settings (tbi)
             const uuid = firstElementChild(features[i]).getAttributeNS(nsMap['gml'], 'id');
-            if (!this.filterUtils.isIdAllowed(uuid)) {
+            if (!uuid || !this.filterUtils.isIdAllowed(uuid)) {
                 this.summary.skippedDocs.push(uuid);
                 continue;
             }
@@ -302,6 +271,7 @@ export abstract class WfsImporter extends Importer {
                 logRequest.debug("Record content: ", features[i].toString());
             }
 
+            this.generalInfo['idx'] = i;
             let mapper = this.getMapper(this.settings, features[i], harvestTime, this.summary, this.generalInfo);
 
             let doc: any = await this.profile.getIndexDocumentFactory(mapper).create().catch(e => {
@@ -322,12 +292,43 @@ export abstract class WfsImporter extends Importer {
             } else {
                 this.summary.skippedDocs.push(uuid);
             }
-            this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalFeatures));
+            // disable updating feature count if harvesting FeatureTypes
+            if (!this.settings.harvestTypes) {
+                this.observer.next(ImportResult.running(++this.numIndexDocs, this.numItems));
+            }
         }
         await Promise.all(promises).catch(err => log.error('Error indexing WFS record', err));
     }
 
-    abstract getMapper(settings, feature, harvestTime, summary, generalInfo): WfsMapper;
+    getFeatureTypeMapper(settings, feature, harvestTime, summary, generalInfo): WfsMapper {//WfsFeatureTypeMapper {
+        // return new WfsFeatureTypeMapper(settings, feature, harvestTime, summary, generalInfo);
+        return this.getMapper(settings, feature, harvestTime, summary, generalInfo);
+    }
+
+    getMapper(settings, feature, harvestTime, summary, generalInfo): WfsMapper {
+        return new WfsMapper(settings, feature, harvestTime, summary, generalInfo);
+    }
+
+    async getNumFeatures(featureTypeName: string): Promise<number> {
+        let requestDelegate = new RequestDelegate(WfsImporter.createRequestConfig({
+            ...this.settings,
+            typename: featureTypeName,
+            maxRecords: undefined,
+            resultType: 'hits'
+        }));
+        let responseDom = await this.getDom(requestDelegate);
+        let resultsNode = responseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
+        return parseInt(resultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures'));
+    }
+
+    async getTypeDescription(featureTypeName: string): Promise<Node> {
+        let requestDelegate = new RequestDelegate(WfsImporter.createRequestConfig({
+            ...this.settings,
+            typename: featureTypeName
+        }, 'DescribeFeatureType'));
+        let responseDom = await this.getDom(requestDelegate);
+        return responseDom.documentElement;
+    }
 
     static createRequestConfig(settings: WfsSettings, request = 'GetFeature'): RequestOptions {
         let requestConfig: RequestOptions = {
@@ -397,5 +398,10 @@ export abstract class WfsImporter extends Importer {
             numRecords: settings.maxRecords,
             count: settings.maxRecords
         }
+    }
+
+    async getDom(delegate: RequestDelegate) {
+        let response = await delegate.doRequest();
+        return this.domParser.parseFromString(response);
     }
 }

@@ -47,6 +47,7 @@
                 <mat-option value="KLD">KLD</mat-option>
                 <mat-option value="OAI">OAI</mat-option>
                 <mat-option value="SPARQL">SPARQL</mat-option>
+                <mat-option value="WFS">WFS</mat-option>
                 <mat-option value="WFS.FIS">WFS (FIS)</mat-option>
                 <mat-option value="WFS.MS">WFS (MS)</mat-option>
                 <mat-option value="WFS.XPLAN">WFS (XPLAN)</mat-option>
@@ -89,7 +90,7 @@
         </mat-card-content>
       </mat-card>
 
-      @if (profile == 'ingrid') {
+      @if (profile == 'ingrid' || profile == 'zdm') {
       <mat-card>
         <mat-card-header contextHelp="harvester_settings_profile_ingrid">
           <mat-card-title>InGrid Einstellungen</mat-card-title>
@@ -284,34 +285,7 @@
         </app-sparql-harvester>
       }
 
-      @if (harvesterForm.get('type').value === 'WFS.FIS') {
-        <app-wfs-harvester
-          [form]="harvesterForm"
-          [model]="harvester"
-          [rulesTemplate]="rules"
-          class="flex-column">
-        </app-wfs-harvester>
-      }
-
-      @if (harvesterForm.get('type').value === 'WFS.MS') {
-        <app-wfs-harvester
-          [form]="harvesterForm"
-          [model]="harvester"
-          [rulesTemplate]="rules"
-          class="flex-column">
-        </app-wfs-harvester>
-      }
-
-      @if (harvesterForm.get('type').value === 'WFS.XPLAN') {
-        <app-wfs-harvester
-          [form]="harvesterForm"
-          [model]="harvester"
-          [rulesTemplate]="rules"
-          class="flex-column">
-        </app-wfs-harvester>
-      }
-
-      @if (harvesterForm.get('type').value === 'WFS.XPLAN.SYN') {
+      @if (harvesterForm.get('type').value?.startsWith('WFS')) {
         <app-wfs-harvester
           [form]="harvesterForm"
           [model]="harvester"

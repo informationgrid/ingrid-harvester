@@ -21,24 +21,24 @@
  * ==================================================
  */
 
-import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
-import * as MiscUtils from '../../../utils/misc.utils.js';
-import type { DateRange } from '../../../model/dateRange.js';
-import type { Distribution } from '../../../model/distribution.js';
+import * as GeoJsonUtils from '../../../../utils/geojson.utils.js';
+import * as MiscUtils from '../../../../utils/misc.utils.js';
+import type { DateRange } from '../../../../model/dateRange.js';
+import { DiplanungWfsMapper } from '../diplanung.wfs.mapper.js';
+import type { Distribution } from '../../../../model/distribution.js';
 import type { Geometries, Geometry, GeometryCollection, Point } from '@turf/helpers';
-import type { PluDocType, ProcessStep } from '../../../model/dcatApPlu.model.js';
-import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType } from '../../../model/dcatApPlu.model.js';
-import { WfsMapper } from '../wfs.mapper.js';
+import type { PluDocType, ProcessStep } from '../../../../model/dcatApPlu.model.js';
+import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType } from '../../../../model/dcatApPlu.model.js';
 
-export class FisWfsMapper extends WfsMapper {
+export class FisWfsMapper extends DiplanungWfsMapper {
 
     getDescription(): string {
-        return this.getTextContent('./*/fis:BEREICH');
+        return this.baseMapper.getTextContent('./*/fis:BEREICH');
     }
 
     async getDistributions(): Promise<Distribution[]> {
         let distributions = [];
-        for (let elem of this.select('./*/fis:*[local-name()="SCAN_WWW" or local-name()="GRUND_WWW"]', this.feature)) {
+        for (let elem of this.baseMapper.select('./*/fis:*[local-name()="SCAN_WWW" or local-name()="GRUND_WWW"]', this.baseMapper.featureOrFeatureType)) {
             let distribution: Distribution = { accessURL: elem.textContent };
             if (MiscUtils.isMaybeDownloadUrl(distribution.accessURL)) {
                 distribution.downloadURL = distribution.accessURL;
@@ -49,33 +49,33 @@ export class FisWfsMapper extends WfsMapper {
     }
 
     getTitle(): string {
-        let title = this.getTextContent('./*/fis:PLANNAME')?.trim();
+        let title = this.baseMapper.getTextContent('./*/fis:PLANNAME')?.trim();
         return title ?? undefined;
     }
 
-    getPlanName(): string {
+    getPluPlanName(): string {
         return this.getTitle();
     }
 
     getBoundingBox(): Geometry {
         // if spatial exists, create bbox from it
-        if (this.select('./*/fis:SHAPE_25833', this.feature, true)) {
+        if (this.baseMapper.select('./*/fis:SHAPE_25833', this.baseMapper.featureOrFeatureType, true)) {
             return GeoJsonUtils.getBbox(this.getSpatial());
         }
         // otherwise, use the general bbox defined at the start of the WFS response
         else {
-            return this.fetched.boundingBox;
+            return this.baseMapper.fetched.boundingBox;
         }
     }
 
     getSpatial(): Geometry | Geometries {
-        let spatialContainer = this.select('./*/fis:SHAPE_25833/*', this.feature, true);
+        let spatialContainer = this.baseMapper.select('./*/fis:SHAPE_25833/*', this.baseMapper.featureOrFeatureType, true);
         if (!spatialContainer) {
             // use bounding box as fallback
-            this.log.debug(`${this.uuid}: no geometry found, using bounding box instead`);
-            return this.fetched.boundingBox;
+            this.baseMapper.log.debug(`${this.baseMapper.uuid}: no geometry found, using bounding box instead`);
+            return this.baseMapper.fetched.boundingBox;
         }
-        let geojson = GeoJsonUtils.parse(spatialContainer, { crs: '25833' }, this.fetched.nsMap);
+        let geojson = GeoJsonUtils.parse(spatialContainer, { crs: '25833' }, this.baseMapper.fetched.nsMap);
         return geojson;
     }
 
@@ -85,7 +85,7 @@ export class FisWfsMapper extends WfsMapper {
     }
 
     getSpatialText(): string {
-        return this.getTextContent('./*/fis:BEZIRK');
+        return this.baseMapper.getTextContent('./*/fis:BEZIRK');
     }
 
     getPluDocType(code: string): PluDocType {
@@ -95,7 +95,7 @@ export class FisWfsMapper extends WfsMapper {
     }
 
     getPluPlanState(): PluPlanState {
-        let planState = this.getTextContent('./*/fis:FESTSG');
+        let planState = this.baseMapper.getTextContent('./*/fis:FESTSG');
         switch (planState?.toLowerCase()) {
             case 'ja': return PluPlanState.FESTGES;
             case 'nein': return PluPlanState.IN_AUFST;
@@ -105,10 +105,10 @@ export class FisWfsMapper extends WfsMapper {
 
     // TODO make use of fis:PLANARTNAME
     getPluPlanType(): PluPlanType {
-        let typename = this.getTypename();
+        let typename = this.baseMapper.getTypename();
         switch (typename) {
             case 'sach_bplan': return PluPlanType.BEBAU_PLAN;   // TODO check
-            default: this.log.debug('No pluPlanType available for typename', typename); return PluPlanType.UNBEKANNT;
+            default: this.baseMapper.log.debug('No pluPlanType available for typename', typename); return PluPlanType.UNBEKANNT;
         }
     }
 
@@ -162,28 +162,24 @@ export class FisWfsMapper extends WfsMapper {
     }
 
     getPluProcedurePeriod(): DateRange {
-        let procedureStartDate = this.getTextContent('fis:AFS_BESCHL');
+        let procedureStartDate = this.baseMapper.getTextContent('fis:AFS_BESCHL');
         return { gte: MiscUtils.normalizeDateTime(procedureStartDate) };
-    }
-
-    getIssued(): Date {
-        return undefined;
     }
 
     private getPeriod(startXpath: string, endXpath: string): DateRange {
         let period: DateRange;
-        let start = this.getTextContent(startXpath);
+        let start = this.baseMapper.getTextContent(startXpath);
         if (start) {
             period = { gte: MiscUtils.normalizeDateTime(start) };
         }
-        let end = this.getTextContent(endXpath);
+        let end = this.baseMapper.getTextContent(endXpath);
         if (end) {
             if (!start) {
-                this.log.warn(`Skipping ProcessStep.temporal: An end date (${endXpath}) was specified but a start date (${startXpath}) is missing:`, this.uuid);
+                this.baseMapper.log.warn(`Skipping ProcessStep.temporal: An end date (${endXpath}) was specified but a start date (${startXpath}) is missing:`, this.baseMapper.uuid);
                 return null;
             }
             else if (start > end) {
-                this.log.warn(`Skipping ProcessStep.temporal: The start date (${start}) is later than the end date (${end}):`, this.uuid);
+                this.baseMapper.log.warn(`Skipping ProcessStep.temporal: The start date (${start}) is later than the end date (${end}):`, this.baseMapper.uuid);
                 return null;
             }
             period.lte = MiscUtils.normalizeDateTime(end);

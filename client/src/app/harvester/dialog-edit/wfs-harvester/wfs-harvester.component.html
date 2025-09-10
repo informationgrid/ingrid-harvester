@@ -53,7 +53,7 @@
         <mat-form-field class="flex-1">
           <mat-label>Typnamen</mat-label>
           <mat-hint>Komma-getrennt, inklusive Namespace</mat-hint>
-          <input matInput formControlName="typename" required>
+          <input matInput formControlName="typename">
         </mat-form-field>
       </div>
     </mat-card-content>
@@ -63,6 +63,7 @@
     <mat-card-header>
       <mat-card-title>Weitere WFS Einstellungen</mat-card-title>
     </mat-card-header>
+    @if (profile == 'diplanung') {
     <mat-card-content>
       <div class="flex-row gap-20 space-between">
         <mat-form-field class="flex-30">
@@ -92,5 +93,20 @@
         </mat-form-field>
       </div>
     </mat-card-content>
+    }
+    @if (profile == 'zdm') {
+    <mat-card-content>
+      <div class="flex-row gap-20 space-between">
+        <mat-form-field class="flex-50">
+          <mat-label>Feature-Limit</mat-label>
+          <input matInput formControlName="featureLimit">
+        </mat-form-field>
+        <mat-form-field class="flex-50 ">
+          <mat-label>Anzahl paralleler Abfragen</mat-label>
+          <input matInput type="number" min="1" formControlName="maxConcurrent" required>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+    }
   </mat-card>
 </form>

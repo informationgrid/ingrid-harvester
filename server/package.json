@@ -11,6 +11,7 @@
     "start-diplanung": "cross-env IMPORTER_PROFILE=diplanung ELASTIC_PREFIX=diplan- ELASTIC_INDEX=harvester nodemon",
     "start-lvr": "cross-env IMPORTER_PROFILE=lvr ELASTIC_PREFIX=lvr- ELASTIC_INDEX=harvester nodemon",
     "start-ingrid": "cross-env IMPORTER_PROFILE=ingrid nodemon --config_dir=./config/ingrid",
+    "start-zdm": "cross-env IMPORTER_PROFILE=zdm nodemon",
     "build-with-tests": "tsc --outDir build",
     "build": "tsc --outDir build -p ./tsconfig.build.json",
     "postbuild": "copyfiles './*.json' 'app/**/*.json' 'app/**/*.sql' 'app/**/*.xml' 'app/**/*.md' build/server",

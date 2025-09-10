@@ -28,6 +28,7 @@ import type { BaseMapper } from '../importer/base.mapper.js';
 import { DiplanungFactory } from './diplanung/profile.factory.js';
 import { LvrFactory } from './lvr/profile.factory.js';
 import type { ProfileFactory } from './profile.factory.js';
+import { ZdmFactory } from './zdm/profile.factory.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -62,6 +63,9 @@ export class ProfileFactoryLoader {
                 break;
             case 'lvr':
                 this.instance = new LvrFactory();
+                break;
+            case 'zdm':
+                this.instance = new ZdmFactory();
                 break;
             default:
                 let errorMsg = `Could not find profile: ${profile}`;

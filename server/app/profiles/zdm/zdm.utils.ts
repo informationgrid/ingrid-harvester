@@ -21,22 +21,15 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../utils/misc.utils.js';
-import type { Harvester } from '@shared/harvester.js';
-import { MsWfsMapper } from './ms.wfs.mapper.js';
-import type { RequestDelegate } from '../../../utils/http-request.utils.js';
-import { WfsImporter } from '../wfs.importer.js';
-import type { WfsMapper } from '../wfs.mapper.js';
+import { v5 as uuidv5 } from 'uuid';
+import type { ZdmIndexDocument } from './model/index.document.js';
 
-export class MsWfsImporter extends WfsImporter {
+const UUID_NAMESPACE = 'b5d8aadf-d03f-452a-8d91-3a6a7f3b1203';
 
-    protected supportsPaging: boolean = true;
+export function createEsId(document: ZdmIndexDocument): string {
+    return uuidv5(ensureSlash(document.extras.metadata.source.source_base) + document.t01_object.obj_id, UUID_NAMESPACE);
+}
 
-    constructor(settings: Harvester, requestDelegate?: RequestDelegate) {
-        super(MiscUtils.merge(settings, { memberElement: 'wfs:member'}));
-    }
-
-    getMapper(settings: Harvester, feature, harvestTime, summary, generalInfo): WfsMapper {
-        return new MsWfsMapper(settings, feature, harvestTime, summary, generalInfo);
-    }
+function ensureSlash(s: string): string {
+    return s.endsWith('/') ? s : `${s}/`;
 }

@@ -21,20 +21,30 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../utils/misc.utils.js';
-import { FisWfsMapper } from './fis.wfs.mapper.js';
+import log4js from 'log4js';
 import type { Harvester } from '@shared/harvester.js';
-import type { RequestDelegate } from '../../../utils/http-request.utils.js';
-import { WfsImporter } from '../wfs.importer.js';
-import type { WfsMapper } from '../wfs.mapper.js';
+import { Importer } from '../../../importer/importer.js';
+import { ImporterFactory } from '../../../importer/importer.factory.js';
+import type { WfsSettings } from '../../../importer/wfs/wfs.settings.js';
+import { ZdmWfsImporter } from './zdm.wfs.importer.js';
 
-export class FisWfsImporter extends WfsImporter {
+const log = log4js.getLogger(__filename);
 
-    constructor(settings: Harvester, requestDelegate?: RequestDelegate) {
-        super(MiscUtils.merge(settings, { memberElement: 'gml:featureMember'}));
-    }
+export class ZdmImporterFactory extends ImporterFactory{
 
-    getMapper(settings: Harvester, feature, harvestTime, summary, generalInfo): WfsMapper {
-        return new FisWfsMapper(settings, feature, harvestTime, summary, generalInfo);
+    public async get(config: Harvester): Promise<Importer> {
+        let importer: Importer;
+        switch (config.type) {
+            case 'WFS':
+                importer = new ZdmWfsImporter(config as WfsSettings);
+                break;
+            default: {
+                log.error('Importer not found: ' + config.type);
+            }
+        }
+        if (importer) {
+            await importer.database.init();
+        }
+        return importer;
     }
 }
