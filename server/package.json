@@ -90,6 +90,7 @@
   },
   "devDependencies": {
     "@swc-node/register": "^1.11.1",
+    "@swc/core": "^1.13.5",
     "@types/chai": "^4.2.7",
     "@types/chai-as-promised": "^7.1.2",
     "@types/cron": "^1.7.1",
