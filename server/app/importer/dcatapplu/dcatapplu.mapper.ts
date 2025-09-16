@@ -25,21 +25,22 @@
  * A mapper for ISO-XML documents harvested over CSW.
  */
 import * as xpath from 'xpath';
-import * as MiscUtils from '../../utils/misc.utils';
-import { getLogger } from 'log4js';
-import { namespaces } from '../../importer/namespaces';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import log4js from 'log4js';
+import { namespaces } from '../../importer/namespaces.js';
 import { throwError } from 'rxjs';
-import { Agent, Contact } from '../../model/agent';
-import { BaseMapper } from '../base.mapper';
-import { DateRange } from '../../model/dateRange';
-import { DcatappluSettings } from './dcatapplu.settings';
-import { Distribution } from '../../model/distribution';
-import { Geometry, Point } from '@turf/helpers';
-import { ImporterSettings } from '../../importer.settings';
-import { MetadataSource } from '../../model/index.document';
-import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep, PluProcessStepType, Catalog } from '../../model/dcatApPlu.model';
-import { Summary } from '../../model/summary';
-import { XPathElementSelect } from '../../utils/xpath.utils';
+import type { Agent, Contact } from '../../model/agent.js';
+import { BaseMapper } from '../base.mapper.js';
+import type { DateRange } from '../../model/dateRange.js';
+import type { DcatappluSettings } from './dcatapplu.settings.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { Geometry, Point } from '@turf/helpers';
+import type { ImporterSettings } from '../../importer.settings.js';
+import type { MetadataSource } from '../../model/index.document.js';
+import type { ProcessStep, Catalog } from '../../model/dcatApPlu.model.js';
+import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, PluProcessStepType } from '../../model/dcatApPlu.model.js';
+import type { Summary } from '../../model/summary.js';
+import type { XPathElementSelect } from '../../utils/xpath.utils.js';
 
 export class DcatappluMapper extends BaseMapper {
 
@@ -60,7 +61,7 @@ export class DcatappluMapper extends BaseMapper {
         'vcard': namespaces.VCARD
     });
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     private readonly record: any;
     private readonly catalogPage: any;

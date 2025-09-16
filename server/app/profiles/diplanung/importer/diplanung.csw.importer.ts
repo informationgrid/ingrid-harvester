@@ -21,17 +21,18 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../utils/misc.utils';
-import { generateXplanWmsDistributions } from '../diplanung.utils';
-import { CswImporter } from '../../../importer/csw/csw.importer';
-import { DiplanungIndexDocument } from '../model/index.document';
-import { Distribution } from '../../../model/distribution';
-import { PluPlanType } from '../../../model/dcatApPlu.model';
-import { RecordEntity } from '../../../model/entity';
+import * as MiscUtils from '../../../utils/misc.utils.js';
+import log4js from 'log4js';
+import { generateXplanWmsDistributions } from '../diplanung.utils.js';
+import { CswImporter } from '../../../importer/csw/csw.importer.js';
+import type { DiplanungIndexDocument } from '../model/index.document.js';
+import type { Distribution } from '../../../model/distribution.js';
+import type { PluPlanType } from '../../../model/dcatApPlu.model.js';
+import type { RecordEntity } from '../../../model/entity.js';
 // import { RequestDelegate } from '../../../utils/http-request.utils';
 // import { WmsXPath } from './wms.xpath';
 
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 const WMS_PARAMS = ['service', 'request', 'version'];
 
 export class DiplanungCswImporter extends CswImporter {

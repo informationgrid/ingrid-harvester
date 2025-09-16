@@ -21,11 +21,11 @@
  * ==================================================
  */
 
-import {XPathElementSelect} from "../../../utils/xpath.utils";
+import type {XPathElementSelect} from "../../../utils/xpath.utils.js";
 import * as xpath from "xpath";
 import * as fs from 'fs';
-import {DOMParser} from "@xmldom/xmldom";
-import * as MiscUtils from "../../../utils/misc.utils";
+import type {DOMParser} from "@xmldom/xmldom";
+import * as MiscUtils from "../../../utils/misc.utils.js";
 
 export class Codelist {
     static select = <XPathElementSelect>xpath.useNamespaces({});

@@ -22,15 +22,17 @@
  */
 
 import * as xpath from 'xpath';
-import * as GeoJsonUtils from '../utils/geojson.utils';
-import * as MiscUtils from './misc.utils';
-import { getNsMap, XPathNodeSelect } from './xpath.utils';
-import { ConfigService } from '../services/config/ConfigService';
-import { Distribution } from '../model/distribution';
-import { DOMParser } from '@xmldom/xmldom';
-import { Geometries, Geometry, GeometryCollection } from '@turf/helpers';
-import { RequestDelegate, RequestOptions } from './http-request.utils';
-import { UrlUtils } from './url.utils';
+import * as GeoJsonUtils from '../utils/geojson.utils.js';
+import * as MiscUtils from './misc.utils.js';
+import type { XPathNodeSelect } from './xpath.utils.js';
+import { getNsMap } from './xpath.utils.js';
+import { ConfigService } from '../services/config/ConfigService.js';
+import type { Distribution } from '../model/distribution.js';
+import type { DOMParser } from '@xmldom/xmldom';
+import type { Geometries, Geometry, GeometryCollection } from '@turf/helpers';
+import type { RequestOptions } from './http-request.utils.js';
+import { RequestDelegate } from './http-request.utils.js';
+import { UrlUtils } from './url.utils.js';
 
 const OGC_QUERY_PARAMS = ['request', 'service', 'version'];
 

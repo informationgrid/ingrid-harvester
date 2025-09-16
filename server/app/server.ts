@@ -23,27 +23,28 @@
 
 import { $log, Configuration, PlatformAcceptMimesMiddleware, PlatformApplication, PlatformLogMiddleware } from '@tsed/common';
 import { Inject } from '@tsed/di';
-import { addLayout, configure } from 'log4js';
+import log4js from 'log4js';
 import * as path from 'path';
-import { ProfileFactoryLoader } from './profiles/profile.factory.loader';
-import { ConfigService } from './services/config/ConfigService';
-import { jsonLayout } from './utils/log4js.json.layout';
+import { ProfileFactoryLoader } from './profiles/profile.factory.loader.js';
+import { ConfigService } from './services/config/ConfigService.js';
+import { jsonLayout } from './utils/log4js.json.layout.js';
+import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
+import createMemoryStore from 'memorystore';
+import serverConfig from "../server-config.json" with { type: "json" };
+import methodOverride from "method-override";
+import compress from "compression";
+import session from "express-session";
 
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const serverConfig = require('../server-config.json');
-const methodOverride = require('method-override');
-const compress = require("compression");
-const rootDir = __dirname;
-const session = require('express-session');
-const MemoryStore = require('memorystore')(session);
+const rootDir = import.meta.dirname;
+const MemoryStore = createMemoryStore(session);
 
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 
 const isProduction = process.env.NODE_ENV == 'production';
-addLayout("json", jsonLayout);
+log4js.addLayout("json", jsonLayout);
 if (isProduction) {
-    configure('./log4js.json');
+    log4js.configure('./log4js.json');
     $log.appenders.set("stdout", {
         type: "stdout",
         levels: ["info", "debug"],
@@ -60,7 +61,7 @@ if (isProduction) {
     });
 }
 else {
-    configure('./log4js-dev.json');
+    log4js.configure('./log4js-dev.json');
 }
 
 const baseURL = process.env.BASE_URL ?? '/';

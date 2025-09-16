@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { IndexDocument } from '../../../model/index.document';
+import type { IndexDocument } from '../../../model/index.document.js';
 
 // general: https://github.com/informationgrid/ingrid-iplug-wfs-dsc/blob/master/src/main/resources/mapping/zdm-wfs-1.1.0_to_lucene-igc.js
 // idf: https://github.com/informationgrid/ingrid-iplug-wfs-dsc/blob/master/src/main/resources/mapping/zdm-wfs-1.1.0_to_idf.js

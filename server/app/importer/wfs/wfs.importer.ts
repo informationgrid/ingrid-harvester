@@ -22,28 +22,32 @@
  */
 
 import * as xpath from 'xpath';
-import * as GeoJsonUtils from '../../utils/geojson.utils';
-import * as MiscUtils from '../../utils/misc.utils';
-import { decode } from 'iconv-lite';
-import { defaultWfsSettings, WfsSettings } from './wfs.settings';
-import { firstElementChild, getExtendedNsMap, getNsMap, XPathNodeSelect } from '../../utils/xpath.utils';
-import { getLogger } from 'log4js';
-import { namespaces } from '../../importer/namespaces';
-import { Catalog } from '../../model/dcatApPlu.model';
-import { DOMParser } from '@xmldom/xmldom';
-import { Importer } from '../importer';
-import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../profiles/profile.factory';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
-import { RecordEntity } from '../../model/entity';
-import { RequestOptions } from '../../utils/http-request.utils';
-import { Response } from 'node-fetch';
-import { WfsMapper } from './wfs.mapper';
-import { WfsParameters, RequestDelegate } from '../../utils/http-request.utils';
+import * as GeoJsonUtils from '../../utils/geojson.utils.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import iconv from 'iconv-lite';
+import type { WfsSettings } from './wfs.settings.js';
+import { defaultWfsSettings } from './wfs.settings.js';
+import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
+import { firstElementChild, getExtendedNsMap, getNsMap } from '../../utils/xpath.utils.js';
+import log4js from 'log4js';
+import { namespaces } from '../../importer/namespaces.js';
+import type { Catalog } from '../../model/dcatApPlu.model.js';
+import type { DOMParser } from '@xmldom/xmldom';
+import { Importer } from '../importer.js';
+import type { ImportLogMessage } from '../../model/import.result.js';
+import { ImportResult } from '../../model/import.result.js';
+import type { Observer } from 'rxjs';
+import type { ProfileFactory } from '../../profiles/profile.factory.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import type { RecordEntity } from '../../model/entity.js';
+import type { RequestOptions } from '../../utils/http-request.utils.js';
+import type { Response } from 'node-fetch';
+import { WfsMapper } from './wfs.mapper.js';
+import type { WfsParameters } from '../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
 
-const log = getLogger(__filename);
-const logRequest = getLogger('requests');
+const log = log4js.getLogger(import.meta.filename);
+const logRequest = log4js.getLogger('requests');
 
 export class WfsImporter extends Importer {
 
@@ -83,7 +87,7 @@ export class WfsImporter extends Importer {
             responseBody = responseBody.toString();
         }
         else {
-            responseBody = decode(responseBody, charset);
+            responseBody = iconv.decode(responseBody, charset);
         }
         let capabilitiesResponseDom = this.domParser.parseFromString(responseBody);
 
@@ -120,7 +124,7 @@ export class WfsImporter extends Importer {
         // for each FeatureType, get all Features
         const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
         const limit = pLimit(this.settings.maxConcurrent);
-        await Promise.allSettled(Object.keys(featureTypes).map(featureTypeName => 
+        await Promise.allSettled(Object.keys(featureTypes).map(featureTypeName =>
             limit(() => this.extractCompleteFeatureType(featureTypeName, featureTypes[featureTypeName]))
         ));
 

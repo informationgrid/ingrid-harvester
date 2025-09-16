@@ -21,21 +21,23 @@
  * ==================================================
  */
 
-import { DatabaseConfiguration } from '@shared/general-config.settings';
-import { Client, Pool, PoolClient, QueryResult } from 'pg';
-import { Catalog } from '../model/dcatApPlu.model';
-import { Distribution } from '../model/distribution';
-import { CouplingEntity, Entity, RecordEntity } from '../model/entity';
-import { IndexDocument } from '../model/index.document';
-import { Summary } from '../model/summary';
-import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
-import { BulkResponse, DatabaseUtils } from './database.utils';
-import { ElasticsearchUtils } from './elastic.utils';
-import { PostgresQueries } from './postgres.queries';
+import log4js from 'log4js';
+import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
+import pg from 'pg';
+import type { Catalog } from '../model/dcatApPlu.model.js';
+import type { Distribution } from '../model/distribution.js';
+import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
+import type { IndexDocument } from '../model/index.document.js';
+import type { Summary } from '../model/summary.js';
+import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory.js';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
+import type { BulkResponse} from './database.utils.js';
+import { DatabaseUtils } from './database.utils.js';
+import type { ElasticsearchUtils } from './elastic.utils.js';
+import type { PostgresQueries } from './postgres.queries.js';
+import Cursor from "pg-cursor";
 
-const log = require('log4js').getLogger(__filename);
-const Cursor = require('pg-cursor');
+const log = log4js.getLogger(import.meta.filename);
 
 /**
  * Contains a primary dataset, a list of duplicates, and a list of services operating on the primary dataset.
@@ -48,16 +50,16 @@ export interface Bucket<T> {
 
 export class PostgresUtils extends DatabaseUtils {
 
-    private static pool: Pool;
+    private static pool: pg.Pool;
     private queries: PostgresQueries;
-    private transactionClient: PoolClient;
+    private transactionClient: pg.PoolClient;
 
     constructor(configuration: DatabaseConfiguration, summary: Summary) {
         super();
         this.configuration = PostgresUtils.fix(configuration);
 
         if (!PostgresUtils.pool) {
-            PostgresUtils.pool = new Pool({
+            PostgresUtils.pool = new pg.Pool({
                 ...this.configuration,
                 idleTimeoutMillis: 300000 // 5min
             });
@@ -82,7 +84,7 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async getStoredData(ids: string[]): Promise<any[]> {
-        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.getStoredData, [ids]);
+        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getStoredData, [ids]);
         let dates = [];
         for (let row of result.rows) {
             dates.push({
@@ -97,9 +99,9 @@ export class PostgresUtils extends DatabaseUtils {
 
     async getDatasetIdentifiers(source: string): Promise<string[]> {
         // TODO
-        // let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.getIdentifiers, [source]);
-        // let result: QueryResult<any> = await this.transactionClient.query("SELECT * from public.record WHERE source = $1", [source]);
-        let result: QueryResult<any> = await this.transactionClient.query("SELECT identifier from public.record WHERE source = $1 and dataset->'extras'->>'hierarchy_level'!='service'", [source]);
+        // let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getIdentifiers, [source]);
+        // let result: pg.QueryResult<any> = await this.transactionClient.query("SELECT * from public.record WHERE source = $1", [source]);
+        let result: pg.QueryResult<any> = await this.transactionClient.query("SELECT identifier from public.record WHERE source = $1 and dataset->'extras'->>'hierarchy_level'!='service'", [source]);
         if (result.rowCount == 0) {
             return [];
         }
@@ -112,7 +114,7 @@ export class PostgresUtils extends DatabaseUtils {
 
     async getDatasets(source: string | number, useTransaction: boolean = true): Promise<RecordEntity[]> {
         let query = typeof source == "number" ? this.queries.getDatasetsByCollection : this.queries.getDatasetsBySource;
-        let result: QueryResult<any> = await this.client(useTransaction).query(query, [source]);
+        let result: pg.QueryResult<any> = await this.client(useTransaction).query(query, [source]);
         if (result.rowCount == 0) {
             return null;
         }
@@ -138,7 +140,7 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async getServices(source: string): Promise<RecordEntity[]> {
-        let result: QueryResult<any> = await this.transactionClient.query(this.queries.getServices, [source]);
+        let result: pg.QueryResult<any> = await this.transactionClient.query(this.queries.getServices, [source]);
         if (result.rowCount == 0) {
             return null;
         }
@@ -146,7 +148,7 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async getCatalogSizes(useTransaction: boolean = true): Promise<{ collection_id: number, count: number }[]> {
-        let result: QueryResult<any> = await this.client(useTransaction).query(this.queries.getCollectionSizes);
+        let result: pg.QueryResult<any> = await this.client(useTransaction).query(this.queries.getCollectionSizes);
         if (result.rowCount == 0) {
             return null;
         }
@@ -156,7 +158,7 @@ export class PostgresUtils extends DatabaseUtils {
     async listCatalogs(): Promise<Catalog[]> {
         // TODO maybe move this to somewhere more sensible
         await this.init();
-        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.listCollections);
+        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.listCollections);
         if (result.rowCount == 0) {
             return [];
         }
@@ -165,7 +167,7 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async createCatalog(catalog: Catalog): Promise<Catalog> {
-        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.createCollection, [catalog.identifier, catalog, null, await DcatApPluDocumentFactory.createCatalog(catalog), catalog]);
+        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.createCollection, [catalog.identifier, catalog, null, await DcatApPluDocumentFactory.createCatalog(catalog), catalog]);
         if (result.rowCount != 1) {
             return null;
         }
@@ -174,7 +176,7 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async getCatalog(identifier: string): Promise<Catalog> {
-        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.getCollection, [identifier]);
+        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getCollection, [identifier]);
         if (result.rowCount == 0) {
             return null;
         }
@@ -187,7 +189,7 @@ export class PostgresUtils extends DatabaseUtils {
     async updateCatalog(catalog: Catalog): Promise<Catalog> {
         // don't persist ID within catalog json
         delete catalog['id'];
-        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.updateCollection,
+        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.updateCollection,
             [catalog.identifier, catalog, null, await DcatApPluDocumentFactory.createCatalog(catalog), catalog]);
         if (result.rowCount != 1) {
             return null;
@@ -197,7 +199,7 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async deleteCatalog(catalogId: number): Promise<Catalog> {
-        let result: QueryResult<any> = await PostgresUtils.pool.query(this.queries.deleteCollection, [catalogId]);
+        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.deleteCollection, [catalogId]);
         if (result.rowCount != 1) {
             return null;
         }
@@ -205,7 +207,7 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async nonFetchedPercentage(source: string, last_modified: Date): Promise<number> {
-        let result: QueryResult<any> = await this.transactionClient.query(this.queries.nonFetchedRatio, [source, last_modified]);
+        let result: pg.QueryResult<any> = await this.transactionClient.query(this.queries.nonFetchedRatio, [source, last_modified]);
         let { total, nonfetched } = result.rows[0];
         return nonfetched / total * 100;
     }
@@ -223,7 +225,7 @@ export class PostgresUtils extends DatabaseUtils {
      */
     async pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string) {
         let pgAggregator = ProfileFactoryLoader.get().getPostgresAggregator();
-        const client: PoolClient = await PostgresUtils.pool.connect();
+        const client: pg.PoolClient = await PostgresUtils.pool.connect();
         log.debug('Connection started');
         let start = Date.now();
         // TODO we also need to store SOURCE_TYPE in postgres and subsequently fetch it here (B.source_type)
@@ -338,7 +340,7 @@ export class PostgresUtils extends DatabaseUtils {
             this.handleError('Error during bulk transactional persistance:', 'no open transaction; not persisting to DB');
             return null;
         }
-        let result: QueryResult<any>;
+        let result: pg.QueryResult<any>;
         try {
             if ((entities[0] as RecordEntity).collection_id) {
                 // if we have the same entity twice in the same bulk, merge the entity before persisting
@@ -483,9 +485,9 @@ export class PostgresUtils extends DatabaseUtils {
 
     static async ping(configuration?: DatabaseConfiguration): Promise<boolean> {
         if (configuration) {
-            let client: Client;
+            let client: pg.Client;
             try {
-                client = new Client(PostgresUtils.fix(configuration));
+                client = new pg.Client(PostgresUtils.fix(configuration));
                 await client.connect();
             }
             catch (e) {
@@ -509,7 +511,7 @@ export class PostgresUtils extends DatabaseUtils {
         log.debug('Transaction: begin');
         this.transactionClient = await PostgresUtils.pool.connect();
         await this.transactionClient.query('BEGIN');
-        let result: QueryResult<any> = await this.transactionClient.query("SELECT transaction_timestamp()");
+        let result: pg.QueryResult<any> = await this.transactionClient.query("SELECT transaction_timestamp()");
         if (result.rowCount != 1) {
             throw new Error('Could not obtain transaction_timestamp from PostgreSQL');
         }

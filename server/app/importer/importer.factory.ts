@@ -21,10 +21,10 @@
  * ==================================================
  */
 
-import { Harvester } from '@shared/harvester';
-import { Importer } from './importer';
+import type { Harvester } from '@shared/harvester.js';
+import type { Importer } from './importer.js';
 
-export * from "./importer"
+export * from "./importer.js"
 
 export abstract class ImporterFactory {
 

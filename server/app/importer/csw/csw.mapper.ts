@@ -25,27 +25,28 @@
  * A mapper for ISO-XML documents harvested over CSW.
  */
 import * as xpath from 'xpath';
-import * as GeoJsonUtils from '../../utils/geojson.utils';
-import * as MiscUtils from '../../utils/misc.utils';
-import * as ServiceUtils from '../../utils/service.utils';
-import { getLogger } from 'log4js';
-import { namespaces } from '../../importer/namespaces';
+import * as GeoJsonUtils from '../../utils/geojson.utils.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import * as ServiceUtils from '../../utils/service.utils.js';
+import log4js from 'log4js';
+import { namespaces } from '../../importer/namespaces.js';
 import { throwError } from 'rxjs';
-import { Agent, Contact, Organization, Person } from '../../model/agent';
-import { BaseMapper } from '../base.mapper';
-import { CswSettings } from './csw.settings';
-import { DateRange } from '../../model/dateRange';
-import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils';
-import { DcatMapper } from '../../importer/dcat/dcat.mapper';
-import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils';
-import { Distribution } from '../../model/distribution';
-import { Geometry, GeometryCollection, Point } from '@turf/helpers';
-import { License } from '@shared/license.model';
-import { MetadataSource } from '../../model/index.document';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { Summary } from '../../model/summary';
-import { UrlUtils } from '../../utils/url.utils';
-import { XPathElementSelect } from '../../utils/xpath.utils';
+import type { Agent, Contact, Organization, Person } from '../../model/agent.js';
+import { BaseMapper } from '../base.mapper.js';
+import type { CswSettings } from './csw.settings.js';
+import type { DateRange } from '../../model/dateRange.js';
+import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
+import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
+import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { Geometry, GeometryCollection, Point } from '@turf/helpers';
+import type { License } from '@shared/license.model.js';
+import type { MetadataSource } from '../../model/index.document.js';
+import type { RequestOptions } from '../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import type { Summary } from '../../model/summary.js';
+import { UrlUtils } from '../../utils/url.utils.js';
+import type { XPathElementSelect } from '../../utils/xpath.utils.js';
 
 export class CswMapper extends BaseMapper {
 
@@ -62,7 +63,7 @@ export class CswMapper extends BaseMapper {
         'xlink': namespaces.XLINK
     });
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     readonly record: any;
     private harvestTime: any;

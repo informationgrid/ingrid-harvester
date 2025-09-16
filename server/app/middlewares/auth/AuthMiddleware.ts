@@ -21,7 +21,8 @@
  * ==================================================
  */
 
-import { Context, Middleware, MiddlewareMethods, Req} from '@tsed/common';
+import { Context, Middleware, Req} from '@tsed/common';
+import type { MiddlewareMethods } from '@tsed/common';
 import { Unauthorized } from '@tsed/exceptions';
 
 @Middleware()

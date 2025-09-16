@@ -21,16 +21,15 @@
  * ==================================================
  */
 
-import { getLogger } from 'log4js';
-import { BaseMapper } from '../base.mapper';
-import { ImporterSettings } from '../../importer.settings';
-import { MetadataSource } from '../../model/index.document';
-import { JsonSettings } from './json.settings';
-import { Summary } from '../../model/summary';
+import log4js from 'log4js';
+import { BaseMapper } from '../base.mapper.js';
+import type { MetadataSource } from '../../model/index.document.js';
+import type { JsonSettings } from './json.settings.js';
+import type { Summary } from '../../model/summary.js';
 
 export class JsonMapper extends BaseMapper {
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     readonly record: object;
     readonly id: string;

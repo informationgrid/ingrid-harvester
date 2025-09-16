@@ -21,27 +21,28 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../utils/misc.utils';
-import { getLogger } from 'log4js';
-import { ConfigService } from '../../services/config/ConfigService';
-import { DefaultImporterSettings } from '../../importer.settings';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import log4js from 'log4js';
+import { ConfigService } from '../../services/config/ConfigService.js';
+import { DefaultImporterSettings } from '../../importer.settings.js';
 import { HttpsProxyAgent } from 'https-proxy-agent';
-import { Importer } from '../importer';
-import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { IndexDocument } from '../../model/index.document';
-import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../profiles/profile.factory';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
-import { RecordEntity } from '../../model/entity';
-import { RequestDelegate } from '../../utils/http-request.utils';
-import { SparqlMapper } from './sparql.mapper';
-import { SparqlSettings } from './sparql.settings';
-import { Summary } from '../../model/summary';
+import { Importer } from '../importer.js';
+import type { ImportLogMessage} from '../../model/import.result.js';
+import { ImportResult } from '../../model/import.result.js';
+import type { IndexDocument } from '../../model/index.document.js';
+import type { Observer } from 'rxjs';
+import type { ProfileFactory } from '../../profiles/profile.factory.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import type { RecordEntity } from '../../model/entity.js';
+import type { RequestDelegate } from '../../utils/http-request.utils.js';
+import { SparqlMapper } from './sparql.mapper.js';
+import type { SparqlSettings } from './sparql.settings.js';
+import type { Summary } from '../../model/summary.js';
+import plain_fetch from "node-fetch";
+import SimpleClient from "sparql-http-client/SimpleClient.js";
 
-const log = require('log4js').getLogger(__filename);
-const logRequest = getLogger('requests');
-const plain_fetch = require('node-fetch');
-const SimpleClient = require('sparql-http-client/SimpleClient');
+const log = log4js.getLogger(import.meta.filename);
+const logRequest = log4js.getLogger('requests');
 
 export class SparqlImporter extends Importer {
 
@@ -84,14 +85,12 @@ export class SparqlImporter extends Importer {
 
         const endpointUrl = this.settings.sourceURL;
 
-        let fetch = plain_fetch;
+        let fetch: any = plain_fetch;
 
-        if(this.generalSettings.proxy){
+        if (this.generalSettings.proxy){
             let proxyAgent = new HttpsProxyAgent(this.generalSettings.proxy);
             proxyAgent.options.rejectUnauthorized = !this.generalSettings.allowAllUnauthorizedSSL;
-            fetch = function(url, options){
-                return plain_fetch(url, {...options, agent: proxyAgent})
-            }
+            fetch = (url, options) => plain_fetch(url, {...options, agent: proxyAgent});
             fetch.Headers = plain_fetch.Headers;
         }
 

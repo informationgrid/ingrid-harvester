@@ -21,13 +21,14 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../utils/misc.utils';
-import { Bucket } from '../../../persistence/postgres.utils';
-import { CswImporter } from '../../../importer/csw/csw.importer';
-import { EsOperation } from '../../../persistence/elastic.utils';
-import { RequestDelegate } from '../../../utils/http-request.utils';
+import * as MiscUtils from '../../../utils/misc.utils.js';
+import log4js from 'log4js';
+import type { Bucket } from '../../../persistence/postgres.utils.js';
+import { CswImporter } from '../../../importer/csw/csw.importer.js';
+import type { EsOperation } from '../../../persistence/elastic.utils.js';
+import type { RequestDelegate } from '../../../utils/http-request.utils.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export class McloudCswImporter extends CswImporter {
 

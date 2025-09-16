@@ -22,24 +22,29 @@
  */
 
 import * as xpath from 'xpath';
-import * as MiscUtils from '../../utils/misc.utils';
-import { defaultOAISettings, OaiSettings } from './oai.settings';
-import { getLogger } from 'log4js';
-import { oaiXPaths, OaiXPaths } from './oai.paths';
-import { DOMParser } from '@xmldom/xmldom';
-import { Importer } from '../importer';
-import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { IndexDocument } from '../../model/index.document';
-import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../profiles/profile.factory';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
-import { RecordEntity } from '../../model/entity';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { Summary } from '../../model/summary';
-import { BaseMapper } from '../../importer/base.mapper';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import { createRequire } from 'module';
+import type { OaiSettings } from './oai.settings.js';
+import { defaultOAISettings } from './oai.settings.js';
+import log4js from 'log4js';
+import type { OaiXPaths } from './oai.paths.js';
+import { oaiXPaths } from './oai.paths.js';
+import type { DOMParser } from '@xmldom/xmldom';
+import { Importer } from '../importer.js';
+import type { ImportLogMessage} from '../../model/import.result.js';
+import { ImportResult } from '../../model/import.result.js';
+import type { IndexDocument } from '../../model/index.document.js';
+import type { Observer } from 'rxjs';
+import type { ProfileFactory } from '../../profiles/profile.factory.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import type { RecordEntity } from '../../model/entity.js';
+import type { RequestOptions } from '../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import type { Summary } from '../../model/summary.js';
+import type { BaseMapper } from '../../importer/base.mapper.js';
 
-const log = require('log4js').getLogger(__filename);
-const logRequest = getLogger('requests');
+const log = log4js.getLogger(import.meta.filename);
+const logRequest = log4js.getLogger('requests');
 
 export class OaiImporter extends Importer {
 
@@ -73,6 +78,7 @@ export class OaiImporter extends Importer {
         }
         this.settings = settings;
         this.xpaths = oaiXPaths[this.settings.metadataPrefix?.toLowerCase()];
+        const require = createRequire(import.meta.url);
         this.OaiMapper = require(`./${this.settings.metadataPrefix}/oai.mapper`).OaiMapper;
     }
 

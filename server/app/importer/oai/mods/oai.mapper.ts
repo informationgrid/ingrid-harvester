@@ -25,18 +25,18 @@
  * A mapper for METS/MODS XML documents harvested over OAI.
  */
 import * as xpath from 'xpath';
-import * as MiscUtils from '../../../utils/misc.utils';
-import { getLogger } from 'log4js';
-import { oaiXPaths } from '../oai.paths';
-import { BaseMapper } from '../../base.mapper';
-import { GeometryInformation, Temporal } from '../../../model/index.document';
-import { ImporterSettings } from '../../../importer.settings';
-import { Keyword } from '../../../model/ingrid.index.document';
-import { Media, MediaType, Person, Relation } from '../../../profiles/lvr/model/index.document';
-import { MetadataSource } from '../../../model/index.document';
-import { OaiSettings } from '../oai.settings';
-import { Summary } from '../../../model/summary';
-import { XPathElementSelect } from '../../../utils/xpath.utils';
+import * as MiscUtils from '../../../utils/misc.utils.js';
+import log4js from 'log4js';
+import { oaiXPaths } from '../oai.paths.js';
+import { BaseMapper } from '../../base.mapper.js';
+import type { GeometryInformation, Temporal } from '../../../model/index.document.js';
+import type { ImporterSettings } from '../../../importer.settings.js';
+import type { Keyword } from '../../../model/ingrid.index.document.js';
+import type { Media, MediaType, Person, Relation } from '../../../profiles/lvr/model/index.document.js';
+import type { MetadataSource } from '../../../model/index.document.js';
+import type { OaiSettings } from '../oai.settings.js';
+import type { Summary } from '../../../model/summary.js';
+import type { XPathElementSelect } from '../../../utils/xpath.utils.js';
 
 export class OaiMapper extends BaseMapper {
 
@@ -50,7 +50,7 @@ export class OaiMapper extends BaseMapper {
         return this.select(path.replace(/\/(?!@)/g, '/mods:'), parent, true)?.textContent;
     }
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     private readonly header: Element;
     public readonly record: Element;

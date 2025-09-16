@@ -21,8 +21,8 @@
  * ==================================================
  */
 
-import { DateRange } from './dateRange';
-import { Geometries, GeometryCollection, Point } from '@turf/helpers';
+import type { DateRange } from './dateRange.js';
+import type { Geometries, GeometryCollection, Point } from '@turf/helpers';
 
 export type IndexDocument = {
     extras: {

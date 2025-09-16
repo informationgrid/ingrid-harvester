@@ -22,7 +22,7 @@
  */
 
 import { v5 as uuidv5 } from 'uuid';
-import { ZdmIndexDocument } from './model/index.document';
+import type { ZdmIndexDocument } from './model/index.document.js';
 
 const UUID_NAMESPACE = 'b5d8aadf-d03f-452a-8d91-3a6a7f3b1203';
 

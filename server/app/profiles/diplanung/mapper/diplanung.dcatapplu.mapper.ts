@@ -21,13 +21,13 @@
  * ==================================================
  */
 
-import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
-import { Contact, Organization, Person } from '../../../model/agent';
-import { DateRange } from '../../../model/dateRange';
-import { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper';
-import { DiplanungMapper } from './diplanung.mapper';
-import { Distribution } from '../../../model/distribution';
-import { Geometry, Point } from '@turf/helpers';
+import type { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model.js';
+import type { Contact, Organization, Person } from '../../../model/agent.js';
+import type { DateRange } from '../../../model/dateRange.js';
+import type { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper.js';
+import { DiplanungMapper } from './diplanung.mapper.js';
+import type { Distribution } from '../../../model/distribution.js';
+import type { Geometry, Point } from '@turf/helpers';
 
 const alternateTitleBlacklist = ['B-Plan', 'F-Plan'];
 

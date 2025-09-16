@@ -21,11 +21,11 @@
  * **************************************************#
  */
 
-import * as MiscUtils from '../../../utils/misc.utils';
-import * as XPathUtils from '../../../utils/xpath.utils';
-import { IdfGenerator as AbstractIdfGenerator } from '../../ingrid/idf.generator';
-import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
-import { ZdmMapper } from './zdm.mapper';
+import * as MiscUtils from '../../../utils/misc.utils.js';
+import * as XPathUtils from '../../../utils/xpath.utils.js';
+import { IdfGenerator as AbstractIdfGenerator } from '../../ingrid/idf.generator.js';
+import { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
+import { ZdmMapper } from './zdm.mapper.js';
 
 export class IdfGenerator extends AbstractIdfGenerator {
 

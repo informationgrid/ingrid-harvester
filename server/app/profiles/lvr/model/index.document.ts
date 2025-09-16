@@ -21,10 +21,10 @@
  * ==================================================
  */
 
-import { Dimensions } from '../../../model/dimensions';
-import { IndexDocument } from '../../../model/index.document';
-import { IngridIndexDocument } from '../../../model/ingrid.index.document';
-import { License } from '@shared/license.model';
+import type { Dimensions } from '../../../model/dimensions.js';
+import type { IndexDocument } from '../../../model/index.document.js';
+import type { IngridIndexDocument } from '../../../model/ingrid.index.document.js';
+import type { License } from '@shared/license.model.js';
 
 export type LvrIndexDocument = IngridIndexDocument & IndexDocument & {
     lvr: {

@@ -24,22 +24,22 @@
 /**
  * A mapper for documents harvested from KuLaDig.
  */
-import * as MiscUtils from '../../utils/misc.utils';
-import { getLogger } from 'log4js';
-import { BaseMapper } from '../../importer/base.mapper';
-import { Contact, Organization, Person } from '../../model/agent';
-import { DateRange } from '../../model/dateRange';
-import { Geometries } from '@turf/helpers';
-import { ImporterSettings } from '../../importer.settings';
-import { KldSettings } from './kld.settings';
-import { License } from '@shared/license.model';
-import { LvrDateRange, Media, Relation } from '../../profiles/lvr/model/index.document';
-import { ObjectResponse, RelatedObject, Document, getDocumentUrl, RelationType, MediaType } from './kld.api';
-import { Summary } from '../../model/summary';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import log4js from 'log4js';
+import { BaseMapper } from '../../importer/base.mapper.js';
+import type { Contact, Organization, Person } from '../../model/agent.js';
+import type { Geometries } from '@turf/helpers';
+import type { ImporterSettings } from '../../importer.settings.js';
+import type { KldSettings } from './kld.settings.js';
+import type { License } from '@shared/license.model.js';
+import type { LvrDateRange, Media, Relation } from '../../profiles/lvr/model/index.document.js';
+import type { ObjectResponse, RelatedObject, Document} from './kld.api.js';
+import { getDocumentUrl, RelationType, MediaType } from './kld.api.js';
+import type { Summary } from '../../model/summary.js';
 
 export class KldMapper extends BaseMapper {
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     private readonly record: ObjectResponse;
     private readonly id: string;

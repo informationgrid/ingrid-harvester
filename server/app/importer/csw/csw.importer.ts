@@ -21,31 +21,34 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../utils/misc.utils';
-import * as ServiceUtils from '../../utils/service.utils';
-import * as XpathUtils from '../../utils/xpath.utils';
-import { defaultCSWSettings, CswSettings } from './csw.settings';
-import { getLogger } from 'log4js';
-import { namespaces } from '../../importer/namespaces';
-import { BulkResponse } from '../../persistence/elastic.utils';
-import { Catalog } from '../../model/dcatApPlu.model';
-import { CouplingEntity, RecordEntity } from '../../model/entity';
-import { CswMapper } from './csw.mapper';
-import { CswParameters, RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { Distribution } from '../../model/distribution';
-import { DOMParser } from '@xmldom/xmldom';
-import { Importer } from '../importer';
-import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { IndexDocument } from '../../model/index.document';
-import { MailServer } from '../../utils/nodemailer.utils';
-import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../profiles/profile.factory';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
-import { Summary } from '../../model/summary';
-import { SummaryService } from '../../services/config/SummaryService';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import * as ServiceUtils from '../../utils/service.utils.js';
+import * as XpathUtils from '../../utils/xpath.utils.js';
+import type { CswSettings } from './csw.settings.js';
+import { defaultCSWSettings } from './csw.settings.js';
+import log4js from 'log4js';
+import { namespaces } from '../../importer/namespaces.js';
+import type { BulkResponse } from '../../persistence/elastic.utils.js';
+import type { Catalog } from '../../model/dcatApPlu.model.js';
+import type { CouplingEntity, RecordEntity } from '../../model/entity.js';
+import { CswMapper } from './csw.mapper.js';
+import type { CswParameters, RequestOptions } from '../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { DOMParser } from '@xmldom/xmldom';
+import { Importer } from '../importer.js';
+import type { ImportLogMessage} from '../../model/import.result.js';
+import { ImportResult } from '../../model/import.result.js';
+import type { IndexDocument } from '../../model/index.document.js';
+import { MailServer } from '../../utils/nodemailer.utils.js';
+import type { Observer } from 'rxjs';
+import type { ProfileFactory } from '../../profiles/profile.factory.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import type { Summary } from '../../model/summary.js';
+import { SummaryService } from '../../services/config/SummaryService.js';
 
-const log = getLogger(__filename);
-const logRequest = getLogger('requests');
+const log = log4js.getLogger(import.meta.filename);
+const logRequest = log4js.getLogger('requests');
 
 export class CswImporter extends Importer {
 

@@ -25,23 +25,24 @@
  * A mapper for ISO-XML documents harvested over CSW.
  */
 import * as xpath from 'xpath';
-import { getLogger } from 'log4js';
-import { namespaces } from '../../namespaces';
+import log4js from 'log4js';
+import { namespaces } from '../../namespaces.js';
 import { throwError } from 'rxjs';
-import { Agent, Contact, Organization, Person } from '../../../model/agent';
-import { BaseMapper } from '../../base.mapper';
-import { DateRange } from '../../../model/dateRange';
-import { DcatMapper } from '../../../importer/dcat/dcat.mapper';
-import { DcatPeriodicityUtils } from '../../../utils/dcat.periodicity.utils';
-import { Distribution } from '../../../model/distribution';
-import { ImporterSettings } from '../../../importer.settings';
-import { License } from '@shared/license.model';
-import { MetadataSource } from '../../../model/index.document';
-import { OaiSettings } from '../oai.settings';
-import { RequestDelegate, RequestOptions } from '../../../utils/http-request.utils';
-import { Summary } from '../../../model/summary';
-import { UrlUtils } from '../../../utils/url.utils';
-import { XPathElementSelect } from '../../../utils/xpath.utils';
+import type { Agent, Contact, Organization, Person } from '../../../model/agent.js';
+import { BaseMapper } from '../../base.mapper.js';
+import type { DateRange } from '../../../model/dateRange.js';
+import { DcatMapper } from '../../../importer/dcat/dcat.mapper.js';
+import { DcatPeriodicityUtils } from '../../../utils/dcat.periodicity.utils.js';
+import type { Distribution } from '../../../model/distribution.js';
+import type { ImporterSettings } from '../../../importer.settings.js';
+import type { License } from '@shared/license.model.js';
+import type { MetadataSource } from '../../../model/index.document.js';
+import type { OaiSettings } from '../oai.settings.js';
+import type { RequestOptions } from '../../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../../utils/http-request.utils.js';
+import type { Summary } from '../../../model/summary.js';
+import { UrlUtils } from '../../../utils/url.utils.js';
+import type { XPathElementSelect } from '../../../utils/xpath.utils.js';
 
 export class OaiMapper extends BaseMapper {
 
@@ -53,7 +54,7 @@ export class OaiMapper extends BaseMapper {
         'srv': namespaces.SRV
     });
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     private readonly header: Element;
     private readonly record: Element;

@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import { DateRange } from './dateRange';
-import { Distribution } from './distribution';
-import { Organization, Person } from './agent';
+import type { DateRange } from './dateRange.js';
+import type { Distribution } from './distribution.js';
+import type { Organization, Person } from './agent.js';
 
 export interface Catalog {
     description: string,

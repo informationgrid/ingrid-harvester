@@ -21,11 +21,11 @@
  * ==================================================
  */
 
-import { EsOperation } from '../../../persistence/elastic.utils';
-import { PostgresAggregator as AbstractPostgresAggregator } from '../../../persistence/postgres.aggregator';
-import { Bucket } from '../../../persistence/postgres.utils';
-import { createEsId } from '../ingrid.utils';
-import { IngridIndexDocument } from '../model/index.document';
+import type { EsOperation } from '../../../persistence/elastic.utils.js';
+import type { PostgresAggregator as AbstractPostgresAggregator } from '../../../persistence/postgres.aggregator.js';
+import type { Bucket } from '../../../persistence/postgres.utils.js';
+import { createEsId } from '../ingrid.utils.js';
+import type { IngridIndexDocument } from '../model/index.document.js';
 
 export class PostgresAggregator implements AbstractPostgresAggregator<IngridIndexDocument> {
 

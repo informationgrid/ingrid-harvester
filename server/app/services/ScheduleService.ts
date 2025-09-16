@@ -21,16 +21,17 @@
  * ==================================================
  */
 
+import log4js from 'log4js';
 import {Service} from '@tsed/di';
-import {ConfigService} from './config/ConfigService';
-import {ImportSocketService} from '../sockets/import.socket.service';
+import {ConfigService} from './config/ConfigService.js';
+import {ImportSocketService} from '../sockets/import.socket.service.js';
 import {CronJob} from 'cron';
-import {CronData} from '../importer.settings';
-import {UrlCheckService} from "./statistic/UrlCheckService";
-import {IndexCheckService} from "./statistic/IndexCheckService";
-import {IndexService} from "./IndexService";
+import type {CronData} from '../importer.settings.js';
+import {UrlCheckService} from "./statistic/UrlCheckService.js";
+import {IndexCheckService} from "./statistic/IndexCheckService.js";
+import {IndexService} from "./IndexService.js";
 
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 
 @Service()
 export class ScheduleService {

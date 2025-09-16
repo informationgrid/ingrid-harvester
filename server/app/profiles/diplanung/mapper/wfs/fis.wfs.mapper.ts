@@ -21,13 +21,14 @@
  * ==================================================
  */
 
-import * as GeoJsonUtils from '../../../../utils/geojson.utils';
-import * as MiscUtils from '../../../../utils/misc.utils';
-import { DateRange } from '../../../../model/dateRange';
-import { DiplanungWfsMapper } from '../diplanung.wfs.mapper';
-import { Distribution } from '../../../../model/distribution';
-import { Geometries, Geometry, GeometryCollection, Point } from '@turf/helpers';
-import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../../model/dcatApPlu.model';
+import * as GeoJsonUtils from '../../../../utils/geojson.utils.js';
+import * as MiscUtils from '../../../../utils/misc.utils.js';
+import type { DateRange } from '../../../../model/dateRange.js';
+import { DiplanungWfsMapper } from '../diplanung.wfs.mapper.js';
+import type { Distribution } from '../../../../model/distribution.js';
+import type { Geometries, Geometry, GeometryCollection, Point } from '@turf/helpers';
+import type { PluDocType, ProcessStep } from '../../../../model/dcatApPlu.model.js';
+import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType } from '../../../../model/dcatApPlu.model.js';
 
 export class FisWfsMapper extends DiplanungWfsMapper {
 

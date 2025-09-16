@@ -21,29 +21,33 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../utils/misc.utils';
-import { defaultKldSettings, KldSettings } from './kld.settings';
-import { getLogger } from 'log4js';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import type { KldSettings } from './kld.settings.js';
+import { defaultKldSettings } from './kld.settings.js';
+import log4js from 'log4js';
 import { existsSync, mkdirSync, mkdtemp, writeFileSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
-import { BulkResponse } from '../../persistence/elastic.utils';
-import { DOMParser } from '@xmldom/xmldom';
-import { Importer } from '../importer';
-import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { IndexDocument } from '../../model/index.document';
-import { KldMapper } from './kld.mapper';
-import { ObjectListRequestParams, ObjectListResponse, ObjectResponse, PAGE_SIZE } from './kld.api';
-import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../profiles/profile.factory';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
-import { RecordEntity } from '../../model/entity';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { Summary } from '../../model/summary';
-import { SummaryService } from '../../services/config/SummaryService';
+import type { BulkResponse } from '../../persistence/elastic.utils.js';
+import type { DOMParser } from '@xmldom/xmldom';
+import { Importer } from '../importer.js';
+import type { ImportLogMessage} from '../../model/import.result.js';
+import { ImportResult } from '../../model/import.result.js';
+import type { IndexDocument } from '../../model/index.document.js';
+import { KldMapper } from './kld.mapper.js';
+import type { ObjectListRequestParams, ObjectListResponse, ObjectResponse} from './kld.api.js';
+import { PAGE_SIZE } from './kld.api.js';
+import type { Observer } from 'rxjs';
+import type { ProfileFactory } from '../../profiles/profile.factory.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import type { RecordEntity } from '../../model/entity.js';
+import type { RequestOptions } from '../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import type { Summary } from '../../model/summary.js';
+import { SummaryService } from '../../services/config/SummaryService.js';
 
-const log = getLogger(__filename);
-const logRequest = getLogger('requests');
+const log = log4js.getLogger(import.meta.filename);
+const logRequest = log4js.getLogger('requests');
 
 const STORE_RESPONSES: boolean = false;
 

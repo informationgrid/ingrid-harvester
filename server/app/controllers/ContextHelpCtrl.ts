@@ -2,12 +2,11 @@ import {Controller, Get, PathParams, UseAuth} from "@tsed/common";
 import { Returns, Summary } from "@tsed/schema";
 import * as fs from "fs";
 import * as path from "path";
-import {AuthMiddleware} from "../middlewares/auth/AuthMiddleware";
+import {AuthMiddleware} from "../middlewares/auth/AuthMiddleware.js";
 import { marked } from "marked";
-import {ProfileFactoryLoader} from "../profiles/profile.factory.loader";
-const matter = require('gray-matter');
-
-const BASE_HELP_DIR = path.join(__dirname, "../contextHelp");
+import {ProfileFactoryLoader} from "../profiles/profile.factory.loader.js";
+import matter from "gray-matter";
+const BASE_HELP_DIR = path.join(import.meta.dirname, "../contextHelp");
 
 interface ContextHelpResult {
     id?: string,
@@ -35,7 +34,7 @@ export class ContextHelpCtrl {
 
         function renderMarkdownFile(content: string): string {
             try {
-                return <string>marked(content);
+                return marked(content, { async: false });
             } catch (e) {
                 console.error("Failed to parse markdown", e);
                 return "<p>Error rendering help content</p>";

@@ -21,12 +21,13 @@
  * ==================================================
  */
 
-import { ConfigService } from '../../../services/config/ConfigService';
-import { CswImporter } from '../../../importer/csw/csw.importer';
-import { INGRID_META_INDEX } from '../profile.factory';
-import { RequestDelegate } from '../../../utils/http-request.utils';
+import log4js from 'log4js';
+import { ConfigService } from '../../../services/config/ConfigService.js';
+import { CswImporter } from '../../../importer/csw/csw.importer.js';
+import { INGRID_META_INDEX } from '../profile.factory.js';
+import type { RequestDelegate } from '../../../utils/http-request.utils.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export class IngridCswImporter extends CswImporter {
 

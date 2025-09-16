@@ -21,20 +21,23 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../utils/misc.utils';
-import { defaultExcelSettings, ExcelSettings } from './excel.settings';
-import { ElasticsearchUtils } from '../../persistence/elastic.utils';
-import { ExcelMapper } from './excel.mapper';
-import { Importer } from '../importer';
-import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../profiles/profile.factory';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
-import { RecordEntity } from '../../model/entity';
-import { Summary } from '../../model/summary';
-import { Workbook, Worksheet } from 'exceljs';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import log4js from 'log4js';
+import type { ExcelSettings } from './excel.settings.js';
+import { defaultExcelSettings } from './excel.settings.js';
+import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import { ExcelMapper } from './excel.mapper.js';
+import { Importer } from '../importer.js';
+import type { ImportLogMessage} from '../../model/import.result.js';
+import { ImportResult } from '../../model/import.result.js';
+import type { Observer } from 'rxjs';
+import type { ProfileFactory } from '../../profiles/profile.factory.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import type { RecordEntity } from '../../model/entity.js';
+import type { Summary } from '../../model/summary.js';
+import exceljs from 'exceljs';
 
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export class ExcelImporter extends Importer {
 
@@ -99,7 +102,7 @@ export class ExcelImporter extends Importer {
             'DCATKategorie': 32
         };
 
-        let workbook = new Workbook();
+        let workbook = new exceljs.Workbook();
 
         let promises = [];
         try {
@@ -220,7 +223,7 @@ export class ExcelImporter extends Importer {
         return candidate;
     }
 
-    private prepareExcelRows(worksheet: Worksheet, columnMap) {
+    private prepareExcelRows(worksheet: exceljs.Worksheet, columnMap) {
         let workUnits = [];
 
         worksheet.eachRow((row, rowNumber) => {

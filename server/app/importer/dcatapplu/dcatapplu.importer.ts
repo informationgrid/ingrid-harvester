@@ -21,25 +21,28 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../utils/misc.utils';
-import { defaultDCATAPPLUSettings, DcatappluSettings } from './dcatapplu.settings';
-import { getLogger } from 'log4js';
-import { namespaces } from '../../importer/namespaces';
-import { Catalog } from '../../model/dcatApPlu.model';
-import { DcatappluMapper } from './dcatapplu.mapper';
-import { DOMParser } from '@xmldom/xmldom';
-import { Importer} from '../importer';
-import { ImportLogMessage, ImportResult} from '../../model/import.result';
-import { IndexDocument } from '../../model/index.document';
-import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../profiles/profile.factory';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
-import { RecordEntity } from '../../model/entity';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { Summary } from '../../model/summary';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import type { DcatappluSettings } from './dcatapplu.settings.js';
+import { defaultDCATAPPLUSettings } from './dcatapplu.settings.js';
+import log4js from 'log4js';
+import { namespaces } from '../../importer/namespaces.js';
+import type { Catalog } from '../../model/dcatApPlu.model.js';
+import { DcatappluMapper } from './dcatapplu.mapper.js';
+import type { DOMParser } from '@xmldom/xmldom';
+import { Importer} from '../importer.js';
+import type { ImportLogMessage} from '../../model/import.result.js';
+import { ImportResult} from '../../model/import.result.js';
+import type { IndexDocument } from '../../model/index.document.js';
+import type { Observer } from 'rxjs';
+import type { ProfileFactory } from '../../profiles/profile.factory.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import type { RecordEntity } from '../../model/entity.js';
+import type { RequestOptions } from '../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import type { Summary } from '../../model/summary.js';
 
-const log = getLogger(__filename);
-const logRequest = getLogger('requests');
+const log = log4js.getLogger(import.meta.filename);
+const logRequest = log4js.getLogger('requests');
 
 export class DcatappluImporter extends Importer {
 

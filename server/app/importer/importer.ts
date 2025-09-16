@@ -21,21 +21,24 @@
  * ==================================================
  */
 
-import { ConfigService } from '../services/config/ConfigService';
-import { DatabaseFactory } from '../persistence/database.factory';
-import { DatabaseUtils } from '../persistence/database.utils';
-import { ElasticsearchFactory } from '../persistence/elastic.factory';
-import { ElasticsearchUtils } from '../persistence/elastic.utils';
-import { FilterUtils } from '../utils/filter.utils';
-import { GeneralSettings } from '@shared/general-config.settings';
-import { ImporterSettings } from '../importer.settings';
-import { ImportLogMessage, ImportResult } from '../model/import.result';
-import { IndexConfiguration } from '../persistence/elastic.setting';
-import { MailServer } from '../utils/nodemailer.utils';
-import { Observable, Observer } from 'rxjs';
-import { Summary } from '../model/summary';
+import log4js from 'log4js';
+import { ConfigService } from '../services/config/ConfigService.js';
+import { DatabaseFactory } from '../persistence/database.factory.js';
+import type { DatabaseUtils } from '../persistence/database.utils.js';
+import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
+import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
+import { FilterUtils } from '../utils/filter.utils.js';
+import type { GeneralSettings } from '@shared/general-config.settings.js';
+import type { ImporterSettings } from '../importer.settings.js';
+import type { ImportLogMessage} from '../model/import.result.js';
+import { ImportResult } from '../model/import.result.js';
+import type { IndexConfiguration } from '../persistence/elastic.setting.js';
+import { MailServer } from '../utils/nodemailer.utils.js';
+import type { Observer } from 'rxjs';
+import { Observable } from 'rxjs';
+import { Summary } from '../model/summary.js';
 
-const log = require('log4js').getLogger(__filename)
+const log = log4js.getLogger(import.meta.filename)
 
 export abstract class Importer {
 

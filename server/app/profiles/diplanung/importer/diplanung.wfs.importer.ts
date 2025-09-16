@@ -22,12 +22,12 @@
  */
 
 import * as fs from 'fs';
-import { getProxyConfig } from '../../../utils/service.utils';
-import { Contact, Organization, Person } from '../../../model/agent';
-import { CswMapper } from '../../../importer/csw/csw.mapper';
-import { RequestDelegate } from '../../../utils/http-request.utils';
-import { WfsImporter } from '../../../importer/wfs/wfs.importer';
-import { XPathNodeSelect } from '../../../utils/xpath.utils';
+import { getProxyConfig } from '../../../utils/service.utils.js';
+import type { Contact, Organization, Person } from '../../../model/agent.js';
+import { CswMapper } from '../../../importer/csw/csw.mapper.js';
+import { RequestDelegate } from '../../../utils/http-request.utils.js';
+import { WfsImporter } from '../../../importer/wfs/wfs.importer.js';
+import type { XPathNodeSelect } from '../../../utils/xpath.utils.js';
 
 export class DiplanungWfsImporter extends WfsImporter {
 

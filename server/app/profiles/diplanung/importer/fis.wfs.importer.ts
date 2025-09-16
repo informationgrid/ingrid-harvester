@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../utils/misc.utils';
-import { Harvester } from '@shared/harvester';
-import { WfsImporter } from '../../../importer/wfs/wfs.importer';
+import * as MiscUtils from '../../../utils/misc.utils.js';
+import type { Harvester } from '@shared/harvester.js';
+import { WfsImporter } from '../../../importer/wfs/wfs.importer.js';
 
 export class FisWfsImporter extends WfsImporter {
 

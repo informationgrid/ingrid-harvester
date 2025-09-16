@@ -24,24 +24,24 @@
 /**
  * A mapper for CKAN documents.
  */
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
+import { marked } from 'marked';
 import { throwError } from 'rxjs';
-import { BaseMapper } from '../base.mapper';
-import { CkanParameters, CkanParametersListWithResources, RequestDelegate, RequestOptions, RequestPaging } from '../../utils/http-request.utils';
-import { CkanSettings } from './ckan.settings';
-import { DateRange } from '../../model/dateRange';
-import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils';
-import { DcatMapper } from '../../importer/dcat/dcat.mapper';
-import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils';
-import { Distribution } from '../../model/distribution';
-import { License } from '@shared/license.model';
-import { MetadataSource } from '../../model/index.document';
-import { Organization, Person } from '../../model/agent';
-import { Summary } from '../../model/summary';
-import { UrlUtils } from '../../utils/url.utils';
-
-const mapping = require('../../../mappings.json');
-const markdown = require('markdown').markdown;
+import { BaseMapper } from '../base.mapper.js';
+import type { CkanParameters, CkanParametersListWithResources, RequestOptions, RequestPaging } from '../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import type { CkanSettings } from './ckan.settings.js';
+import type { DateRange } from '../../model/dateRange.js';
+import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
+import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
+import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { License } from '@shared/license.model.js';
+import type { MetadataSource } from '../../model/index.document.js';
+import type { Organization, Person } from '../../model/agent.js';
+import type { Summary } from '../../model/summary.js';
+import { UrlUtils } from '../../utils/url.utils.js';
+import mapping from "../../../mappings.json" with { type: "json" };
 
 export interface CkanMapperData {
     harvestTime: Date;
@@ -66,7 +66,7 @@ export class CkanMapper extends BaseMapper {
         gb: 10000000000,
     };
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     private readonly source: any;
     private readonly data: CkanMapperData;
@@ -102,7 +102,7 @@ export class CkanMapper extends BaseMapper {
 
     getDescription() {
         if (this.source.notes) {
-            return this.settings.markdownAsDescription ? markdown.toHTML(this.source.notes) : this.source.notes;
+            return this.settings.markdownAsDescription ? marked(this.source.notes, { async: false }) : this.source.notes;
         } else {
             return undefined;
         }
@@ -433,7 +433,7 @@ export class CkanMapper extends BaseMapper {
         if (this.source.description) {
             subsections.push({
                 title: 'Langbeschreibung',
-                description: markdown.toHTML(this.source.description)
+                description: marked(this.source.description, { async: false })
             });
         }
 

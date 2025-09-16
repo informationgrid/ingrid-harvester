@@ -21,24 +21,25 @@
  * ==================================================
  */
 
-import * as GeoJsonUtils from '../../utils/geojson.utils';
-import { getLogger } from 'log4js';
+import * as GeoJsonUtils from '../../utils/geojson.utils.js';
+import log4js from 'log4js';
 import { throwError } from 'rxjs';
-import { BaseMapper } from '../base.mapper';
-import { Catalog } from '../../model/dcatApPlu.model';
-import { Contact, Organization, Person } from '../../model/agent';
-import { Distribution } from '../../model/distribution';
-import { Geometry, GeometryCollection, Point } from '@turf/helpers';
-import { ImporterSettings } from '../../importer.settings';
-import { MetadataSource } from '../../model/index.document';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { Summary } from '../../model/summary';
-import { WfsSettings } from './wfs.settings';
-import { XPathNodeSelect } from '../../utils/xpath.utils';
+import { BaseMapper } from '../base.mapper.js';
+import type { Catalog } from '../../model/dcatApPlu.model.js';
+import type { Contact, Organization, Person } from '../../model/agent.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { Geometry, GeometryCollection, Point } from '@turf/helpers';
+import type { ImporterSettings } from '../../importer.settings.js';
+import type { MetadataSource } from '../../model/index.document.js';
+import type { RequestOptions } from '../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import type { Summary } from '../../model/summary.js';
+import type { WfsSettings } from './wfs.settings.js';
+import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
 
 export class WfsMapper extends BaseMapper {
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     readonly featureOrFeatureType: Node & Element;
     readonly featureTypeDescription: Node & Element;

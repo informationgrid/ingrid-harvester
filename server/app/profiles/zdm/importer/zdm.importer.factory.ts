@@ -21,13 +21,14 @@
  * ==================================================
  */
 
-import { Harvester } from '@shared/harvester';
-import { Importer } from '../../../importer/importer';
-import { ImporterFactory } from '../../../importer/importer.factory';
-import { WfsSettings } from '../../../importer/wfs/wfs.settings';
-import { ZdmWfsImporter } from './zdm.wfs.importer';
+import log4js from 'log4js';
+import type { Harvester } from '@shared/harvester.js';
+import { Importer } from '../../../importer/importer.js';
+import { ImporterFactory } from '../../../importer/importer.factory.js';
+import type { WfsSettings } from '../../../importer/wfs/wfs.settings.js';
+import { ZdmWfsImporter } from './zdm.wfs.importer.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export class ZdmImporterFactory extends ImporterFactory{
 

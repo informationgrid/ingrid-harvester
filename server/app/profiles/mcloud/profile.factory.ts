@@ -21,27 +21,27 @@
  * ==================================================
  */
 
-import { mcloudCkanMapper } from './mapper/mcloud.ckan.mapper';
-import { mcloudCswMapper } from './mapper/mcloud.csw.mapper';
-import { mcloudDcatMapper } from './mapper/mcloud.dcat.mapper';
-import { mcloudExcelMapper } from './mapper/mcloud.excel.mapper';
-import { mcloudIndexDocument } from './model/index.document';
-import { mcloudOaiMapper } from './mapper/mcloud.oai.mapper';
-import { mcloudSparqlMapper } from './mapper/mcloud.sparql.mapper';
-import { CkanMapper } from '../../importer/ckan/ckan.mapper';
-import { CswMapper } from '../../importer/csw/csw.mapper';
-import { DcatMapper } from '../../importer/dcat/dcat.mapper';
-import { ElasticQueries } from './persistence/elastic.queries';
-import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
-import { ExcelMapper } from '../../importer/excel/excel.mapper';
-import { ImporterFactory } from '../../importer/importer.factory';
-import { IndexDocumentFactory } from '../../model/index.document.factory';
-import { McloudImporterFactory } from './importer/mcloud.importer.factory';
-import { OaiMapper } from '../../importer/oai/iso19139/oai.mapper';
-import { PostgresAggregator } from './persistence/postgres.aggregator';
-import { PostgresAggregator as AbstractPostgresAggregator} from '../../persistence/postgres.aggregator';
-import { ProfileFactory } from '../profile.factory';
-import { SparqlMapper } from '../../importer/sparql/sparql.mapper';
+import { mcloudCkanMapper } from './mapper/mcloud.ckan.mapper.js';
+import { mcloudCswMapper } from './mapper/mcloud.csw.mapper.js';
+import { mcloudDcatMapper } from './mapper/mcloud.dcat.mapper.js';
+import { mcloudExcelMapper } from './mapper/mcloud.excel.mapper.js';
+import type { mcloudIndexDocument } from './model/index.document.js';
+import { mcloudOaiMapper } from './mapper/mcloud.oai.mapper.js';
+import { mcloudSparqlMapper } from './mapper/mcloud.sparql.mapper.js';
+import type { CkanMapper } from '../../importer/ckan/ckan.mapper.js';
+import type { CswMapper } from '../../importer/csw/csw.mapper.js';
+import type { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
+import { ElasticQueries } from './persistence/elastic.queries.js';
+import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
+import type { ExcelMapper } from '../../importer/excel/excel.mapper.js';
+import type { ImporterFactory } from '../../importer/importer.factory.js';
+import type { IndexDocumentFactory } from '../../model/index.document.factory.js';
+import { McloudImporterFactory } from './importer/mcloud.importer.factory.js';
+import type { OaiMapper } from '../../importer/oai/iso19139/oai.mapper.js';
+import { PostgresAggregator } from './persistence/postgres.aggregator.js';
+import type { PostgresAggregator as AbstractPostgresAggregator} from '../../persistence/postgres.aggregator.js';
+import { ProfileFactory } from '../profile.factory.js';
+import type { SparqlMapper } from '../../importer/sparql/sparql.mapper.js';
 
 export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper> {
 

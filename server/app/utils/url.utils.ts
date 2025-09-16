@@ -21,14 +21,14 @@
  * ==================================================
  */
 
-'use strict';
-
 import * as fs from 'fs';
 import fetch from 'node-fetch';
-import { ConfigService } from '../services/config/ConfigService';
-import { RequestDelegate, RequestOptions } from './http-request.utils';
+import log4js from 'log4js';
+import { ConfigService } from '../services/config/ConfigService.js';
+import type { RequestOptions } from './http-request.utils.js';
+import { RequestDelegate } from './http-request.utils.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export class UrlUtils {
 

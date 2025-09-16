@@ -21,15 +21,15 @@
  * ==================================================
  */
 
-import * as GeoJsonUtils from '../../../utils/geojson.utils';
-import * as MiscUtils from '../../../utils/misc.utils';
-import { createEsId } from '../diplanung.utils';
-import { Bucket } from '../../../persistence/postgres.utils';
-import { DcatApPluDocumentFactory } from '../model/dcatapplu.document.factory';
-import { DiplanungIndexDocument } from '../model/index.document';
-import { Distribution } from '../../../model/distribution';
-import { EsOperation } from '../../../persistence/elastic.utils';
-import { PostgresAggregator as AbstractPostgresAggregator } from '../../../persistence/postgres.aggregator';
+import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
+import * as MiscUtils from '../../../utils/misc.utils.js';
+import { createEsId } from '../diplanung.utils.js';
+import type { Bucket } from '../../../persistence/postgres.utils.js';
+import { DcatApPluDocumentFactory } from '../model/dcatapplu.document.factory.js';
+import type { DiplanungIndexDocument } from '../model/index.document.js';
+import type { Distribution } from '../../../model/distribution.js';
+import type { EsOperation } from '../../../persistence/elastic.utils.js';
+import type { PostgresAggregator as AbstractPostgresAggregator } from '../../../persistence/postgres.aggregator.js';
 
 
 const overwriteFields = [

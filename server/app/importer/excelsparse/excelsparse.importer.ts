@@ -21,20 +21,23 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../utils/misc.utils';
-import { defaultExcelSparseSettings, ExcelSparseSettings } from './excelsparse.settings';
-import { ElasticsearchUtils } from '../../persistence/elastic.utils';
-import { ExcelSparseMapper } from './excelsparse.mapper';
-import { Importer } from '../importer';
-import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../profiles/profile.factory';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
-import { RecordEntity } from '../../model/entity';
-import { Summary } from '../../model/summary';
-import { Workbook, Worksheet } from 'exceljs';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import log4js from 'log4js';
+import type { ExcelSparseSettings } from './excelsparse.settings.js';
+import { defaultExcelSparseSettings } from './excelsparse.settings.js';
+import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import { ExcelSparseMapper } from './excelsparse.mapper.js';
+import { Importer } from '../importer.js';
+import type { ImportLogMessage} from '../../model/import.result.js';
+import { ImportResult } from '../../model/import.result.js';
+import type { Observer } from 'rxjs';
+import type { ProfileFactory } from '../../profiles/profile.factory.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import type { RecordEntity } from '../../model/entity.js';
+import type { Summary } from '../../model/summary.js';
+import exceljs from 'exceljs';
 
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export class ExcelSparseImporter extends Importer {
 
@@ -76,7 +79,7 @@ export class ExcelSparseImporter extends Importer {
             KONTAKT_EMAIL_2: null
         };
 
-        let workbook = new Workbook();
+        let workbook = new exceljs.Workbook();
 
         let promises = [];
         try {
@@ -202,7 +205,7 @@ export class ExcelSparseImporter extends Importer {
         return candidate;
     }
 
-    private prepareExcelRows(worksheet: Worksheet) {
+    private prepareExcelRows(worksheet: exceljs.Worksheet) {
         let workUnits = [];
 
         worksheet.eachRow((row, rowNumber) => {

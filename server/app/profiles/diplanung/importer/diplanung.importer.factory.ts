@@ -21,16 +21,17 @@
  * ==================================================
  */
 
-import { DcatappluImporter } from '../../../importer/dcatapplu/dcatapplu.importer';
-import { DiplanungCswImporter } from './diplanung.csw.importer';
-import { DiplanungWfsImporter } from './diplanung.wfs.importer';
-import { Harvester } from '@shared/harvester';
-import { Importer } from '../../../importer/importer';
-import { ImporterFactory } from '../../../importer/importer.factory';
-import { WfsImporter } from '../../../importer/wfs/wfs.importer';
-import { WfsSettings } from '../../../importer/wfs/wfs.settings';
+import log4js from 'log4js';
+import { DcatappluImporter } from '../../../importer/dcatapplu/dcatapplu.importer.js';
+import { DiplanungCswImporter } from './diplanung.csw.importer.js';
+import { DiplanungWfsImporter } from './diplanung.wfs.importer.js';
+import type { Harvester } from '@shared/harvester.js';
+import type { Importer } from '../../../importer/importer.js';
+import { ImporterFactory } from '../../../importer/importer.factory.js';
+import { WfsImporter } from '../../../importer/wfs/wfs.importer.js';
+import { WfsSettings } from '../../../importer/wfs/wfs.settings.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export class DiplanungImporterFactory extends ImporterFactory {
 
@@ -43,9 +44,9 @@ export class DiplanungImporterFactory extends ImporterFactory {
             case 'DCATAPPLU': 
                 importer = new DcatappluImporter(config);
                 break;
-            case 'WFS.FIS': 
-            case 'WFS.MS': 
-            case 'WFS.XPLAN': 
+            case 'WFS.FIS':
+            case 'WFS.MS':
+            case 'WFS.XPLAN':
             case 'WFS.XPLAN.SYN': 
                 importer = new DiplanungWfsImporter(config as WfsSettings);
                 break;

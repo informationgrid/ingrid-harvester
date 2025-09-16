@@ -25,17 +25,17 @@
  * A mapper for LIDO XML documents harvested over OAI.
  */
 import * as xpath from 'xpath';
-import * as GeoJsonUtils from '../../../utils/geojson.utils';
-import { getLogger } from 'log4js';
-import { oaiXPaths } from '../oai.paths';
-import { BaseMapper } from '../../base.mapper';
-import { Event, Record, Relation, Repository, Resource, Subject } from './lido.model';
-import { ImporterSettings } from '../../../importer.settings';
-import { MetadataSource } from '../../../model/index.document';
-import { OaiSettings } from '../oai.settings';
-import { Summary } from '../../../model/summary';
-import { XPathElementSelect } from '../../../utils/xpath.utils';
-import { normalizeDateTime } from '../../../utils/misc.utils';
+import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
+import log4js from 'log4js';
+import { oaiXPaths } from '../oai.paths.js';
+import { BaseMapper } from '../../base.mapper.js';
+import type { Event, Record, Relation, Repository, Resource, Subject } from './lido.model.js';
+import type { ImporterSettings } from '../../../importer.settings.js';
+import type { MetadataSource } from '../../../model/index.document.js';
+import type { OaiSettings } from '../oai.settings.js';
+import type { Summary } from '../../../model/summary.js';
+import type { XPathElementSelect } from '../../../utils/xpath.utils.js';
+import { normalizeDateTime } from '../../../utils/misc.utils.js';
 
 export class OaiMapper extends BaseMapper {
 
@@ -47,7 +47,7 @@ export class OaiMapper extends BaseMapper {
         return OaiMapper.select(path, parent, true)?.textContent;
     }
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     private readonly header: Element;
     public readonly record: Element;

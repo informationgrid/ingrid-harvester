@@ -24,7 +24,7 @@
 import * as Express from 'express';
 import passport from 'passport';
 import { BodyParams, Controller, Get, Post, Req, Res } from '@tsed/common';
-import { IUser } from '../../model/User';
+import type { IUser } from '../../model/User.js';
 import { Required } from '@tsed/schema';
 
 @Controller('/passport')

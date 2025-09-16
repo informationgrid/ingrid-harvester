@@ -21,23 +21,22 @@
  * ==================================================
  */
 
-import 'dayjs/locale/de';
-import {getLogger} from "log4js";
-import {CswMapper} from "../../../importer/csw/csw.mapper";
-import {IndexDocumentFactory} from "../../../model/index.document.factory";
-import {IngridIndexDocument} from "../model/index.document";
+import 'dayjs/locale/de.js';
+import log4js from 'log4js';
+import type {CswMapper} from "../../../importer/csw/csw.mapper.js";
+import type {IndexDocumentFactory} from "../../../model/index.document.factory.js";
+import type {IngridIndexDocument} from "../model/index.document.js";
 import * as crypto from "crypto";
-import {Distribution} from "../../../model/distribution";
-import {Codelist} from "../utils/codelist";
-
-const dayjs = require('dayjs');
+import type {Distribution} from "../../../model/distribution.js";
+import {Codelist} from "../utils/codelist.js";
+import dayjs from "dayjs";
 dayjs.locale('de');
 
 export abstract class ingridMapper<M extends CswMapper> implements IndexDocumentFactory<IngridIndexDocument>{
 
     protected baseMapper: M;
 
-    private _log = getLogger();
+    private _log = log4js.getLogger();
 
     private blacklistedFormats: string[] = [];
     constructor(baseMapper: M) {

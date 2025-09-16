@@ -21,14 +21,20 @@
  * ==================================================
  */
 
-import bbobHTML from '@bbob/html';
-import presetHTML5 from '@bbob/preset-html5';
-import { LvrIndexDocument } from './model/index.document';
-import { TagNode } from "@bbob/plugin-helper";
+// import { html as bbobHTML } from '@bbob/html';
+// import presetHTML5 from '@bbob/preset-html5';
+import { createRequire } from 'module';
+import type { LvrIndexDocument } from './model/index.document.js';
+import type { TagNode } from "@bbob/plugin-helper";
 
 export function createEsId(document: LvrIndexDocument): string {
     return document.id;
 }
+
+// workaround for https://github.com/JiLiZART/BBob/issues/214
+const require = createRequire(import.meta.url);
+const bbobHTML = require('@bbob/html');
+const presetHTML5 = require('@bbob/preset-html5').default;
 
 /**
  * - null-values denote default handling
