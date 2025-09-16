@@ -46,7 +46,7 @@ import buffer from '@turf/buffer';
 import centroid from '@turf/centroid';
 import combine from '@turf/combine';
 // import flatten from '@turf/flatten';
-import flip from '@turf/flip';
+import turfFlip from '@turf/flip';
 import rewind from '@turf/rewind';
 import simplify from '@turf/simplify';
 import { firstElementChild } from './xpath.utils.js';
@@ -128,10 +128,10 @@ export function flip<T>(spatial: number[] | Point | Geometry | GeometryCollectio
     }
     if ('type' in spatial) {
         if ('coordinates' in spatial) {
-            return flip(spatial);
+            return turfFlip(spatial);
         }
         else if ('geometries' in spatial) {
-            return <T>{ ...spatial, geometries: spatial.geometries.map<Geometry>(geom => flip<Geometry>(geom)) };
+            return <T>{ ...spatial, geometries: spatial.geometries.map<Geometry>(geom => turfFlip<Geometry>(geom)) };
         }
         else {
             // TODO log unexpected input
@@ -139,7 +139,7 @@ export function flip<T>(spatial: number[] | Point | Geometry | GeometryCollectio
         }
     }
     else {
-        return flip({ type: 'Point', coordinates: spatial });
+        return turfFlip({ type: 'Point', coordinates: spatial });
     }
 }
 
