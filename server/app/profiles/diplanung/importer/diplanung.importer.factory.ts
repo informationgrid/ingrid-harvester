@@ -28,8 +28,7 @@ import { DiplanungWfsImporter } from './diplanung.wfs.importer.js';
 import type { Harvester } from '@shared/harvester.js';
 import type { Importer } from '../../../importer/importer.js';
 import { ImporterFactory } from '../../../importer/importer.factory.js';
-import { WfsImporter } from '../../../importer/wfs/wfs.importer.js';
-import { WfsSettings } from '../../../importer/wfs/wfs.settings.js';
+import type { WfsSettings } from '../../../importer/wfs/wfs.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 

@@ -21,7 +21,8 @@
  * ==================================================
  */
 
-import type { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model.js';
+import type { Catalog, ProcessStep } from '../../../model/dcatApPlu.model.js';
+import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType } from '../../../model/dcatApPlu.model.js';
 import type { Contact, Organization, Person } from '../../../model/agent.js';
 import type { DateRange } from '../../../model/dateRange.js';
 import { DiplanungMapper } from './diplanung.mapper.js';
