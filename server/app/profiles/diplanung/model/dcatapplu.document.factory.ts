@@ -212,10 +212,6 @@ export class DcatApPluDocumentFactory {// no can do with TS: extends ExportDocum
     }
 
     private static xmlAdmsIdentifier(admsIdentifier: string) {
-        return`<adms:identifier>
-            <adms:Identifier>
-                ${optional('skos:notation', esc(admsIdentifier))}
-            </adms:Identifier>
-        </adms:identifier>`;
+        return`<adms:identifier rdf:resource="${diplanUriPrefix}/authority#${esc(admsIdentifier)}"/>`;
     }
 }
