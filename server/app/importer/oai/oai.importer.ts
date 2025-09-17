@@ -95,7 +95,7 @@ export class OaiImporter extends Importer {
                 let responseDom = this.domParser.parseFromString(response, 'application/xml');
                 let resultsNode = responseDom.getElementsByTagName('ListRecords')[0];
                 if (!resultsNode) {
-                    throw new Error('Could not find ListRecords node in response DOM: ' + responseDom?.toString());
+                    throw new Error('Could not find ListRecords node in response DOM:\n' + responseDom?.toString());
                 }
 
                 let numReturned = resultsNode.getElementsByTagName('record').length;
@@ -116,6 +116,9 @@ export class OaiImporter extends Importer {
                 this.requestDelegate = new RequestDelegate(requestConfig);
             }
             catch (e) {
+                if (e.message?.startsWith('Could not find ListRecords node in response DOM')) {
+                    throw e;
+                }
                 const message = `Error while fetching OAI Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(e.message)}.`;
                 log.error(message);
                 this.summary.appErrors.push(message);
