@@ -29,7 +29,7 @@ import { CswMapper } from '../../../importer/csw/csw.mapper.js';
 import type { DateRange } from '../../../model/dateRange.js';
 import { DiplanungMapper } from './diplanung.mapper.js';
 import type { Distribution } from '../../../model/distribution.js';
-import type { Geometry, GeometryCollection, Point } from '@turf/helpers';
+import type { Geometry, Point } from 'geojson';
 
 const alternateTitleBlacklist = ['B-Plan', 'F-Plan'];
 
@@ -180,7 +180,7 @@ export class DiplanungCswMapper extends DiplanungMapper<CswMapper> {
         return undefined;
     }
 
-    getBoundingBox(): Geometry | GeometryCollection {
+    getBoundingBox(): Geometry {
         return this.baseMapper.getGeometry(true);
     }
 
@@ -188,7 +188,7 @@ export class DiplanungCswMapper extends DiplanungMapper<CswMapper> {
         return this.baseMapper.getCentroid();
     }
 
-    getSpatial(): Geometry | GeometryCollection {
+    getSpatial(): Geometry {
         return this.baseMapper.getSpatial();
     }
 

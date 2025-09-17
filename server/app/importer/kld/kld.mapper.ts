@@ -28,7 +28,7 @@ import * as MiscUtils from '../../utils/misc.utils.js';
 import log4js from 'log4js';
 import { BaseMapper } from '../../importer/base.mapper.js';
 import type { Contact, Organization, Person } from '../../model/agent.js';
-import type { Geometries } from '@turf/helpers';
+import type { Geometry } from 'geojson';
 import type { ImporterSettings } from '../../importer.settings.js';
 import type { KldSettings } from './kld.settings.js';
 import type { License } from '@shared/license.model.js';
@@ -85,7 +85,7 @@ export class KldMapper extends BaseMapper {
         return abstract;
     }
 
-    getSpatial(): Geometries {
+    getSpatial(): Geometry {
         return this.record.Polygon;
     }
 

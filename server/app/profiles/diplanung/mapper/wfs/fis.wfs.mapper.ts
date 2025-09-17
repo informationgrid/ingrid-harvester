@@ -26,7 +26,7 @@ import * as MiscUtils from '../../../../utils/misc.utils.js';
 import type { DateRange } from '../../../../model/dateRange.js';
 import { DiplanungWfsMapper } from '../diplanung.wfs.mapper.js';
 import type { Distribution } from '../../../../model/distribution.js';
-import type { Geometries, Geometry, GeometryCollection, Point } from '@turf/helpers';
+import type { Geometry, Point } from 'geojson';
 import type { PluDocType, ProcessStep } from '../../../../model/dcatApPlu.model.js';
 import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType } from '../../../../model/dcatApPlu.model.js';
 
@@ -68,7 +68,7 @@ export class FisWfsMapper extends DiplanungWfsMapper {
         }
     }
 
-    getSpatial(): Geometry | Geometries {
+    getSpatial(): Geometry {
         let spatialContainer = this.baseMapper.select('./*/fis:SHAPE_25833/*', this.baseMapper.featureOrFeatureType, true);
         if (!spatialContainer) {
             // use bounding box as fallback
@@ -81,7 +81,7 @@ export class FisWfsMapper extends DiplanungWfsMapper {
 
     getCentroid(): Point {
         let spatial = this.getSpatial() ?? this.getBoundingBox();
-        return GeoJsonUtils.getCentroid(<Geometry | GeometryCollection>spatial);
+        return GeoJsonUtils.getCentroid(<Geometry>spatial);
     }
 
     getSpatialText(): string {

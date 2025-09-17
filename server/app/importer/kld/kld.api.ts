@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import type { Geometries } from '@turf/helpers';
+import type { Geometry } from 'geojson';
 
 /**
  * KuLaDig API definitions
@@ -64,7 +64,7 @@ export interface ObjectResponse {
     EndeVon: string;
     EndeBis: string;
     Schlagwoerter: Record<string, string>;
-    Polygon: Geometries;
+    Polygon: Geometry;
     ZuletztGeaendert: string;
     UebergeordnetesObjekt: RelatedObject;
     UntergeordneteObjekte: RelatedObject[];

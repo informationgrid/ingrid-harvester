@@ -28,7 +28,7 @@ import { BaseMapper } from '../base.mapper.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
 import type { Contact, Organization, Person } from '../../model/agent.js';
 import type { Distribution } from '../../model/distribution.js';
-import type { Geometry, GeometryCollection, Point } from '@turf/helpers';
+import type { Geometry, Point } from 'geojson';
 import type { ImporterSettings } from '../../importer.settings.js';
 import type { MetadataSource } from '../../model/index.document.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
@@ -186,7 +186,7 @@ export class WfsMapper extends BaseMapper {
         return { lowerCorner, upperCorner, crs };
     }
 
-    getSpatial(): Geometry | GeometryCollection {
+    getSpatial(): Geometry {
         return undefined;
     }
 
@@ -196,7 +196,7 @@ export class WfsMapper extends BaseMapper {
 
     getCentroid(): Point {
         let spatial = this.getSpatial() ?? this.getBoundingBox();
-        return GeoJsonUtils.getCentroid(<Geometry | GeometryCollection>spatial);
+        return GeoJsonUtils.getCentroid(<Geometry>spatial);
     }
 
     isRealtime(): boolean {

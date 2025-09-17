@@ -27,7 +27,7 @@ import type { Contact, Organization, Person } from '../../../model/agent.js';
 import type { DateRange } from '../../../model/dateRange.js';
 import { DiplanungMapper } from './diplanung.mapper.js';
 import type { Distribution } from '../../../model/distribution.js';
-import type { Geometry, GeometryCollection, Point } from '@turf/helpers';
+import type { Geometry, Point } from 'geojson';
 import type { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
 
 export abstract class DiplanungWfsMapper extends DiplanungMapper<WfsMapper> {
@@ -108,7 +108,7 @@ export abstract class DiplanungWfsMapper extends DiplanungMapper<WfsMapper> {
         return this.baseMapper.getCentroid();
     }
 
-    getSpatial(): Geometry | GeometryCollection {
+    getSpatial(): Geometry {
         return this.baseMapper.getSpatial();
     }
 

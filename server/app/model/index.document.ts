@@ -22,7 +22,7 @@
  */
 
 import type { DateRange } from './dateRange.js';
-import type { Geometries, GeometryCollection, Point } from '@turf/helpers';
+import type { Geometry, Point } from 'geojson';
 
 export type IndexDocument = {
     extras: {
@@ -52,7 +52,7 @@ export type MetadataSource = {
 };
 
 export type GeometryInformation = {
-    geometry: Geometries | GeometryCollection,
+    geometry: Geometry,
     centroid: Point,
     type: string,
     description: string,

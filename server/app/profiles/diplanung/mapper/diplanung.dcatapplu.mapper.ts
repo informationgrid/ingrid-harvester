@@ -27,7 +27,7 @@ import type { DateRange } from '../../../model/dateRange.js';
 import type { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper.js';
 import { DiplanungMapper } from './diplanung.mapper.js';
 import type { Distribution } from '../../../model/distribution.js';
-import type { Geometry, Point } from '@turf/helpers';
+import type { Geometry, Point } from 'geojson';
 
 const alternateTitleBlacklist = ['B-Plan', 'F-Plan'];
 

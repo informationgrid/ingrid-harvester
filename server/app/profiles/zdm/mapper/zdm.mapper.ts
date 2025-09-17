@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Geometry } from '@turf/helpers';
+import type { Geometry } from 'geojson';
 import { IndexDocumentFactory } from '../../../model/index.document.factory.js';
 import type { MetadataSource } from '../../../model/index.document.js';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';

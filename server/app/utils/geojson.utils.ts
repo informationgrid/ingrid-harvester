@@ -50,7 +50,8 @@ import turfFlip from '@turf/flip';
 import rewind from '@turf/rewind';
 import simplify from '@turf/simplify';
 import { firstElementChild } from './xpath.utils.js';
-import type { AllGeoJSON, Feature, FeatureCollection, Geometries, Geometry, GeometryCollection, MultiPoint, MultiLineString, MultiPolygon, Point } from '@turf/helpers';
+import type { AllGeoJSON } from '@turf/helpers';
+import type { Feature, FeatureCollection, Geometry, GeometryCollection, MultiPoint, MultiLineString, MultiPolygon, Point } from 'geojson';
 import turfFlatten from "@turf/flatten";
 import deepEqual from "deep-equal";
 import proj4 from "proj4";
@@ -101,7 +102,7 @@ export function getBbox(spatial: AllGeoJSON): Geometry {
     return polygon;
 }
 
-export function within(spatial: number[] | Point | Geometry | GeometryCollection, bbox: Geometry): boolean {
+export function within(spatial: number[] | Geometry, bbox: Geometry | Feature): boolean {
     if (!spatial) {
         return undefined;
     }
@@ -122,13 +123,13 @@ export function within(spatial: number[] | Point | Geometry | GeometryCollection
     }
 }
 
-export function flip<T>(spatial: number[] | Point | Geometry | GeometryCollection): T {
+export function flip<T>(spatial: number[] | Geometry): T {
     if (!spatial) {
         return undefined;
     }
     if ('type' in spatial) {
         if ('coordinates' in spatial) {
-            return turfFlip(spatial);
+            return turfFlip(spatial) as T;
         }
         else if ('geometries' in spatial) {
             return <T>{ ...spatial, geometries: spatial.geometries.map<Geometry>(geom => turfFlip<Geometry>(geom)) };
@@ -139,11 +140,11 @@ export function flip<T>(spatial: number[] | Point | Geometry | GeometryCollectio
         }
     }
     else {
-        return turfFlip({ type: 'Point', coordinates: spatial });
+        return turfFlip({ type: 'Point', coordinates: spatial }) as T;
     }
 }
 
-export function getCentroid(spatial: Geometry | GeometryCollection): Point {
+export function getCentroid(spatial: Geometry): Point {
     if (!spatial) {
         return undefined;
     }
@@ -153,7 +154,9 @@ export function getCentroid(spatial: Geometry | GeometryCollection): Point {
         modifiedSpatial.type = 'LineString';
     }
     if (modifiedSpatial.type == 'GeometryCollection') {
-        (<GeometryCollection>modifiedSpatial).geometries.filter((geometry: AllGeoJSON) => geometry.type == 'Envelope').forEach((geometry: AllGeoJSON) => geometry.type = 'LineString');
+        (<GeometryCollection>modifiedSpatial).geometries
+            .filter((geometry: Geometry) => geometry.type?.toLowerCase() == 'envelope')
+            .forEach((geometry: Geometry) => geometry.type = 'LineString');
     }
     return centroid(modifiedSpatial)?.geometry;
 }
@@ -178,7 +181,7 @@ export function flatten(geometryCollection: GeometryCollection, tolerance: numbe
  * @param spatial
  * @returns spatial if centroid within Germany; flipped spatial if flipped centroid within Germany; null else
  */
-export function sanitize(spatial: Geometry | GeometryCollection): Geometry | GeometryCollection {
+export function sanitize(spatial: Geometry): Geometry {
     if (!spatial) {
         return undefined;
     }
@@ -186,9 +189,9 @@ export function sanitize(spatial: Geometry | GeometryCollection): Geometry | Geo
     let centroid = getCentroid(spatial);
     if (!within(centroid, BBOX_GERMANY)) {
         // if not, try to swap lat and lon
-        let flippedCentroid = flip<Geometry | GeometryCollection>(centroid);
+        let flippedCentroid = flip<Geometry>(centroid);
         if (within(flippedCentroid, BBOX_GERMANY)) {
-            return flip<Geometry | GeometryCollection>(spatial);
+            return flip<Geometry>(spatial);
         }
         return null;
     }
@@ -265,7 +268,7 @@ export function getBoundingBox(lowerCorner: string, upperCorner: string, crs?: s
     }
     else if (west === east || north === south) {
         boundingBox = {
-            type: 'Linestring',
+            type: 'LineString',
             coordinates: [[west, north], [east, south]]
         };
     }
@@ -279,7 +282,7 @@ export function getBoundingBox(lowerCorner: string, upperCorner: string, crs?: s
     return boundingBox;
 }
 
-export function parse(_: Node, opts: { crs?: any, stride?: number } = { crs: null, stride: 2 }, nsMap: { [ name: string ]: string; }): Geometries {
+export function parse(_: Node, opts: { crs?: any, stride?: number } = { crs: null, stride: 2 }, nsMap: { [ name: string ]: string; }): Geometry {
     if (_ == null) {
         return null;
     }
@@ -566,7 +569,7 @@ export function parse(_: Node, opts: { crs?: any, stride?: number } = { crs: nul
                 return rewind({
                     type: 'LineString',
                     coordinates: parseLinearRingOrLineString(_, opts, childCtx)
-                });
+                }) as Geometry;
             case 'gml:MultiCurve':
                 return {
                     type: 'MultiLineString',
@@ -578,17 +581,17 @@ export function parse(_: Node, opts: { crs?: any, stride?: number } = { crs: nul
                 return rewind({
                     type: 'Polygon',
                     coordinates: parsePolygonOrRectangle(_, opts, childCtx)
-                });
+                }) as Geometry;
             case 'gml:Surface':
                 return rewind({
                     type: 'MultiPolygon',
                     coordinates: parseSurface(_, opts, childCtx)
-                });
+                }) as Geometry;
             case 'gml:MultiSurface':
                 return rewind({
                     type: 'MultiPolygon',
                     coordinates: parseMultiSurface(_, opts, childCtx)
-                });
+                }) as Geometry;
             case 'gml:MultiGeometry':
                 // TODO similar to gml:MultiSurface ??
                 // example: https://metropolplaner.de/osterholz/wfs?typeNames=plu:LU.SupplementaryRegulation&request=GetFeature

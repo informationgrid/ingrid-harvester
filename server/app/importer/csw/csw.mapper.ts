@@ -39,7 +39,7 @@ import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
 import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
 import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
 import type { Distribution } from '../../model/distribution.js';
-import type { Geometry, GeometryCollection, Point } from '@turf/helpers';
+import type { Geometry, Point } from 'geojson';
 import type { License } from '@shared/license.model.js';
 import type { MetadataSource } from '../../model/index.document.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
@@ -523,11 +523,11 @@ export class CswMapper extends BaseMapper {
         return modified ? new Date(modified) : undefined;
     }
 
-    getSpatial(): Geometry | GeometryCollection {
+    getSpatial(): Geometry {
         return this.getGeometry(false);
     }
 
-    getGeometry(forcePolygon: boolean): Geometry | GeometryCollection {
+    getGeometry(forcePolygon: boolean): Geometry {
         let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
         let geometries = [];
         for (let i=0; i < geographicBoundingBoxes.length; i++){
@@ -621,7 +621,7 @@ export class CswMapper extends BaseMapper {
 
     getCentroid(): Point {
         let spatial = this.getSpatial();
-        return GeoJsonUtils.getCentroid(<Geometry | GeometryCollection>spatial);
+        return GeoJsonUtils.getCentroid(<Geometry>spatial);
     }
 
     getTemporal(): DateRange[] {

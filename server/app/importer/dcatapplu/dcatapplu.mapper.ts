@@ -34,7 +34,7 @@ import { BaseMapper } from '../base.mapper.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { DcatappluSettings } from './dcatapplu.settings.js';
 import type { Distribution } from '../../model/distribution.js';
-import type { Geometry, Point } from '@turf/helpers';
+import type { Geometry, Point } from 'geojson';
 import type { ImporterSettings } from '../../importer.settings.js';
 import type { MetadataSource } from '../../model/index.document.js';
 import type { ProcessStep, Catalog } from '../../model/dcatApPlu.model.js';

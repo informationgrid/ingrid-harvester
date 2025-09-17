@@ -29,7 +29,7 @@ import type { DateRange } from '../../../model/dateRange.js';
 import type { DiplanungIndexDocument } from '../model/index.document.js';
 import type { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper.js';
 import type { Distribution } from '../../../model/distribution.js';
-import type { Geometries, Geometry, GeometryCollection, Point } from '@turf/helpers';
+import type { Geometry, Point } from 'geojson';
 import type { IndexDocumentFactory } from '../../../model/index.document.factory.js';
 import type { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
 
@@ -147,11 +147,11 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
     abstract getPluNotification(): string;
 
     // spatial features
-    abstract getBoundingBox(): Geometry | GeometryCollection;
+    abstract getBoundingBox(): Geometry;
 
     abstract getCentroid(): Point;
 
-    abstract getSpatial(): Geometries | Geometry | GeometryCollection;
+    abstract getSpatial(): Geometry;
 
     abstract getSpatialText(): string;
 

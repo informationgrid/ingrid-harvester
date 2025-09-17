@@ -27,7 +27,7 @@ import type { DateRange } from '../../../../model/dateRange.js';
 import { DiplanungWfsMapper } from '../diplanung.wfs.mapper.js';
 import type { Distribution} from '../../../../model/distribution.js';
 import { DocTypeMapping, PlanTypeMapping, ProcedureTypeMapping } from './xplan.codelist.mappings.js';
-import type { Geometries, Geometry } from '@turf/helpers';
+import type { Geometry } from 'geojson';
 import type { PluProcedureState, ProcessStep } from '../../../../model/dcatApPlu.model.js';
 import { PluDocType, PluPlanType, PluProcedureType } from '../../../../model/dcatApPlu.model.js';
 
@@ -73,7 +73,7 @@ export class XplanWfsMapper extends DiplanungWfsMapper {
         return undefined;
     }
 
-    getSpatial(): Geometry | Geometries {
+    getSpatial(): Geometry {
         let spatialContainer = this.baseMapper.select('./*/xplan:raeumlicherGeltungsbereich/*', this.baseMapper.featureOrFeatureType, true);
         if (!spatialContainer) {
             // use bounding box as fallback

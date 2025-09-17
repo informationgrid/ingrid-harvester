@@ -29,7 +29,7 @@ import { getNsMap } from './xpath.utils.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import type { Distribution } from '../model/distribution.js';
 import type { DOMParser } from '@xmldom/xmldom';
-import type { Geometries, Geometry, GeometryCollection } from '@turf/helpers';
+import type { Geometry } from 'geojson';
 import type { RequestOptions } from './http-request.utils.js';
 import { RequestDelegate } from './http-request.utils.js';
 import { UrlUtils } from './url.utils.js';
@@ -41,7 +41,7 @@ export const RO_DEFAULT_TYPENAMES = ['xplan:RP_Plan', 'plu:SpatialPlan', 'plu:Su
 
 const domParser: DOMParser = MiscUtils.getDomParser();
 
-export async function parseWfsFeatureCollection(url: string, typeNames: string, tolerance: number): Promise<Geometry | GeometryCollection> {
+export async function parseWfsFeatureCollection(url: string, typeNames: string, tolerance: number): Promise<Geometry> {
     let xmlResponse: string = await RequestDelegate.doRequest({
         uri: url,
         qs: {
@@ -59,7 +59,7 @@ export async function parseWfsFeatureCollection(url: string, typeNames: string, 
     let select = <XPathNodeSelect>xpath.useNamespaces(nsMap);
     let localGeometryNames = ['extent', 'raeumlicherGeltungsbereich', 'the_geom', 'geometry'].map(ln => `local-name()='${ln}'`).join(' or ');
     let geometryNodes = select(`./wfs:FeatureCollection/${this.settings.memberElement}/*/*[${localGeometryNames}]/*`, dom);
-    let geometries: Geometries[] = [];
+    let geometries: Geometry[] = [];
     for (let geometryNode of geometryNodes) {
         let geom = GeoJsonUtils.parse(geometryNode, { }, nsMap);
         if (geom) {

@@ -63,9 +63,9 @@ export class DiplanungCswImporter extends CswImporter {
                 //     // copy and/or create relevant metadata structure
                 //     updateDoc.extras = MiscUtils.merge(MiscUtils.structuredClone(doc.extras), updateDoc.extras);
                 //     // if not, try to swap lat and lon
-                //     let flippedBbox = GeoJsonUtils.flip<Geometry | GeometryCollection>(doc.bounding_box);
+                //     let flippedBbox = GeoJsonUtils.flip<Geometry>(doc.bounding_box);
                 //     if (GeoJsonUtils.within(flippedBbox, GeoJsonUtils.BBOX_GERMANY)) {
-                //         updateDoc.spatial = GeoJsonUtils.flip<Geometry | GeometryCollection>(doc.spatial);
+                //         updateDoc.spatial = GeoJsonUtils.flip<Geometry>(doc.spatial);
                 //         updateDoc.bounding_box = flippedBbox;
                 //         updateDoc.centroid = GeoJsonUtils.flip<Point>(doc.centroid);
                 //         updateQuality(updateDoc, 'Swapped lat and lon', null, true);
