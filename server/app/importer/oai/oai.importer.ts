@@ -58,7 +58,7 @@ export class OaiImporter extends Importer {
     private totalRecords = 0;
     private numIndexDocs = 0;
 
-    private readonly OaiMapper;
+    private OaiMapper;
 
     constructor(settings, requestDelegate?: RequestDelegate) {
         super(settings);
@@ -78,8 +78,6 @@ export class OaiImporter extends Importer {
         }
         this.settings = settings;
         this.xpaths = oaiXPaths[this.settings.metadataPrefix?.toLowerCase()];
-        const require = createRequire(import.meta.url);
-        this.OaiMapper = require(`./${this.settings.metadataPrefix}/oai.mapper`).OaiMapper;
     }
 
     // only here for documentation - use the "default" exec function
@@ -151,7 +149,7 @@ export class OaiImporter extends Importer {
                 logRequest.debug("Record content: ", record.toString());
             }
 
-            let mapper = this.getMapper(this.settings, header, record, harvestTime, this.summary);
+            let mapper = await this.getMapper(this.settings, header, record, harvestTime, this.summary);
 
             let doc: IndexDocument;
             try {
@@ -181,7 +179,10 @@ export class OaiImporter extends Importer {
         await Promise.allSettled(promises).catch(err => log.error('Error indexing OAI record', err));
     }
 
-    getMapper(settings, header, record, harvestTime, summary) {
+    async getMapper(settings, header, record, harvestTime, summary) {
+        if (!this.OaiMapper) {
+            this.OaiMapper = (await import(`./${this.settings.metadataPrefix}/oai.mapper.js`)).OaiMapper;
+        }
         return new this.OaiMapper(settings, header, record, harvestTime, summary);
     }
 
