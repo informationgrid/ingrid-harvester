@@ -31,6 +31,9 @@ export type IngridIndexDocument = IndexDocument & {
     organisation: string,
     datatype: string[],
     dataSourceName: string,
+    collection: {
+        name: string
+    },
     t0: string,
     t1: string,
     t2: string,
@@ -41,7 +44,7 @@ export type IngridIndexDocument = IndexDocument & {
     boost: number,
     title: string,
     summary: string,
-    content: string,
+    content: string[],
     location: string[],
     x1: number[],
     x2: number[],

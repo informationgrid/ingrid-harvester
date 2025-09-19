@@ -38,13 +38,12 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
 
     private _log = log4js.getLogger();
 
-    private blacklistedFormats: string[] = [];
     constructor(baseMapper: M) {
         this.baseMapper = baseMapper;
     }
 
     async create() : Promise<IngridIndexDocument> {
-        let result = await {
+        let result = <IngridIndexDocument>{
             iPlugId: this.getIPlugId(),
             uuid: this.getGeneratedId(),
             partner: this.getPartner(),
@@ -52,6 +51,9 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             organisation: this.getOrganisation(),
             datatype: this.getDataType(),
             dataSourceName: this.getDataSourceName(),
+            collection: {
+                name: this.getDataSourceName(),
+            },
             extras: {
                 // harvested_data: mapper.getHarvestedData(),
                 hierarchy_level: this.getHierarchyLevel(),    // only csw
@@ -232,7 +234,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             if (typeof obj !== 'object') {
                 values.push(obj);
                 return;
-            }        
+            }
             Object.values(obj).forEach(traverse);
         };
         traverse(resultObj);

@@ -24,6 +24,10 @@
             "type": "keyword",
             "store": true
         },
+        "collection.name": {
+            "type": "keyword",
+            "store": true
+        },
         "t01_object.mod_time": {
             "type": "keyword",
             "store": true
@@ -155,7 +159,7 @@
         "t04_search.searchterm": {
             "type": "keyword",
             "store": true
-        },    
+        },
         "t011_obj_geo.keyc_incl_w_dataset": {
             "type": "keyword",
             "store": true
