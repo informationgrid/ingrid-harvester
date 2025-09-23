@@ -29,4 +29,7 @@ export class LogService {
     get(): string {
         return fs.readFileSync('logs/app.log', "utf8");
     }
+    getLogByHarvesterID(harvesterId: string): string {
+        return fs.readFileSync(`logs/harvester/${harvesterId}.log`, "utf8");
+    }
 }

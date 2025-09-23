@@ -85,6 +85,11 @@ export class ApiCtrl {
         return this.logService.get();
     }
 
+    @Get('/log/:harvesterId')
+    getLogByHarvesterId(@PathParams('harvesterId') harvesterId: string) {
+        return this.logService.getLogByHarvesterID(harvesterId);
+    }
+
     @Post('/schedule/:id')
     schedule(@PathParams('id') id: number, @BodyParams('cron') cron: { full: CronData, incr: CronData }): Date[] {
         return this.scheduleService.set(+id, cron);

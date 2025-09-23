@@ -25,6 +25,7 @@ import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {ImportLogMessage} from "../../../../../server/app/model/import.result";
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import {LogService} from "../../log/log.service";
 
 @Component({
     selector: 'app-dialog-log',
@@ -41,16 +42,31 @@ export class DialogLogComponent implements OnInit {
   databaseErrors: string[] = [];
   elasticsearchErrors: string[] = [];
   appWarnings: string[][] = [];
+  harvesterID: string;
+  logdata = [];
+  isLoading = true;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private logService: LogService) {
     const message: ImportLogMessage = data.content;
+    this.harvesterID = data.content.id;
     this.appErrors = message.summary.appErrors;
     this.databaseErrors = message.summary.databaseErrors;
     this.elasticsearchErrors = message.summary.elasticErrors;
     this.appWarnings = message.summary.warnings;
+    console.log("Harvester ID",  data)
   }
 
   ngOnInit() {
+    this.logService.getLogByHarvesterID(this.harvesterID).subscribe(data => {
+      this.logdata = data.split('\n');
+      this.isLoading = false;
+
+      // wait for content to be rendered
+      setTimeout(() => {
+        this.viewPort.scrollToIndex(this.logdata.length);
+      }, 0);
+
+    }, (error => console.error('Error getting log:', error)));
   }
 
   getInitialIndex() {
@@ -62,6 +78,18 @@ export class DialogLogComponent implements OnInit {
       return 2;
     } else {
       return 3;
+    }
+  }
+
+  determineClass(line: string) {
+    if (line.includes('[DEBUG]')) {
+      return 'debug';
+    } else if (line.includes('[WARN]')) {
+      return 'warn';
+    } else if (line.includes('[ERROR]')) {
+      return 'error';
+    } else {
+      return 'info'
     }
   }
 }
