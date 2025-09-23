@@ -18,11 +18,20 @@
       "filename": "logs/summary.log",
       "maxLogSize": 10485760,
       "backups": 3
+    },
+    "harvesterLogs": {
+      "type": "multiFile",
+      "base": "logs/harvester/",
+      "property": "harvester",
+      "extension": ".log",
+      "maxLogSize": 10485760,
+      "backups": 3,
+      "layout": { "type": "pattern", "pattern": "[%d] [%p] harvester ID %X{harvester} - %m - %c" }
     }
   },
   "categories": {
     "default": {
-      "appenders": [ "console", "appLog" ],
+      "appenders": [ "console", "appLog", "harvesterLogs" ],
       "level": "INFO"
     },
     "summary": {

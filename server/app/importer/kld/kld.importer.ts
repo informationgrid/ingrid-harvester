@@ -70,6 +70,7 @@ export class KldImporter extends Importer {
 
     constructor(settings: KldSettings) {
         super(settings);
+        log.addContext('harvester', settings.id);
 
         this.profile = ProfileFactoryLoader.get();
         this.domParser = MiscUtils.getDomParser();

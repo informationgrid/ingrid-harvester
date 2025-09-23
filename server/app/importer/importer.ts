@@ -52,6 +52,7 @@ export abstract class Importer {
     readonly elastic: ElasticsearchUtils;
 
     protected constructor(settings: ImporterSettings) {
+        log.addContext('harvester', settings.id);
         this.filterUtils = new FilterUtils(settings);
         this.generalConfig = ConfigService.getGeneralSettings();
         this.summary = new Summary(settings);

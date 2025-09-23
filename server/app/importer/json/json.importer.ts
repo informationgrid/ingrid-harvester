@@ -51,6 +51,7 @@ export class JsonImporter extends Importer {
 
     constructor(settings: JsonSettings) {
         super(settings);
+        log.addContext('harvester', settings.id);
         this.profile = ProfileFactoryLoader.get();
         this.settings = settings;
     }
@@ -83,7 +84,7 @@ export class JsonImporter extends Importer {
         if (numReturned) {
             log.debug(`Received ${numReturned} records from ${this.settings.sourceURL}`);
             await this.extractRecords(response, harvestTime);
-            
+
             let processingTime = Math.floor((Date.now() - harvestTime.getTime()) / 1000);
             log.info(`Finished processing ${numReturned} records in ${processingTime} seconds`);
         }

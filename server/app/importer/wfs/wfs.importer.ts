@@ -65,6 +65,7 @@ export class WfsImporter extends Importer {
 
     constructor(settings: WfsSettings) {
         super(settings);
+        log.addContext('harvester', settings.id);
         this.profile = ProfileFactoryLoader.get();
         this.domParser = MiscUtils.getDomParser();
         // merge default settings with configured ones

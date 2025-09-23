@@ -56,6 +56,7 @@ export class DcatappluImporter extends Importer {
 
     constructor(settings, requestDelegate?: RequestDelegate) {
         super(settings);
+        log.addContext('harvester', settings.id);
 
         this.profile = ProfileFactoryLoader.get();
         this.domParser = MiscUtils.getDomParser();

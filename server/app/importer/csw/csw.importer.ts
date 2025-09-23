@@ -69,6 +69,7 @@ export class CswImporter extends Importer {
 
     constructor(settings, requestDelegate?: RequestDelegate) {
         super(settings);
+        log.addContext('harvester', settings.id);
         this.profile = ProfileFactoryLoader.get();
         this.domParser = MiscUtils.getDomParser();
         this.settings = MiscUtils.merge(defaultCSWSettings, settings);
