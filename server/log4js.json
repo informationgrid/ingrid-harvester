@@ -11,7 +11,11 @@
       "type": "file",
       "filename": "logs/app.log",
       "maxLogSize": 10485760,
-      "backups": 5
+      "backups": 5,
+      "layout": {
+        "type": "pattern",
+        "pattern": "[%d{yyyy-MM-dd hh:mm:ss}] [%p] harvester ID %X{harvester} - %m - %c"
+      }
     },
     "summaryFile": {
       "type": "file",
@@ -26,7 +30,10 @@
       "extension": ".log",
       "maxLogSize": 10485760,
       "backups": 3,
-      "layout": { "type": "pattern", "pattern": "[%d] [%p] harvester ID %X{harvester} - %m - %c" }
+      "layout": {
+        "type": "pattern",
+        "pattern": "[%d{yyyy-MM-dd hh:mm:ss}] [%p] harvester ID %X{harvester} - %m - %c"
+      }
     }
   },
   "categories": {
