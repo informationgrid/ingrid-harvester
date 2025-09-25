@@ -86,8 +86,8 @@ export class ApiCtrl {
     }
 
     @Get('/log/:harvesterId')
-    getLogByHarvesterId(@PathParams('harvesterId') harvesterId: string) {
-        return this.logService.getLogByHarvesterID(harvesterId);
+    getLogByHarvesterId(@PathParams('harvesterId') harvesterId: number) {
+        return this.logService.getLogByHarvesterId(harvesterId);
     }
 
     @Post('/schedule/:id')
