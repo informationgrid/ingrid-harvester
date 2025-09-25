@@ -127,12 +127,13 @@ export class HarvesterComponent implements OnInit, OnDestroy {
     });
   }
 
-  showLog(id: number) {
+  showLog(id: number, selectedTabIndex?: number) {
     this.dialog.open(DialogLogComponent, {
       width: '900px',
       height: '600px',
       data: {
-        content: this.importDetail[id]
+        content: this.importDetail[id],
+        selectedTabIndex: selectedTabIndex ?? 0,
       }
     });
   }

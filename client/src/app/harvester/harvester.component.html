@@ -103,7 +103,7 @@
 
             </mat-expansion-panel-header>
 
-            <app-importer-detail [data]="importDetail[harvester.id]" (showLog)="showLog(harvester.id)"
+            <app-importer-detail [data]="importDetail[harvester.id]" (showLog)="showLog(harvester.id, $event)"
                 [cronActive]="!harvester.disable && (harvester.cron?.full?.active || harvester.cron?.incr?.active)"></app-importer-detail>
 
             <div class="harvester-config-buttons grid grid-cols-1 gap-20 justify-items-end baseline harvester-button-custom-grid-cols-mobile margin-below">
@@ -126,10 +126,10 @@
             <div
                 class="harvester-config-buttons grid grid-cols-6 gap-20 justify-items-end baseline harvester-button-custom-grid-cols-mobile">
 
-                <button class="col-span-1" mat-button (click)="showLog(harvester.id)"
+                <button class="col-span-1" mat-button (click)="showLog(harvester.id, 0)"
                     [disabled]="!hasAnyProblems(harvester.id)" data-test="log">
                     <mat-icon svgIcon="Logging" class="inline-valigned"/>
-                    Error-Log
+                    Log
                 </button>
 
                 <button mat-button (click)="showHistory(harvester)" data-test="history">

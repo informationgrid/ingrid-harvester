@@ -45,40 +45,30 @@ export class DialogLogComponent implements OnInit {
   harvesterID: string;
   logdata = [];
   isLoading = true;
+  selectedTabIndex = 0;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private logService: LogService) {
     const message: ImportLogMessage = data.content;
     this.harvesterID = data.content.id;
+    this.selectedTabIndex = data.selectedTabIndex;
     this.appErrors = message.summary.appErrors;
     this.databaseErrors = message.summary.databaseErrors;
     this.elasticsearchErrors = message.summary.elasticErrors;
     this.appWarnings = message.summary.warnings;
-    console.log("Harvester ID",  data)
   }
 
   ngOnInit() {
-    this.logService.getLogByHarvesterID(this.harvesterID).subscribe(data => {
-      this.logdata = data.split('\n');
-      this.isLoading = false;
-
-      // wait for content to be rendered
-      setTimeout(() => {
-        this.viewPort.scrollToIndex(this.logdata.length);
-      }, 0);
-
-    }, (error => console.error('Error getting log:', error)));
-  }
-
-  getInitialIndex() {
-    if (this.appErrors.length > 0) {
-      return 0;
-    } else if (this.databaseErrors.length > 0) {
-      return 1;
-    } else if (this.elasticsearchErrors.length > 0) {
-      return 2;
-    } else {
-      return 3;
-    }
+    this.logService.getLogByHarvesterID(this.harvesterID).subscribe({
+      next: (data) => {
+        this.logdata = data.split('\n');
+        this.isLoading = false;
+        setTimeout(() => {
+          this.viewPort.scrollToIndex(this.logdata.length);
+        }, 0);
+      },
+      error: (err) => console.error('Error getting log:', err),
+      complete: () => {},
+    });
   }
 
   determineClass(line: string) {
