@@ -37,4 +37,7 @@ export class LogService {
     return this.http.get('rest/api/log', {responseType: 'text'});
   }
 
+  getLogByHarvesterID(harvesterId: string): Observable<string> {
+    return this.http.get(`rest/api/log/${harvesterId}`, {responseType: 'text'});
+  }
 }
