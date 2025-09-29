@@ -42,7 +42,7 @@ export class DiplanungWfsImporter extends WfsImporter {
         }
 
         // Regionalschlüssel
-        const rs_data = fs.readFileSync('app/importer/regionalschluessel.json', { encoding: 'utf8', flag: 'r' });
+        const rs_data = fs.readFileSync('regionalschluessel.json', { encoding: 'utf8', flag: 'r' });
         generalInfo['regionalschluessel'] = JSON.parse(rs_data);
 
         // general metadata contacts
