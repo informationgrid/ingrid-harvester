@@ -27,6 +27,7 @@ import * as XpathUtils from '../../utils/xpath.utils.js';
 import type { CswSettings } from './csw.settings.js';
 import { defaultCSWSettings } from './csw.settings.js';
 import log4js from 'log4js';
+import pLimit from 'p-limit';
 import { namespaces } from '../../importer/namespaces.js';
 import type { BulkResponse } from '../../persistence/elastic.utils.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
@@ -223,7 +224,6 @@ export class CswImporter extends Importer {
             })));
         }
         // 2) run in parallel
-        const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
         const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
         log.info(`Finished requesting records`);
@@ -253,7 +253,6 @@ export class CswImporter extends Importer {
             ));
         }
         // 2) run in parallel
-        const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
         const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
         // 3) persist leftovers
@@ -267,7 +266,6 @@ export class CswImporter extends Importer {
         let recordEntities: RecordEntity[] = await this.database.getDatasets(this.settings.sourceURL) ?? [];
         // for all services, get WFS, WMS info and merge into dataset
         // 2) run in parallel
-        const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
         const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(recordEntities.map(recordEntity => limit(() => this.coupleService(recordEntity, resolveOgcDistributions, true))));
         log.info(`Finished self-coupling`);
@@ -281,7 +279,6 @@ export class CswImporter extends Importer {
         let serviceEntities: RecordEntity[] = await this.database.getServices(this.settings.sourceURL) ?? [];
         // for all services, get WFS, WMS info and merge into dataset
         // 2) run in parallel
-        const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
         const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(serviceEntities.map(serviceEntity => limit(() => this.coupleService(serviceEntity, resolveOgcDistributions, false))));
         log.info(`Finished dataset-service coupling`);

@@ -25,6 +25,7 @@ import * as xpath from 'xpath';
 import * as GeoJsonUtils from '../../utils/geojson.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import iconv from 'iconv-lite';
+import pLimit from 'p-limit';
 import type { WfsSettings } from './wfs.settings.js';
 import { defaultWfsSettings } from './wfs.settings.js';
 import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
@@ -122,7 +123,6 @@ export class WfsImporter extends Importer {
         this.numItems = numFeatureTypes;
 
         // for each FeatureType, get all Features
-        const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
         const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(Object.keys(featureTypes).map(featureTypeName =>
             limit(() => this.extractCompleteFeatureType(featureTypeName, featureTypes[featureTypeName]))

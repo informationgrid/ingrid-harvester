@@ -23,6 +23,7 @@
 
 import * as MiscUtils from '../../../utils/misc.utils.js';
 import log4js from 'log4js';
+import pLimit from 'p-limit';
 import { generateXplanWmsDistributions } from '../diplanung.utils.js';
 import { CswImporter } from '../../../importer/csw/csw.importer.js';
 import type { DiplanungIndexDocument } from '../model/index.document.js';
@@ -95,9 +96,6 @@ export class DiplanungCswImporter extends CswImporter {
                 }
             }));
         }
-        // // TODO move import somewhere outside
-        // // TODO possible with dynamic imports?
-        const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
         // TODO 10 seems to hit a sweet spot. 20 is already too much with our default fetch timeout of 20sec
         const limit = pLimit(10);
         let results = (await Promise.allSettled(promises.map(pf => limit(pf)))).filter(result => result.status === 'fulfilled');

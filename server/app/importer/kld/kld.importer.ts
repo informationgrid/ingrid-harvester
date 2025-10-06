@@ -27,6 +27,7 @@ import { defaultKldSettings } from './kld.settings.js';
 import log4js from 'log4js';
 import { existsSync, mkdirSync, mkdtemp, writeFileSync } from 'fs';
 import { join } from 'path';
+import pThrottle from 'p-throttle';
 import { tmpdir } from 'os';
 import type { BulkResponse } from '../../persistence/elastic.utils.js';
 import type { DOMParser } from '@xmldom/xmldom';
@@ -143,7 +144,6 @@ export class KldImporter extends Importer {
         log.info(`Number of records to fetch: ${this.totalRecords}`);
 
         // setup concurrency
-        const pThrottle = (await import('p-throttle')).default; // use dynamic import because this module is ESM-only
         const throttle = pThrottle({
             limit: this.settings.maxConcurrent,
             interval: this.settings.maxConcurrentTimespan,
