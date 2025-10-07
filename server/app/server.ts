@@ -21,7 +21,9 @@
  * ==================================================
  */
 
-import { $log, Configuration, PlatformAcceptMimesMiddleware, PlatformApplication, PlatformLogMiddleware } from '@tsed/common';
+import { $log, Configuration, PlatformApplication } from '@tsed/common';
+import { PlatformAcceptMimesMiddleware } from '@tsed/platform-accept-mimes';
+import { PlatformLogMiddleware } from '@tsed/platform-log-middleware';
 import { Inject } from '@tsed/di';
 import log4js from 'log4js';
 import * as path from 'path';
