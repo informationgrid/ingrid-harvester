@@ -21,7 +21,11 @@
       "type": "file",
       "filename": "logs/summary.log",
       "maxLogSize": 10485760,
-      "backups": 3
+      "backups": 3,
+      "layout": {
+        "type": "pattern",
+        "pattern": "[%d{ISO8601_WITH_TZ_OFFSET}] [%p] %m - %c"
+      }
     },
     "harvesterLogs": {
       "type": "multiFile",
