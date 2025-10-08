@@ -160,7 +160,7 @@ export class WfsMapper extends BaseMapper {
 
     getBoundingBox(): Geometry {
         let obbox = this.getOriginalBoundingBox();
-        return GeoJsonUtils.getBoundingBox(obbox.lowerCorner, obbox.upperCorner, obbox.crs);
+        return obbox ? GeoJsonUtils.getBoundingBox(obbox.lowerCorner, obbox.upperCorner, obbox.crs) : undefined;
     }
 
     getOriginalBoundingBox(): Record<string, string> {
