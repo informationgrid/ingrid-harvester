@@ -136,6 +136,9 @@
             "type": "double",
             "store": true
         },
+        "spatial": {
+            "type": "nested"
+        },
         "idf": {
             "type": "text",
             "index": false
