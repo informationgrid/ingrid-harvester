@@ -43,7 +43,7 @@ export class DialogEditComponent implements OnInit {
 
   profile: string;
 
-  catalogs = this.configService.getCatalogs();
+  indices = this.configService.getCatalogs();
 
   private ngUnsubscribe = new Subject<void>();
 

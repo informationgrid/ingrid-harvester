@@ -1,8 +1,8 @@
 ---
-title: Katalog-Identifier
+title: Index-Identifier
 ---
 
-# Katalog-Identifier (Pflichtfeld)
+# Index-Identifier (Pflichtfeld)
 
 Name des Elasticsearch-Index, in dem die erfassten Datensätze gespeichert werden sollen.
 

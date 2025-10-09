@@ -56,16 +56,16 @@
             </mat-form-field>
 
             <mat-form-field class="col-span-3 col-span-6-mobile">
-              <mat-icon matSuffix matTooltip="Eingabehilfe" svgIcon="info-context-help"  contextHelp="harvester_field_catalogId"/>
-              <mat-label>Katalog-Identifier</mat-label>
+              <mat-icon matSuffix matTooltip="Eingabehilfe" svgIcon="info-context-help"  contextHelp="harvester_field_indexId"/>
+              <mat-label>Index-Identifier</mat-label>
               <input type="text"
                 placeholder="Eingeben oder auswählen"
                 matInput
                 formControlName="catalogId"
                 [matAutocomplete]="auto">
               <mat-autocomplete #auto="matAutocomplete">
-                @for (catalog of catalogs | async; track catalog.id) {
-                  <mat-option value="{{catalog.identifier}}">{{catalog.title}}</mat-option>
+                @for (index of indices | async; track index.id) {
+                  <mat-option value="{{index.identifier}}">{{index.title}}</mat-option>
                 }
               </mat-autocomplete>
             </mat-form-field>

@@ -50,7 +50,7 @@ export const routing = RouterModule.forChild([
         path: "catalogs",
         component: ConfigCatalogsComponent,
         data: {
-          title: "Katalogverwaltung",
+          title: "Indexverwaltung",
         },
       },
       {
