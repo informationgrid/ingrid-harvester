@@ -60,6 +60,7 @@ export class ImportSocketService {
     @Input('runImport')
     @Emit('/log')
     async runImport(id: number, isIncremental?: boolean): Promise<void> {
+        this.log.addContext("harvester", id)
         try {
             let lastExecution = new Date();
             let configGeneral = ConfigService.getGeneralSettings();

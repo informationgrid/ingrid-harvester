@@ -37,9 +37,9 @@ import type { Summary } from '../../model/summary.js';
 import type { WfsSettings } from './wfs.settings.js';
 import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
 
-export class WfsMapper extends BaseMapper {
+const log = log4js.getLogger(import.meta.filename);
 
-    log = log4js.getLogger();
+export class WfsMapper extends BaseMapper {
 
     readonly featureOrFeatureType: Node & Element;
     readonly featureTypeDescription: Node & Element;
@@ -54,6 +54,7 @@ export class WfsMapper extends BaseMapper {
 
     constructor(settings, featureOrFeatureType, harvestTime, summary, generalInfo) {
         super();
+        log.addContext('harvester', settings.id);
         this.settings = settings;
         this.featureOrFeatureType = featureOrFeatureType;
         this.featureTypeDescription = generalInfo['featureTypeDescription'];

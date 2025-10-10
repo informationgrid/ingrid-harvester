@@ -37,9 +37,9 @@ import type { ObjectResponse, RelatedObject, Document} from './kld.api.js';
 import { getDocumentUrl, RelationType, MediaType } from './kld.api.js';
 import type { Summary } from '../../model/summary.js';
 
-export class KldMapper extends BaseMapper {
+const log = log4js.getLogger(import.meta.filename);
 
-    log = log4js.getLogger();
+export class KldMapper extends BaseMapper {
 
     private readonly record: ObjectResponse;
     private readonly id: string;
@@ -49,6 +49,7 @@ export class KldMapper extends BaseMapper {
 
     constructor(settings: KldSettings, record: ObjectResponse, harvestTime: Date, summary: Summary) {
         super();
+        log.addContext('harvester', settings.id);
         this.settings = settings;
         this.record = record;
         this.summary = summary;
@@ -78,7 +79,7 @@ export class KldMapper extends BaseMapper {
         const abstract = this.record.Beschreibung;
         if (!abstract) {
             let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.id}\', title: \'${this.getTitle()}\', source: \'${this.settings.sourceURL}\'`;
-            this.log.warn(msg);
+            log.warn(msg);
             this.summary.warnings.push(['No description', msg]);
             this.valid = false;
         }
