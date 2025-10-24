@@ -29,6 +29,7 @@ import type { ElasticQueries } from './elastic.queries.js';
 import type { Index } from '@shared/index.model.js';
 import type { IndexConfiguration, IndexSettings } from './elastic.setting.js';
 import type { Summary } from '../model/summary.js';
+import { INGRID_META_INDEX } from '../profiles/ingrid/profile.factory.js';
 
 export interface BulkResponse {
     queued: boolean;
@@ -225,6 +226,11 @@ export abstract class ElasticsearchUtils {
     }
 
     protected addPrefixIfNotExists(index: string | string[]): string | string[] {
+        // system level exceptions, e.g. for ingrid_meta
+        if (index == INGRID_META_INDEX) {
+            return index;
+        }
+
         const addPrefix = (index: string) => {
             let prefix = '';
             if (index != this.config.alias && !index.startsWith(this.config.prefix)) {
