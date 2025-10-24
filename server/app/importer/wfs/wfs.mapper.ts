@@ -173,6 +173,9 @@ export class WfsMapper extends BaseMapper {
             lowerCorner = this.select('./ows:LowerCorner', bbox, true)?.textContent;
             upperCorner = this.select('./ows:UpperCorner', bbox, true)?.textContent;
             crs = 'WGS84';
+            if (!lowerCorner || !upperCorner) {
+                return null;
+            }
         }
         else {
             let bbox = this.select('./*/gml:boundedBy/gml:Envelope', this.featureOrFeatureType, true);

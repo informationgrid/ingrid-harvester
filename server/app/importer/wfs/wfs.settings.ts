@@ -42,7 +42,8 @@ export type WfsSettings = {
     eitherKeywords: string[],
     httpMethod: 'GET' | 'POST',
     featureFilter?: string,
-    resolveWithFullResponse?: boolean
+    resolveWithFullResponse?: boolean,
+    requireGeometry?: boolean
 } & ImporterSettings;
 
 export const defaultWfsSettings: Partial<WfsSettings> = {
