@@ -156,6 +156,9 @@ export class IdfGenerator extends AbstractIdfGenerator {
     getMapPreview(name: string) {
         let title = this.mapper.isFeatureType() ? this.mapper.getTitle() : this.mapper.getGeneratedId();
         let bbox = this.mapper.getBoundingBox()?.bbox;
+        if (!bbox) {
+            return "";
+        }
         // Latitude first (Breitengrad = y), longitude second (Laengengrad = x)
         let [ y1, x1, y2, x2 ] = bbox.map(Number);
         let addHtml: string;

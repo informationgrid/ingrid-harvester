@@ -31,7 +31,11 @@ const log = log4js.getLogger(import.meta.filename);
 export class ZdmWfsImporter extends WfsImporter {
 
     constructor(settings: WfsSettings) {
-        super(MiscUtils.merge(settings, { memberElement: 'gml:featureMember', harvestTypes: true }));
+        super(MiscUtils.merge(settings, { 
+            memberElement: 'gml:featureMember', 
+            harvestTypes: true,
+            requireGeometry: true
+        }));
     }
 
     // protected async postHarvestingHandling() {

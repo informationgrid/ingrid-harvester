@@ -36,7 +36,7 @@ export abstract class ZdmMapper<M extends WfsMapper> implements IndexDocumentFac
     }
 
     async create(): Promise<ZdmIndexDocument> {
-        let bbox = this.getBoundingBox().bbox;
+        let bbox = this.getBoundingBox()?.bbox;
         let result: ZdmIndexDocument = {
             t01_object: {
                 obj_id: this.getGeneratedId()
