@@ -69,7 +69,7 @@ pipeline {
                         sh 'gpg --batch --import $RPM_PRIVATE_KEY'
                         sh "mkdir -p ./build/rpms/ingrid"
                         sh "cp -r /root/rpmbuild/RPMS/noarch/* ${WORKSPACE}/build/rpms/ingrid/"
-                        sh "expect /rpm-sign.exp ${WORKSPACE}/build/rprms/ingrid/*.rpm"
+                        sh "expect /rpm-sign.exp ${WORKSPACE}/build/rpms/ingrid/*.rpm"
 
                         archiveArtifacts artifacts: "build/rpms/ingrid/ingrid-harvester-*.rpm", fingerprint: true
                     }
@@ -83,7 +83,7 @@ pipeline {
                         sh 'rm -f ~/.gnupg/*.gpg'
                         sh 'gpg --batch --import $RPM_PUBLIC_KEY'
                         sh 'gpg --batch --import $RPM_PRIVATE_KEY'
-                        sh "mkdir -p ./build ./build/rpms ./build/rpms/itzbund"
+                        sh "mkdir -p ./build/rpms/itzbund"
                         sh "cp -r /root/rpmbuild/RPMS/noarch/* ${WORKSPACE}/build/rpms/itzbund/"
                         sh "expect /rpm-sign.exp ${WORKSPACE}/build/rpms/itzbund/*.rpm"
 
@@ -119,7 +119,7 @@ pipeline {
 
                     withCredentials([usernamePassword(credentialsId: '9623a365-d592-47eb-9029-a2de40453f68', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                         sh '''
-                            curl -f --user $USERNAME:$PASSWORD --upload-file build/rpms/*.rpm https://nexus.informationgrid.eu/repository/''' + repoType + '''/
+                            curl -f --user $USERNAME:$PASSWORD --upload-file build/rpms/ingrid/*.rpm https://nexus.informationgrid.eu/repository/''' + repoType + '''/
                             curl -f --user $USERNAME:$PASSWORD --upload-file build/*-sbom.json https://nexus.informationgrid.eu/repository/''' + repoType + '''/
                         '''
                     }
