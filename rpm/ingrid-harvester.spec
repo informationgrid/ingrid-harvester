@@ -8,7 +8,8 @@ URL:                        https://www.wemove.com/
 BuildArch:                  noarch
 AutoReqProv:                no
 
-%define target              %{buildroot}/opt/ingrid/ingrid-harvester
+%define install_root        /opt/ingrid/ingrid-harvester
+%define target              %{buildroot}%{install_root}
 %define systemd_dir         /usr/lib/systemd/system
 %define ingrid_unit_name    ingrid-harvester.service
 %define ingrid_service      %{systemd_dir}/%{ingrid_unit_name}
@@ -35,8 +36,9 @@ cp ${WORKSPACE}/rpm/%{ingrid_unit_name} %{buildroot}%{systemd_dir}
 
 %files
 %defattr(0644,ingrid,ingrid,0755)
-%attr(0755,ingrid,ingrid) /opt/ingrid/ingrid-harvester
+%attr(0755,ingrid,ingrid) %{install_root}
 %attr(0644,root,root) %{ingrid_service}
+%config(noreplace) %{install_root}/config.json
 
 ################################################################################
 %pre
