@@ -39,6 +39,9 @@ cp ${WORKSPACE}/rpm/%{ingrid_unit_name} %{buildroot}%{systemd_dir}
 %attr(0755,ingrid,ingrid) %{install_root}
 %attr(0644,root,root) %{ingrid_service}
 %config(noreplace) %{install_root}/config.json
+%config(noreplace) %{install_root}/config-general.json
+%config(noreplace) %{install_root}/server-config.json
+%config(noreplace) %{install_root}/users.json
 
 ################################################################################
 %pre
