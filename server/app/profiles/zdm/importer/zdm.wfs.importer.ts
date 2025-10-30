@@ -76,7 +76,7 @@ export class ZdmWfsImporter extends WfsImporter {
                     "ranking": [
                         "score"
                     ],
-                    "iPlugClass": "de.ingrid.iplug.csw.dsc.CswDscSearchPlug",
+                    "iPlugClass": "de.ingrid.iplug.wfs.dsc.WfsDscSearchPlug",
                     "fields": [],
                     "proxyServiceUrl": this.settings.iPlugId,
                     "useRemoteElasticsearch": true
