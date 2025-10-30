@@ -38,7 +38,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<ZdmIndexDo
         let deleteDocument = document.extras.metadata.deleted != null;
         bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.extras.metadata.deleted != null);
         if (deleteDocument) {
-            return [{ operation: 'delete', _id: createEsId(document) }];
+            return [{ operation: 'delete', _index: document['catalog'].identifier, _id: createEsId(document) }];
         }
 
         // // deduplication
@@ -66,7 +66,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<ZdmIndexDo
         document.idf = document.idf.replace('<h2>Features:</h2>', '<h2>Features:</h2>\n' + features.join('\n'));
         document = this.sanitize(document);
         // document = MiscUtils.merge(document, { extras: { transformed_data: { dcat_ap_plu: DcatApPluDocumentFactory.create(document) } } });
-        box.push({ operation: 'index', _id: createEsId(document), document });
+        box.push({ operation: 'index', _index: document['catalog'].identifier, _id: createEsId(document), document });
         return box;
     }
 
