@@ -396,10 +396,6 @@ export class CswImporter extends Importer {
         }
     }
 
-    protected async postHarvestingHandling() {
-        // For Profile specific Handling
-    }
-
     async handleHarvest(delegate: RequestDelegate): Promise<void> {
         log.info('Requesting next records, starting at', delegate.getStartRecordIndex());
         let harvestStart = Date.now();

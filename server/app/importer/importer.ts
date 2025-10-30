@@ -113,6 +113,7 @@ export abstract class Importer {
                 await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
                 await this.database.commitTransaction();
                 await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
+                await this.postHarvestingHandling();
                 observer.next(ImportResult.complete(this.summary));
             }
             catch (err) {
@@ -129,6 +130,10 @@ export abstract class Importer {
     }
 
     protected abstract harvest(): Promise<number>;
+
+    protected async postHarvestingHandling() {
+        // For Profile specific Handling
+    }
 
     getSummary(): Summary {
         return this.summary;

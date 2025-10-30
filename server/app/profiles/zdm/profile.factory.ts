@@ -32,7 +32,7 @@ import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { ImporterFactory } from '../../importer/importer.factory.js';
 import { IndexDocumentFactory } from '../../model/index.document.factory.js';
-import { INGRID_META_INDEX } from '../../profiles/ingrid/profile.factory.js';
+import { INGRID_META_INDEX } from '../ingrid/profile.factory.js';
 import { PostgresAggregator } from './persistence/postgres.aggregator.js';
 import type { PostgresAggregator as AbstractPostgresAggregator} from '../../persistence/postgres.aggregator.js';
 import { ProfileFactory } from '../profile.factory.js';

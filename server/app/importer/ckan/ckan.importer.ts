@@ -196,13 +196,13 @@ export class CkanImporter extends Importer {
             this.updateRequestMethod(offset);
 
         }
-        await this.postHarvestingHandling(promises);
+        await this.finalizeHarvestingHandling(promises);
         await this.database.sendBulkData();
 
         return total;
     }
 
-    protected async postHarvestingHandling(promises: any[]){
+    protected async finalizeHarvestingHandling(promises: any[]){
         // For Profile specific Handling
     }
 
