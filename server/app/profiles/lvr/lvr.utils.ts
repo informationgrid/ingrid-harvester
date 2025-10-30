@@ -33,7 +33,7 @@ export function createEsId(document: LvrIndexDocument): string {
 
 // workaround for https://github.com/JiLiZART/BBob/issues/214
 const require = createRequire(import.meta.url);
-const bbobHTML = require('@bbob/html');
+const bbobHTML = require('@bbob/html').default;
 const presetHTML5 = require('@bbob/preset-html5').default;
 
 /**
