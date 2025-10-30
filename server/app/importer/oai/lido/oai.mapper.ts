@@ -37,6 +37,8 @@ import type { Summary } from '../../../model/summary.js';
 import type { XPathElementSelect } from '../../../utils/xpath.utils.js';
 import { normalizeDateTime } from '../../../utils/misc.utils.js';
 
+const log = log4js.getLogger(import.meta.filename);
+
 export class OaiMapper extends BaseMapper {
 
     static select = <XPathElementSelect>xpath.useNamespaces(oaiXPaths.lido.prefixMap);
@@ -46,8 +48,6 @@ export class OaiMapper extends BaseMapper {
         path = path.replace(/\/(?!@)/g, '/lido:');
         return OaiMapper.select(path, parent, true)?.textContent;
     }
-
-    log = log4js.getLogger();
 
     private readonly header: Element;
     public readonly record: Element;
@@ -60,6 +60,7 @@ export class OaiMapper extends BaseMapper {
 
     constructor(settings, header: Element, record: Element, harvestTime, summary) {
         super();
+        log.addContext('harvester', settings.id);
         this.settings = settings;
         this.header = header;
         this.record = record;

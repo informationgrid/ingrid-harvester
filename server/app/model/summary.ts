@@ -27,6 +27,8 @@ export class Summary {
 
     private MAX_ITEMS_TO_SHOW = 10;
 
+    id: number;
+
     numDocs: number = 0;
 
     numErrors: number = 0;
@@ -48,6 +50,7 @@ export class Summary {
     private readonly headerTitle: string;
 
     constructor(settings: Partial<ImporterSettings>) {
+        this.id = settings.id;
         this.headerTitle = `${settings.description} (${settings.type})`;
         if (settings.showCompleteSummaryInfo) {
             this.MAX_ITEMS_TO_SHOW = 1000000;
