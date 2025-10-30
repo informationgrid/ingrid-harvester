@@ -111,6 +111,6 @@ export class ZdmFactory extends ProfileFactory<WfsMapper> {
     }
 
     useIndexPerCatalog(): boolean {
-        return false;
+        return true;
     }
 }
