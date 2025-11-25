@@ -17,7 +17,7 @@ The InGrid Harvester runs two components in a single docker container: the actua
 ### General notes
 
 * If you want the InGrid Harvester to be accessed at a sub-path (i.e., not directly at root), you have to **both**
-  * set `BASE_URL` to the desired path (environment variable)
+  * set `BASE_URL` to the desired path (environment variable & build args)
   * set `contextPath` in the client config file to the same value
 * This is in addition to appropriate nginx settings
 

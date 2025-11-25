@@ -76,6 +76,30 @@ services:
     networks:
       - harvester-network
 
+  harvester:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - BASE_URL=/harvester/
+    container_name: ingrid-harvester
+    image: ingrid-harvester
+    environment:
+      - IMPORTER_PROFILE=diplanung
+      - DB_URL=postgres
+      - ELASTIC_URL=http://elastic:9200
+      - ELASTIC_VERSION=9
+      - ELASTIC_ALIAS=harvester
+      - ELASTIC_USER=elastic
+      - ELASTIC_PASSWORD=elastic
+      - BASE_URL=/harvester/
+    working_dir: /opt/ingrid/harvester
+    command: node app/index.js
+    volumes:
+      - ./client/src/assets/config.json:/opt/ingrid/harvester/server/app/webapp/assets/config.json
+    networks:
+      - harvester-network
+
 volumes:
   esdata:
   postgresdata:

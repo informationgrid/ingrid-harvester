@@ -24,6 +24,7 @@ RUN npm run build
 # IMAGE: build client
 #
 FROM ${NODE_BASE_IMAGE} AS build-client
+ARG BASE_URL="/"
 LABEL stage=build
 
 # install build dependencies
@@ -37,8 +38,7 @@ COPY . .
 
 # build client
 WORKDIR /opt/ingrid/harvester/client
-RUN npm run prod
-
+RUN npm run prod -- --base-href ${BASE_URL}
 
 #
 # IMAGE: final
