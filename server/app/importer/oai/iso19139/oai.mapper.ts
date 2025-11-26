@@ -44,6 +44,8 @@ import type { Summary } from '../../../model/summary.js';
 import { UrlUtils } from '../../../utils/url.utils.js';
 import type { XPathElementSelect } from '../../../utils/xpath.utils.js';
 
+const log = log4js.getLogger(import.meta.filename);
+
 export class OaiMapper extends BaseMapper {
 
     static select = <XPathElementSelect>xpath.useNamespaces({
@@ -53,8 +55,6 @@ export class OaiMapper extends BaseMapper {
         'gml32': namespaces.GML_3_2,
         'srv': namespaces.SRV
     });
-
-    log = log4js.getLogger();
 
     private readonly header: Element;
     private readonly record: Element;
@@ -75,6 +75,7 @@ export class OaiMapper extends BaseMapper {
 
     constructor(settings, header, record, harvestTime, summary) {
         super();
+        log.addContext('harvester', settings.id);
         this.settings = settings;
         this.header = header;
         this.record = record;
@@ -100,7 +101,7 @@ export class OaiMapper extends BaseMapper {
         let abstract = OaiMapper.getCharacterStringContent(this.idInfo, 'abstract');
         if (!abstract) {
             let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.sourceURL}\'`;
-            this.log.warn(msg);
+            log.warn(msg);
             this.summary.warnings.push(['No description', msg]);
             this.valid = false;
         }
@@ -415,7 +416,7 @@ export class OaiMapper extends BaseMapper {
         }, false);
         if (!valid) {
             // Don't index metadata-sets without any of the mandatory keywords
-            this.log.info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.settings.sourceURL}'.`);
+            log.info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.settings.sourceURL}'.`);
             this.skipped = true;
         }
 
@@ -549,11 +550,11 @@ export class OaiMapper extends BaseMapper {
                 if (date) {
                     return date;
                 } else {
-                    this.log.warn(`Error parsing begin date, which was '${text}'. It will be ignored.`);
+                    log.warn(`Error parsing begin date, which was '${text}'. It will be ignored.`);
                 }
             }
         } catch (e) {
-            this.log.error(`Cannot extract time range.`, e);
+            log.error(`Cannot extract time range.`, e);
         }
     }
 
@@ -637,7 +638,7 @@ export class OaiMapper extends BaseMapper {
             let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
             this.summary.missingLicense++;
 
-            this.log.warn(msg);
+            log.warn(msg);
             this.summary.warnings.push(['Missing license', msg]);
             return {
                 id: 'unknown',

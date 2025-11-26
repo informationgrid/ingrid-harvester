@@ -44,6 +44,8 @@ import type { Summary } from '../../model/summary.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 import type { XPathElementSelect } from '../../utils/xpath.utils.js';
 
+const log = log4js.getLogger(import.meta.filename);
+
 export class DcatMapper extends BaseMapper {
 
     static DCAT_CATEGORY_URL = 'http://publications.europa.eu/resource/authority/data-theme/';
@@ -137,10 +139,9 @@ export class DcatMapper extends BaseMapper {
         themes: null
     };
 
-    log = log4js.getLogger();
-
     constructor(settings, record, catalogPage, harvestTime, summary) {
         super();
+        log.addContext('harvester', settings.id);
         this.settings = settings;
         this.record = record;
         this.harvestTime = harvestTime;
@@ -178,7 +179,7 @@ export class DcatMapper extends BaseMapper {
         }
         if (!description) {
             let msg = `Dataset doesn't have an description. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.sourceURL}\'`;
-            this.log.warn(msg);
+            log.warn(msg);
             this.summary.warnings.push(['No description', msg]);
             this.valid = false;
         } else {
@@ -565,7 +566,7 @@ export class DcatMapper extends BaseMapper {
             if (date) {
                 return date;
             } else {
-                this.log.warn(`Error parsing date, which was '${text}'. It will be ignored.`);
+                log.warn(`Error parsing date, which was '${text}'. It will be ignored.`);
             }
         }
     }
@@ -650,7 +651,7 @@ export class DcatMapper extends BaseMapper {
             let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
             this.summary.missingLicense++;
 
-            this.log.warn(msg);
+            log.warn(msg);
             this.summary.warnings.push(['Missing license', msg]);
             return {
                 id: 'unknown',
@@ -782,7 +783,7 @@ export class DcatMapper extends BaseMapper {
 
                 let infos: Contact = {
                     fn: name?.textContent,
-                };                 
+                };
 
                 if (contact.getAttribute('uuid')) {
                     infos.hasUID = contact.getAttribute('uuid');

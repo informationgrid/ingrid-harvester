@@ -37,6 +37,7 @@ import { MailServer } from '../utils/nodemailer.utils.js';
 import type { Observer } from 'rxjs';
 import { Observable } from 'rxjs';
 import { Summary } from '../model/summary.js';
+import {LogService} from "../services/storage/LogService.js";
 
 const log = log4js.getLogger(import.meta.filename)
 
@@ -52,6 +53,9 @@ export abstract class Importer {
     readonly elastic: ElasticsearchUtils;
 
     protected constructor(settings: ImporterSettings) {
+        let logService = new LogService();
+        logService.deleteLogByHarvesterId(settings.id);
+        log.addContext('harvester', settings.id);
         this.filterUtils = new FilterUtils(settings);
         this.generalConfig = ConfigService.getGeneralSettings();
         this.summary = new Summary(settings);

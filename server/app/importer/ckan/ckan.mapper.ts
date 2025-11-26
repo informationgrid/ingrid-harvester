@@ -43,6 +43,8 @@ import type { Summary } from '../../model/summary.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 import mapping from "../../../mappings.json" with { type: "json" };
 
+const log = log4js.getLogger(import.meta.filename);
+
 export interface CkanMapperData {
     harvestTime: Date;
     source: any;
@@ -66,8 +68,6 @@ export class CkanMapper extends BaseMapper {
         gb: 10000000000,
     };
 
-    log = log4js.getLogger();
-
     private readonly source: any;
     private readonly data: CkanMapperData;
     private resourcesDate: Date[] = null;
@@ -76,6 +76,7 @@ export class CkanMapper extends BaseMapper {
 
     constructor(settings: CkanSettings, data: CkanMapperData) {
         super();
+        log.addContext('harvester', settings.id);
         this.settings = settings;
         this.source = data.source;
         this.data = data;
@@ -138,7 +139,7 @@ export class CkanMapper extends BaseMapper {
                 } else {
                     let msg = `Invalid URL '${res.url} found for item with id: '${this.source.id}', title: '${this.source.title}', index: '${this.data.currentIndexName}'.`;
                     urlErrors.push(msg);
-                    this.log.warn(msg);
+                    log.warn(msg);
                 }
             }
         }
@@ -466,14 +467,14 @@ export class CkanMapper extends BaseMapper {
 
         if (this.settings.defaultLicense && hasNoLicense) {
             this.summary.missingLicense++;
-            this.log.warn(`Missing license for ${this.getGeneratedId()} using default one.`);
+            log.warn(`Missing license for ${this.getGeneratedId()} using default one.`);
 
             return this.settings.defaultLicense;
         } else if (hasNoLicense) {
             let msg = `No license detected for dataset: ${this.getGeneratedId()} -> ${this.getTitle()}`;
             this.summary.missingLicense++;
 
-            this.log.warn(msg);
+            log.warn(msg);
             this.summary.warnings.push(['Missing license', msg]);
         } else {
             let license = await DcatLicensesUtils.get(this.source.license_url);
@@ -641,7 +642,7 @@ export class CkanMapper extends BaseMapper {
             let message = `Date has incorrect format: ${date}`;
             this.summary.numErrors++;
             this.summary.appErrors.push(message);
-            this.log.warn(message);
+            log.warn(message);
         };
 
         if (date instanceof Date) {
@@ -686,7 +687,7 @@ export class CkanMapper extends BaseMapper {
             let message = `Byte size has incorrect format: ${size}`;
             this.summary.numErrors++; //.push(message);
             this.summary.appErrors.push(message);
-            this.log.warn(message);
+            log.warn(message);
             return undefined;
         }
 

@@ -39,9 +39,9 @@ import { RequestDelegate } from '../../utils/http-request.utils.js';
 import type { SparqlSettings } from './sparql.settings.js';
 import type { Summary } from '../../model/summary.js';
 
-export class SparqlMapper extends BaseMapper {
+const log = log4js.getLogger(import.meta.filename);
 
-    log = log4js.getLogger();
+export class SparqlMapper extends BaseMapper {
 
     private readonly record: any;
     private readonly catalogPage: any;
@@ -63,6 +63,7 @@ export class SparqlMapper extends BaseMapper {
 
     constructor(settings, record, harvestTime, summary) {
         super();
+        log.addContext('harvester', settings.id);
         this.settings = settings;
         this.record = record;
         this.harvestTime = harvestTime;
@@ -241,7 +242,7 @@ export class SparqlMapper extends BaseMapper {
             let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
             this.summary.missingLicense++;
 
-            this.log.warn(msg);
+            log.warn(msg);
             this.summary.warnings.push(['Missing license', msg]);
             return {
                 id: 'unknown',
