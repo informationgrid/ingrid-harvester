@@ -1,3 +1,12 @@
+# InGrid Editor
+
+<img src="https://ingrid-oss.eu/8.2.0/assets/components/ingrid-plattform.png" alt="InformationGrid illustration" width="480" align="right">
+
+This repository is part of **[InGrid](https://ingrid-oss.eu)**, an open-source solution for building, managing, and exposing metadata-driven information systems. 
+
+**About InGrid Harvester:**  
+Standalone component that collects data from diverse sources and stores it in Elasticsearch indices for processing, ensuring data is always available in a unified format.
+
 # Installation
 
 The InGrid Harvester runs two components in a single docker container: the actual `server` application and the admin `client`. It depends on an Elasticsearch instance and a PostgreSQL installation.
