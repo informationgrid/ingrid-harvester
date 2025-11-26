@@ -1,4 +1,4 @@
-# InGrid Editor
+# InGrid Harvester
 
 <img src="https://ingrid-oss.eu/8.2.0/assets/components/ingrid-plattform.png" alt="InformationGrid illustration" width="480" align="right">
 
