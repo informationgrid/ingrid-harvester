@@ -21,10 +21,12 @@
  * ==================================================
  */
 
+import * as GeoJsonUtils from "../../../utils/geojson.utils.js";
 import log4js from 'log4js';
 import {ingridMapper} from "./ingrid.mapper.js";
 import {CswMapper} from "../../../importer/csw/csw.mapper.js";
 import type {Distribution} from "../../../model/distribution.js";
+import type { Geometry } from 'geojson';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -121,6 +123,12 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
 
     getY2() {
         return this.getGeoBound("north");
+    }
+
+    getSpatial(): Geometry[] {
+        let lowerCorner = `${this.getX1()} ${this.getY1()}`;
+        let upperCorner = `${this.getX2()} ${this.getY2()}`;
+        return [GeoJsonUtils.getBoundingBox(lowerCorner, upperCorner, "WGS84")];
     }
 
     getIDF() {

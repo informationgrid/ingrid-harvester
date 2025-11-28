@@ -83,6 +83,9 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             x2: this.getX2(),
             y1: this.getY1(),
             y2: this.getY2(),
+            spatial: {
+                geometries: this.getSpatial()
+            },
             modified: this.getModifiedDate(),
             capabilities_url: this.getCapabilitiesURL(),
             additional_html_1: this.getAdditionalHTML(),
@@ -258,6 +261,10 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
     }
 
     getY2() {
+        return undefined;
+    }
+
+    getSpatial() {
         return undefined;
     }
 

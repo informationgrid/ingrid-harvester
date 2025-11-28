@@ -254,7 +254,7 @@ export function projectFeatureCollection(featureCollection: FeatureCollection, s
     return projectedFeatureCollection;
 }
 
-export function getBoundingBox(lowerCorner: string, upperCorner: string, crs?: string): Geometry {
+export function getBoundingBox(lowerCorner: string, upperCorner: string, crs: string): Geometry {
     const transformCoords = transformer(crs);
     let [west, south] = transformCoords(...lowerCorner.trim().split(' ').map(parseFloat));
     let [east, north] = transformCoords(...upperCorner.trim().split(' ').map(parseFloat));
