@@ -515,6 +515,10 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return false;
     }
 
+    getHierarchyLevel() {
+        return this.baseMapper.getHierarchyLevel();
+    }
+
     private getReferenceSystems(): string[] {
         let rsIdentifiers = CswMapper.select("./gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier", this.baseMapper.record);
         return rsIdentifiers?.map(rsIdentifier => {

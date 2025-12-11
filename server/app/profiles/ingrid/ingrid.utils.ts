@@ -26,3 +26,53 @@ import type { IngridIndexDocument } from './model/index.document.js';
 export function createEsId(document: IngridIndexDocument): string {
     return document.uuid;
 }
+
+export async function updateIngridMetaIndex(elastic, settings, iPlugClass) {
+    let meta = await elastic.search(INGRID_META_INDEX,
+        {
+            "query": {
+                "term": {
+                    "plugId": {
+                        "value": settings.iPlugId,
+                    }
+                }
+            }
+        }, false);
+    if (meta.hits?.total?.value > 0) {
+        let entry = meta.hits?.hits[0]._source;
+
+        entry.lastIndexed = new Date(Date.now()).toISOString();
+        entry.plugdescription.dataSourceName = settings.dataSourceName;
+        entry.plugdescription.provider = settings.provider?.split(",")?.map(p => p.trim());
+        entry.plugdescription.dataType = settings.datatype?.split(",")?.map(d => d.trim());
+        entry.plugdescription.partner = settings.partner?.split(",")?.map(p => p.trim());
+
+        await elastic.update(INGRID_META_INDEX, meta.hits?.hits[0]._id, entry, false);
+    }
+    else {
+        let { prefix, index } = ConfigService.getGeneralSettings().elasticsearch;
+        let indexId = (prefix ?? '') + settings.catalogId;
+        let entry = {
+            "plugId": settings.iPlugId,
+            "indexId": indexId,
+            "iPlugName": "Harvester",
+            "lastIndexed": new Date(Date.now()).toISOString(),
+            "linkedIndex": indexId,
+            "plugdescription": {
+                "dataSourceName": settings.dataSourceName,
+                "provider": settings.provider?.split(",")?.map(p => p.trim()),
+                "dataType": settings.datatype?.split(",")?.map(d => d.trim()),
+                "partner": settings.partner?.split(",")?.map(p => p.trim()),
+                "ranking": [
+                    "score"
+                ],
+                "iPlugClass": iPlugClass,
+                "fields": [],
+                "proxyServiceUrl": settings.iPlugId,
+                "useRemoteElasticsearch": true
+            },
+            "active": false
+        }
+        await elastic.index(INGRID_META_INDEX, entry, false);
+    }
+}

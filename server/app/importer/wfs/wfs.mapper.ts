@@ -199,7 +199,7 @@ export class WfsMapper extends BaseMapper {
 
     getCentroid(): Point {
         let spatial = this.getSpatial() ?? this.getBoundingBox();
-        return GeoJsonUtils.getCentroid(<Geometry>spatial);
+        return GeoJsonUtils.getCentroid(spatial as Geometry);
     }
 
     isRealtime(): boolean {

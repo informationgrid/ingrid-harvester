@@ -34,7 +34,7 @@ dayjs.locale('de');
 
 export abstract class ingridMapper<M extends CswMapper> implements IndexDocumentFactory<IngridIndexDocument>{
 
-    protected baseMapper: M;
+    readonly baseMapper: M;
 
     private _log = log4js.getLogger();
 
@@ -116,6 +116,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             is_hvd: this.isHvd(),
             spatial_system: this.getSpatialSystem(),
             sort_hash: this.getSortHash(),
+            ...this.getCustomEntries(),
             content: null, // assigned after
             idf: null // assigned after
         };
@@ -126,6 +127,10 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         this.executeCustomCode(result);
 
         return result;
+    }
+
+    getCustomEntries(): Object {
+        return {};
     }
 
     getDistributions(): Promise<Distribution[]>{
@@ -140,16 +145,12 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return this.baseMapper.getModifiedDate();
     }
 
-    getAccessRights(): string[]{
-        return this.baseMapper.getAccessRights();
-    }
-
     getGeneratedId(): string{
         return this.baseMapper.getGeneratedId()
     }
 
     getHierarchyLevel() {
-        return this.baseMapper.getHierarchyLevel();
+        return undefined;
     }
 
     getHarvestedData(): string{
@@ -224,9 +225,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return this.baseMapper.getSettings().boost;
     }
 
-    getSummary() {
-        return undefined;
-    }
+    abstract getSummary();
 
     getContent(resultObj) {
         const values = [];
@@ -264,13 +263,9 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return undefined;
     }
 
-    getSpatial() {
-        return undefined;
-    }
+    abstract getSpatial();
 
-    getIDF() {
-        return undefined;
-    }
+    abstract getIDF();
 
     getCapabilitiesURL() {
         return undefined;

@@ -242,7 +242,7 @@ export class WfsImporter extends Importer {
         // this.nsMap = { ...XPathUtils.getNsMap(xml), ...XPathUtils.getExtendedNsMap(xml) };
         // TODO: the above does not work, because it doesn't contain the NS for the FeatureType;
         let nsMap = MiscUtils.merge(this.nsMap, getNsMap(xml));
-        let select = <XPathNodeSelect>xpath.useNamespaces(nsMap);
+        let select = xpath.useNamespaces(nsMap) as XPathNodeSelect;
 
         // store xpath handling stuff in general info
         this.generalInfo['nsMap'] = nsMap;
@@ -253,7 +253,7 @@ export class WfsImporter extends Importer {
         if (envelope) {
             let lowerCorner = select('./gml:lowerCorner', envelope, true)?.textContent;
             let upperCorner = select('./gml:upperCorner', envelope, true)?.textContent;
-            let crs = (<Element>envelope).getAttribute('srsName') || this.generalInfo['defaultCrs'];
+            let crs = (envelope as Element).getAttribute('srsName') || this.generalInfo['defaultCrs'];
             this.generalInfo['boundingBox'] = GeoJsonUtils.getBoundingBox(lowerCorner, upperCorner, crs);
         }
 
