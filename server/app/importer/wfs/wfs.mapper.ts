@@ -246,14 +246,7 @@ export class WfsMapper extends BaseMapper {
     }
 
     getTypename(toLowerCase: boolean = false): string {
-        let typename: string;
-        if (this.isFeatureType()) {
-            typename = this.select('./wfs:Name', this.featureOrFeatureType, true)?.textContent;
-        }
-        else {
-            typename = (this.select('./*', this.featureOrFeatureType, true) as Element)?.localName;
-        }
-        return toLowerCase ? typename.toLowerCase() : typename;
+        return toLowerCase ? this.fetched['typename'].toLowerCase() : this.fetched['typename'];
     }
 
     executeCustomCode(doc: any) {

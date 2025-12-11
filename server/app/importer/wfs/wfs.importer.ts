@@ -152,6 +152,7 @@ export class WfsImporter extends Importer {
         let numFeatures = await this.getNumFeatures(featureTypeName);
         log.info(`Found ${numFeatures} features at ${this.settings.sourceURL} for FeatureType "${featureTypeName}"`);
         let featureTypeDescriptionNode = await this.getTypeDescription(featureTypeName);
+        this.generalInfo['typename'] = featureTypeName;
 
         // if harvesting FeatureTypes, do it here (to include the feature names)
         if (this.settings.harvestTypes) {
