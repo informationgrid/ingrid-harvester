@@ -39,6 +39,7 @@ import { ProfileFactory } from '../profile.factory.js';
 import { IngridImporterFactory } from './importer/ingrid.importer.factory.js';
 import { ingridCswMapper } from './mapper/ingrid.csw.mapper.js';
 import { PegelonlineWfsMapper } from './mapper/wfs/pegelonline.wfs.mapper.js';
+import { ZdmWfsMapper } from './mapper/wfs/zdm.wfs.mapper.js';
 import type { IngridIndexDocument } from './model/index.document.js';
 import { ElasticQueries } from './persistence/elastic.queries.js';
 import mappings from './persistence/ingrid-meta-mapping.json' with { type: 'json' };
@@ -110,6 +111,7 @@ export class ingridFactory extends ProfileFactory<CswMapper> {
                 let wfsProfile = (mapper as WfsMapper).settings.wfsProfile;
                 switch (wfsProfile) {
                     case WfsProfile.pegelonline: return new PegelonlineWfsMapper(mapper as WfsMapper);
+                    case WfsProfile.zdm: return new ZdmWfsMapper(mapper as WfsMapper);
                 }
             }
             default:

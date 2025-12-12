@@ -59,8 +59,10 @@ export enum WfsProfile {
     // TODO diplanung profiles
     pegelonline = "pegelonline",
     // TODO other ingrid profiles
+    zdm = "zdm"
 }
 
 export const memberElements = {
     [WfsProfile.pegelonline]: "gml:featureMembers/gk:waterlevels",
+    [WfsProfile.zdm]: "gml:featureMember"
 }
