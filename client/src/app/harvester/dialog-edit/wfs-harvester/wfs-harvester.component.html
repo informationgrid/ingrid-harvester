@@ -94,7 +94,7 @@
       </div>
     </mat-card-content>
     }
-    @if (profile == 'zdm') {
+    @if (profile == 'ingrid' || profile == 'zdm') {
     <mat-card-content>
       <div class="flex-row gap-20 space-between">
         <mat-form-field class="flex-50">
@@ -108,5 +108,15 @@
       </div>
     </mat-card-content>
     }
+    <mat-card-content>
+      <div class="flex-row gap-20 space-between">
+        <mat-form-field class="flex-20">
+          <mat-label>WFS Profil</mat-label>
+          <mat-select formControlName="wfsProfile" required>
+            <mat-option value="pegelonline">pegelonline</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
   </mat-card>
 </form>
