@@ -198,8 +198,4 @@ export class PegelonlineIdfGenerator extends IdfGenerator {
         this.baseMapper.log.debug("MapPreview Html: " + addHtml);
         return addHtml;
     }
-
-    getMapIFrame(height: number): string {
-        return null;
-    }
 }
