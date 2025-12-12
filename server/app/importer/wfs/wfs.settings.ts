@@ -43,7 +43,8 @@ export type WfsSettings = {
     httpMethod: 'GET' | 'POST',
     featureFilter?: string,
     resolveWithFullResponse?: boolean,
-    requireGeometry?: boolean
+    requireGeometry?: boolean,
+    wfsProfile: WfsProfile
 } & ImporterSettings;
 
 export const defaultWfsSettings: Partial<WfsSettings> = {
@@ -53,3 +54,13 @@ export const defaultWfsSettings: Partial<WfsSettings> = {
     resultType: 'results',
     memberElement: 'wfs:member'
 };
+
+export enum WfsProfile {
+    // TODO diplanung profiles
+    pegelonline = "pegelonline",
+    // TODO other ingrid profiles
+}
+
+export const memberElements = {
+    [WfsProfile.pegelonline]: "gml:featureMembers/gk:waterlevels",
+}

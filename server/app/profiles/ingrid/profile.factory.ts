@@ -24,6 +24,8 @@
 import log4js from 'log4js';
 import type { CswMapper } from '../../importer/csw/csw.mapper.js';
 import type { ImporterFactory } from '../../importer/importer.factory.js';
+import type { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
+import { WfsProfile } from '../../importer/wfs/wfs.settings.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
 import type { IndexDocumentFactory } from '../../model/index.document.factory.js';
 import { DatabaseFactory } from '../../persistence/database.factory.js';
@@ -36,11 +38,12 @@ import { ConfigService } from '../../services/config/ConfigService.js';
 import { ProfileFactory } from '../profile.factory.js';
 import { IngridImporterFactory } from './importer/ingrid.importer.factory.js';
 import { ingridCswMapper } from './mapper/ingrid.csw.mapper.js';
+import { PegelonlineWfsMapper } from './mapper/wfs/pegelonline.wfs.mapper.js';
 import type { IngridIndexDocument } from './model/index.document.js';
 import { ElasticQueries } from './persistence/elastic.queries.js';
-import { PostgresAggregator } from './persistence/postgres.aggregator.js';
 import mappings from './persistence/ingrid-meta-mapping.json' with { type: 'json' };
 import settings from './persistence/ingrid-meta-settings.json' with { type: 'json' };
+import { PostgresAggregator } from './persistence/postgres.aggregator.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -100,9 +103,17 @@ export class ingridFactory extends ProfileFactory<CswMapper> {
         return 'ingrid';
     }
 
-    getIndexDocumentFactory(mapper: CswMapper ): IndexDocumentFactory<IngridIndexDocument> {
+    getIndexDocumentFactory(mapper: CswMapper | WfsMapper): IndexDocumentFactory<IngridIndexDocument> {
         switch (mapper.constructor.name) {
-            case 'CswMapper': return new ingridCswMapper(<CswMapper>mapper);
+            case 'CswMapper': return new ingridCswMapper(mapper as CswMapper);
+            case 'WfsMapper': {
+                let wfsProfile = (mapper as WfsMapper).settings.wfsProfile;
+                switch (wfsProfile) {
+                    case WfsProfile.pegelonline: return new PegelonlineWfsMapper(mapper as WfsMapper);
+                }
+            }
+            default:
+                throw new Error(`No mapper "${mapper.constructor.name}" registered`);
         }
     }
 

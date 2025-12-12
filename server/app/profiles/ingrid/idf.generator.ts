@@ -21,9 +21,13 @@
  * ==================================================
  */
 
+import type { DOMParser } from '@xmldom/xmldom';
+import * as MiscUtils from '../../utils/misc.utils.js';
+
 export abstract class IdfGenerator {
 
     protected document: Document;
+    protected domParser: DOMParser = MiscUtils.getDomParser();
 
     abstract createIdf(): string;
 

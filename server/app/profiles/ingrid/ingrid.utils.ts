@@ -21,10 +21,25 @@
  * ==================================================
  */
 
+import { v5 as uuidv5 } from 'uuid';
+import { ConfigService } from '../../services/config/ConfigService.js';
 import type { IngridIndexDocument } from './model/index.document.js';
+import { INGRID_META_INDEX } from './profile.factory.js';
+
+const UUID_NAMESPACE = 'b5d8aadf-d03f-452a-8d91-3a6a7f3b1203';
 
 export function createEsId(document: IngridIndexDocument): string {
     return document.uuid;
+    // return generateWfsUuid(document.extras.metadata.source.source_base, document., document.t01_object.obj_id);
+}
+
+export function generateWfsUuid(source_base: string, typename: string, obj_id: string) {
+    let uniqueStr = [ensureNoEndSlash(source_base), typename, obj_id].join('/');
+    return uuidv5(uniqueStr, UUID_NAMESPACE);
+}
+
+function ensureNoEndSlash(s: string): string {
+    return s.replace(/\/$/g, '');
 }
 
 export async function updateIngridMetaIndex(elastic, settings, iPlugClass) {

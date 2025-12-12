@@ -21,18 +21,19 @@
  * ==================================================
  */
 
+import * as crypto from "crypto";
+import dayjs from "dayjs";
 import 'dayjs/locale/de.js';
 import log4js from 'log4js';
-import type {CswMapper} from "../../../importer/csw/csw.mapper.js";
-import type {IndexDocumentFactory} from "../../../model/index.document.factory.js";
-import type {IngridIndexDocument} from "../model/index.document.js";
-import * as crypto from "crypto";
-import type {Distribution} from "../../../model/distribution.js";
-import {Codelist} from "../utils/codelist.js";
-import dayjs from "dayjs";
+import type { CswMapper } from "../../../importer/csw/csw.mapper.js";
+import type { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
+import type { Distribution } from "../../../model/distribution.js";
+import type { IndexDocumentFactory } from "../../../model/index.document.factory.js";
+import type { IngridIndexDocument } from "../model/index.document.js";
+import { Codelist } from "../utils/codelist.js";
 dayjs.locale('de');
 
-export abstract class ingridMapper<M extends CswMapper> implements IndexDocumentFactory<IngridIndexDocument>{
+export abstract class ingridMapper<M extends CswMapper | WfsMapper> implements IndexDocumentFactory<IngridIndexDocument>{
 
     readonly baseMapper: M;
 

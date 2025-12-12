@@ -21,11 +21,13 @@
  * ==================================================
  */
 
-import log4js from 'log4js';
 import type { Harvester } from '@shared/harvester.js';
-import type { Importer } from '../../../importer/importer.js';
+import log4js from 'log4js';
 import { ImporterFactory } from '../../../importer/importer.factory.js';
-import {IngridCswImporter} from "./ingrid.csw.importer.js";
+import type { Importer } from '../../../importer/importer.js';
+import type { WfsSettings } from '../../../importer/wfs/wfs.settings.js';
+import { IngridCswImporter } from "./ingrid.csw.importer.js";
+import { IngridWfsImporter } from './ingrid.wfs.importer.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -36,6 +38,9 @@ export class IngridImporterFactory extends ImporterFactory{
         switch (config.type) {
             case 'CSW':
                 importer = new IngridCswImporter(config);
+                break;
+            case 'WFS':
+                importer = new IngridWfsImporter(config as WfsSettings);
                 break;
             default: {
                 log.error('Importer not found: ' + config.type);
