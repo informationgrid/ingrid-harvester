@@ -209,8 +209,8 @@ export abstract class ingridMapper<M extends CswMapper | WfsMapper> implements I
 
     getT01_object() {
         return {
-            obj_id: this.baseMapper.getGeneratedId(),
-            org_obj_id: this.baseMapper.getGeneratedId()
+            obj_id: this.getGeneratedId(),
+            org_obj_id: this.getGeneratedId()
         }
     }
 

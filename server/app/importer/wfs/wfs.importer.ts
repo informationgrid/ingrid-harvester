@@ -219,7 +219,7 @@ export class WfsImporter extends Importer {
         let doc: any = await this.profile.getIndexDocumentFactory(mapper).create();
         if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
             let entity: RecordEntity = {
-                identifier: featureTypeName,
+                identifier: doc.uuid,
                 source: this.settings.sourceURL,
                 collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                 dataset: doc,
@@ -263,9 +263,12 @@ export class WfsImporter extends Importer {
             this.summary.numDocs++;
 
             // TODO use ID-property from settings (tbi)
-            const uuid = firstElementChild(features[i]).getAttributeNS(nsMap['gml'], 'id');
-            if (!uuid || !this.filterUtils.isIdAllowed(uuid)) {
-                this.summary.skippedDocs.push(uuid);
+            let gmlId = (features[i] as Element).getAttributeNS(nsMap['gml'], 'id');
+            if (!gmlId) {
+                gmlId = firstElementChild(features[i]).getAttributeNS(nsMap['gml'], 'id');
+            }
+            if (!gmlId || !this.filterUtils.isIdAllowed(gmlId)) {
+                this.summary.skippedDocs.push(gmlId);
                 continue;
             }
 
@@ -287,7 +290,7 @@ export class WfsImporter extends Importer {
 
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
-                    identifier: uuid,
+                    identifier: doc.uuid,
                     source: this.settings.sourceURL,
                     collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
                     dataset: doc,
@@ -295,7 +298,7 @@ export class WfsImporter extends Importer {
                 };
                 promises.push(this.database.addEntityToBulk(entity));
             } else {
-                this.summary.skippedDocs.push(uuid);
+                this.summary.skippedDocs.push(gmlId);
             }
             // disable updating feature count if harvesting FeatureTypes
             if (!this.settings.harvestTypes) {

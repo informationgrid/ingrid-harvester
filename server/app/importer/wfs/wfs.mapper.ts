@@ -45,7 +45,7 @@ export class WfsMapper extends BaseMapper {
     readonly featureTypeDescription: Node & Element;
     readonly fetched: any;
     readonly settings: WfsSettings;
-    readonly uuid: string;
+    readonly gmlId: string;
 
     private harvestTime: any;
     private summary: Summary;
@@ -75,8 +75,13 @@ export class WfsMapper extends BaseMapper {
                 return undefined;
             }
         };
-        let path = this.isFeatureType() ? './wfs:Name' : './*/@gml:id';
-        this.uuid = this.getTextContent(path);
+        let paths = this.isFeatureType() ? ['./wfs:Name'] : ['./@gml:id', './*/@gml:id'];
+        for (let path of paths) {
+            this.gmlId = this.getTextContent(path);
+            if (this.gmlId) {
+                break;
+            }
+        }
 
         super.init();
     }
@@ -133,12 +138,12 @@ export class WfsMapper extends BaseMapper {
     }
 
     getGeneratedId(): string {
-        return this.uuid;
+        return this.gmlId;
     }
 
     // TODO:check
     getMetadataSource(): MetadataSource {
-        let wfsLink = `${this.settings.sourceURL}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.settings.version}&outputFormat=application/xml&featureId=${this.uuid}`;
+        let wfsLink = `${this.settings.sourceURL}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.settings.version}&outputFormat=application/xml&featureId=${this.gmlId}`;
         return {
             source_base: this.settings.sourceURL,
             raw_data_source: wfsLink,
