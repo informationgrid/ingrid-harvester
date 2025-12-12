@@ -62,7 +62,7 @@ export class IdfGenerator extends AbstractIdfGenerator {
         this.addOutput(idfBody, "p", this.mapper.getDescription());
 
         //add the bounding box
-        let boundingBox = this.mapper.baseMapper.getOriginalBoundingBox();
+        let boundingBox = this.baseMapper.getOriginalBoundingBox();
         this.addOutput(idfBody, "h2", "Ort:");
         if (boundingBox) {
             let [x1, y1] = boundingBox.lowerCorner.split(" ").map(coord => coord.trim());

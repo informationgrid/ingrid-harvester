@@ -183,13 +183,16 @@ export class WfsMapper extends BaseMapper {
             }
         }
         else {
-            let bbox = this.select('./*/gml:boundedBy/gml:Envelope', this.featureOrFeatureType, true);
+            let bbox = this.select('.//gml:boundedBy/gml:Envelope', this.featureOrFeatureType, true);
             if (!bbox) {
                 return null;
             }
             lowerCorner = this.select('./gml:lowerCorner', bbox, true)?.textContent;
             upperCorner = this.select('./gml:upperCorner', bbox, true)?.textContent;
-            crs = (<Element>bbox).getAttribute('srsName') || this.fetched['defaultCrs'];
+            crs = (bbox as Element).getAttribute('srsName') || this.fetched['defaultCrs'];
+            if (crs?.endsWith("WGS84") || crs?.endsWith(":4326")) {
+                crs = "WGS84_latlon";
+            }
         }
         return { lowerCorner, upperCorner, crs };
     }
