@@ -128,7 +128,13 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     getSpatial(): Geometry[] {
         let lowerCorner = `${this.getX1()} ${this.getY1()}`;
         let upperCorner = `${this.getX2()} ${this.getY2()}`;
-        return [GeoJsonUtils.getBoundingBox(lowerCorner, upperCorner, "WGS84")];
+        try {
+            return [GeoJsonUtils.getBoundingBox(lowerCorner, upperCorner, "WGS84")];
+        }
+        catch (e) {
+            // log.warn(`Could not parse bounding box: ${lowerCorner}, ${upperCorner}`);
+            return [];
+        }
     }
 
     getIDF() {
