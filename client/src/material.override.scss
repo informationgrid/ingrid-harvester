@@ -45,18 +45,33 @@ mat-form-field:hover .mdc-notched-outline__trailing {
   //border-width: 2px !important;
 }
 
-ige-side-menu .mat-mdc-list-item {
+ige-side-menu .mat-mdc-nav-list .mat-mdc-list-item {
+  border-radius: 0;
+
   &:hover::before,
   &:focus::before {
     opacity: 0;
   }
 
   &:hover {
-    background: color.adjust(variables.$ige-secondary, $lightness: 8%) !important;
+    background: color.adjust(variables.$ige-secondary, $lightness: 8%);
   }
 
-  &.active:hover {
-    background: color.adjust(variables.$ige-primary, $lightness: 8%) !important;
+  &.mdc-list-item--activated {
+    background: variables.$ige-primary;
+
+    &:hover {
+      background: color.adjust(variables.$ige-primary, $lightness: 8%);
+    }
+  }
+
+  .mdc-list-item__primary-text {
+    color: white !important;
+    white-space: normal;
+  }
+
+  .mat-icon {
+    color: #ffffff !important;
   }
 }
 
