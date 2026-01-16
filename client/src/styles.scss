@@ -154,6 +154,10 @@
   width: 100%;
 }
 
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
 mat-card-header {
   margin-bottom: 24px;
 }
@@ -228,6 +232,14 @@ mat-card-header {
 }
 .mt-0 {
   margin-top: 0;
+}
+.my-0 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.my-8 {
+  margin-top: 32px;
+  margin-bottom: 32px;
 }
 .mb-24 {
   margin-bottom: 24px;
@@ -1678,4 +1690,15 @@ h2.title-with-context-help {
 }
 .pointer {
   cursor: pointer;
+}
+
+.max-w-content {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding-left: 36px;
+  padding-right: 36px;
+}
+
+.text-2xl {
+  font-size: 24px;
 }
