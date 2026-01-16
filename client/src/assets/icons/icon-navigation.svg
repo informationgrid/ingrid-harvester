@@ -55,4 +55,6 @@
 <symbol id="expand_more" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-345 240-585l56-56 184 184 184-184 56 56-240 240Z"/></symbol>
 <symbol id="expand_less" height="24" viewBox="0 -960 960 960" width="24"><path d="m296-345-56-56 240-240 240 240-56 56-184-184-184 184Z"/></symbol>
 
+<symbol id="external" height="24px" viewBox="0 -960 960 960" width="24px"><path d="m216-160-56-56 464-464H360v-80h400v400h-80v-264L216-160Z"/></symbol>
+
 </svg>

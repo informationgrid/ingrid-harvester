@@ -21,29 +21,36 @@
  * ==================================================
  */
 
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { ImportLogMessage } from "../../../../../server/app/model/import.result";
+@use "../../../variables";
 
-@Component({
-  selector: "app-importer-detail",
-  templateUrl: "./importer-detail.component.html",
-  styleUrls: ["./importer-detail.component.scss"],
-  standalone: false
-})
-export class ImporterDetailComponent {
-  @Input() data: ImportLogMessage;
-  @Input() cronActive = false;
+:host {
+  background-color: #fafafa;
+  border: 1px solid #d4d4d4;
+  border-radius: 12px;
+  padding: 16px;
+  line-height: 1.28;
+}
 
-  @Output() showLog = new EventEmitter();
+.stat-indicator-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 18px;
+}
 
-  constructor() {
-  }
+.stat-indicator-value {
+  font-size: 32px;
+  font-weight: 500;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
 
-  getProgressValue() {
-    if (this.data.progress) {
-      return (this.data.progress.current / this.data.progress.total) * 100;
-    } else {
-      return 0;
-    }
-  }
+.stat-indicator-subtitle {
+  font-size: 14px;
+  color: variables.$ige-hint-color;
+}
+
+.stat-indicator-btn {
+  background-color: white;
+  box-shadow: 0 0 0 1px #d4d4d4;
 }

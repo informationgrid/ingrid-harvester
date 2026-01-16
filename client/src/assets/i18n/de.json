@@ -37,6 +37,11 @@
       "form": "Daten",
       "formSingular": "Datensatz"
     },
+    "harvester": {
+      "importAll": "Alle importieren",
+      "add": "Neu hinzufügen",
+      "showDetail": "Detail anzeigen"
+    },
     "form": {
       "validationMessages": {
         "required": "Dieses Feld muss ausgefüllt sein",

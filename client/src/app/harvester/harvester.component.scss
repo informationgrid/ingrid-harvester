@@ -27,13 +27,6 @@
   overflow: hidden;
   flex: 1; // IE 11
 }
-.allPageScroll {
-  overflow-y: auto;
-}
-.harvester-content {
-  padding-top: 30px;
-  flex: 1;
-}
 
 mat-expansion-panel {
   margin-bottom: 20px;
@@ -103,10 +96,6 @@ mat-expansion-panel-header {
   float: right;
 }
 
-mat-spinner {
-  margin: 0 0 0 10px;
-}
-
 .no-harvester {
   display: flex;
   justify-content: center;
@@ -139,7 +128,10 @@ mat-spinner {
   max-width: vars.$max-width-panel;
 }
 
-.panel-header-icon {
-  width: 24px;
-  height: 24px;
+.status-icon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

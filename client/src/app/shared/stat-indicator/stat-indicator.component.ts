@@ -21,29 +21,31 @@
  * ==================================================
  */
 
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { ImportLogMessage } from "../../../../../server/app/model/import.result";
+import { Component, input, output } from "@angular/core";
+import { MatIconButton } from "@angular/material/button";
+import { MatIcon } from "@angular/material/icon";
+import { MatTooltip } from "@angular/material/tooltip";
+import { TranslocoDirective } from "@ngneat/transloco";
 
 @Component({
-  selector: "app-importer-detail",
-  templateUrl: "./importer-detail.component.html",
-  styleUrls: ["./importer-detail.component.scss"],
-  standalone: false
+  selector: "stat-indicator",
+  templateUrl: "./stat-indicator.component.html",
+  imports: [
+    MatIconButton,
+    MatIcon,
+    MatTooltip,
+    TranslocoDirective
+  ],
+  styleUrls: ["./stat-indicator.component.scss"]
 })
-export class ImporterDetailComponent {
-  @Input() data: ImportLogMessage;
-  @Input() cronActive = false;
+export class StatIndicatorComponent {
+  leading = input<string>();
+  value = input<number>();
+  text = input<string>();
 
-  @Output() showLog = new EventEmitter();
+  canOpenDetail = input<boolean>(false);
+  openDetail = output<void>();
 
   constructor() {
-  }
-
-  getProgressValue() {
-    if (this.data.progress) {
-      return (this.data.progress.current / this.data.progress.total) * 100;
-    } else {
-      return 0;
-    }
   }
 }
