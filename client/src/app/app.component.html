@@ -22,9 +22,17 @@ limitations under the Licence.
 -->
 
 @if (isLoggedIn) {
-  <button mat-stroked-button class="fixed-upper-right" color="primary" title="Logout" (click)="logout()" data-test="logout">
-    <mat-icon svgIcon="Lock" aria-hidden="false" aria-label="logout"/>
-    {{authService.currentUserValue.firstName}} {{authService.currentUserValue.lastName}}
+  <button
+    mat-stroked-button
+    class="fixed-upper-right"
+    color="primary"
+    *transloco="let t; read: 'pageTitle'"
+    (click)="logout()"
+    data-test="logout"
+    aria-label="{{ t('logout') }}"
+  >
+    <mat-icon svgIcon="logout" />
+    {{ t("logout") }}
   </button>
 }
 
@@ -33,13 +41,13 @@ limitations under the Licence.
     <!-- Left drawer -->
     @if (isLoggedIn) {
       <mat-drawer mode="side" [opened]="true" disableClose>
-        <ige-side-menu/>
+        <ige-side-menu />
       </mat-drawer>
     }
     <!-- Right content -->
     <mat-drawer-content>
       @if (isLoggedIn) {
-        <ige-main-header (onLogout)="isLoggingout = true"/>
+        <ige-main-header (onLogout)="isLoggingout = true" />
       }
       <router-outlet></router-outlet>
     </mat-drawer-content>

@@ -10,7 +10,8 @@
       "harvester": "Harvester",
       "indices": "Indizes",
       "log": "Log",
-      "login": "Login"
+      "login": "Login",
+      "logout": "Abmelden"
     },
     "menu": {
       "application": "INGRID",

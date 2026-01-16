@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {Component, OnInit} from '@angular/core';
+import { Component, computed, OnInit } from '@angular/core';
 import {AuthenticationService} from './security/authentication.service';
 import {Router, NavigationEnd} from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
