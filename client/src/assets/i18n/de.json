@@ -40,7 +40,16 @@
     "harvester": {
       "importAll": "Alle importieren",
       "add": "Neu hinzufügen",
-      "showDetail": "Detail anzeigen"
+      "showDetail": "Detail anzeigen",
+      "import": "Import starten",
+      "importIncrement": "Import starten (inkrementell)",
+      "edit": "Bearbeiten",
+      "copy": "Duplizieren",
+      "delete": "Entfernen",
+      "schedule": "Planen",
+      "history": "Historie",
+      "log": "Error-Log",
+      "more": "Mehr"
     },
     "form": {
       "validationMessages": {

@@ -24,7 +24,7 @@ limitations under the Licence.
 @if (data) {
   <!-- import progress -->
   @if (!data.complete) {
-    <div class="flex-col gap-8 items-center">
+    <div class="flex-col gap-8 items-center mb-24">
       <div>Import läuft</div>
 
       <mat-progress-bar
@@ -43,7 +43,7 @@ limitations under the Licence.
 
   <!-- import stats -->
   @if (data.complete) {
-    <div class="flex-row gap-16">
+    <div class="flex-row flex-wrap gap-16">
       <!-- document stat -->
       <stat-indicator
         class="flex-1"
@@ -78,28 +78,50 @@ limitations under the Licence.
 
     <!-- import timestamps -->
     <mat-list>
+      <!-- last execution -->
       <mat-list-item>
         <mat-icon matListItemIcon svgIcon="available" />
-        <span matListItemTitle>Letzte Ausführung</span>
-        <span matListItemLine
-              data-test="last-execution"> {{ data.lastExecution | date:'short' }} {{ data.summary?.isIncremental ? '(inkrementell)' : '' }}</span>
+        <div class="flex-col">
+          <div class="item-title">Letzte Ausführung</div>
+          <div
+            class="item-subtitle"
+            data-test="last-execution"
+          >
+            {{ data.lastExecution | date:'short' }} {{ data.summary?.isIncremental ? '(inkrementell)' : '' }}
+          </div>
+        </div>
       </mat-list-item>
+
+      <!-- execution duration -->
       <mat-list-item>
         <mat-icon matListItemIcon svgIcon="timer" />
-        <span matListItemTitle>Dauer der Ausführung</span>
-        <span matListItemLine data-test="duration"> {{ data.duration * 1000 | date:'HH:mm:ss':'UTC' }}</span>
+        <div class="flex-col">
+          <div class="item-title">Dauer der Ausführung</div>
+          <div
+            class="item-subtitle"
+            data-test="duration"
+          >
+            {{ data.duration * 1000 | date:'HH:mm:ss':'UTC' }}
+          </div>
+        </div>
       </mat-list-item>
+
+      <!-- next execution -->
       <mat-list-item>
         <mat-icon matListItemIcon svgIcon="upcoming" />
-        <!-- <mat-icon mat-list-icon>snooze</mat-icon> -->
-        <span matListItemTitle>Nächste Ausführung</span>
-        @if (!cronActive) {
-          <span matListItemLine data-test="next-execution"
-                [title]="'Wenn aktiviert, dann: ' + (data.nextExecution | date:'short')"> deaktiviert </span>
-        }
-        @if (cronActive) {
-          <span matListItemLine data-test="next-execution"> {{ data.nextExecution | date:'short' }} </span>
-        }
+        <div class="flex-col">
+          <div class="item-title">Nächste Ausführung</div>
+          <div
+            class="item-subtitle"
+            data-test="next-execution"
+          >
+            @if (cronActive) {
+              {{ data.nextExecution | date:'short' }}
+            } @else {
+              Deaktiviert
+            }
+          </div>
+        </div>
       </mat-list-item>
     </mat-list>
   }

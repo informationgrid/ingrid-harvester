@@ -24,8 +24,9 @@
 @use "../../../variables";
 
 :host {
+  min-width: 120px;
   background-color: #fafafa;
-  border: 1px solid #d4d4d4;
+  border: 1px solid variables.$ige-divider;
   border-radius: 12px;
   padding: 16px;
   line-height: 1.28;
@@ -52,5 +53,5 @@
 
 .stat-indicator-btn {
   background-color: white;
-  box-shadow: 0 0 0 1px #d4d4d4;
+  box-shadow: 0 0 0 1px variables.$ige-divider;
 }

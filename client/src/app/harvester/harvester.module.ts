@@ -67,6 +67,7 @@ import { MatGridList, MatGridTile } from "@angular/material/grid-list";
 import { ContextHelpButtonComponent } from "../shared/context-help/context-help-button/context-help-button.component";
 import { TranslocoDirective } from "@ngneat/transloco";
 import { StatIndicatorComponent } from "../shared/stat-indicator/stat-indicator.component";
+import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 
 const harvesterRoutes: Routes = [
   {
@@ -124,7 +125,10 @@ const harvesterRoutes: Routes = [
     MatGridTile,
     ContextHelpButtonComponent,
     TranslocoDirective,
-    StatIndicatorComponent
+    StatIndicatorComponent,
+    MatMenu,
+    MatMenuTrigger,
+    MatMenuItem
   ],
   exports: [
     HarvesterComponent

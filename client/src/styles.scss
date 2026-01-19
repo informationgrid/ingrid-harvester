@@ -1703,6 +1703,13 @@ h2.title-with-context-help {
   padding-right: 36px;
 }
 
+@media screen and (max-width: 1024px) {
+  .max-w-content {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
 .text-2xl {
   font-size: 24px;
 }

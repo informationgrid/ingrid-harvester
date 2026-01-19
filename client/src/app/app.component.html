@@ -37,10 +37,18 @@ limitations under the Licence.
 }
 
 <div class="wrapper" [class.hide]="isLoggingout">
-  <mat-drawer-container class="flex-1" [autosize]="true">
+  <mat-drawer-container
+    class="flex-1"
+    [autosize]="true"
+    [hasBackdrop]="false"
+  >
     <!-- Left drawer -->
     @if (isLoggedIn) {
-      <mat-drawer mode="side" [opened]="true" disableClose>
+      <mat-drawer
+        mode="side"
+        opened
+        disableClose
+      >
         <ige-side-menu />
       </mat-drawer>
     }

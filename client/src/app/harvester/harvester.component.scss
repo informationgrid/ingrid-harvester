@@ -28,12 +28,12 @@
   flex: 1; // IE 11
 }
 
-mat-expansion-panel {
-  margin-bottom: 20px;
+h2 {
+  margin-top: 32px;
 }
 
-mat-expansion-panel-header {
-  padding: 0 !important;
+.mat-expansion-panel {
+  margin-bottom: 20px;
 }
 
 .mat-mdc-slide-toggle {
@@ -56,15 +56,6 @@ mat-expansion-panel-header {
   margin-right: 0;
 }
 
-.material-icons.inline-valigned {
-  font-size: inherit;
-  line-height: inherit;
-  vertical-align: middle;
-  height: auto;
-  width: auto;
-  margin-bottom: 0.15em;
-}
-
 .success {
   color: #5dc57b;
 }
@@ -74,26 +65,6 @@ mat-expansion-panel-header {
 }
 .warning {
   color: #ff9e00;
-}
-
-.flex-space {
-  flex: 1 1 auto;
-}
-
-// mat-action-row {
-//   padding-left: 8px;
-// }
-
-.lastExecution, .nextExecution {
-  color: #d2d2d2;
-}
-
-.lastExecution {
-  float: left;
-}
-
-.nextExecution, #btnAddHarvester {
-  float: right;
 }
 
 .no-harvester {
@@ -107,31 +78,17 @@ mat-expansion-panel-header {
   }
 }
 
-.scheduled {
-  align-self: center;
-  padding-right: 10px;
-}
-
-::ng-deep h4 {
-  padding-top: 10px;
-  margin-bottom: 10px;
-}
-
-.harvester-button-col-span-1-mobile { @media screen and (max-width: 1199px) { grid-column: span 1 / span 1; } }
-.harvester-button-custom-grid-cols-mobile { @media screen and (max-width: 1199px) { grid-template-columns: 1fr } }
-
-.harvester-list {
-  margin: auto;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  box-sizing: border-box;
-  max-width: vars.$max-width-panel;
-}
-
 .status-icon {
   width: 56px;
   height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.scheduled-icon {
+  width: 24px;
+  height: 24px;
+  align-self: center;
+  margin-right: 8px;
 }

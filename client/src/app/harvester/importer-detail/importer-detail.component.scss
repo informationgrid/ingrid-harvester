@@ -21,6 +21,8 @@
  * ==================================================
  */
 
+@use "../../../variables";
+
 .error {
   color: white;
   background-color: #B71C1C;
@@ -34,4 +36,18 @@
 mat-progress-bar {
   --mat-progress-bar-track-color: #ededed;
   border-radius: 12px;
+}
+
+mat-list {
+  padding: 12px 0;
+}
+
+mat-list-item {
+  height: unset !important;
+  margin: 12px 0;
+
+  .item-subtitle {
+    font-size: 14px;
+    color: variables.$ige-hint-color;
+  }
 }
