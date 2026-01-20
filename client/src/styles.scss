@@ -1698,6 +1698,25 @@ h2.title-with-context-help {
   text-align: right;
 }
 
+.sticky-action-bar {
+  height: 56px;
+  margin-top: -56px;
+  background-color: variables.$ige-background;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: end;
+}
+
+@media screen and (max-width: 1024px) {
+  .sticky-action-bar {
+    margin-top: 0;
+  }
+}
+
 // -----------------------------------------------------------
 // Column responsiveness management
 // Every row contains 10 spaces. if 10 is assigned in the class,
