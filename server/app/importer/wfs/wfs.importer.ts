@@ -215,6 +215,7 @@ export class WfsImporter extends Importer {
         this.generalInfo['numFeatures'] = numFeatures;
         this.generalInfo['title'] = select('./wfs:Title', featureTypeNode, true)?.textContent;
         this.generalInfo['featureTypeDescription'] = featureTypeDescriptionNode;
+        this.generalInfo['geometryType'] = this.extractGeometryType(select, featureTypeDescriptionNode);
         let mapper = this.getFeatureTypeMapper(this.settings, featureTypeNode, Date.now(), this.summary, this.generalInfo);
         let doc: any = await this.profile.getIndexDocumentFactory(mapper).create();
         if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
@@ -344,6 +345,13 @@ export class WfsImporter extends Importer {
         return responseDom.documentElement;
     }
 
+    extractGeometryType(select: XPathNodeSelect, featureTypeDescriptionNode: Node): string {
+        let typeConditions = GML_GEOMETRY_PROPERTY_TYPES.map(type => `contains(@type, '${type}')`).join(' or ');
+        let pathNames: string[] = ["schema", "complexType", "complexContent", "extension", "sequence", "element"];
+        let path = pathNames.map(step => `*[local-name()='${step}']`).join('/');
+        return (select(`/${path}[${typeConditions}]/@name`, featureTypeDescriptionNode, true) as Attr)?.value;
+    }
+
     static createRequestConfig(settings: WfsSettings, request = 'GetFeature'): RequestOptions {
         let requestConfig: RequestOptions = {
             method: settings.httpMethod || "GET",
@@ -419,3 +427,21 @@ export class WfsImporter extends Importer {
         return this.domParser.parseFromString(response);
     }
 }
+
+const GML_GEOMETRY_PROPERTY_TYPES: string[] = [
+    "PointPropertyType",
+    "LineStringPropertyType",
+    "PolygonPropertyType",
+    "CurvePropertyType",
+    "SurfacePropertyType",
+    "SolidPropertyType",
+    "MultiPointPropertyType",
+    "MultiLineStringPropertyType",
+    "MultiCurvePropertyType",
+    "MultiPolygonPropertyType",
+    "MultiSurfacePropertyType",
+    "MultiSolidPropertyType",
+    "MultiGeometryPropertyType",
+    "GeometryPropertyType",
+    "AbstractGeometryPropertyType"
+];
