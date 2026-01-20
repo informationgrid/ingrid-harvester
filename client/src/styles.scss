@@ -28,6 +28,41 @@
 
 
 // -----------------------------------------------------------
+// Fonts
+// -----------------------------------------------------------
+
+@font-face {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 400;
+  src: url(assets/fonts/roboto-v20-latin-regular.eot);
+  src:
+    local("Roboto"),
+    local("Roboto-Regular"),
+    url(assets/fonts/roboto-v20-latin-regular.eot?#iefix) format("embedded-opentype"),
+    url(assets/fonts/roboto-v20-latin-regular.woff2) format("woff2"),
+    url(assets/fonts/roboto-v20-latin-regular.woff) format("woff"),
+    url(assets/fonts/roboto-v20-latin-regular.ttf) format("truetype"),
+    url(assets/fonts/roboto-v20-latin-regular.svg#Roboto) format("svg");
+}
+
+@font-face {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  src: url(assets/fonts/roboto-v20-latin-500.eot);
+  src:
+    local("Roboto Medium"),
+    local("Roboto-Medium"),
+    url(assets/fonts/roboto-v20-latin-500.eot?#iefix) format("embedded-opentype"),
+    url(assets/fonts/roboto-v20-latin-500.woff2) format("woff2"),
+    url(assets/fonts/roboto-v20-latin-500.woff) format("woff"),
+    url(assets/fonts/roboto-v20-latin-500.ttf) format("truetype"),
+    url(assets/fonts/roboto-v20-latin-500.svg#Roboto) format("svg");
+}
+
+
+// -----------------------------------------------------------
 // Migration form @angular/flex-layout to native css solution
 // -----------------------------------------------------------
 
@@ -319,21 +354,6 @@ a {
 
   span.mdc-list-item {
     font-size: 14px;
-  }
-}
-
-button.button-with-text {
-  padding: 0 4px 0;
-  min-width: 36px;
-
-  .mdc-button__label {
-    display: flex;
-    align-items: center;
-    color: variables.$ige-secondary;
-  }
-
-  &.primary .mdc-button__label {
-    color: #ffffff;
   }
 }
 
@@ -1221,44 +1241,6 @@ mat-icon.mark-color .coloring {
   padding: 24px 0;
 }
 
-/* Material Tabs */
-.page-tabs-routing {
-  &.mat-mdc-tab-nav-bar {
-    border-bottom: none;
-  }
-
-  .mat-mdc-tab-links {
-    background-color: variables.$ige-secondary-dark;
-  }
-
-  .mat-mdc-tab-link {
-    border-bottom: none;
-    height: 56px !important;
-
-    &:hover {
-      background: color.adjust(variables.$ige-secondary, $lightness: 8%);
-    }
-
-    .mdc-tab__text-label {
-      color: #ffffff !important;
-      letter-spacing: 1.25px;
-      text-transform: uppercase;
-      opacity: 0.75;
-    }
-
-    &.active-link .mdc-tab__text-label {
-      opacity: 1;
-      color: #4ba7d0 !important;
-    }
-  }
-
-  .mdc-tab-indicator__content {
-    border-color: variables.$ige-background !important;
-    background-color: variables.$ige-background !important;
-    height: 6px;
-  }
-}
-
 .page-tabs {
   height: 100%;
 
@@ -1295,20 +1277,6 @@ mat-icon.mark-color .coloring {
   /*TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
   & > .mat-tab-body-wrapper {
     flex: 1;
-  }
-}
-
-.page-tabs,
-.page-tabs-routing ~ * {
-  .status {
-    padding: 30px;
-    margin-bottom: 24px;
-    background-color: rgb(223, 223, 223);
-
-    .log {
-      overflow: auto;
-      max-height: 300px;
-    }
   }
 }
 

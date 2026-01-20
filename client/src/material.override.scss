@@ -257,6 +257,57 @@ mat-icon.dark-blue {
   display: inline-flex !important;
 }
 
+.mat-mdc-card {
+  border-radius: 8px !important;
+  box-shadow: unset !important;
+  border: 1px solid variables.$ige-divider !important;
+}
+
+.ige-tab-nav-bar {
+  &.mat-mdc-tab-nav-bar {
+    background-color: variables.$ige-secondary-dark;
+
+    .mdc-tab {
+      height: 56px;
+
+      .mdc-tab__text-label {
+        color: white;
+      }
+
+      &.mdc-tab--active .mdc-tab__text-label {
+        color: variables.$ige-primary-light;
+      }
+
+      &:hover {
+        background: color.adjust(variables.$ige-secondary, $lightness: 8%);
+
+        .mdc-tab__text-label {
+          color: variables.$ige-primary-light;
+        }
+
+        &.mdc-tab--active .mdc-tab__text-label {
+          color: variables.$ige-primary-light;
+        }
+      }
+    }
+
+    .mdc-tab-indicator__content {
+      border-top-width: 4px;
+      border-color: white !important;
+    }
+
+    .mat-mdc-tab-header-pagination-chevron {
+      border-color: white;
+    }
+  }
+}
+
+button[matbutton] {
+  .mdc-button__label {
+    font-weight: normal;
+  }
+}
+
 // Accessibility requirement.
 input,
 textarea {

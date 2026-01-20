@@ -53,7 +53,7 @@ export class SideMenuComponent {
     map((routes) => routes.filter((route) => route.data.partOfMenu == true)),
   );
 
-  menuIsExpanded = true;
+  menuIsExpanded = false;
 
   currentRoute: string;
   toggleState = "collapsed";
