@@ -52,8 +52,10 @@
   min-height: 110px;
 }
 
-.side-header {
+.side-header h2 {
+  margin: 0;
   font-size: 34px;
+  font-weight: normal;
   color: variables.$ige-primary;
 }
 
