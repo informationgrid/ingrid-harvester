@@ -24,16 +24,18 @@
 import { Component, Input, OnInit } from "@angular/core";
 
 @Component({
-    selector: 'page-template',
-    templateUrl: './page-template.component.html',
-    styleUrl: './page-template.component.scss',
-    standalone: false
+  selector: "page-template",
+  templateUrl: "./page-template.component.html",
+  styleUrl: "./page-template.component.scss",
+  standalone: false
 })
 export class PageTemplateComponent implements OnInit {
   @Input() label = "";
   @Input() subLabel = "";
 
-  constructor() {}
+  constructor() {
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 }

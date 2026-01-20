@@ -21,40 +21,30 @@
  * ==================================================
  */
 
-//  :host {
-//   overflow: auto;
-// }
+@use "../../../variables";
 
+.action-bar {
+  height: 56px;
+  margin-top: -56px;
+  background-color: variables.$ige-background;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: end;
+}
 
-// .info-icon {
-//   vertical-align: middle;
-//   cursor: pointer;
-// }
+@media screen and (max-width: 1024px) {
+  .action-bar {
+    margin-top: 0;
+  }
+}
 
-// .info {
-//   padding-bottom: 20px;
-//   font-size: small;
-
-//   & div span {
-//     display: inline-block;
-//     width: 100px;
-//     white-space: pre;
-//   }
-// }
-
-// .config-info-field {
-//   padding: 6px;
-//   border-radius: 6px;
-//   background-color: rgba(255,255,255,.04);
-// }
-
-.config-card {
-  margin: auto;
+.form-section {
   margin-bottom: 20px;
   padding: 8px 20px;
-  box-sizing: border-box;
-  max-width: var(--max-width-panel);
-  width: 100%;
 }
 
 .center-right {

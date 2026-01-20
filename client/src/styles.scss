@@ -216,6 +216,11 @@ mat-card-header {
   margin: 0 0 !important;
 }
 
+// simulate the offset of hint block from standard inputs
+.mat-hint-offset {
+  margin-bottom: 22px;
+}
+
 .margin-below {
   margin-bottom: 32px;
 }
@@ -282,6 +287,9 @@ mat-card-header {
 }
 .mb-24 {
   margin-bottom: 24px;
+}
+.ml-auto {
+  margin-left: auto;
 }
 .padding {
   padding: 16px !important;
@@ -878,6 +886,10 @@ ige-one-column-wrapper formly-group {
 
 .align-self-end {
   align-self: flex-end;
+}
+
+.align-self-center {
+  align-self: center;
 }
 
 .justify-content-space-between {
@@ -1680,4 +1692,78 @@ h2.title-with-context-help {
 
 .text-2xl {
   font-size: 24px;
+}
+
+.text-right {
+  text-align: right;
+}
+
+// -----------------------------------------------------------
+// Column responsiveness management
+// Every row contains 10 spaces. if 10 is assigned in the class,
+// this means that the element will take up the full width of the row.
+// -----------------------------------------------------------
+
+.ingrid-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -6px;
+}
+
+.ingrid-row > [class*=ingrid-col-] {
+  box-sizing: border-box;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.ingrid-col-none {
+  flex: unset;
+  max-width: unset;
+}
+
+.ingrid-col-5 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.ingrid-col-10 {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+@media (min-width: 800px) {
+  .ingrid-col-md-1 {
+    flex: 0 0 10%;
+    max-width: 10%;
+  }
+
+  .ingrid-col-md-2 {
+    flex: 0 0 20%;
+    max-width: 20%;
+  }
+
+  .ingrid-col-md-3 {
+    flex: 0 0 30%;
+    max-width: 30%;
+  }
+
+  .ingrid-col-md-4 {
+    flex: 0 0 40%;
+    max-width: 40%;
+  }
+
+  .ingrid-col-md-5 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  .ingrid-col-md-6 {
+    flex: 0 0 60%;
+    max-width: 60%;
+  }
+
+  .ingrid-col-md-7 {
+    flex: 0 0 70%;
+    max-width: 70%;
+  }
 }

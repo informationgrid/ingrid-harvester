@@ -31,8 +31,9 @@
 .tab {
   display: flex;
   flex-direction: row;
-  gap: 16px;
-  padding: 24px 36px;
+  align-items: start;
+  gap: 20px;
+  padding: 40px;
 }
 
 .side, .main {
@@ -42,7 +43,9 @@
 }
 
 .side {
-  width: 350px;
+  width: 400px;
+  position: sticky;
+  top: 40px;
 }
 
 .side-header, .main-header {
@@ -68,6 +71,7 @@
 
   .side {
     width: auto;
+    position: unset;
   }
 
   .side-header, .main-header {
