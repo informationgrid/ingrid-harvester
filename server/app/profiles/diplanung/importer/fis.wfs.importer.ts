@@ -28,6 +28,6 @@ import { WfsImporter } from '../../../importer/wfs/wfs.importer.js';
 export class FisWfsImporter extends WfsImporter {
 
     constructor(settings: Harvester) {
-        super(MiscUtils.merge(settings, { memberElement: 'gml:featureMember'}));
+        super(MiscUtils.merge(settings, { memberElements: ['gml:featureMember'] }));
     }
 }

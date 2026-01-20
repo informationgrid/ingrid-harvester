@@ -258,7 +258,13 @@ export class WfsImporter extends Importer {
         }
 
         // some documents may use wfs:member, some gml:featureMember, some maybe something else: use settings
-        let features = select(`/wfs:FeatureCollection/${this.settings.memberElement}`, xml);
+        let features = [];
+        for (let memberElement of this.settings.memberElements) {
+            features = select(`/wfs:FeatureCollection/${memberElement}`, xml);
+            if (features.length > 0) {
+                break;
+            }
+        }
         for (let i = 0; i < features.length; i++) {
             this.summary.numDocs++;
 

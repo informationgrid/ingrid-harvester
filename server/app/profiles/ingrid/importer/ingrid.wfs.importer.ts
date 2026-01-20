@@ -30,7 +30,7 @@ export class IngridWfsImporter extends WfsImporter {
 
     constructor(settings: WfsSettings) {
         super(MiscUtils.merge(settings, {
-            memberElement: memberElements[settings.wfsProfile],
+            memberElements: memberElements[settings.wfsProfile],
             harvestTypes: true,
             requireGeometry: true
         }));
