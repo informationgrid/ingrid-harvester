@@ -22,34 +22,124 @@
 -->
 
 <page-template label="Import/Export">
-  <aside left-side contextHelp="about_import_export"></aside>
-  <div main-content class="margin-below">
-    <mat-card class="import-export-card">
+  <ng-container left-side>
+    <aside contextHelp="about_import_export"></aside>
+  </ng-container>
+
+  <ng-container main-content>
+    <div class="sticky-action-bar">
+      <button
+        matButton="filled"
+        color="primary"
+        (click)="exportConfigs()"
+        data-test="exportAll"
+      >
+        Alle Exportieren
+      </button>
+    </div>
+
+    <mat-card>
       <mat-card-content>
         <div class="flex-col gap-16">
-          <div class="flex-row gap-20 baseline">
-            <label for="configUpload" class="flex-15">Konfiguration</label>
-            <input type="file" #configUpload id="configUpload" name="configUpload" (change)="importGeneralConfig(configUpload.files)" accept="json/*.json" style="display:none;" />
-            <button mat-stroked-button color="primary" class="flex-20" (click)="configUpload.click()" data-test="importConfigGeneral">Import</button>
-            <button mat-flat-button color="primary" class="flex-20" (click)="exportGeneralConfig()" data-test="exportConfigGeneral">Export</button>
+          <div class="flex-row gap-20 align-items-center">
+            <label class="flex-15" for="configUpload">
+              Konfiguration
+            </label>
+            <input
+              class="hidden"
+              id="configUpload"
+              type="file" #configUpload
+              name="configUpload"
+              (change)="importGeneralConfig(configUpload.files)"
+              accept="json/*.json"
+            />
+            <button
+              matButton="outlined"
+              color="primary"
+              class="flex-20"
+              (click)="configUpload.click()"
+              data-test="importConfigGeneral"
+            >
+              Import
+            </button>
+            <button
+              matButton="filled"
+              color="primary"
+              class="flex-20"
+              (click)="exportGeneralConfig()"
+              data-test="exportConfigGeneral"
+            >
+              Export
+            </button>
           </div>
-          <div class="flex-row gap-20 baseline">
-            <label for="mappingUpload" class="flex-15">Mapping</label>
-            <input type="file" #mappingUpload id="mappingUpload" name="mappingUpload" (change)="importMappings(mappingUpload.files)" accept="json/*.json" style="display:none;" />
-            <button mat-stroked-button color="primary" class="flex-20" (click)="mappingUpload.click()" data-test="importMapping">Import</button>
-            <button mat-flat-button color="primary" class="flex-20" (click)="exportMappingConfig()" data-test="exportMapping">Export</button>
+
+          <div class="flex-row gap-20 align-items-center">
+            <label for="mappingUpload" class="flex-15">
+              Mapping
+            </label>
+            <input
+              class="hidden"
+              id="mappingUpload"
+              type="file"
+              #mappingUpload
+              name="mappingUpload"
+              (change)="importMappings(mappingUpload.files)"
+              accept="json/*.json"
+            />
+            <button
+              matButton="outlined"
+              color="primary"
+              class="flex-20"
+              (click)="mappingUpload.click()"
+              data-test="importMapping"
+            >
+              Import
+            </button>
+            <button
+              matButton="filled"
+              color="primary"
+              class="flex-20"
+              (click)="exportMappingConfig()"
+              data-test="exportMapping"
+            >
+              Export
+            </button>
           </div>
-          <div class="flex-row gap-20 baseline">
-            <label for="harvesterUpload" class="flex-15">Harvester</label>
-            <input type="file" #harvesterUpload id="harvesterUpload" name="harvesterUpload" (change)="importHarvester(harvesterUpload.files)" accept="json/*.json" style="display:none;" />
-            <button mat-stroked-button color="primary" class="flex-20" (click)="harvesterUpload.click()" data-test="importHarvester">Import</button>
-            <button mat-flat-button color="primary" class="flex-20" (click)="exportHarvesterConfig()" data-test="exportHarvester">Export</button>
-          </div>
-          <div class="flex-row gap-20 baseline">
-            <button mat-flat-button color="primary" (click)="exportConfigs()" data-test="exportAll">Alle Exportieren</button>
+
+          <div class="flex-row gap-20 align-items-center">
+            <label for="harvesterUpload" class="flex-15">
+              Harvester
+            </label>
+            <input
+              class="hidden"
+              id="harvesterUpload"
+              type="file"
+              #harvesterUpload
+              name="harvesterUpload"
+              (change)="importHarvester(harvesterUpload.files)"
+              accept="json/*.json"
+            />
+            <button
+              matButton="outlined"
+              color="primary"
+              class="flex-20"
+              (click)="harvesterUpload.click()"
+              data-test="importHarvester"
+            >
+              Import
+            </button>
+            <button
+              matButton="filled"
+              color="primary"
+              class="flex-20"
+              (click)="exportHarvesterConfig()"
+              data-test="exportHarvester"
+            >
+              Export
+            </button>
           </div>
         </div>
       </mat-card-content>
     </mat-card>
-  </div>
+  </ng-container>
 </page-template>
