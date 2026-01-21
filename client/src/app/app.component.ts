@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Component, OnInit } from "@angular/core";
+import { Component, HostListener, OnInit } from "@angular/core";
 import { AuthenticationService } from "./security/authentication.service";
 import { NavigationEnd, Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -40,8 +40,12 @@ import { MatIconRegistry } from "@angular/material/icon";
 export class AppComponent implements OnInit {
   isLoggedIn = false;
   isLoggingout = false;
+
   version = this.configService.config$;
   favIcon: HTMLLinkElement = document.querySelector("#appIcon");
+
+  isMinimized = false;
+  isSideMenuOpened = true;
 
   constructor(
     private router: Router,
@@ -78,6 +82,9 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Initialize the side menu state.
+    this.onResize();
+
     this.authService.currentUser.subscribe(user => {
       this.isLoggedIn = user !== null;
     });
@@ -107,5 +114,23 @@ export class AppComponent implements OnInit {
       this.router.navigate(['login']);
       this.snack.open('Sie wurden ausgeloggt', null, {duration: 3000});
     });
+  }
+
+  @HostListener("window:resize", ["$event"])
+  onResize() {
+    const preIsMinimized = this.isMinimized;
+    this.isMinimized = window.innerWidth < 640;
+
+    if (preIsMinimized == this.isMinimized) return;
+
+    if (this.isMinimized && !preIsMinimized) {
+      this.isSideMenuOpened = false;
+    } else if (!this.isMinimized && preIsMinimized) {
+      this.isSideMenuOpened = true;
+    }
+  }
+
+  sideMenuOpenedOnChange(opened: boolean) {
+    this.isSideMenuOpened = opened;
   }
 }

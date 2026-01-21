@@ -23,8 +23,18 @@
 
 <mat-toolbar
   *transloco="let t; read: 'menu'"
-  class="gap-16"
 >
+  <button
+    class="side-menu-btn"
+    matIconButton
+    color="primary"
+    [matTooltip]="t('logout')"
+    [attr.aria-label]="t('logout')"
+    (click)="onSideMenuToggle.emit()"
+  >
+    <mat-icon svgIcon="menu" />
+  </button>
+
   <img
     class="logo"
     src="assets/icons/logo.svg"
@@ -47,7 +57,6 @@
   <div class="flex-1"></div>
 
   <button
-    class="logout-btn"
     matButton="outlined"
     color="primary"
     (click)="onLogout.emit()"
@@ -58,7 +67,6 @@
   </button>
 
   <button
-    class="logout-btn"
     matIconButton
     color="primary"
     [matTooltip]="t('logout')"

@@ -57,4 +57,6 @@
 
 <symbol id="external" height="24px" viewBox="0 -960 960 960" width="24px"><path d="m216-160-56-56 464-464H360v-80h400v400h-80v-264L216-160Z"/></symbol>
 
+<symbol id="menu" height="24px" viewBox="0 -960 960 960" width="24px"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></symbol>
+
 </svg>

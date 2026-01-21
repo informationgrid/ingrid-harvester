@@ -32,6 +32,7 @@ import { NavigationEnd, Router } from "@angular/router";
 })
 export class MainHeaderComponent {
   @Output() onLogout = new EventEmitter<void>();
+  @Output() onSideMenuToggle = new EventEmitter<void>();
 
   pageTitle: string;
 

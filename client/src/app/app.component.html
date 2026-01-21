@@ -25,14 +25,15 @@ limitations under the Licence.
   <mat-drawer-container
     class="flex-1"
     [autosize]="true"
-    [hasBackdrop]="false"
+    [hasBackdrop]="isMinimized"
   >
     <!-- Left drawer -->
     @if (isLoggedIn) {
       <mat-drawer
-        mode="side"
-        opened
-        disableClose
+        [mode]="isMinimized ? 'over' : 'side'"
+        [opened]="isSideMenuOpened"
+        [disableClose]="!isMinimized"
+        (openedChange)="sideMenuOpenedOnChange($event)"
       >
         <ige-side-menu />
       </mat-drawer>
@@ -40,7 +41,10 @@ limitations under the Licence.
     <!-- Right content -->
     <mat-drawer-content>
       @if (isLoggedIn) {
-        <ige-main-header (onLogout)="logout()" />
+        <ige-main-header
+          (onLogout)="logout()"
+          (onSideMenuToggle)="sideMenuOpenedOnChange(!isSideMenuOpened)"
+        />
       }
       <router-outlet></router-outlet>
     </mat-drawer-content>

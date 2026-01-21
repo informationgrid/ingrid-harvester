@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+@use "sass:color";
 @use "../../_variables";
 
 :host {
@@ -30,6 +31,7 @@
 
 mat-toolbar {
   height: 48px;
+  gap: 16px;
   padding-left: 12px;
   padding-right: 12px;
   background-color: white;
@@ -52,20 +54,30 @@ mat-toolbar h1 {
   font-size: 20px;
 }
 
-.logout-btn[matIconButton] {
+.side-menu-btn {
+  color: white;
+  background-color: variables.$ige-secondary;
+  border-radius: 4px;
+}
+
+[matIconButton] {
   display: none;
 }
 
 @media screen and (max-width: 640px) {
+  mat-toolbar {
+    gap: 12px;
+  }
+
   .site-title {
     display: none;
   }
 
-  .logout-btn[matButton] {
+  [matButton] {
     display: none;
   }
 
-  .logout-btn[matIconButton] {
+  [matIconButton] {
     display: block;
   }
 }
