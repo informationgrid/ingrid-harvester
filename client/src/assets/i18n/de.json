@@ -1,4 +1,5 @@
 {
+    "delete": "Löschen",
     "pageTitle": {
       "default": "InGrid Harvester",
       "dashboard": "Übersicht",
@@ -50,6 +51,14 @@
       "history": "Historie",
       "log": "Error-Log",
       "more": "Mehr"
+    },
+    "config": {
+      "catalogs": "Kataloge",
+      "config": "Konfiguration",
+      "mapping": "Mapping",
+      "harvester": "Harvester",
+      "import": "import",
+      "export": "export"
     },
     "form": {
       "validationMessages": {

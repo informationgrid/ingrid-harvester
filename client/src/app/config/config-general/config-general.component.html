@@ -53,6 +53,8 @@
           class="form-section"
           [formGroup]="configForm.get('database')"
           data-test="config-database"
+          role="group"
+          aria-label="Datenbank"
         >
           <mat-card-header contextHelp="config_database">
             <mat-card-title>Datenbank</mat-card-title>
@@ -131,6 +133,8 @@
         <mat-card
           class="form-section"
           [formGroup]="configForm.get('elasticsearch')"
+          role="group"
+          aria-label="Elasticsearch"
         >
           <mat-card-header contextHelp="config_elasticsearch">
             <mat-card-title>Elasticsearch</mat-card-title>
@@ -244,7 +248,11 @@
         </mat-card>
 
         <!-- Zusätzliche Einstellungen -->
-        <mat-card class="form-section">
+        <mat-card
+          class="form-section"
+          role="group"
+          aria-label="Zusätzliche Einstellungen"
+        >
           <mat-card-header contextHelp="config_additional_settings">
             <mat-card-title>Zusätzliche Einstellungen</mat-card-title>
           </mat-card-header>
@@ -284,7 +292,11 @@
         </mat-card>
 
         <!-- Checks -->
-        <mat-card class="form-section">
+        <mat-card
+          class="form-section"
+          role="group"
+          aria-label="Checks"
+        >
           <mat-card-header contextHelp="config_checks">
             <mat-card-title>Checks</mat-card-title>
           </mat-card-header>
@@ -309,6 +321,8 @@
         <mat-card
           class="form-section"
           [formGroup]="configForm.get('indexBackup')"
+          role="group"
+          aria-label="Index-Backup"
         >
           <mat-card-header contextHelp="config_index_backup">
             <mat-card-title>Index-Backup</mat-card-title>
@@ -346,7 +360,11 @@
         </mat-card>
 
         <!-- Harvesting Differenzen -->
-        <mat-card class="form-section">
+        <mat-card
+          class="form-section"
+          role="group"
+          aria-label="Harvesting Differenzen"
+        >
           <mat-card-header contextHelp="config_harvesting_differences">
             <mat-card-title>Harvesting Differenzen</mat-card-title>
           </mat-card-header>
@@ -405,7 +423,11 @@
         </mat-card>
 
         <!-- E-Mail-Einstellungen -->
-        <mat-card class="form-section">
+        <mat-card
+          class="form-section"
+          role="group"
+          aria-label="E-Mail-Einstellungen"
+        >
           <mat-card-header
             contextHelp="config_email"
             [formGroup]="configForm.get('mail')"

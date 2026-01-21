@@ -302,10 +302,12 @@ mat-icon.dark-blue {
   }
 }
 
-button[matbutton] {
-  .mdc-button__label {
-    font-weight: normal;
-  }
+button[matbutton] .mdc-button__label {
+  font-weight: normal;
+}
+
+button[matbutton="filled"]:hover {
+  background-color: color.adjust(variables.$ige-secondary, $lightness: 8%);
 }
 
 // Accessibility requirement.

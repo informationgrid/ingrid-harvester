@@ -21,7 +21,11 @@
     ==================================================
 -->
 
-<page-template label="Mapping" subLabel="(Datenformate)">
+<page-template
+  label="Mapping"
+  subLabel="(Datenformate)"
+  *transloco="let t"
+>
   <ng-container left-side>
     <aside contextHelp="about_mapping"></aside>
   </ng-container>
@@ -46,14 +50,22 @@
         </mat-card-header>
 
         <mat-card-content>
-          <div class="flex-col">
+          <div
+            class="flex-col"
+            role="list"
+            aria-label="{{ type.name }}"
+          >
             @for (item of type.items; track item) {
-              <div class="mapping-item">
+              <div
+                class="mapping-item"
+                role="listitem"
+                aria-label="{{ item }}"
+              >
                 <button
                   matIconButton
                   color="warn"
+                  matTooltip="{{ t('delete') }}"
                   (click)="deleteItem(type.name, item)"
-                  class="mapping-delete-button"
                 >
                   <mat-icon svgIcon="Delete" />
                 </button>

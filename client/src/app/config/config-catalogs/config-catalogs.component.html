@@ -21,7 +21,10 @@
     ==================================================
 -->
 
-<page-template label="Katalogverwaltung">
+<page-template
+  label="Katalogverwaltung"
+  *transloco="let t; read 'config'"
+>
   <ng-container left-side>
     <aside contextHelp="about_catalog_management"></aside>
   </ng-container>
@@ -41,13 +44,21 @@
 
     <mat-card>
       <mat-card-content>
-        <div class="flex-col gap-16">
+        <div
+          class="flex-col gap-16"
+          role="list"
+          aria-label="{{ t('catalogs') }}"
+        >
           @for (wrapper of catalogsWrapper | async; track wrapper.catalog.identifier) {
-            <div class="catalog">
+            <div
+              class="catalog"
+              role="listitem"
+              aria-label="{{ wrapper.catalog.title }}"
+            >
               <div class="flex-row gap-8 align-items-center">
                 <mat-slide-toggle
                   color="accent"
-                  title="Für Suche an- / ausschalten"
+                  aria-label="Für Suche an- / ausschalten"
                   [checked]="wrapper.catalog.isEnabled"
                   (change)="toggleCatalogStatus($event, wrapper.catalog)"
                   (click)="$event.stopImmediatePropagation()"
