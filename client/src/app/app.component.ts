@@ -21,13 +21,13 @@
  * ==================================================
  */
 
-import { Component, computed, OnInit } from '@angular/core';
-import {AuthenticationService} from './security/authentication.service';
-import {Router, NavigationEnd} from '@angular/router';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {ConfigService} from "./config.service";
+import { Component, OnInit } from "@angular/core";
+import { AuthenticationService } from "./security/authentication.service";
+import { NavigationEnd, Router } from "@angular/router";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { ConfigService } from "./config.service";
 import { TranslocoService } from "@ngneat/transloco";
-import { combineLatest } from 'rxjs';
+import { combineLatest } from "rxjs";
 import { DomSanitizer, Title } from "@angular/platform-browser";
 import { MatIconRegistry } from "@angular/material/icon";
 

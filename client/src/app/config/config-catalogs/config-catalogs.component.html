@@ -23,7 +23,7 @@
 
 <page-template
   label="Katalogverwaltung"
-  *transloco="let t; read 'config'"
+  *transloco="let t"
 >
   <ng-container left-side>
     <aside contextHelp="about_catalog_management"></aside>
@@ -47,7 +47,7 @@
         <div
           class="flex-col gap-16"
           role="list"
-          aria-label="{{ t('catalogs') }}"
+          aria-label="{{ t('config.catalogs') }}"
         >
           @for (wrapper of catalogsWrapper | async; track wrapper.catalog.identifier) {
             <div
@@ -68,7 +68,8 @@
                 <button
                   matIconButton
                   color="info"
-                  title="Ändern"
+                  [matTooltip]="t('edit')"
+                  [attr.aria-label]="t('edit')"
                   (click)="addOrEditCatalog(wrapper.catalog)"
                 >
                   <mat-icon svgIcon="Edit" />
@@ -77,7 +78,9 @@
                 <button
                   matIconButton
                   color="warn"
-                  title="Löschen" (click)="deleteCatalog(wrapper.catalog)"
+                  [matTooltip]="t('Löschen')"
+                  [attr.aria-label]="t('delete')"
+                  (click)="deleteCatalog(wrapper.catalog)"
                 >
                   <mat-icon svgIcon="Delete" />
                 </button>

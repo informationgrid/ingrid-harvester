@@ -517,7 +517,7 @@ h1 {
   font-weight: 400;
 }*/
 
-.upper-case {
+.uppercase {
   text-transform: uppercase;
 }
 
@@ -1696,6 +1696,10 @@ h2.title-with-context-help {
 
 .text-sm {
   font-size: 14px;
+}
+
+.text-xl {
+  font-size: 20px;
 }
 
 .text-2xl {

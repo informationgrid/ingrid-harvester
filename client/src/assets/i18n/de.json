@@ -1,5 +1,6 @@
 {
     "delete": "Löschen",
+    "edit": "Editieren",
     "pageTitle": {
       "default": "InGrid Harvester",
       "dashboard": "Übersicht",
@@ -11,21 +12,18 @@
       "harvester": "Harvester",
       "indices": "Indizes",
       "log": "Log",
-      "login": "Login",
-      "logout": "Abmelden"
+      "login": "Login"
     },
     "menu": {
       "application": "INGRID",
-      "application-suffix": " ",
-      "logo": "assets/icons/logo.svg",
-      "logo-text": "Logo InGrid Framework",
       "default": "InGrid Harvester",
       "dashboard": "Übersicht",
       "config": "Konfiguration",
       "harvester": "Harvester",
       "indices": "Indizes",
       "log": "Log",
-      "login": "Login"
+      "login": "Login",
+      "logout": "Abmelden"
     },
     "dashboard": {
       "welcome": "Guten Tag! Willkommen zurück.",

@@ -33,7 +33,6 @@ import { NavigationEnd, Router } from "@angular/router";
 export class MainHeaderComponent {
   @Output() onLogout = new EventEmitter<void>();
 
-  showShadow: boolean;
   pageTitle: string;
 
   constructor(
@@ -43,15 +42,9 @@ export class MainHeaderComponent {
   ngOnInit() {
     this.router.events.subscribe((event: any) => {
       if (event instanceof NavigationEnd) {
-        const rootPath = this.router.parseUrl(this.router.url).root.children
+        this.pageTitle = this.router.parseUrl(this.router.url).root.children
           .primary?.segments[0]?.path;
-        this.showShadow = rootPath !== "dashboard";
-        this.pageTitle = rootPath;
       }
     });
   }
-
-  async logout() {
-  }
-
 }
