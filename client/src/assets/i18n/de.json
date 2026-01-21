@@ -60,6 +60,11 @@
       "import": "import",
       "export": "export"
     },
+    "indices": {
+      "more": "Mehr",
+      "previousHit": "Vorheriger Treffer",
+      "nextHit": "Nächster Treffer"
+    },
     "form": {
       "validationMessages": {
         "required": "Dieses Feld muss ausgefüllt sein",

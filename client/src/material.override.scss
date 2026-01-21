@@ -39,10 +39,10 @@ button.mdc-button {
   text-transform: uppercase;
 }
 
-mat-form-field:hover .mdc-notched-outline__leading,
-mat-form-field:hover .mdc-notched-outline__trailing {
-  //border-color: #979797;
-  //border-width: 2px !important;
+mat-form-field.no-subscript {
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
 }
 
 ige-side-menu .mat-mdc-nav-list .mat-mdc-list-item {

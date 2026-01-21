@@ -36,6 +36,22 @@
   padding: 40px;
 }
 
+@media screen and (min-width: 1024px) {
+  .tab.fixed-height {
+    height: 100%;
+    box-sizing: border-box;
+
+    .side, .main {
+      height: 100%;
+    }
+
+    .side-content, .main-content {
+      flex: 1;
+      overflow-y: auto;
+    }
+  }
+}
+
 .side, .main {
   display: flex;
   flex-direction: column;

@@ -21,7 +21,7 @@
     ==================================================
 -->
 
-<div class="tab">
+<div class="tab" [class.fixed-height]="fixHeight">
   <div class="side">
     <div class="side-header">
       <h2>
@@ -36,9 +36,12 @@
   <ng-content select="[status]"></ng-content>
 
   <div class="main">
-    <div class="main-header">
-      <ng-content select="[main-header]"></ng-content>
-    </div>
+    @if (hasMainHeader) {
+      <div class="main-header">
+        <ng-content select="[main-header]"></ng-content>
+      </div>
+    }
+
     <div class="main-content">
       <ng-content select="[main-content]"></ng-content>
     </div>

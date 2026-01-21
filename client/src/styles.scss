@@ -259,6 +259,9 @@ mat-card-header {
 .text-bottom{
   vertical-align: bottom !important;
 }
+.font-medium {
+  font-weight: 500;
+}
 .font-normal {
   font-weight: normal;
 }
@@ -1691,12 +1694,20 @@ h2.title-with-context-help {
   }
 }
 
+.text-sm {
+  font-size: 14px;
+}
+
 .text-2xl {
   font-size: 24px;
 }
 
 .text-right {
   text-align: right;
+}
+
+.text-hint {
+  color: variables.$ige-hint-color;
 }
 
 .break-word {
