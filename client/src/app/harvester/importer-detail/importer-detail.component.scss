@@ -25,12 +25,12 @@
 
 .error {
   color: white;
-  background-color: #B71C1C;
+  background-color: variables.$error-color;
 }
 
 .warning {
   color: white;
-  background-color: #FB8C00;
+  background-color: variables.$warning-color;
 }
 
 mat-progress-bar {

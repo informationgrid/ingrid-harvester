@@ -22,25 +22,25 @@
  */
 
 @use "sass:color";
+@use "../../variables";
 
- :host {
+:host {
   display: flex;
   overflow: hidden;
   flex: 1; // IE 11
   flex-direction: column;
 }
 
-.code {
-  white-space: pre;
-  padding-left: 20px;
+.logs-container {
   overflow: auto;
+  white-space: pre;
   height: 100%;
   color: color.invert($color: #000000);
   background-color: #2e2e2e;
 }
 
-.viewport {
-  height: 100%;
+.log-entry {
+  padding: 0 16px;
 }
 
 .debug {
@@ -48,9 +48,9 @@
 }
 
 .warn {
-  color: darkorange;
+  color: variables.$warning-color;
 }
 
 .error {
-  color: crimson;
+  color: variables.$error-color;
 }

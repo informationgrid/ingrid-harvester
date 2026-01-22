@@ -22,11 +22,17 @@
 -->
 
 @if (isLoading) {
-<div>Loading log file ...</div>
+  <div>Loading log file ...</div>
+} @else {
+  <div class="logs-container">
+    <cdk-virtual-scroll-viewport itemSize="19" class="h-full">
+      <div
+        class="log-entry"
+        [class]="determineClass(line)"
+        *cdkVirtualFor="let line of logdata"
+      >
+        {{ line }}
+      </div>
+    </cdk-virtual-scroll-viewport>
+  </div>
 }
-
-<div class="code">
-  <cdk-virtual-scroll-viewport itemSize="19" class="viewport">
-    <div [class]="determineClass(line)" *cdkVirtualFor="let line of logdata">{{line}}</div>
-  </cdk-virtual-scroll-viewport>
-</div>
