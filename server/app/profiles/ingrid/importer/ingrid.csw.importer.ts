@@ -32,6 +32,6 @@ export class IngridCswImporter extends CswImporter {
     }
 
     protected async postHarvestingHandling() {
-        updateIngridMetaIndex(this.elastic, this.settings, "de.ingrid.iplug.csw.dsc.CswDscSearchPlug");
+        await updateIngridMetaIndex(this.elastic, this.settings, "de.ingrid.iplug.csw.dsc.CswDscSearchPlug");
     }
 }

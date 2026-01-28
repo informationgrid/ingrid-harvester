@@ -37,6 +37,6 @@ export class IngridWfsImporter extends WfsImporter {
     }
     
     protected async postHarvestingHandling() {
-        updateIngridMetaIndex(this.elastic, this.settings, "de.ingrid.iplug.wfs.dsc.WfsDscSearchPlug");
+        await updateIngridMetaIndex(this.elastic, this.settings, "de.ingrid.iplug.wfs.dsc.WfsDscSearchPlug");
     }
 }
