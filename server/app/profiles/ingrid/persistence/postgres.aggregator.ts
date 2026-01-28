@@ -45,7 +45,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         let deleteDocument = document.extras.metadata.deleted != null;
         bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.extras.metadata.deleted != null);
         if (deleteDocument) {
-            return [{ operation: 'delete', _index: document['catalog'].identifier, _id: createEsId(document) }];
+            return [{ operation: 'delete', _index: document['catalog'].identifier, _id: document.uuid }];
         }
 
         // deduplication
@@ -66,7 +66,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         }
         document = this.sanitize(document);
         // document = MiscUtils.merge(document, { extras: { transformed_data: { dcat_ap_plu: DcatApPluDocumentFactory.create(document) } } });
-        box.push({ operation: 'index', _index: document['catalog'].identifier, _id: createEsId(document), document });
+        box.push({ operation: 'index', _index: document['catalog'].identifier, _id: document.uuid, document });
         return box;
     }
 

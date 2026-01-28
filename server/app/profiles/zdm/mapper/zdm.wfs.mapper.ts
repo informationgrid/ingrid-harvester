@@ -78,10 +78,6 @@ export class ZdmWfsMapper extends ZdmMapper<WfsMapper> {
         return this.baseMapper.getModifiedDate()
     }
 
-    getGeneratedId(): string{
-        return this.baseMapper.getGeneratedId()
-    }
-
     getMetadataSource(): MetadataSource {
         return this.baseMapper.getMetadataSource();
     }
