@@ -198,7 +198,13 @@ export class WfsMapper extends BaseMapper {
     }
 
     getSpatial(): Geometry {
-        return undefined;
+        if (this.isFeatureType()) {
+            return null;
+        }
+        let geometryType = this.fetched['geometryType'];
+        let xpath = `./*[local-name()="${this.getTypename()}"]/*[local-name()="${geometryType}"]/*`;
+        let geometry = this.select(xpath, this.featureOrFeatureType, true);
+        return GeoJsonUtils.parse(geometry, null, this.fetched.nsMap);
     }
 
     getSpatialText(): string {

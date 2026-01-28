@@ -51,7 +51,8 @@ export abstract class ingridWfsMapper extends ingridMapper<WfsMapper> {
     }
 
     getAdditionalHtml(): string {
-        let bbox = this.getSpatial()?.bbox;
+        // let bbox = this.getSpatial()?.bbox;
+        let bbox = this.baseMapper.getBoundingBox()?.bbox;
         // let bbox = this.getBoundingBox()?.bbox;
         if (!bbox) {
             return null;

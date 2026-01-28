@@ -24,6 +24,7 @@
 import { generateWfsUuid } from '../../ingrid.utils.js';
 import { ingridWfsMapper } from '../ingrid.wfs.mapper.js';
 import { PegelonlineIdfGenerator } from './pegelonline.idf.generator.js';
+import type { Geometry } from 'geojson';
 
 export class PegelonlineWfsMapper extends ingridWfsMapper {
 
@@ -56,8 +57,10 @@ export class PegelonlineWfsMapper extends ingridWfsMapper {
         return summary;
     }
 
-    getSpatial() {
-        return this.baseMapper.getBoundingBox();
+    getSpatial(): Geometry | Geometry[] {
+        return [
+            this.baseMapper.getBoundingBox(),
+        ];
     }
 
     getGeneratedId(): string {

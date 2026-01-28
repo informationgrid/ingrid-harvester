@@ -28,6 +28,7 @@ import log4js from 'log4js';
 import type { CswMapper } from "../../../importer/csw/csw.mapper.js";
 import type { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
 import type { Distribution } from "../../../model/distribution.js";
+import type { Geometry } from "geojson";
 import type { IndexDocumentFactory } from "../../../model/index.document.factory.js";
 import type { IngridIndexDocument } from "../model/index.document.js";
 import { Codelist } from "../utils/codelist.js";
@@ -264,7 +265,7 @@ export abstract class ingridMapper<M extends CswMapper | WfsMapper> implements I
         return undefined;
     }
 
-    abstract getSpatial();
+    abstract getSpatial(): Geometry | Geometry[];
 
     abstract getIDF();
 
