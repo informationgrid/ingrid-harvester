@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { namespaces } from '../importer/namespaces.js';
 import * as MiscUtils from './misc.utils.js';
 
 /**
@@ -77,6 +78,52 @@ function _extractNamespaces(attributes: NamedNodeMap, defaultPrefix: string = un
         }
     }
     return nsMap;
+}
+
+/**
+ * Rename all nodes with name oldName to newName within the given node (incl. the node itself if applicable).
+ * This does not alter the given node itself, instead it returns a copy.
+ * 
+ * @param oldName the old qualified name (with prefix)
+ * @param newName the new qualified name (with prefix)
+ * @param node the node in which to rename the nodes
+ * @returns a copy of the given node with renamed nodes
+ */
+export function renameNodes(oldName: string, newName: string, node: Node): Node {
+    let clone = node.cloneNode(true) as Element;
+    const [sourceNsPrefix, sourceTagName] = oldName.split(":", 2);
+    const sourceNsUri = namespaces[sourceNsPrefix.toUpperCase()];
+    const [targetNsPrefix, targetTagName] = newName.split(":", 2);
+    const targetNsUri = namespaces[targetNsPrefix.toUpperCase()];
+
+    // get all matching descendants
+    const targets: Element[] = Array.from(clone.getElementsByTagNameNS(sourceNsUri, sourceTagName));
+    // if the given node matches, add it to the list
+    if (clone.namespaceURI === sourceNsUri && clone.localName === sourceTagName) {
+        targets.push(clone);
+    }
+
+    for (const oldNode of targets) {
+        const newNode = clone.ownerDocument.createElementNS(targetNsUri, newName);
+        // move attributes
+        while (oldNode.attributes.length > 0) {
+            const attr = oldNode.attributes[0];
+            oldNode.removeAttributeNode(attr);
+            newNode.setAttributeNode(attr);
+        }
+        // move children
+        while (oldNode.firstChild) {
+            newNode.appendChild(oldNode.firstChild);
+        }
+        // swap within DOM
+        if (oldNode === clone) {
+            clone = newNode;
+        }
+        else if (oldNode.parentNode) {
+            oldNode.parentNode.replaceChild(newNode, oldNode);
+        }
+    }
+    return clone;
 }
 
 export interface XPathNodeSelect {
