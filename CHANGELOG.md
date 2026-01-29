@@ -1,4 +1,11 @@
 
+## 8.2.1 (29.01.2026)
+
+
+### Bugfixes
+
+* Harvester muss HTML Tags bei der Erstellung von IDF Dokumenten escapen (#8690)
+    
 ## 8.1.0 (10.10.2025)
 
 ### Features
