@@ -4,11 +4,7 @@
 ### Features
 
 * Harvester: Ausschluss von internen Dateireferenzen von der URL Prüfung (#8696)
-
-### Bugfixes
-
-* Harvester muss HTML Tags bei der Erstellung von IDF Dokumenten escapen (#8690)
-    
+   
 ## Bugfixes
 
 * Harvester muss HTML Tags bei der Erstellung von IDF Dokumenten escapen (#8690)
