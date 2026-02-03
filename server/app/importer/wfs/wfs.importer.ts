@@ -62,6 +62,7 @@ export class WfsImporter extends Importer {
     private generalInfo: object = {};
     protected nsMap: {};
 
+    // TODO get from server capabilities
     protected supportsPaging: boolean = false;
 
     constructor(settings: WfsSettings) {
@@ -368,6 +369,7 @@ export class WfsImporter extends Importer {
         // * correct namespaces
         // * check filter
         // * support paging if server supports it
+        //      * GetCapabilities -> ImplementsResultPaging
         if (settings.httpMethod === "POST") {
             if (request === 'GetFeature') {
                 requestConfig.body = `<?xml version="1.0" encoding="UTF-8"?>
@@ -404,10 +406,11 @@ export class WfsImporter extends Importer {
             if (settings.featureFilter) {
                 requestConfig.qs.constraint = settings.featureFilter;
             }
-            if (settings.maxRecords) {
-                requestConfig.qs.startIndex = settings.startPosition;
-                requestConfig.qs.maxFeatures = settings.maxRecords;
-            }
+            // if (this.supportsPaging && settings.maxRecords) {
+            // if (settings.maxRecords) {
+            //     requestConfig.qs.startIndex = settings.startPosition;
+            //     requestConfig.qs.maxFeatures = settings.maxRecords;
+            // }
         }
 
         return requestConfig;
