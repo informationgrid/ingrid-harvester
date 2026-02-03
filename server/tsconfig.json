@@ -16,7 +16,7 @@
     "allowSyntheticDefaultImports": true,
     "verbatimModuleSyntax": true,
     "resolveJsonModule": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "baseUrl": "./app",
     "paths": {
       "@shared/*": ["../../shared/*"]
