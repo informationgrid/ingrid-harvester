@@ -53,7 +53,7 @@ export const defaultWfsSettings: Partial<WfsSettings> = {
     eitherKeywords: [],
     httpMethod: 'GET',
     resultType: 'results',
-    memberElements: ["gml:featureMember", "wfs:member"]
+    memberElements: ["gml:featureMember/*", "wfs:member/*", "gml:featureMembers/*"],
 };
 
 export enum WfsProfile {
