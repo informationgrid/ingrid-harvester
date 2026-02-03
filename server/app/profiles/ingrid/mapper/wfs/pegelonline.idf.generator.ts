@@ -27,15 +27,15 @@ import type { PegelonlineWfsMapper } from './pegelonline.wfs.mapper.js';
 
 export class PegelonlineIdfGenerator extends IdfGenerator {
 
-    private mapper: PegelonlineWfsMapper;
-    private baseMapper: WfsMapper;
+    protected mapper: PegelonlineWfsMapper;
+    // private baseMapper: WfsMapper;
 
     constructor(profileMapper: PegelonlineWfsMapper) {
-        super();
-        this.mapper = profileMapper;
-        this.baseMapper = profileMapper.baseMapper;
-        let idfBody = '<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.portalu.de/IDF/1.0"><head/><body/></html>';
-        this.document = this.domParser.parseFromString(idfBody);
+        super(profileMapper);
+        // this.mapper = profileMapper;
+        // this.baseMapper = profileMapper.baseMapper;
+        // let idfBody = '<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.portalu.de/IDF/1.0"><head/><body/></html>';
+        // this.document = this.domParser.parseFromString(idfBody);
     }
 
     createIdf(): string {

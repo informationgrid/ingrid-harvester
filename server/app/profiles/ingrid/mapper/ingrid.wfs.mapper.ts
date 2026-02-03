@@ -21,17 +21,78 @@
  * ==================================================
  */
 
+import * as MiscUtils from '../../../utils/misc.utils.js';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
 import type { MetadataSource } from '../../../model/index.document.js';
 import * as GeojsonUtils from '../../../utils/geojson.utils.js';
+import { IdfGenerator } from '../idf.generator.js';
 import { generateWfsUuid } from '../ingrid.utils.js';
 import type { IngridIndexDocument } from '../model/index.document.js';
 import { ingridMapper } from './ingrid.mapper.js';
+import type { Geometry } from 'geojson';
 
-export abstract class ingridWfsMapper extends ingridMapper<WfsMapper> {
+export class ingridWfsMapper extends ingridMapper<WfsMapper> {
 
     constructor(baseMapper: WfsMapper) {
         super(baseMapper);
+    }
+
+    getTitle(): string {
+        const featureTitleAttribute = this.baseMapper.settings.featureTitleAttribute;
+        if (featureTitleAttribute && !this.baseMapper.isFeatureType()) {
+            const xpath = `.//${featureTitleAttribute}`;
+            const titleNode = this.baseMapper.select(xpath, this.baseMapper.featureOrFeatureType, true);
+            if (titleNode?.textContent) {
+                return titleNode.textContent;
+            }
+        }
+        return this.baseMapper.getTitle();
+    }
+
+    getSummary() {
+        return "";
+    }
+
+    getSpatial(): Geometry | Geometry[] {
+        return [
+            this.baseMapper.getBoundingBox(),
+            this.baseMapper.getSpatial()
+        ];
+    }
+
+    getIDF() {
+        let idfGenerator = new IdfGenerator(this);
+        return idfGenerator.createIdf(this.baseMapper.fetched.idx);
+    }
+
+    getCustomEntries(toLower: boolean = true): Object {
+        let localname = MiscUtils.substringAfterLast(this.baseMapper.fetched['typename'], ":", true);
+        let xpath = this.baseMapper.isFeatureType() ? './*' : `./*[local-name()="${localname}"]/*`;
+        xpath = "./*";
+        let children = this.baseMapper.select(xpath, this.baseMapper.featureOrFeatureType);
+        let obj = {};
+        for (let child of children) {
+            let tag = (child as Element).localName;
+            if (toLower) {
+                tag = tag.toLowerCase();
+            }
+            let text = child.textContent;
+            if (obj[tag]) {
+                // already exists, make array
+                if (Array.isArray(obj[tag])) {
+                    obj[tag].push(text);
+                }
+                else {
+                    obj[tag] = [obj[tag], text];
+                }
+            }
+            else {
+                obj[tag] = text;
+            }
+        }
+        obj["is_feature_type"] = this.baseMapper.isFeatureType();
+        obj["typename"] = this.baseMapper.getTypename();
+        return obj;
     }
 
     getX1() {
@@ -50,27 +111,27 @@ export abstract class ingridWfsMapper extends ingridMapper<WfsMapper> {
         return this.baseMapper.getBoundingBox()?.bbox?.[3];
     }
 
-    getAdditionalHtml(): string {
+    getAdditionalHTML(): string {
         // let bbox = this.getSpatial()?.bbox;
         let bbox = this.baseMapper.getBoundingBox()?.bbox;
         // let bbox = this.getBoundingBox()?.bbox;
         if (!bbox) {
             return null;
         }
+
         let [ x1, y1, x2, y2 ] = bbox;
-        if (x1 === x2 && y1 === y2) {
-            x1 -= 0.012;
-            y1 -= 0.048;
-            x2 += 0.012;
-            y2 += 0.048;
-        }
+        // if (x1 === x2 && y1 === y2) {
+        //     x1 -= 0.012;
+        //     y1 -= 0.048;
+        //     x2 += 0.012;
+        //     y2 += 0.048;
+        // }
         [ x1, y1 ] = GeojsonUtils.project(x1, y1, 'WGS84', '25832');
         [ x2, y2 ] = GeojsonUtils.project(x2, y2, 'WGS84', '25832');
-        var BBOX = "" + x1 + "," + y1 + "," + x2 + "," + y2;
 
-        var addHtml = "" +
-            "https://sgx.geodatenzentrum.de/wms_topplus_open?VERSION=1.3.0&amp;REQUEST=GetMap&amp;CRS=EPSG:25832&amp;BBOX=" + BBOX +
-            "&amp;LAYERS=web&amp;FORMAT=image/png&amp;STYLES=&amp;WIDTH=200&amp;HEIGHT=200";
+        var addHtml = `<iframe class="map-ingrid"
+                src="/ingrid-webmap-client/frontend/prd/embed.html?lang=de&zoom=15&topic=favoriten&bgLayer=wmts_topplus_web&layers=bwastr_vnetz&layers_opacity=0.4&E=${x2}&N=${y1}&crosshair=marker" style="height:320px">
+            </iframe>`;
 
         return addHtml;
     }
@@ -80,7 +141,10 @@ export abstract class ingridWfsMapper extends ingridMapper<WfsMapper> {
     }
 
     getGeneratedId(): string {
-        return generateWfsUuid(this.getMetadataSource().source_base, this.baseMapper.getTypename(), this.baseMapper.gmlId);
+        let customEntries = this.getCustomEntries();
+        let existingUuid = customEntries["uuid"];
+        let generatedUuid = generateWfsUuid(this.getMetadataSource().source_base, this.baseMapper.getTypename(), this.baseMapper.gmlId);
+        return existingUuid ?? generatedUuid;
     }
 
     getMetadataSource(): MetadataSource {

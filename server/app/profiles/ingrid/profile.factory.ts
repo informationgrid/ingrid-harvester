@@ -45,6 +45,7 @@ import { ElasticQueries } from './persistence/elastic.queries.js';
 import mappings from './persistence/ingrid-meta-mapping.json' with { type: 'json' };
 import settings from './persistence/ingrid-meta-settings.json' with { type: 'json' };
 import { PostgresAggregator } from './persistence/postgres.aggregator.js';
+import { ingridWfsMapper } from './mapper/ingrid.wfs.mapper.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -112,6 +113,7 @@ export class ingridFactory extends ProfileFactory<CswMapper> {
                 switch (wfsProfile) {
                     case WfsProfile.pegelonline: return new PegelonlineWfsMapper(mapper as WfsMapper);
                     case WfsProfile.zdm: return new ZdmWfsMapper(mapper as WfsMapper);
+                    default: return new ingridWfsMapper(mapper as WfsMapper);
                 }
             }
             default:

@@ -46,6 +46,8 @@ export abstract class ingridMapper<M extends CswMapper | WfsMapper> implements I
 
     async create() : Promise<IngridIndexDocument> {
         let result = <IngridIndexDocument>{
+            // put custom entries first, so they can potentially get overwritten with more specific getters below
+            ...this.getCustomEntries(),
             iPlugId: this.getIPlugId(),
             uuid: this.getGeneratedId(),
             partner: this.getPartner(),
@@ -118,7 +120,6 @@ export abstract class ingridMapper<M extends CswMapper | WfsMapper> implements I
             is_hvd: this.isHvd(),
             spatial_system: this.getSpatialSystem(),
             sort_hash: this.getSortHash(),
-            ...this.getCustomEntries(),
             content: null, // assigned after
             idf: null // assigned after
         };
@@ -131,7 +132,7 @@ export abstract class ingridMapper<M extends CswMapper | WfsMapper> implements I
         return result;
     }
 
-    getCustomEntries(): Object {
+    getCustomEntries(toLower: boolean = true): Object {
         return {};
     }
 
@@ -147,8 +148,10 @@ export abstract class ingridMapper<M extends CswMapper | WfsMapper> implements I
         return this.baseMapper.getModifiedDate();
     }
 
+    // if the custom entries contain a "uuid", use it
+    // otherwise, use the "generated" id, e.g. gmlId (WFS) or fileIdentifier (CSW)
     getGeneratedId(): string{
-        return this.baseMapper.getGeneratedId()
+        return this.baseMapper.getGeneratedId();
     }
 
     getHierarchyLevel() {

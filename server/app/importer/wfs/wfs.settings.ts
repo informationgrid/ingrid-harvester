@@ -57,12 +57,13 @@ export const defaultWfsSettings: Partial<WfsSettings> = {
 
 export enum WfsProfile {
     // TODO diplanung profiles
+    default = "default",
     pegelonline = "pegelonline",
-    // TODO other ingrid profiles
     zdm = "zdm"
 }
 
 export const memberElements = {
+    [WfsProfile.default]: ["gml:featureMember/*", "wfs:member/*", "gml:featureMembers/*"],
     [WfsProfile.pegelonline]: ["gml:featureMembers/gk:waterlevels"],
     [WfsProfile.zdm]: ["gml:featureMember"]
 }

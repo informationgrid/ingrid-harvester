@@ -30,15 +30,14 @@ import type { ZdmWfsMapper } from './zdm.wfs.mapper.js';
 
 export class ZdmIdfGenerator extends IdfGenerator {
 
-    private mapper: ZdmWfsMapper;
-    private baseMapper: WfsMapper;
+    protected mapper: ZdmWfsMapper;
 
     constructor(profileMapper: ZdmWfsMapper) {
-        super();
-        this.mapper = profileMapper;
-        this.baseMapper = profileMapper.baseMapper;
-        let idfBody = '<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.portalu.de/IDF/1.0"><head/><body/></html>';
-        this.document = MiscUtils.getDomParser().parseFromString(idfBody);
+        super(profileMapper);
+        // this.mapper = profileMapper;
+        // this.baseMapper = profileMapper.baseMapper;
+        // let idfBody = '<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.portalu.de/IDF/1.0"><head/><body/></html>';
+        // this.document = MiscUtils.getDomParser().parseFromString(idfBody);
     }
 
     createIdf(idx?: number): string {
