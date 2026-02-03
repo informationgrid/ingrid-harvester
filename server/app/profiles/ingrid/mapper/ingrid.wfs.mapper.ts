@@ -111,7 +111,7 @@ export class ingridWfsMapper extends ingridMapper<WfsMapper> {
         return this.baseMapper.getBoundingBox()?.bbox?.[3];
     }
 
-    getAdditionalHTML(): string {
+    getAdditionalHtml(): string {
         // let bbox = this.getSpatial()?.bbox;
         let bbox = this.baseMapper.getBoundingBox()?.bbox;
         // let bbox = this.getBoundingBox()?.bbox;

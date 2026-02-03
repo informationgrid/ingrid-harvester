@@ -148,7 +148,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return url ? [url] : [];
     }
 
-    getAdditionalHTML() {
+    getAdditionalHtml(): string {
         let result = [];
         let mdBrowseGraphics = CswMapper.select(".//gmd:graphicOverview/gmd:MD_BrowseGraphic", this.baseMapper.idInfo)
         mdBrowseGraphics?.forEach(mdBrowseGraphic => {

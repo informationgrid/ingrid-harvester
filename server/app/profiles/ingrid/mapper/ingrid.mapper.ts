@@ -92,7 +92,7 @@ export abstract class ingridMapper<M extends CswMapper | WfsMapper> implements I
             },
             modified: this.getModifiedDate(),
             capabilities_url: this.getCapabilitiesURL(),
-            additional_html_1: this.getAdditionalHTML(),
+            additional_html_1: this.getAdditionalHtml(),
             t04_search: this.getT04Search(),
             t0110_avail_format: this.getT0110_avail_format(),
             t011_obj_geo: this.getT011_obj_geo(),
@@ -276,7 +276,7 @@ export abstract class ingridMapper<M extends CswMapper | WfsMapper> implements I
         return undefined;
     }
 
-    getAdditionalHTML() {
+    getAdditionalHtml(): string {
         return undefined;
     }
 
