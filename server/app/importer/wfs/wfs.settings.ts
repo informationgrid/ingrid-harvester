@@ -44,7 +44,8 @@ export type WfsSettings = {
     featureFilter?: string,
     resolveWithFullResponse?: boolean,
     requireGeometry?: boolean,
-    wfsProfile: WfsProfile
+    wfsProfile: WfsProfile,
+    featureTitleAttribute?: string,
 } & ImporterSettings;
 
 export const defaultWfsSettings: Partial<WfsSettings> = {

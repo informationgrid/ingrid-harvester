@@ -95,6 +95,8 @@ export class WfsHarvesterComponent implements OnInit, OnDestroy {
     this.form.addControl('maintainer', new UntypedFormControl(this.model.maintainer && JSON.stringify(this.model.maintainer, null, 4), WfsHarvesterComponent.MaintainerValidator));
     // zdm
     this.form.addControl('featureLimit', new UntypedFormControl(this.model.featureLimit));
+    // ingrid
+    this.form.addControl('featureTitleAttribute', new UntypedFormControl(this.model.featureTitleAttribute));
     // this.form.addControl('harvestTypes', new UntypedFormControl(this.model.harvestTypes));
 
     // this is intended to set the model.contactMetadata to a JS object,
