@@ -50,7 +50,7 @@ export class IdfGenerator {
         }
     }
 
-    createFeatureTypeIdf(): string {
+    createFeatureTypeIdf(idx?: number): string {
         let idfBody = this.document.getElementsByTagName('body')[0];
 
         // add the title
@@ -103,7 +103,7 @@ export class IdfGenerator {
         return this.document.toString();
     }
 
-    createFeatureIdf(): string {
+    createFeatureIdf(idx?: number): string {
         var plugDescrDataSourceName = this.baseMapper.settings.dataSourceName;
         var plugDescrOrganisation = this.mapper.getOrganisation();
 

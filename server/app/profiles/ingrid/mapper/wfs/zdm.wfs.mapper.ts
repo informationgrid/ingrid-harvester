@@ -96,10 +96,6 @@ export class ZdmWfsMapper extends ingridWfsMapper {
         return this.baseMapper.getModifiedDate()
     }
 
-    getGeneratedId(): string{
-        return this.baseMapper.getGeneratedId()
-    }
-
     getMetadataSource(): MetadataSource {
         return this.baseMapper.getMetadataSource();
     }
