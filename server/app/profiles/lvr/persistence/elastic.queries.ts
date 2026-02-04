@@ -22,7 +22,8 @@
  */
 
 import type { ElasticQueries as IElasticQueries } from '../../../persistence/elastic.queries.js';
-import dayjs from "dayjs";
+import dayjs from '../../../utils/dayjs.js';
+
 // fields potentially occurring in CSW that should be overwritten by WFS data
 export const overwriteFields = [
     'catalog',

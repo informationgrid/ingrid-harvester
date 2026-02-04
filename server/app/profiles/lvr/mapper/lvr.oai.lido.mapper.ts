@@ -22,7 +22,6 @@
  */
 
 import type { License } from '@shared/license.model.js';
-import 'dayjs/locale/de.js';
 import type { Link } from '../../../importer/oai/lido/lido.model.js';
 import { OaiMapper } from '../../../importer/oai/lido/oai.mapper.js';
 import type { GeometryInformation, Temporal } from '../../../model/index.document.js';
@@ -32,8 +31,6 @@ import { LvrMapper } from './lvr.mapper.js';
 import type { Media, Person, Relation, Source } from '../model/index.document.js';
 import * as MiscUtils from '../../../utils/misc.utils.js';
 import { UrlUtils } from '../../../utils/url.utils.js';
-import dayjs from "dayjs";
-dayjs.locale('de');
 
 export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
 

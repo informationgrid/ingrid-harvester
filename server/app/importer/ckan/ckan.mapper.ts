@@ -42,6 +42,7 @@ import type { Organization, Person } from '../../model/agent.js';
 import type { Summary } from '../../model/summary.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 import mapping from "../../../mappings.json" with { type: "json" };
+import dayjs from '../../utils/dayjs.js';
 
 export interface CkanMapperData {
     harvestTime: Date;
@@ -651,7 +652,7 @@ export class CkanMapper extends BaseMapper {
         } else {
             if (this.settings.dateSourceFormats && this.settings.dateSourceFormats.length > 0) {
                 // let dateObj = this.moment(date, this.settings.dateSourceFormats);
-                let dateObj = this.dayjs(date, this.settings.dateSourceFormats);
+                let dateObj = dayjs(date, this.settings.dateSourceFormats);
 
                 if (dateObj.isValid()) {
                     return dateObj.toDate();

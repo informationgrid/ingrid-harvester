@@ -22,7 +22,7 @@
  */
 
 import type { ElasticQueries as IElasticQueries } from '../../../persistence/elastic.queries.js';
-import dayjs from "dayjs";
+import dayjs from '../../../utils/dayjs.js';
 
 export class ElasticQueries implements IElasticQueries {
 

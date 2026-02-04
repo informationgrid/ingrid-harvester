@@ -22,7 +22,6 @@
  */
 
 import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
-import 'dayjs/locale/de.js';
 import { createEsId } from '../lvr.utils.js';
 import { v5 as uuidv5 } from 'uuid';
 import type { GeometryInformation, Temporal } from '../../../model/index.document.js';
@@ -34,8 +33,7 @@ import type { License } from '@shared/license.model.js';
 import type { LvrIndexDocument, Media, Person, Relation, Source } from '../model/index.document.js';
 import type { OaiMapper as OaiLidoMapper } from '../../../importer/oai/lido/oai.mapper.js';
 import type { OaiMapper as OaiModsMapper } from '../../../importer/oai/mods/oai.mapper.js';
-import dayjs from "dayjs";
-dayjs.locale('de');
+
 const UUID_NAMESPACE = '0afd6f59-d498-4da3-8919-1890d718d69e'; // randomly generated using uuid.v4
 
 export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMapper | JsonMapper> implements IndexDocumentFactory<LvrIndexDocument> {

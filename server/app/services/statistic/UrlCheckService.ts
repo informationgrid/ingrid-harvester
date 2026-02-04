@@ -36,7 +36,7 @@ import { HttpsProxyAgent } from 'https-proxy-agent';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { Service } from '@tsed/di';
 import { Summary } from '../../model/summary.js';
-import dayjs from "dayjs";
+import dayjs from '../../utils/dayjs.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
