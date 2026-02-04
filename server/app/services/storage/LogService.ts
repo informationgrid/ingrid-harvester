@@ -23,10 +23,23 @@
 
 import * as fs from 'fs';
 import {Service} from '@tsed/di';
+import log4js from "log4js";
+
+const log = log4js.getLogger(import.meta.filename)
 
 @Service()
 export class LogService {
     get(): string {
         return fs.readFileSync('logs/app.log', "utf8");
+    }
+
+    getLogByHarvesterId(harvesterId: number): string {
+        return fs.readFileSync(`logs/harvester/${harvesterId}.log`, "utf8");
+    }
+
+    deleteLogByHarvesterId(harvesterId: number): void {
+        fs.truncate(`logs/harvester/${harvesterId}.log`, 0, (err) => {
+            log.error(err);
+        });
     }
 }

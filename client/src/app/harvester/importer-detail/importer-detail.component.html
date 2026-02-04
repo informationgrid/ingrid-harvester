@@ -50,7 +50,7 @@ limitations under the Licence.
           <mat-card-subtitle>{{data.summary?.skippedDocs.length}} übersprungen</mat-card-subtitle>
         </mat-card-header>
       </mat-card>
-      <mat-card (click)="showLog.next()" class="clickable">
+      <mat-card (click)="showLog.emit(1)" class="clickable">
         <mat-card-header>
           <div mat-card-avatar class="numberCircle" data-test="num-errors"
             [class.error]="data.summary?.numErrors > 0 || data.summary?.databaseErrors.length > 0 || data.summary?.elasticErrors.length > 0 || data.summary?.appErrors.length > 0">
@@ -59,7 +59,7 @@ limitations under the Licence.
           <mat-card-title>Fehler</mat-card-title>
         </mat-card-header>
       </mat-card>
-      <mat-card (click)="showLog.next()" class="clickable">
+      <mat-card (click)="showLog.emit(2)" class="clickable">
         <mat-card-header>
           <div mat-card-avatar class="numberCircle" data-test="num-warnings"
             [class.warning]="data.summary?.warnings?.length > 0">

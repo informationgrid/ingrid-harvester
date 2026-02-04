@@ -23,7 +23,6 @@
 
 import 'dayjs/locale/de.js';
 import type { ImporterSettings } from '../importer.settings.js';
-import type { Logger } from 'log4js';
 import type { MetadataSource } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
 import dayjs from "dayjs";
@@ -37,7 +36,6 @@ export abstract class BaseMapper {
     protected changed = false;
     protected harvestingNotes = [];
     skipped = false;
-    abstract log: Logger;
     private blacklistedFormats: string[] = [];
 
     init() {

@@ -53,6 +53,7 @@ export class ExcelImporter extends Importer {
      */
     constructor(settings) {
         super(settings);
+        log.addContext('harvester', settings.id);
 
         this.profile = ProfileFactoryLoader.get();
 

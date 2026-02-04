@@ -42,6 +42,8 @@ import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureT
 import type { Summary } from '../../model/summary.js';
 import type { XPathElementSelect } from '../../utils/xpath.utils.js';
 
+const log = log4js.getLogger(import.meta.filename);
+
 export class DcatappluMapper extends BaseMapper {
 
     static select = <XPathElementSelect>xpath.useNamespaces({
@@ -60,8 +62,6 @@ export class DcatappluMapper extends BaseMapper {
         'skos': namespaces.SKOS,
         'vcard': namespaces.VCARD
     });
-
-    log = log4js.getLogger();
 
     private readonly record: any;
     private readonly catalogPage: any;
@@ -86,6 +86,7 @@ export class DcatappluMapper extends BaseMapper {
 
     constructor(settings, record, catalog, catalogPage, harvestTime, summary) {
         super();
+        log.addContext('harvester', settings.id);
         this.settings = settings;
         this.record = record;
         this.fetched.catalog = catalog;
@@ -299,7 +300,7 @@ export class DcatappluMapper extends BaseMapper {
             if (date) {
                 return date;
             } else {
-                this.log.warn(`Error parsing date, which was '${text}'. It will be ignored.`);
+                log.warn(`Error parsing date, which was '${text}'. It will be ignored.`);
             }
         }
     }

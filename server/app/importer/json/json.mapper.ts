@@ -27,9 +27,9 @@ import type { MetadataSource } from '../../model/index.document.js';
 import type { JsonSettings } from './json.settings.js';
 import type { Summary } from '../../model/summary.js';
 
-export class JsonMapper extends BaseMapper {
+const log = log4js.getLogger(import.meta.filename);
 
-    log = log4js.getLogger();
+export class JsonMapper extends BaseMapper {
 
     readonly record: object;
     readonly id: string;
@@ -40,6 +40,7 @@ export class JsonMapper extends BaseMapper {
 
     constructor(settings: JsonSettings, record: object, harvestTime: Date, summary: Summary) {
         super();
+        log.addContext('harvester', settings.id);
         this.settings = settings;
         this.record = record;
         this.id = record[this.settings.idProperty];

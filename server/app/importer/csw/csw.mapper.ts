@@ -48,6 +48,8 @@ import type { Summary } from '../../model/summary.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 import type { XPathElementSelect } from '../../utils/xpath.utils.js';
 
+const log = log4js.getLogger(import.meta.filename);
+
 export class CswMapper extends BaseMapper {
 
     static select = <XPathElementSelect>xpath.useNamespaces({
@@ -62,8 +64,6 @@ export class CswMapper extends BaseMapper {
         'srv': namespaces.SRV,
         'xlink': namespaces.XLINK
     });
-
-    log = log4js.getLogger();
 
     readonly record: any;
     private harvestTime: any;
@@ -83,6 +83,7 @@ export class CswMapper extends BaseMapper {
 
     constructor(settings, record, harvestTime, summary, generalInfo) {
         super();
+        log.addContext('harvester', settings.id);
         this.settings = settings;
         this.record = record;
         this.harvestTime = harvestTime;
@@ -491,7 +492,7 @@ export class CswMapper extends BaseMapper {
         }, false);
         if (!valid) {
             // Don't index metadata-sets without any of the mandatory keywords
-            this.log.info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.settings.sourceURL}'.`);
+            log.info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.settings.sourceURL}'.`);
             this.skipped = true;
         }
 
@@ -681,11 +682,11 @@ export class CswMapper extends BaseMapper {
                 if (date) {
                     return date;
                 } else {
-                    this.log.warn(`Error parsing begin date, which was '${text}'. It will be ignored.`);
+                    log.warn(`Error parsing begin date, which was '${text}'. It will be ignored.`);
                 }
             }
         } catch (e) {
-            // this.log.error(`Cannot extract time range.`, e);
+            // log.error(`Cannot extract time range.`, e);
             this.summary.warnings.push([`Could not extract time range for ${this.uuid}.`]);
         }
     }
@@ -895,7 +896,7 @@ export class CswMapper extends BaseMapper {
             let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
             this.summary.missingLicense++;
 
-            this.log.warn(msg);
+            log.warn(msg);
             this.summary.warnings.push(['Missing license', msg]);
             return {
                 id: 'unknown',

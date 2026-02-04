@@ -21,7 +21,18 @@
     ==================================================
 -->
 
-<mat-tab-group [animationDuration]="'0ms'" [dynamicHeight]="false" mat-align-tabs="center" [selectedIndex]="getInitialIndex()">
+<mat-tab-group [animationDuration]="'0ms'" [dynamicHeight]="false" mat-align-tabs="center" [selectedIndex]="selectedTabIndex">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span>Logs</span>
+    </ng-template>
+    <cdk-virtual-scroll-viewport class="logContainer" itemSize="20" minBufferPx="500" maxBufferPx="500">
+      @if (isLoading) {
+        <div>Loading log file ...</div>
+      }
+      <div [class]="determineClass(line)" *cdkVirtualFor="let line of logdata">{{line}}</div>
+    </cdk-virtual-scroll-viewport>
+  </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>
       <span [matBadge]="appErrors.length" [matBadgeColor]="appErrors.length > 0 ? 'warn' : 'accent'" matBadgeOverlap="false">Fehler</span>

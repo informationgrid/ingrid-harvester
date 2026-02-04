@@ -37,9 +37,9 @@ import { RequestDelegate } from '../../utils/http-request.utils.js';
 import type { Summary } from '../../model/summary.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 
-export class ExcelMapper extends BaseMapper {
+const log = log4js.getLogger(import.meta.filename);
 
-    log = log4js.getLogger();
+export class ExcelMapper extends BaseMapper {
 
     data;
     id;
@@ -52,6 +52,7 @@ export class ExcelMapper extends BaseMapper {
 
     constructor(settings: ExcelSettings, data) {
         super();
+        log.addContext('harvester', settings.id);
         this.settings = settings;
         this.data = data;
         this.id = data.id;
@@ -246,7 +247,7 @@ export class ExcelMapper extends BaseMapper {
             }
             if (!found) {
                 let message = 'Could not find abbreviation of "Datenhaltende Stelle": ' + abbr;
-                this.log.warn(message);
+                log.warn(message);
                 this.summary.warnings.push(['No Publisher found', message]);
             }
         });
@@ -279,7 +280,7 @@ export class ExcelMapper extends BaseMapper {
                 });
             } else {
                 let msg = `Invalid URL '${downloadUrl} found for item with id: '${this.id}', title: '${this.getTitle()}', index: '${this.currentIndexName}'.`;
-                this.log.warn(msg);
+                log.warn(msg);
                 this.summary.warnings.push(['Invalid URL', msg]);
                 //this.errors.push(msg);
                 //this.summary.numErrors++;
@@ -335,7 +336,7 @@ export class ExcelMapper extends BaseMapper {
 
         if (!license) {
             let message = 'Could not find abbreviation of "License": ' + licenseId;
-            this.log.warn(message);
+            log.warn(message);
             this.summary.warnings.push(['Invalid License', message]);
         }
 

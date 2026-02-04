@@ -35,7 +35,7 @@ export class ImporterDetailComponent implements OnInit {
   @Input() data: ImportLogMessage;
   @Input() cronActive = false;
 
-  @Output() showLog = new EventEmitter();
+  @Output() showLog = new EventEmitter<number>();
 
   constructor() {
   }
