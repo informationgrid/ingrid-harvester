@@ -23,19 +23,18 @@
 
 import * as MiscUtils from '../../../utils/misc.utils.js';
 import * as XPathUtils from '../../../utils/xpath.utils.js';
-import { IdfGenerator as AbstractIdfGenerator } from '../../ingrid/idf.generator.js';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
 import { ZdmMapper } from './zdm.mapper.js';
 
-export class IdfGenerator extends AbstractIdfGenerator {
+export class IdfGenerator {
 
     private mapper: ZdmMapper<WfsMapper>;
     private baseMapper: WfsMapper;
 
     private feature: Node;
+    protected document: Document;
 
     constructor(profileMapper: ZdmMapper<WfsMapper>) {
-        super();
         this.mapper = profileMapper;
         this.baseMapper = profileMapper.baseMapper;
         this.feature = XPathUtils.firstElementChild(this.baseMapper.featureOrFeatureType);
@@ -202,5 +201,95 @@ export class IdfGenerator extends AbstractIdfGenerator {
         this.baseMapper.log.debug("MapPreview Html: " + addHtml);
 
         return addHtml;
+    }
+
+    addOutput(parent: Element, elementName: string, textContent?: string) {
+        var element = this.document.createElement(elementName);
+        if (textContent != undefined) {
+            element.appendChild(this.document.createTextNode(textContent));
+        }
+        parent.appendChild(element);
+        return element;
+    }
+
+    addOutputWithLinks(parent, elementName, textContent) {
+        var element = this.document.createElement(elementName);
+        if (textContent != undefined) {
+            // tokenize string and create links if necessary
+            var words = textContent.split(" ");
+            for (var i=0, count=words.length; i<count; i++) {
+                var text = words[i];
+                
+                // add a link for an url
+                if (this.isUrl(text)) {
+                    this.addLink(element, text, text, "_blank");
+                }
+                // add a mailto link for an email address
+                else if (this.isEmail(text)) {
+                    this.addLink(element, text, "mailto:"+text);
+                }
+                // default: add the plain text
+                else {
+                    element.appendChild(this.document.createTextNode(text));
+                }
+
+                // add space
+                if (i<count-1) {
+                    element.appendChild(this.document.createTextNode(" "));
+                }
+            }
+        }
+        parent.appendChild(element);
+        return element;
+    }
+
+    addLink(parent, name, url, target?) {
+        var link = this.document.createElement("a");
+        link.setAttribute("href", url);
+        if (target != undefined) {
+            link.setAttribute("target", target);
+        }
+        link.appendChild(this.document.createTextNode(name));
+        parent.appendChild(link);
+        return link;
+    }
+
+    /**
+     * Check if the given value is not equal to null, undefined of empty string
+     * 
+     * @param val
+     * @returns {Boolean}
+     */
+    hasValue(val: any): boolean {
+        // if (typeof val == "undefined") {
+        //     return false; 
+        // } else if (val == null) {
+        //     return false; 
+        // } else if (typeof val == "string" && val == "") {
+        //     return false;
+        // } else {
+        //     return true;
+        // }
+        return !(val == null || val === "");
+    }
+
+    /**
+     * Check if the given string is an url
+     * @param str
+     * @returns {Boolean}
+     */
+    isUrl(str: string): boolean {
+        var pattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
+        return str.match(pattern) != null;
+    }
+
+    /**
+     * Check if the given string is an email address
+     * @param str
+     * @returns {Boolean}
+     */
+    isEmail(str: string): boolean {
+        var pattern = /(([a-zA-Z0-9_\-\.]+)@[a-zA-Z_\-]+?(?:\.[a-zA-Z]{2,6})+)+/gim;
+        return pattern.test(str);
     }
 }
