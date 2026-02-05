@@ -34,7 +34,6 @@ import type { Observer } from 'rxjs';
 import type { ProfileFactory } from '../../profiles/profile.factory.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { RecordEntity } from '../../model/entity.js';
-import type { Summary } from '../../model/summary.js';
 import exceljs from 'exceljs';
 
 const log = log4js.getLogger(import.meta.filename);
@@ -255,9 +254,4 @@ export class ExcelImporter extends Importer {
         });
         return workUnits;
     }
-
-    getSummary(): Summary {
-        return this.summary;
-    }
-
 }

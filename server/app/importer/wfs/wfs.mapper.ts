@@ -29,7 +29,6 @@ import type { Catalog } from '../../model/dcatApPlu.model.js';
 import type { Contact, Organization, Person } from '../../model/agent.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { Geometry, Point } from 'geojson';
-import type { ImporterSettings } from '../../importer.settings.js';
 import type { MetadataSource } from '../../model/index.document.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
@@ -41,18 +40,17 @@ export class WfsMapper extends BaseMapper {
 
     log = log4js.getLogger();
 
+    protected readonly settings: WfsSettings;
     readonly featureOrFeatureType: Node & Element;
     readonly featureTypeDescription: Node & Element;
     readonly fetched: any;
-    readonly settings: WfsSettings;
     readonly uuid: string;
 
     private harvestTime: any;
-    private summary: Summary;
 
     select: XPathNodeSelect;
 
-    constructor(settings, featureOrFeatureType, harvestTime, summary, generalInfo) {
+    constructor(settings: WfsSettings, featureOrFeatureType, harvestTime, summary: Summary, generalInfo) {
         super();
         this.settings = settings;
         this.featureOrFeatureType = featureOrFeatureType;
@@ -79,14 +77,6 @@ export class WfsMapper extends BaseMapper {
         this.uuid = this.getTextContent(path);
 
         super.init();
-    }
-
-    getSettings(): ImporterSettings {
-        return this.settings;
-    }
-
-    getSummary(): Summary {
-        return this.summary;
     }
 
     async getPublisher(): Promise<Person[] | Organization[]> {

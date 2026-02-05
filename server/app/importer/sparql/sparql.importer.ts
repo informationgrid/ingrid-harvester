@@ -37,7 +37,6 @@ import type { RecordEntity } from '../../model/entity.js';
 import type { RequestDelegate } from '../../utils/http-request.utils.js';
 import { SparqlMapper } from './sparql.mapper.js';
 import type { SparqlSettings } from './sparql.settings.js';
-import type { Summary } from '../../model/summary.js';
 import plain_fetch from "node-fetch";
 import SimpleClient from "sparql-http-client/SimpleClient.js";
 
@@ -203,10 +202,4 @@ export class SparqlImporter extends Importer {
     getMapper(settings, record, harvestTime, summary): SparqlMapper {
         return new SparqlMapper(settings, record, harvestTime, summary);
     }
-
-
-    getSummary(): Summary {
-        return this.summary;
-    }
-
 }

@@ -30,7 +30,6 @@ import log4js from 'log4js';
 import { oaiXPaths } from '../oai.paths.js';
 import { BaseMapper } from '../../base.mapper.js';
 import type { Event, Record, Relation, Repository, Resource, Subject } from './lido.model.js';
-import type { ImporterSettings } from '../../../importer.settings.js';
 import type { MetadataSource } from '../../../model/index.document.js';
 import type { OaiSettings } from '../oai.settings.js';
 import type { Summary } from '../../../model/summary.js';
@@ -54,11 +53,10 @@ export class OaiMapper extends BaseMapper {
     private harvestTime: any;
 
     protected readonly idInfo; // : SelectedValue;
-    private settings: OaiSettings;
+    protected readonly settings: OaiSettings;
     private readonly uuid: string;
-    private summary: Summary;
 
-    constructor(settings, header: Element, record: Element, harvestTime, summary) {
+    constructor(settings, header: Element, record: Element, harvestTime, summary: Summary) {
         super();
         this.settings = settings;
         this.header = header;
@@ -245,14 +243,6 @@ export class OaiMapper extends BaseMapper {
             type: OaiMapper.text('./resourceType/term', resourceNode)
         }));
         return resources;
-    }
-
-    getSettings(): ImporterSettings {
-        return this.settings;
-    }
-
-    getSummary(): Summary {
-        return this.summary;
     }
 
     getHarvestedData(): string {

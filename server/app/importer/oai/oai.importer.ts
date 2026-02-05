@@ -40,7 +40,6 @@ import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { RecordEntity } from '../../model/entity.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
-import type { Summary } from '../../model/summary.js';
 import type { BaseMapper } from '../../importer/base.mapper.js';
 
 const log = log4js.getLogger(import.meta.filename);
@@ -51,7 +50,7 @@ export class OaiImporter extends Importer {
     protected domParser: DOMParser;
     protected profile: ProfileFactory<BaseMapper>;
     protected requestDelegate: RequestDelegate;
-    protected settings: OaiSettings;
+    protected readonly settings: OaiSettings;
 
     private xpaths: OaiXPaths;
 
@@ -228,9 +227,4 @@ export class OaiImporter extends Importer {
             resumptionToken: resumptionToken
         }
     }
-
-    getSummary(): Summary {
-        return this.summary;
-    }
-
 }

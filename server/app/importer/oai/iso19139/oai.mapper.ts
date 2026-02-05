@@ -34,7 +34,6 @@ import type { DateRange } from '../../../model/dateRange.js';
 import { DcatMapper } from '../../../importer/dcat/dcat.mapper.js';
 import { DcatPeriodicityUtils } from '../../../utils/dcat.periodicity.utils.js';
 import type { Distribution } from '../../../model/distribution.js';
-import type { ImporterSettings } from '../../../importer.settings.js';
 import type { License } from '@shared/license.model.js';
 import type { MetadataSource } from '../../../model/index.document.js';
 import type { OaiSettings } from '../oai.settings.js';
@@ -61,9 +60,8 @@ export class OaiMapper extends BaseMapper {
     private harvestTime: any;
 
     protected readonly idInfo; // : SelectedValue;
-    private settings: OaiSettings;
+    protected readonly settings: OaiSettings;
     private readonly uuid: string;
-    private summary: Summary;
 
     private keywordsAlreadyFetched = false;
     private fetched: any = {
@@ -73,7 +71,7 @@ export class OaiMapper extends BaseMapper {
     };
 
 
-    constructor(settings, header, record, harvestTime, summary) {
+    constructor(settings, header, record, harvestTime, summary: Summary) {
         super();
         this.settings = settings;
         this.header = header;
@@ -86,14 +84,6 @@ export class OaiMapper extends BaseMapper {
         this.idInfo = OaiMapper.select('./gmd:identificationInfo', record, true);
 
         super.init();
-    }
-
-    public getSettings(): ImporterSettings {
-        return this.settings;
-    }
-
-    public getSummary(): Summary{
-        return this.summary;
     }
 
     getDescription() {

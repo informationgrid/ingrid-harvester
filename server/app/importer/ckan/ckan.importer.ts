@@ -289,8 +289,4 @@ export class CkanImporter extends Importer {
             this.requestDelegate.updateConfig(partialConfig);
         }
     }
-
-    getSummary(): Summary {
-        return this.summary;
-    }
 }

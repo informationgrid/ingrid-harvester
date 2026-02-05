@@ -72,8 +72,7 @@ export class CkanMapper extends BaseMapper {
     private readonly source: any;
     private readonly data: CkanMapperData;
     private resourcesDate: Date[] = null;
-    private settings: CkanSettings;
-    private summary: Summary;
+    protected readonly settings: CkanSettings;
 
     constructor(settings: CkanSettings, data: CkanMapperData) {
         super();
@@ -83,14 +82,6 @@ export class CkanMapper extends BaseMapper {
         this.summary = data.summary;
 
         super.init();
-    }
-
-    public getSettings(): CkanSettings {
-        return this.settings;
-    }
-
-    public getSummary(): Summary{
-        return this.summary;
     }
 
     getAccessRights() {

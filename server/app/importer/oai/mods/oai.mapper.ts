@@ -30,7 +30,6 @@ import log4js from 'log4js';
 import { oaiXPaths } from '../oai.paths.js';
 import { BaseMapper } from '../../base.mapper.js';
 import type { GeometryInformation, Temporal } from '../../../model/index.document.js';
-import type { ImporterSettings } from '../../../importer.settings.js';
 import type { Keyword } from '../../../model/ingrid.index.document.js';
 import type { Media, MediaType, Person, Relation } from '../../../profiles/lvr/model/index.document.js';
 import type { MetadataSource } from '../../../model/index.document.js';
@@ -57,11 +56,10 @@ export class OaiMapper extends BaseMapper {
     private harvestTime: any;
 
     protected readonly idInfo; // : SelectedValue;
-    private settings: OaiSettings;
+    protected readonly settings: OaiSettings;
     private readonly uuid: string;
-    private summary: Summary;
 
-    constructor(settings, header: Element, record: Element, harvestTime, summary) {
+    constructor(settings, header: Element, record: Element, harvestTime, summary: Summary) {
         super();
         this.settings = settings;
         this.header = header;
@@ -185,14 +183,6 @@ export class OaiMapper extends BaseMapper {
             url: node.getAttribute('xlink:href')
         }));
         return licenses;
-    }
-
-    getSettings(): ImporterSettings {
-        return this.settings;
-    }
-
-    getSummary(): Summary {
-        return this.summary;
     }
 
     getHarvestedData(): string {

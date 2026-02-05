@@ -28,6 +28,8 @@ import type { Summary } from '../model/summary.js';
 
 export abstract class BaseMapper {
 
+    protected readonly settings: ImporterSettings;
+    protected summary: Summary;
     protected errors: string[] = [];
     protected valid = true;
     protected changed = false;
@@ -48,75 +50,21 @@ export abstract class BaseMapper {
         }
     }
 
-    public abstract getSettings(): ImporterSettings;
+    /**
+     * Settings for the current harvesting Job
+     */
+    public getSettings(): ImporterSettings {
+        return this.settings;
+    }
 
-    public abstract getSummary(): Summary;
-
-    // async getDistributions(): Promise<Distribution[]>{
-    //     if (this.cache.distributions) {
-    //         return this.cache.distributions;
-    //     }
-
-    //     let distributions = await this._getDistributions();
-    //     distributions.forEach(dist => {
-    //         if(dist.format){
-    //             dist.format = dist.format.filter(format => format && format.trim() !== 'null' && format.trim() !== '');
-    //         }
-    //         if(!dist.format || dist.format.length === 0){
-    //             dist.format = ["Unbekannt"];
-    //         }
-
-    //         dist.accessURL = dist.accessURL?.replace(/ /g, '%20');
-    //     });
-
-    //     // if (distributions.length === 0) {
-    //     //     this.valid = false;
-    //     //     let msg = `Dataset has no links for download/access. It will not be displayed in the portal. Title: '${this.getTitle()}', Id: '${this.getGeneratedId()}'.`;
-
-    //     //     this.getSummary().missingLinks++;
-
-    //     //     this.valid = false;
-    //     //     this.getSummary().warnings.push(['No links', msg]);
-
-    //     //     this._log.warn(msg);
-    //     // }
-
-    //     const isWhitelisted = this.getSettings().whitelistedIds.indexOf(this.getGeneratedId()) !== -1;
-
-    //     if (this.blacklistedFormats.length > 0) {
-
-    //         if (isWhitelisted) {
-    //             this._log.info(`Document is whitelisted and not checked: ${this.getGeneratedId()}`);
-    //         } else {
-    //             const result = Rules.containsDocumentsWithData(distributions, this.blacklistedFormats);
-    //             if (result.skipped) {
-    //                 this.getSummary().warnings.push(['No data document', `${this.getTitle()} (${this.getGeneratedId()})`]);
-    //                 this.skipped = true;
-    //             }
-    //             if (!result.valid) {
-    //                 this._log.warn(`Document does not contain data links: ${this.getGeneratedId()}`);
-    //                 this.valid = false;
-    //             }
-    //         }
-    //     }
-    //     this.cache.distributions = distributions;
-    //     return distributions;
-    // }
+    /**
+     * Summary of the current harvesting Job (managed by the Importer)
+     */
+    public getSummary(): Summary{
+        return this.summary;
+    }
 
     abstract getMetadataSource(): MetadataSource;
-
-    // abstract _isRealtime(): boolean;
-
-    // getAutoCompletion(): string[]{
-    //     let title = this.getTitle();
-    //     let parts = title.split(/[^a-zA-Z0-9\u00E4\u00F6\u00FC\u00C4\u00D6\u00DC\u00df]/).filter(s => s.length >= 3).filter(s => s.match(/[a-zA-Z]/));
-
-    //     let keywords = this.getKeywords()
-    //     if(keywords != undefined)
-    //         parts = parts.concat(keywords.filter(s => s.length >= 3));
-
-    //     return parts;
-    // }
 
     abstract getHarvestedData(): string;
 

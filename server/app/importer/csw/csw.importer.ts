@@ -585,8 +585,4 @@ export class CswImporter extends Importer {
             numRecords: settings.maxRecords
         }
     }
-
-    getSummary(): Summary {
-        return this.summary;
-    }
 }

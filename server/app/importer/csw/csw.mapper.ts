@@ -69,9 +69,8 @@ export class CswMapper extends BaseMapper {
     private harvestTime: any;
 
     readonly idInfo; // : SelectedValue;
-    readonly settings: CswSettings;
+    protected readonly settings: CswSettings;
     private readonly uuid: string;
-    protected summary: Summary;
 
     private keywordsAlreadyFetched = false;
     fetched = {
@@ -81,7 +80,7 @@ export class CswMapper extends BaseMapper {
         themes: null
     };
 
-    constructor(settings, record, harvestTime, summary, generalInfo) {
+    constructor(settings: CswSettings, record, harvestTime, summary: Summary, generalInfo) {
         super();
         this.settings = settings;
         this.record = record;
@@ -94,14 +93,6 @@ export class CswMapper extends BaseMapper {
         this.idInfo = CswMapper.select('./gmd:identificationInfo', record, true);
 
         super.init();
-    }
-
-    public getSettings(): CswSettings {
-        return this.settings;
-    }
-
-    public getSummary(): Summary {
-        return this.summary;
     }
 
     // _getResourceIdentifier() {

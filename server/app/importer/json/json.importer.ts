@@ -163,8 +163,4 @@ export class JsonImporter extends Importer {
         };
         return requestConfig;
     }
-
-    getSummary(): Summary {
-        return this.summary;
-    }
 }

@@ -49,9 +49,8 @@ export class SparqlMapper extends BaseMapper {
     private harvestTime: any;
 
 //    protected readonly idInfo; // : SelectedValue;
-    private settings: SparqlSettings;
+    protected readonly settings: SparqlSettings;
     private readonly uuid: string;
-    private summary: Summary;
 
     private keywordsAlreadyFetched = false;
     private fetched: any = {
@@ -60,8 +59,7 @@ export class SparqlMapper extends BaseMapper {
         themes: null
     };
 
-
-    constructor(settings, record, harvestTime, summary) {
+    constructor(settings, record, harvestTime, summary: Summary) {
         super();
         this.settings = settings;
         this.record = record;
@@ -71,14 +69,6 @@ export class SparqlMapper extends BaseMapper {
         this.uuid = record.id.value;
 
         super.init();
-    }
-
-    public getSettings(): ImporterSettings {
-        return this.settings;
-    }
-
-    public getSummary(): Summary{
-        return this.summary;
     }
 
     getDescription() {

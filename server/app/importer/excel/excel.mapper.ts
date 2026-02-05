@@ -28,13 +28,11 @@ import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
 import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { ExcelSettings } from './excel.settings.js';
-import type { ImporterSettings } from '../../importer.settings.js';
 import type { License } from '@shared/license.model.js';
 import type { MetadataSource } from '../../model/index.document.js';
 import type { Organization, Person } from '../../model/agent.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
-import type { Summary } from '../../model/summary.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 
 export class ExcelMapper extends BaseMapper {
@@ -46,8 +44,7 @@ export class ExcelMapper extends BaseMapper {
     columnValues: string[] | Date;
     columnMap;
     workbook;
-    private settings: ExcelSettings;
-    private summary: Summary;
+    protected settings: ExcelSettings;
     private currentIndexName: string;
 
     constructor(settings: ExcelSettings, data) {
@@ -62,14 +59,6 @@ export class ExcelMapper extends BaseMapper {
         this.currentIndexName = data.currentIndexName;
 
         super.init();
-    }
-
-    public getSettings(): ImporterSettings {
-        return this.settings;
-    }
-
-    public getSummary(): Summary{
-        return this.summary;
     }
 
     getTitle() {

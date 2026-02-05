@@ -34,9 +34,8 @@ export class JsonMapper extends BaseMapper {
     readonly record: object;
     readonly id: string;
 
-    private settings: JsonSettings;
+    protected settings: JsonSettings;
     private harvestTime: Date;
-    private summary: Summary;
 
     constructor(settings: JsonSettings, record: object, harvestTime: Date, summary: Summary) {
         super();
@@ -47,14 +46,6 @@ export class JsonMapper extends BaseMapper {
         this.summary = summary;
 
         super.init();
-    }
-
-    getSettings(): JsonSettings {
-        return this.settings;
-    }
-
-    getSummary(): Summary {
-        return this.summary;
     }
 
     getMetadataSource(): MetadataSource {

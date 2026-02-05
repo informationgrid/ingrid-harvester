@@ -35,11 +35,9 @@ import type { DateRange } from '../../model/dateRange.js';
 import type { DcatappluSettings } from './dcatapplu.settings.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { Geometry, Point } from 'geojson';
-import type { ImporterSettings } from '../../importer.settings.js';
 import type { MetadataSource } from '../../model/index.document.js';
 import type { ProcessStep, Catalog } from '../../model/dcatApPlu.model.js';
 import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, PluProcessStepType } from '../../model/dcatApPlu.model.js';
-import type { Summary } from '../../model/summary.js';
 import type { XPathElementSelect } from '../../utils/xpath.utils.js';
 
 export class DcatappluMapper extends BaseMapper {
@@ -70,9 +68,8 @@ export class DcatappluMapper extends BaseMapper {
     private harvestTime: any;
 
     //    protected readonly idInfo; // : SelectedValue;
-    private settings: DcatappluSettings;
+    protected settings: DcatappluSettings;
     private readonly uuid: string;
-    private summary: Summary;
 
     private keywordsAlreadyFetched = false;
     private fetched: any = {
@@ -387,14 +384,6 @@ export class DcatappluMapper extends BaseMapper {
     getSpatialText(): string {
         let geographicName = DcatappluMapper.select('./dct:spatial/dct:Location/locn:geographicName', this.record, true)?.textContent;
         return geographicName;
-    }
-
-    public getSettings(): ImporterSettings {
-        return this.settings;
-    }
-
-    public getSummary(): Summary {
-        return this.summary;
     }
 
     executeCustomCode(doc: any) {

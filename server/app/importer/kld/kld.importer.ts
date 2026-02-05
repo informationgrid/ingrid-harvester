@@ -401,8 +401,4 @@ export class KldImporter extends Importer {
     private static async sleep(milliseconds: number): Promise<void> {
         return new Promise((resolve) => { setTimeout(resolve, milliseconds); });
     }
-
-    getSummary(): Summary {
-        return this.summary;
-    }
 }

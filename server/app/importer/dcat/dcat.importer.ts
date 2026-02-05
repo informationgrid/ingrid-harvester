@@ -241,10 +241,6 @@ export class DcatImporter extends Importer {
         }
     }
 
-    getSummary(): Summary {
-        return this.summary;
-    }
-
     private static getPageFromUrl(url: string) {
         let pos = url.indexOf('page=')
         if (pos !== -1) {

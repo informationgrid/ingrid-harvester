@@ -29,7 +29,6 @@ import log4js from 'log4js';
 import { BaseMapper } from '../../importer/base.mapper.js';
 import type { Contact, Organization, Person } from '../../model/agent.js';
 import type { Geometry } from 'geojson';
-import type { ImporterSettings } from '../../importer.settings.js';
 import type { KldSettings } from './kld.settings.js';
 import type { License } from '@shared/license.model.js';
 import type { LvrDateRange, Media, Relation } from '../../profiles/lvr/model/index.document.js';
@@ -43,9 +42,7 @@ export class KldMapper extends BaseMapper {
 
     private readonly record: ObjectResponse;
     private readonly id: string;
-
-    private settings: KldSettings;
-    private summary: Summary;
+    protected readonly settings: KldSettings;
 
     constructor(settings: KldSettings, record: ObjectResponse, harvestTime: Date, summary: Summary) {
         super();
@@ -55,14 +52,6 @@ export class KldMapper extends BaseMapper {
         this.id = record.Id;
 
         super.init();
-    }
-
-    public getSettings(): ImporterSettings {
-        return this.settings;
-    }
-
-    public getSummary(): Summary {
-        return this.summary;
     }
 
     getGeneratedId(): string {

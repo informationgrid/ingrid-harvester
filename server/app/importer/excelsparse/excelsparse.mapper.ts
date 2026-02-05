@@ -46,8 +46,7 @@ export class ExcelSparseMapper extends BaseMapper {
     columnValues: string[] | Date;
     columnMap: Columns;
     workbook;
-    private settings: ExcelSparseSettings;
-    private summary: Summary;
+    protected settings: ExcelSparseSettings;
     private currentIndexName: string;
     private fetched: any = {
         description: null,
@@ -71,14 +70,6 @@ export class ExcelSparseMapper extends BaseMapper {
         this.fetched = MiscUtils.merge(this.fetched, generalInfo);
 
         super.init();
-    }
-
-    public getSettings(): ImporterSettings {
-        return this.settings;
-    }
-
-    public getSummary(): Summary{
-        return this.summary;
     }
 
     getTitle() {
