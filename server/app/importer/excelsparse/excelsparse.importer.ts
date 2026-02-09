@@ -35,6 +35,7 @@ import type { ProfileFactory } from '../../profiles/profile.factory.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { RecordEntity } from '../../model/entity.js';
 import exceljs from 'exceljs';
+import type { IndexDocument } from '../../model/index.document.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -132,8 +133,15 @@ export class ExcelSparseImporter extends Importer {
                 }, generalInfo);
 
                 // add document to buffer and send to elasticsearch if full
+                let doc: IndexDocument;
+                try {
+                    doc = await this.profile.getIndexDocumentFactory(mapper).create();
+                }
+                catch (e) {
+                    this.handleIndexDocError(e, mapper);
+                }
+
                 if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
-                    let doc = await this.profile.getIndexDocumentFactory(mapper).create().catch(e => this.handleIndexDocError(e, mapper));
                     let entity: RecordEntity = {
                         identifier: unit.id,
                         source: this.settings.filePath,
@@ -150,6 +158,9 @@ export class ExcelSparseImporter extends Importer {
                             }
                         })
                     );
+                }
+                else {
+                    this.summary.skippedDocs.push(unit.id);
                 }
             }
 
