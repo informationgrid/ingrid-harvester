@@ -24,26 +24,26 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import * as xpath from 'xpath';
-import log4js from 'log4js';
-import { namespaces } from '../../namespaces.js';
-import { throwError } from 'rxjs';
-import type { Agent, Contact, Organization, Person } from '../../../model/agent.js';
-import { BaseMapper } from '../../base.mapper.js';
-import type { DateRange } from '../../../model/dateRange.js';
-import { DcatMapper } from '../../../importer/dcat/dcat.mapper.js';
-import { DcatPeriodicityUtils } from '../../../utils/dcat.periodicity.utils.js';
-import type { Distribution } from '../../../model/distribution.js';
 import type { License } from '@shared/license.model.js';
+import log4js from 'log4js';
+import { throwError } from 'rxjs';
+import * as xpath from 'xpath';
+import { DcatMapper } from '../../../importer/dcat/dcat.mapper.js';
+import type { Agent, Contact, Organization, Person } from '../../../model/agent.js';
+import type { DateRange } from '../../../model/dateRange.js';
+import type { Distribution } from '../../../model/distribution.js';
 import type { MetadataSource } from '../../../model/index.document.js';
-import type { OaiSettings } from '../oai.settings.js';
+import type { Summary } from '../../../model/summary.js';
+import { DcatPeriodicityUtils } from '../../../utils/dcat.periodicity.utils.js';
 import type { RequestOptions } from '../../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../../utils/http-request.utils.js';
-import type { Summary } from '../../../model/summary.js';
 import { UrlUtils } from '../../../utils/url.utils.js';
 import type { XPathElementSelect } from '../../../utils/xpath.utils.js';
+import { Mapper } from '../../mapper.js';
+import { namespaces } from '../../namespaces.js';
+import type { OaiSettings } from '../oai.settings.js';
 
-export class OaiMapper extends BaseMapper {
+export class OaiMapper extends Mapper<OaiSettings> {
 
     static select = <XPathElementSelect>xpath.useNamespaces({
         'gmd': namespaces.GMD,
@@ -60,7 +60,6 @@ export class OaiMapper extends BaseMapper {
     private harvestTime: any;
 
     protected readonly idInfo; // : SelectedValue;
-    protected readonly settings: OaiSettings;
     private readonly uuid: string;
 
     private keywordsAlreadyFetched = false;
@@ -71,13 +70,11 @@ export class OaiMapper extends BaseMapper {
     };
 
 
-    constructor(settings, header, record, harvestTime, summary: Summary) {
-        super();
-        this.settings = settings;
+    constructor(settings: OaiSettings, header, record, harvestTime, summary: Summary) {
+        super(settings, summary);
         this.header = header;
         this.record = record;
         this.harvestTime = harvestTime;
-        this.summary = summary;
 
         this.uuid = OaiMapper.getCharacterStringContent(record, 'fileIdentifier');
 
@@ -89,9 +86,9 @@ export class OaiMapper extends BaseMapper {
     getDescription() {
         let abstract = OaiMapper.getCharacterStringContent(this.idInfo, 'abstract');
         if (!abstract) {
-            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.sourceURL}\'`;
+            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.getSettings().sourceURL}\'`;
             this.log.warn(msg);
-            this.summary.warnings.push(['No description', msg]);
+            this.getSummary().warnings.push(['No description', msg]);
             this.valid = false;
         }
 
@@ -138,7 +135,7 @@ export class OaiMapper extends BaseMapper {
                 let url = null;
                 if (urlNode.length > 0) {
                     let requestConfig = this.getUrlCheckRequestConfig(urlNode[0].textContent);
-                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
                 }
                 if (url && !urls.includes(url)) {
                     const formatArray = protocolNode.length > 0 && protocolNode[0].textContent
@@ -148,7 +145,7 @@ export class OaiMapper extends BaseMapper {
                     urls.push({
                         accessURL: url,
                         title: title.length > 0 ? title[0].textContent : undefined,
-                        format: UrlUtils.mapFormat(formats, this.summary.warnings)
+                        format: UrlUtils.mapFormat(formats, this.getSummary().warnings)
                     });
                 }
             }
@@ -215,7 +212,7 @@ export class OaiMapper extends BaseMapper {
                 }
 
                 let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                let url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
+                let url = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
                 if (url && !urlsFound.includes(url)) {
                     serviceLinks.push({
                         accessURL: url,
@@ -251,7 +248,7 @@ export class OaiMapper extends BaseMapper {
                 let url = null;
                 if (urlNode) {
                     let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
                 }
 
                 if (role === 'publisher') {
@@ -267,7 +264,7 @@ export class OaiMapper extends BaseMapper {
         }
 
         if (publishers.length === 0) {
-            this.summary.missingPublishers++;
+            this.getSummary().missingPublishers++;
             return undefined;
         } else {
             return publishers;
@@ -383,7 +380,7 @@ export class OaiMapper extends BaseMapper {
      * have this keyword defined, then it will be skipped from the index.
      */
     getKeywords(): string[] {
-        let mandatoryKws = this.settings.eitherKeywords || [];
+        let mandatoryKws = this.getSettings().eitherKeywords || [];
         let keywords = this.fetched.keywords[mandatoryKws.join()];
         if (keywords) {
             return keywords;
@@ -405,13 +402,13 @@ export class OaiMapper extends BaseMapper {
         }, false);
         if (!valid) {
             // Don't index metadata-sets without any of the mandatory keywords
-            this.log.info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.settings.sourceURL}'.`);
+            this.log.info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.getSettings().sourceURL}'.`);
             this.skipped = true;
         }
 
         // Update the statistics
         if (!this.keywordsAlreadyFetched && valid) {
-            this.summary.opendata++;
+            this.getSummary().opendata++;
         }
 
         this.keywordsAlreadyFetched = true;
@@ -421,13 +418,13 @@ export class OaiMapper extends BaseMapper {
     }
 
     getMetadataSource(): MetadataSource {
-        let oaiLink = `${this.settings.sourceURL}?verb=GetRecord&metadataPrefix=iso19139&identifier=${this.uuid}`;
+        let oaiLink = `${this.getSettings().sourceURL}?verb=GetRecord&metadataPrefix=iso19139&identifier=${this.uuid}`;
         return {
-            source_base: this.settings.sourceURL,
+            source_base: this.getSettings().sourceURL,
             raw_data_source: oaiLink,
             source_type: 'oai_iso19139',
-            portal_link: this.settings.defaultAttributionLink,
-            attribution: this.settings.defaultAttribution
+            portal_link: this.getSettings().defaultAttributionLink,
+            attribution: this.getSettings().defaultAttribution
         };
     }
 
@@ -559,7 +556,7 @@ export class OaiMapper extends BaseMapper {
 
         if (!themes || themes.length === 0) {
             // Fall back to default value
-            themes = this.settings.defaultDCATCategory
+            themes = this.getSettings().defaultDCATCategory
                 .map( category => DcatMapper.DCAT_CATEGORY_URL + category);
         }
 
@@ -589,7 +586,7 @@ export class OaiMapper extends BaseMapper {
         if (freq.length > 0) {
             let periodicity = DcatPeriodicityUtils.getPeriodicity(freq[0].getAttribute('codeListValue'))
             if(!periodicity){
-                this.summary.warnings.push(["Unbekannte Periodizität", freq[0].getAttribute('codeListValue')]);
+                this.getSummary().warnings.push(["Unbekannte Periodizität", freq[0].getAttribute('codeListValue')]);
             }
             return periodicity;
         }
@@ -615,7 +612,7 @@ export class OaiMapper extends BaseMapper {
                         license = {
                             id: json.id,
                             title: json.name,
-                            url: await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest)
+                            url: await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest)
                         };
 
                     } catch(ignored) {}
@@ -625,10 +622,10 @@ export class OaiMapper extends BaseMapper {
 
         if (!license) {
             let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
-            this.summary.missingLicense++;
+            this.getSummary().missingLicense++;
 
             this.log.warn(msg);
-            this.summary.warnings.push(['Missing license', msg]);
+            this.getSummary().warnings.push(['Missing license', msg]);
             return {
                 id: 'unknown',
                 title: 'Unbekannt',
@@ -640,7 +637,7 @@ export class OaiMapper extends BaseMapper {
     }
 
     getErrorSuffix(uuid, title) {
-        return `Id: '${uuid}', title: '${title}', source: '${this.settings.sourceURL}'.`;
+        return `Id: '${uuid}', title: '${title}', source: '${this.getSettings().sourceURL}'.`;
     }
 
     getHarvestedData(): string {
@@ -783,7 +780,7 @@ export class OaiMapper extends BaseMapper {
                     let url = null;
                     if (urlNode) {
                         let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                        url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
+                        url = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
                     }
 
                     let infos: Contact = {
@@ -826,8 +823,8 @@ export class OaiMapper extends BaseMapper {
             uri: uri
         };
 
-        if (this.settings.proxy) {
-            config.proxy = this.settings.proxy;
+        if (this.getSettings().proxy) {
+            config.proxy = this.getSettings().proxy;
         }
 
         return config;
@@ -839,8 +836,8 @@ export class OaiMapper extends BaseMapper {
 
     executeCustomCode(doc: any) {
         try {
-            if (this.settings.customCode) {
-                eval(this.settings.customCode);
+            if (this.getSettings().customCode) {
+                eval(this.getSettings().customCode);
             }
         } catch (error) {
             throwError('An error occurred in custom code: ' + error.message);

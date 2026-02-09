@@ -24,31 +24,28 @@
 /**
  * A mapper for documents harvested from KuLaDig.
  */
-import * as MiscUtils from '../../utils/misc.utils.js';
-import log4js from 'log4js';
-import { BaseMapper } from '../../importer/base.mapper.js';
-import type { Contact, Organization, Person } from '../../model/agent.js';
-import type { Geometry } from 'geojson';
-import type { KldSettings } from './kld.settings.js';
 import type { License } from '@shared/license.model.js';
-import type { LvrDateRange, Media, Relation } from '../../profiles/lvr/model/index.document.js';
-import type { ObjectResponse, RelatedObject, Document} from './kld.api.js';
-import { getDocumentUrl, RelationType, MediaType } from './kld.api.js';
+import type { Geometry } from 'geojson';
+import log4js from 'log4js';
+import type { Contact, Organization, Person } from '../../model/agent.js';
 import type { Summary } from '../../model/summary.js';
+import type { LvrDateRange, Media, Relation } from '../../profiles/lvr/model/index.document.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import { Mapper } from '../mapper.js';
+import type { Document, ObjectResponse, RelatedObject } from './kld.api.js';
+import { getDocumentUrl, MediaType, RelationType } from './kld.api.js';
+import type { KldSettings } from './kld.settings.js';
 
-export class KldMapper extends BaseMapper {
+export class KldMapper extends Mapper<KldSettings> {
 
     log = log4js.getLogger();
 
     private readonly record: ObjectResponse;
     private readonly id: string;
-    protected readonly settings: KldSettings;
 
     constructor(settings: KldSettings, record: ObjectResponse, harvestTime: Date, summary: Summary) {
-        super();
-        this.settings = settings;
+        super(settings, summary);
         this.record = record;
-        this.summary = summary;
         this.id = record.Id;
 
         super.init();
@@ -66,9 +63,9 @@ export class KldMapper extends BaseMapper {
     getDescription(): string {
         const abstract = this.record.Beschreibung;
         if (!abstract) {
-            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.id}\', title: \'${this.getTitle()}\', source: \'${this.settings.sourceURL}\'`;
+            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.id}\', title: \'${this.getTitle()}\', source: \'${this.getSettings().sourceURL}\'`;
             this.log.warn(msg);
-            this.summary.warnings.push(['No description', msg]);
+            this.getSummary().warnings.push(['No description', msg]);
             this.valid = false;
         }
         return abstract;
@@ -91,7 +88,7 @@ export class KldMapper extends BaseMapper {
         if (start && end && start > end) {
             const message = `Inconsistent dates found in object ${this.record.Id}: \
                 Start (${new Date(start).toJSON()}) is greater than end (${new Date(end).toJSON()}).`;
-            this.summary.warnings.push(['Inconsistent dates', message]);
+            this.getSummary().warnings.push(['Inconsistent dates', message]);
         }
         const range = { gte: start, lte: end };
         return [range];
@@ -124,13 +121,13 @@ export class KldMapper extends BaseMapper {
     }
 
     getMetadataSource() {
-        let link = `${this.settings.sourceURL}Objekt/${this.id}`;
+        let link = `${this.getSettings().sourceURL}Objekt/${this.id}`;
         return {
-            source_base: this.settings.sourceURL,
+            source_base: this.getSettings().sourceURL,
             raw_data_source: link,
             source_type: 'kld',
-            portal_link: this.settings.defaultAttributionLink,
-            attribution: this.settings.defaultAttribution
+            portal_link: this.getSettings().defaultAttributionLink,
+            attribution: this.getSettings().defaultAttribution
         };
     }
 

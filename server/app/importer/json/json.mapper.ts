@@ -22,36 +22,33 @@
  */
 
 import log4js from 'log4js';
-import { BaseMapper } from '../base.mapper.js';
 import type { MetadataSource } from '../../model/index.document.js';
-import type { JsonSettings } from './json.settings.js';
 import type { Summary } from '../../model/summary.js';
+import { Mapper } from '../mapper.js';
+import type { JsonSettings } from './json.settings.js';
 
-export class JsonMapper extends BaseMapper {
+export class JsonMapper extends Mapper<JsonSettings> {
 
     log = log4js.getLogger();
 
     readonly record: object;
     readonly id: string;
 
-    protected settings: JsonSettings;
     private harvestTime: Date;
 
     constructor(settings: JsonSettings, record: object, harvestTime: Date, summary: Summary) {
-        super();
-        this.settings = settings;
+        super(settings, summary);
         this.record = record;
-        this.id = record[this.settings.idProperty];
+        this.id = record[this.getSettings().idProperty];
         this.harvestTime = harvestTime;
-        this.summary = summary;
 
         super.init();
     }
 
     getMetadataSource(): MetadataSource {
         return {
-            source_base: this.settings.sourceURL,
-            raw_data_source: this.settings.sourceURL,
+            source_base: this.getSettings().sourceURL,
+            raw_data_source: this.getSettings().sourceURL,
             source_type: 'json'
         };
     }

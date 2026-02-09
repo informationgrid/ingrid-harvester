@@ -24,20 +24,19 @@
 /**
  * A mapper for METS/MODS XML documents harvested over OAI.
  */
-import * as xpath from 'xpath';
-import * as MiscUtils from '../../../utils/misc.utils.js';
 import log4js from 'log4js';
-import { oaiXPaths } from '../oai.paths.js';
-import { BaseMapper } from '../../base.mapper.js';
-import type { GeometryInformation, Temporal } from '../../../model/index.document.js';
+import * as xpath from 'xpath';
+import type { GeometryInformation, MetadataSource, Temporal } from '../../../model/index.document.js';
 import type { Keyword } from '../../../model/ingrid.index.document.js';
-import type { Media, MediaType, Person, Relation } from '../../../profiles/lvr/model/index.document.js';
-import type { MetadataSource } from '../../../model/index.document.js';
-import type { OaiSettings } from '../oai.settings.js';
 import type { Summary } from '../../../model/summary.js';
+import type { Media, MediaType, Person, Relation } from '../../../profiles/lvr/model/index.document.js';
+import * as MiscUtils from '../../../utils/misc.utils.js';
 import type { XPathElementSelect } from '../../../utils/xpath.utils.js';
+import { Mapper } from '../../mapper.js';
+import { oaiXPaths } from '../oai.paths.js';
+import type { OaiSettings } from '../oai.settings.js';
 
-export class OaiMapper extends BaseMapper {
+export class OaiMapper extends Mapper<OaiSettings> {
 
     static select = <XPathElementSelect>xpath.useNamespaces(oaiXPaths.mods.prefixMap);
 
@@ -56,16 +55,13 @@ export class OaiMapper extends BaseMapper {
     private harvestTime: any;
 
     protected readonly idInfo; // : SelectedValue;
-    protected readonly settings: OaiSettings;
     private readonly uuid: string;
 
-    constructor(settings, header: Element, record: Element, harvestTime, summary: Summary) {
-        super();
-        this.settings = settings;
+    constructor(settings: OaiSettings, header: Element, record: Element, harvestTime, summary: Summary) {
+        super(settings, summary);
         this.header = header;
         this.record = record;
         this.harvestTime = harvestTime;
-        this.summary = summary;
 
         super.init();
     }
@@ -203,11 +199,11 @@ export class OaiMapper extends BaseMapper {
     }
 
     getMetadataSource(): MetadataSource {
-        let link = `${this.settings.sourceURL}?verb=GetRecord&metadataPrefix=${this.settings.metadataPrefix}&identifier=oai:www.mycore.de:${this.getId()}`;
+        let link = `${this.getSettings().sourceURL}?verb=GetRecord&metadataPrefix=${this.getSettings().metadataPrefix}&identifier=oai:www.mycore.de:${this.getId()}`;
         return {
-            source_base: this.settings.sourceURL,
+            source_base: this.getSettings().sourceURL,
             raw_data_source: link,
-            source_type: this.settings.metadataPrefix
+            source_type: this.getSettings().metadataPrefix
         };
     }
 }

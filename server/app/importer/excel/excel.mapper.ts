@@ -21,21 +21,21 @@
  * ==================================================
  */
 
-import log4js from 'log4js';
-import { BaseMapper } from '../base.mapper.js';
-import type { DateRange } from '../../model/dateRange.js';
-import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
-import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
-import type { Distribution } from '../../model/distribution.js';
-import type { ExcelSettings } from './excel.settings.js';
 import type { License } from '@shared/license.model.js';
-import type { MetadataSource } from '../../model/index.document.js';
+import log4js from 'log4js';
+import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
 import type { Organization, Person } from '../../model/agent.js';
+import type { DateRange } from '../../model/dateRange.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { MetadataSource } from '../../model/index.document.js';
+import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
+import { Mapper } from '../mapper.js';
+import type { ExcelSettings } from './excel.settings.js';
 
-export class ExcelMapper extends BaseMapper {
+export class ExcelMapper extends Mapper<ExcelSettings> {
 
     log = log4js.getLogger();
 
@@ -44,18 +44,15 @@ export class ExcelMapper extends BaseMapper {
     columnValues: string[] | Date;
     columnMap;
     workbook;
-    protected settings: ExcelSettings;
     private currentIndexName: string;
 
     constructor(settings: ExcelSettings, data) {
-        super();
-        this.settings = settings;
+        super(settings, data.summary);
         this.data = data;
         this.id = data.id;
         this.columnValues = data.columnValues;
         this.columnMap = data.columnMap;
         this.workbook = data.workbook;
-        this.summary = data.summary;
         this.currentIndexName = data.currentIndexName;
 
         super.init();
@@ -88,7 +85,7 @@ export class ExcelMapper extends BaseMapper {
         if (dcatCategoriesString) {
             return dcatCategoriesString.split(',').map(cat => DcatMapper.DCAT_CATEGORY_URL + cat);
         } else {
-            return this.settings.defaultDCATCategory
+            return this.getSettings().defaultDCATCategory
                 .map( category => DcatMapper.DCAT_CATEGORY_URL + category);
         }
 
@@ -125,7 +122,7 @@ export class ExcelMapper extends BaseMapper {
 
     getMetadataSource(): MetadataSource {
         return {
-            source_base: this.settings.filePath,
+            source_base: this.getSettings().filePath,
             source_type: 'excel'
         };
     }
@@ -174,7 +171,7 @@ export class ExcelMapper extends BaseMapper {
 
     getCategories() {
         let categories = this.mapCategories(this.columnValues[this.columnMap.Kategorie].split(','));
-        if (!categories || categories.length === 0) categories = this.settings.defaultMcloudSubgroup;
+        if (!categories || categories.length === 0) categories = this.getSettings().defaultMcloudSubgroup;
         return categories;
     }
 
@@ -236,7 +233,7 @@ export class ExcelMapper extends BaseMapper {
             if (!found) {
                 let message = 'Could not find abbreviation of "Datenhaltende Stelle": ' + abbr;
                 this.log.warn(message);
-                this.summary.warnings.push(['No Publisher found', message]);
+                this.getSummary().warnings.push(['No Publisher found', message]);
             }
         });
         return publishers;
@@ -259,7 +256,7 @@ export class ExcelMapper extends BaseMapper {
             if (downloadUrl.trim().length === 0) return;
 
             let requestConfig = this.getUrlCheckRequestConfig(downloadUrl);
-            let checkedUrl = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
+            let checkedUrl = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
 
             if (checkedUrl) {
                 distributions.push({
@@ -269,7 +266,7 @@ export class ExcelMapper extends BaseMapper {
             } else {
                 let msg = `Invalid URL '${downloadUrl} found for item with id: '${this.id}', title: '${this.getTitle()}', index: '${this.currentIndexName}'.`;
                 this.log.warn(msg);
-                this.summary.warnings.push(['Invalid URL', msg]);
+                this.getSummary().warnings.push(['Invalid URL', msg]);
                 //this.errors.push(msg);
                 //this.summary.numErrors++;
             }
@@ -325,7 +322,7 @@ export class ExcelMapper extends BaseMapper {
         if (!license) {
             let message = 'Could not find abbreviation of "License": ' + licenseId;
             this.log.warn(message);
-            this.summary.warnings.push(['Invalid License', message]);
+            this.getSummary().warnings.push(['Invalid License', message]);
         }
 
         return license;
@@ -336,7 +333,7 @@ export class ExcelMapper extends BaseMapper {
         if(value){
             let periodicity = DcatPeriodicityUtils.getPeriodicity(value);
             if(!periodicity){
-                this.summary.warnings.push(["Unbekannte Periodizität", value]);
+                this.getSummary().warnings.push(["Unbekannte Periodizität", value]);
             }
             return periodicity;
         }
@@ -397,8 +394,8 @@ export class ExcelMapper extends BaseMapper {
             uri: uri
         };
 
-        if (this.settings.proxy) {
-            config.proxy = this.settings.proxy;
+        if (this.getSettings().proxy) {
+            config.proxy = this.getSettings().proxy;
         }
 
         return config;

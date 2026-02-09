@@ -24,23 +24,24 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import * as xpath from 'xpath';
-import * as MiscUtils from '../../utils/misc.utils.js';
-import log4js from 'log4js';
-import { namespaces } from '../../importer/namespaces.js';
-import { throwError } from 'rxjs';
-import type { Agent, Contact } from '../../model/agent.js';
-import { BaseMapper } from '../base.mapper.js';
-import type { DateRange } from '../../model/dateRange.js';
-import type { DcatappluSettings } from './dcatapplu.settings.js';
-import type { Distribution } from '../../model/distribution.js';
 import type { Geometry, Point } from 'geojson';
-import type { MetadataSource } from '../../model/index.document.js';
-import type { ProcessStep, Catalog } from '../../model/dcatApPlu.model.js';
+import log4js from 'log4js';
+import { throwError } from 'rxjs';
+import * as xpath from 'xpath';
+import { namespaces } from '../../importer/namespaces.js';
+import type { Agent, Contact } from '../../model/agent.js';
+import type { DateRange } from '../../model/dateRange.js';
+import type { Catalog, ProcessStep } from '../../model/dcatApPlu.model.js';
 import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, PluProcessStepType } from '../../model/dcatApPlu.model.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { MetadataSource } from '../../model/index.document.js';
+import type { Summary } from '../../model/summary.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
 import type { XPathElementSelect } from '../../utils/xpath.utils.js';
+import { Mapper } from '../mapper.js';
+import type { DcatappluSettings } from './dcatapplu.settings.js';
 
-export class DcatappluMapper extends BaseMapper {
+export class DcatappluMapper extends Mapper<DcatappluSettings> {
 
     static select = <XPathElementSelect>xpath.useNamespaces({
         'adms': namespaces.ADMS,
@@ -68,7 +69,6 @@ export class DcatappluMapper extends BaseMapper {
     private harvestTime: any;
 
     //    protected readonly idInfo; // : SelectedValue;
-    protected settings: DcatappluSettings;
     private readonly uuid: string;
 
     private keywordsAlreadyFetched = false;
@@ -81,13 +81,11 @@ export class DcatappluMapper extends BaseMapper {
         themes: null
     };
 
-    constructor(settings, record, catalog, catalogPage, harvestTime, summary) {
-        super();
-        this.settings = settings;
+    constructor(settings: DcatappluSettings, record, catalog, catalogPage, harvestTime, summary: Summary) {
+        super(settings, summary);
         this.record = record;
         this.fetched.catalog = catalog;
         this.harvestTime = harvestTime;
-        this.summary = summary;
         this.catalogPage = catalogPage;
         this.linkedDistributions = DcatappluMapper.select('./dcat:Distribution', catalogPage);
         this.linkedProcessSteps = DcatappluMapper.select('./plu:ProcessStep', catalogPage);
@@ -323,7 +321,7 @@ export class DcatappluMapper extends BaseMapper {
         let node = DcatappluMapper.select('./dct:publisher', this.record);
         let publishers: any[] = this.getAgent(node);
         if (publishers.length === 0) {
-            this.summary.missingPublishers++;
+            this.getSummary().missingPublishers++;
             return undefined;
         } else {
             this.fetched.publishers = publishers;
@@ -369,11 +367,11 @@ export class DcatappluMapper extends BaseMapper {
         let dcatLink; //=  DcatappluMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.getAttribute('rdf:about');
         return {
-            source_base: this.settings.sourceURL,
+            source_base: this.getSettings().sourceURL,
             raw_data_source: dcatLink,
             source_type: 'dcatapplu',
             portal_link: portalLink,
-            attribution: this.settings.defaultAttribution
+            attribution: this.getSettings().defaultAttribution
         };
     }
 
@@ -388,8 +386,8 @@ export class DcatappluMapper extends BaseMapper {
 
     executeCustomCode(doc: any) {
         try {
-            if (this.settings.customCode) {
-                eval(this.settings.customCode); doc
+            if (this.getSettings().customCode) {
+                eval(this.getSettings().customCode); doc
             }
         } catch (error) {
             throwError('An error occurred in custom code: ' + error.message);

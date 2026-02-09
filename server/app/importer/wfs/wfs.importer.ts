@@ -21,40 +21,36 @@
  * ==================================================
  */
 
-import * as xpath from 'xpath';
-import * as GeoJsonUtils from '../../utils/geojson.utils.js';
-import * as MiscUtils from '../../utils/misc.utils.js';
+import type { DOMParser } from '@xmldom/xmldom';
 import iconv from 'iconv-lite';
-import pLimit from 'p-limit';
-import type { WfsSettings } from './wfs.settings.js';
-import { defaultWfsSettings } from './wfs.settings.js';
-import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
-import { firstElementChild, getExtendedNsMap, getNsMap } from '../../utils/xpath.utils.js';
 import log4js from 'log4js';
+import type { Response } from 'node-fetch';
+import pLimit from 'p-limit';
+import type { Observer } from 'rxjs';
+import * as xpath from 'xpath';
 import { namespaces } from '../../importer/namespaces.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
-import type { DOMParser } from '@xmldom/xmldom';
-import { Importer } from '../importer.js';
+import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
 import { ImportResult } from '../../model/import.result.js';
-import type { Observer } from 'rxjs';
-import type { ProfileFactory } from '../../profiles/profile.factory.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
-import type { RecordEntity } from '../../model/entity.js';
-import type { RequestOptions } from '../../utils/http-request.utils.js';
-import type { Response } from 'node-fetch';
-import { WfsMapper } from './wfs.mapper.js';
-import type { WfsParameters } from '../../utils/http-request.utils.js';
+import * as GeoJsonUtils from '../../utils/geojson.utils.js';
+import type { RequestOptions, WfsParameters } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
+import { firstElementChild, getExtendedNsMap, getNsMap } from '../../utils/xpath.utils.js';
+import { Importer } from '../importer.js';
+import { WfsMapper } from './wfs.mapper.js';
+import type { WfsSettings } from './wfs.settings.js';
+import { defaultWfsSettings } from './wfs.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
 
-export class WfsImporter extends Importer {
+export class WfsImporter extends Importer<WfsSettings> {
 
     protected domParser: DOMParser;
-    protected profile: ProfileFactory<WfsMapper>;
-    protected settings: WfsSettings;
 
     private numItems = 0;
     private numIndexDocs = 0;
@@ -65,11 +61,11 @@ export class WfsImporter extends Importer {
     protected supportsPaging: boolean = false;
 
     constructor(settings: WfsSettings) {
-        super(settings);
-        this.profile = ProfileFactoryLoader.get();
-        this.domParser = MiscUtils.getDomParser();
         // merge default settings with configured ones
-        this.settings = MiscUtils.merge(defaultWfsSettings, settings);
+        settings = MiscUtils.merge(defaultWfsSettings, settings);
+        super(settings);
+
+        this.domParser = MiscUtils.getDomParser();
     }
 
     // only here for documentation - use the "default" exec function
@@ -78,7 +74,7 @@ export class WfsImporter extends Importer {
     }
 
     protected async harvest(): Promise<number> {
-        let capabilitiesRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, resolveWithFullResponse: true }, 'GetCapabilities');
+        let capabilitiesRequestConfig = WfsImporter.createRequestConfig({ ...this.getSettings(), resolveWithFullResponse: true }, 'GetCapabilities');
         let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
         let capabilitiesResponse: Response = await capabilitiesRequestDelegate.doRequest();
         let contentType = capabilitiesResponse.headers.get('content-type')?.split(';');
@@ -104,17 +100,17 @@ export class WfsImporter extends Importer {
         this.generalInfo = await this.prepareImport(this.generalInfo, capabilitiesResponseDom, select);
 
         // retrieve catalog info from database
-        let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId);
+        let catalog: Catalog = await this.database.getCatalog(this.getSettings().catalogId);
         this.generalInfo['catalog'] = catalog;
 
         // get all FeatureTypes and filter by given
         let featureTypesNodes = select('/*[local-name()="WFS_Capabilities"]/*[local-name()="FeatureTypeList"]/*[local-name()="FeatureType"]', capabilitiesResponseDom);
-        log.info(`Found ${featureTypesNodes.length} FeatureTypes at ${this.settings.sourceURL}`);
+        log.info(`Found ${featureTypesNodes.length} FeatureTypes at ${this.getSettings().sourceURL}`);
         let featureTypes = {};
-        let requestedTypes = this.settings.typename ? this.settings.typename.split(',').map(t => t.trim()) : null;
+        let requestedTypes = this.getSettings().typename ? this.getSettings().typename.split(',').map(t => t.trim()) : null;
         for (let featureType of featureTypesNodes) {
             let typename = select('./*[local-name()="Name"]', featureType, true).textContent;
-            if (this.settings.requireGeometry && !select('./ows:WGS84BoundingBox/@dimensions', featureType, true)) {
+            if (this.getSettings().requireGeometry && !select('./ows:WGS84BoundingBox/@dimensions', featureType, true)) {
                 log.warn(`Skipping FeatureType ${typename} because it doesn't contain a geometry`);
                 continue;
             }
@@ -127,7 +123,7 @@ export class WfsImporter extends Importer {
         this.numItems = numFeatureTypes;
 
         // for each FeatureType, get all Features
-        const limit = pLimit(this.settings.maxConcurrent);
+        const limit = pLimit(this.getSettings().maxConcurrent);
         await Promise.allSettled(Object.keys(featureTypes).map(featureTypeName =>
             limit(() => this.extractCompleteFeatureType(featureTypeName, featureTypes[featureTypeName]))
         ));
@@ -150,34 +146,34 @@ export class WfsImporter extends Importer {
 
     async extractCompleteFeatureType(featureTypeName: string, featureTypeNode: Node): Promise<void> {
         let numFeatures = await this.getNumFeatures(featureTypeName);
-        log.info(`Found ${numFeatures} features at ${this.settings.sourceURL} for FeatureType "${featureTypeName}"`);
+        log.info(`Found ${numFeatures} features at ${this.getSettings().sourceURL} for FeatureType "${featureTypeName}"`);
         let featureTypeDescriptionNode = await this.getTypeDescription(featureTypeName);
 
         // if harvesting FeatureTypes, do it here (to include the feature names)
-        if (this.settings.harvestTypes) {
+        if (this.getSettings().harvestTypes) {
             try {
                 await this.extractFeatureType(featureTypeName, featureTypeNode, featureTypeDescriptionNode, numFeatures);
             }
             catch (e) {
                 const message = `Error while fetching FeatureType "${featureTypeName}"\n  ${e.toString()}.`;
                 log.warn(message);
-                this.summary.warnings.push(message.split('\n  '));
+                this.getSummary().warnings.push(message.split('\n  '));
                 return;
             }
         }
         // skip harvesting features if numFeatures is above limit
-        if (this.settings.featureLimit && numFeatures > this.settings.featureLimit) {
-            log.info(`This exceeds the limit of ${this.settings.featureLimit} features; skipping feature harvesting`);
+        if (this.getSettings().featureLimit && numFeatures > this.getSettings().featureLimit) {
+            log.info(`This exceeds the limit of ${this.getSettings().featureLimit} features; skipping feature harvesting`);
             return;
         }
         while (true) {
             log.info(`Requesting next features for FeatureType ${featureTypeName}`);
             let requestConfig = WfsImporter.createRequestConfig({
-                ...this.settings,
+                ...this.getSettings(),
                 typename: featureTypeName
             });
             let harvestTime = new Date(Date.now());
-            let requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(this.settings));
+            let requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(this.getSettings()));
             // let response = await requestDelegate.doRequest();
             // let responseDom = this.domParser.parseFromString(response);
             let responseDom: Document;
@@ -189,7 +185,7 @@ export class WfsImporter extends Importer {
             catch (e) {
                 const message = `Error while fetching WFS Features for FeatureType ${featureTypeName}. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom?.toString())}.`;
                 log.error(message);
-                this.summary.appErrors.push(message);
+                this.getSummary().appErrors.push(message);
             }
             requestDelegate.incrementStartRecordIndex();
             /*
@@ -214,22 +210,22 @@ export class WfsImporter extends Importer {
         this.generalInfo['numFeatures'] = numFeatures;
         this.generalInfo['title'] = select('./wfs:Title', featureTypeNode, true)?.textContent;
         this.generalInfo['featureTypeDescription'] = featureTypeDescriptionNode;
-        let mapper = this.getFeatureTypeMapper(this.settings, featureTypeNode, Date.now(), this.summary, this.generalInfo);
-        let doc: any = await this.profile.getIndexDocumentFactory(mapper).create();
-        if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+        let mapper = this.getFeatureTypeMapper(this.getSettings(), featureTypeNode, Date.now(), this.getSummary(), this.generalInfo);
+        let doc: any = await ProfileFactoryLoader.get().getIndexDocumentFactory(mapper).create();
+        if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
             let entity: RecordEntity = {
                 identifier: featureTypeName,
-                source: this.settings.sourceURL,
-                collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
+                source: this.getSettings().sourceURL,
+                collection_id: (await this.database.getCatalog(this.getSettings().catalogId)).id,
                 dataset: doc,
                 original_document: mapper.getHarvestedData()
             };
             await this.database.addEntityToBulk(entity);
         }
         else {
-            this.summary.skippedDocs.push(featureTypeName);
+            this.getSummary().skippedDocs.push(featureTypeName);
         }
-        if (this.settings.harvestTypes) {
+        if (this.getSettings().harvestTypes) {
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.numItems));
         }
     }
@@ -257,14 +253,14 @@ export class WfsImporter extends Importer {
         }
 
         // some documents may use wfs:member, some gml:featureMember, some maybe something else: use settings
-        let features = select(`/wfs:FeatureCollection/${this.settings.memberElement}`, xml);
+        let features = select(`/wfs:FeatureCollection/${this.getSettings().memberElement}`, xml);
         for (let i = 0; i < features.length; i++) {
-            this.summary.numDocs++;
+            this.getSummary().numDocs++;
 
             // TODO use ID-property from settings (tbi)
             const uuid = firstElementChild(features[i]).getAttributeNS(nsMap['gml'], 'id');
             if (!uuid || !this.filterUtils.isIdAllowed(uuid)) {
-                this.summary.skippedDocs.push(uuid);
+                this.getSummary().skippedDocs.push(uuid);
                 continue;
             }
 
@@ -276,28 +272,28 @@ export class WfsImporter extends Importer {
             }
 
             this.generalInfo['idx'] = i;
-            let mapper = this.getMapper(this.settings, features[i], harvestTime, this.summary, this.generalInfo);
+            let mapper = this.getMapper(this.getSettings(), features[i], harvestTime, this.getSummary(), this.generalInfo);
 
-            let doc: any = await this.profile.getIndexDocumentFactory(mapper).create().catch(e => {
+            let doc: any = await ProfileFactoryLoader.get().getIndexDocumentFactory(mapper).create().catch(e => {
                 log.error('Error creating index document', e);
-                this.summary.appErrors.push(e.toString());
+                this.getSummary().appErrors.push(e.toString());
                 mapper.skipped = true;
             });
 
-            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+            if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: uuid,
-                    source: this.settings.sourceURL,
-                    collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
+                    source: this.getSettings().sourceURL,
+                    collection_id: (await this.database.getCatalog(this.getSettings().catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };
                 promises.push(this.database.addEntityToBulk(entity));
             } else {
-                this.summary.skippedDocs.push(uuid);
+                this.getSummary().skippedDocs.push(uuid);
             }
             // disable updating feature count if harvesting FeatureTypes
-            if (!this.settings.harvestTypes) {
+            if (!this.getSettings().harvestTypes) {
                 this.observer.next(ImportResult.running(++this.numIndexDocs, this.numItems));
             }
         }
@@ -315,19 +311,19 @@ export class WfsImporter extends Importer {
 
     async getNumFeatures(featureTypeName: string): Promise<number> {
         let requestDelegate = new RequestDelegate(WfsImporter.createRequestConfig({
-            ...this.settings,
+            ...this.getSettings(),
             typename: featureTypeName,
             maxRecords: undefined,
             resultType: 'hits'
         }));
         let responseDom = await this.getDom(requestDelegate);
         let resultsNode = responseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
-        return parseInt(resultsNode.getAttribute(this.settings.version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures'));
+        return parseInt(resultsNode.getAttribute(this.getSettings().version === '2.0.0' ? 'numberMatched' : 'numberOfFeatures'));
     }
 
     async getTypeDescription(featureTypeName: string): Promise<Node> {
         let requestDelegate = new RequestDelegate(WfsImporter.createRequestConfig({
-            ...this.settings,
+            ...this.getSettings(),
             typename: featureTypeName
         }, 'DescribeFeatureType'));
         let responseDom = await this.getDom(requestDelegate);

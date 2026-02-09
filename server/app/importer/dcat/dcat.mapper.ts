@@ -24,25 +24,25 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import * as xpath from 'xpath';
+import type { License } from '@shared/license.model.js';
 import log4js from 'log4js';
-import { namespaces } from '../../importer/namespaces.js';
 import { throwError } from 'rxjs';
-import { BaseMapper } from '../base.mapper.js';
+import * as xpath from 'xpath';
+import { namespaces } from '../../importer/namespaces.js';
 import type { Contact, Person } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { MetadataSource } from '../../model/index.document.js';
 import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
 import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
-import type { DcatSettings } from './dcat.settings.js';
-import type { Distribution } from '../../model/distribution.js';
-import type { License } from '@shared/license.model.js';
-import type { MetadataSource } from '../../model/index.document.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 import type { XPathElementSelect } from '../../utils/xpath.utils.js';
+import { Mapper } from '../mapper.js';
+import type { DcatSettings } from './dcat.settings.js';
 
-export class DcatMapper extends BaseMapper {
+export class DcatMapper extends Mapper<DcatSettings> {
 
     static DCAT_CATEGORY_URL = 'http://publications.europa.eu/resource/authority/data-theme/';
 
@@ -123,7 +123,6 @@ export class DcatMapper extends BaseMapper {
     private harvestTime: any;
 
 //    protected readonly idInfo; // : SelectedValue;
-    protected settings: DcatSettings;
     private readonly uuid: string;
 
     private keywordsAlreadyFetched = false;
@@ -136,12 +135,10 @@ export class DcatMapper extends BaseMapper {
 
     log = log4js.getLogger();
 
-    constructor(settings, record, catalogPage, harvestTime, summary) {
-        super();
-        this.settings = settings;
+    constructor(settings: DcatSettings, record, catalogPage, harvestTime, summary) {
+        super(settings, summary);
         this.record = record;
         this.harvestTime = harvestTime;
-        this.summary = summary;
         this.catalogPage = catalogPage;
 
         let distributions = DcatMapper.select('./dcat:Distribution', catalogPage);
@@ -157,7 +154,7 @@ export class DcatMapper extends BaseMapper {
         }
         this.uuid = uuid;
 
-            super.init();
+        super.init();
     }
 
     getDescription() {
@@ -166,9 +163,9 @@ export class DcatMapper extends BaseMapper {
             description = DcatMapper.select('./dct:abstract', this.record, true);
         }
         if (!description) {
-            let msg = `Dataset doesn't have an description. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.sourceURL}\'`;
+            let msg = `Dataset doesn't have an description. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.getSettings().sourceURL}\'`;
             this.log.warn(msg);
-            this.summary.warnings.push(['No description', msg]);
+            this.getSummary().warnings.push(['No description', msg]);
             this.valid = false;
         } else {
             return description.textContent;
@@ -225,7 +222,7 @@ export class DcatMapper extends BaseMapper {
 
                 if(url) {
                     let distribution = {
-                        format: UrlUtils.mapFormat([format], this.summary.warnings),
+                        format: UrlUtils.mapFormat([format], this.getSummary().warnings),
                         accessURL: url.getAttribute('rdf:resource')?url.getAttribute('rdf:resource'):url.textContent,
                         title: title ? title.textContent : undefined,
                         description: description ? description.textContent : undefined,
@@ -286,7 +283,7 @@ export class DcatMapper extends BaseMapper {
         }
 
         if (publishers.length === 0) {
-            this.summary.missingPublishers++;
+            this.getSummary().missingPublishers++;
             return undefined;
         } else {
             this.fetched.publishers = publishers;
@@ -330,8 +327,8 @@ export class DcatMapper extends BaseMapper {
         let displayName;
         let displayHomepage;
 
-        if(this.settings.dcatProviderField) {
-            switch (this.settings.dcatProviderField) {
+        if(this.getSettings().dcatProviderField) {
+            switch (this.getSettings().dcatProviderField) {
                 case "contactPoint":
                     let contactPoint = await this.getContactPoint();
                     if (contactPoint) {
@@ -422,11 +419,11 @@ export class DcatMapper extends BaseMapper {
         }
 
         if(!displayName) {
-            displayName = this.settings.description.trim()
+            displayName = this.getSettings().description.trim()
         }
 
-        if(this.settings.providerPrefix){
-            displayName = this.settings.providerPrefix+displayName;
+        if(this.getSettings().providerPrefix){
+            displayName = this.getSettings().providerPrefix+displayName;
         }
 
         let displayContact: Person = {
@@ -458,7 +455,7 @@ export class DcatMapper extends BaseMapper {
             }
         }
 
-        if(this.settings.filterTags && this.settings.filterTags.length > 0 && !keywords.some(keyword => this.settings.filterTags.includes(keyword))){
+        if(this.getSettings().filterTags && this.getSettings().filterTags.length > 0 && !keywords.some(keyword => this.getSettings().filterTags.includes(keyword))){
             this.skipped = true;
         }
 
@@ -469,11 +466,11 @@ export class DcatMapper extends BaseMapper {
         let dcatLink; //=  DcatMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.getAttribute('rdf:about');
         return {
-            source_base: this.settings.sourceURL,
+            source_base: this.getSettings().sourceURL,
             raw_data_source: dcatLink,
             source_type: 'dcat',
             portal_link: portalLink,
-            attribution: this.settings.defaultAttribution
+            attribution: this.getSettings().defaultAttribution
         };
     }
 
@@ -512,7 +509,7 @@ export class DcatMapper extends BaseMapper {
                 'coordinates': JSON.parse(coords)
             };
         } catch(e) {
-            this.summary.appErrors.push("Can't parse WKT: "+e.message);
+            this.getSummary().appErrors.push("Can't parse WKT: "+e.message);
         }
     }
 
@@ -569,7 +566,7 @@ export class DcatMapper extends BaseMapper {
             .map(node => node.getAttribute('rdf:resource'))
             .filter(theme => theme); // Filter out falsy values
 
-        if(this.settings.filterThemes && this.settings.filterThemes.length > 0 && !themes.some(theme => this.settings.filterThemes.includes(theme.substr(theme.lastIndexOf('/')+1)))){
+        if(this.getSettings().filterThemes && this.getSettings().filterThemes.length > 0 && !themes.some(theme => this.getSettings().filterThemes.includes(theme.substr(theme.lastIndexOf('/')+1)))){
             this.skipped = true;
         }
 
@@ -595,7 +592,7 @@ export class DcatMapper extends BaseMapper {
             if(periodicity){
                 let period = DcatPeriodicityUtils.getPeriodicity(periodicity)
                 if(!period){
-                    this.summary.warnings.push(["Unbekannte Periodizität", periodicity]);
+                    this.getSummary().warnings.push(["Unbekannte Periodizität", periodicity]);
                 }
                 return period;
             }
@@ -618,7 +615,7 @@ export class DcatMapper extends BaseMapper {
                     license = {
                         id: json.id,
                         title: json.name,
-                        url: await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest)
+                        url: await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest)
                     };
 
                 } catch(ignored) {}
@@ -637,10 +634,10 @@ export class DcatMapper extends BaseMapper {
 
         if (!license) {
             let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
-            this.summary.missingLicense++;
+            this.getSummary().missingLicense++;
 
             this.log.warn(msg);
-            this.summary.warnings.push(['Missing license', msg]);
+            this.getSummary().warnings.push(['Missing license', msg]);
             return {
                 id: 'unknown',
                 title: 'Unbekannt',
@@ -652,7 +649,7 @@ export class DcatMapper extends BaseMapper {
     }
 
     getErrorSuffix(uuid, title) {
-        return `Id: '${uuid}', title: '${title}', source: '${this.settings.sourceURL}'.`;
+        return `Id: '${uuid}', title: '${title}', source: '${this.getSettings().sourceURL}'.`;
     }
 
     getHarvestedData(): string {
@@ -766,7 +763,7 @@ export class DcatMapper extends BaseMapper {
                 let url = null;
                 if (urlNode) {
                     let requestConfig = this.getUrlCheckRequestConfig(urlNode.getAttribute('rdf:resource'));
-                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
                 }
 
                 let infos: Contact = {
@@ -803,8 +800,8 @@ export class DcatMapper extends BaseMapper {
             uri: uri
         };
 
-        if (this.settings.proxy) {
-            config.proxy = this.settings.proxy;
+        if (this.getSettings().proxy) {
+            config.proxy = this.getSettings().proxy;
         }
 
         return config;
@@ -816,8 +813,8 @@ export class DcatMapper extends BaseMapper {
 
     executeCustomCode(doc: any) {
         try {
-            if (this.settings.customCode) {
-                eval(this.settings.customCode);doc
+            if (this.getSettings().customCode) {
+                eval(this.getSettings().customCode);doc
             }
         } catch (error) {
             throwError('An error occurred in custom code: ' + error.message);

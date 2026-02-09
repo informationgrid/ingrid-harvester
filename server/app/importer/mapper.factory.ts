@@ -22,8 +22,9 @@
  */
 
 import type { ImporterSettings } from 'importer.settings.js';
-import type { Importer } from './importer.js';
+import type { Summary } from '../model/summary.js';
+import type { Mapper } from './mapper.js';
 
-export interface ImporterFactory<T extends ImporterSettings> {
-    getImporter(settings: T): Promise<Importer<T>>;
+export interface MapperFactory<T extends ImporterSettings> {
+    getMapper(settings: T, record: any, harvestTime: Date, summary: Summary, generalInfo: any): Promise<Mapper<T>>;
 }

@@ -21,26 +21,25 @@
  * ==================================================
  */
 
-import * as GeoJsonUtils from '../../utils/geojson.utils.js';
+import type { Geometry, Point } from 'geojson';
 import log4js from 'log4js';
 import { throwError } from 'rxjs';
-import { BaseMapper } from '../base.mapper.js';
-import type { Catalog } from '../../model/dcatApPlu.model.js';
 import type { Contact, Organization, Person } from '../../model/agent.js';
+import type { Catalog } from '../../model/dcatApPlu.model.js';
 import type { Distribution } from '../../model/distribution.js';
-import type { Geometry, Point } from 'geojson';
 import type { MetadataSource } from '../../model/index.document.js';
+import type { Summary } from '../../model/summary.js';
+import * as GeoJsonUtils from '../../utils/geojson.utils.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
-import type { Summary } from '../../model/summary.js';
-import type { WfsSettings } from './wfs.settings.js';
 import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
+import { Mapper } from '../mapper.js';
+import type { WfsSettings } from './wfs.settings.js';
 
-export class WfsMapper extends BaseMapper {
+export class WfsMapper extends Mapper<WfsSettings> {
 
     log = log4js.getLogger();
 
-    protected readonly settings: WfsSettings;
     readonly featureOrFeatureType: Node & Element;
     readonly featureTypeDescription: Node & Element;
     readonly fetched: any;
@@ -51,12 +50,10 @@ export class WfsMapper extends BaseMapper {
     select: XPathNodeSelect;
 
     constructor(settings: WfsSettings, featureOrFeatureType, harvestTime, summary: Summary, generalInfo) {
-        super();
-        this.settings = settings;
+        super(settings, summary);
         this.featureOrFeatureType = featureOrFeatureType;
         this.featureTypeDescription = generalInfo['featureTypeDescription'];
         this.harvestTime = harvestTime;
-        this.summary = summary;
         this.fetched = {
             boundingBox: null,
             contactPoint: null,
@@ -128,13 +125,13 @@ export class WfsMapper extends BaseMapper {
 
     // TODO:check
     getMetadataSource(): MetadataSource {
-        let wfsLink = `${this.settings.sourceURL}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.settings.version}&outputFormat=application/xml&featureId=${this.uuid}`;
+        let wfsLink = `${this.getSettings().sourceURL}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.getSettings().version}&outputFormat=application/xml&featureId=${this.uuid}`;
         return {
-            source_base: this.settings.sourceURL,
+            source_base: this.getSettings().sourceURL,
             raw_data_source: wfsLink,
             source_type: 'wfs',
-            portal_link: this.settings.defaultAttributionLink,
-            attribution: this.settings.defaultAttribution
+            portal_link: this.getSettings().defaultAttributionLink,
+            attribution: this.getSettings().defaultAttribution
         };
     }
 
@@ -224,8 +221,8 @@ export class WfsMapper extends BaseMapper {
             uri: uri
         };
 
-        if (this.settings.proxy) {
-            config.proxy = this.settings.proxy;
+        if (this.getSettings().proxy) {
+            config.proxy = this.getSettings().proxy;
         }
 
         return config;
@@ -248,8 +245,8 @@ export class WfsMapper extends BaseMapper {
 
     executeCustomCode(doc: any) {
         try {
-            if (this.settings.customCode) {
-                eval(this.settings.customCode);
+            if (this.getSettings().customCode) {
+                eval(this.getSettings().customCode);
             }
         } catch (error) {
             throwError('An error occurred in custom code: ' + error.message);

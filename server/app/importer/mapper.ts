@@ -23,13 +23,19 @@
 
 import type { ImporterSettings } from '../importer.settings.js';
 import type { Logger } from 'log4js';
-import type { MetadataSource } from '../model/index.document.js';
+import type { HarvestingMetadata, MetadataSource } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
 
-export abstract class BaseMapper {
+/**
+ * Base class for all mappers.
+ * 
+ * A mapper is responsible for transforming the data of one harvested record into various formats (@see toMappers).
+ * It also provides metadata about the harvested record.
+ */
+export abstract class Mapper<S extends ImporterSettings> {
 
-    protected readonly settings: ImporterSettings;
-    protected summary: Summary;
+    private readonly settings: S;
+    private readonly summary: Summary;
     protected errors: string[] = [];
     protected valid = true;
     protected changed = false;
@@ -37,6 +43,11 @@ export abstract class BaseMapper {
     skipped = false;
     abstract log: Logger;
     private blacklistedFormats: string[] = [];
+
+    constructor(settings: S, summary: Summary) {
+        this.settings = settings;
+        this.summary = summary;
+    }
 
     init() {
         let hasDataDownloadRule = this.getSettings() && this.getSettings().rules
@@ -51,17 +62,36 @@ export abstract class BaseMapper {
     }
 
     /**
-     * Settings for the current harvesting Job
+     * Settings for the current harvesting Job (proxied from the Importer).
      */
-    public getSettings(): ImporterSettings {
+    public getSettings(): S {
         return this.settings;
     }
 
     /**
-     * Summary of the current harvesting Job (managed by the Importer)
+     * Summary of the current harvesting Job (managed by the Importer).
      */
     public getSummary(): Summary{
         return this.summary;
+    }
+
+    /**
+     * Metadata for the managed harvested record
+     */
+    // public abstract getHarvestingMetadata(): HarvestingMetadata;
+    public getHarvestingMetadata(): HarvestingMetadata {
+        return {
+            deleted: Date,
+            harvested: this.getHarvestingDate(),
+            harvesting_errors: this.errors,
+            issued: this.getIssued(),
+            is_changed: this.changed,
+            is_valid: this.valid,
+            merged_from: [],
+            modified: this.getModified(),
+            quality_notes: this.harvestingNotes,
+            source: this.getMetadataSource(),
+        };
     }
 
     abstract getMetadataSource(): MetadataSource;

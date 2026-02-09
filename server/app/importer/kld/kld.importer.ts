@@ -21,42 +21,39 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../utils/misc.utils.js';
-import type { KldSettings } from './kld.settings.js';
-import { defaultKldSettings } from './kld.settings.js';
-import log4js from 'log4js';
-import { existsSync, mkdirSync, mkdtemp, writeFileSync } from 'fs';
-import { join } from 'path';
-import pThrottle from 'p-throttle';
-import { tmpdir } from 'os';
-import type { BulkResponse } from '../../persistence/elastic.utils.js';
 import type { DOMParser } from '@xmldom/xmldom';
-import { Importer } from '../importer.js';
-import type { ImportLogMessage} from '../../model/import.result.js';
+import { existsSync, mkdirSync, mkdtemp, writeFileSync } from 'fs';
+import log4js from 'log4js';
+import { tmpdir } from 'os';
+import pThrottle from 'p-throttle';
+import { join } from 'path';
+import type { Observer } from 'rxjs';
+import type { RecordEntity } from '../../model/entity.js';
+import type { ImportLogMessage } from '../../model/import.result.js';
 import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
-import { KldMapper } from './kld.mapper.js';
-import type { ObjectListRequestParams, ObjectListResponse, ObjectResponse} from './kld.api.js';
-import { PAGE_SIZE } from './kld.api.js';
-import type { Observer } from 'rxjs';
-import type { ProfileFactory } from '../../profiles/profile.factory.js';
+import type { Summary } from '../../model/summary.js';
+import type { BulkResponse } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
-import type { RecordEntity } from '../../model/entity.js';
+import { SummaryService } from '../../services/config/SummaryService.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
-import type { Summary } from '../../model/summary.js';
-import { SummaryService } from '../../services/config/SummaryService.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import { Importer } from '../importer.js';
+import type { ObjectListRequestParams, ObjectListResponse, ObjectResponse } from './kld.api.js';
+import { PAGE_SIZE } from './kld.api.js';
+import { KldMapper } from './kld.mapper.js';
+import type { KldSettings } from './kld.settings.js';
+import { defaultKldSettings } from './kld.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
 
 const STORE_RESPONSES: boolean = false;
 
-export class KldImporter extends Importer {
+export class KldImporter extends Importer<KldSettings> {
 
     protected domParser: DOMParser;
-    protected profile: ProfileFactory<KldMapper>;
-    protected settings: KldSettings;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
@@ -70,29 +67,26 @@ export class KldImporter extends Importer {
     private readonly requestRetryDelay = 3000;
 
     constructor(settings: KldSettings) {
-        super(settings);
-
-        this.profile = ProfileFactoryLoader.get();
-        this.domParser = MiscUtils.getDomParser();
-
         // merge default settings with configured ones
         settings = MiscUtils.merge(defaultKldSettings, settings);
-
         // if we are looking for incremental updates, set the last execution date
         // TODO how to set incremental?
+        let lastSummary: ImportLogMessage;
         if (settings.isIncremental) {
             let sumser: SummaryService = new SummaryService();
-            let summary: ImportLogMessage = sumser.get(settings.id);
+            lastSummary = sumser.get(settings.id);
             // only do an incremental harvest if there exists a previous run
-            if (summary) {
-                this.minimumUpdateDate = new Date(summary.lastExecution);
-            }
-            else {
+            if (!lastSummary) {
                 log.warn(`Changing type of harvest to "full" because no previous harvest was found for harvester with id ${settings.id}`);
                 settings.isIncremental = false;
             }
         }
-        this.settings = settings;
+        super(settings);
+
+        this.domParser = MiscUtils.getDomParser();
+        if (lastSummary) {
+            this.minimumUpdateDate = new Date(lastSummary.lastExecution);
+        }
     }
 
     // only here for documentation - use the "default" exec function
@@ -123,12 +117,12 @@ export class KldImporter extends Importer {
         }
 
         // collect number of totalRecords up front, so we can harvest concurrently
-        if (this.settings.maxRecords && !isNaN(this.settings.maxRecords)) {
-          this.totalRecords = this.settings.maxRecords;
+        if (this.getSettings().maxRecords && !isNaN(this.getSettings().maxRecords)) {
+          this.totalRecords = this.getSettings().maxRecords;
         }
         else {
           // extract the total number of records from the first list request
-          const hitsRequestConfig = KldImporter.createRequestConfig({ ...this.settings, startPosition: 0 }, 'Objekt');
+          const hitsRequestConfig = KldImporter.createRequestConfig({ ...this.getSettings(), startPosition: 0 }, 'Objekt');
           const hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
           try {
               const hitsResponse: ObjectListResponse = await this.requestWithRetries(hitsRequestDelegate);
@@ -137,7 +131,7 @@ export class KldImporter extends Importer {
           catch (e) {
               const message = `Received empty response when requesting total number of objects. Skipping import.`;
               log.error(message);
-              this.summary.appErrors.push(message);
+              this.getSummary().appErrors.push(message);
               return 0;
           }
         }
@@ -145,8 +139,8 @@ export class KldImporter extends Importer {
 
         // setup concurrency
         const throttle = pThrottle({
-            limit: this.settings.maxConcurrent,
-            interval: this.settings.maxConcurrentTimespan,
+            limit: this.getSettings().maxConcurrent,
+            interval: this.getSettings().maxConcurrentTimespan,
         });
 
         // extract all object ids with their latest change dates
@@ -162,7 +156,7 @@ export class KldImporter extends Importer {
         let numRequested = 0;
         for (let page = 0; page < numPages && numRequested < this.totalRecords; page++) {
             const params: ObjectListRequestParams = { ...defaultListParams, Seite: page };
-            const requestDelegate = new RequestDelegate(KldImporter.createRequestConfig(this.settings, 'Objekt', params));
+            const requestDelegate = new RequestDelegate(KldImporter.createRequestConfig(this.getSettings(), 'Objekt', params));
             const request = throttle(() => {
                 return this.extractObjectIds(requestDelegate, page, numPages);
             })();
@@ -181,7 +175,7 @@ export class KldImporter extends Importer {
                 if (id in idMap) {
                     const message = `Record with id ${id} was already received. Skipping record.`;
                     log.warn(message);
-                    this.summary.warnings.push([message]);
+                    this.getSummary().warnings.push([message]);
                     this.totalRecords--;
                 }
                 else {
@@ -200,20 +194,20 @@ export class KldImporter extends Importer {
         if (numReceived < this.totalRecords) {
             const message = `Received less records than expected ${numReceived}/${this.totalRecords}. Skipping import.`;
             log.error(message);
-            this.summary.appErrors.push(message);
+            this.getSummary().appErrors.push(message);
             return 0;
         }
 
         // wait before doing detail requests
-        await KldImporter.sleep(this.settings.maxConcurrentTimespan);
+        await KldImporter.sleep(this.getSettings().maxConcurrentTimespan);
 
         // store details for all objects, take minimumUpdateDate into account for incremental harvesting
         const detailRequests = [];
         for (let i = 0; i < numReceived; i++) {
             const objectId = ids[i];
             const lastUpdateDate = new Date(idMap[objectId]);
-            if (!this.settings.isIncremental || lastUpdateDate < this.minimumUpdateDate) {
-                const requestDelegate = new RequestDelegate(KldImporter.createRequestConfig(this.settings, `Objekt/${ids[i]}`));
+            if (!this.getSettings().isIncremental || lastUpdateDate < this.minimumUpdateDate) {
+                const requestDelegate = new RequestDelegate(KldImporter.createRequestConfig(this.getSettings(), `Objekt/${ids[i]}`));
                 const request = throttle(() => {
                     return this.extractObjectDetails(requestDelegate, i, numReceived)
                 })();
@@ -252,7 +246,7 @@ export class KldImporter extends Importer {
             // add an error if there is a problem when retrieving record ids to abort the import process later
             const message = `Error while fetching ids from ${requestUrl}: ${MiscUtils.truncateErrorMessage(e)}.`;
             log.error(`Error while fetching ids from ${requestUrl}`, e);
-            this.summary.appErrors.push(message);
+            this.getSummary().appErrors.push(message);
         }
         return ids;
     }
@@ -280,7 +274,7 @@ export class KldImporter extends Importer {
             // add a warning only if details for a single record could not be retrieved to avoid aborting the import
             const message = `Error while fetching record details from ${requestUrl}: ${MiscUtils.truncateErrorMessage(e)}.`;
             log.warn(`Error while fetching record details from ${requestUrl}`, e);
-            this.summary.warnings.push(['No details', message]);
+            this.getSummary().warnings.push(['No details', message]);
         }
     }
 
@@ -288,10 +282,10 @@ export class KldImporter extends Importer {
         const promises: Promise<BulkResponse>[] = [];
         const id = record.Id;
 
-        this.summary.numDocs++;
+        this.getSummary().numDocs++;
 
         if (!this.filterUtils.isIdAllowed(id)) {
-            this.summary.skippedDocs.push(id);
+            this.getSummary().skippedDocs.push(id);
         }
         else {
             if (log.isDebugEnabled()) {
@@ -301,30 +295,30 @@ export class KldImporter extends Importer {
                 logRequest.debug("Record content: ", JSON.stringify(record));
             }
 
-            const mapper = this.getMapper(this.settings, record, harvestTime, this.summary);
+            const mapper = this.getMapper(this.getSettings(), record, harvestTime, this.getSummary());
 
             let doc: IndexDocument;
             try {
-                doc = await this.profile.getIndexDocumentFactory(mapper).create();
+                doc = await ProfileFactoryLoader.get().getIndexDocumentFactory(mapper).create();
             }
             catch (e) {
                 log.warn('Error creating index document', e);
-                this.summary.warnings.push(['Indexing error', e.toString()]);
+                this.getSummary().warnings.push(['Indexing error', e.toString()]);
                 mapper.skipped = true;
             }
 
-            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+            if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: id,
-                    source: this.settings.sourceURL,
-                    collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
+                    source: this.getSettings().sourceURL,
+                    collection_id: (await this.database.getCatalog(this.getSettings().catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };
                 promises.push(this.database.addEntityToBulk(entity));
             }
             else {
-                this.summary.skippedDocs.push(id);
+                this.getSummary().skippedDocs.push(id);
             }
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
         }
@@ -364,7 +358,7 @@ export class KldImporter extends Importer {
             // ignore time out errors
             if (e.name != 'AbortError') {
                 const message = e.message ? e.message : e;
-                this.summary.warnings.push(['Request failure', message]);
+                this.getSummary().warnings.push(['Request failure', message]);
                 log.warn('Error during request', e);
             }
         }

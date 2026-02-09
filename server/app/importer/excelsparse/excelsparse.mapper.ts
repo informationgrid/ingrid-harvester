@@ -21,23 +21,21 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../utils/misc.utils.js';
 import log4js from 'log4js';
-import { BaseMapper } from '../base.mapper.js';
-import type { Catalog } from '../../model/dcatApPlu.model.js';
-import type { Columns } from './excelsparse.importer.js';
-import type { DateRange } from '../../model/dateRange.js';
-import type { Distribution } from '../../model/distribution.js';
-import type { ExcelSparseSettings } from './excelsparse.settings.js';
-import type { ImporterSettings } from '../../importer.settings.js';
-import type { MetadataSource } from '../../model/index.document.js';
 import type { Contact, Organization, Person } from '../../model/agent.js';
+import type { DateRange } from '../../model/dateRange.js';
+import type { Catalog } from '../../model/dcatApPlu.model.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { MetadataSource } from '../../model/index.document.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
-import type { Summary } from '../../model/summary.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
+import { Mapper } from '../mapper.js';
+import type { Columns } from './excelsparse.importer.js';
+import type { ExcelSparseSettings } from './excelsparse.settings.js';
 
-export class ExcelSparseMapper extends BaseMapper {
+export class ExcelSparseMapper extends Mapper<ExcelSparseSettings> {
 
     log = log4js.getLogger();
 
@@ -46,7 +44,6 @@ export class ExcelSparseMapper extends BaseMapper {
     columnValues: string[] | Date;
     columnMap: Columns;
     workbook;
-    protected settings: ExcelSparseSettings;
     private currentIndexName: string;
     private fetched: any = {
         description: null,
@@ -58,14 +55,12 @@ export class ExcelSparseMapper extends BaseMapper {
     };
 
     constructor(settings: ExcelSparseSettings, data, generalInfo) {
-        super();
-        this.settings = settings;
+        super(settings, data.summary);
         this.data = data;
         this.id = data.id;
         this.columnValues = data.columnValues;
         this.columnMap = data.columnMap;
         this.workbook = data.workbook;
-        this.summary = data.summary;
         this.currentIndexName = data.currentIndexName;
         this.fetched = MiscUtils.merge(this.fetched, generalInfo);
 
@@ -154,7 +149,7 @@ export class ExcelSparseMapper extends BaseMapper {
 
     getMetadataSource(): MetadataSource {
         return {
-            source_base: this.settings.filePath,
+            source_base: this.getSettings().filePath,
             source_type: 'excelsparse'
         };
     }
@@ -286,7 +281,7 @@ export class ExcelSparseMapper extends BaseMapper {
             if (!found) {
                 let message = 'Could not find abbreviation of "Datenhaltende Stelle": ' + abbr;
                 this.log.warn(message);
-                this.summary.warnings.push(['No Publisher found', message]);
+                this.getSummary().warnings.push(['No Publisher found', message]);
             }
         });
         return publishers;
@@ -309,7 +304,7 @@ export class ExcelSparseMapper extends BaseMapper {
             if (downloadUrl.trim().length === 0) return;
 
             let requestConfig = this.getUrlCheckRequestConfig(downloadUrl);
-            let checkedUrl = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
+            let checkedUrl = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
 
             if (checkedUrl) {
                 distributions.push({
@@ -319,7 +314,7 @@ export class ExcelSparseMapper extends BaseMapper {
             } else {
                 let msg = `Invalid URL '${downloadUrl} found for item with id: '${this.id}', title: '${this.getTitle()}', index: '${this.currentIndexName}'.`;
                 this.log.warn(msg);
-                this.summary.warnings.push(['Invalid URL', msg]);
+                this.getSummary().warnings.push(['Invalid URL', msg]);
                 //this.errors.push(msg);
                 //this.summary.numErrors++;
             }
@@ -451,8 +446,8 @@ export class ExcelSparseMapper extends BaseMapper {
             uri: uri
         };
 
-        if (this.settings.proxy) {
-            config.proxy = this.settings.proxy;
+        if (this.getSettings().proxy) {
+            config.proxy = this.getSettings().proxy;
         }
 
         return config;

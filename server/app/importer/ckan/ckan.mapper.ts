@@ -24,25 +24,25 @@
 /**
  * A mapper for CKAN documents.
  */
+import type { License } from '@shared/license.model.js';
 import log4js from 'log4js';
 import { marked } from 'marked';
 import { throwError } from 'rxjs';
-import { BaseMapper } from '../base.mapper.js';
+import mapping from "../../../mappings.json" with { type: "json" };
+import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
+import type { Organization, Person } from '../../model/agent.js';
+import type { DateRange } from '../../model/dateRange.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { MetadataSource } from '../../model/index.document.js';
+import type { Summary } from '../../model/summary.js';
+import dayjs from '../../utils/dayjs.js';
+import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
+import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
 import type { CkanParameters, CkanParametersListWithResources, RequestOptions, RequestPaging } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
-import type { CkanSettings } from './ckan.settings.js';
-import type { DateRange } from '../../model/dateRange.js';
-import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
-import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
-import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
-import type { Distribution } from '../../model/distribution.js';
-import type { License } from '@shared/license.model.js';
-import type { MetadataSource } from '../../model/index.document.js';
-import type { Organization, Person } from '../../model/agent.js';
-import type { Summary } from '../../model/summary.js';
 import { UrlUtils } from '../../utils/url.utils.js';
-import mapping from "../../../mappings.json" with { type: "json" };
-import dayjs from '../../utils/dayjs.js';
+import { Mapper } from '../mapper.js';
+import type { CkanSettings } from './ckan.settings.js';
 
 export interface CkanMapperData {
     harvestTime: Date;
@@ -51,7 +51,7 @@ export interface CkanMapperData {
     summary: Summary;
 }
 
-export class CkanMapper extends BaseMapper {
+export class CkanMapper extends Mapper<CkanSettings> {
 
     protected sizeMap = {
         byte: 1,
@@ -72,14 +72,11 @@ export class CkanMapper extends BaseMapper {
     private readonly source: any;
     private readonly data: CkanMapperData;
     private resourcesDate: Date[] = null;
-    protected readonly settings: CkanSettings;
 
     constructor(settings: CkanSettings, data: CkanMapperData) {
-        super();
-        this.settings = settings;
+        super(settings, data.summary);
         this.source = data.source;
         this.data = data;
-        this.summary = data.summary;
 
         super.init();
     }
@@ -94,7 +91,7 @@ export class CkanMapper extends BaseMapper {
 
     getDescription() {
         if (this.source.notes) {
-            return this.settings.markdownAsDescription ? marked(this.source.notes, { async: false }) : this.source.notes;
+            return this.getSettings().markdownAsDescription ? marked(this.source.notes, { async: false }) : this.source.notes;
         } else {
             return undefined;
         }
@@ -113,7 +110,7 @@ export class CkanMapper extends BaseMapper {
                 let res = resources[i];
 
                 let requestConfig = this.getUrlCheckRequestConfig(res.url);
-                let accessURL = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
+                let accessURL = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
 
                 if (accessURL) {
                     let dist = {
@@ -121,7 +118,7 @@ export class CkanMapper extends BaseMapper {
                         title: res.name,
                         description: res.description,
                         accessURL: this.cleanupURL(accessURL),
-                        format: UrlUtils.mapFormat([res.format], this.summary.warnings),
+                        format: UrlUtils.mapFormat([res.format], this.getSummary().warnings),
                         issued: this.handleDate(res.created),
                         modified: this.handleDate(res.last_modified),
                         byteSize: this.handleByteSize(res.size)
@@ -165,15 +162,15 @@ export class CkanMapper extends BaseMapper {
     getMetadataSource(): MetadataSource {
         // Metadata
         // The harvest source
-        let rawSource = this.settings.sourceURL + '/api/3/action/package_show?id=' + this.source.name;
-        let portalSource = this.settings.sourceURL + '/dataset/' + this.source.name;
+        let rawSource = this.getSettings().sourceURL + '/api/3/action/package_show?id=' + this.source.name;
+        let portalSource = this.getSettings().sourceURL + '/dataset/' + this.source.name;
 
         return {
-            source_base: this.settings.sourceURL,
+            source_base: this.getSettings().sourceURL,
             raw_data_source: rawSource,
             source_type: 'ckan',
             portal_link: portalSource,
-            attribution: this.settings.defaultAttribution
+            attribution: this.getSettings().defaultAttribution
         };
     }
 
@@ -199,7 +196,7 @@ export class CkanMapper extends BaseMapper {
         let maintainer: Person;
         if (this.source.maintainer) {
             maintainer = {
-                name: this.settings.providerPrefix + this.source.maintainer.trim(),
+                name: this.getSettings().providerPrefix + this.source.maintainer.trim(),
                 mbox: this.source.maintainer_email
             };
         }
@@ -211,7 +208,7 @@ export class CkanMapper extends BaseMapper {
         let author: Person;
         if (this.source.author) {
             author = {
-                name: this.settings.providerPrefix + this.source.author.trim(),
+                name: this.getSettings().providerPrefix + this.source.author.trim(),
                 mbox: this.source.author_email
             };
         }
@@ -279,7 +276,7 @@ export class CkanMapper extends BaseMapper {
         }
 
         if (mappedThemes.length === 0) {
-            mappedThemes = this.settings.defaultDCATCategory;
+            mappedThemes = this.getSettings().defaultDCATCategory;
         }
         return mappedThemes
             .map(category => DcatMapper.DCAT_CATEGORY_URL + category);
@@ -326,7 +323,7 @@ export class CkanMapper extends BaseMapper {
         if(raw){
             result = DcatPeriodicityUtils.getPeriodicity(raw);
             if(!result){
-                    this.summary.warnings.push(["Unbekannte Periodizität", raw]);
+                    this.getSummary().warnings.push(["Unbekannte Periodizität", raw]);
             }
         }
 
@@ -456,17 +453,17 @@ export class CkanMapper extends BaseMapper {
     async getLicense(): Promise<License> {
         const hasNoLicense = !this.source.license_id && !this.source.license_title && !this.source.license_url;
 
-        if (this.settings.defaultLicense && hasNoLicense) {
-            this.summary.missingLicense++;
+        if (this.getSettings().defaultLicense && hasNoLicense) {
+            this.getSummary().missingLicense++;
             this.log.warn(`Missing license for ${this.getGeneratedId()} using default one.`);
 
-            return this.settings.defaultLicense;
+            return this.getSettings().defaultLicense;
         } else if (hasNoLicense) {
             let msg = `No license detected for dataset: ${this.getGeneratedId()} -> ${this.getTitle()}`;
-            this.summary.missingLicense++;
+            this.getSummary().missingLicense++;
 
             this.log.warn(msg);
-            this.summary.warnings.push(['Missing license', msg]);
+            this.getSummary().warnings.push(['Missing license', msg]);
         } else {
             let license = await DcatLicensesUtils.get(this.source.license_url);
             if(license) return license;
@@ -489,8 +486,8 @@ export class CkanMapper extends BaseMapper {
             uri: uri
         };
 
-        if (this.settings.proxy) {
-            config.proxy = this.settings.proxy;
+        if (this.getSettings().proxy) {
+            config.proxy = this.getSettings().proxy;
         }
 
         return config;
@@ -631,8 +628,8 @@ export class CkanMapper extends BaseMapper {
 
         let logDateError = () => {
             let message = `Date has incorrect format: ${date}`;
-            this.summary.numErrors++;
-            this.summary.appErrors.push(message);
+            this.getSummary().numErrors++;
+            this.getSummary().appErrors.push(message);
             this.log.warn(message);
         };
 
@@ -641,9 +638,9 @@ export class CkanMapper extends BaseMapper {
         } else if (date === null) {
             return null;
         } else {
-            if (this.settings.dateSourceFormats && this.settings.dateSourceFormats.length > 0) {
+            if (this.getSettings().dateSourceFormats && this.getSettings().dateSourceFormats.length > 0) {
                 // let dateObj = this.moment(date, this.settings.dateSourceFormats);
-                let dateObj = dayjs(date, this.settings.dateSourceFormats);
+                let dateObj = dayjs(date, this.getSettings().dateSourceFormats);
 
                 if (dateObj.isValid()) {
                     return dateObj.toDate();
@@ -676,8 +673,8 @@ export class CkanMapper extends BaseMapper {
             }
 
             let message = `Byte size has incorrect format: ${size}`;
-            this.summary.numErrors++; //.push(message);
-            this.summary.appErrors.push(message);
+            this.getSummary().numErrors++; //.push(message);
+            this.getSummary().appErrors.push(message);
             this.log.warn(message);
             return undefined;
         }
@@ -687,8 +684,8 @@ export class CkanMapper extends BaseMapper {
 
     executeCustomCode(doc: any) {
         try {
-            if (this.settings.customCode) {
-                eval(this.settings.customCode);
+            if (this.getSettings().customCode) {
+                eval(this.getSettings().customCode);
             }
         } catch (error) {
             throwError('An error occurred in custom code: ' + error.message);
