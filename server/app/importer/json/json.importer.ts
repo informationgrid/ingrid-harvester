@@ -27,7 +27,6 @@ import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
 import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
-import type { Summary } from '../../model/summary.js';
 import type { BulkResponse } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
@@ -111,11 +110,11 @@ export class JsonImporter extends Importer<JsonSettings> {
                     logRequest.debug("Record content: ", JSON.stringify(record));
                 }
 
-                const mapper = this.getMapper(this.getSettings(), record, harvestTime, this.getSummary());
+                const mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), record)) as JsonMapper;
 
                 let doc: IndexDocument;
                 try {
-                    doc = await ProfileFactoryLoader.get().getIndexDocumentFactory(mapper).create();
+                    doc = await mapper.createEsDocument();
                 }
                 catch (e) {
                     log.warn('Error creating index document', e);
@@ -140,10 +139,6 @@ export class JsonImporter extends Importer<JsonSettings> {
             }
         }
         await Promise.allSettled(promises).catch(e => log.error('Error persisting record', e));
-    }
-
-    getMapper(settings: JsonSettings, record: object, harvestTime: Date, summary: Summary): JsonMapper {
-        return new JsonMapper(settings, record, harvestTime, summary);
     }
 
     protected static createRequestConfig(settings: JsonSettings): RequestOptions {

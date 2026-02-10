@@ -22,12 +22,13 @@
  */
 
 import log4js from 'log4js';
-import type { MetadataSource } from '../../model/index.document.js';
+import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
+import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
 import { Mapper } from '../mapper.js';
 import type { JsonSettings } from './json.settings.js';
 
-export class JsonMapper extends Mapper<JsonSettings> {
+export class JsonMapper extends Mapper<JsonSettings> implements ToElasticMapper<IndexDocument> {
 
     log = log4js.getLogger();
 
@@ -43,6 +44,14 @@ export class JsonMapper extends Mapper<JsonSettings> {
         this.harvestTime = harvestTime;
 
         super.init();
+    }
+
+    async createEsDocument(): Promise<IndexDocument> {
+        return {
+            extras: {
+                metadata: this.getHarvestingMetadata(),
+            }
+        };
     }
 
     getMetadataSource(): MetadataSource {

@@ -283,7 +283,7 @@ export class CswImporter extends Importer<CswSettings> {
     }
 
     async coupleService(serviceEntity: RecordEntity, resolveOgcDistributions: boolean, coupleSelf = false) {
-        for (let service of serviceEntity.dataset.distributions) {
+        for (let service of serviceEntity.dataset['distributions']) {
             if (coupleSelf) {
                 service.operates_on = [serviceEntity.identifier];
                 // let rsidentifier = MiscUtils.extractDatasetUuid(serviceEntity.dataset.resource_identifier);
@@ -443,7 +443,7 @@ export class CswImporter extends Importer<CswSettings> {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), records[i], harvestTime, this.getSummary(), this.generalInfo)) as CswMapper;
+            let mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), records[i], this.generalInfo)) as CswMapper;
 
             let doc: IndexDocument;
             try {
@@ -489,10 +489,6 @@ export class CswImporter extends Importer<CswSettings> {
      */
     protected async updateRecords(documents: any[], collectionId: number) {
         // For Profile specific Handling
-    }
-
-    getMapper(settings, record, harvestTime, summary, generalInfo): CswMapper {
-        return new CswMapper(settings, record, harvestTime, summary, generalInfo);
     }
 
     protected createRequestConfig(additionalSettings: Partial<CswSettings> = null, request = 'GetRecords'): RequestOptions {

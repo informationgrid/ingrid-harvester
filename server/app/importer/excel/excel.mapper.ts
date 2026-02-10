@@ -24,10 +24,11 @@
 import type { License } from '@shared/license.model.js';
 import log4js from 'log4js';
 import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
+import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
 import type { Organization, Person } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
-import type { MetadataSource } from '../../model/index.document.js';
+import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
 import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
@@ -35,7 +36,7 @@ import { UrlUtils } from '../../utils/url.utils.js';
 import { Mapper } from '../mapper.js';
 import type { ExcelSettings } from './excel.settings.js';
 
-export class ExcelMapper extends Mapper<ExcelSettings> {
+export class ExcelMapper extends Mapper<ExcelSettings> implements ToElasticMapper<IndexDocument> {
 
     log = log4js.getLogger();
 
@@ -56,6 +57,14 @@ export class ExcelMapper extends Mapper<ExcelSettings> {
         this.currentIndexName = data.currentIndexName;
 
         super.init();
+    }
+
+    async createEsDocument(): Promise<IndexDocument> {
+        return {
+            extras: {
+                metadata: this.getHarvestingMetadata(),
+            }
+        };
     }
 
     getTitle() {

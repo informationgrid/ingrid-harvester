@@ -23,13 +23,13 @@
 
 import type { DOMParser } from '@xmldom/xmldom';
 import log4js from 'log4js';
-import { ProfileFactoryLoader } from 'profiles/profile.factory.loader.js';
 import type { Observer } from 'rxjs';
 import { namespaces } from '../../importer/namespaces.js';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
 import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
@@ -167,11 +167,11 @@ export class DcatImporter extends Importer<DcatSettings> {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = this.getMapper(this.getSettings(), records[i], rootNode, harvestTime, this.getSummary());
+            let mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), records[i], rootNode)) as DcatMapper;
 
             let doc: IndexDocument;
             try {
-                doc = await ProfileFactoryLoader.get().getIndexDocumentFactory(mapper).create();
+                doc = await mapper.createEsDocument();
             }
             catch (e) {
                 log.error('Error creating index document', e);

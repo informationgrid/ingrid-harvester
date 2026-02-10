@@ -27,7 +27,9 @@
 import type { License } from '@shared/license.model.js';
 import type { Geometry } from 'geojson';
 import log4js from 'log4js';
+import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
 import type { Contact, Organization, Person } from '../../model/agent.js';
+import type { IndexDocument } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
 import type { LvrDateRange, Media, Relation } from '../../profiles/lvr/model/index.document.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
@@ -36,7 +38,7 @@ import type { Document, ObjectResponse, RelatedObject } from './kld.api.js';
 import { getDocumentUrl, MediaType, RelationType } from './kld.api.js';
 import type { KldSettings } from './kld.settings.js';
 
-export class KldMapper extends Mapper<KldSettings> {
+export class KldMapper extends Mapper<KldSettings> implements ToElasticMapper<IndexDocument> {
 
     log = log4js.getLogger();
 
@@ -49,6 +51,14 @@ export class KldMapper extends Mapper<KldSettings> {
         this.id = record.Id;
 
         super.init();
+    }
+
+    async createEsDocument(): Promise<IndexDocument> {
+        return {
+            extras: {
+                metadata: this.getHarvestingMetadata(),
+            }
+        };
     }
 
     getGeneratedId(): string {

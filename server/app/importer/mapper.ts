@@ -81,7 +81,7 @@ export abstract class Mapper<S extends ImporterSettings> {
     // public abstract getHarvestingMetadata(): HarvestingMetadata;
     public getHarvestingMetadata(): HarvestingMetadata {
         return {
-            deleted: Date,
+            deleted: this.getDeleted(),
             harvested: this.getHarvestingDate(),
             harvesting_errors: this.errors,
             issued: this.getIssued(),
@@ -92,6 +92,20 @@ export abstract class Mapper<S extends ImporterSettings> {
             quality_notes: this.harvestingNotes,
             source: this.getMetadataSource(),
         };
+    }
+
+    // TODO make abstract, implement in mappers
+    getIssued(): Date {
+        return null;
+    }
+
+    // TODO make abstract, implement in mappers
+    getModified(): Date {
+        return null;
+    }
+
+    getDeleted(): Date {
+        return null;
     }
 
     abstract getMetadataSource(): MetadataSource;

@@ -22,11 +22,12 @@
  */
 
 import log4js from 'log4js';
+import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
 import type { Contact, Organization, Person } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
 import type { Distribution } from '../../model/distribution.js';
-import type { MetadataSource } from '../../model/index.document.js';
+import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
@@ -35,7 +36,7 @@ import { Mapper } from '../mapper.js';
 import type { Columns } from './excelsparse.importer.js';
 import type { ExcelSparseSettings } from './excelsparse.settings.js';
 
-export class ExcelSparseMapper extends Mapper<ExcelSparseSettings> {
+export class ExcelSparseMapper extends Mapper<ExcelSparseSettings> implements ToElasticMapper<IndexDocument> {
 
     log = log4js.getLogger();
 
@@ -65,6 +66,14 @@ export class ExcelSparseMapper extends Mapper<ExcelSparseSettings> {
         this.fetched = MiscUtils.merge(this.fetched, generalInfo);
 
         super.init();
+    }
+
+    async createEsDocument(): Promise<IndexDocument> {
+        return {
+            extras: {
+                metadata: this.getHarvestingMetadata(),
+            }
+        };
     }
 
     getTitle() {

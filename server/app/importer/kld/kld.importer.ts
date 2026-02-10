@@ -32,7 +32,6 @@ import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
 import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
-import type { Summary } from '../../model/summary.js';
 import type { BulkResponse } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { SummaryService } from '../../services/config/SummaryService.js';
@@ -295,11 +294,11 @@ export class KldImporter extends Importer<KldSettings> {
                 logRequest.debug("Record content: ", JSON.stringify(record));
             }
 
-            const mapper = this.getMapper(this.getSettings(), record, harvestTime, this.getSummary());
+            const mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), record)) as KldMapper;
 
             let doc: IndexDocument;
             try {
-                doc = await ProfileFactoryLoader.get().getIndexDocumentFactory(mapper).create();
+                doc = await mapper.createEsDocument();
             }
             catch (e) {
                 log.warn('Error creating index document', e);
@@ -323,10 +322,6 @@ export class KldImporter extends Importer<KldSettings> {
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
         }
         await Promise.allSettled(promises).catch(e => log.error('Error persisting record', e));
-    }
-
-    getMapper(settings: KldSettings, record: ObjectResponse, harvestTime: Date, summary: Summary): KldMapper {
-        return new KldMapper(settings, record, harvestTime, summary);
     }
 
     private static formatCounter(index: number, total: number): string {

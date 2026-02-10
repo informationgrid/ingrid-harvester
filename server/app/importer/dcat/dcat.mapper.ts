@@ -29,10 +29,11 @@ import log4js from 'log4js';
 import { throwError } from 'rxjs';
 import * as xpath from 'xpath';
 import { namespaces } from '../../importer/namespaces.js';
+import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
 import type { Contact, Person } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
-import type { MetadataSource } from '../../model/index.document.js';
+import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
 import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
 import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
@@ -42,7 +43,7 @@ import type { XPathElementSelect } from '../../utils/xpath.utils.js';
 import { Mapper } from '../mapper.js';
 import type { DcatSettings } from './dcat.settings.js';
 
-export class DcatMapper extends Mapper<DcatSettings> {
+export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<IndexDocument> {
 
     static DCAT_CATEGORY_URL = 'http://publications.europa.eu/resource/authority/data-theme/';
 
@@ -155,6 +156,14 @@ export class DcatMapper extends Mapper<DcatSettings> {
         this.uuid = uuid;
 
         super.init();
+    }
+
+    async createEsDocument(): Promise<IndexDocument> {
+        return {
+            extras: {
+                metadata: this.getHarvestingMetadata(),
+            }
+        };
     }
 
     getDescription() {

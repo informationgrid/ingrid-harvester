@@ -29,19 +29,20 @@ import log4js from 'log4js';
 import { throwError } from 'rxjs';
 import * as xpath from 'xpath';
 import { namespaces } from '../../importer/namespaces.js';
+import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
 import type { Agent, Contact } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Catalog, ProcessStep } from '../../model/dcatApPlu.model.js';
 import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, PluProcessStepType } from '../../model/dcatApPlu.model.js';
 import type { Distribution } from '../../model/distribution.js';
-import type { MetadataSource } from '../../model/index.document.js';
+import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import type { XPathElementSelect } from '../../utils/xpath.utils.js';
 import { Mapper } from '../mapper.js';
 import type { DcatappluSettings } from './dcatapplu.settings.js';
 
-export class DcatappluMapper extends Mapper<DcatappluSettings> {
+export class DcatappluMapper extends Mapper<DcatappluSettings> implements ToElasticMapper<IndexDocument> {
 
     static select = <XPathElementSelect>xpath.useNamespaces({
         'adms': namespaces.ADMS,
@@ -97,6 +98,14 @@ export class DcatappluMapper extends Mapper<DcatappluSettings> {
         this.uuid = uuid;
 
         super.init();
+    }
+    
+    async createEsDocument(): Promise<IndexDocument> {
+        return {
+            extras: {
+                metadata: this.getHarvestingMetadata(),
+            }
+        };
     }
 
     async getContactPoint(): Promise<Contact> {

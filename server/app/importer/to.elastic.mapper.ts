@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+ * Copyright (C) 2026 - 2026 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -21,10 +21,8 @@
  * ==================================================
  */
 
-import type { ImporterSettings } from '../importer.settings.js';
-import type { Summary } from '../model/summary.js';
-import type { Mapper } from './mapper.js';
+import type { IndexDocument } from '../model/index.document.js';
 
-export interface MapperFactory<T extends ImporterSettings> {
-    getMapper(settings: T, harvestTime: Date, summary: Summary, record: any, ...additionalData: any): Promise<Mapper<T>>;
+export interface ToElasticMapper<TargetFormat extends IndexDocument> {
+    createEsDocument(): Promise<TargetFormat>;
 }

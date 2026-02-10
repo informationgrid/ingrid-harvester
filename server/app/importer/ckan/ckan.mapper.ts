@@ -30,10 +30,11 @@ import { marked } from 'marked';
 import { throwError } from 'rxjs';
 import mapping from "../../../mappings.json" with { type: "json" };
 import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
+import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
 import type { Organization, Person } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
-import type { MetadataSource } from '../../model/index.document.js';
+import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
 import dayjs from '../../utils/dayjs.js';
 import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
@@ -51,7 +52,7 @@ export interface CkanMapperData {
     summary: Summary;
 }
 
-export class CkanMapper extends Mapper<CkanSettings> {
+export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<IndexDocument> {
 
     protected sizeMap = {
         byte: 1,
@@ -79,6 +80,14 @@ export class CkanMapper extends Mapper<CkanSettings> {
         this.data = data;
 
         super.init();
+    }
+
+    async createEsDocument(): Promise<IndexDocument> {
+        return {
+            extras: {
+                metadata: this.getHarvestingMetadata(),
+            }
+        };
     }
 
     getAccessRights() {

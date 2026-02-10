@@ -24,10 +24,11 @@
 import type { Geometry, Point } from 'geojson';
 import log4js from 'log4js';
 import { throwError } from 'rxjs';
+import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
 import type { Contact, Organization, Person } from '../../model/agent.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
 import type { Distribution } from '../../model/distribution.js';
-import type { MetadataSource } from '../../model/index.document.js';
+import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
 import * as GeoJsonUtils from '../../utils/geojson.utils.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
@@ -36,7 +37,7 @@ import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
 import { Mapper } from '../mapper.js';
 import type { WfsSettings } from './wfs.settings.js';
 
-export class WfsMapper extends Mapper<WfsSettings> {
+export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<IndexDocument> {
 
     log = log4js.getLogger();
 
@@ -74,6 +75,14 @@ export class WfsMapper extends Mapper<WfsSettings> {
         this.uuid = this.getTextContent(path);
 
         super.init();
+    }
+
+    async createEsDocument(): Promise<IndexDocument> {
+        return {
+            extras: {
+                metadata: this.getHarvestingMetadata(),
+            }
+        };
     }
 
     async getPublisher(): Promise<Person[] | Organization[]> {

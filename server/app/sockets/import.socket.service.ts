@@ -72,7 +72,7 @@ export class ImportSocketService {
             if (profile.useIndexPerCatalog()) {
                 profile.createCatalogIfNotExist(configHarvester.catalogId);
             }
-            let importer = await profile.getImporterFactory().get(configHarvester);
+            let importer = await profile.getImporter(configHarvester);
             let mode = isIncremental ? 'incr' : 'full';
             this.log.info(`>> Running importer: [${configHarvester.type}] ${configHarvester.description}`);
 

@@ -33,6 +33,7 @@ import type { Catalog } from '../../model/dcatApPlu.model.js';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
 import { ImportResult } from '../../model/import.result.js';
+import type { IndexDocument } from '../../model/index.document.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import * as GeoJsonUtils from '../../utils/geojson.utils.js';
 import type { RequestOptions, WfsParameters } from '../../utils/http-request.utils.js';
@@ -210,8 +211,8 @@ export class WfsImporter extends Importer<WfsSettings> {
         this.generalInfo['numFeatures'] = numFeatures;
         this.generalInfo['title'] = select('./wfs:Title', featureTypeNode, true)?.textContent;
         this.generalInfo['featureTypeDescription'] = featureTypeDescriptionNode;
-        let mapper = this.getFeatureTypeMapper(this.getSettings(), featureTypeNode, Date.now(), this.getSummary(), this.generalInfo);
-        let doc: any = await ProfileFactoryLoader.get().getIndexDocumentFactory(mapper).create();
+        let mapper = await this.getMapper(new Date(Date.now()), featureTypeNode);
+        let doc: IndexDocument = await mapper.createEsDocument();
         if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
             let entity: RecordEntity = {
                 identifier: featureTypeName,
@@ -272,13 +273,17 @@ export class WfsImporter extends Importer<WfsSettings> {
             }
 
             this.generalInfo['idx'] = i;
-            let mapper = this.getMapper(this.getSettings(), features[i], harvestTime, this.getSummary(), this.generalInfo);
+            const mapper = await this.getMapper(harvestTime, features[i]);
 
-            let doc: any = await ProfileFactoryLoader.get().getIndexDocumentFactory(mapper).create().catch(e => {
+            let doc: IndexDocument;
+            try {
+                doc = await mapper.createEsDocument();
+            }
+            catch (e) {
                 log.error('Error creating index document', e);
                 this.getSummary().appErrors.push(e.toString());
                 mapper.skipped = true;
-            });
+            }
 
             if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
@@ -300,13 +305,8 @@ export class WfsImporter extends Importer<WfsSettings> {
         await Promise.all(promises).catch(err => log.error('Error indexing WFS record', err));
     }
 
-    getFeatureTypeMapper(settings, feature, harvestTime, summary, generalInfo): WfsMapper {//WfsFeatureTypeMapper {
-        // return new WfsFeatureTypeMapper(settings, feature, harvestTime, summary, generalInfo);
-        return this.getMapper(settings, feature, harvestTime, summary, generalInfo);
-    }
-
-    getMapper(settings, feature, harvestTime, summary, generalInfo): WfsMapper {
-        return new WfsMapper(settings, feature, harvestTime, summary, generalInfo);
+    async getMapper(harvestTime: Date, feature: any): Promise<WfsMapper> {
+        return (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), feature, this.generalInfo)) as WfsMapper;
     }
 
     async getNumFeatures(featureTypeName: string): Promise<number> {

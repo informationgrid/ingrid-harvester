@@ -23,9 +23,9 @@
 
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import log4js from 'log4js';
-import plain_fetch from "node-fetch";
+import plain_fetch from 'node-fetch';
 import type { Observer } from 'rxjs';
-import SimpleClient from "sparql-http-client/SimpleClient.js";
+import SimpleClient from 'sparql-http-client/SimpleClient.js';
 import { DefaultImporterSettings } from '../../importer.settings.js';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
@@ -33,7 +33,6 @@ import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
-import type { RequestDelegate } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { Importer } from '../importer.js';
 import { SparqlMapper } from './sparql.mapper.js';
@@ -152,11 +151,11 @@ export class SparqlImporter extends Importer<SparqlSettings> {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = this.getMapper(this.getSettings(), records[i], harvestTime, this.getSummary());
+            const mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), records[i])) as SparqlMapper;
 
             let doc: IndexDocument;
             try{
-                doc = await ProfileFactoryLoader.get().getIndexDocumentFactory(mapper).create();
+                doc = await mapper.createEsDocument();
             }
             catch (e) {
                 log.error('Error creating index document', e);
@@ -188,9 +187,5 @@ export class SparqlImporter extends Importer<SparqlSettings> {
         }
         await Promise.all(promises)
             .catch(err => log.error('Error indexing DCAT record', err));
-    }
-
-    getMapper(settings, record, harvestTime, summary): SparqlMapper {
-        return new SparqlMapper(settings, record, harvestTime, summary);
     }
 }

@@ -22,7 +22,7 @@
  */
 
 import log4js from 'log4js';
-import { ProfileFactoryLoader } from 'profiles/profile.factory.loader.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { Observer } from 'rxjs';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
@@ -72,16 +72,13 @@ export class CkanImporter extends Importer<CkanSettings> {
      * @param data
      */
     async importDataset(data: CkanMapperData): Promise<void> {
-
         try {
             log.debug('Processing CKAN dataset: ' + data.source.name + ' from data-source: ' + this.getSettings().sourceURL);
-
-            // Execute the mappers
-            let mapper = new CkanMapper(this.getSettings(), data);
+            let mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), data.harvestTime, this.getSummary(), data)) as CkanMapper;
 
             let doc: IndexDocument;
             try {
-                doc = await ProfileFactoryLoader.get().getIndexDocumentFactory(mapper).create();
+                doc = await mapper.createEsDocument();
                 this.posthandlingDocument(mapper, doc);
             }
             catch (e) {

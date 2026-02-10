@@ -21,13 +21,16 @@
  * ==================================================
  */
 
-import { createRequire } from 'module';
 import log4js from 'log4js';
-import type { BaseMapper } from '../importer/base.mapper.js';
+import { createRequire } from 'module';
+import type { ImporterSettings } from '../importer.settings.js';
 import type { ImporterFactory } from '../importer/importer.factory.js';
+import type { Importer } from '../importer/importer.js';
+import type { MapperFactory } from '../importer/mapper.factory.js';
+import type { Mapper } from '../importer/mapper.js';
 import type { Catalog } from '../model/dcatApPlu.model.js';
 import type { IndexDocument } from '../model/index.document.js';
-import type { IndexDocumentFactory } from '../model/index.document.factory.js';
+import type { Summary } from '../model/summary.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
 import type { DatabaseUtils } from '../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
@@ -41,7 +44,7 @@ import * as MiscUtils from '../utils/misc.utils.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
-export abstract class ProfileFactory<M extends BaseMapper> {
+export abstract class ProfileFactory<T extends ImporterSettings> implements ImporterFactory<T>, MapperFactory<T> {
 
     /**
      * Set up profile specific environment.
@@ -95,9 +98,14 @@ export abstract class ProfileFactory<M extends BaseMapper> {
     }
 
     abstract getElasticQueries(): ElasticQueries;
-    abstract getImporterFactory(): ImporterFactory;
-    abstract getIndexDocumentFactory(mapper: M): IndexDocumentFactory<IndexDocument>;
+
+    abstract getImporter(settings: T): Promise<Importer<T>>;
+
+    abstract getMapper(settings: T, harvestTime: Date, summary: Summary, record: any, ...additionalData: any): Promise<Mapper<T>>;
+
     abstract getPostgresAggregator(): PostgresAggregator<IndexDocument>;
+
     abstract getProfileName(): string;
+
     abstract useIndexPerCatalog(): boolean;
 }
