@@ -21,15 +21,15 @@
  * ==================================================
  */
 
-import { ConfigService } from '../../../services/config/ConfigService.js';
 import { CswImporter } from '../../../importer/csw/csw.importer.js';
+import type { CswSettings } from '../../../importer/csw/csw.settings.js';
+import { ConfigService } from '../../../services/config/ConfigService.js';
 import { INGRID_META_INDEX } from '../profile.factory.js';
-import type { RequestDelegate } from '../../../utils/http-request.utils.js';
 
 export class IngridCswImporter extends CswImporter {
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
-        super(settings, requestDelegate)
+    constructor(settings: CswSettings) {
+        super(settings);
     }
 
     protected async postHarvestingHandling() {
@@ -38,7 +38,7 @@ export class IngridCswImporter extends CswImporter {
                 "query": {
                     "term": {
                         "plugId": {
-                            "value": this.settings.iPlugId,
+                            "value": this.getSettings().iPlugId,
                         }
                     }
                 }
@@ -47,33 +47,33 @@ export class IngridCswImporter extends CswImporter {
             let entry = meta.hits?.hits[0]._source;
 
             entry.lastIndexed = new Date(Date.now()).toISOString();
-            entry.plugdescription.dataSourceName = this.settings.dataSourceName;
-            entry.plugdescription.provider = this.settings.provider?.split(",")?.map(p => p.trim());
-            entry.plugdescription.dataType = this.settings.datatype?.split(",")?.map(d => d.trim());
-            entry.plugdescription.partner = this.settings.partner?.split(",")?.map(p => p.trim());
+            entry.plugdescription.dataSourceName = this.getSettings().dataSourceName;
+            entry.plugdescription.provider = this.getSettings().provider?.split(",")?.map(p => p.trim());
+            entry.plugdescription.dataType = this.getSettings().datatype?.split(",")?.map(d => d.trim());
+            entry.plugdescription.partner = this.getSettings().partner?.split(",")?.map(p => p.trim());
 
             await this.elastic.update(INGRID_META_INDEX, meta.hits?.hits[0]._id, entry, false);
         }
         else {
             let { prefix, index } = ConfigService.getGeneralSettings().elasticsearch;
-            let indexId = (prefix ?? '') + this.settings.catalogId;
+            let indexId = (prefix ?? '') + this.getSettings().catalogId;
             let entry = {
-                "plugId": this.settings.iPlugId,
+                "plugId": this.getSettings().iPlugId,
                 "indexId": indexId,
                 "iPlugName": "Harvester",
                 "lastIndexed": new Date(Date.now()).toISOString(),
                 "linkedIndex": indexId,
                 "plugdescription": {
-                    "dataSourceName": this.settings.dataSourceName,
-                    "provider": this.settings.provider?.split(",")?.map(p => p.trim()),
-                    "dataType": this.settings.datatype?.split(",")?.map(d => d.trim()),
-                    "partner": this.settings.partner?.split(",")?.map(p => p.trim()),
+                    "dataSourceName": this.getSettings().dataSourceName,
+                    "provider": this.getSettings().provider?.split(",")?.map(p => p.trim()),
+                    "dataType": this.getSettings().datatype?.split(",")?.map(d => d.trim()),
+                    "partner": this.getSettings().partner?.split(",")?.map(p => p.trim()),
                     "ranking": [
                         "score"
                     ],
                     "iPlugClass": "de.ingrid.iplug.csw.dsc.CswDscSearchPlug",
                     "fields": [],
-                    "proxyServiceUrl": this.settings.iPlugId,
+                    "proxyServiceUrl": this.getSettings().iPlugId,
                     "useRemoteElasticsearch": true
                 },
                 "active": false

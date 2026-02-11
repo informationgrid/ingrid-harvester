@@ -21,20 +21,24 @@
  * ==================================================
  */
 
-import type { Distribution } from "./distribution.js";
+import type { Distribution } from './distribution.js';
+import type { IndexDocument } from './index.document.js';
 
 export interface Entity {
-    id?: string
+    id?: string     // optional because it is usually set by the DB automatically at the time of insertion
 }
 
 export interface RecordEntity extends Entity {
     identifier: string,
     source: string,
     collection_id: number,
-    dataset: any,
+    dataset: IndexDocument, // TODO rename to dataset_elastic, make optional
+    dataset_csw?: any,
+    dataset_dcat?: any,
     original_document: string
 }
 
+// TODO revise coupling handling
 export interface CouplingEntity extends Entity {
     dataset_identifier: string,
     service_id: string,

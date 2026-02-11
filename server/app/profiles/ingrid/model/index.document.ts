@@ -23,14 +23,11 @@
 
 import type { IndexDocument } from '../../../model/index.document.js';
 
-export type IngridIndexDocument = IndexDocument & {
-    iPlugId: string,
+export type IngridIndexDocument = IndexDocument & IngridMetadata & {
     uuid: string,
-    partner: string[],
-    provider: string[],
-    organisation: string,
-    datatype: string[],
-    dataSourceName: string,
+    extras: {
+        hierarchy_level?: string,
+    },
     collection: {
         name: string
     },
@@ -41,7 +38,6 @@ export type IngridIndexDocument = IndexDocument & {
     hierarchylevel: string,
     alternatetitle: string,
     t02_address: any[],
-    boost: number,
     title: string,
     summary: string,
     content: string[],
@@ -77,10 +73,32 @@ export type IngridIndexDocument = IndexDocument & {
     t0113_dataset_reference: any,
     t017_url_ref: any[],
     t021_communication: any[],
-    object_use: string
-    object_use_constraint: string,
-    object_access: string,
+    object_use: {
+        terms_of_use_value: string[],
+    }
+    object_use_constraint: {
+        license_key?: string | string[],
+        license_value: string | string[],
+    },
+    object_access: {
+        restriction_key: string[],
+        restriction_value: string[],
+        terms_of_use: string,
+    },
     object_reference?: any[],
     is_hvd: boolean,
+    spatial_system: {
+        referencesystem_value: string[],
+    },
     sort_hash: string
+}
+
+export type IngridMetadata = {
+    iPlugId: string,
+    partner: string[],
+    provider: string[],
+    organisation: string,
+    datatype: string[],
+    dataSourceName: string,
+    boost?: number,
 }

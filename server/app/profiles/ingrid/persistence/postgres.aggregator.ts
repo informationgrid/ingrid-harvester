@@ -27,8 +27,15 @@ import type { Bucket } from '../../../persistence/postgres.utils.js';
 import { createEsId } from '../ingrid.utils.js';
 import type { IngridIndexDocument } from '../model/index.document.js';
 import * as MiscUtils from '../../../utils/misc.utils.js';
+import type { CatalogSettings } from 'catalog/catalog.factory.js';
 
 export class PostgresAggregator implements AbstractPostgresAggregator<IngridIndexDocument> {
+
+    private index: string;
+
+    constructor(catalogSettings: CatalogSettings) {
+        this.index = catalogSettings.settings.index;
+    }
 
     public async processBucket(bucket: Bucket<IngridIndexDocument>): Promise<EsOperation[]> {
         let box: EsOperation[] = [];
@@ -46,7 +53,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         let deleteDocument = document.extras.metadata.deleted != null;
         bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.extras.metadata.deleted != null);
         if (deleteDocument) {
-            return [{ operation: 'delete', _index: document['catalog'].identifier, _id: createEsId(document) }];
+            return [{ operation: 'delete', _index: this.index, _id: createEsId(document) }];
         }
 
         // deduplication
@@ -58,16 +65,16 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
             document.extras.metadata.merged_from.push(duplicate_id);
             // remove dataset with old_id if it differs from the newly created id
             if (old_id != document_id) {
-                box.push({ operation: 'delete', _index: document['catalog'].identifier, _id: old_id });
+                box.push({ operation: 'delete', _index: this.index, _id: old_id });
             }
             // remove data with duplicate _id if it differs from the newly created id
             if (duplicate_id != document_id) {
-                box.push({ operation: 'delete', _index: document['catalog'].identifier, _id: duplicate_id });
+                box.push({ operation: 'delete', _index: this.index, _id: duplicate_id });
             }
         }
         document = this.sanitize(document);
         // document = MiscUtils.merge(document, { extras: { transformed_data: { dcat_ap_plu: DcatApPluDocumentFactory.create(document) } } });
-        box.push({ operation: 'index', _index: document['catalog'].identifier, _id: createEsId(document), document });
+        box.push({ operation: 'index', _index: this.index, _id: createEsId(document), document });
         return box;
     }
 

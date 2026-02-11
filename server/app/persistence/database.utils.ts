@@ -21,11 +21,13 @@
  * ==================================================
  */
 
+import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
 import type { Catalog } from '../model/dcatApPlu.model.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
-import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
-import type { ElasticsearchUtils } from './elastic.utils.js';
+import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
+import type { ElasticsearchUtils } from './elastic.utils.js';
+import type { PostgresAggregator } from './postgres.aggregator.js';
 
 export interface BulkResponse {
     queued: boolean;
@@ -77,7 +79,7 @@ export abstract class DatabaseUtils {
 
     abstract deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void>;
 
-    abstract pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string): Promise<void>;
+    abstract pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string, aggregator?: PostgresAggregator<IndexDocument>): Promise<void>;
 
     abstract getStoredData(ids: string[]): Promise<any[]>;
 

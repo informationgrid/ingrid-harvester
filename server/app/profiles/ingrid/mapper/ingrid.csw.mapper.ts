@@ -22,57 +22,136 @@
  */
 
 import log4js from 'log4js';
-import {ingridMapper} from "./ingrid.mapper.js";
 import {CswMapper} from "../../../importer/csw/csw.mapper.js";
 import type {Distribution} from "../../../model/distribution.js";
 import * as XpathUtils from "../../../utils/xpath.utils.js";
+import type { IngridIndexDocument } from '../model/index.document.js';
+import * as IngridUtils from '../utils/ingrid.utils.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
-export class ingridCswMapper extends ingridMapper<CswMapper> {
+export class ingridCswMapper extends CswMapper {
+
+    async createEsDocument(): Promise<IngridIndexDocument> {
+        let result: IngridIndexDocument = {
+            ...super.createEsDocument(),
+            ...IngridUtils.getIngridMetadata(this.getSettings()),
+            uuid: this.getGeneratedId(),
+            collection: {
+                name: this.getSettings().dataSourceName,
+            },
+            extras: {
+                // harvested_data: mapper.getHarvestedData(),
+                hierarchy_level: this.getHierarchyLevel(),    // only csw
+                metadata: {
+                    harvested: this.getHarvestingDate(),
+                    harvesting_errors: null, // get errors after all operations been done
+                    issued: null,
+                    is_valid: null, // check validity before persisting to ES
+                    modified: null,
+                    source: this.getMetadataSource(),
+                    merged_from: []
+                }
+            },
+            // distributions: await this.getDistributions(),
+            t0: this.getT0(),
+            t1: this.getT1(),
+            t01_object: this.getT01_object(),
+            t2: this.getT2(),
+            hierarchylevel: this.getHierarchyLevel(),
+            alternatetitle: this.getAlternateTitle()?.[0],
+            t02_address: this.getAddress(),
+            title: this.getTitle(),
+            summary: this.getDescription(),
+            location: this.getLocation(),
+            x1: this.getX1(),
+            x2: this.getX2(),
+            y1: this.getY1(),
+            y2: this.getY2(),
+            modified: this.getModifiedDate(),
+            capabilities_url: this.getCapabilitiesURL(),
+            additional_html_1: this.getAdditionalHTML(),
+            t04_search: this.getT04Search(),
+            t0110_avail_format: this.getT0110_avail_format(),
+            t011_obj_geo: this.getT011_obj_geo(),
+            t011_obj_geo_keyc: this.getT011_obj_geo_keyc(),
+            t011_obj_geo_symc: this.getT011_obj_geo_symc(),
+            t011_obj_geo_scale: this.getT011_obj_geo_scale(),
+            t011_obj_geo_spatial_rep: this.getT011_obj_geo_spatial_rep(),
+            t011_obj_geo_vector: this.getT011_obj_geo_vector(),
+            t011_obj_geo_supplinfo: this.getT011_obj_geo_supplinfo(),
+            t011_obj_serv: this.getT011_obj_serv(),
+            t011_obj_serv_version: this.getT011_obj_serv_version(),
+            t011_obj_serv_op_connpoint: this.getT011_obj_serv_op_connpoint(),
+            t011_obj_serv_op_depends: this.getT011_obj_serv_op_depends(),
+            t011_obj_serv_op_para: this.getT011_obj_serv_op_para(),
+            t011_obj_serv_operation: this.getT011_obj_serv_operation(),
+            t011_obj_serv_op_platform: this.getT011_obj_serv_op_platform(),
+            t011_obj_topic_cat: this.getT011_obj_topic_cat(),
+            t012_obj_adr: this.getT012_obj_adr(),
+            t0113_dataset_reference: this.getT0113_dataset_reference(),
+            t017_url_ref: this.getT017_url_ref(),
+            t021_communication: this.getT021_communication(),
+            object_use: this.getObjectUse(),    // TODO does not exist in mapping
+            object_use_constraint: this.getObjectUseConstraint(),
+            object_access: this.getObjectAccess(),
+            is_hvd: this.isHvd(),
+            spatial_system: this.getSpatialSystem(),
+            sort_hash: IngridUtils.getSortHash(this.getTitle()),
+            content: null, // assigned after
+            idf: null // assigned after
+        };
+        result.content = IngridUtils.getContent(result);
+        // add "idf" at the end, so it does not get included in the "content" array
+        result.idf = this.getIDF();
+
+        this.executeCustomCode(result);
+
+        return result;
+    }
 
     getT0() {
-        let temporal = this.baseMapper.getTemporal()?.[0];
+        let temporal = this.getTemporal()?.[0];
         if (temporal && temporal.gte === temporal.lte) {
-            return temporal.gte;
+            return IngridUtils.formatDate(temporal.gte);
         }
         return undefined;
     }
 
     getT1() {
-        let temporal = this.baseMapper.getTemporal()?.[0];
+        let temporal = this.getTemporal()?.[0];
         if (temporal && temporal.gte !== temporal.lte) {
-            return temporal.gte ? this.formatDate(temporal.gte) : "00000000";
+            return temporal.gte ? IngridUtils.formatDate(temporal.gte) : "00000000";
         }
         return undefined;
     }
 
     getT2() {
-        let temporal = this.baseMapper.getTemporal()?.[0];
+        let temporal = this.getTemporal()?.[0];
         if (temporal && temporal.gte !== temporal.lte) {
-            return temporal.lte ? this.formatDate(temporal.lte) : "99999999";
+            return temporal.lte ? IngridUtils.formatDate(temporal.lte) : "99999999";
         }
         return undefined;
     }
 
     getAlternateTitle() {
-        return this.baseMapper._getAlternateTitle();
+        return this._getAlternateTitle();
     }
 
     getAddress() {
-       return this.baseMapper.getAddress();
+       return super.getAddress();
     }
 
-    getSummary() {
-        return this.baseMapper.getDescription();
+    getDescription() {
+        return super.getDescription();
     }
 
     getLocation() {
         let result = [];
-        let geographicElements = CswMapper.select(".//*/gmd:EX_Extent/gmd:geographicElement", this.baseMapper.idInfo);
+        let geographicElements = CswMapper.select(".//*/gmd:EX_Extent/gmd:geographicElement", this.idInfo);
         geographicElements?.forEach(geographicElement => {
             let value = this.text("./gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString", geographicElement);
-            if(this.hasValue(value)) {
+            if(IngridUtils.hasValue(value)) {
                 result.push(value)
             }
             let boundingBoxes = CswMapper.select("./gmd:EX_GeographicBoundingBox", geographicElement);
@@ -88,7 +167,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
 
     private getGeoBound(orientation: string){
         let result = [];
-        let geographicElements = CswMapper.select(".//*/gmd:EX_Extent/gmd:geographicElement", this.baseMapper.idInfo);
+        let geographicElements = CswMapper.select(".//*/gmd:EX_Extent/gmd:geographicElement", this.idInfo);
         geographicElements?.forEach(geographicElement => {
             let boundingBoxes = CswMapper.select("./gmd:EX_GeographicBoundingBox", geographicElement);
             boundingBoxes?.forEach(boundingBox => {
@@ -126,7 +205,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
 
     getIDF() {
         let idf = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.portalu.de/IDF/1.0\">\n  <head/>\n  <body>\n";
-        let renamedDom = XpathUtils.renameNodes("gmd:MD_Metadata", "idf:idfMdMetadata", this.baseMapper.record.cloneNode(true));
+        let renamedDom = XpathUtils.renameNodes("gmd:MD_Metadata", "idf:idfMdMetadata", this.record.cloneNode(true));
         renamedDom = XpathUtils.renameNodes("gmd:CI_ResponsibleParty", "idf:idfResponsibleParty", renamedDom);
         idf += renamedDom.toString();
         idf += "\n  </body>\n</html>\n";
@@ -139,19 +218,19 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
                 or ./srv:serviceType/gco:LocalName/text() = 'view'
                 or ./srv:serviceType/gco:LocalName/text() = 'WFS'
                 or ./srv:serviceType/gco:LocalName/text() = 'download'
-            ]//srv:containsOperations/srv:SV_OperationMetadata/srv:operationName/gco:CharacterString[text() = 'GetCapabilities']/../../srv:connectPoint//gmd:URL`, this.baseMapper.idInfo);
+            ]//srv:containsOperations/srv:SV_OperationMetadata/srv:operationName/gco:CharacterString[text() = 'GetCapabilities']/../../srv:connectPoint//gmd:URL`, this.idInfo);
         return url ? [url] : [];
     }
 
     getAdditionalHTML() {
         let result = [];
-        let mdBrowseGraphics = CswMapper.select(".//gmd:graphicOverview/gmd:MD_BrowseGraphic", this.baseMapper.idInfo)
+        let mdBrowseGraphics = CswMapper.select(".//gmd:graphicOverview/gmd:MD_BrowseGraphic", this.idInfo)
         mdBrowseGraphics?.forEach(mdBrowseGraphic => {
             let fileName = this.text("./gmd:fileName/gco:CharacterString", mdBrowseGraphic);
             let fileDescription = this.text("./gmd:fileDescription/gco:CharacterString", mdBrowseGraphic);
-            if (this.hasValue(fileName)) {
+            if (IngridUtils.hasValue(fileName)) {
                 let previewImageHtmlTag = "<img src='" + fileName + "' height='100' class='preview_image' ";
-                if (this.hasValue(fileDescription)) {
+                if (IngridUtils.hasValue(fileDescription)) {
                     previewImageHtmlTag += "alt='" + fileDescription + "' title='" + fileDescription + "' >";
                 } else {
                     previewImageHtmlTag += "alt='"+ fileName + "' >";
@@ -164,36 +243,36 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
 
     getT01_object() {
         let result = {
-            obj_id: this.baseMapper.getGeneratedId(),
-            org_obj_id: this.baseMapper.getGeneratedId(),
+            obj_id: this.getGeneratedId(),
+            org_obj_id: this.getGeneratedId(),
             obj_class: this.getObjClass(),
-            info_note: this.text("./gmd:MD_DataIdentification/gmd:purpose/gco:CharacterString", this.baseMapper.idInfo),
-            loc_descr: this.text("./gmd:MD_DataIdentification/gmd:EX_Extent/gmd:description/gco:CharacterString", this.baseMapper.idInfo),
+            info_note: this.text("./gmd:MD_DataIdentification/gmd:purpose/gco:CharacterString", this.idInfo),
+            loc_descr: this.text("./gmd:MD_DataIdentification/gmd:EX_Extent/gmd:description/gco:CharacterString", this.idInfo),
             dataset_alternate_name: this.getAlternateTitle(),
-            dataset_character_set: this.transformToIgcDomainId(this.text("./gmd:MD_DataIdentification/gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue", this.baseMapper.idInfo), "510"),
-            dataset_usage: this.text("./gmd:MD_DataIdentification/gmd:resourceSpecificUsage/gmd:MD_Usage/gmd:specificUsage/gco:CharacterString", this.baseMapper.idInfo),
-            data_language_code: this.transformGeneric(this.text("./*/gmd:language/gco:CharacterString", this.baseMapper.idInfo), {"deu":"de", "ger":"de", "eng":"en"}, "de"),
-            metadata_character_set: this.transformToIgcDomainId(this.text("./gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue", this.baseMapper.record), "510"),
-            metadata_standard_name: this.text("./gmd:metadataStandardName/gco:CharacterString", this.baseMapper.record),
-            metadata_standard_version: this.text("./gmd:metadataStandardVersion/gco:CharacterString", this.baseMapper.record),
-            metadata_language_code: this.transformGeneric(this.text("./*/gmd:language/gco:CharacterString", this.baseMapper.idInfo), {"deu":"de", "ger":"de", "eng":"en"}, "de"),
-            vertical_extent_minimum: this.text("./*/gmd:extent/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:minimumValue/gco:Real", this.baseMapper.idInfo),
-            vertical_extent_maximum: this.text("./*/gmd:extent/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:maximumValue/gco:Real", this.baseMapper.idInfo),
-            vertical_extent_unit: this.transformToIgcDomainId(this.text("./*/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:verticalCRS/gml:verticalCRS/gml:verticalCS/gml:VerticalCS/gml:axis/gml:CoordinateSystemAxis/@uom", this.baseMapper.idInfo), "102"),
-            vertical_extent_vdatum: this.transformToIgcDomainId(this.text("./*/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:verticalCRS/gml:verticalCRS/gml:verticalDatum/gml:VerticalDatum/gml:identifier", this.baseMapper.idInfo), "101"),
-            ordering_instructions: this.text("./gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributionOrderProcess/gmd:MD_StandardOrderProcess/gmd:orderingInstructions/gco:CharacterString", this.baseMapper.record),
+            dataset_character_set: IngridUtils.transformToIgcDomainId(this.text("./gmd:MD_DataIdentification/gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue", this.idInfo), "510"),
+            dataset_usage: this.text("./gmd:MD_DataIdentification/gmd:resourceSpecificUsage/gmd:MD_Usage/gmd:specificUsage/gco:CharacterString", this.idInfo),
+            data_language_code: IngridUtils.transformGeneric(this.text("./*/gmd:language/gco:CharacterString", this.idInfo), {"deu":"de", "ger":"de", "eng":"en"}, "de"),
+            metadata_character_set: IngridUtils.transformToIgcDomainId(this.text("./gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue", this.record), "510"),
+            metadata_standard_name: this.text("./gmd:metadataStandardName/gco:CharacterString", this.record),
+            metadata_standard_version: this.text("./gmd:metadataStandardVersion/gco:CharacterString", this.record),
+            metadata_language_code: IngridUtils.transformGeneric(this.text("./*/gmd:language/gco:CharacterString", this.idInfo), {"deu":"de", "ger":"de", "eng":"en"}, "de"),
+            vertical_extent_minimum: this.text("./*/gmd:extent/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:minimumValue/gco:Real", this.idInfo),
+            vertical_extent_maximum: this.text("./*/gmd:extent/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:maximumValue/gco:Real", this.idInfo),
+            vertical_extent_unit: IngridUtils.transformToIgcDomainId(this.text("./*/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:verticalCRS/gml:verticalCRS/gml:verticalCS/gml:VerticalCS/gml:axis/gml:CoordinateSystemAxis/@uom", this.idInfo), "102"),
+            vertical_extent_vdatum: IngridUtils.transformToIgcDomainId(this.text("./*/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:verticalCRS/gml:verticalCRS/gml:verticalDatum/gml:VerticalDatum/gml:identifier", this.idInfo), "101"),
+            ordering_instructions: this.text("./gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributionOrderProcess/gmd:MD_StandardOrderProcess/gmd:orderingInstructions/gco:CharacterString", this.record),
             mod_time: this.getModifiedDate(),
-            time_status: this.transformToIgcDomainId(this.text("./gmd:MD_DataIdentification/gmd:status/gmd:MD_ProgressCode/@codeListValue", this.baseMapper.idInfo), "523"),
+            time_status: IngridUtils.transformToIgcDomainId(this.text("./gmd:MD_DataIdentification/gmd:status/gmd:MD_ProgressCode/@codeListValue", this.idInfo), "523"),
             time_type: undefined,
             time_from: undefined,
             time_to: undefined,
-            time_descr: this.text("./gmd:MD_DataIdentification/gmd:resourceMaintenance/gmd:MD_MaintenanceInformation/gmd:maintenanceNote/gco:CharacterString", this.baseMapper.idInfo),
-            time_period: this.transformToIgcDomainId(this.text("./gmd:MD_DataIdentification/gmd:resourceMaintenance/gmd:MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode/@codeListValue", this.baseMapper.idInfo), "518")
+            time_descr: this.text("./gmd:MD_DataIdentification/gmd:resourceMaintenance/gmd:MD_MaintenanceInformation/gmd:maintenanceNote/gco:CharacterString", this.idInfo),
+            time_period: IngridUtils.transformToIgcDomainId(this.text("./gmd:MD_DataIdentification/gmd:resourceMaintenance/gmd:MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode/@codeListValue", this.idInfo), "518")
         };
-        let temporal = this.baseMapper.getTemporal()?.[0];
+        let temporal = this.getTemporal()?.[0];
         if (temporal) {
-            let hasStart = this.hasValue(temporal.gte?.toString());
-            let hasEnd = this.hasValue(temporal.lte?.toString());
+            let hasStart = IngridUtils.hasValue(temporal.gte?.toString());
+            let hasEnd = IngridUtils.hasValue(temporal.lte?.toString());
             if (hasStart && hasEnd){
                 if (temporal.gte.toString() == temporal.lte.toString()) result.time_type = "am"
                 else result.time_type = "von"
@@ -209,17 +288,17 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             else if (!hasStart && hasEnd){
                 result.time_type = "bis"
             }
-            result.time_from = temporal.gte ? this.formatDate(temporal.gte) : "00000000"
-            result.time_to = temporal.lte ? this.formatDate(temporal.lte) : "99999999";
+            result.time_from = temporal.gte ? IngridUtils.formatDate(temporal.gte) : "00000000"
+            result.time_to = temporal.lte ? IngridUtils.formatDate(temporal.lte) : "99999999";
         }
         return result;
     }
 
     private getObjClass(){
         let hierarchyLevel = this.getHierarchyLevel()
-        let hierarchyLevelName = this.baseMapper.getHierarchyLevelName();
+        let hierarchyLevelName = this.getHierarchyLevelName();
         let objectClass = "1";
-        if (this.hasValue(hierarchyLevel)) {
+        if (IngridUtils.hasValue(hierarchyLevel)) {
             if (hierarchyLevel.toLowerCase() == "service") {
                 // "Geodatendienst"
                 objectClass = "3";
@@ -227,7 +306,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
                 // "Dienst / Anwendung / Informationssystem"
                 objectClass = "6";
             } else if (hierarchyLevel.toLowerCase() == "nongeographicdataset") {
-                if (this.hasValue(hierarchyLevelName)) {
+                if (IngridUtils.hasValue(hierarchyLevelName)) {
                     if (hierarchyLevelName == "job") {
                         // "Organisation/Fachaufgabe"
                         objectClass = "0";
@@ -247,10 +326,10 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     getT04Search() {
         let result = [];
         const addKeywords = (xpath: string, type: string) => {
-            let keywords = CswMapper.select(xpath, this.baseMapper.idInfo);
+            let keywords = CswMapper.select(xpath, this.idInfo);
             keywords?.forEach(keyword => {
                 let value = keyword.textContent?.trim();
-                if (this.hasValue(value) && !result.some(r => r.searchterm === value)) {
+                if (IngridUtils.hasValue(value) && !result.some(r => r.searchterm === value)) {
                     result.push({
                         searchterm: value,
                         type: type,
@@ -270,7 +349,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT0110_avail_format() {
-        let formats = CswMapper.select("./gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format", this.baseMapper.record);
+        let formats = CswMapper.select("./gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format", this.record);
         let result = formats?.map(format => ({
             name: this.text("./gmd:name/gco:CharacterString", format),
             version: this.text("./gmd:version/gco:CharacterString", format),
@@ -281,14 +360,14 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT011_obj_geo() {
-        let lineage = CswMapper.select("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage", this.baseMapper.record, true);
-        let report = CswMapper.select("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report", this.baseMapper.record, true);
+        let lineage = CswMapper.select("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage", this.record, true);
+        let report = CswMapper.select("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report", this.record, true);
         let result: any = {
-            datasource_uuid: this.text("./*/gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/gco:CharacterString", this.baseMapper.idInfo),
+            datasource_uuid: this.text("./*/gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/gco:CharacterString", this.idInfo),
             referencesystem_id: this.getReferenceSystems(),
-            hierarchy_level: this.transformGeneric(this.text("./gmd:hierarchyLevelName/gmd:MD_ScopeCode/@codeListValue", this.baseMapper.record), {"dataset":"5", "series":"6"}, false),
-            vector_topology_level: this.transformToIgcDomainId(this.text("./gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:topologyLevel/gmd:MD_TopologyLevelCode/@codeListValue", this.baseMapper.record), "528"),
-            keyc_incl_w_dataset: this.transformGeneric(this.text("./gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:includedWithDataset/gco:Boolean", this.baseMapper.record), {"true":"1", "false":"0"}, false)
+            hierarchy_level: IngridUtils.transformGeneric(this.text("./gmd:hierarchyLevelName/gmd:MD_ScopeCode/@codeListValue", this.record), {"dataset":"5", "series":"6"}, false),
+            vector_topology_level: IngridUtils.transformToIgcDomainId(this.text("./gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:topologyLevel/gmd:MD_TopologyLevelCode/@codeListValue", this.record), "528"),
+            keyc_incl_w_dataset: IngridUtils.transformGeneric(this.text("./gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:includedWithDataset/gco:Boolean", this.record), {"true":"1", "false":"0"}, false)
         };
         if (lineage) {
             result = {
@@ -310,25 +389,25 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT011_obj_geo_keyc() {
-        let fcCitations = CswMapper.select("./gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation/gmd:CI_Citation", this.baseMapper.record);
+        let fcCitations = CswMapper.select("./gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation/gmd:CI_Citation", this.record);
         return fcCitations?.map(citation => ({
             symbol_cat: this.text("./gmd:title/gco:CharacterString", citation),
-            symbol_date: this.formatDate(new Date(Date.parse(this.text("./gmd:date/gmd:CI_Date/gmd:date/gco:Date", citation)))),
+            symbol_date: IngridUtils.formatDate(new Date(Date.parse(this.text("./gmd:date/gmd:CI_Date/gmd:date/gco:Date", citation)))),
             edition: this.text("./gmd:edition/gco:CharacterString", citation)
         }));
     }
 
     getT011_obj_geo_symc() {
-        let pcCitations = CswMapper.select("./gmd:portrayalCatalogueInfo/gmd:MD_PortrayalCatalogueReference/gmd:portrayalCatalogueCitation/gmd:CI_Citation", this.baseMapper.record);
+        let pcCitations = CswMapper.select("./gmd:portrayalCatalogueInfo/gmd:MD_PortrayalCatalogueReference/gmd:portrayalCatalogueCitation/gmd:CI_Citation", this.record);
         return pcCitations?.map(citation => ({
             symbol_cat: this.text("./gmd:title/gco:CharacterString", citation),
-            symbol_date: this.formatDate(new Date(Date.parse(this.text("./gmd:date/gmd:CI_Date/gmd:date/gco:Date", citation)))),
+            symbol_date: IngridUtils.formatDate(new Date(Date.parse(this.text("./gmd:date/gmd:CI_Date/gmd:date/gco:Date", citation)))),
             edition: this.text("./gmd:edition/gco:CharacterString", citation)
         }));
     }
 
     getT011_obj_geo_scale() {
-        let resolutions = CswMapper.select("./gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution", this.baseMapper.idInfo)
+        let resolutions = CswMapper.select("./gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution", this.idInfo)
         return resolutions?.map(resolution => ({
             scale: this.text("./gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer", resolution),
             resolution_ground: this.text("./gmd:distance/gmd:Distance[@uom='meter']", resolution),
@@ -338,34 +417,34 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
 
     getT011_obj_geo_spatial_rep() {
         return {
-            type: this.transformToIgcDomainId(this.text("./gmd:MD_DataIdentification/gmd:spatialRepresentationType/MD_SpatialRepresentationTypeCode/@codeListValue", this.baseMapper.idInfo), "526")
+            type: IngridUtils.transformToIgcDomainId(this.text("./gmd:MD_DataIdentification/gmd:spatialRepresentationType/MD_SpatialRepresentationTypeCode/@codeListValue", this.idInfo), "526")
         };
     }
 
     getT011_obj_geo_vector() {
-        let geometricObjects = CswMapper.select("./gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects/gmd:MD_GeometricObjects", this.baseMapper.record);
+        let geometricObjects = CswMapper.select("./gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects/gmd:MD_GeometricObjects", this.record);
         return geometricObjects?.map(geometricObject => ({
-            geometric_object_type: this.transformToIgcDomainId(this.text("./gmd:geometricObjectType/gmd:MD_GeometricObjectTypeCode/@codeListValue", geometricObject), "515"),
+            geometric_object_type: IngridUtils.transformToIgcDomainId(this.text("./gmd:geometricObjectType/gmd:MD_GeometricObjectTypeCode/@codeListValue", geometricObject), "515"),
             geometric_object_count: this.text("./gmd:geometricObjectCount/gco:Integer", geometricObject)
         }));
     }
 
     getT011_obj_geo_supplinfo() {
         return {
-            feature_type: this.text("./gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureTypes/gco:LocalName", this.baseMapper.record)
+            feature_type: this.text("./gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureTypes/gco:LocalName", this.record)
         };
     }
 
     getT011_obj_serv() {
         return {
-            base: this.text("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source/gmd:LI_Source/gmd:description/gco:CharacterString", this.baseMapper.record),
-            history: this.text("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:processStep/gmd:LI_ProcessStep/gmd:description/gco:CharacterString", this.baseMapper.record),
-            type: this.text("./srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName", this.baseMapper.idInfo)
+            base: this.text("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source/gmd:LI_Source/gmd:description/gco:CharacterString", this.record),
+            history: this.text("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:processStep/gmd:LI_ProcessStep/gmd:description/gco:CharacterString", this.record),
+            type: this.text("./srv:SV_ServiceIdentification/srv:serviceType/gco:LocalName", this.idInfo)
         };
     }
 
     getT011_obj_serv_version() {
-        let serviceTypeVersions = CswMapper.select("./srv:SV_ServiceIdentification/srv:serviceTypeVersion/gco:CharacterString", this.baseMapper.idInfo);
+        let serviceTypeVersions = CswMapper.select("./srv:SV_ServiceIdentification/srv:serviceTypeVersion/gco:CharacterString", this.idInfo);
         if (serviceTypeVersions) {
             return { version_value: serviceTypeVersions?.map(serviceTypeVersion => serviceTypeVersion.textContent)?.join(", ") };
         }
@@ -373,19 +452,19 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT011_obj_serv_op_connpoint() {
-        let operationsMetadata = CswMapper.select('./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata', this.baseMapper.idInfo);
+        let operationsMetadata = CswMapper.select('./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata', this.idInfo);
         return operationsMetadata?.map(operationMetadata => ({
             connect_point: this.text("./srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL", operationMetadata)
         }));
     }
 
     getT011_obj_serv_op_depends() {
-        let dependsOn = this.text("./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata/srv:dependsOn/srv:SV_OperationMetadata/srv:operationName/gco:CharacterString", this.baseMapper.idInfo);
-        return this.hasValue(dependsOn) ? { depends_on: dependsOn } : undefined;
+        let dependsOn = this.text("./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata/srv:dependsOn/srv:SV_OperationMetadata/srv:operationName/gco:CharacterString", this.idInfo);
+        return IngridUtils.hasValue(dependsOn) ? { depends_on: dependsOn } : undefined;
     }
 
     getT011_obj_serv_op_para() {
-        let svParameter = CswMapper.select("./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata/srv:parameters/srv:SV_Parameter", this.baseMapper.idInfo, true);
+        let svParameter = CswMapper.select("./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata/srv:parameters/srv:SV_Parameter", this.idInfo, true);
         if (!svParameter) {
             return undefined;
         }
@@ -393,13 +472,13 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             name: this.text("./srv:name", svParameter),
             direction: this.text("./srv:direction/srv:SV_ParameterDirection", svParameter),
             descr: this.text("./gmd:description/gco:CharacterString", svParameter),
-            optional: this.transformGeneric(this.text("./srv:optionality/gco:CharacterString", svParameter), {"optional":"1", "mandatory":"0"}, false),
-            repeatability: this.transformGeneric(this.text("./srv:repeatability/gco:Boolean", svParameter), {"true":"1", "false":"0"}, false)
+            optional: IngridUtils.transformGeneric(this.text("./srv:optionality/gco:CharacterString", svParameter), {"optional":"1", "mandatory":"0"}, false),
+            repeatability: IngridUtils.transformGeneric(this.text("./srv:repeatability/gco:Boolean", svParameter), {"true":"1", "false":"0"}, false)
         };
     }
 
     getT011_obj_serv_operation() {
-        let operationsMetadata = CswMapper.select('./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata', this.baseMapper.idInfo);
+        let operationsMetadata = CswMapper.select('./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata', this.idInfo);
         return operationsMetadata?.map(operationMetadata => ({
             name: this.text("./srv:operationName/gco:CharacterString", operationMetadata),
             descr: this.text("./srv:operationDescription/gco:CharacterString", operationMetadata),
@@ -408,57 +487,57 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getT011_obj_serv_op_platform() {
-        let operationsMetadata = CswMapper.select('./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata', this.baseMapper.idInfo);
+        let operationsMetadata = CswMapper.select('./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata', this.idInfo);
         return operationsMetadata?.map(operationMetadata => ({
             platform: this.text("./srv:DCP/srv:DCPList/@codeListValue", operationMetadata)
         }));
     }
 
     getT011_obj_topic_cat() {
-        let topicCategories = CswMapper.select("./gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode", this.baseMapper.idInfo);
+        let topicCategories = CswMapper.select("./gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode", this.idInfo);
         return topicCategories?.map(topicCategory => ({
-            topic_category: this.transformToIgcDomainId(topicCategory.textContent, "527")
+            topic_category: IngridUtils.transformToIgcDomainId(topicCategory.textContent, "527")
         }));
     }
 
     getT012_obj_adr() {
-        let roles = CswMapper.select(".//gmd:CI_ResponsibleParty", this.baseMapper.record);
+        let roles = CswMapper.select(".//gmd:CI_ResponsibleParty", this.record);
         return roles?.map(role => ({
             special_ref: "0", // explicitly set to 0
-            typ: this.transformToIgcDomainId(this.text("./gmd:role/gmd:CI_RoleCode/@codeListValue", role), "505")
+            typ: IngridUtils.transformToIgcDomainId(this.text("./gmd:role/gmd:CI_RoleCode/@codeListValue", role), "505")
         }));
     }
 
     getT0113_dataset_reference() {
-        let dates = CswMapper.select("./gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date", this.baseMapper.idInfo);
+        let dates = CswMapper.select("./gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date", this.idInfo);
         return dates?.map(dateNode => {
             let date = this.text("./gmd:date/gco:Date|./gmd:date/gco:DateTime", dateNode);
             return {
-                reference_date: date ? this.formatDate(new Date(Date.parse(date))) : null,
-                type: this.transformToIgcDomainId(this.text("./gmd:dateType/gmd:CI_DateTypeCode/@codeListValue", dateNode), "502")
+                reference_date: date ? IngridUtils.formatDate(new Date(Date.parse(date))) : null,
+                type: IngridUtils.transformToIgcDomainId(this.text("./gmd:dateType/gmd:CI_DateTypeCode/@codeListValue", dateNode), "502")
             };
         });
     }
 
     getT017_url_ref() {
-        let onlineResources = CswMapper.select("./gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource", this.baseMapper.record);
+        let onlineResources = CswMapper.select("./gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource", this.record);
         let result = onlineResources?.map(onlineResource => ({
             url_link : this.text("./gmd:linkage/gmd:URL", onlineResource),
             content: this.text("./gmd:name/gco:CharacterString", onlineResource) ?? "",
             descr: this.text("./gmd:description/gco:CharacterString", onlineResource) ?? "",
-            special_ref: this.transformToIgcDomainId(this.text("gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue", onlineResource), "2000") ?? ""
+            special_ref: IngridUtils.transformToIgcDomainId(this.text("gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue", onlineResource), "2000") ?? ""
         }));
-        return result.filter(resource => this.hasValue(resource.url_link));
+        return result.filter(resource => IngridUtils.hasValue(resource.url_link));
     }
 
     getT021_communication(): any[] {
         let results = [];
-        let contacts = CswMapper.select(".//*/gmd:CI_ResponsibleParty", this.baseMapper.record);
+        let contacts = CswMapper.select(".//*/gmd:CI_ResponsibleParty", this.record);
         contacts?.forEach(contact => {
             const extractEntries = (path: string, commType: string) => {
                 CswMapper.select(path, contact)?.forEach(entry => {
                     const commValue = entry.textContent;
-                    if (this.hasValue(commValue)) {
+                    if (IngridUtils.hasValue(commValue)) {
                         results.push({
                             comm_type: commType,
                             comm_value: commValue,
@@ -475,29 +554,29 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getObjectUse() {
-        let constraints = CswMapper.select("./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:useLimitation]/gco:CharacterString", this.baseMapper.idInfo);
+        let constraints = CswMapper.select("./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:useLimitation]/gco:CharacterString", this.idInfo);
         let result = constraints?.map(constraint => constraint.textContent).filter(text => text?.trim());
         return result?.length ? { terms_of_use_value: result } : undefined;
     }
 
     getObjectUseConstraint() {
-        let constraints = CswMapper.select("./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:useConstraints]/gmx:Anchor | ./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:useConstraints]/gco:CharacterString", this.baseMapper.idInfo);
+        let constraints = CswMapper.select("./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:useConstraints]/gmx:Anchor | ./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:useConstraints]/gco:CharacterString", this.idInfo);
         let result = constraints?.map(constraint => constraint.textContent).filter(text => text?.trim());
         return result?.length ? { license_value: result } : undefined;
     }
 
     getObjectAccess() {
-        let restrictionValues = CswMapper.select("./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:accessConstraints]/gco:CharacterString", this.baseMapper.idInfo);
+        let restrictionValues = CswMapper.select("./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:accessConstraints]/gco:CharacterString", this.idInfo);
         return {
-            restriction_key: restrictionValues?.map(restrictionValue => this.transformToIgcDomainId(restrictionValue.textContent, "6010") ?? "-1"),
+            restriction_key: restrictionValues?.map(restrictionValue => IngridUtils.transformToIgcDomainId(restrictionValue.textContent, "6010") ?? "-1"),
             restriction_value: restrictionValues?.map(restrictionValue => restrictionValue.textContent),
-            terms_of_use: this.text("./*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useLimitation/gco:CharacterString", this.baseMapper.idInfo)
+            terms_of_use: this.text("./*/gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useLimitation/gco:CharacterString", this.idInfo)
         };
     }
 
     isHvd(): boolean {
-        let isOpendata = this.baseMapper.getKeywords()?.some(keyword => ['opendata', 'opendataident'].includes(keyword));
-        let descriptiveKeywordsElems = CswMapper.select('./*/gmd:descriptiveKeywords/gmd:MD_Keywords', this.baseMapper.idInfo);
+        let isOpendata = this.getKeywords()?.some(keyword => ['opendata', 'opendataident'].includes(keyword));
+        let descriptiveKeywordsElems = CswMapper.select('./*/gmd:descriptiveKeywords/gmd:MD_Keywords', this.idInfo);
         if (isOpendata && descriptiveKeywordsElems?.length > 0) {
             for (let descriptiveKeywordsElem of descriptiveKeywordsElems) {
                 let thesaurusName = this.text("./gmd:thesaurusName/gmd:CI_Citation/gmd:title/*[self::gco:CharacterString or self::gmx:Anchor]", descriptiveKeywordsElem);
@@ -511,7 +590,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     private getReferenceSystems(): string[] {
-        let rsIdentifiers = CswMapper.select("./gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier", this.baseMapper.record);
+        let rsIdentifiers = CswMapper.select("./gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier", this.record);
         return rsIdentifiers?.map(rsIdentifier => {
             let code = this.text("./gmd:code/gco:CharacterString", rsIdentifier);
             let codeSpace = this.text("../gmd:codeSpace/gco:CharacterString", rsIdentifier);
@@ -532,13 +611,13 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     async getDistributions(): Promise<Distribution[]> {
-        let distributions = await this.baseMapper.getDistributions();
+        let distributions = await super.getDistributions();
         return distributions?.filter(distribution => distribution.accessURL);
 /*
 
         let result = []
 
-        let operationNodes = CswMapper.select("./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata", this.baseMapper.idInfo);
+        let operationNodes = CswMapper.select("./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata", this.idInfo);
 
         for (let operationNode of operationNodes){
             let operationName = this.text("./srv:operationName/gco:CharacterString", operationNode);

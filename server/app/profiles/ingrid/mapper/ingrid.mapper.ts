@@ -28,7 +28,9 @@ import type {IngridIndexDocument} from "../model/index.document.js";
 import * as crypto from "crypto";
 import type {Distribution} from "../../../model/distribution.js";
 import {Codelist} from "../utils/codelist.js";
+import * as IngridUtils from '../utils/ingrid.utils.js';
 
+// TODO DEPRECATED
 export abstract class ingridMapper<M extends CswMapper> implements IndexDocumentFactory<IngridIndexDocument>{
 
     protected baseMapper: M;
@@ -72,7 +74,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             hierarchylevel: this.getHierarchyLevel(),
             alternatetitle: this.getAlternateTitle(),
             t02_address: this.getAddress(),
-            boost: this.getBoost(),
+            boost: this.baseMapper.getSettings().boost,
             title: this.getTitle(),
             summary: this.getSummary(),
             location: this.getLocation(),
@@ -113,7 +115,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             content: null, // assigned after
             idf: null // assigned after
         };
-        result.content = this.getContent(result);
+        result.content = IngridUtils.getContent(result);
         // add "idf" at the end, so it does not get included in the "content" array
         result.idf = this.getIDF();
 
@@ -214,28 +216,8 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return undefined;
     }
 
-    getBoost() {
-        return this.baseMapper.getSettings().boost;
-    }
-
     getSummary() {
         return undefined;
-    }
-
-    getContent(resultObj) {
-        const values = [];
-        const traverse = obj => {
-            if (obj == null) {
-                return;
-            }
-            if (typeof obj !== 'object') {
-                values.push(obj);
-                return;
-            }
-            Object.values(obj).forEach(traverse);
-        };
-        traverse(resultObj);
-        return values;
     }
 
     getLocation() {

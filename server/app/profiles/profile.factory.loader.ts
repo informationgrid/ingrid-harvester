@@ -28,15 +28,15 @@ import type { BaseMapper } from '../importer/base.mapper.js';
 import { DiplanungFactory } from './diplanung/profile.factory.js';
 import { LvrFactory } from './lvr/profile.factory.js';
 import type { ProfileFactory } from './profile.factory.js';
-import { ZdmFactory } from './zdm/profile.factory.js';
+import type { ImporterSettings } from 'importer.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
 export class ProfileFactoryLoader {
 
-    private static instance: ProfileFactory<BaseMapper>;
+    private static instance: ProfileFactory<any>;
 
-    public static get(): ProfileFactory<BaseMapper> {
+    public static get<T extends ImporterSettings>(): ProfileFactory<T> {
         if (this.instance) {
             return this.instance;
         }

@@ -32,6 +32,7 @@ export const DefaultImporterSettings: ImporterSettings = {
     maxRecords: 100,
     startPosition: 0,
     catalogId: 'harvester-index',
+    catalogIds: [],
     customCode: '',
     defaultMcloudSubgroup: [],
     defaultDCATCategory: [],
@@ -52,7 +53,8 @@ export const DefaultImporterSettings: ImporterSettings = {
 export type ImporterSettings = {
     priority?: number,
     blacklistedIds?: string[],
-    catalogId: string,
+    catalogId: string,  // deprecated - this is the old, DiPlanung-centric catalog
+    catalogIds: string[],
     cron?: {
         full: CronData,
         incr: CronData

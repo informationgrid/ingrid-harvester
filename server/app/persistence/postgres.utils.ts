@@ -21,9 +21,10 @@
  * ==================================================
  */
 
-import log4js from 'log4js';
 import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
+import log4js from 'log4js';
 import pg from 'pg';
+import Cursor from "pg-cursor";
 import type { Catalog } from '../model/dcatApPlu.model.js';
 import type { Distribution } from '../model/distribution.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
@@ -31,11 +32,11 @@ import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
 import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
-import type { BulkResponse} from './database.utils.js';
+import type { BulkResponse } from './database.utils.js';
 import { DatabaseUtils } from './database.utils.js';
 import type { ElasticsearchUtils } from './elastic.utils.js';
+import type { PostgresAggregator } from './postgres.aggregator.js';
 import type { PostgresQueries } from './postgres.queries.js';
-import Cursor from "pg-cursor";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -223,8 +224,13 @@ export class PostgresUtils extends DatabaseUtils {
      * @param source
      * @param processBucket
      */
-    async pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string) {
-        let pgAggregator = ProfileFactoryLoader.get().getPostgresAggregator();
+    async pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string, pgAggregator?: PostgresAggregator<IndexDocument>): Promise<void> {
+        // TODO refactor with regards to new catalog concept
+        // pgAggregator ??= ProfileFactoryLoader.get().getPostgresAggregator({} as CatalogSettings);
+        if (!pgAggregator) {
+            throw new Error('Not implemented: pushToElastic3ReturnOfTheJedi without PostgresAggregator');
+        }
+
         const client: pg.PoolClient = await PostgresUtils.pool.connect();
         log.debug('Connection started');
         let start = Date.now();

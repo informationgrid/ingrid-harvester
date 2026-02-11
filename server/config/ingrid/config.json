@@ -1,11 +1,13 @@
 [
   {
-    "index": "csw_geoportal_de",
     "priority": 5,
     "type": "CSW",
     "maxRecords": 200,
     "startPosition": 1,
     "catalogId": "harvester-index",
+    "catalogIds": [
+      "ingrid-elastic-1"
+    ],
     "customCode": null,
     "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
@@ -32,7 +34,7 @@
     "description": "geoportal.de",
     "defaultAttribution": null,
     "defaultAttributionLink": null,
-    "recordFilter": "<ogc:Filter>\n\t<ogc:PropertyIsEqualTo>\n\t\t<ogc:PropertyName>identifier</ogc:PropertyName>\n\t\t<ogc:Literal>1BFC8279-364D-47FF-B59B-C7D37C5A6BB8</ogc:Literal>\n\t</ogc:PropertyIsEqualTo>\n</ogc:Filter>",
+    "recordFilter": "<ogc:Filter>\n\t<ogc:PropertyIsEqualTo>\n\t\t<ogc:PropertyName>identifier</ogc:PropertyName>\n\t\t<ogc:Literal>f1950cd0-de59-413c-93fd-b669af06c863</ogc:Literal>\n\t</ogc:PropertyIsEqualTo>\n</ogc:Filter>",
     "pluPlanState": "fixed",
     "disable": false,
     "cron": {

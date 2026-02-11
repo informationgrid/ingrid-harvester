@@ -26,6 +26,7 @@ import type { Harvester } from '@shared/harvester.js';
 import type { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
 import * as fs from 'fs';
 import log4js from 'log4js';
+import type { CatalogSettings } from '../../catalog/catalog.factory.js';
 import { defaultCKANSettings } from '../../importer/ckan/ckan.settings.js';
 import { defaultCSWSettings } from '../../importer/csw/csw.settings.js';
 import { defaultDCATSettings } from '../../importer/dcat/dcat.settings.js';
@@ -53,6 +54,8 @@ function parseBooleanOrUndefined(b: string): boolean {
 export class ConfigService {
 
     private static GENERAL_CONFIG_FILE = "config-general.json";
+
+    private static CATALOG_CONFIG_FILE = "config-catalogs.json";
 
     private static HARVESTER_CONFIG_FILE = "config.json";
 
@@ -308,6 +311,22 @@ export class ConfigService {
 
         fs.writeFileSync(this.GENERAL_CONFIG_FILE, JSON.stringify(config, null, 2));
     }
+
+    static getCatalogSettings(): CatalogSettings[] {
+        const configExists = fs.existsSync(this.CATALOG_CONFIG_FILE);
+        if (configExists) {
+            let contents = fs.readFileSync(this.CATALOG_CONFIG_FILE);
+            return JSON.parse(contents.toString());
+        }
+        else {
+            log.warn("No catalog config file found (config-catalogs.json).");
+            return [];
+        }
+     }
+
+     static setCatalogSettings(config: CatalogSettings[]) {
+        fs.writeFileSync(this.CATALOG_CONFIG_FILE, JSON.stringify(config, null, 2));
+     }
 
     private static getDbUtils() {
         let generalConfig = ConfigService.getGeneralSettings();

@@ -24,7 +24,6 @@
 import type { DOMParser } from '@xmldom/xmldom';
 import log4js from 'log4js';
 import pLimit from 'p-limit';
-import { ProfileFactoryLoader } from 'profiles/profile.factory.loader.js';
 import type { Observer } from 'rxjs';
 import { namespaces } from '../../importer/namespaces.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
@@ -34,6 +33,7 @@ import type { ImportLogMessage } from '../../model/import.result.js';
 import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import type { BulkResponse } from '../../persistence/elastic.utils.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { SummaryService } from '../../services/config/SummaryService.js';
 import type { CswParameters, RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
@@ -152,7 +152,25 @@ export class CswImporter extends Importer<CswSettings> {
                     await this.database.deleteNonFetchedDatasets(this.getSettings().sourceURL, transactionTimestamp);
                 }
                 await this.database.commitTransaction();
-                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.getSettings().sourceURL);
+                // TODO support concurrency of different catalogs
+                for (const catalogId of this.getSettings().catalogIds) {
+                    try {
+                        const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, this.getSummary());
+                        // log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with transaction timestamp ${transactionTimestamp}`);
+                        log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with source ${this.getSettings().sourceURL}`);
+
+                        // TODO currently this relies on "sourceURL" instead of transactionTimestamp
+                        // should this be changed to transactionTimestamp?
+                        // for that, we need to consider how to handle "deleted", i.e. non-fetched, datasets
+
+                        await catalog.process(this.getSettings().sourceURL, this.getSettings());
+                    }
+                    catch (e) {
+                        log.error(`Error while importing into catalog ${catalogId}`, e);
+                        this.getSummary().appErrors.push(`Error while importing into catalog ${catalogId}: ${e.message}`);
+                    }
+                }
+                // await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.getSettings().sourceURL);
                 await this.postHarvestingHandling();
                 observer.next(ImportResult.complete(this.getSummary()));
             }
@@ -460,6 +478,7 @@ export class CswImporter extends Importer<CswSettings> {
                 let entity: RecordEntity = {
                     identifier: uuid,
                     source: this.getSettings().sourceURL,
+                    // TODO remove collection_id
                     collection_id: (await this.database.getCatalog(this.getSettings().catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()

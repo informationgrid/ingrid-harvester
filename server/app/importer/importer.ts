@@ -134,7 +134,7 @@ export abstract class Importer<S extends ImporterSettings> {
                         // should this be changed to transactionTimestamp?
                         // for that, we need to consider how to handle "deleted", i.e. non-fetched, datasets
 
-                        await catalog.process(this.getSettings().sourceURL);
+                        await catalog.process(this.getSettings().sourceURL, this.settings);
                     }
                     catch (e) {
                         log.error(`Error while importing into catalog ${catalogId}`, e);
