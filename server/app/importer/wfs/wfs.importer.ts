@@ -79,7 +79,7 @@ export class WfsImporter extends Importer {
     }
 
     protected async harvest(): Promise<number> {
-        let capabilitiesRequestConfig = WfsImporter.createRequestConfig({ ...this.settings, resolveWithFullResponse: true }, 'GetCapabilities');
+        let capabilitiesRequestConfig = this.createRequestConfig({ ...this.settings, resolveWithFullResponse: true }, 'GetCapabilities');
         let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
         let capabilitiesResponse: Response = await capabilitiesRequestDelegate.doRequest();
         let contentType = capabilitiesResponse.headers.get('content-type')?.split(';');
@@ -101,6 +101,10 @@ export class WfsImporter extends Importer {
         if (!select('/*[local-name()="WFS_Capabilities"]', capabilitiesResponseDom, true)) {
             throw new Error(`Could not retrieve WFS_Capabilities from ${capabilitiesRequestDelegate.getFullURL()}: ${responseBody}`);
         }
+
+        // detect paging support
+        const pagingVar = select('/*[local-name()="WFS_Capabilities"]/*[local-name()="OperationsMetadata"]/*[local-name()="Constraint"][@name="ImplementsResultPaging"]/*[local-name()="DefaultValue"]', capabilitiesResponseDom, true);
+        this.supportsPaging = pagingVar?.textContent?.toLowerCase() === "true";
 
         this.generalInfo = await this.prepareImport(this.generalInfo, capabilitiesResponseDom, select);
 
@@ -172,19 +176,17 @@ export class WfsImporter extends Importer {
             log.info(`This exceeds the limit of ${this.settings.featureLimit} features; skipping feature harvesting`);
             return;
         }
+        let requestConfig = this.createRequestConfig({
+            ...this.settings,
+            typename: featureTypeName
+        });
+        let requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(this.settings));
         while (true) {
-            log.info(`Requesting next features for FeatureType ${featureTypeName}`);
-            let requestConfig = WfsImporter.createRequestConfig({
-                ...this.settings,
-                typename: featureTypeName
-            });
+            log.info(`Requesting next features for FeatureType ${featureTypeName} (startIndex=${requestDelegate.getStartRecordIndex()})`);
             let harvestTime = new Date(Date.now());
-            let requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(this.settings));
-            // let response = await requestDelegate.doRequest();
-            // let responseDom = this.domParser.parseFromString(response);
             let responseDom: Document;
             try {
-                let responseDom = await this.getDom(requestDelegate);
+                responseDom = await this.getDom(requestDelegate);
                 // let resultsNode = responseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
                 await this.extractFeatures(responseDom, harvestTime);
             }
@@ -326,7 +328,7 @@ export class WfsImporter extends Importer {
     }
 
     async getNumFeatures(featureTypeName: string): Promise<number> {
-        let requestDelegate = new RequestDelegate(WfsImporter.createRequestConfig({
+        let requestDelegate = new RequestDelegate(this.createRequestConfig({
             ...this.settings,
             typename: featureTypeName,
             maxRecords: undefined,
@@ -338,7 +340,7 @@ export class WfsImporter extends Importer {
     }
 
     async getTypeDescription(featureTypeName: string): Promise<Node> {
-        let requestDelegate = new RequestDelegate(WfsImporter.createRequestConfig({
+        let requestDelegate = new RequestDelegate(this.createRequestConfig({
             ...this.settings,
             typename: featureTypeName
         }, 'DescribeFeatureType'));
@@ -353,7 +355,7 @@ export class WfsImporter extends Importer {
         return (select(`/${path}[${typeConditions}]/@name`, featureTypeDescriptionNode, true) as Attr)?.value;
     }
 
-    static createRequestConfig(settings: WfsSettings, request = 'GetFeature'): RequestOptions {
+    createRequestConfig(settings: WfsSettings, request = 'GetFeature'): RequestOptions {
         let requestConfig: RequestOptions = {
             method: settings.httpMethod || "GET",
             uri: settings.sourceURL,
@@ -401,16 +403,15 @@ export class WfsImporter extends Importer {
                 resultType: settings.resultType,
                 typename: settings.typename,
                 CONSTRAINTLANGUAGE: 'FILTER',
-                CONSTRAINT_LANGUAGE_VERSION: '1.1.0'
+                CONSTRAINT_LANGUAGE_VERSION: settings.version
             };
             if (settings.featureFilter) {
                 requestConfig.qs.constraint = settings.featureFilter;
             }
-            // if (this.supportsPaging && settings.maxRecords) {
-            // if (settings.maxRecords) {
-            //     requestConfig.qs.startIndex = settings.startPosition;
-            //     requestConfig.qs.maxFeatures = settings.maxRecords;
-            // }
+            if (this.supportsPaging && settings.maxRecords) {
+                requestConfig.qs.startIndex = settings.startPosition;
+                requestConfig.qs.maxFeatures = settings.maxRecords;
+            }
         }
 
         return requestConfig;
