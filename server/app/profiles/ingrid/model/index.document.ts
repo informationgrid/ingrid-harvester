@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import type { Geometry } from 'geojson';
 import type { IndexDocument } from '../../../model/index.document.js';
 
 export type IngridIndexDocument = IndexDocument & {
@@ -50,6 +51,9 @@ export type IngridIndexDocument = IndexDocument & {
     x2: number[],
     y1: number[],
     y2: number[],
+    spatial: {
+        geometries: Geometry[]
+    },
     idf: string,
     modified: Date,
     capabilities_url: string[],

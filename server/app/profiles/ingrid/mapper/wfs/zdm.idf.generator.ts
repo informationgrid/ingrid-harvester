@@ -21,29 +21,27 @@
  * **************************************************#
  */
 
-import * as MiscUtils from '../../../utils/misc.utils.js';
-import * as XPathUtils from '../../../utils/xpath.utils.js';
-import { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
-import { ZdmMapper } from './zdm.mapper.js';
+import * as MiscUtils from '../../../../utils/misc.utils.js';
+import * as XPathUtils from '../../../../utils/xpath.utils.js';
+import { IdfGenerator } from '../../idf.generator.js';
+import { WfsMapper } from '../../../../importer/wfs/wfs.mapper.js';
+import type { ingridWfsMapper } from '../ingrid.wfs.mapper.js';
+import type { ZdmWfsMapper } from './zdm.wfs.mapper.js';
 
-export class IdfGenerator {
+export class ZdmIdfGenerator extends IdfGenerator {
 
-    private mapper: ZdmMapper<WfsMapper>;
-    private baseMapper: WfsMapper;
+    protected mapper: ZdmWfsMapper;
 
-    private feature: Node;
-    protected document: Document;
-
-    constructor(profileMapper: ZdmMapper<WfsMapper>) {
-        this.mapper = profileMapper;
-        this.baseMapper = profileMapper.baseMapper;
-        this.feature = XPathUtils.firstElementChild(this.baseMapper.featureOrFeatureType);
-        let idfBody = '<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.portalu.de/IDF/1.0"><head/><body/></html>';
-        this.document = MiscUtils.getDomParser().parseFromString(idfBody);
+    constructor(profileMapper: ZdmWfsMapper) {
+        super(profileMapper);
+        // this.mapper = profileMapper;
+        // this.baseMapper = profileMapper.baseMapper;
+        // let idfBody = '<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.portalu.de/IDF/1.0"><head/><body/></html>';
+        // this.document = MiscUtils.getDomParser().parseFromString(idfBody);
     }
 
     createIdf(idx?: number): string {
-        if (this.mapper.isFeatureType()) {
+        if (this.baseMapper.isFeatureType()) {
             return this.createFeatureTypeIdf();
         }
         else {
@@ -58,7 +56,7 @@ export class IdfGenerator {
         this.addOutput(idfBody, "h1", this.mapper.getTitle());
 
         //add the summary
-        this.addOutput(idfBody, "p", this.mapper.getDescription());
+        this.addOutput(idfBody, "p", this.mapper.getSummary());
 
         //add the bounding box
         let boundingBox = this.baseMapper.getOriginalBoundingBox();
@@ -74,7 +72,7 @@ export class IdfGenerator {
         }
 
         // add the map preview
-        let name = this.mapper.getFeatureTypeName();
+        let name = this.baseMapper.getTypename();
         this.addOutput(idfBody, "div", this.getMapPreview(name));
         this.addOutput(idfBody, "br");
 
@@ -96,7 +94,7 @@ export class IdfGenerator {
         this.addOutput(idfBody, "br");
 
         // // show features, if loaded
-        if (this.mapper.getNumberOfFeatures() < this.baseMapper.settings.featureLimit) {
+        if (this.baseMapper.getNumberOfFeatures() < this.baseMapper.settings.featureLimit) {
             // NOTE: the below section is filled in server/app/profiles/zdm/persistence/postgres.aggregator.ts
             this.addOutput(idfBody, "h2", "Features:");
         }
@@ -128,7 +126,7 @@ export class IdfGenerator {
         }
 
         // add the map preview
-        let name = this.mapper.getFeatureTypeName() + '_' + idx;
+        let name = this.baseMapper.getTypename() + '_' + idx;
         this.addOutput(idfBody, "div", this.getMapPreview(name));
         this.addOutput(idfBody, "br");
 
@@ -153,8 +151,8 @@ export class IdfGenerator {
     }
 
     getMapPreview(name: string) {
-        let title = this.mapper.isFeatureType() ? this.mapper.getTitle() : this.mapper.getGeneratedId();
-        let bbox = this.mapper.getBoundingBox()?.bbox;
+        let title = this.baseMapper.isFeatureType() ? this.mapper.getTitle() : this.mapper.getGeneratedId();
+        let bbox = this.baseMapper.getBoundingBox()?.bbox;
         if (!bbox) {
             return "";
         }
@@ -162,13 +160,13 @@ export class IdfGenerator {
         let [ y1, x1, y2, x2 ] = bbox.map(Number);
         let addHtml: string;
 
-        if (this.mapper.isFeatureType()) {
+        if (this.baseMapper.isFeatureType()) {
             addHtml = this.mapper.getMapIFrame(450);
         }
         else {
             let mapLink = '';
             let serviceURL = encodeURIComponent(`${this.mapper.getMetadataSource().source_base}?SERVICE=WFS&VERSION=${this.baseMapper.settings.version}&`);
-            mapLink += '/DE/dienste/karte?layers=WFS%7C%7C' + encodeURIComponent(title.replaceAll(',','')) + '%7C%7C' + serviceURL + '%7C%7C' + this.mapper.getFeatureTypeName();
+            mapLink += '/DE/dienste/karte?layers=WFS%7C%7C' + encodeURIComponent(title.replaceAll(',','')) + '%7C%7C' + serviceURL + '%7C%7C' + this.baseMapper.getTypename();
             mapLink += '%7C%7C' + title;
 
             let marker = "";
@@ -182,7 +180,7 @@ export class IdfGenerator {
             }
             let BBOX = "[" + x1 + "," + y1 + "],[" + x2 + "," + y2 + "]";
 
-            let height = this.mapper.isFeatureType() ? 280 : 160;
+            let height = this.baseMapper.isFeatureType() ? 280 : 160;
 
             addHtml = '<div id="map_' + name + '" style="height: '+ height + 'px;"></div>' +
             ' <script>' + 
@@ -201,95 +199,5 @@ export class IdfGenerator {
         this.baseMapper.log.debug("MapPreview Html: " + addHtml);
 
         return addHtml;
-    }
-
-    addOutput(parent: Element, elementName: string, textContent?: string) {
-        var element = this.document.createElement(elementName);
-        if (textContent != undefined) {
-            element.appendChild(this.document.createTextNode(textContent));
-        }
-        parent.appendChild(element);
-        return element;
-    }
-
-    addOutputWithLinks(parent, elementName, textContent) {
-        var element = this.document.createElement(elementName);
-        if (textContent != undefined) {
-            // tokenize string and create links if necessary
-            var words = textContent.split(" ");
-            for (var i=0, count=words.length; i<count; i++) {
-                var text = words[i];
-                
-                // add a link for an url
-                if (this.isUrl(text)) {
-                    this.addLink(element, text, text, "_blank");
-                }
-                // add a mailto link for an email address
-                else if (this.isEmail(text)) {
-                    this.addLink(element, text, "mailto:"+text);
-                }
-                // default: add the plain text
-                else {
-                    element.appendChild(this.document.createTextNode(text));
-                }
-
-                // add space
-                if (i<count-1) {
-                    element.appendChild(this.document.createTextNode(" "));
-                }
-            }
-        }
-        parent.appendChild(element);
-        return element;
-    }
-
-    addLink(parent, name, url, target?) {
-        var link = this.document.createElement("a");
-        link.setAttribute("href", url);
-        if (target != undefined) {
-            link.setAttribute("target", target);
-        }
-        link.appendChild(this.document.createTextNode(name));
-        parent.appendChild(link);
-        return link;
-    }
-
-    /**
-     * Check if the given value is not equal to null, undefined of empty string
-     * 
-     * @param val
-     * @returns {Boolean}
-     */
-    hasValue(val: any): boolean {
-        // if (typeof val == "undefined") {
-        //     return false; 
-        // } else if (val == null) {
-        //     return false; 
-        // } else if (typeof val == "string" && val == "") {
-        //     return false;
-        // } else {
-        //     return true;
-        // }
-        return !(val == null || val === "");
-    }
-
-    /**
-     * Check if the given string is an url
-     * @param str
-     * @returns {Boolean}
-     */
-    isUrl(str: string): boolean {
-        var pattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
-        return str.match(pattern) != null;
-    }
-
-    /**
-     * Check if the given string is an email address
-     * @param str
-     * @returns {Boolean}
-     */
-    isEmail(str: string): boolean {
-        var pattern = /(([a-zA-Z0-9_\-\.]+)@[a-zA-Z_\-]+?(?:\.[a-zA-Z]{2,6})+)+/gim;
-        return pattern.test(str);
     }
 }

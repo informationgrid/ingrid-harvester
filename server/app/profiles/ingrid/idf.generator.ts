@@ -21,11 +21,194 @@
  * ==================================================
  */
 
-export abstract class IdfGenerator {
+import type { DOMParser } from '@xmldom/xmldom';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import type { WfsMapper } from 'importer/wfs/wfs.mapper.js';
+import type { ingridMapper } from './mapper/ingrid.mapper.js';
+
+export class IdfGenerator {
+
+    protected mapper: ingridMapper<WfsMapper>;
+    protected baseMapper: WfsMapper;
 
     protected document: Document;
+    protected domParser: DOMParser = MiscUtils.getDomParser();
+    
+    constructor(profileMapper: ingridMapper<WfsMapper>) {
+        this.mapper = profileMapper;
+        this.baseMapper = profileMapper.baseMapper;
+        let idfBody = '<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.portalu.de/IDF/1.0"><head/><body/></html>';
+        this.document = MiscUtils.getDomParser().parseFromString(idfBody);
+    }
 
-    abstract createIdf(): string;
+    createIdf(idx?: number): string {
+        if (this.baseMapper.isFeatureType()) {
+            return this.createFeatureTypeIdf();
+        }
+        else {
+            return this.createFeatureIdf();
+        }
+    }
+
+    createFeatureTypeIdf(idx?: number): string {
+        let idfBody = this.document.getElementsByTagName('body')[0];
+
+        // add the title
+        this.addOutput(idfBody, "h1", this.mapper.getTitle());
+
+        //add the summary
+        this.addOutput(idfBody, "p", this.mapper.getSummary());
+
+        //add the bounding box
+        let boundingBox = this.baseMapper.getOriginalBoundingBox();
+        this.addOutput(idfBody, "h2", "Ort:");
+        if (boundingBox) {
+            let [x1, y1] = boundingBox.lowerCorner.split(" ").map(coord => coord.trim());
+            let [x2, y2] = boundingBox.upperCorner.split(" ").map(coord => coord.trim());
+            let coordList = this.addOutput(idfBody, "ul");
+            this.addOutput(coordList, "li", `Nord: ${y2}`);
+            this.addOutput(coordList, "li", `West: ${x1}`);
+            this.addOutput(coordList, "li", `Ost: ${x2}`);
+            this.addOutput(coordList, "li", `S&uuml;d: ${y1}`);
+        }
+
+        // add the map preview
+        let name = this.baseMapper.getTypename();
+        this.addOutput(idfBody, "div", this.getMapPreview(name));
+        this.addOutput(idfBody, "br");
+
+        // add details (content of all child nodes)
+        this.addOutput(idfBody, "h2", "Details:");
+        this.addOutput(idfBody, "h4", "Feature Attribute:");
+        let detailList = this.addOutput(idfBody, "ul");
+        let detailNodes = this.baseMapper.select("//*/*[local-name()='extension'][@base='gml:AbstractFeatureType']/*[local-name()='sequence']/*[local-name()='element']", this.baseMapper.featureTypeDescription);
+        for (let i = 0, count = detailNodes.length; i < count; i++) {
+            let content = detailNodes[i];
+            if (content.nodeType != 1) { //Node.ELEMENT_NODE
+                continue;
+            }
+            let contentName = (content as Element).getAttribute('name');
+            if (this.hasValue(contentName)) {
+                this.addOutputWithLinks(detailList, "li", contentName);
+            }
+        }
+        this.addOutput(idfBody, "br");
+
+        // // show features, if loaded
+        if (this.baseMapper.getNumberOfFeatures() < this.baseMapper.settings.featureLimit) {
+            // NOTE: the below section is filled in server/app/profiles/zdm/persistence/postgres.aggregator.ts
+            this.addOutput(idfBody, "h2", "Features:");
+        }
+
+        return this.document.toString();
+    }
+
+    createFeatureIdf(idx?: number): string {
+        var plugDescrDataSourceName = this.baseMapper.settings.dataSourceName;
+        var plugDescrOrganisation = this.mapper.getOrganisation();
+
+        //---------- <idf:body> ----------
+        let idfBody = this.document.getElementsByTagName('body')[0];
+
+        var detail = this.addOutputWithAttributes(idfBody, "section", ["class", "id"], ["detail", "detail"]);
+
+        // header
+        var header = this.addDetailHeaderWrapperNewLayout(detail);
+
+        // header back to search
+        this.addDetailHeaderWrapperNewLayoutBackSearch(header);
+
+        // header title
+        this.addDetailHeaderWrapperNewLayoutTitle(header, this.mapper.getTitle());
+
+        // detail content
+
+        var detailNavContent = this.addOutputWithAttributes(detail, "section", ["class"], ["row nav-content search-filtered"]);
+
+        // navigation
+        this.addDetailHeaderWrapperNewLayoutDetailNavigation(detailNavContent, this.mapper.getSummary(), null, undefined, plugDescrDataSourceName, plugDescrOrganisation)
+
+        // content
+        this.addOutputWithAttributes(detailNavContent, "a", ["class", "id"], ["anchor", "detail_overview"]);
+
+        detailNavContent = this.addOutputWithAttributes(detailNavContent, "div", ["class"], ["xsmall-24 large-18 xlarge-18 columns"]);
+
+        var detailNavContentData = this.addOutputWithAttributes(detailNavContent, "div", ["class"], ["data"]);
+        detailNavContentData = this.addOutputWithAttributes(detailNavContentData, "div", ["class"], ["teaser-data search row is-active"]);
+
+        var detailNavContentDataLeft = this.addOutputWithAttributes(detailNavContentData, "div", ["class"], ["xsmall-24 small-24 medium-14 large-14 xlarge-14 columns"]);
+        //add the bounding box
+        let boundingBox = this.baseMapper.getOriginalBoundingBox();
+        if (boundingBox)  {
+            let [y1, x1] = boundingBox.lowerCorner.split(" ").map(coord => coord.trim());
+            let [y2, x2] = boundingBox.upperCorner.split(" ").map(coord => coord.trim());
+            this.addOutput(detailNavContentDataLeft, "h4", "Ort:");
+            this.addDetailTableRowWrapperNewLayout(detailNavContentDataLeft, "Nord", y2);
+            this.addDetailTableRowWrapperNewLayout(detailNavContentDataLeft, "West", x1);
+            this.addDetailTableRowWrapperNewLayout(detailNavContentDataLeft, "Ost", x2);
+            this.addDetailTableRowWrapperNewLayout(detailNavContentDataLeft, "S&uuml;d", y1);
+        }
+
+        // let mapPreview = this.getMapPreview("THE_NAME");
+        // if (mapPreview) {
+        //     var dataMap = "<div class=\"xsmall-24 small-24 medium-10 columns\">";
+        //     dataMap += "<h4 class=\"text-center\">Vorschau</h4>";
+        //     dataMap += "<div class=\"swiper-container-background\"><div class=\"swiper-slide\"><div class=\"caption\"><div class=\"preview_image\">";
+        //     dataMap += mapPreview;
+        //     dataMap += "</div></div></div></div></div>";
+        //     let dataMapElement = this.domParser.parseFromString(dataMap);
+        //     detailNavContentData.appendChild(dataMapElement);
+        // }
+
+        if (this.mapper.getSummary()) {
+            var detailNavContentSection = this.addOutputWithAttributes(detailNavContent, "div", ["class"], ["section"]);
+            this.addOutputWithAttributes(detailNavContentSection, "a", ["class", "id"], ["anchor", "detail_description"]);
+            this.addOutput(detailNavContentSection, "h3", "Beschreibung");
+            var result = this.addOutputWithAttributes(detailNavContentSection, "div", ["class"], ["row columns"]);
+            result = this.addOutput(result, "p", this.mapper.getSummary());
+        }
+
+        let detailNodes = this.baseMapper.select("//*/*[local-name()='extension'][@base='gml:AbstractFeatureType']/*[local-name()='sequence']/*[local-name()='element']", this.baseMapper.featureTypeDescription);
+        if (detailNodes.length > 0) {
+            const entries = this.mapper.getCustomEntries(false) ?? {};
+            const exceptions = ['is_feature_type', 'typename'];
+            var detailNavContentSection =this.addOutputWithAttributes(detailNavContent, "div", ["class"], ["section"]);
+            this.addOutputWithAttributes(detailNavContentSection, "a", ["class", "id"], ["anchor", "detail_details"]);
+            this.addOutput(detailNavContentSection, "h3", "Details");
+            Object.entries(entries).filter(([key, _]) => !exceptions.includes(key)).forEach(([key, value]) => {
+                this.addDetailTableRowWrapperNewLayout(detailNavContentSection, key, value);
+            });
+        }
+
+        if (this.hasValue(plugDescrDataSourceName) || this.hasValue(plugDescrOrganisation)) {
+            var detailNavContentSection = this.addOutputWithAttributes(detailNavContent, "div", ["class"], ["section"]);
+            this.addOutputWithAttributes(detailNavContentSection, "a", ["class", "id"], ["anchor", "metadata_info"]);
+            this.addOutput(detailNavContentSection, "h3", "Informationen zum Metadatensatz");
+            var result = this.addOutputWithAttributes(detailNavContentSection, "div", ["class"], ["table table--lined"]);
+            result = this.addOutput(result, "table", "");
+            result = this.addOutput(result, "tbody", "");
+            result = this.addOutput(result, "tr", "");
+            this.addOutput(result, "th", "Metadatenquelle");
+            result = this.addOutput(result, "td", "");
+            if (this.hasValue(plugDescrDataSourceName)) {
+                this.addOutput(result, "p", plugDescrDataSourceName);
+                this.addOutput(result, "span", "&nbsp;");
+            }
+            if (this.hasValue(plugDescrOrganisation)) {
+                this.addOutput(result, "p", plugDescrOrganisation);
+            }
+        }
+
+        return this.document.toString();
+    }
+
+    getMapPreview(name: string) {
+        return "MAP_PREVIEW";
+    }
+
+    getFeatureSummary() {
+        return "FEATURE_SUMMARY";
+    }
 
     addOutput(parent: Element, elementName: string, textContent?: string) {
         var element = this.document.createElement(elementName);

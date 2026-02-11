@@ -26,6 +26,7 @@ import { IndexDocumentFactory } from '../../../model/index.document.factory.js';
 import type { MetadataSource } from '../../../model/index.document.js';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
 import type { ZdmIndexDocument } from '../model/index.document.js';
+import { generateWfsUuid } from '../../../profiles/ingrid/ingrid.utils.js';
 
 export abstract class ZdmMapper<M extends WfsMapper> implements IndexDocumentFactory<ZdmIndexDocument> {
 
@@ -118,7 +119,7 @@ export abstract class ZdmMapper<M extends WfsMapper> implements IndexDocumentFac
     }
 
     getGeneratedId(): string{
-        return this.baseMapper.getGeneratedId()
+        return generateWfsUuid(this.getMetadataSource().source_base, this.baseMapper.getTypename(), this.baseMapper.gmlId);
     }
 
     getMetadataSource(): MetadataSource {

@@ -21,13 +21,22 @@
  * ==================================================
  */
 
-import type {ingridMapper} from "./ingrid.mapper.js";
-import {ingridCswMapper} from "./ingrid.csw.mapper.js";
+import { WfsImporter } from '../../../importer/wfs/wfs.importer.js';
+import { memberElements, type WfsSettings } from '../../../importer/wfs/wfs.settings.js';
+import * as MiscUtils from '../../../utils/misc.utils.js';
+import { updateIngridMetaIndex } from '../ingrid.utils.js';
 
-export class ingridMapperFactory {
-    static getMapper(mapper) : ingridMapper<any> {
-        switch (mapper.constructor.name) {
-            case 'CswMapper': return new ingridCswMapper(mapper)
-        }
+export class IngridWfsImporter extends WfsImporter {
+
+    constructor(settings: WfsSettings) {
+        super(MiscUtils.merge(settings, {
+            memberElements: memberElements[settings.wfsProfile],
+            harvestTypes: true,
+            requireGeometry: true
+        }));
+    }
+    
+    protected async postHarvestingHandling() {
+        await updateIngridMetaIndex(this.elastic, this.settings, "de.ingrid.iplug.wfs.dsc.WfsDscSearchPlug");
     }
 }

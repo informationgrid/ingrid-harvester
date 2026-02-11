@@ -21,20 +21,14 @@
  * ==================================================
  */
 
-import * as GeojsonUtils from '../../../utils/geojson.utils.js';
-import { IdfGenerator } from './idf.generator.js';
-import type { MetadataSource } from '../../../model/index.document.js';
-import { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
-import type { ZdmIndexDocument } from '../model/index.document.js';
-import { ZdmMapper } from './zdm.mapper.js';
+import * as GeojsonUtils from '../../../../utils/geojson.utils.js';
+import type { MetadataSource } from '../../../../model/index.document.js';
+import { ingridWfsMapper } from '../ingrid.wfs.mapper.js';
+import { ZdmIdfGenerator } from './zdm.idf.generator.js';
 
-export class ZdmWfsMapper extends ZdmMapper<WfsMapper> {
+export class ZdmWfsMapper extends ingridWfsMapper {
 
-    constructor(baseMapper: WfsMapper) {
-        super(baseMapper);
-    }
-
-    getDescription(): string {
+    getSummary(): string {
         var summary = this.baseMapper.select('./wfs:Abstract', this.baseMapper.featureOrFeatureType, true)?.textContent;
         var name = this.baseMapper.getTypename();
         var portal = "Küstendaten";
@@ -47,7 +41,7 @@ export class ZdmWfsMapper extends ZdmMapper<WfsMapper> {
     }
 
     getAdditionalHtml(): string {
-        let bbox = this.getBoundingBox()?.bbox;
+        let bbox = this.baseMapper.getBoundingBox()?.bbox;
         if (!bbox) {
             return null;
         }
@@ -69,9 +63,33 @@ export class ZdmWfsMapper extends ZdmMapper<WfsMapper> {
         return addHtml;
     }
 
-    getIdf(): string {
-        let idfGenerator = new IdfGenerator(this);
+    getCustomEntries(): Object {
+        return {
+            is_feature_type: this.baseMapper.isFeatureType(),
+            typename: this.baseMapper.getTypename(),
+            number_of_features: this.baseMapper.getNumberOfFeatures(),
+            map_iframe: this.getMapIFrame(250),
+        };
+    }
+
+    getMapIFrame(height: number): string {
+        let mapLink = '';
+        let serviceURL = encodeURIComponent(`${this.getMetadataSource().source_base}?SERVICE=WFS&VERSION=${this.baseMapper.settings.version}&`);
+        mapLink += '/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=';
+        mapLink += 'WFS%7C%7C' + encodeURIComponent(this.getTitle().replaceAll(',','') + ' (WFS)') + '%7C%7C' + serviceURL + '%7C%7C' + this.baseMapper.getTypename();
+        mapLink += '%2C';
+        let wmsURL = serviceURL.split('%3F')[0];
+        mapLink += 'WMS%7C%7C' + encodeURIComponent(this.getTitle().replaceAll(',','') + ' (WMS)') + '%7C%7C' + wmsURL + '%3F%7C%7C' + this.baseMapper.getTypename() + '%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F';
+        return '<iframe src="' + mapLink + '" height="' + height + '" frameborder="0" style="border:0"></iframe>';
+    }
+
+    getIDF(): string {
+        let idfGenerator = new ZdmIdfGenerator(this);
         return idfGenerator.createIdf(this.baseMapper.fetched.idx);
+    }
+
+    getSpatial() {
+        return this.baseMapper.getBoundingBox();
     }
 
     getModifiedDate(): Date{
@@ -82,35 +100,7 @@ export class ZdmWfsMapper extends ZdmMapper<WfsMapper> {
         return this.baseMapper.getMetadataSource();
     }
 
-    // getHarvestedData(): string{
-    //     return this.baseMapper.getHarvestedData();
-    // }
-
-    // getHarvestErrors() {
-    //     return this.baseMapper.getHarvestingErrors();
-    // }
-
     getIssued(): Date {
         return this.baseMapper.getIssued();
-    }
-
-    // getHarvestingDate(): Date {
-    //     return this.baseMapper.getHarvestingDate();
-    // }
-
-    // isValid() {
-    //     return this.baseMapper.isValid();
-    // }
-
-    // shouldBeSkipped() {
-    //     return this.baseMapper.shouldBeSkipped();
-    // }
-
-    // getOriginator(): Agent[]{
-    //     return this.baseMapper.getOriginator();
-    // }
-
-    executeCustomCode(doc: ZdmIndexDocument) {
-        this.baseMapper.executeCustomCode(doc);
     }
 }
