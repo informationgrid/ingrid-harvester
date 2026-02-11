@@ -23,11 +23,11 @@
 
 import log4js from 'log4js';
 import { ingridFactory } from './ingrid/profile.factory.js';
-import { mcloudFactory } from './mcloud/profile.factory.js';
-import type { BaseMapper } from '../importer/base.mapper.js';
-import { DiplanungFactory } from './diplanung/profile.factory.js';
-import { LvrFactory } from './lvr/profile.factory.js';
+// import { mcloudFactory } from './mcloud/profile.factory.js';
+// import { DiplanungFactory } from './diplanung/profile.factory.js';
+// import { LvrFactory } from './lvr/profile.factory.js';
 import type { ProfileFactory } from './profile.factory.js';
+// import { ZdmFactory } from './zdm/profile.factory.js';
 import type { ImporterSettings } from 'importer.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
@@ -55,18 +55,18 @@ export class ProfileFactoryLoader {
             case 'ingrid':
                 this.instance = new ingridFactory();
                 break;
-            case 'mcloud':
-                this.instance = new mcloudFactory();
-                break;
-            case 'diplanung':
-                this.instance = new DiplanungFactory();
-                break;
-            case 'lvr':
-                this.instance = new LvrFactory();
-                break;
-            case 'zdm':
-                this.instance = new ZdmFactory();
-                break;
+            // case 'mcloud':
+            //     this.instance = new mcloudFactory();
+            //     break;
+            // case 'diplanung':
+            //     this.instance = new DiplanungFactory();
+            //     break;
+            // case 'lvr':
+            //     this.instance = new LvrFactory();
+            //     break;
+            // case 'zdm':
+            //     this.instance = new ZdmFactory();
+            //     break;
             default:
                 let errorMsg = `Could not find profile: ${profile}`;
                 log.error(errorMsg);
