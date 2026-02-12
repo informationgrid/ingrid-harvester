@@ -68,6 +68,7 @@ import { ContextHelpButtonComponent } from "../shared/context-help/context-help-
 import { TranslocoDirective } from "@ngneat/transloco";
 import { StatIndicatorComponent } from "../shared/stat-indicator/stat-indicator.component";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
+import { DialogHeaderComponent } from "../shared/dialog-header/dialog-header.component";
 
 const harvesterRoutes: Routes = [
   {
@@ -97,39 +98,40 @@ const harvesterRoutes: Routes = [
     ImporterDetailComponent,
     ChipListComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(harvesterRoutes),
-    SharedModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatCardModule,
-    MatExpansionModule,
-    MatIconModule,
-    MatListModule,
-    MatSnackBarModule,
-    MatSlideToggleModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatChipsModule,
-    MatTabsModule,
-    ReactiveFormsModule,
-    MatCheckboxModule,
-    MatBadgeModule,
-    ScrollingModule,
-    CronjobFormFieldComponent,
-    MatAutocompleteModule,
-    ContextHelpDirective,
-    MatTooltip,
-    MatGridList,
-    MatGridTile,
-    ContextHelpButtonComponent,
-    TranslocoDirective,
-    StatIndicatorComponent,
-    MatMenu,
-    MatMenuTrigger,
-    MatMenuItem
-  ],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(harvesterRoutes),
+        SharedModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatCardModule,
+        MatExpansionModule,
+        MatIconModule,
+        MatListModule,
+        MatSnackBarModule,
+        MatSlideToggleModule,
+        MatProgressBarModule,
+        MatProgressSpinnerModule,
+        MatChipsModule,
+        MatTabsModule,
+        ReactiveFormsModule,
+        MatCheckboxModule,
+        MatBadgeModule,
+        ScrollingModule,
+        CronjobFormFieldComponent,
+        MatAutocompleteModule,
+        ContextHelpDirective,
+        MatTooltip,
+        MatGridList,
+        MatGridTile,
+        ContextHelpButtonComponent,
+        TranslocoDirective,
+        StatIndicatorComponent,
+        MatMenu,
+        MatMenuTrigger,
+        MatMenuItem,
+        DialogHeaderComponent
+    ],
   exports: [
     HarvesterComponent
   ]
