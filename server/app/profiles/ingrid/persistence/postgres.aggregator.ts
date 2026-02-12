@@ -26,6 +26,7 @@ import type { PostgresAggregator as AbstractPostgresAggregator } from '../../../
 import type { Bucket } from '../../../persistence/postgres.utils.js';
 import { createEsId } from '../ingrid.utils.js';
 import type { IngridIndexDocument } from '../model/index.document.js';
+import * as MiscUtils from '../../../utils/misc.utils.js';
 
 export class PostgresAggregator implements AbstractPostgresAggregator<IngridIndexDocument> {
 
@@ -136,7 +137,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
     private addCrossReference(idf: string, additionalDoc: IngridIndexDocument): string {
         let direction = additionalDoc.hierarchylevel == 'service' ? 'IN' : 'OUT';
         // let objectType = additionalDoc.hierarchylevel == 'service' ? 3 : 1;
-        let crossReference = `
+        let crossReference = escapeIdf`
 <idf:crossReference direction="${direction}" orig-uuid="${additionalDoc.uuid}" uuid="${additionalDoc.uuid}">
     <idf:objectName>${additionalDoc.title}</idf:objectName>
     <idf:attachedToField entry-id="3600" list-id="2000">Gekoppelte Daten</idf:attachedToField>
@@ -144,7 +145,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
     <idf:description>${additionalDoc.summary}</idf:description>`;
         if (additionalDoc.hierarchylevel == 'service') {
             let idx = additionalDoc.t011_obj_serv_operation?.findIndex(op => op.name?.toLowerCase() == 'getcapabilities');
-            crossReference += `
+            crossReference += escapeIdf`
     <idf:serviceType>${additionalDoc.t011_obj_serv?.type ?? ""}</idf:serviceType>
     <idf:serviceVersion>${additionalDoc.t011_obj_serv_version?.version_value ?? ""}</idf:serviceVersion>
     <idf:serviceOperation>${additionalDoc.t011_obj_serv_operation?.[idx]?.name ?? ""}</idf:serviceOperation>
@@ -153,7 +154,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         let addHtml = Array.isArray(additionalDoc.additional_html_1) ? additionalDoc.additional_html_1[0] : additionalDoc.additional_html_1;
         let browseGraphic = addHtml?.match(/<img src=["'](.*?)["'].*/)?.[1];
         if (browseGraphic) {
-            crossReference += `
+            crossReference += escapeIdf`
     <idf:graphicOverview>${browseGraphic}</idf:graphicOverview>`
         }
         else {
@@ -162,7 +163,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         }
         crossReference += `
 </idf:crossReference>`;
-        return idf.replace('</idf:idfMdMetadata>', `${crossReference.replaceAll("&", "&amp;")}\n</idf:idfMdMetadata>`);
+        return idf.replace('</idf:idfMdMetadata>', `${crossReference}\n</idf:idfMdMetadata>`);
     }
 
     private createObjRef(doc: IngridIndexDocument, special_ref: string, skeletonOnly: boolean = false) {
@@ -177,4 +178,12 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
             version: skeletonOnly ? "" : doc.t011_obj_serv_version?.version_value ?? ""
         }
     }
+}
+
+function escapeIdf(literals: TemplateStringsArray, ...substitutions: any[]) {
+    return literals.reduce((result, literal, i) => {
+        const value = substitutions[i];
+        const escaped = typeof value === 'string' ? MiscUtils.escapeXml(value) : value;
+        return result + literal + (escaped ?? '');
+    }, '');
 }

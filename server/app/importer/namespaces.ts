@@ -35,6 +35,7 @@ export const namespaces = {
     GML_3_2: 'http://www.opengis.net/gml/3.2',
     GMX: 'http://www.isotc211.org/2005/gmx',
     HYDRA: 'http://www.w3.org/ns/hydra/core#',
+    IDF: 'http://www.portalu.de/IDF/1.0',
     INSPIRE_COMMON: 'http://inspire.ec.europa.eu/schemas/common/1.0',
     INSPIRE_VS: 'http://inspire.ec.europa.eu/schemas/inspire_vs/1.0',
     LIDO: 'http://www.lido-schema.org',
