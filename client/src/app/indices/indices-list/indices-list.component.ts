@@ -38,9 +38,6 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
     standalone: false
 })
 export class IndicesListComponent implements OnInit {
-
-  pageContextHelpIsVisible: boolean = false;
-
   @ViewChild(CdkVirtualScrollViewport, {static: false})
   viewPort: CdkVirtualScrollViewport;
 

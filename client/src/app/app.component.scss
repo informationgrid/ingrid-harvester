@@ -51,18 +51,9 @@ mat-drawer-container {
 :host ::ng-deep mat-drawer-content.mat-drawer-content {
   display: flex;
   flex-direction: column;
-
-  // Accessibility
-  min-width: 1024px;
 }
 
 .mat-drawer {
   border: 0;
-}
-
-.fixed-upper-right {
-  position: fixed;
-  top: 6px;
-  right: 16px;
-  z-index: 200;
+  box-shadow: unset;
 }

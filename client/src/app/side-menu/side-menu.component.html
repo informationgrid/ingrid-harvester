@@ -37,10 +37,8 @@
         [matTooltip]="t(item.path)"
         matTooltipPosition="right"
         [matTooltipDisabled]="menuIsExpanded"
-        [class.active]="
-            currentRoute?.indexOf(item.path) === 0
-        "
         [attr.aria-label]="t(item.path)"
+        [activated]="currentRoute?.indexOf(item.path) === 0"
         role="menuitem"
         tabindex="0"
     >
@@ -49,7 +47,7 @@
     </a>
 }
 
-<div class="fillVertical"></div>
+<div class="flex-1"></div>
 
     <!-- @if (showDrawer | async) { -->
         <a

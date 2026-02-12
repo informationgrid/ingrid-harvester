@@ -21,25 +21,31 @@
  * ==================================================
  */
 
-.mapping-list {
-  margin-bottom: 20px;
-  padding: 8px;
-}
+import { Component, input, output } from "@angular/core";
+import { MatIconButton } from "@angular/material/button";
+import { MatIcon } from "@angular/material/icon";
+import { MatTooltip } from "@angular/material/tooltip";
+import { TranslocoDirective } from "@ngneat/transloco";
 
-.mapping-list h3 {
-  margin: 0;
-  font-weight: 500;
-}
+@Component({
+  selector: "stat-indicator",
+  templateUrl: "./stat-indicator.component.html",
+  imports: [
+    MatIconButton,
+    MatIcon,
+    MatTooltip,
+    TranslocoDirective
+  ],
+  styleUrls: ["./stat-indicator.component.scss"]
+})
+export class StatIndicatorComponent {
+  leading = input<string>();
+  value = input<number>();
+  text = input<string>();
 
-.mapping-item {
-  min-height: 56px;
-  display: flex;
-  flex-direction: row;
-  gap: 16px;
-  align-items: center;
-  border-bottom: 1px solid #e0e0e0;
-}
+  canOpenDetail = input<boolean>(false);
+  openDetail = output<void>();
 
-.mapping-item:last-of-type {
-  border-bottom: none;
+  constructor() {
+  }
 }

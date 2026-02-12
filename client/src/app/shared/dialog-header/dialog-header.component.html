@@ -21,18 +21,28 @@
     ==================================================
 -->
 
-@if (isLoading) {
-  <div>Loading log file ...</div>
-} @else {
-  <div class="logs-container">
-    <cdk-virtual-scroll-viewport itemSize="19" class="h-full">
-      <div
-        class="log-entry"
-        [class]="determineClass(line)"
-        *cdkVirtualFor="let line of logdata"
-      >
-        {{ line }}
-      </div>
-    </cdk-virtual-scroll-viewport>
-  </div>
-}
+<div
+  mat-dialog-title
+  class="header"
+>
+  @if (icon()) {
+    <mat-icon
+      class="icon"
+      [svgIcon]="icon()"
+    />
+  }
+
+  <h2 class="title">
+    {{ title() }}
+  </h2>
+
+  <div class="flex-1"></div>
+
+  <button
+    matIconButton
+    class="dismiss-btn"
+    mat-dialog-close
+  >
+    <mat-icon svgIcon="close" />
+  </button>
+</div>

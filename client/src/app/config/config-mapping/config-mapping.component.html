@@ -21,36 +21,60 @@
     ==================================================
 -->
 
-<page-template label="Mapping (Datenformate)">
-  <aside left-side contextHelp="about_mapping"></aside>
-  <div main-content class="margin-below">
-    @for (type of types | async; track type) {
-      <mat-list dense class="list-hover mapping-card">
-            <h3 matSubheader>{{type.name}}</h3>
-            @for (item of type.items; track item) {
-              <mat-list-item>
-                <button mat-icon-button matListItemIcon color="warn" (click)="deleteItem(type.name, item)" class="mapping-delete-button" >
-                  <mat-icon svgIcon="Delete"/>
-                </button>
-                <!-- <mat-icon matListItemIcon svgIcon="Delete" (click)="deleteItem(type.name, item)" /> -->
-                <!-- <button mat-icon-button color="warn" (click)="deleteItem(type.name, item)" >
-                  <mat-icon matListItemIcon svgIcon="Delete"/>
-                </button> -->
-                <span matListItemTitle>{{item}}</span>
-              </mat-list-item>
-            }
-        </mat-list>
-      }
-    <div class="big-button-container">
+<page-template
+  label="Mapping"
+  subLabel="(Datenformate)"
+  *transloco="let t"
+>
+  <ng-container left-side>
+    <aside contextHelp="about_mapping"></aside>
+  </ng-container>
 
-      <button mat-flat-button
-              color="primary"
-              (click)="addItem()"
-              class="fixed-bottom-right"
-              id="btnAddMapping">
-        <mat-icon  svgIcon="Add" aria-label="Add Mapping" ></mat-icon>
+  <ng-container main-content>
+    <div class="sticky-action-bar">
+      <button
+        matButton="filled"
+        color="primary"
+        (click)="addItem()"
+        id="btnAddMapping"
+      >
+        <mat-icon svgIcon="Add" aria-label="Add Mapping"></mat-icon>
         Hinzufügen
       </button>
     </div>
-  </div>
+
+    @for (type of types | async; track type) {
+      <mat-card class="mapping-list">
+        <mat-card-header>
+          <h3>{{ type.name }}</h3>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div
+            class="flex-col"
+            role="list"
+            aria-label="{{ type.name }}"
+          >
+            @for (item of type.items; track item) {
+              <div
+                class="mapping-item"
+                role="listitem"
+                aria-label="{{ item }}"
+              >
+                <button
+                  matIconButton
+                  color="warn"
+                  matTooltip="{{ t('delete') }}"
+                  (click)="deleteItem(type.name, item)"
+                >
+                  <mat-icon svgIcon="Delete" />
+                </button>
+                <div class="break-word">{{ item }}</div>
+              </div>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+  </ng-container>
 </page-template>

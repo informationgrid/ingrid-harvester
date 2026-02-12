@@ -28,15 +28,10 @@
 }
 
 :host {
+  height: 100%;
   display: flex;
   background-color: variables.$ige-secondary-dark;
-  height: 100%;
   letter-spacing: 0.67px;
-}
-
-.active {
-  background: variables.$ige-primary !important;
-  box-shadow: 0 2px 2px -2px #808080;
 }
 
 mat-nav-list {
@@ -44,23 +39,10 @@ mat-nav-list {
   width: 320px;
   display: flex;
   flex-direction: column;
+
   &.collapsed {
     width: 56px;
     overflow: hidden;
-  }
-
-  mat-icon {
-    color: #ffffff;
-  }
-
-  a:hover {
-    mat-icon {
-      color: #ffffff;
-    }
-  }
-
-  p {
-    white-space: normal;
   }
 
   .menu-toggle {
@@ -68,6 +50,3 @@ mat-nav-list {
   }
 }
 
-.fillVertical {
-  flex: 1;
-}

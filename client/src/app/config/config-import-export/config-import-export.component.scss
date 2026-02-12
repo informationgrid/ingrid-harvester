@@ -21,12 +21,8 @@
  * ==================================================
  */
 
-.import-export-card {
-    margin: auto;
-    margin-bottom: 20px;
-    box-sizing: border-box;
-    max-width: var(--max-width-panel);
-    width: 100%;
+mat-card {
+  padding: 8px;
 }
 
 label {

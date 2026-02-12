@@ -34,22 +34,12 @@ import { Chart, registerables } from 'chart.js';
 })
 export class MonitoringComponent implements OnInit {
 
-  breakpoint;
-  breakpointCols;
   constructor() {
     Chart.register(...registerables);
     Chart.defaults.color = 'black'; // Global text color
   }
 
   ngOnInit() {
-    this.breakpoint = (window.innerWidth <= 1400) ? 1 : 2;
-    this.breakpointCols = (window.innerWidth <= 1400) ? 1 : 2;
-  }
-
-
-  onResize(event) {
-    this.breakpoint = (event.target.innerWidth <= 1400) ? 1 : 2;
-    this.breakpointCols = (event.target.innerWidth <= 1400) ? 1 : 2;
   }
 
   private static monitoringHarvesterComponent: MonitoringHarvesterComponent;

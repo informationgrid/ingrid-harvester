@@ -21,25 +21,27 @@
  * ==================================================
  */
 
-.mapping-list {
-  margin-bottom: 20px;
-  padding: 8px;
-}
+import { Component, input } from "@angular/core";
+import { MatDialogClose, MatDialogTitle } from "@angular/material/dialog";
+import { MatIcon } from "@angular/material/icon";
+import { MatIconButton } from "@angular/material/button";
 
-.mapping-list h3 {
-  margin: 0;
-  font-weight: 500;
-}
+@Component({
+  selector: "app-dialog-header",
+  templateUrl: "./dialog-header.component.html",
+  imports: [
+    MatDialogTitle,
+    MatIcon,
+    MatIconButton,
+    MatDialogClose
+  ],
+  standalone: true,
+  styleUrls: ["./dialog-header.component.scss"]
+})
+export class DialogHeaderComponent {
+  icon = input<string>();
+  title = input<string>();
 
-.mapping-item {
-  min-height: 56px;
-  display: flex;
-  flex-direction: row;
-  gap: 16px;
-  align-items: center;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.mapping-item:last-of-type {
-  border-bottom: none;
+  constructor() {
+  }
 }

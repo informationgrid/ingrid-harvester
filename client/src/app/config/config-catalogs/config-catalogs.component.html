@@ -21,38 +21,81 @@
     ==================================================
 -->
 
-<page-template label="Katalogverwaltung">
-  <aside left-side contextHelp="about_catalog_management"></aside>
-  <div main-content class="margin-below">
-    <mat-list class="list-hover catalog-card">
-      @for (wrapper of catalogsWrapper | async; track wrapper.catalog.identifier) {
-        <mat-list-item>
-          <mat-slide-toggle matListItemIcon color="accent" [checked]="wrapper.catalog.isEnabled"
-              title="Für Suche an- / ausschalten" (change)="toggleCatalogStatus($event, wrapper.catalog)"
-              (click)="$event.stopImmediatePropagation()">
-          </mat-slide-toggle>
-          <button mat-icon-button matListItemIcon color="info" class="catalog-config-button"
-              title="Ändern" (click)="addOrEditCatalog(wrapper.catalog)">
-            <mat-icon svgIcon="Edit" />
-          </button>
-          <button mat-icon-button matListItemIcon color="warn" class="catalog-config-button"
-              title="Löschen" (click)="deleteCatalog(wrapper.catalog)">
-            <mat-icon svgIcon="Delete" />
-          </button>
-          <span matListItemTitle>{{wrapper.catalog.title}} ({{wrapper.count}} Metadatensätze)</span>
-          <span matListItemLine>{{wrapper.catalog.description}}</span>
-        </mat-list-item>
-      }
-    </mat-list>
-    <div class="big-button-container">
-      <button mat-flat-button
-              color="primary"
-              (click)="addOrEditCatalog(null)"
-              class="fixed-bottom-right"
-              id="btnAddCatalog">
-        <mat-icon  svgIcon="Add" aria-label="Add Catalog" ></mat-icon>
+<page-template
+  label="Katalogverwaltung"
+  *transloco="let t"
+>
+  <ng-container left-side>
+    <aside contextHelp="about_catalog_management"></aside>
+  </ng-container>
+
+  <ng-container main-content>
+    <div class="sticky-action-bar">
+      <button
+        matButton="filled"
+        color="primary"
+        (click)="addOrEditCatalog(null)"
+        id="btnAddCatalog"
+      >
+        <mat-icon svgIcon="Add" aria-label="Add Catalog"></mat-icon>
         Hinzufügen
       </button>
     </div>
-  </div>
+
+    <mat-card>
+      <mat-card-content>
+        <div
+          class="flex-col gap-16"
+          role="list"
+          aria-label="{{ t('config.catalogs') }}"
+        >
+          @for (wrapper of catalogsWrapper | async; track wrapper.catalog.identifier) {
+            <div
+              class="catalog"
+              role="listitem"
+              aria-label="{{ wrapper.catalog.title }}"
+            >
+              <div class="flex-row gap-8 align-items-center">
+                <mat-slide-toggle
+                  color="accent"
+                  aria-label="Für Suche an- / ausschalten"
+                  [checked]="wrapper.catalog.isEnabled"
+                  (change)="toggleCatalogStatus($event, wrapper.catalog)"
+                  (click)="$event.stopImmediatePropagation()"
+                >
+                </mat-slide-toggle>
+
+                <button
+                  matIconButton
+                  color="info"
+                  [matTooltip]="t('edit')"
+                  [attr.aria-label]="t('edit')"
+                  (click)="addOrEditCatalog(wrapper.catalog)"
+                >
+                  <mat-icon svgIcon="Edit" />
+                </button>
+
+                <button
+                  matIconButton
+                  color="warn"
+                  [matTooltip]="t('Löschen')"
+                  [attr.aria-label]="t('delete')"
+                  (click)="deleteCatalog(wrapper.catalog)"
+                >
+                  <mat-icon svgIcon="Delete" />
+                </button>
+              </div>
+
+              <div class="flex-col">
+                <span>
+                  {{ wrapper.catalog.title }} ({{ wrapper.count }} Metadatensätze)
+                </span>
+                <span class="catalog-subtitle">{{ wrapper.catalog.description }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
 </page-template>
