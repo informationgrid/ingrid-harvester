@@ -21,63 +21,38 @@
  * ==================================================
  */
 
-@use "sass:color";
-@use "../../_variables";
+@use "../../../variables";
 
 :host {
-  overflow-y: hidden;
-  position: relative;
+  background-color: variables.$ige-secondary-dark;
 }
 
-mat-toolbar {
-  height: variables.$header-height;
-  gap: 16px;
-  padding-left: 12px;
-  padding-right: 12px;
-  background-color: white;
-}
-
-.logo {
-  width: 32px;
-  height: 32px;
-  object-fit: cover;
-}
-
-.site-title {
-  color: variables.$ige-secondary;
+.header {
+  width: 100%;
   display: flex;
   flex-direction: row;
-  gap: 6px;
+  gap: 16px;
+  padding: 16px 24px;
+  align-items: center;
+
+  &:before {
+    display: none;
+  }
 }
 
-mat-toolbar h1 {
-  font-size: 20px;
-}
-
-.side-menu-btn {
+.icon {
   color: white;
-  background-color: variables.$ige-secondary;
-  border-radius: 4px;
+  width: 24px;
+  height: 24px;
 }
 
-[matIconButton] {
-  display: none;
+.title {
+  color: white;
+  font-weight: normal;
+  font-size: 20px;
+  margin: 0;
 }
 
-@media screen and (max-width: 640px) {
-  mat-toolbar {
-    gap: 12px;
-  }
-
-  .site-title {
-    display: none;
-  }
-
-  [matButton] {
-    display: none;
-  }
-
-  [matIconButton] {
-    display: block;
-  }
+.dismiss-btn {
+  background-color: white;
 }

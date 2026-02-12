@@ -27,6 +27,7 @@
 // @import '@angular/material/theming';
 
 $max-width-panel: 1000px;
+$header-height: 56px;
 
 // Copy the palettes from your selected theme (usually theme.scss).
 $app-primary: mat.m2-define-palette(mat.$m2-grey-palette);

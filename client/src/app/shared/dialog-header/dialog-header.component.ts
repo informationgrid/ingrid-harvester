@@ -21,63 +21,27 @@
  * ==================================================
  */
 
-@use "sass:color";
-@use "../../_variables";
+import { Component, input } from "@angular/core";
+import { MatDialogClose, MatDialogTitle } from "@angular/material/dialog";
+import { MatIcon } from "@angular/material/icon";
+import { MatIconButton } from "@angular/material/button";
 
-:host {
-  overflow-y: hidden;
-  position: relative;
-}
+@Component({
+  selector: "app-dialog-header",
+  templateUrl: "./dialog-header.component.html",
+  imports: [
+    MatDialogTitle,
+    MatIcon,
+    MatIconButton,
+    MatDialogClose
+  ],
+  standalone: true,
+  styleUrls: ["./dialog-header.component.scss"]
+})
+export class DialogHeaderComponent {
+  icon = input<string>();
+  title = input<string>();
 
-mat-toolbar {
-  height: variables.$header-height;
-  gap: 16px;
-  padding-left: 12px;
-  padding-right: 12px;
-  background-color: white;
-}
-
-.logo {
-  width: 32px;
-  height: 32px;
-  object-fit: cover;
-}
-
-.site-title {
-  color: variables.$ige-secondary;
-  display: flex;
-  flex-direction: row;
-  gap: 6px;
-}
-
-mat-toolbar h1 {
-  font-size: 20px;
-}
-
-.side-menu-btn {
-  color: white;
-  background-color: variables.$ige-secondary;
-  border-radius: 4px;
-}
-
-[matIconButton] {
-  display: none;
-}
-
-@media screen and (max-width: 640px) {
-  mat-toolbar {
-    gap: 12px;
-  }
-
-  .site-title {
-    display: none;
-  }
-
-  [matButton] {
-    display: none;
-  }
-
-  [matIconButton] {
-    display: block;
+  constructor() {
   }
 }
