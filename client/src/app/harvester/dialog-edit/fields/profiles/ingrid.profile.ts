@@ -4,6 +4,11 @@ export abstract class IngridProfile {
   static fields(): FormlyFieldConfig[] {
     return [
       {
+        wrappers: ["section"],
+        props: {
+          label: "InGrid Einstellungen",
+          contextHelpId: "harvester_settings_profile_ingrid",
+        },
         expressions: {
           hide: "model.profile != 'ingrid' && model.profile != 'zdm'",
         },

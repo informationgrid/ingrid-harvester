@@ -11,6 +11,8 @@ export abstract class SharedFields {
   }): FormlyFieldConfig[] {
     return [
       {
+        wrappers: ["section"],
+        props: { label: "Allgemein" },
         fieldGroup: [
           {
             fieldGroupClassName: "ingrid-row",
@@ -101,31 +103,31 @@ export abstract class SharedFields {
               required: true,
             },
           },
-        ],
-      },
-      {
-        fieldGroupClassName: "ingrid-row",
-        fieldGroup: [
           {
-            key: "maxRecords",
-            type: "input",
-            className: "ingrid-col-10 ingrid-col-md-auto",
-            props: {
-              label: "Max. Datensätze pro Anfrage",
-              type: "number",
-              min: 1,
-              max: 10000,
-            },
-          },
-          {
-            key: "startPosition",
-            type: "input",
-            className: "ingrid-col-10 ingrid-col-md-auto",
-            props: {
-              label: "Start Datensatz",
-              type: "number",
-              min: 0,
-            },
+            fieldGroupClassName: "ingrid-row",
+            fieldGroup: [
+              {
+                key: "maxRecords",
+                type: "input",
+                className: "ingrid-col-10 ingrid-col-md-auto",
+                props: {
+                  label: "Max. Datensätze pro Anfrage",
+                  type: "number",
+                  min: 1,
+                  max: 10000,
+                },
+              },
+              {
+                key: "startPosition",
+                type: "input",
+                className: "ingrid-col-10 ingrid-col-md-auto",
+                props: {
+                  label: "Start Datensatz",
+                  type: "number",
+                  min: 0,
+                },
+              },
+            ],
           },
         ],
       },

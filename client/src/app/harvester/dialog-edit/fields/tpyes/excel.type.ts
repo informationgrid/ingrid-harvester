@@ -5,6 +5,10 @@ export abstract class ExcelType {
   static fields(): FormlyFieldConfig[] {
     return [
       {
+        wrappers: ["section"],
+        props: {
+          label: "Excel",
+        },
         expressions: {
           hide: "model.type != 'EXCEL'",
         },

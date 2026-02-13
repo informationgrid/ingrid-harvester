@@ -2121,6 +2121,14 @@ h2.title-with-context-help {
   }
 }
 
+.ingrid-checkbox {
+  --mat-form-field-container-vertical-padding: 4px;
+
+  .mdc-text-field {
+    padding: 0 4px;
+  }
+}
+
 // -----------------------------------------------------------
 // Column responsiveness management
 // Every row contains 10 spaces. if 10 is assigned in the class,
