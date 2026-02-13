@@ -24,9 +24,9 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { Router, RouterModule, Routes } from "@angular/router";
 import {
+  inject,
   LOCALE_ID,
   NgModule,
-  inject,
   provideAppInitializer,
 } from "@angular/core";
 
@@ -48,12 +48,11 @@ import { environment } from "../environments/environment";
 import { UnauthorizedInterceptor } from "./security/unauthorized.interceptor";
 import { LoginComponent } from "./security/login.component";
 import { ReactiveFormsModule } from "@angular/forms";
-import { MatCardModule } from "@angular/material/card";
+import { MAT_CARD_CONFIG, MatCardModule } from "@angular/material/card";
 import {
   MAT_FORM_FIELD_DEFAULT_OPTIONS,
   MatFormFieldModule,
 } from "@angular/material/form-field";
-import { MAT_CARD_CONFIG } from "@angular/material/card";
 import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
@@ -66,6 +65,10 @@ import { MainHeaderComponent } from "./main-header/main-header.component";
 import { routes } from "./app.router";
 import { provideFormlyCore } from "@ngx-formly/core";
 import { withFormlyMaterial } from "@ngx-formly/material";
+import { FormlySectionWrapperComponent } from "./formly/wrappers/formly-section-wrapper/formly-section-wrapper.component";
+import { FormlyInlineHelpWrapperComponent } from "./formly/wrappers/formly-inline-help-wrapper/formly-inline-help-wrapper.component";
+import { FormlyChipTypeComponent } from "./formly/types/formly-chip-type/formly-chip-type.component";
+import { FormlyAutocompleteTypeComponent } from "./formly/types/formly-autocomplete-type/formly-autocomplete-type.component";
 
 registerLocaleData(localeDe);
 
@@ -131,8 +134,16 @@ const appRoutes: Routes = routes;
     { provide: MAT_CARD_CONFIG, useValue: { appearance: "raised" } },
     provideHttpClient(withInterceptorsFromDi()),
     provideFormlyCore({
-      ...withFormlyMaterial()
-    })
+      types: [
+        { name: "chip", component: FormlyChipTypeComponent },
+        { name: "autocomplete", component: FormlyAutocompleteTypeComponent },
+      ],
+      wrappers: [
+        { name: "section", component: FormlySectionWrapperComponent },
+        { name: "inline-help", component: FormlyInlineHelpWrapperComponent },
+      ],
+      ...withFormlyMaterial(),
+    }),
   ],
 })
 export class AppModule {}

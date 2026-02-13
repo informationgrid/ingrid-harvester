@@ -36,14 +36,13 @@
   font-style: normal;
   font-weight: 400;
   src: url(assets/fonts/roboto-v20-latin-regular.eot);
-  src:
-    local("Roboto"),
-    local("Roboto-Regular"),
-    url(assets/fonts/roboto-v20-latin-regular.eot?#iefix) format("embedded-opentype"),
-    url(assets/fonts/roboto-v20-latin-regular.woff2) format("woff2"),
-    url(assets/fonts/roboto-v20-latin-regular.woff) format("woff"),
-    url(assets/fonts/roboto-v20-latin-regular.ttf) format("truetype"),
-    url(assets/fonts/roboto-v20-latin-regular.svg#Roboto) format("svg");
+  src: local("Roboto"),
+  local("Roboto-Regular"),
+  url(assets/fonts/roboto-v20-latin-regular.eot?#iefix) format("embedded-opentype"),
+  url(assets/fonts/roboto-v20-latin-regular.woff2) format("woff2"),
+  url(assets/fonts/roboto-v20-latin-regular.woff) format("woff"),
+  url(assets/fonts/roboto-v20-latin-regular.ttf) format("truetype"),
+  url(assets/fonts/roboto-v20-latin-regular.svg#Roboto) format("svg");
 }
 
 @font-face {
@@ -51,14 +50,13 @@
   font-style: normal;
   font-weight: 500;
   src: url(assets/fonts/roboto-v20-latin-500.eot);
-  src:
-    local("Roboto Medium"),
-    local("Roboto-Medium"),
-    url(assets/fonts/roboto-v20-latin-500.eot?#iefix) format("embedded-opentype"),
-    url(assets/fonts/roboto-v20-latin-500.woff2) format("woff2"),
-    url(assets/fonts/roboto-v20-latin-500.woff) format("woff"),
-    url(assets/fonts/roboto-v20-latin-500.ttf) format("truetype"),
-    url(assets/fonts/roboto-v20-latin-500.svg#Roboto) format("svg");
+  src: local("Roboto Medium"),
+  local("Roboto-Medium"),
+  url(assets/fonts/roboto-v20-latin-500.eot?#iefix) format("embedded-opentype"),
+  url(assets/fonts/roboto-v20-latin-500.woff2) format("woff2"),
+  url(assets/fonts/roboto-v20-latin-500.woff) format("woff"),
+  url(assets/fonts/roboto-v20-latin-500.ttf) format("truetype"),
+  url(assets/fonts/roboto-v20-latin-500.svg#Roboto) format("svg");
 }
 
 
@@ -70,122 +68,478 @@
   display: inline-flex !important;
 }
 
-.flex-row { display: flex; flex-direction: row; }
-.flex-col { display: flex; flex-direction: column; }
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
 
-.flex-wrap { flex-wrap: wrap; }  // Mostly used with flex-row, when wrapping is desired.
-.rows-2 { @media screen and (max-width: 599px) { flex: 1 1 50%; } }  // Switch from flex-row to flex-col on mobile.
-.flex-col-mobile { @media screen and (max-width: 599px) { flex-direction: column; } }  // Switch from flex-row to flex-col on mobile.
-.flex-row-mobile { @media screen and (max-width: 599px) { flex-direction: column; } }  // Switch from flex-row to flex-col on mobile.
-.flex-100-mobile { @media only screen and (max-width: 599px) { min-width: 100% } }  // Switch from flex-row to flex-col on mobile.
-.flex-10-mobile { @media only screen and (max-width: 599px) { min-width: 10% } }  // Switch from flex-row to flex-col on mobile.
-.flex-20-mobile { @media only screen and (max-width: 599px) { min-width: 20% } }  // Switch from flex-row to flex-col on mobile.
-.flex-50-mobile { @media only screen and (max-width: 599px) { min-width: 50% } }  // Switch from flex-row to flex-col on mobile.
-.flex-80-mobile { @media only screen and (max-width: 599px) { min-width: 80% } }  // Switch from flex-row to flex-col on mobile.
-.flex-90-mobile { @media only screen and (max-width: 599px) { min-width: 90% } }  // Switch from flex-row to flex-col on mobile.
-.flex-grow-mobile { @media only screen and (max-width: 599px) { flex-grow: 1; } }  // Switch from flex-row to flex-col on mobile.
-.flex-wrap-mobile { @media only screen and (max-width: 599px) { flex-wrap: wrap; } }  // Switch from flex-row to flex-col on mobile.
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
 
-.flex-1 { flex: 1 }  // Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
-.flex-5 { flex: 1 1 100%; max-width: 5%; }
-.flex-10 { flex: 1 1 100%; max-width: 10%; }
-.flex-15 { flex: 1 1 100%; max-width: 15%; }
-.flex-20 { flex: 1 1 100%; max-width: 20%; }
-.flex-25 { flex: 1 1 100%; max-width: 25%; }
-.flex-30 { flex: 1 1 100%; max-width: 30%; }
-.flex-35 { flex: 1 1 100%; max-width: 35%; }
-.flex-40 { flex: 1 1 100%; max-width: 40%; }
-.flex-45 { flex: 1 1 100%; max-width: 45%; }
-.flex-50 { flex: 1 1 100%; max-width: 50%; }
-.flex-55 { flex: 1 1 100%; max-width: 55%; }
-.flex-60 { flex: 1 1 100%; max-width: 60%; }
-.flex-65 { flex: 1 1 100%; max-width: 65%; }
-.flex-70 { flex: 1 1 100%; max-width: 70%; }
-.flex-75 { flex: 1 1 100%; max-width: 75%; }
-.flex-80 { flex: 1 1 100%; max-width: 80%; }
-.flex-85 { flex: 1 1 100%; max-width: 85%; }
-.flex-90 { flex: 1 1 100%; max-width: 90%; }
-.flex-95 { flex: 1 1 100%; max-width: 95%; }
-.flex-100 { flex: 1 1 100%; max-width: 100%; }
-.flex-grow { flex-grow: 1; }
-.flex-wrap { flex-wrap: wrap; }
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+// Mostly used with flex-row, when wrapping is desired.
+.rows-2 {
+  @media screen and (max-width: 599px) {
+    flex: 1 1 50%;
+  }
+}
+
+// Switch from flex-row to flex-col on mobile.
+.flex-col-mobile {
+  @media screen and (max-width: 599px) {
+    flex-direction: column;
+  }
+}
+
+// Switch from flex-row to flex-col on mobile.
+.flex-row-mobile {
+  @media screen and (max-width: 599px) {
+    flex-direction: column;
+  }
+}
+
+// Switch from flex-row to flex-col on mobile.
+.flex-100-mobile {
+  @media only screen and (max-width: 599px) {
+    min-width: 100%
+  }
+}
+
+// Switch from flex-row to flex-col on mobile.
+.flex-10-mobile {
+  @media only screen and (max-width: 599px) {
+    min-width: 10%
+  }
+}
+
+// Switch from flex-row to flex-col on mobile.
+.flex-20-mobile {
+  @media only screen and (max-width: 599px) {
+    min-width: 20%
+  }
+}
+
+// Switch from flex-row to flex-col on mobile.
+.flex-50-mobile {
+  @media only screen and (max-width: 599px) {
+    min-width: 50%
+  }
+}
+
+// Switch from flex-row to flex-col on mobile.
+.flex-80-mobile {
+  @media only screen and (max-width: 599px) {
+    min-width: 80%
+  }
+}
+
+// Switch from flex-row to flex-col on mobile.
+.flex-90-mobile {
+  @media only screen and (max-width: 599px) {
+    min-width: 90%
+  }
+}
+
+// Switch from flex-row to flex-col on mobile.
+.flex-grow-mobile {
+  @media only screen and (max-width: 599px) {
+    flex-grow: 1;
+  }
+}
+
+// Switch from flex-row to flex-col on mobile.
+.flex-wrap-mobile {
+  @media only screen and (max-width: 599px) {
+    flex-wrap: wrap;
+  }
+}
+
+// Switch from flex-row to flex-col on mobile.
+
+.flex-1 {
+  flex: 1
+}
+
+// Same as flex: 1 1 0 (grow, shrink, basis 0). Has similar effect to width: 100%;
+.flex-5 {
+  flex: 1 1 100%;
+  max-width: 5%;
+}
+
+.flex-10 {
+  flex: 1 1 100%;
+  max-width: 10%;
+}
+
+.flex-15 {
+  flex: 1 1 100%;
+  max-width: 15%;
+}
+
+.flex-20 {
+  flex: 1 1 100%;
+  max-width: 20%;
+}
+
+.flex-25 {
+  flex: 1 1 100%;
+  max-width: 25%;
+}
+
+.flex-30 {
+  flex: 1 1 100%;
+  max-width: 30%;
+}
+
+.flex-35 {
+  flex: 1 1 100%;
+  max-width: 35%;
+}
+
+.flex-40 {
+  flex: 1 1 100%;
+  max-width: 40%;
+}
+
+.flex-45 {
+  flex: 1 1 100%;
+  max-width: 45%;
+}
+
+.flex-50 {
+  flex: 1 1 100%;
+  max-width: 50%;
+}
+
+.flex-55 {
+  flex: 1 1 100%;
+  max-width: 55%;
+}
+
+.flex-60 {
+  flex: 1 1 100%;
+  max-width: 60%;
+}
+
+.flex-65 {
+  flex: 1 1 100%;
+  max-width: 65%;
+}
+
+.flex-70 {
+  flex: 1 1 100%;
+  max-width: 70%;
+}
+
+.flex-75 {
+  flex: 1 1 100%;
+  max-width: 75%;
+}
+
+.flex-80 {
+  flex: 1 1 100%;
+  max-width: 80%;
+}
+
+.flex-85 {
+  flex: 1 1 100%;
+  max-width: 85%;
+}
+
+.flex-90 {
+  flex: 1 1 100%;
+  max-width: 90%;
+}
+
+.flex-95 {
+  flex: 1 1 100%;
+  max-width: 95%;
+}
+
+.flex-100 {
+  flex: 1 1 100%;
+  max-width: 100%;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
 .flex-space {
   flex: 1 1 auto;
 }
+
 // -----------> fxLayoutGap
 // <div fxLayoutGap="8px"> → <div class="gap-8">
 // Gap.
-.gap-4 { gap: 4px; }
-.gap-8 { gap: 8px; }
-.gap-10 { gap: 10px; }
-.gap-12 { gap: 12px; }
-.gap-16 { gap: 16px; }
-.gap-20 { gap: 20px; }
-.row-gap-16 { row-gap: 16px; }
+.gap-4 {
+  gap: 4px;
+}
+
+.gap-8 {
+  gap: 8px;
+}
+
+.gap-10 {
+  gap: 10px;
+}
+
+.gap-12 {
+  gap: 12px;
+}
+
+.gap-16 {
+  gap: 16px;
+}
+
+.gap-20 {
+  gap: 20px;
+}
+
+.row-gap-16 {
+  row-gap: 16px;
+}
 
 // -----------> fxLayoutAlign
 // <div fxLayoutAlign="justify-between center"> → <div class="space-between items-center">
 // Justify content.
-.space-between { justify-content: space-between; }  // Used very often with flex-row.
-.justify-center { justify-content: center; }  // Used to center something via flexbox.
-.space-around {justify-content: space-around}
-.justify-end {justify-content: flex-end;}
-.justify-items-end {justify-items: end;}
-// Align items. (Naming inspiration: https://tailwindcss.com/docs/align-items.)
-.items-center { align-items: center; }  // Used very often with flex-row.
-.baseline { align-items: baseline; }
+.space-between {
+  justify-content: space-between;
+}
 
-.right { float: right; }
+// Used very often with flex-row.
+.justify-center {
+  justify-content: center;
+}
+
+// Used to center something via flexbox.
+.space-around {
+  justify-content: space-around
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.justify-items-end {
+  justify-items: end;
+}
+
+// Align items. (Naming inspiration: https://tailwindcss.com/docs/align-items.)
+.items-center {
+  align-items: center;
+}
+
+// Used very often with flex-row.
+.baseline {
+  align-items: baseline;
+}
+
+.right {
+  float: right;
+}
 
 // -----------> Grid
 
-.grid { display: grid; }
-.grid-cols-1 {grid-template-columns: repeat(1, 1fr) }
-.grid-cols-2 {grid-template-columns: repeat(2, 1fr) }
-.grid-cols-3 {grid-template-columns: repeat(3, 1fr) }
-.grid-cols-4 {grid-template-columns: repeat(4, 1fr) }
-.grid-cols-5 {grid-template-columns: repeat(5, 1fr) }
-.grid-cols-6 {grid-template-columns: repeat(6, 1fr) }
-.grid-cols-7 {grid-template-columns: repeat(7, 1fr) }
-.grid-cols-8 {grid-template-columns: repeat(8, 1fr) }
-.grid-cols-9 {grid-template-columns: repeat(9, 1fr) }
-.grid-cols-10 {grid-template-columns: repeat(10, 1fr) }
-.grid-cols-11 {grid-template-columns: repeat(11, 1fr) }
-.grid-cols-12 {grid-template-columns: repeat(12, 1fr) }
-.grid-cols-6-mobile { @media screen and (max-width: 799px) { grid-template-columns: repeat(6, 1fr) } }
+.grid {
+  display: grid;
+}
 
-.col-auto {grid-column: auto;}
-.col-span-1 {grid-column: span 1 / span 1;}
-.col-span-2 {grid-column: span 2 / span 2;}
-.col-span-3 {grid-column: span 3 / span 3;}
-.col-span-4 {grid-column: span 4 / span 4;}
-.col-span-5 {grid-column: span 5 / span 5;}
-.col-span-6 {grid-column: span 6 / span 6;}
-.col-span-7 {grid-column: span 7 / span 7;}
-.col-span-8 {grid-column: span 8 / span 8;}
-.col-span-9 {grid-column: span 9 / span 9;}
-.col-span-10 {grid-column: span 10 / span 10;}
-.col-span-11 {grid-column: span 11 / span 11;}
-.col-span-12 {grid-column: span 12 / span 12;}
+.grid-cols-1 {
+  grid-template-columns: repeat(1, 1fr)
+}
 
-.col-span-1-mobile { @media screen and (max-width: 799px) { grid-column: span 1 / span 1; } }
-.col-span-2-mobile { @media screen and (max-width: 799px) { grid-column: span 2 / span 2; } }
-.col-span-3-mobile { @media screen and (max-width: 799px) { grid-column: span 3 / span 3; } }
-.col-span-4-mobile { @media screen and (max-width: 799px) { grid-column: span 4 / span 4; } }
-.col-span-5-mobile { @media screen and (max-width: 799px) { grid-column: span 5 / span 5; } }
-.col-span-6-mobile { @media screen and (max-width: 799px) { grid-column: span 6 / span 6; } }
-.col-span-7-mobile { @media screen and (max-width: 799px) { grid-column: span 7 / span 7; } }
-.col-span-8-mobile { @media screen and (max-width: 799px) { grid-column: span 8 / span 8; } }
-.col-span-9-mobile { @media screen and (max-width: 799px) { grid-column: span 9 / span 9; } }
-.col-span-10-mobile { @media screen and (max-width: 799px) { grid-column: span 10 / span 10; } }
-.col-span-11-mobile { @media screen and (max-width: 799px) { grid-column: span 11 / span 11; } }
-.col-span-12-mobile { @media screen and (max-width: 799px) { grid-column: span 12 / span 12; } }
+.grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr)
+}
 
-.grid-flow-row {grid-auto-flow: row;}
+.grid-cols-3 {
+  grid-template-columns: repeat(3, 1fr)
+}
+
+.grid-cols-4 {
+  grid-template-columns: repeat(4, 1fr)
+}
+
+.grid-cols-5 {
+  grid-template-columns: repeat(5, 1fr)
+}
+
+.grid-cols-6 {
+  grid-template-columns: repeat(6, 1fr)
+}
+
+.grid-cols-7 {
+  grid-template-columns: repeat(7, 1fr)
+}
+
+.grid-cols-8 {
+  grid-template-columns: repeat(8, 1fr)
+}
+
+.grid-cols-9 {
+  grid-template-columns: repeat(9, 1fr)
+}
+
+.grid-cols-10 {
+  grid-template-columns: repeat(10, 1fr)
+}
+
+.grid-cols-11 {
+  grid-template-columns: repeat(11, 1fr)
+}
+
+.grid-cols-12 {
+  grid-template-columns: repeat(12, 1fr)
+}
+
+.grid-cols-6-mobile {
+  @media screen and (max-width: 799px) {
+    grid-template-columns: repeat(6, 1fr)
+  }
+}
+
+.col-auto {
+  grid-column: auto;
+}
+
+.col-span-1 {
+  grid-column: span 1 / span 1;
+}
+
+.col-span-2 {
+  grid-column: span 2 / span 2;
+}
+
+.col-span-3 {
+  grid-column: span 3 / span 3;
+}
+
+.col-span-4 {
+  grid-column: span 4 / span 4;
+}
+
+.col-span-5 {
+  grid-column: span 5 / span 5;
+}
+
+.col-span-6 {
+  grid-column: span 6 / span 6;
+}
+
+.col-span-7 {
+  grid-column: span 7 / span 7;
+}
+
+.col-span-8 {
+  grid-column: span 8 / span 8;
+}
+
+.col-span-9 {
+  grid-column: span 9 / span 9;
+}
+
+.col-span-10 {
+  grid-column: span 10 / span 10;
+}
+
+.col-span-11 {
+  grid-column: span 11 / span 11;
+}
+
+.col-span-12 {
+  grid-column: span 12 / span 12;
+}
+
+.col-span-1-mobile {
+  @media screen and (max-width: 799px) {
+    grid-column: span 1 / span 1;
+  }
+}
+
+.col-span-2-mobile {
+  @media screen and (max-width: 799px) {
+    grid-column: span 2 / span 2;
+  }
+}
+
+.col-span-3-mobile {
+  @media screen and (max-width: 799px) {
+    grid-column: span 3 / span 3;
+  }
+}
+
+.col-span-4-mobile {
+  @media screen and (max-width: 799px) {
+    grid-column: span 4 / span 4;
+  }
+}
+
+.col-span-5-mobile {
+  @media screen and (max-width: 799px) {
+    grid-column: span 5 / span 5;
+  }
+}
+
+.col-span-6-mobile {
+  @media screen and (max-width: 799px) {
+    grid-column: span 6 / span 6;
+  }
+}
+
+.col-span-7-mobile {
+  @media screen and (max-width: 799px) {
+    grid-column: span 7 / span 7;
+  }
+}
+
+.col-span-8-mobile {
+  @media screen and (max-width: 799px) {
+    grid-column: span 8 / span 8;
+  }
+}
+
+.col-span-9-mobile {
+  @media screen and (max-width: 799px) {
+    grid-column: span 9 / span 9;
+  }
+}
+
+.col-span-10-mobile {
+  @media screen and (max-width: 799px) {
+    grid-column: span 10 / span 10;
+  }
+}
+
+.col-span-11-mobile {
+  @media screen and (max-width: 799px) {
+    grid-column: span 11 / span 11;
+  }
+}
+
+.col-span-12-mobile {
+  @media screen and (max-width: 799px) {
+    grid-column: span 12 / span 12;
+  }
+}
+
+.grid-flow-row {
+  grid-auto-flow: row;
+}
 
 .h-full {
   height: 100%;
 }
+
 .w-full {
   width: 100%;
 }
@@ -201,6 +555,7 @@ mat-card-header {
 .form-wrapper .mat-mdc-card {
   box-shadow: none !important;
 }
+
 // ------------------------
 // Material customizations
 // ------------------------
@@ -210,6 +565,7 @@ mat-card-header {
 .mat-form-field-infix {
   width: auto !important;
 }
+
 /*
  TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.
  */
@@ -225,6 +581,7 @@ mat-card-header {
 .margin-below {
   margin-bottom: 32px;
 }
+
 .margin-top {
   margin-top: 32px;
 }
@@ -246,6 +603,7 @@ mat-card-header {
   margin-right: 40px;
   z-index: 100;
 }
+
 .fixed-bottom-right {
   position: fixed !important;
   bottom: 20px;
@@ -253,57 +611,73 @@ mat-card-header {
   z-index: 100;
 }
 
-.text-middle{
+.text-middle {
   vertical-align: middle !important;
 }
-.text-bottom{
+
+.text-bottom {
   vertical-align: bottom !important;
 }
+
 .font-medium {
   font-weight: 500;
 }
+
 .font-normal {
   font-weight: normal;
 }
-.no-margin{
+
+.no-margin {
   margin: 0 !important;
 }
-.no-padding{
+
+.no-padding {
   padding: 0 !important;
 }
+
 .margin {
   margin: 16px;
 }
+
 .mt-0 {
   margin-top: 0;
 }
+
 .my-0 {
   margin-top: 0;
   margin-bottom: 0;
 }
+
 .my-4 {
   margin-top: 16px;
   margin-bottom: 16px;
 }
+
 .my-8 {
   margin-top: 32px;
   margin-bottom: 32px;
 }
+
 .mb-24 {
   margin-bottom: 24px;
 }
+
 .ml-auto {
   margin-left: auto;
 }
+
 .padding {
   padding: 16px !important;
 }
+
 .padding-small {
   padding: 6px !important;
 }
+
 .margin-small {
   margin: 6px !important;
 }
+
 .h-auto {
   height: auto !important;
 }
@@ -329,14 +703,13 @@ body {
 }
 
 body {
-  font-family:
-    Roboto,
-    Helvetica Neue Light,
-    Helvetica Neue,
-    Helvetica,
-    Arial,
-    Lucida Grande,
-    sans-serif;
+  font-family: Roboto,
+  Helvetica Neue Light,
+  Helvetica Neue,
+  Helvetica,
+  Arial,
+  Lucida Grande,
+  sans-serif;
   letter-spacing: 0.4px;
 }
 
@@ -382,6 +755,7 @@ a {
     position: relative;
   }
 }
+
 // prevent form field errors overlapping with labels of lower field by reducing padding
 ige-form-dialog {
   .mat-mdc-form-field-error,
@@ -444,11 +818,11 @@ button.button-next-to-input {
 
 .no-input-border {
   .mdc-text-field--outlined:not(.mdc-text-field--disabled)
-    .mdc-notched-outline__leading,
+  .mdc-notched-outline__leading,
   .mdc-text-field--outlined:not(.mdc-text-field--disabled)
-    .mdc-notched-outline__notch,
+  .mdc-notched-outline__notch,
   .mdc-text-field--outlined:not(.mdc-text-field--disabled)
-    .mdc-notched-outline__trailing {
+  .mdc-notched-outline__trailing {
     border-color: white !important;
   }
 }
@@ -480,10 +854,9 @@ h1 {
     }
 
     &:hover {
-      box-shadow:
-        0 3px 3px -2px rgba(0, 0, 0, 0.2),
-        0px 3px 4px 0px rgba(0, 0, 0, 0.14),
-        0px 1px 8px 0px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2),
+      0px 3px 4px 0px rgba(0, 0, 0, 0.14),
+      0px 1px 8px 0px rgba(0, 0, 0, 0.12);
     }
   }
 
@@ -1358,10 +1731,9 @@ mat-icon.mark-color .coloring {
 .cdk-drag-preview {
   box-sizing: border-box;
   border-radius: 4px;
-  box-shadow:
-    0 5px 5px -3px rgba(0, 0, 0, 0.2),
-    0 8px 10px 1px rgba(0, 0, 0, 0.14),
-    0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+  0 8px 10px 1px rgba(0, 0, 0, 0.14),
+  0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 
 .cdk-drag-handle {
@@ -1639,43 +2011,55 @@ mat-card-header {
       opacity: 1;
     }
   }
+
   &:hover app-context-help-button [tabindex="0"] {
     opacity: 1;
   }
+
   .title-with-context-help {
     cursor: pointer;
+
     &:hover {
       color: #196ea2;
     }
   }
 }
+
 h2.title-with-context-help {
   padding-left: 40px;
+
   app-context-help-button {
     position: absolute;
     margin-left: -32px;
     margin-top: 16px;
     opacity: 0;
   }
+
   cursor: pointer;
+
   &:hover {
-      color: #196ea2 !important;
+    color: #196ea2 !important;
   }
-  &:hover app-context-help-button{
+
+  &:hover app-context-help-button {
     opacity: 1;
   }
 }
+
 .context-help-icon {
   cursor: pointer;
+
   svg {
     border-radius: 50%;
     background-color: #f3f3f3;
     fill: rgb(0 0 0 / 60%);
   }
 }
+
 .hidden {
   display: none;
 }
+
 .pointer {
   cursor: pointer;
 }
@@ -1771,6 +2155,10 @@ h2.title-with-context-help {
 }
 
 @media (min-width: 800px) {
+  .ingrid-col-md-auto {
+    flex: 1;
+  }
+
   .ingrid-col-md-1 {
     flex: 0 0 10%;
     max-width: 10%;
