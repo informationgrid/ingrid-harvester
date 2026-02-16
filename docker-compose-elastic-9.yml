@@ -80,8 +80,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        - BASE_URL=/harvester/
     container_name: ingrid-harvester
     image: ingrid-harvester
     environment:
@@ -97,6 +95,19 @@ services:
     command: node app/index.js
     volumes:
       - ./client/src/assets/config.json:/opt/ingrid/harvester/server/app/webapp/assets/config.json
+#    ports:
+#      - "8091:8090"
+    networks:
+      - harvester-network
+
+  apache:
+    image: httpd:2.4
+    container_name: apache
+    ports:
+      - "8090:80"
+    volumes:
+      - ./apache/proxy.conf:/usr/local/apache2/conf/conf.d/proxy.conf:ro
+      - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
     networks:
       - harvester-network
 

@@ -24,7 +24,6 @@ RUN npm run build
 # IMAGE: build client
 #
 FROM ${NODE_BASE_IMAGE} AS build-client
-ARG BASE_URL="/"
 LABEL stage=build
 
 # install build dependencies
@@ -38,7 +37,7 @@ COPY . .
 
 # build client
 WORKDIR /opt/ingrid/harvester/client
-RUN npm run prod -- --base-href ${BASE_URL}
+RUN npm run prod
 
 #
 # IMAGE: final
@@ -63,8 +62,10 @@ COPY --chown=node:node --from=build-client /opt/ingrid/harvester/client/dist/web
 
 EXPOSE 8090
 
+COPY --chmod=755 entrypoint.sh /entrypoint.sh
+
 USER node
 
 WORKDIR /opt/ingrid/harvester
-ENTRYPOINT ["/sbin/tini", "--"]
+ENTRYPOINT ["/entrypoint.sh", "/sbin/tini", "--"]
 CMD ["node", "app/index.js"]
