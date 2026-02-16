@@ -19,3 +19,15 @@ export function UrlValidator(control: AbstractControl): ValidationErrors {
     return { url: true };
   }
 }
+
+export function UniqueKeyValidator(control: AbstractControl): ValidationErrors {
+  const values: any[] = control.value;
+  if (!values || !Array.isArray(values)) {
+    return null;
+  }
+
+  const keys = values.map((v) => v["key"]?.trim());
+  const uniqueKeys = new Set(keys);
+
+  return keys.length !== uniqueKeys.size ? { uniqueKey: true } : null;
+}

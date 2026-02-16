@@ -1261,12 +1261,16 @@ ige-one-column-wrapper formly-group {
   align-content: flex-end;
 }
 
-.align-self-end {
+.self-end {
   align-self: flex-end;
 }
 
 .align-self-center {
   align-self: center;
+}
+
+.self-stretch {
+  align-self: stretch;
 }
 
 .justify-content-space-between {
@@ -1967,9 +1971,8 @@ table.big-font {
   padding-bottom: 12px;
 }
 
-.space-bottom-field {
-  display: block;
-  padding-bottom: 22px;
+.field-bottom-space {
+  margin-bottom: 22px;
 }
 
 .negative-space-top-field {

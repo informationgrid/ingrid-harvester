@@ -69,8 +69,9 @@ import { FormlySectionWrapperComponent } from "./formly/wrappers/formly-section-
 import { FormlyInlineHelpWrapperComponent } from "./formly/wrappers/formly-inline-help-wrapper/formly-inline-help-wrapper.component";
 import { FormlyChipTypeComponent } from "./formly/types/formly-chip-type/formly-chip-type.component";
 import { FormlyAutocompleteTypeComponent } from "./formly/types/formly-autocomplete-type/formly-autocomplete-type.component";
+import { FormlyRepeatFormTypeComponent } from "./formly/types/formly-repeat-form-type/formly-repeat-form-type.component";
 import { FormlySubSectionWrapperComponent } from "./formly/wrappers/formly-sub-section-wrapper/formly-sub-section-wrapper.component";
-import { UrlValidator } from "./formly/validators";
+import { UniqueKeyValidator, UrlValidator } from "./formly/validators";
 
 registerLocaleData(localeDe);
 
@@ -139,16 +140,21 @@ const appRoutes: Routes = routes;
       types: [
         { name: "chip", component: FormlyChipTypeComponent },
         { name: "autocomplete", component: FormlyAutocompleteTypeComponent },
+        { name: "repeat-form", component: FormlyRepeatFormTypeComponent },
       ],
       wrappers: [
         { name: "section", component: FormlySectionWrapperComponent },
         { name: "sub-section", component: FormlySubSectionWrapperComponent },
         { name: "inline-help", component: FormlyInlineHelpWrapperComponent },
       ],
-      validators: [{ name: "url", validation: UrlValidator }],
+      validators: [
+        { name: "url", validation: UrlValidator },
+        { name: "uniqueKey", validation: UniqueKeyValidator },
+      ],
       validationMessages: [
         { name: "required", message: "Dieses Feld muss ausgefüllt sein." },
         { name: "url", message: "Die URL ist ungültig." },
+        { name: "uniqueKey", message: "Die Schlüssel müssen eindeutig sein." },
       ],
       ...withFormlyMaterial(),
     }),
