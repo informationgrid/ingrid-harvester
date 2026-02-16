@@ -69,12 +69,14 @@ import { TranslocoDirective } from "@ngneat/transloco";
 import { StatIndicatorComponent } from "../shared/stat-indicator/stat-indicator.component";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { DialogHeaderComponent } from "../shared/dialog-header/dialog-header.component";
+import { FormlyModule } from "@ngx-formly/core";
+import { FormlyMaterialModule } from "@ngx-formly/material";
 
 const harvesterRoutes: Routes = [
   {
     path: "",
-    component: HarvesterComponent
-  }
+    component: HarvesterComponent,
+  },
 ];
 
 @NgModule({
@@ -96,45 +98,44 @@ const harvesterRoutes: Routes = [
     SparqlHarvesterComponent,
     WfsHarvesterComponent,
     ImporterDetailComponent,
-    ChipListComponent
+    ChipListComponent,
   ],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(harvesterRoutes),
-        SharedModule,
-        MatDialogModule,
-        MatButtonModule,
-        MatCardModule,
-        MatExpansionModule,
-        MatIconModule,
-        MatListModule,
-        MatSnackBarModule,
-        MatSlideToggleModule,
-        MatProgressBarModule,
-        MatProgressSpinnerModule,
-        MatChipsModule,
-        MatTabsModule,
-        ReactiveFormsModule,
-        MatCheckboxModule,
-        MatBadgeModule,
-        ScrollingModule,
-        CronjobFormFieldComponent,
-        MatAutocompleteModule,
-        ContextHelpDirective,
-        MatTooltip,
-        MatGridList,
-        MatGridTile,
-        ContextHelpButtonComponent,
-        TranslocoDirective,
-        StatIndicatorComponent,
-        MatMenu,
-        MatMenuTrigger,
-        MatMenuItem,
-        DialogHeaderComponent
-    ],
-  exports: [
-    HarvesterComponent
-  ]
+  imports: [
+    CommonModule,
+    RouterModule.forChild(harvesterRoutes),
+    SharedModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatCardModule,
+    MatExpansionModule,
+    MatIconModule,
+    MatListModule,
+    MatSnackBarModule,
+    MatSlideToggleModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatChipsModule,
+    MatTabsModule,
+    ReactiveFormsModule,
+    MatCheckboxModule,
+    MatBadgeModule,
+    ScrollingModule,
+    CronjobFormFieldComponent,
+    MatAutocompleteModule,
+    ContextHelpDirective,
+    MatTooltip,
+    MatGridList,
+    MatGridTile,
+    ContextHelpButtonComponent,
+    TranslocoDirective,
+    StatIndicatorComponent,
+    MatMenu,
+    MatMenuTrigger,
+    MatMenuItem,
+    DialogHeaderComponent,
+    FormlyModule,
+    FormlyMaterialModule,
+  ],
+  exports: [HarvesterComponent],
 })
-export class HarvesterModule {
-}
+export class HarvesterModule {}

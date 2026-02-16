@@ -69,9 +69,8 @@ import { FormlySectionWrapperComponent } from "./formly/wrappers/formly-section-
 import { FormlyInlineHelpWrapperComponent } from "./formly/wrappers/formly-inline-help-wrapper/formly-inline-help-wrapper.component";
 import { FormlyChipTypeComponent } from "./formly/types/formly-chip-type/formly-chip-type.component";
 import { FormlyAutocompleteTypeComponent } from "./formly/types/formly-autocomplete-type/formly-autocomplete-type.component";
-import {
-  FormlySubSectionWrapperComponent
-} from "./formly/wrappers/formly-sub-section-wrapper/formly-sub-section-wrapper.component";
+import { FormlySubSectionWrapperComponent } from "./formly/wrappers/formly-sub-section-wrapper/formly-sub-section-wrapper.component";
+import { UrlValidator } from "./formly/validators";
 
 registerLocaleData(localeDe);
 
@@ -146,8 +145,10 @@ const appRoutes: Routes = routes;
         { name: "sub-section", component: FormlySubSectionWrapperComponent },
         { name: "inline-help", component: FormlyInlineHelpWrapperComponent },
       ],
+      validators: [{ name: "url", validation: UrlValidator }],
       validationMessages: [
         { name: "required", message: "Dieses Feld muss ausgefüllt sein." },
+        { name: "url", message: "Die URL ist ungültig." },
       ],
       ...withFormlyMaterial(),
     }),

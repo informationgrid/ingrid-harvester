@@ -1,0 +1,124 @@
+import { FormlyFieldConfig } from "@ngx-formly/core";
+import { SharedFields } from "../shared.fields";
+
+export abstract class CswType {
+  static fields(): FormlyFieldConfig[] {
+    return [
+      {
+        expressions: {
+          hide: "model.type != 'CSW'",
+        },
+        fieldGroup: [
+          {
+            wrappers: ["section"],
+            props: {
+              label: "CSW Einstellungen",
+            },
+            fieldGroup: [
+              {
+                fieldGroupClassName: "ingrid-row",
+                fieldGroup: [
+                  {
+                    key: "httpMethod",
+                    type: "select",
+                    className: "ingrid-col-10 ingrid-col-md-2",
+                    props: {
+                      label: "HTTP Methode",
+                      required: true,
+                      options: [
+                        { label: "GET", value: "GET" },
+                        { label: "POST", value: "POST" },
+                      ],
+                    },
+                  },
+                  {
+                    key: "sourceURL",
+                    type: "input",
+                    className: "ingrid-col-10 ingrid-col-md-8",
+                    props: {
+                      label: "GetCapabilities URL",
+                      required: true,
+                    },
+                    validators: {
+                      validation: ["url"],
+                    },
+                  },
+                ],
+              },
+              {
+                fieldGroupClassName: "ingrid-row",
+                fieldGroup: [
+                  {
+                    key: "maxConcurrent",
+                    type: "input",
+                    className: "ingrid-col-10 ingrid-col-md-auto",
+                    props: {
+                      label: "Anzahl paralleler Abfragen",
+                      type: "number",
+                      required: true,
+                      min: 1,
+                    },
+                  },
+                  {
+                    key: "harvestingMode",
+                    type: "select",
+                    className: "ingrid-col-10 ingrid-col-md-auto",
+                    props: {
+                      label: "Harvesting Modus",
+                      required: true,
+                      options: [
+                        { label: "Standard", value: "standard" },
+                        { label: "Separat (langsam)", value: "separate" },
+                      ],
+                    },
+                  },
+                  {
+                    key: "maxServices",
+                    type: "input",
+                    className: "ingrid-col-10 ingrid-col-md-auto",
+                    props: {
+                      label: "Max. Dienste pro Anfrage",
+                      type: "number",
+                      required: true,
+                    },
+                    expressions: {
+                      "props.disabled": "model.profile == 'diplanung'",
+                    },
+                  },
+                ],
+              },
+              {
+                fieldGroupClassName: "ingrid-row",
+                fieldGroup: [
+                  {
+                    key: "resolveOgcDistributions",
+                    type: "select",
+                    className: "ingrid-col-10 ingrid-col-md-auto",
+                    props: {
+                      label: "WFS/WMS auflösen",
+                      required: true,
+                      options: [
+                        { label: "Nein", value: false },
+                        { label: "Ja (langsam)", value: true },
+                      ],
+                    },
+                  },
+                  {
+                    key: "simplifyTolerance",
+                    type: "input",
+                    className: "ingrid-col-10 ingrid-col-md-auto",
+                    props: {
+                      label: "Toleranz: Polygone vereinfachen",
+                      type: "number",
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          ...SharedFields.addRules(),
+        ],
+      },
+    ];
+  }
+}

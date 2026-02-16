@@ -2,7 +2,7 @@ import { FormlyFieldConfig } from "@ngx-formly/core";
 import { debounceTime, Observable } from "rxjs";
 import { Catalog } from "../../../../../../server/app/model/dcatApPlu.model";
 import { map } from "rxjs/operators";
-import { identifierValidator } from "../../../formly/validators";
+import { IdentifierValidator } from "../../../formly/validators";
 
 export abstract class SharedFields {
   static addGeneral(options: {
@@ -67,7 +67,7 @@ export abstract class SharedFields {
                 },
                 validators: {
                   naming: {
-                    expression: (control) => identifierValidator(control),
+                    expression: (control) => IdentifierValidator(control),
                     message: "Die Eingabe ist ungültig.",
                   },
                 },
@@ -137,6 +137,10 @@ export abstract class SharedFields {
   static addRules(): FormlyFieldConfig[] {
     return [
       {
+        wrappers: ["section"],
+        props: {
+          label: "Filter und Regeln",
+        },
         fieldGroup: [
           {
             key: "blacklistedIds",
