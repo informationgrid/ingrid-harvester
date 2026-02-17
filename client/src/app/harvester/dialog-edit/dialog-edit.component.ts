@@ -64,7 +64,7 @@ export class DialogEditComponent {
   initForm() {
     this.configService.getProfileName().subscribe((profile) => {
       // Set initial values.
-      this.model = { ...this.harvester };
+      this.model = this.getInitialValues(this.harvester);
 
       // Set options used by initializing fields.
       this.options = {
@@ -100,11 +100,36 @@ export class DialogEditComponent {
       return;
     }
 
-    const result = {
-      ...this.harvester,
-      ...this.model,
-    };
+    const result = this.getSubmitValues(this.harvester, this.model);
     this.dialogRef.close(result);
+  }
+
+  getInitialValues(harvester: any) {
+    const values = { ...harvester };
+
+    if (values.additionalSettings) {
+      values.additionalSettings = Object.entries(values.additionalSettings).map(
+        ([key, value]) => ({ key, value }),
+      );
+    }
+
+    return values;
+  }
+
+  getSubmitValues(oldValues, newValues) {
+    const values = { ...oldValues, ...newValues };
+
+    if (values.additionalSettings) {
+      values.additionalSettings = values.additionalSettings.reduce(
+        (acc, cur) => {
+          acc[cur.key] = cur.value;
+          return acc;
+        },
+        {} as Record<string, string>,
+      );
+    }
+
+    return values;
   }
 
   protected readonly console = console;

@@ -42,7 +42,7 @@ export abstract class JsonType {
                 ],
               },
               {
-                key: "settingsArray",
+                key: "additionalSettings",
                 type: "repeat-form",
                 props: {
                   label: "Zusätzliche Eigenschaften",
