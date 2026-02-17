@@ -5,14 +5,17 @@ import { map } from "rxjs/operators";
 import { IdentifierValidator } from "../../../formly/validators";
 
 export abstract class SharedFields {
-  static addGeneral(options: {
+  static general(options: {
     catalogs: Observable<Catalog[]>;
     datasourceId?: number;
   }): FormlyFieldConfig[] {
     return [
       {
         wrappers: ["section"],
-        props: { label: "Allgemein" },
+        props: {
+          label: "Allgemeine Einstellungen",
+          contextHelpId: "harvester_settings_general",
+        },
         fieldGroup: [
           {
             fieldGroupClassName: "ingrid-row",
@@ -24,28 +27,32 @@ export abstract class SharedFields {
                 props: {
                   label: "Typ",
                   required: true,
-                  options: [
-                    { label: "CKAN", value: "CKAN" },
-                    { label: "CSW", value: "CSW" },
-                    {
-                      label: "CODEDE-CSW",
-                      value: "CODEDE-CSW",
-                      disabled: options?.datasourceId == -1,
-                    },
-                    { label: "DCAT", value: "DCAT" },
-                    { label: "DCATAPPLU", value: "DCATAPPLU" },
-                    { label: "EXCEL", value: "EXCEL" },
-                    { label: "EXCEL (SPARSE)", value: "EXCEL_SPARSE" },
-                    { label: "JSON", value: "JSON" },
-                    { label: "KLD", value: "KLD" },
-                    { label: "OAI", value: "OAI" },
-                    { label: "SPARQL", value: "SPARQL" },
-                    { label: "WFS", value: "WFS" },
-                    { label: "WFS (FIS)", value: "WFS.FIS" },
-                    { label: "WFS (MS)", value: "WFS.MS" },
-                    { label: "WFS (XPLAN)", value: "WFS.XPLAN" },
-                    { label: "WFS (Syn XPLAN)", value: "WFS.XPLAN.SYN" },
-                  ],
+                },
+                expressions: {
+                  "props.options": (field) => {
+                    return [
+                      { label: "CKAN", value: "CKAN" },
+                      { label: "CSW", value: "CSW" },
+                      {
+                        label: "CSW (CODEDE)",
+                        value: "CODEDE-CSW",
+                        disabled: field.model?.datasourceId == -1,
+                      },
+                      { label: "DCAT", value: "DCAT" },
+                      { label: "DCATAPPLU", value: "DCATAPPLU" },
+                      { label: "EXCEL", value: "EXCEL" },
+                      { label: "EXCEL (SPARSE)", value: "EXCEL_SPARSE" },
+                      { label: "JSON", value: "JSON" },
+                      { label: "KLD", value: "KLD" },
+                      { label: "OAI", value: "OAI" },
+                      { label: "SPARQL", value: "SPARQL" },
+                      { label: "WFS", value: "WFS" },
+                      { label: "WFS (FIS)", value: "WFS.FIS" },
+                      { label: "WFS (MS)", value: "WFS.MS" },
+                      { label: "WFS (XPLAN)", value: "WFS.XPLAN" },
+                      { label: "WFS (Syn XPLAN)", value: "WFS.XPLAN.SYN" },
+                    ];
+                  },
                 },
               },
               {
@@ -134,26 +141,73 @@ export abstract class SharedFields {
     ];
   }
 
-  static addRules(): FormlyFieldConfig[] {
+  static sharedRules(): FormlyFieldConfig[] {
+    return [
+      {
+        key: "blacklistedIds",
+        type: "chip",
+        props: {
+          label: "Ausgeschlossene IDs",
+        },
+      },
+      {
+        key: "whitelistedIds",
+        type: "chip",
+        props: {
+          label: "Nicht auszuschließende IDs",
+        },
+      },
+      {
+        fieldGroupClassName: "ingrid-row",
+        fieldGroup: [
+          {
+            key: "containsDocumentsWithData",
+            type: "checkbox",
+            defaultValue: false,
+            className: "ingrid-col-10 ingrid-col-md-4 ingrid-checkbox",
+            props: {
+              label: "Muss Daten-Download enthalten",
+            },
+          },
+          {
+            key: "containsDocumentsWithDataBlacklist",
+            type: "input",
+            className: "ingrid-col-10 ingrid-col-md-auto",
+            props: {
+              label: "Datenformat ausschließen",
+              placeholder: "rss,doc,...",
+              attributes: {
+                autocomplete: "off",
+              },
+            },
+            expressions: {
+              "props.disabled": "!model.containsDocumentsWithData",
+              "props.required": "model.containsDocumentsWithData",
+            },
+          },
+        ],
+      },
+    ];
+  }
+
+  static additional(): FormlyFieldConfig[] {
     return [
       {
         wrappers: ["section"],
         props: {
-          label: "Filter und Regeln",
+          label: "Weitere Einstellungen",
+          contextHelpId: "harvester_settings_extras",
         },
         fieldGroup: [
           {
-            key: "blacklistedIds",
-            type: "chip",
+            key: "customCode",
+            type: "textarea",
             props: {
-              label: "Ausgeschlossene IDs",
-            },
-          },
-          {
-            key: "whitelistedIds",
-            type: "chip",
-            props: {
-              label: "Nicht auszuschließende IDs",
+              label: "Zusätzlicher Mapping-Code",
+              rows: 2,
+              attributes: {
+                class: "!font-monospace",
+              },
             },
           },
         ],

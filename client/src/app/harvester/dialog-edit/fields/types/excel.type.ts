@@ -1,35 +1,38 @@
 import { FormlyFieldConfig } from "@ngx-formly/core";
 import { SharedFields } from "../shared.fields";
 
-export abstract class DecatappluType {
+export abstract class ExcelType {
   static fields(): FormlyFieldConfig[] {
     return [
       {
         expressions: {
-          hide: "model.type != 'DCATAPPLU'",
+          hide: "model.type != 'EXCEL'",
         },
         fieldGroup: [
           {
             wrappers: ["section"],
             props: {
-              label: "DCATAPPLU Einstellungen",
+              label: "Excel Einstellungen",
             },
             fieldGroup: [
               {
-                key: "sourceURL",
+                key: "filePath",
                 type: "input",
                 wrappers: ["form-field"],
                 props: {
-                  label: "Catalog URL",
+                  label: "Dateipfad",
                   required: true,
                 },
-                validators: {
-                  validation: ["url"],
-                }
               },
             ],
           },
-          ...SharedFields.addRules(),
+          {
+            wrappers: ["section"],
+            props: {
+              label: "Filter und Regeln",
+            },
+            fieldGroup: [...SharedFields.sharedRules()],
+          },
         ],
       },
     ];

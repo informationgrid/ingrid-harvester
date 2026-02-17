@@ -64,7 +64,36 @@ export abstract class DcatType {
               },
             ],
           },
-          ...SharedFields.addRules(),
+          {
+            wrappers: ["section"],
+            props: {
+              label: "Filter und Regeln",
+            },
+            fieldGroup: [
+              ...SharedFields.sharedRules(),
+              {
+                fieldGroupClassName: "ingrid-row",
+                fieldGroup: [
+                  {
+                    key: "filterTags",
+                    type: "chip",
+                    className: "ingrid-col-10 ingrid-col-md-auto",
+                    props: {
+                      label: "Filter Tags",
+                    },
+                  },
+                  {
+                    key: "filterThemes",
+                    type: "chip",
+                    className: "ingrid-col-10 ingrid-col-md-auto",
+                    props: {
+                      label: "Filter Themes",
+                    },
+                  },
+                ],
+              },
+            ],
+          },
         ],
       },
     ];

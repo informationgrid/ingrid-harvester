@@ -112,11 +112,59 @@ export abstract class CswType {
                       type: "number",
                     },
                   },
+                  {
+                    expressions: {
+                      hide: "model.profile != 'diplanung'",
+                    },
+                    key: "pluPlanState",
+                    type: "select",
+                    className: "ingrid-col-10 ingrid-col-md-auto",
+                    props: {
+                      label: "Planstatus",
+                      options: [
+                        { label: "unbekannt", value: "unknown" },
+                        { label: "eingestellt", value: "discontinued" },
+                        {
+                          label: "ganz aufgehoben",
+                          value: "completelyReversed",
+                        },
+                        { label: "festgestellt", value: "fixed" },
+                        { label: "in Aufstellung", value: "inPreparation" },
+                        { label: "simuliert", value: "planned" },
+                      ],
+                    },
+                  },
                 ],
               },
             ],
           },
-          ...SharedFields.addRules(),
+          {
+            wrappers: ["section"],
+            props: {
+              label: "Filter und Regeln",
+            },
+            fieldGroup: [
+              ...SharedFields.sharedRules(),
+              {
+                key: "recordFilter",
+                type: "textarea",
+                props: {
+                  label: "Record Filter",
+                  rows: 6,
+                  attributes: {
+                    class: "!font-monospace",
+                  },
+                },
+              },
+              {
+                key: "eitherKeywords",
+                type: "chip",
+                props: {
+                  label: "Either keywords",
+                },
+              },
+            ],
+          },
         ],
       },
     ];

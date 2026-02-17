@@ -1,49 +1,68 @@
 import { FormlyFieldConfig } from "@ngx-formly/core";
 import { SharedFields } from "../shared.fields";
 
-export abstract class JsonType {
+export abstract class ExcelSparseType {
   static fields(): FormlyFieldConfig[] {
     return [
       {
         expressions: {
-          hide: "model.type != 'JSON'",
+          hide: "model.type != 'EXCEL_SPARSE'",
         },
         fieldGroup: [
           {
             wrappers: ["section"],
             props: {
-              label: "JSON Einstellungen",
+              label: "Excel (Sparse) Einstellungen",
             },
             fieldGroup: [
               {
                 fieldGroupClassName: "ingrid-row",
                 fieldGroup: [
                   {
-                    key: "sourceURL",
+                    key: "title",
                     type: "input",
                     className: "ingrid-col-10 ingrid-col-md-auto",
                     props: {
-                      label: "Provider URL",
+                      label: "Katalog-Titel",
                       required: true,
-                    },
-                    validators: {
-                      validation: ["url"],
                     },
                   },
                   {
-                    key: "idProperty",
+                    key: "language",
                     type: "input",
                     className: "ingrid-col-10 ingrid-col-md-3",
                     props: {
-                      label: "ID-Eigenschaftsname",
+                      label: "Katalog-Sprache",
                       required: true,
                     },
                   },
                 ],
               },
+              {
+                key: "description",
+                type: "input",
+                props: {
+                  label: "Katalog-Beschreibung",
+                  required: true,
+                },
+              },
+              {
+                key: "filePath",
+                type: "input",
+                props: {
+                  label: "Dateipfad",
+                  required: true,
+                },
+              },
             ],
           },
-          ...SharedFields.addRules(),
+          {
+            wrappers: ["section"],
+            props: {
+              label: "Filter und Regeln",
+            },
+            fieldGroup: [...SharedFields.sharedRules()],
+          },
         ],
       },
     ];
