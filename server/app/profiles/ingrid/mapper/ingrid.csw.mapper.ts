@@ -26,6 +26,7 @@ import log4js from 'log4js';
 import {ingridMapper} from "./ingrid.mapper.js";
 import {CswMapper} from "../../../importer/csw/csw.mapper.js";
 import type {Distribution} from "../../../model/distribution.js";
+import * as XpathUtils from "../../../utils/xpath.utils.js";
 import type { Geometry } from 'geojson';
 
 const log = log4js.getLogger(import.meta.filename);
@@ -133,7 +134,9 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
 
     getIDF() {
         let idf = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.portalu.de/IDF/1.0\">\n  <head/>\n  <body>\n";
-        idf += this.baseMapper.record.toString().replace("<gmd:MD_Metadata", "<idf:idfMdMetadata xmlns:idf=\"http://www.portalu.de/IDF/1.0\" ").replace("</gmd:MD_Metadata>", "</idf:idfMdMetadata>").replaceAll("gmd:CI_ResponsibleParty", "idf:idfResponsibleParty");
+        let renamedDom = XpathUtils.renameNodes("gmd:MD_Metadata", "idf:idfMdMetadata", this.baseMapper.record.cloneNode(true));
+        renamedDom = XpathUtils.renameNodes("gmd:CI_ResponsibleParty", "idf:idfResponsibleParty", renamedDom);
+        idf += renamedDom.toString();
         idf += "\n  </body>\n</html>\n";
         return idf;
     }

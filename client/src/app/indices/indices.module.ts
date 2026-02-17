@@ -35,6 +35,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import {ContextHelpDirective} from "../shared/context-help/context-help.directive";
 import {MatTooltip} from "@angular/material/tooltip";
 import {ContextHelpButtonComponent} from "../shared/context-help/context-help-button/context-help-button.component";
+import { TranslocoDirective } from "@ngneat/transloco";
 
 const routes: Routes = [
   {
@@ -57,7 +58,8 @@ const routes: Routes = [
         MatMenuModule,
         ContextHelpDirective,
         MatTooltip,
-        ContextHelpButtonComponent
+        ContextHelpButtonComponent,
+        TranslocoDirective
     ]
 })
 export class IndicesModule {

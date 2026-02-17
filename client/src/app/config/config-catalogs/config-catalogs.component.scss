@@ -21,45 +21,21 @@
  * ==================================================
  */
 
-h4 {
-  margin-top: 0;
+@use "../../../variables";
+
+.catalog {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
 }
 
-.config-card {
-  margin: auto;
-  margin-bottom: 20px;
-  box-sizing: border-box;
-  max-width: var(--max-width-panel);
-  width: 100%;
+.catalog-subtitle {
+  font-size: 14px;
+  color: variables.$ige-hint-color;
 }
 
-.center-right {
-  inset: 0;
-  margin: auto;
-  margin-right: 0;
-}
-
-input[readonly] {
-  cursor: default;
-  color: #0009 !important;
-}
-
-mat-list-item {
-  gap: 12px;
-}
-
-mat-slide-toggle {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  width: 40px !important;
-}
-
-button {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-}
-
-.catalog-config-button {
-  height: 32px;
-  width: 32px;
+@media screen and (max-width: 1024px) {
+  .catalog {
+    flex-direction: column;
+  }
 }

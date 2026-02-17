@@ -76,7 +76,12 @@ export class UrlUtils {
                 }
             }
             else {
-                // if URL is just a domain name with no protocol then first check if 'https://' works
+                // if URL is just a domain name with no protocol then first check if it may be a local path instead
+                // examples: /data/file.xml, \\data\file.xml, <Geoserver>\data\file.xml
+                if (!/^[a-zA-Z]/.test(url)) {
+                    return url;
+                }
+                // if not, check if 'https://' works
                 requestConfig.uri = `https://${url}`;
                 if (await UrlUtils.checkUrlWithProtocol(requestConfig)) {
                     return requestConfig.uri;

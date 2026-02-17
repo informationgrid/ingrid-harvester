@@ -21,17 +21,16 @@
  * ==================================================
  */
 
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import {ImportLogMessage} from "../../../../../server/app/model/import.result";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { ImportLogMessage } from "../../../../../server/app/model/import.result";
 
 @Component({
-    selector: 'app-importer-detail',
-    templateUrl: './importer-detail.component.html',
-    styleUrls: ['./importer-detail.component.scss'],
-    standalone: false
+  selector: "app-importer-detail",
+  templateUrl: "./importer-detail.component.html",
+  styleUrls: ["./importer-detail.component.scss"],
+  standalone: false
 })
-export class ImporterDetailComponent implements OnInit {
-
+export class ImporterDetailComponent {
   @Input() data: ImportLogMessage;
   @Input() cronActive = false;
 
@@ -40,18 +39,11 @@ export class ImporterDetailComponent implements OnInit {
   constructor() {
   }
 
-  ngOnInit() {
-  }
-
   getProgressValue() {
     if (this.data.progress) {
-      return (this.data.progress.current / this.data.progress.total) * 100
+      return (this.data.progress.current / this.data.progress.total) * 100;
     } else {
       return 0;
     }
-  }
-
-  getNextExecutionTime(data: ImportLogMessage) {
-    return null;
   }
 }

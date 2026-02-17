@@ -1,4 +1,6 @@
 {
+    "delete": "Löschen",
+    "edit": "Editieren",
     "pageTitle": {
       "default": "InGrid Harvester",
       "dashboard": "Übersicht",
@@ -14,16 +16,14 @@
     },
     "menu": {
       "application": "INGRID",
-      "application-suffix": " ",
-      "logo": "assets/icons/logo.svg",
-      "logo-text": "Logo InGrid Framework",
       "default": "InGrid Harvester",
       "dashboard": "Übersicht",
       "config": "Konfiguration",
       "harvester": "Harvester",
       "indices": "Indizes",
       "log": "Log",
-      "login": "Login"
+      "login": "Login",
+      "logout": "Abmelden"
     },
     "dashboard": {
       "welcome": "Guten Tag! Willkommen zurück.",
@@ -35,6 +35,33 @@
       "oldestExpired": "Älteste abgelaufene Metadaten",
       "form": "Daten",
       "formSingular": "Datensatz"
+    },
+    "harvester": {
+      "importAll": "Alle importieren",
+      "add": "Neu hinzufügen",
+      "showDetail": "Detail anzeigen",
+      "import": "Import starten",
+      "importIncrement": "Import starten (inkrementell)",
+      "edit": "Bearbeiten",
+      "copy": "Duplizieren",
+      "delete": "Entfernen",
+      "schedule": "Planen",
+      "history": "Historie",
+      "log": "Error-Log",
+      "more": "Mehr"
+    },
+    "config": {
+      "catalogs": "Kataloge",
+      "config": "Konfiguration",
+      "mapping": "Mapping",
+      "harvester": "Harvester",
+      "import": "import",
+      "export": "export"
+    },
+    "indices": {
+      "more": "Mehr",
+      "previousHit": "Vorheriger Treffer",
+      "nextHit": "Nächster Treffer"
     },
     "form": {
       "validationMessages": {

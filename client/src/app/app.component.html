@@ -21,25 +21,30 @@ limitations under the Licence.
 ==================================================
 -->
 
-@if (isLoggedIn) {
-  <button mat-stroked-button class="fixed-upper-right" color="primary" title="Logout" (click)="logout()" data-test="logout">
-    <mat-icon svgIcon="Lock" aria-hidden="false" aria-label="logout"/>
-    {{authService.currentUserValue.firstName}} {{authService.currentUserValue.lastName}}
-  </button>
-}
-
 <div class="wrapper" [class.hide]="isLoggingout">
-  <mat-drawer-container class="flex-1" [autosize]="true">
+  <mat-drawer-container
+    class="flex-1"
+    [autosize]="true"
+    [hasBackdrop]="isMinimized"
+  >
     <!-- Left drawer -->
     @if (isLoggedIn) {
-      <mat-drawer mode="side" [opened]="true" disableClose>
-        <ige-side-menu/>
+      <mat-drawer
+        [mode]="isMinimized ? 'over' : 'side'"
+        [opened]="isSideMenuOpened"
+        [disableClose]="!isMinimized"
+        (openedChange)="sideMenuOpenedOnChange($event)"
+      >
+        <ige-side-menu />
       </mat-drawer>
     }
     <!-- Right content -->
     <mat-drawer-content>
       @if (isLoggedIn) {
-        <ige-main-header (onLogout)="isLoggingout = true"/>
+        <ige-main-header
+          (onLogout)="logout()"
+          (onSideMenuToggle)="sideMenuOpenedOnChange(!isSideMenuOpened)"
+        />
       }
       <router-outlet></router-outlet>
     </mat-drawer-content>

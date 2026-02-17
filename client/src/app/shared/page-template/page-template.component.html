@@ -21,22 +21,29 @@
     ==================================================
 -->
 
-<div class="tab-padding flex-col">
-    <div class="header flex-row">
-        <div class="page-title left-side">{{ label }}<br />{{ subLabel }}</div>
-        <div class="main-header">
-            <ng-content select="[main-header]"></ng-content>
-        </div>
+<div class="tab" [class.fixed-height]="fixHeight">
+  <div class="side">
+    <div class="side-header">
+      <h2>
+        {{ label }}<br />{{ subLabel }}
+      </h2>
     </div>
-
-    <ng-content select="[status]"></ng-content>
-
-    <div class="content flex-1 flex-row">
-        <div class="left-side">
-            <ng-content select="[left-side]"></ng-content>
-        </div>
-        <div class="main-content">
-            <ng-content select="[main-content]"></ng-content>
-        </div>
+    <div class="side-content">
+      <ng-content select="[left-side]"></ng-content>
     </div>
+  </div>
+
+  <ng-content select="[status]"></ng-content>
+
+  <div class="main">
+    @if (hasMainHeader) {
+      <div class="main-header">
+        <ng-content select="[main-header]"></ng-content>
+      </div>
+    }
+
+    <div class="main-content">
+      <ng-content select="[main-content]"></ng-content>
+    </div>
+  </div>
 </div>

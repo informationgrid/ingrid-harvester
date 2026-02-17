@@ -21,22 +21,21 @@
  * ==================================================
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Harvester } from '@shared/harvester';
-import { of, Subscription, zip } from 'rxjs';
-import { flatMap, groupBy, mergeMap, tap, toArray } from 'rxjs/operators';
-import { ImportLogMessage } from '../../../../server/app/model/import.result';
-import { ConfirmDialogComponent } from '../shared/confirm-dialog/confirm-dialog.component';
-import { DialogEditComponent } from './dialog-edit/dialog-edit.component';
-import { DialogHistoryComponent } from './dialog-history/dialog-history.component';
-import { DialogLogComponent } from './dialog-log/dialog-log.component';
-import { DialogSchedulerComponent } from './dialog-scheduler/dialog-scheduler.component';
-import { HarvesterService } from './harvester.service';
-import { SocketService } from './socket.service';
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
+import { Harvester } from "@shared/harvester";
+import { of, Subscription, zip } from "rxjs";
+import { flatMap, groupBy, mergeMap, tap, toArray } from "rxjs/operators";
+import { ImportLogMessage } from "../../../../server/app/model/import.result";
+import { ConfirmDialogComponent } from "../shared/confirm-dialog/confirm-dialog.component";
+import { DialogEditComponent } from "./dialog-edit/dialog-edit.component";
+import { DialogHistoryComponent } from "./dialog-history/dialog-history.component";
+import { DialogLogComponent } from "./dialog-log/dialog-log.component";
+import { DialogSchedulerComponent } from "./dialog-scheduler/dialog-scheduler.component";
+import { HarvesterService } from "./harvester.service";
+import { SocketService } from "./socket.service";
 
 @UntilDestroy()
 @Component({
@@ -46,8 +45,6 @@ import { SocketService } from './socket.service';
     standalone: false
 })
 export class HarvesterComponent implements OnInit, OnDestroy {
-
-  pageContextHelpIsVisible: boolean = false;
 
   harvesters: { [x: string]: Harvester[] } = {};
 
@@ -62,8 +59,7 @@ export class HarvesterComponent implements OnInit, OnDestroy {
               private snackBar: MatSnackBar,
               private harvesterService: HarvesterService,
               private socketService: SocketService,
-              private formBuilder: UntypedFormBuilder,
-              ) {
+  ) {
   }
 
   ngOnInit() {

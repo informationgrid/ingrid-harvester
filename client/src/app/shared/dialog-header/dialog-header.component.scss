@@ -21,25 +21,38 @@
  * ==================================================
  */
 
-.mapping-list {
-  margin-bottom: 20px;
-  padding: 8px;
+@use "../../../variables";
+
+:host {
+  background-color: variables.$ige-secondary-dark;
 }
 
-.mapping-list h3 {
-  margin: 0;
-  font-weight: 500;
-}
-
-.mapping-item {
-  min-height: 56px;
+.header {
+  width: 100%;
   display: flex;
   flex-direction: row;
   gap: 16px;
+  padding: 16px 24px;
   align-items: center;
-  border-bottom: 1px solid #e0e0e0;
+
+  &:before {
+    display: none;
+  }
 }
 
-.mapping-item:last-of-type {
-  border-bottom: none;
+.icon {
+  color: white;
+  width: 24px;
+  height: 24px;
+}
+
+.title {
+  color: white;
+  font-weight: normal;
+  font-size: 20px;
+  margin: 0;
+}
+
+.dismiss-btn {
+  background-color: white;
 }

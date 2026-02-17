@@ -322,3 +322,19 @@ export function substringAfterLast(s: string, delim: string, fullFallback: boole
     }
     return s.substring(lastIdx + delim.length);
 }
+
+// TODO: remove "xml-escape" from packages, use the below function in `dcatapplu.document.factory.ts` instead
+export function escapeXml(unsafe: string): string {
+    if (typeof unsafe !== 'string') {
+        return '';
+    }
+    return unsafe.replace(/[<>&'"]/g, (c) => {
+        switch (c) {
+            case '<': return '&lt;';
+            case '>': return '&gt;';
+            case '&': return '&amp;';
+            case '\'': return '&apos;';
+            case '"': return '&quot;';
+        }
+    });
+}
