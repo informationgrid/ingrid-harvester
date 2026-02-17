@@ -38,7 +38,7 @@
           aria-label="{{ t('importAll') }}"
           data-test="import-all"
         >
-          <mat-icon svgIcon="Harvester" />
+          <mat-icon svgIcon="Harvester"/>
           {{ t("importAll") }}
         </button>
 
@@ -49,7 +49,7 @@
           aria-label="{{ t('add') }}"
           id="btnAddHarvester"
         >
-          <mat-icon svgIcon="Add" />
+          <mat-icon svgIcon="Add"/>
           {{ t("add") }}
         </button>
 
@@ -58,7 +58,7 @@
           color="primary"
           contextHelp="about_harvester_timing"
         >
-          <mat-icon svgIcon="info" />
+          <mat-icon svgIcon="info"/>
           Ausführung planen
         </button>
 
@@ -67,7 +67,7 @@
           color="primary"
           contextHelp="about_harvester_history"
         >
-          <mat-icon svgIcon="info" />
+          <mat-icon svgIcon="info"/>
           Historie anzeigen
         </button>
       </div>
@@ -84,13 +84,13 @@
                   @if (importDetail[harvester.id]?.summary) {
                     <!-- <mat-panel-description> -->
                     @if (hasAnyErrors(harvester.id)) {
-                      <mat-icon svgIcon="Error" class="warn" />
+                      <mat-icon svgIcon="Error" class="warn"/>
                     }
                     @if (!hasAnyProblems(harvester.id)) {
-                      <mat-icon svgIcon="Success" class="success" />
+                      <mat-icon svgIcon="Success" class="success"/>
                     }
                     @if (hasOnlyWarnings(harvester.id)) {
-                      <mat-icon svgIcon="Error" class="warning" />
+                      <mat-icon svgIcon="Error" class="warning"/>
                     }
                     <!-- </mat-panel-description> -->
                   }
@@ -132,7 +132,7 @@
                     (click)="startImport(harvester.id, true)"
                     data-test="import"
                   >
-                    <mat-icon svgIcon="Harvester" />
+                    <mat-icon svgIcon="Harvester"/>
                     {{ t("importIncrement") }}
                   </button>
                 }
@@ -143,7 +143,7 @@
                   (click)="startImport(harvester.id)"
                   data-test="import"
                 >
-                  <mat-icon svgIcon="Harvester" />
+                  <mat-icon svgIcon="Harvester"/>
                   {{ t("import") }}
                 </button>
               </div>
@@ -158,7 +158,7 @@
                   (click)="edit(harvester)"
                   data-test="edit"
                 >
-                  <mat-icon svgIcon="cursor-edit" />
+                  <mat-icon svgIcon="cursor-edit"/>
                 </button>
 
                 <button
@@ -169,7 +169,7 @@
                   (click)="deleteHarvester(harvester)"
                   data-test="delete"
                 >
-                  <mat-icon svgIcon="Delete" />
+                  <mat-icon svgIcon="Delete"/>
                 </button>
 
                 <button
@@ -180,15 +180,15 @@
                   [matMenuTriggerFor]="actionMenu"
                   data-test="more"
                 >
-                  <mat-icon svgIcon="Options" />
+                  <mat-icon svgIcon="Options"/>
                 </button>
-                <mat-menu #actionMenu>
+                <mat-menu data-test="action-menu" #actionMenu>
                   <button
                     mat-menu-item
                     (click)="copy(harvester)"
                     data-test="copy"
                   >
-                    <mat-icon svgIcon="Copy" />
+                    <mat-icon svgIcon="Copy"/>
                     {{ t('copy') }}
                   </button>
                   <button
@@ -196,7 +196,7 @@
                     (click)="schedule(harvester)"
                     data-test="schedule"
                   >
-                    <mat-icon svgIcon="Schedule" />
+                    <mat-icon svgIcon="Schedule"/>
                     {{ t('schedule') }}
                   </button>
                   <button
@@ -204,7 +204,7 @@
                     (click)="showHistory(harvester)"
                     data-test="history"
                   >
-                    <mat-icon svgIcon="Timeline" />
+                    <mat-icon svgIcon="Timeline"/>
                     {{ t('history') }}
                   </button>
                   <button
@@ -213,7 +213,7 @@
                     (click)="showLog(harvester.id)"
                     data-test="log"
                   >
-                    <mat-icon svgIcon="Logging" />
+                    <mat-icon svgIcon="Logging"/>
                     {{ t('log') }}
                   </button>
                 </mat-menu>
