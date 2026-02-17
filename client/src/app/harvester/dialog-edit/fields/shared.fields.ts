@@ -1,14 +1,10 @@
 import { FormlyFieldConfig } from "@ngx-formly/core";
-import { debounceTime, Observable } from "rxjs";
-import { Catalog } from "../../../../../../server/app/model/dcatApPlu.model";
+import { debounceTime } from "rxjs";
 import { map } from "rxjs/operators";
 import { IdentifierValidator } from "../../../formly/validators";
 
 export abstract class SharedFields {
-  static general(options: {
-    catalogs: Observable<Catalog[]>;
-    datasourceId?: number;
-  }): FormlyFieldConfig[] {
+  static general(): FormlyFieldConfig[] {
     return [
       {
         wrappers: ["section"],
@@ -29,6 +25,7 @@ export abstract class SharedFields {
                   required: true,
                 },
                 expressions: {
+                  "props.disabled": "model?.id != -1",
                   "props.options": (field) => {
                     return [
                       { label: "CKAN", value: "CKAN" },
@@ -36,7 +33,7 @@ export abstract class SharedFields {
                       {
                         label: "CSW (CODEDE)",
                         value: "CODEDE-CSW",
-                        disabled: field.model?.datasourceId == -1,
+                        disabled: field.model?.id == -1,
                       },
                       { label: "DCAT", value: "DCAT" },
                       { label: "DCATAPPLU", value: "DCATAPPLU" },
@@ -61,16 +58,20 @@ export abstract class SharedFields {
                 className: "ingrid-col-10 ingrid-col-md-auto",
                 props: {
                   label: "Katalog-Identifier",
-                  options: options.catalogs.pipe(
-                    map((catalogs) =>
-                      catalogs.map((catalog) => ({
-                        label: catalog.title,
-                        value: catalog.identifier,
-                      })),
-                    ),
-                  ),
                   required: true,
                   placeholder: "Eingeben oder auswählen",
+                },
+                expressions: {
+                  "props.options": (field) => {
+                    return field.options.formState?.catalogs?.pipe(
+                      map((catalogs: any[]) =>
+                        catalogs.map((catalog) => ({
+                          label: catalog.title,
+                          value: catalog.identifier,
+                        })),
+                      ),
+                    );
+                  },
                 },
                 validators: {
                   naming: {
@@ -158,32 +159,38 @@ export abstract class SharedFields {
         },
       },
       {
-        fieldGroupClassName: "ingrid-row",
+        key: "rules",
         fieldGroup: [
           {
-            key: "containsDocumentsWithData",
-            type: "checkbox",
-            defaultValue: false,
-            className: "ingrid-col-10 ingrid-col-md-4 ingrid-checkbox",
-            props: {
-              label: "Muss Daten-Download enthalten",
-            },
-          },
-          {
-            key: "containsDocumentsWithDataBlacklist",
-            type: "input",
-            className: "ingrid-col-10 ingrid-col-md-auto",
-            props: {
-              label: "Datenformat ausschließen",
-              placeholder: "rss,doc,...",
-              attributes: {
-                autocomplete: "off",
+            fieldGroupClassName: "ingrid-row",
+            fieldGroup: [
+              {
+                key: "containsDocumentsWithData",
+                type: "checkbox",
+                defaultValue: false,
+                className: "ingrid-col-10 ingrid-col-md-4 ingrid-checkbox",
+                props: {
+                  label: "Muss Daten-Download enthalten",
+                },
               },
-            },
-            expressions: {
-              "props.disabled": "!model.containsDocumentsWithData",
-              "props.required": "model.containsDocumentsWithData",
-            },
+              {
+                key: "containsDocumentsWithDataBlacklist",
+                type: "input",
+                className: "ingrid-col-10 ingrid-col-md-auto",
+                props: {
+                  label: "Datenformat ausschließen",
+                  placeholder: "rss,doc,...",
+                  attributes: {
+                    autocomplete: "off",
+                  },
+                },
+                parsers: [(value?: string) => value?.toLowerCase()],
+                expressions: {
+                  "props.disabled": "!model?.containsDocumentsWithData",
+                  "props.required": "model?.containsDocumentsWithData",
+                },
+              },
+            ],
           },
         ],
       },

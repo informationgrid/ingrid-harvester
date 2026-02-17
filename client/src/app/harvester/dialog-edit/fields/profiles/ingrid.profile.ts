@@ -10,7 +10,12 @@ export abstract class IngridProfile {
           contextHelpId: "harvester_settings_profile_ingrid",
         },
         expressions: {
-          hide: "model.profile != 'ingrid' && model.profile != 'zdm'",
+          hide: (field) => {
+            return (
+              field.options?.formState?.profile != "ingrid" &&
+              field.options?.formState?.profile != "zdm"
+            );
+          },
         },
         fieldGroup: [
           {

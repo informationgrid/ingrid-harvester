@@ -82,7 +82,9 @@ export abstract class CswType {
                       required: true,
                     },
                     expressions: {
-                      "props.disabled": "model.profile == 'diplanung'",
+                      "props.disabled": (field) => {
+                        return field.options?.formState?.profile == "diplanung";
+                      },
                     },
                   },
                 ],
@@ -114,7 +116,9 @@ export abstract class CswType {
                   },
                   {
                     expressions: {
-                      hide: "model.profile != 'diplanung'",
+                      hide: (field) => {
+                        return field.options?.formState?.profile != "diplanung";
+                      },
                     },
                     key: "pluPlanState",
                     type: "select",

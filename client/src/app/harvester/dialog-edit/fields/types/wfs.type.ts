@@ -1,5 +1,4 @@
 import { FormlyFieldConfig } from "@ngx-formly/core";
-import { SharedFields } from "../shared.fields";
 
 export abstract class WfsType {
   static fields(): FormlyFieldConfig[] {
@@ -76,7 +75,9 @@ export abstract class WfsType {
           },
           {
             expressions: {
-              hide: "model.profile != 'diplanung'",
+              hide: (field) => {
+                return field.options?.formState?.profile != "diplanung";
+              },
             },
             wrappers: ["section"],
             props: {
@@ -144,7 +145,9 @@ export abstract class WfsType {
           },
           {
             expressions: {
-              hide: "model.profile != 'zdm'",
+              hide: (field) => {
+                return field.options?.formState?.profile != "zdm";
+              },
             },
             wrappers: ["section"],
             props: {

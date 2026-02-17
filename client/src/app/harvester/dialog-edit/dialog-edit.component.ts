@@ -21,111 +21,91 @@
  * ==================================================
  */
 
-import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Harvester } from '@shared/harvester';
-import { Subject, takeUntil } from 'rxjs';
-import { AddOrEditCatalogComponent } from '../../config/config-catalogs/add-or-edit-catalog/add-or-edit-catalog.component';
-import { ConfigService } from '../../config/config.service';
+import { Component, Inject } from "@angular/core";
+import { UntypedFormGroup } from "@angular/forms";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { Harvester } from "@shared/harvester";
+import { ConfigService } from "../../config/config.service";
+import { FormlyFieldConfig, FormlyFormOptions } from "@ngx-formly/core";
+import { SharedFields } from "./fields/shared.fields";
+import { IngridProfile } from "./fields/profiles/ingrid.profile";
+import { ExcelType } from "./fields/types/excel.type";
+import { CkanType } from "./fields/types/ckan.type";
+import { CswType } from "./fields/types/csw.type";
+import { DcatType } from "./fields/types/dcat.type";
+import { DecatappluType } from "./fields/types/dcatapplu.type";
+import { ExcelSparseType } from "./fields/types/excel-sparse.type";
+import { JsonType } from "./fields/types/json.type";
+import { KldType } from "./fields/types/kld.type";
+import { OaiType } from "./fields/types/oai.type";
+import { SparqlType } from "./fields/types/sparql.type";
+import { WfsType } from "./fields/types/wfs.type";
 
 @Component({
-    selector: 'app-dialog-edit',
-    templateUrl: './dialog-edit.component.html',
-    styleUrls: ['./dialog-edit.component.scss'],
-    standalone: false
+  selector: "app-dialog-edit",
+  templateUrl: "./dialog-edit.component.html",
+  styleUrls: ["./dialog-edit.component.scss"],
+  standalone: false,
 })
-export class DialogEditComponent implements OnInit {
+export class DialogEditComponent {
+  form = new UntypedFormGroup({});
+  fields: FormlyFieldConfig[];
+  model: any = {};
+  options: FormlyFormOptions = {};
 
-  dialogTitle = 'Neuen Harvester anlegen';
-
-  harvesterForm: UntypedFormGroup;
-
-  profile: string;
-
-  catalogs = this.configService.getCatalogs();
-
-  private ngUnsubscribe = new Subject<void>();
-
-  constructor(@Inject(MAT_DIALOG_DATA) public harvester: Harvester,
-              public dialogRef: MatDialogRef<DialogEditComponent>,
-              private formBuilder: UntypedFormBuilder,
-              private configService: ConfigService) {
-      if (harvester.id !== -1) {
-        this.dialogTitle = 'Harvester bearbeiten';
-      }
-      this.buildForm(harvester);
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public harvester: Harvester,
+    public dialogRef: MatDialogRef<DialogEditComponent>,
+    private configService: ConfigService,
+  ) {
+    this.initForm();
   }
 
-  ngOnInit() {
-    this.configService.getProfileName()
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(data => {
-        this.profile = data;
-    });
-    // use harvester catalogId also as iPlugId
-    this.harvesterForm.get('catalogId')?.valueChanges
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(value => {
-        this.harvesterForm.patchValue({ iPlugId: value });
+  initForm() {
+    this.configService.getProfileName().subscribe((profile) => {
+      // Set initial values.
+      this.model = { ...this.harvester };
+
+      // Set options used by initializing fields.
+      this.options = {
+        formState: {
+          profile,
+          catalogs: this.configService.getCatalogs(),
+        },
+      };
+
+      // Build fields.
+      this.fields = [
+        ...SharedFields.general(),
+        ...IngridProfile.fields(),
+        ...CkanType.fields(),
+        ...CswType.fields(),
+        ...DcatType.fields(),
+        ...DecatappluType.fields(),
+        ...ExcelSparseType.fields(),
+        ...ExcelType.fields(),
+        ...JsonType.fields(),
+        ...KldType.fields(),
+        ...OaiType.fields(),
+        ...SparqlType.fields(),
+        ...WfsType.fields(),
+        ...SharedFields.additional(),
+      ];
     });
   }
 
-  private buildForm(harvester: Harvester) {
-    this.harvesterForm = this.formBuilder.group({
-      type: [{value: harvester.type, disabled: harvester.id !== -1}, Validators.required],
-      description: [harvester.description, Validators.required],
-      priority: [harvester.priority],
-      iPlugId: [harvester.iPlugId],
-      partner: [harvester.partner],
-      provider: [harvester.provider],
-      datatype: [harvester.datatype],
-      dataSourceName: [harvester.dataSourceName],
-      boost: [harvester.boost],
-      defaultDCATCategory: [harvester.defaultDCATCategory],
-      defaultMcloudSubgroup: [harvester.defaultMcloudSubgroup],
-      defaultAttribution: [harvester.defaultAttribution],
-      defaultAttributionLink: [harvester.defaultAttributionLink],
-      maxRecords: [harvester.maxRecords, Validators.min(1)],
-      startPosition: [harvester.startPosition, Validators.min(0)],
-      catalogId: [harvester.catalogId, Validators.required, AddOrEditCatalogComponent.identifierValidator],
-      customCode: [harvester.customCode],
-      rules: this.formBuilder.group({
-        containsDocumentsWithData: [harvester.rules.containsDocumentsWithData],
-        containsDocumentsWithDataBlacklist: [harvester.rules.containsDocumentsWithDataBlacklist]
-      })
-    });
+  submit() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
-    this.toggleDisableRule(harvester.rules.containsDocumentsWithData);
-  }
-
-  submit(value: any) {
     const result = {
       ...this.harvester,
-      ...value
+      ...this.model,
     };
-    // remove temporary properties (starting with '_')
-    Object.keys(result).filter(key => key.startsWith('_')).forEach(key => delete result[key]);
     this.dialogRef.close(result);
   }
 
-  toggleDisableRule(isChecked) {
-    if (isChecked) {
-      this.harvesterForm.get('rules.containsDocumentsWithDataBlacklist').enable();
-    } else {
-      this.harvesterForm.get('rules.containsDocumentsWithDataBlacklist').disable();
-    }
-  }
-
-  toLowerCase(text: string) {
-    const field = this.harvesterForm.get('rules.containsDocumentsWithDataBlacklist');
-    if (field.value !== text.toLowerCase()) {
-      field.setValue(text.toLowerCase());
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-  }
+  protected readonly console = console;
 }
