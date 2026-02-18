@@ -112,7 +112,7 @@ export abstract class Importer {
 
                 await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
                 await this.database.commitTransaction();
-                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
+                await this.database.pushToElasticsearch(this.elastic, this.settings.sourceURL, observer);
                 await this.postHarvestingHandling();
                 observer.next(ImportResult.complete(this.summary));
             }

@@ -36,6 +36,8 @@ import { DatabaseUtils } from './database.utils.js';
 import type { ElasticsearchUtils } from './elastic.utils.js';
 import type { PostgresQueries } from './postgres.queries.js';
 import Cursor from "pg-cursor";
+import {type ImportLogMessage, ImportResult} from "../model/import.result.js";
+import type {Observer} from "rxjs";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -221,9 +223,9 @@ export class PostgresUtils extends DatabaseUtils {
      *
      * @param elastic
      * @param source
-     * @param processBucket
+     * @param observer
      */
-    async pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string) {
+    async pushToElasticsearch(elastic: ElasticsearchUtils, source: string, observer: Observer<ImportLogMessage>): Promise<void> {
         let pgAggregator = ProfileFactoryLoader.get().getPostgresAggregator();
         const client: pg.PoolClient = await PostgresUtils.pool.connect();
         log.debug('Connection started');
@@ -233,8 +235,13 @@ export class PostgresUtils extends DatabaseUtils {
 
         let catalogs = (await this.listCatalogs()).reduce((map, catalog: Catalog) => (map[catalog.id] = catalog, map), {});
 
+      // right before creating the cursor
+      const { rows: [{ count: totalRows }] } = await client.query(
+        `SELECT COUNT(*)::int AS count FROM (${this.queries.getBuckets}) AS t`,
+        [source]
+      );
+
         const cursor = client.query(new Cursor(this.queries.getBuckets, [source]));
-        // const totalRows = client.query(this.queries.getBuckets, [source]);
         let currentId: string | number;
         let currentBucket: Bucket<any>;
         const maxRows = 100;
@@ -243,6 +250,7 @@ export class PostgresUtils extends DatabaseUtils {
         let numBuckets = 0;
         while (rows.length > 0) {
             log.info(`PQ->ES: Processing rows ${numDatasets} - ${numDatasets + rows.length}`);
+            observer.next(ImportResult.running(numDatasets, totalRows, "Datensätze nach Elasticsearch"));
             for (let row of rows) {
                 numDatasets += 1;
                 if (row.anchor_id != currentId) {
