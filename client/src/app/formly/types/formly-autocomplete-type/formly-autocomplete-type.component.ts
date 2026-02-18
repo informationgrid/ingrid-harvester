@@ -23,8 +23,18 @@
 
 import { Component } from "@angular/core";
 import { FieldType } from "@ngx-formly/material/form-field";
-import { FieldTypeConfig, FormlyAttributes, FormlyValidationMessage } from "@ngx-formly/core";
-import { MatError, MatFormField, MatInput, MatLabel } from "@angular/material/input";
+import {
+  FieldTypeConfig,
+  FormlyAttributes,
+  FormlyValidationMessage,
+} from "@ngx-formly/core";
+import {
+  MatError,
+  MatFormField,
+  MatInput,
+  MatLabel,
+  MatSuffix,
+} from "@angular/material/input";
 import { ReactiveFormsModule } from "@angular/forms";
 import {
   MatAutocomplete,
@@ -34,6 +44,7 @@ import {
 import { AsyncPipe } from "@angular/common";
 import { Observable, of, startWith, switchMap } from "rxjs";
 import { map } from "rxjs/operators";
+import { ContextHelpButtonComponent } from "../../../shared/context-help/context-help-button/context-help-button.component";
 
 @Component({
   selector: "formly-autocomplete-type",
@@ -50,6 +61,8 @@ import { map } from "rxjs/operators";
     FormlyAttributes,
     MatError,
     FormlyValidationMessage,
+    ContextHelpButtonComponent,
+    MatSuffix,
   ],
 })
 export class FormlyAutocompleteTypeComponent extends FieldType<FieldTypeConfig> {

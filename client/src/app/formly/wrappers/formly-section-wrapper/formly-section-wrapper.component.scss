@@ -33,15 +33,6 @@ h3 {
   font-size: 20px;
 }
 
-button.mat-mdc-icon-button {
-  padding: 0;
-  --mat-icon-button-state-layer-size: 24px;
-
-  &.cdk-keyboard-focused {
-    outline-offset: 0;
-  }
-}
-
 mat-divider {
   margin-top: 4px;
   margin-bottom: 28px;

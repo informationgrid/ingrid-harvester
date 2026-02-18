@@ -23,6 +23,7 @@
 
 <mat-form-field class="width-100">
   <mat-label>{{ props.label }}</mat-label>
+
   <input
     matInput
     type="text"
@@ -42,5 +43,12 @@
     <mat-error>
       <formly-validation-message [field]="field"></formly-validation-message>
     </mat-error>
+  }
+
+  @if (props.contextHelpId) {
+    <app-context-help-button
+      matSuffix
+      [helpKey]="props.contextHelpId"
+    ></app-context-help-button>
   }
 </mat-form-field>

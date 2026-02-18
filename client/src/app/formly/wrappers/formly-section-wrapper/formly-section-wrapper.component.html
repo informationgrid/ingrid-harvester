@@ -27,14 +27,9 @@
       {{ props.label }}
     </h3>
     @if (props.contextHelpId) {
-      <button
-        class="context-help-icon"
-        matIconButton
-        matTooltip="Eingabehilfe"
-        [contextHelp]="props.contextHelpId"
-      >
-        <mat-icon svgIcon="info-context-help"></mat-icon>
-      </button>
+      <app-context-help-button
+        [helpKey]="props.contextHelpId"
+      ></app-context-help-button>
     }
   </div>
 }

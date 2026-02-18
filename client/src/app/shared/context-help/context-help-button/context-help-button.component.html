@@ -1,13 +1,10 @@
-<mat-icon
-  class="context-help-icon"
-  svgIcon="info-context-help"
-  aria-label="Eingabehilfe"
-  tabindex="0"
-  role="button"
-  aria-hidden="false"
-  aria-haspopup="dialog"
+<button
+  class="context-help-button"
+  matIconButton
   matTooltip="Eingabehilfe"
-  (click)="showHelp()"
-  (keydown.enter)="showHelp()"
-></mat-icon>
-
+  aria-haspopup="dialog"
+  aria-label="Eingabehilfe"
+  (click)="showHelp($event)"
+>
+  <mat-icon svgIcon="info-context-help"></mat-icon>
+</button>

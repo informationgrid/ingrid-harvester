@@ -2049,7 +2049,7 @@ h2.title-with-context-help {
   }
 }
 
-.context-help-icon {
+button.context-help-button {
   cursor: pointer;
 
   svg {
@@ -2057,6 +2057,20 @@ h2.title-with-context-help {
     background-color: #f3f3f3;
     fill: rgb(0 0 0 / 60%);
   }
+
+  &.mat-mdc-icon-button {
+    --mat-icon-button-state-layer-size: 24px;
+    padding: 0;
+
+    &.cdk-keyboard-focused {
+      outline-offset: 0;
+    }
+  }
+}
+
+mat-form-field .context-help-button {
+  margin-left: 4px;
+  margin-right: 8px;
 }
 
 .hidden {

@@ -21,13 +21,29 @@
  * ==================================================
  */
 
-import { Component } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  TemplateRef,
+  ViewChild,
+} from "@angular/core";
 import { FieldTypeConfig, FieldWrapper } from "@ngx-formly/core";
+import { ContextHelpButtonComponent } from "../../../shared/context-help/context-help-button/context-help-button.component";
 
 @Component({
   selector: "formly-inline-help-wrapper",
   templateUrl: "./formly-inline-help-wrapper.component.html",
-  styleUrls: ["./formly-inline-help-wrapper.component.scss"],
-  imports: [],
+  imports: [ContextHelpButtonComponent],
 })
-export class FormlyInlineHelpWrapperComponent extends FieldWrapper<FieldTypeConfig> {}
+export class FormlyInlineHelpWrapperComponent
+  extends FieldWrapper<FieldTypeConfig>
+  implements AfterViewInit
+{
+  @ViewChild("matSuffix", { static: true }) matSuffix!: TemplateRef<any>;
+
+  ngAfterViewInit(): void {
+    if (this.matSuffix) {
+      this.props.suffix = this.matSuffix;
+    }
+  }
+}

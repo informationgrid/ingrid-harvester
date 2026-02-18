@@ -19,10 +19,12 @@ export abstract class SharedFields {
               {
                 key: "type",
                 type: "select",
+                wrappers: ["inline-help", "form-field"],
                 className: "ingrid-col-10 ingrid-col-md-auto",
                 props: {
                   label: "Typ",
                   required: true,
+                  contextHelpId: "harvester_field_type",
                 },
                 expressions: {
                   "props.disabled": "model?.id != -1",
@@ -60,6 +62,7 @@ export abstract class SharedFields {
                   label: "Katalog-Identifier",
                   required: true,
                   placeholder: "Eingeben oder auswählen",
+                  contextHelpId: "harvester_field_catalogId",
                 },
                 expressions: {
                   "props.options": (field) => {
@@ -94,10 +97,12 @@ export abstract class SharedFields {
               {
                 key: "priority",
                 type: "input",
+                wrappers: ["inline-help", "form-field"],
                 className: "ingrid-col-10 ingrid-col-md-auto",
                 props: {
                   label: "Priorität",
                   type: "number",
+                  contextHelpId: "harvester_field_priority",
                 },
               },
             ],
@@ -105,10 +110,12 @@ export abstract class SharedFields {
           {
             key: "description",
             type: "input",
+            wrappers: ["inline-help", "form-field"],
             props: {
               label: "Beschreibung",
               type: "text",
               required: true,
+              contextHelpId: "harvester_field_description",
             },
           },
           {

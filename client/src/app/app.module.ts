@@ -72,6 +72,7 @@ import { FormlyAutocompleteTypeComponent } from "./formly/types/formly-autocompl
 import { FormlyRepeatFormTypeComponent } from "./formly/types/formly-repeat-form-type/formly-repeat-form-type.component";
 import { FormlySubSectionWrapperComponent } from "./formly/wrappers/formly-sub-section-wrapper/formly-sub-section-wrapper.component";
 import { UniqueKeyValidator, UrlValidator } from "./formly/validators";
+import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
 
 registerLocaleData(localeDe);
 
@@ -158,6 +159,18 @@ const appRoutes: Routes = routes;
       ],
       ...withFormlyMaterial(),
     }),
+        {
+      provide: MAT_DIALOG_DEFAULT_OPTIONS,
+      useValue: {
+        hasBackdrop: true,
+        maxWidth: "min(950px, 90vw)",
+        minWidth: "min(500px, 100%)",
+        minHeight: "min(0px, 100%)",
+        role: "dialog",
+        autoFocus: "dialog",
+        restoreFocus: true,
+      },
+    },
   ],
 })
 export class AppModule {}

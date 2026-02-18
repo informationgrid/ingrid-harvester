@@ -21,4 +21,12 @@
     ==================================================
 -->
 
+<ng-template #matSuffix>
+  @if (props.contextHelpId) {
+    <app-context-help-button
+      [helpKey]="props.contextHelpId"
+    ></app-context-help-button>
+  }
+</ng-template>
+
 <ng-container #fieldComponent></ng-container>

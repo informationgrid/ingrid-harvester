@@ -23,22 +23,13 @@
 
 import { Component } from "@angular/core";
 import { FieldTypeConfig, FieldWrapper } from "@ngx-formly/core";
-import { MatIconButton } from "@angular/material/button";
-import { MatIcon } from "@angular/material/icon";
-import { ContextHelpDirective } from "../../../shared/context-help/context-help.directive";
-import { MatTooltip } from "@angular/material/tooltip";
 import { MatDivider } from "@angular/material/list";
+import { ContextHelpButtonComponent } from "../../../shared/context-help/context-help-button/context-help-button.component";
 
 @Component({
   selector: "formly-section-wrapper",
   templateUrl: "./formly-section-wrapper.component.html",
   styleUrls: ["./formly-section-wrapper.component.scss"],
-  imports: [
-    MatIconButton,
-    MatIcon,
-    ContextHelpDirective,
-    MatTooltip,
-    MatDivider,
-  ],
+  imports: [MatDivider, ContextHelpButtonComponent],
 })
 export class FormlySectionWrapperComponent extends FieldWrapper<FieldTypeConfig> {}
