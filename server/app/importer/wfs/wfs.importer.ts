@@ -233,7 +233,7 @@ export class WfsImporter extends Importer {
             this.summary.skippedDocs.push(featureTypeName);
         }
         if (this.settings.harvestTypes) {
-            this.observer.next(ImportResult.running(++this.numIndexDocs, this.numItems));
+            this.observer.next(ImportResult.running(++this.numIndexDocs, this.numItems, "FeatureTypes"));
         }
     }
 
