@@ -160,7 +160,7 @@ export class ExcelSparseImporter extends Importer {
             await this.database.sendBulkData();
             await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
             await this.database.commitTransaction();
-            await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.filePath, observer);
+            await this.database.pushToElasticsearch(this.elastic, this.settings.filePath, observer);
             observer.next(ImportResult.message('Running post operations'));
             observer.next(ImportResult.complete(this.summary));
         }

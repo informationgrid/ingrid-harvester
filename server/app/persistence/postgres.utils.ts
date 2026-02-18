@@ -225,7 +225,7 @@ export class PostgresUtils extends DatabaseUtils {
      * @param source
      * @param observer
      */
-    async pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string, observer: Observer<ImportLogMessage>): Promise<void> {
+    async pushToElasticsearch(elastic: ElasticsearchUtils, source: string, observer: Observer<ImportLogMessage>): Promise<void> {
         let pgAggregator = ProfileFactoryLoader.get().getPostgresAggregator();
         const client: pg.PoolClient = await PostgresUtils.pool.connect();
         log.debug('Connection started');

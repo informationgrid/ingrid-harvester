@@ -79,7 +79,7 @@ export abstract class DatabaseUtils {
 
     abstract deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void>;
 
-    abstract pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string, observer: Observer<ImportLogMessage>): Promise<void>;
+    abstract pushToElasticsearch(elastic: ElasticsearchUtils, source: string, observer: Observer<ImportLogMessage>): Promise<void>;
 
     abstract getStoredData(ids: string[]): Promise<any[]>;
 
