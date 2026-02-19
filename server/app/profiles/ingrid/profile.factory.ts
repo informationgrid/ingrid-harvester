@@ -22,7 +22,9 @@
  */
 
 import log4js from 'log4js';
-import { Catalog as NewCatalog, type CatalogSettings, type ElasticsearchCatalogSettings } from '../../catalog/catalog.factory.js';
+import { Catalog as NewCatalog, type CatalogSettings } from '../../catalog/catalog.factory.js';
+import type { ElasticsearchCatalogSettings } from '../../catalog/elasticsearch/elasticsearch.catalog.js';
+import type { CswCatalogSettings } from '../../catalog/csw/csw.catalog.js';
 import type { CswSettings } from '../../importer/csw/csw.settings.js';
 import type { Importer } from '../../importer/importer.js';
 import type { Mapper } from '../../importer/mapper.js';
@@ -37,6 +39,7 @@ import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import type { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
 import { ProfileFactory } from '../profile.factory.js';
+import { IngridCswCatalog } from './catalog/csw.catalog.js';
 import { IngridElasticsearchCatalog } from './catalog/elasticsearch.catalog.js';
 import { IngridCswImporter } from './importer/ingrid.csw.importer.js';
 import { ingridCswMapper } from './mapper/ingrid.csw.mapper.js';
@@ -129,6 +132,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
         const catalogSettings = ConfigService.getCatalogSettings().find(config => config.id === catalogId);
         switch (catalogSettings.type) {
             case 'elasticsearch': return new IngridElasticsearchCatalog(catalogSettings as ElasticsearchCatalogSettings, summary);
+            case 'csw': return new IngridCswCatalog(catalogSettings as CswCatalogSettings, summary);
             default: log.error(`Catalog type not found: ${catalogSettings.type}`);
         }
         return null;

@@ -91,6 +91,8 @@ export abstract class DatabaseUtils {
      */
     abstract getDatasets(source: string | number, useTransaction?: boolean): Promise<RecordEntity[]>;
 
+    abstract getDatasetsWithOriginalDocument(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'original_document'>[]>;
+
     abstract deleteDatasets(catalogId: number): Promise<void>;
 
     abstract moveDatasets(catalogId: number, targetCatalogId: number): Promise<void>;

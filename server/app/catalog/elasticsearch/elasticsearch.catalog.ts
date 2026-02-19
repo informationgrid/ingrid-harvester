@@ -23,24 +23,31 @@
 
 import type { ImporterSettings } from 'importer.settings.js';
 import type { Summary } from '../../model/summary.js';
-import { DatabaseFactory } from '../../persistence/database.factory.js';
 import type { DatabaseUtils } from '../../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
-import { Catalog, type CatalogSettings, type ElasticsearchCatalogSettings } from '../catalog.factory.js';
+import { Catalog, type CatalogSettings } from '../catalog.factory.js';
+import { ElasticsearchCatalogSummary } from './elasticsearch.catalog-summary.js';
+
+export type ElasticsearchCatalogSettings = CatalogSettings & {
+    settings: {
+        index: string,
+        alias: string,
+    }
+}
 
 export abstract class ElasticsearchCatalog extends Catalog<object> {
 
     readonly id: string = 'elastic-catalog';
     readonly type: string = 'elasticsearch';
 
-    private readonly database: DatabaseUtils;
+    protected readonly catalogSummary = new ElasticsearchCatalogSummary();
+
     private readonly elastic: ElasticsearchUtils;
 
     constructor(catalogSettings: ElasticsearchCatalogSettings, summary: Summary) {
         super(catalogSettings, summary);
-        this.database = DatabaseFactory.getDatabaseUtils(ConfigService.getGeneralSettings().database, summary);
         this.elastic = ElasticsearchFactory.getElasticUtils(ConfigService.getGeneralSettings().elasticsearch, summary);
     }
 
