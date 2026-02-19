@@ -313,9 +313,10 @@ export class ConfigService {
     }
 
     static getCatalogSettings(): CatalogSettings[] {
-        const configExists = fs.existsSync(this.CATALOG_CONFIG_FILE);
+        const catalogConfigFile = this.getCatalogConfigFile();
+        const configExists = fs.existsSync(catalogConfigFile);
         if (configExists) {
-            let contents = fs.readFileSync(this.CATALOG_CONFIG_FILE);
+            let contents = fs.readFileSync(catalogConfigFile);
             return JSON.parse(contents.toString());
         }
         else {
@@ -325,7 +326,7 @@ export class ConfigService {
      }
 
      static setCatalogSettings(config: CatalogSettings[]) {
-        fs.writeFileSync(this.CATALOG_CONFIG_FILE, JSON.stringify(config, null, 2));
+        fs.writeFileSync(this.getCatalogConfigFile(), JSON.stringify(config, null, 2));
      }
 
     private static getDbUtils() {
@@ -477,14 +478,22 @@ export class ConfigService {
         return ordered;
     }
 
-    private static getHarvesterConfigFile() {
+    private static getConfigFile(filename: string) {
         let configDir = process.env.IMPORTER_CONFIG_DIR;
         if (!configDir) {
             configDir = process.argv.find(arg => arg.toLowerCase().startsWith('--config_dir=')) ?? '';
             configDir = configDir.toLowerCase().replace('--config_dir=', '');
         }
         return configDir
-            ? configDir + '/' + this.HARVESTER_CONFIG_FILE
-            : this.HARVESTER_CONFIG_FILE;
+            ? configDir + '/' + filename
+            : filename;
+    }
+
+    private static getHarvesterConfigFile() {
+        return this.getConfigFile(this.HARVESTER_CONFIG_FILE);
+    }
+
+    private static getCatalogConfigFile() {
+        return this.getConfigFile(this.CATALOG_CONFIG_FILE);
     }
 }

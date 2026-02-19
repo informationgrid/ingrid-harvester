@@ -102,7 +102,7 @@ export class PostgresUtils extends DatabaseUtils {
         // TODO
         // let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getIdentifiers, [source]);
         // let result: pg.QueryResult<any> = await this.transactionClient.query("SELECT * from public.record WHERE source = $1", [source]);
-        let result: pg.QueryResult<any> = await this.transactionClient.query("SELECT identifier from public.record WHERE source = $1 and dataset->'extras'->>'hierarchy_level'!='service'", [source]);
+        let result: pg.QueryResult<any> = await PostgresUtils.pool.query("SELECT identifier from public.record WHERE source = $1 and dataset->'extras'->>'hierarchy_level'!='service'", [source]);
         if (result.rowCount == 0) {
             return [];
         }
@@ -118,6 +118,14 @@ export class PostgresUtils extends DatabaseUtils {
         let result: pg.QueryResult<any> = await this.client(useTransaction).query(query, [source]);
         if (result.rowCount == 0) {
             return null;
+        }
+        return result.rows;
+    }
+
+    async getDatasetsWithOriginalDocument(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'original_document'>[]> {
+        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getDatasetsBySourceWithOriginal, [source]);
+        if (result.rowCount == 0) {
+            return [];
         }
         return result.rows;
     }
