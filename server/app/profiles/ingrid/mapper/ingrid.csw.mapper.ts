@@ -21,11 +21,13 @@
  * ==================================================
  */
 
+import * as GeoJsonUtils from "../../../utils/geojson.utils.js";
 import log4js from 'log4js';
 import {ingridMapper} from "./ingrid.mapper.js";
 import {CswMapper} from "../../../importer/csw/csw.mapper.js";
 import type {Distribution} from "../../../model/distribution.js";
 import * as XpathUtils from "../../../utils/xpath.utils.js";
+import type { Geometry } from 'geojson';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -124,6 +126,18 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return this.getGeoBound("north");
     }
 
+    getSpatial(): Geometry[] {
+        let lowerCorner = `${this.getX1()} ${this.getY1()}`;
+        let upperCorner = `${this.getX2()} ${this.getY2()}`;
+        try {
+            return [GeoJsonUtils.getBoundingBox(lowerCorner, upperCorner, "WGS84")];
+        }
+        catch (e) {
+            log.warn(`Error while parsing bounding box for record ${this.getGeneratedId()}: ${e}`);
+            return [];
+        }
+    }
+
     getIDF() {
         let idf = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.portalu.de/IDF/1.0\">\n  <head/>\n  <body>\n";
         let renamedDom = XpathUtils.renameNodes("gmd:MD_Metadata", "idf:idfMdMetadata", this.baseMapper.record.cloneNode(true));
@@ -143,7 +157,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return url ? [url] : [];
     }
 
-    getAdditionalHTML() {
+    getAdditionalHtml(): string {
         let result = [];
         let mdBrowseGraphics = CswMapper.select(".//gmd:graphicOverview/gmd:MD_BrowseGraphic", this.baseMapper.idInfo)
         mdBrowseGraphics?.forEach(mdBrowseGraphic => {
@@ -508,6 +522,10 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             }
         }
         return false;
+    }
+
+    getHierarchyLevel() {
+        return this.baseMapper.getHierarchyLevel();
     }
 
     private getReferenceSystems(): string[] {

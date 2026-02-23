@@ -50,7 +50,7 @@ import type { XPathElementSelect } from '../../utils/xpath.utils.js';
 
 export class CswMapper extends BaseMapper {
 
-    static select = <XPathElementSelect>xpath.useNamespaces({
+    static readonly cswNsMap = {
         'csw': namespaces.CSW,
         'gmd': namespaces.GMD,
         'gco': namespaces.GCO,
@@ -61,7 +61,8 @@ export class CswMapper extends BaseMapper {
         'plu': namespaces.PLU,
         'srv': namespaces.SRV,
         'xlink': namespaces.XLINK
-    });
+    };
+    static select = <XPathElementSelect>xpath.useNamespaces(CswMapper.cswNsMap);
 
     log = log4js.getLogger();
 

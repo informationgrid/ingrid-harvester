@@ -21,20 +21,22 @@
  * ==================================================
  */
 
+import * as crypto from "crypto";
+import dayjs from "dayjs";
 import 'dayjs/locale/de.js';
 import log4js from 'log4js';
-import type {CswMapper} from "../../../importer/csw/csw.mapper.js";
-import type {IndexDocumentFactory} from "../../../model/index.document.factory.js";
-import type {IngridIndexDocument} from "../model/index.document.js";
-import * as crypto from "crypto";
-import type {Distribution} from "../../../model/distribution.js";
-import {Codelist} from "../utils/codelist.js";
-import dayjs from "dayjs";
+import type { CswMapper } from "../../../importer/csw/csw.mapper.js";
+import type { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
+import type { Distribution } from "../../../model/distribution.js";
+import type { Geometry } from "geojson";
+import type { IndexDocumentFactory } from "../../../model/index.document.factory.js";
+import type { IngridIndexDocument } from "../model/index.document.js";
+import { Codelist } from "../utils/codelist.js";
 dayjs.locale('de');
 
-export abstract class ingridMapper<M extends CswMapper> implements IndexDocumentFactory<IngridIndexDocument>{
+export abstract class ingridMapper<M extends CswMapper | WfsMapper> implements IndexDocumentFactory<IngridIndexDocument>{
 
-    protected baseMapper: M;
+    readonly baseMapper: M;
 
     private _log = log4js.getLogger();
 
@@ -44,6 +46,8 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
 
     async create() : Promise<IngridIndexDocument> {
         let result = <IngridIndexDocument>{
+            // put custom entries first, so they can potentially get overwritten with more specific getters below
+            ...this.getCustomEntries(),
             iPlugId: this.getIPlugId(),
             uuid: this.getGeneratedId(),
             partner: this.getPartner(),
@@ -83,9 +87,12 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             x2: this.getX2(),
             y1: this.getY1(),
             y2: this.getY2(),
+            spatial: {
+                geometries: this.getSpatial()
+            },
             modified: this.getModifiedDate(),
             capabilities_url: this.getCapabilitiesURL(),
-            additional_html_1: this.getAdditionalHTML(),
+            additional_html_1: this.getAdditionalHtml(),
             t04_search: this.getT04Search(),
             t0110_avail_format: this.getT0110_avail_format(),
             t011_obj_geo: this.getT011_obj_geo(),
@@ -125,6 +132,10 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return result;
     }
 
+    getCustomEntries(toLower: boolean = true): Object {
+        return {};
+    }
+
     getDistributions(): Promise<Distribution[]>{
         return undefined
     }
@@ -137,16 +148,14 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return this.baseMapper.getModifiedDate();
     }
 
-    getAccessRights(): string[]{
-        return this.baseMapper.getAccessRights();
-    }
-
+    // if the custom entries contain a "uuid", use it
+    // otherwise, use the "generated" id, e.g. gmlId (WFS) or fileIdentifier (CSW)
     getGeneratedId(): string{
-        return this.baseMapper.getGeneratedId()
+        return this.baseMapper.getGeneratedId();
     }
 
     getHierarchyLevel() {
-        return this.baseMapper.getHierarchyLevel();
+        return undefined;
     }
 
     getHarvestedData(): string{
@@ -204,8 +213,8 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
 
     getT01_object() {
         return {
-            obj_id: this.baseMapper.getGeneratedId(),
-            org_obj_id: this.baseMapper.getGeneratedId()
+            obj_id: this.getGeneratedId(),
+            org_obj_id: this.getGeneratedId()
         }
     }
 
@@ -221,9 +230,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return this.baseMapper.getSettings().boost;
     }
 
-    getSummary() {
-        return undefined;
-    }
+    abstract getSummary();
 
     getContent(resultObj) {
         const values = [];
@@ -261,15 +268,15 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return undefined;
     }
 
-    getIDF() {
-        return undefined;
-    }
+    abstract getSpatial(): Geometry | Geometry[];
+
+    abstract getIDF();
 
     getCapabilitiesURL() {
         return undefined;
     }
 
-    getAdditionalHTML() {
+    getAdditionalHtml(): string {
         return undefined;
     }
 

@@ -87,6 +87,7 @@ export class WfsHarvesterComponent implements OnInit, OnDestroy {
     this.form.addControl('version', new UntypedFormControl(this.model.version));
     this.form.addControl('typename', new UntypedFormControl(this.model.typename));
     this.form.addControl('maxConcurrent', new FormControl(this.model.maxConcurrent, Validators.min(1))),
+    this.form.addControl('wfsProfile', new UntypedFormControl(this.model.wfsProfile)),
     // diplanung
     this.form.addControl('pluPlanState', new UntypedFormControl(this.model.pluPlanState));
     this.form.addControl('contactCswUrl', new UntypedFormControl(this.model.contactCswUrl));
@@ -94,6 +95,8 @@ export class WfsHarvesterComponent implements OnInit, OnDestroy {
     this.form.addControl('maintainer', new UntypedFormControl(this.model.maintainer && JSON.stringify(this.model.maintainer, null, 4), WfsHarvesterComponent.MaintainerValidator));
     // zdm
     this.form.addControl('featureLimit', new UntypedFormControl(this.model.featureLimit));
+    // ingrid
+    this.form.addControl('featureTitleAttribute', new UntypedFormControl(this.model.featureTitleAttribute));
     // this.form.addControl('harvestTypes', new UntypedFormControl(this.model.harvestTypes));
 
     // this is intended to set the model.contactMetadata to a JS object,
