@@ -56,3 +56,6 @@ client/cypress/screenshots
 client/cypress/mochawesome-reports/*
 !client/cypress/mochawesome-reports/.gitkeep
 /client/.angular/
+
+.env
+.claude

@@ -6,7 +6,7 @@
     "startPosition": 1,
     "catalogId": "harvester-index",
     "catalogIds": [
-      "ingrid-elastic-1"
+      "py-csw"
     ],
     "customCode": null,
     "defaultMcloudSubgroup": [],
@@ -53,5 +53,59 @@
     "datatype": "default,dsc_csw,csw,metadata,IDF_1.0",
     "dataSourceName": "Harvester",
     "boost": null
+  },
+  {
+    "priority": null,
+    "type": "CSW",
+    "maxRecords": 100,
+    "startPosition": 1,
+    "catalogId": "nokis",
+    "catalogIds": [
+      "py-csw"
+    ],
+    "customCode": null,
+    "defaultMcloudSubgroup": null,
+    "defaultDCATCategory": null,
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "isIncremental": false,
+    "maxConcurrent": 4,
+    "skipUrlCheckOnHarvest": false,
+    "timeout": 60000,
+    "sourceURL": "https://nokis.niedersachsen.de/NOKIS//servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetCapabilitiesServant$GET?SERVICE=CSW&REQUEST=GetCapabilities&VERSION=2.0.2",
+    "maxServices": 30,
+    "resolveOgcDistributions": false,
+    "harvestingMode": "standard",
+    "eitherKeywords": [],
+    "httpMethod": "POST",
+    "resultType": "results",
+    "simplifyTolerance": 0,
+    "id": 19,
+    "description": "nokis.niedersachsen.de",
+    "iPlugId": "nokis",
+    "partner": "bund",
+    "provider": "ni_nlwkn, Nationalpark Niedersächsisches Wattenmeer",
+    "datatype": "default,dsc_csw,csw,metadata,IDF_1.0",
+    "dataSourceName": "NOKIS (Datenkatalog des Nds. Landesbetriebs für Wasserwirtschaft, Küsten- und Naturschutz sowie der Nationalparkverwaltung Nds. Wattenmeer)",
+    "boost": null,
+    "defaultAttribution": null,
+    "defaultAttributionLink": null,
+    "pluPlanState": null,
+    "recordFilter": "<ogc:Filter>\n\t<ogc:PropertyIsEqualTo>\n\t\t<ogc:PropertyName>identifier</ogc:PropertyName>\n\t\t<ogc:Literal>8ab590a216f7f05f01185fd222071e45</ogc:Literal>\n\t</ogc:PropertyIsEqualTo>\n</ogc:Filter>",
+    "cron": {
+      "full": {
+        "pattern": "0 1 * * *",
+        "active": true
+      },
+      "incr": {
+        "pattern": "",
+        "active": false
+      }
+    }
   }
 ]
