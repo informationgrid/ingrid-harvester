@@ -57,7 +57,7 @@ services:
       - harvester-network
 
   postgres:
-    image: postgres:14.4-alpine
+    image: postgres
     container_name: postgresql
     restart: unless-stopped
     environment:
@@ -72,9 +72,35 @@ services:
     volumes:
       - postgresdata:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5434:5432"
     networks:
       - harvester-network
+
+  pycsw-db:
+    image: postgis/postgis:15-3.3
+    environment:
+      POSTGRES_DB: pycsw
+      POSTGRES_USER: pycsw
+      POSTGRES_PASSWORD: pycsw_secret
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pycsw"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pycsw:
+    image: geopython/pycsw:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./docker-dev/pycsw.cfg:/etc/pycsw/pycsw.cfg
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - PYCSW_CONFIG=/etc/pycsw/pycsw.cfg
 
 volumes:
   esdata:
