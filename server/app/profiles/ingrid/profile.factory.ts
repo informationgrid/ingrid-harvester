@@ -52,6 +52,7 @@ import { CswImporter } from 'importer/csw/csw.importer.js';
 import {ingridDcatapdeMapper} from "./mapper/ingrid.dcatapde.mapper.js";
 import type {DcatapdeSettings} from "../../importer/dcatapde/dcatapde.settings.js";
 import {DcatapdeImporter} from "../../importer/dcatapde/dcatapde.importer.js";
+import {PiveauCatalog, type PiveauCatalogSettings} from "../../catalog/piveau/piveau.catalog.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -140,6 +141,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
         switch (catalogSettings.type) {
             case 'elasticsearch': return new IngridElasticsearchCatalog(catalogSettings as ElasticsearchCatalogSettings, summary);
             case 'csw': return new IngridCswCatalog(catalogSettings as CswCatalogSettings, summary);
+            case 'piveau': return new PiveauCatalog(catalogSettings as PiveauCatalogSettings, summary);
             default: log.error(`Catalog type not found: ${catalogSettings.type}`);
         }
         return null;

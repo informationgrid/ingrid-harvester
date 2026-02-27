@@ -139,25 +139,41 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
 
     log = log4js.getLogger();
 
-    constructor(settings: DcatapdeSettings, record, catalogPage, harvestTime, summary) {
+    constructor(settings: DcatapdeSettings, record, harvestTime, summary, catalogPage) {
         super(settings, summary);
         this.record = record;
         this.harvestTime = harvestTime;
         this.catalogPage = catalogPage;
-
-        let distributions = DcatapdeMapper.select('./dcat:Distribution', catalogPage);
-        let distributionIDs = DcatapdeMapper.select('./dcat:distribution', record)
-            .map(node => node.getAttribute('rdf:resource'))
-            .filter(distibution => distibution);
-
-        this.linkedDistributions = distributions.filter(distribution => distributionIDs.includes(distribution.getAttribute('rdf:about')))
-        this.linkedDistributions = this.linkedDistributions.concat(DcatapdeMapper.select('./dcat:distribution/dcat:Distribution', record));
 
         let uuid = DcatapdeMapper.select('./dct:identifier', record, true).textContent;
         if(!uuid) {
             uuid = DcatapdeMapper.select('./dct:identifier/@rdf:resource', record, true).textContent;
         }
         this.uuid = uuid;
+
+        let allDistributions = []
+        let pageDistributions = DcatapdeMapper.select('./dcat:Distribution', catalogPage);
+        let datasetDistributions = DcatapdeMapper.select('./dcat:distribution', record);
+
+        for(const distribution of datasetDistributions) {
+            const localDistribution = DcatapdeMapper.select('./dcat:Distribution', distribution, true);
+
+            if(localDistribution) {
+                allDistributions.push(localDistribution)
+            } else {
+                const distributionID = distribution.getAttribute('rdf:resource')
+                const linkedDistribution = pageDistributions.find(distribution => distribution.getAttribute('rdf:about') == distributionID);
+
+                if(linkedDistribution) {
+                    distribution.appendChild(linkedDistribution);
+                    distribution.removeAttribute('rdf:resource')
+                    allDistributions.push(linkedDistribution)
+                } else {
+                    console.warn(`${uuid} Distribution not found: ${distributionID}`)
+                }
+            }
+        }
+        this.linkedDistributions = allDistributions;
 
         super.init();
     }
