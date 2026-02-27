@@ -39,7 +39,7 @@
                 @if (harvester.id != -1) {
                   <mat-option value="CODEDE-CSW">CSW (CODEDE)</mat-option>
                 }
-                <mat-option value="DCAT">DCAT</mat-option>
+                <mat-option value="DCATAPDE">DCAT-AP.de</mat-option>
                 <mat-option value="DCATAPPLU">DCATAPPLU</mat-option>
                 <mat-option value="EXCEL">EXCEL</mat-option>
                 <mat-option value="EXCEL_SPARSE">EXCEL (SPARSE)</mat-option>
@@ -213,7 +213,7 @@
         </app-csw-harvester>
       }
 
-      @if (harvesterForm.get('type').value === 'DCAT') {
+      @if (harvesterForm.get('type').value === 'DCATAPDE') {
         <app-dcat-harvester
           [form]="harvesterForm"
           [model]="harvester"

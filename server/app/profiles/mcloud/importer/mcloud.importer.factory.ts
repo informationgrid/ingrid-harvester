@@ -22,7 +22,7 @@
  */
 
 import log4js from 'log4js';
-import { DcatImporter } from '../../../importer/dcat/dcat.importer.js';
+import { DcatapdeImporter } from '../../../importer/dcatapde/dcatapde.importer.js';
 import { ExcelImporter } from '../../../importer/excel/excel.importer.js';
 import type { Importer } from '../../../importer/importer.js';
 import { ImporterFactory } from '../../../importer/importer.factory.js';
@@ -52,7 +52,7 @@ export class McloudImporterFactory extends ImporterFactory{
                 importer = new OaiImporter(config);
                 break;
             case 'DCAT':
-                importer = new DcatImporter(config);
+                importer = new DcatapdeImporter(config);
                 break;
             case 'SPARQL':
                 importer = new SparqlImporter(config);

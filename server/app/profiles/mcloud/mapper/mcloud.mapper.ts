@@ -26,7 +26,7 @@ import type { Agent, Contact, Organization, Person } from '../../../model/agent.
 import type { CkanMapper } from '../../../importer/ckan/ckan.mapper.js';
 import type { CswMapper } from '../../../importer/csw/csw.mapper.js';
 import type { DateRange } from '../../../model/dateRange.js';
-import type { DcatMapper } from '../../../importer/dcat/dcat.mapper.js';
+import type { DcatapdeMapper } from '../../../importer/dcatapde/dcatapde.mapper.js';
 import type { Distribution } from '../../../model/distribution.js';
 import type { ExcelMapper } from '../../../importer/excel/excel.mapper.js';
 import type { IndexDocumentFactory } from '../../../model/index.document.factory.js';
@@ -35,7 +35,7 @@ import type { MetadataSource } from '../../../model/index.document.js';
 import type { OaiMapper } from '../../../importer/oai/iso19139/oai.mapper.js';
 import type { SparqlMapper } from '../../../importer/sparql/sparql.mapper.js';
 
-export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper> implements IndexDocumentFactory<mcloudIndexDocument> {
+export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatapdeMapper | ExcelMapper | OaiMapper | SparqlMapper> implements IndexDocumentFactory<mcloudIndexDocument> {
 
     protected baseMapper: M;
 

@@ -46,12 +46,15 @@ import mappings from './persistence/ingrid-meta-mapping.json' with { type: 'json
 import settings from './persistence/ingrid-meta-settings.json' with { type: 'json' };
 import { PostgresAggregator } from './persistence/postgres.aggregator.js';
 import { CswImporter } from 'importer/csw/csw.importer.js';
+import {ingridDcatapdeMapper} from "./mapper/ingrid.dcatapde.mapper.js";
+import type {DcatapdeSettings} from "../../importer/dcatapde/dcatapde.settings.js";
+import {DcatapdeImporter} from "../../importer/dcatapde/dcatapde.importer.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
 export const INGRID_META_INDEX = 'ingrid_meta';
 
-export type ingridSettings = CswSettings | WfsSettings;
+export type ingridSettings = CswSettings | WfsSettings | DcatapdeSettings;
 
 export class ingridFactory extends ProfileFactory<ingridSettings> {
 
@@ -106,6 +109,9 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
                 // importer = new IngridCswImporter(settings as CswSettings);
                 importer = new CswImporter(settings as CswSettings);
                 break;
+            case 'DCATAPDE':
+                importer = new DcatapdeImporter(settings as DcatapdeSettings);
+                break;
             default: {
                 log.error('Importer not found: ' + settings.type);
             }
@@ -119,6 +125,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
     async getMapper(settings: ingridSettings, harvestTime: Date, summary: Summary, record: any, generalInfo: any): Promise<Mapper<ingridSettings>> {
         switch (settings.type) {
             case 'CSW': return new ingridCswMapper(settings as CswSettings, record, harvestTime, summary, generalInfo);
+            case 'DCATAPDE': return new ingridDcatapdeMapper(settings as DcatapdeSettings, record, harvestTime, summary, generalInfo);
             default: {
                 log.error('Mapper not found: ' + settings.type);
             }

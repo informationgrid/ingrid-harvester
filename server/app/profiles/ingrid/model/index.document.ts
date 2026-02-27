@@ -22,6 +22,7 @@
  */
 
 import type { IndexDocument } from '../../../model/index.document.js';
+import type { IngridMetadata } from "./ingrid.metadata.js";
 
 export type IngridIndexDocument = IndexDocument & IngridMetadata & {
     uuid: string,
@@ -91,14 +92,4 @@ export type IngridIndexDocument = IndexDocument & IngridMetadata & {
         referencesystem_value: string[],
     },
     sort_hash: string
-}
-
-export type IngridMetadata = {
-    iPlugId: string,
-    partner: string[],
-    provider: string[],
-    organisation: string,
-    datatype: string[],
-    dataSourceName: string,
-    boost?: number,
 }

@@ -23,7 +23,7 @@
 
 import type { License } from '@shared/license.model.js';
 import log4js from 'log4js';
-import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
+import { DcatapdeMapper } from '../dcatapde/dcatapde.mapper.js';
 import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
 import type { Organization, Person } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
@@ -92,10 +92,10 @@ export class ExcelMapper extends Mapper<ExcelSettings> implements ToElasticMappe
         // see https://joinup.ec.europa.eu/release/dcat-ap-how-use-mdr-data-themes-vocabulary
         const dcatCategoriesString: string = this.columnValues[this.columnMap.DCATKategorie];
         if (dcatCategoriesString) {
-            return dcatCategoriesString.split(',').map(cat => DcatMapper.DCAT_CATEGORY_URL + cat);
+            return dcatCategoriesString.split(',').map(cat => DcatapdeMapper.DCAT_CATEGORY_URL + cat);
         } else {
             return this.getSettings().defaultDCATCategory
-                .map( category => DcatMapper.DCAT_CATEGORY_URL + category);
+                .map( category => DcatapdeMapper.DCAT_CATEGORY_URL + category);
         }
 
     }

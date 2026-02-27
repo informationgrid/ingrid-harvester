@@ -41,11 +41,13 @@ import { RequestDelegate } from '../../utils/http-request.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 import type { XPathElementSelect } from '../../utils/xpath.utils.js';
 import { Mapper } from '../mapper.js';
-import type { DcatSettings } from './dcat.settings.js';
+import type { DcatapdeSettings } from './dcatapde.settings.js';
 
-export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<IndexDocument> {
+export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasticMapper<IndexDocument> {
 
     static DCAT_CATEGORY_URL = 'http://publications.europa.eu/resource/authority/data-theme/';
+    static DCAT_LANGUAGE_URL = 'http://publications.europa.eu/resource/authority/language/';
+    static DCAT_AVAILABILTY_URL = 'http://publications.europa.eu/resource/authority/planned-availability/';
 
     static DCAT_THEMES = ['AGRI', 'ECON', 'EDUC','ENER','ENVI','GOVE','HEAL','INTR','JUST','REGI','SOCI','TECH','TRAN'];
 
@@ -110,6 +112,7 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
         'rdf': namespaces.RDF,
         'rdfs': namespaces.RDFS,
         'dcat': namespaces.DCAT,
+        'dcatap': namespaces.DCATAP,
         'dct': namespaces.DCT,
         'skos': namespaces.SKOS,
         'schema': namespaces.SCHEMA,
@@ -136,22 +139,23 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
 
     log = log4js.getLogger();
 
-    constructor(settings: DcatSettings, record, catalogPage, harvestTime, summary) {
+    constructor(settings: DcatapdeSettings, record, catalogPage, harvestTime, summary) {
         super(settings, summary);
         this.record = record;
         this.harvestTime = harvestTime;
         this.catalogPage = catalogPage;
 
-        let distributions = DcatMapper.select('./dcat:Distribution', catalogPage);
-        let distributionIDs = DcatMapper.select('./dcat:distribution', record)
+        let distributions = DcatapdeMapper.select('./dcat:Distribution', catalogPage);
+        let distributionIDs = DcatapdeMapper.select('./dcat:distribution', record)
             .map(node => node.getAttribute('rdf:resource'))
             .filter(distibution => distibution);
 
         this.linkedDistributions = distributions.filter(distribution => distributionIDs.includes(distribution.getAttribute('rdf:about')))
+        this.linkedDistributions = this.linkedDistributions.concat(DcatapdeMapper.select('./dcat:distribution/dcat:Distribution', record));
 
-        let uuid = DcatMapper.select('./dct:identifier', record, true).textContent;
+        let uuid = DcatapdeMapper.select('./dct:identifier', record, true).textContent;
         if(!uuid) {
-            uuid = DcatMapper.select('./dct:identifier/@rdf:resource', record, true).textContent;
+            uuid = DcatapdeMapper.select('./dct:identifier/@rdf:resource', record, true).textContent;
         }
         this.uuid = uuid;
 
@@ -167,9 +171,9 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
     }
 
     getDescription() {
-        let description = DcatMapper.select('./dct:description', this.record, true);
+        let description = DcatapdeMapper.select('./dct:description', this.record, true);
         if (!description) {
-            description = DcatMapper.select('./dct:abstract', this.record, true);
+            description = DcatapdeMapper.select('./dct:abstract', this.record, true);
         }
         if (!description) {
             let msg = `Dataset doesn't have an description. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.getSettings().sourceURL}\'`;
@@ -183,8 +187,23 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
         return undefined;
     }
 
+    getLandingPage() {
+        let landingPage = DcatapdeMapper.select('./dcat:landingPage', this.record, true)?.getAttribute('rdf:resource');
+        return landingPage && landingPage.trim() !== '' ? landingPage : undefined;
+    }
 
-    async getDistributions(): Promise<Distribution[]> {
+
+    getPoliticalGeocodingLevelURI() {
+        let politicalGeocodingLevelURI = DcatapdeMapper.select('./dcatde:politicalGeocodingLevelURI ', this.record, true)?.getAttribute('rdf:resource');
+        return politicalGeocodingLevelURI && politicalGeocodingLevelURI.trim() !== '' ? politicalGeocodingLevelURI : undefined;
+    }
+
+    getLegalBasis() {
+        let legalBasis = DcatapdeMapper.select('./dcatde:legalBasis ', this.record, true)?.textContent;
+        return legalBasis && legalBasis.trim() !== '' ? legalBasis : undefined;
+    }
+
+    getDistributions():Distribution[] {
         let dists = [];
 
         if (this.linkedDistributions) {
@@ -192,11 +211,11 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
                 this.linkedDistributions[i]
 
                 let format: string = "Unbekannt";
-                let formatNode = DcatMapper.select('./dct:format', this.linkedDistributions[i], true);
-                let mediaTypeNode = DcatMapper.select('./dcat:mediaType', this.linkedDistributions[i], true);
+                let formatNode = DcatapdeMapper.select('./dct:format', this.linkedDistributions[i], true);
+                let mediaTypeNode = DcatapdeMapper.select('./dcat:mediaType', this.linkedDistributions[i], true);
                 if (formatNode) {
-                    let formatLabel = DcatMapper.select('.//rdfs:label', formatNode, true);
-                    let formatValue = DcatMapper.select('.//rdf:value', formatNode, true);
+                    let formatLabel = DcatapdeMapper.select('.//rdfs:label', formatNode, true);
+                    let formatValue = DcatapdeMapper.select('.//rdf:value', formatNode, true);
                     if(formatLabel){
                         format = formatLabel.textContent;
                     }
@@ -222,22 +241,53 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
                     }
                 }
 
-                let url = DcatMapper.select('./dcat:accessURL', this.linkedDistributions[i], true);
-                let title = DcatMapper.select('./dct:title', this.linkedDistributions[i], true);
-                let description = DcatMapper.select('./dct:description', this.linkedDistributions[i], true);
-                let issued = DcatMapper.select('./dct:issued', this.linkedDistributions[i], true);
-                let modified = DcatMapper.select('./dct:modified', this.linkedDistributions[i], true);
-                let size = DcatMapper.select('./dcat:byteSize', this.linkedDistributions[i], true);
+
+                let license = undefined;
+                let licenseResource = DcatapdeMapper.select('dct:license', this.linkedDistributions[i], true);
+                if(licenseResource) {
+                    license = DcatLicensesUtils.get(licenseResource.getAttribute('rdf:resource'));
+
+                    let licenseAttributionByText = DcatapdeMapper.select('dcatde:licenseAttributionByText', this.linkedDistributions[i], true)?.textContent;
+                    if(licenseAttributionByText) {
+                        license["attribution_by_text"] = licenseAttributionByText;
+                    }
+                }
+
+                let url = DcatapdeMapper.select('./dcat:accessURL', this.linkedDistributions[i], true);
+                let title = DcatapdeMapper.select('./dct:title', this.linkedDistributions[i], true);
+                let description = DcatapdeMapper.select('./dct:description', this.linkedDistributions[i], true);
+                let issued = DcatapdeMapper.select('./dct:issued', this.linkedDistributions[i], true);
+                let modified = DcatapdeMapper.select('./dct:modified', this.linkedDistributions[i], true);
+                let size = DcatapdeMapper.select('./dcat:byteSize', this.linkedDistributions[i], true);
+                let availability = DcatapdeMapper.select('./dcatap:availability', this.linkedDistributions[i], true)?.getAttribute('rdf:resource');
+
+                let languages = [];
+                let languageNodes  = DcatapdeMapper.select('./dcat:language', this.linkedDistributions[i]);
+                if (languageNodes) {
+                    for (let j = 0; j < languageNodes.length; j++) {
+                        let language = languageNodes[j].getAttribute('rdf:resource');
+                        if(language && language.startsWith(DcatapdeMapper.DCAT_LANGUAGE_URL)) {
+                            language = language.substring(DcatapdeMapper.DCAT_LANGUAGE_URL.length);
+                        }
+                        if(language && language.trim().length > 0) {
+                            languages.push(language.trim())
+                        }
+                    }
+                }
+
 
                 if(url) {
                     let distribution = {
                         format: UrlUtils.mapFormat([format], this.getSummary().warnings),
-                        accessURL: url.getAttribute('rdf:resource')?url.getAttribute('rdf:resource'):url.textContent,
+                        access_url: url.getAttribute('rdf:resource')?url.getAttribute('rdf:resource'):url.textContent,
                         title: title ? title.textContent : undefined,
                         description: description ? description.textContent : undefined,
                         issued: issued ? new Date(issued.textContent) : undefined,
                         modified: modified ? new Date(modified.textContent) : undefined,
-                        byteSize: size ? Number(size.textContent) : undefined
+                        byteSize: size ? Number(size.textContent) : undefined,
+                        license,
+                        availability,
+                        languages: languages ? languages : undefined,
                     }
 
                     dists.push(distribution);
@@ -249,21 +299,21 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
     }
 
 
-    async getPublisher(): Promise<any[]> {
+    getPublisher(): any[] {
         if(this.fetched.publishers != null){
             return this.fetched.publishers
         }
 
         let publishers = [];
 
-        let dctPublishers = DcatMapper.select('./dct:publisher', this.record);
+        let dctPublishers = DcatapdeMapper.select('./dct:publisher', this.record);
         for (let i = 0; i < dctPublishers.length; i++) {
-            let organization = DcatMapper.select('./foaf:Organization', dctPublishers[i], true);
+            let organization = DcatapdeMapper.select('./foaf:Organization', dctPublishers[i], true);
             if(!organization){
-                organization = DcatMapper.select('./foaf:Organization[@rdf:about="'+dctPublishers[i].getAttribute('rdf:resource')+'"]', this.catalogPage, true)
+                organization = DcatapdeMapper.select('./foaf:Organization[@rdf:about="'+dctPublishers[i].getAttribute('rdf:resource')+'"]', this.catalogPage, true)
             }
             if (organization) {
-                let name = DcatMapper.select('./foaf:name', organization, true);
+                let name = DcatapdeMapper.select('./foaf:name', organization, true);
                 if(name) {
                     let infos: any = {
                         organization: name.textContent
@@ -275,33 +325,15 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
         }
 
         if (publishers.length === 0) {
-            let creators = DcatMapper.select('./dct:creator', this.record);
-            for (let i = 0; i < creators.length; i++) {
-                let organization = DcatMapper.select('./foaf:Organization', creators[i], true);
-                if (organization) {
-                    let name = DcatMapper.select('./foaf:name', organization, true);
-                    if (name) {
-                        let infos: any = {
-                            organization: name.textContent
-                        };
-
-                        publishers.push(infos);
-                    }
-                }
-            }
-        }
-
-        if (publishers.length === 0) {
             this.getSummary().missingPublishers++;
-            return undefined;
-        } else {
-            this.fetched.publishers = publishers;
-            return publishers;
         }
+
+        this.fetched.publishers = publishers;
+        return publishers;
     }
 
     getTitle() {
-        let title = DcatMapper.select('./dct:title', this.record, true).textContent;
+        let title = DcatapdeMapper.select('./dct:title', this.record, true).textContent;
         return title && title.trim() !== '' ? title : undefined;
     }
 
@@ -332,117 +364,6 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
         return undefined;
     }
 
-    async getDisplayContacts() {
-        let displayName;
-        let displayHomepage;
-
-        if(this.getSettings().dcatProviderField) {
-            switch (this.getSettings().dcatProviderField) {
-                case "contactPoint":
-                    let contactPoint = await this.getContactPoint();
-                    if (contactPoint) {
-
-                        if (contactPoint['organization-name']) {
-                            displayName = contactPoint['organization-name'];
-                        } else if (contactPoint.fn) {
-                            displayName = contactPoint.fn;
-                        }
-
-                        displayHomepage = contactPoint.hasURL
-                    }
-                    break;
-                case "creator":
-                    let creator = this.getCreator();
-                    if (creator) {
-                        displayName = creator[0].name;
-                        displayHomepage = creator[0].homepage
-                    }
-                    break;
-                case "maintainer":
-                    let maintainer = this.getMaintainer();
-                    if (maintainer) {
-                        displayName = maintainer[0].name;
-                        displayHomepage = maintainer[0].homepage
-                    }
-                    break;
-                case "originator":
-                    let originator = this.getOriginator();
-                    if (originator) {
-                        displayName = originator[0].name;
-                        displayHomepage = originator[0].homepage
-                    }
-                    break;
-                case "publisher":
-                    let publisher = await this.getPublisher();
-                    if (publisher.length > 0) {
-                        displayName = publisher[0].organization;
-                        displayHomepage = null;
-                    }
-                    break;
-            }
-        }
-
-        if(!displayName){
-            let contactPoint = await this.getContactPoint();
-            if (contactPoint) {
-
-                if (contactPoint['organization-name']) {
-                    displayName = contactPoint['organization-name'];
-                } else if (contactPoint.fn) {
-                    displayName = contactPoint.fn;
-                }
-
-                displayHomepage = contactPoint.hasURL
-            }
-        }
-
-        if(!displayName){
-            let publisher = await this.getPublisher();
-            if (publisher && publisher[0]['organization']) {
-                displayName = publisher[0]['organization'];
-            }
-        }
-
-        if(!displayName){
-            let creator = this.getCreator();
-            if (creator) {
-                displayName = creator[0].name;
-                displayHomepage = creator[0].homepage
-            }
-        }
-
-        if(!displayName) {
-            let maintainer = this.getMaintainer();
-            if (maintainer) {
-                displayName = maintainer[0].name;
-                displayHomepage = maintainer[0].homepage
-            }
-        }
-
-        if(!displayName) {
-            let originator = this.getOriginator();
-            if (originator) {
-                displayName = originator[0].name;
-                displayHomepage = originator[0].homepage
-            }
-        }
-
-        if(!displayName) {
-            displayName = this.getSettings().description.trim()
-        }
-
-        if(this.getSettings().providerPrefix){
-            displayName = this.getSettings().providerPrefix+displayName;
-        }
-
-        let displayContact: Person = {
-            name: displayName.trim(),
-            homepage: displayHomepage
-        };
-
-        return [displayContact];
-    }
-
     getGeneratedId(): string {
         return this.uuid;
     }
@@ -457,7 +378,7 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
      */
     getKeywords(): string[] {
         let keywords = [];
-        let keywordNodes = DcatMapper.select('./dcat:keyword', this.record);
+        let keywordNodes = DcatapdeMapper.select('./dcat:keyword', this.record);
         if (keywordNodes) {
             for (let i = 0; i < keywordNodes.length; i++) {
                 keywords.push(keywordNodes[i].textContent)
@@ -484,16 +405,16 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
     }
 
     getModifiedDate() {
-        let modified = DcatMapper.select('./dct:modified', this.record, true);
+        let modified = DcatapdeMapper.select('./dct:modified', this.record, true);
         return modified?new Date(modified.textContent):undefined;
     }
 
     getSpatial(): any {
-        let geometry = DcatMapper.select('./dct:spatial/dct:Location/locn:geometry[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
+        let geometry = DcatapdeMapper.select('./dct:spatial/dct:Location/locn:geometry[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
         if(geometry){
             return JSON.parse(geometry.textContent);
         }
-        geometry = DcatMapper.select('./dct:spatial/ogc:Polygon/ogc:asWKT[./@rdf:datatype="http://www.opengis.net/rdf#WKTLiteral"]', this.record, true);
+        geometry = DcatapdeMapper.select('./dct:spatial/ogc:Polygon/ogc:asWKT[./@rdf:datatype="http://www.opengis.net/rdf#WKTLiteral"]', this.record, true);
         if(geometry){
             return this.wktToGeoJson(geometry.textContent);
         }
@@ -523,7 +444,7 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
     }
 
     getSpatialText(): string {
-        let prefLabel = DcatMapper.select('./dct:spatial/dct:Location/skos:prefLabel', this.record, true);
+        let prefLabel = DcatapdeMapper.select('./dct:spatial/dct:Location/skos:prefLabel', this.record, true);
         if(prefLabel){
             return prefLabel.textContent;
         }
@@ -533,7 +454,7 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
     getTemporal(): DateRange[] {
         let result: DateRange[] = [];
 
-        let nodes = DcatMapper.select('./dct:temporal/dct:PeriodOfTime', this.record);
+        let nodes = DcatapdeMapper.select('./dct:temporal/dct:PeriodOfTime', this.record);
         for (let i = 0; i < nodes.length; i++) {
             let begin = this.getTimeValue(nodes[i], 'startDate');
             let end = this.getTimeValue(nodes[i], 'endDate');
@@ -553,7 +474,7 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
     }
 
     getTimeValue(node, beginOrEnd: 'startDate' | 'endDate'): Date {
-        let dateNode = DcatMapper.select('./schema:' + beginOrEnd, node, true);
+        let dateNode = DcatapdeMapper.select('./schema:' + beginOrEnd, node, true);
         if (dateNode) {
             let text = dateNode.textContent;
             let date = new Date(Date.parse(text));
@@ -571,7 +492,7 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
         if (this.fetched.themes) return this.fetched.themes;
 
         // Evaluate the themes
-        let themes : string[] = DcatMapper.select('./dcat:theme', this.record)
+        let themes : string[] = DcatapdeMapper.select('./dcat:theme', this.record)
             .map(node => node.getAttribute('rdf:resource'))
             .filter(theme => theme); // Filter out falsy values
 
@@ -588,7 +509,7 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
     }
 
     getAccrualPeriodicity(): string {
-        let accrualPeriodicity = DcatMapper.select('./dct:accrualPeriodicity', this.record, true);
+        let accrualPeriodicity = DcatapdeMapper.select('./dct:accrualPeriodicity', this.record, true);
         if (accrualPeriodicity) {
             let res = accrualPeriodicity.getAttribute('rdf:resource');
             let periodicity;
@@ -612,7 +533,7 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
     async getLicense(): Promise<License> {
         let license: License;
 
-        let accessRights = DcatMapper.select('./dct:accessRights', this.record);
+        let accessRights = DcatapdeMapper.select('./dct:accessRights', this.record);
         if(accessRights){
             for(let i=0; i < accessRights.length; i++){
                 try {
@@ -633,7 +554,7 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
         }
         if(!license){
             for(let i = 0; i < this.linkedDistributions.length; i++) {
-                let licenseResource = DcatMapper.select('dct:license', this.linkedDistributions[i], true);
+                let licenseResource = DcatapdeMapper.select('dct:license', this.linkedDistributions[i], true);
                 if(licenseResource) {
                     license = await DcatLicensesUtils.get(licenseResource.getAttribute('rdf:resource'));
                     break;
@@ -668,12 +589,12 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
     getCreator(): Person[] {
         let creators = [];
 
-        let creatorNodes = DcatMapper.select('./dct:creator', this.record);
+        let creatorNodes = DcatapdeMapper.select('./dct:creator', this.record);
         for (let i = 0; i < creatorNodes.length; i++) {
-            let organization = DcatMapper.select('./foaf:Organization', creatorNodes[i], true);
+            let organization = DcatapdeMapper.select('./foaf:Organization', creatorNodes[i], true);
             if (organization) {
-                let name = DcatMapper.select('./foaf:name', organization, true);
-                let mbox = DcatMapper.select('./foaf:mbox', organization, true);
+                let name = DcatapdeMapper.select('./foaf:name', organization, true);
+                let mbox = DcatapdeMapper.select('./foaf:mbox', organization, true);
                 if(name) {
                     let infos: any = {
                         name: name.textContent
@@ -685,18 +606,18 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
             }
         }
 
-        return creators.length === 0 ? undefined : creators;
+        return creators;
     }
 
     getMaintainer(): Person[] {
         let maintainers = [];
 
-        let maintainerNodes = DcatMapper.select('./dct:maintainer', this.record);
+        let maintainerNodes = DcatapdeMapper.select('./dct:maintainer', this.record);
         for (let i = 0; i < maintainerNodes.length; i++) {
-            let organization = DcatMapper.select('./foaf:Organization', maintainerNodes[i], true);
+            let organization = DcatapdeMapper.select('./foaf:Organization', maintainerNodes[i], true);
             if (organization) {
-                let name = DcatMapper.select('./foaf:name', organization, true);
-                let mbox = DcatMapper.select('./foaf:mbox', organization, true);
+                let name = DcatapdeMapper.select('./foaf:name', organization, true);
+                let mbox = DcatapdeMapper.select('./foaf:mbox', organization, true);
                 if(name) {
                     let infos: any = {
                         name: name.textContent
@@ -708,7 +629,7 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
             }
         }
 
-        return maintainers.length === 0 ? undefined : maintainers;
+        return maintainers;
     }
 
     getGroups(): string[] {
@@ -716,7 +637,7 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
     }
 
     getIssued(): Date {
-        let modified = DcatMapper.select('./dct:modified', this.record, true);
+        let modified = DcatapdeMapper.select('./dct:modified', this.record, true);
         return modified?new Date(modified.textContent):undefined;
     }
 
@@ -730,12 +651,12 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
 
     getOriginator(): Person[] {
         let originators = [];
-        let originatorNode = DcatMapper.select('./dcatde:originator', this.record);
+        let originatorNode = DcatapdeMapper.select('./dcatde:originator', this.record);
         for (let i = 0; i < originatorNode.length; i++) {
-            let organization = DcatMapper.select('./foaf:Organization', originatorNode[i], true);
+            let organization = DcatapdeMapper.select('./foaf:Organization', originatorNode[i], true);
             if (organization) {
-                let name = DcatMapper.select('./foaf:name', organization, true);
-                let mbox = DcatMapper.select('./foaf:mbox', organization, true);
+                let name = DcatapdeMapper.select('./foaf:name', organization, true);
+                let mbox = DcatapdeMapper.select('./foaf:mbox', organization, true);
                 let infos: any = {
                     name: name.textContent
                 };
@@ -745,39 +666,38 @@ export class DcatMapper extends Mapper<DcatSettings> implements ToElasticMapper<
             }
         }
 
-        return originators.length === 0 ? undefined : originators;
+        return originators;
     }
 
-    async getContactPoint(): Promise<any> {
+    getContactPoint(): any {
         let contactPoint = this.fetched.contactPoint;
         if (contactPoint) {
             return contactPoint;
         }
         let infos: any = {};
-        let contact = DcatMapper.select('./dcat:contactPoint', this.record, true);
+        let contact = DcatapdeMapper.select('./dcat:contactPoint', this.record, true);
         if (contact) {
-            let organization = DcatMapper.select('./vcard:Organization', contact, true);
+            let organization = DcatapdeMapper.select('./vcard:Organization', contact, true);
             if(contact.getAttribute('rdf:resource')){
-                organization = DcatMapper.select('(vcard:Organization[./@rdf:about="'+contact.getAttribute('rdf:resource')+'"]|./*/*/vcard:Organization[./@rdf:about="'+contact.getAttribute('rdf:resource')+'"])', this.catalogPage, true)
+                organization = DcatapdeMapper.select('(vcard:Organization[./@rdf:about="'+contact.getAttribute('rdf:resource')+'"]|./*/*/vcard:Organization[./@rdf:about="'+contact.getAttribute('rdf:resource')+'"])', this.catalogPage, true)
             }
             if(organization) {
-                let name = DcatMapper.select('./vcard:fn', organization, true);
-                let org = DcatMapper.select('./organization-name', organization, true);
-                let region = DcatMapper.select('./vcard:region', organization, true);
-                let country = DcatMapper.select('./vcard:hasCountryName', organization, true);
-                let postCode = DcatMapper.select('./vcard:hasPostalCode', organization, true);
-                let email = DcatMapper.select('./vcard:hasEmail', organization, true);
-                let phone = DcatMapper.select('./vcard:hasTelephone', organization, true);
-                let urlNode = DcatMapper.select('./vcard:hasURL', organization, true);
+                let name = DcatapdeMapper.select('./vcard:fn', organization, true);
+                let org = DcatapdeMapper.select('./organization-name', organization, true);
+                let region = DcatapdeMapper.select('./vcard:region', organization, true);
+                let country = DcatapdeMapper.select('./vcard:hasCountryName', organization, true);
+                let postCode = DcatapdeMapper.select('./vcard:hasPostalCode', organization, true);
+                let email = DcatapdeMapper.select('./vcard:hasEmail', organization, true);
+                let phone = DcatapdeMapper.select('./vcard:hasTelephone', organization, true);
+                let urlNode = DcatapdeMapper.select('./vcard:hasURL', organization, true);
                 let url = null;
                 if (urlNode) {
-                    let requestConfig = this.getUrlCheckRequestConfig(urlNode.getAttribute('rdf:resource'));
-                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
+                    url = urlNode.getAttribute('rdf:resource');
                 }
 
                 let infos: Contact = {
                     fn: name?.textContent,
-                };                 
+                };
 
                 if (contact.getAttribute('uuid')) {
                     infos.hasUID = contact.getAttribute('uuid');

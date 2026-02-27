@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2026 - 2026 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -21,11 +21,12 @@
  * ==================================================
  */
 
-import dayjs from 'dayjs';
-import 'dayjs/locale/de.js';
-import customParseFormat from 'dayjs/plugin/customParseFormat.js';
-
-dayjs.locale('de');
-dayjs.extend(customParseFormat);
-
-export default dayjs;
+export type IngridMetadata = {
+    iPlugId: string,
+    partner: string[],
+    provider: string[],
+    organisation: string,
+    datatype: string[],
+    dataSourceName: string,
+    boost?: number,
+}

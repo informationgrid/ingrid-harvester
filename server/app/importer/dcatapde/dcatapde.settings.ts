@@ -26,13 +26,13 @@ import {DefaultImporterSettings} from '../../importer.settings.js';
 
 export type DCATProviderField = 'contactPoint' | 'creator' | 'originator' | 'maintainer' | 'publisher';
 
-export const defaultDCATSettings: DcatSettings = {
+export const defaultDCATSettings: DcatapdeSettings = {
     ...DefaultImporterSettings,
     filterTags: [],
     filterThemes: []
 };
 
-export type DcatSettings = {
+export type DcatapdeSettings = {
     filterTags?: string[],
     filterThemes?: string[],
     providerPrefix?: string,
