@@ -37,6 +37,7 @@ import { Importer } from '../importer.js';
 import { DcatapdeMapper } from './dcatapde.mapper.js';
 import type { DcatapdeSettings } from './dcatapde.settings.js';
 import { defaultDCATSettings } from './dcatapde.settings.js';
+import {dereferenceRdfElements} from "../../utils/rdf.utils.js";
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
@@ -129,6 +130,9 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
         let promises = [];
         let xml = this.domParser.parseFromString(getRecordsResponse, 'application/xml');
         let rootNode = xml.getElementsByTagNameNS(namespaces.RDF, 'RDF')[0];
+
+        dereferenceRdfElements(rootNode, './/dcat:distribution | .//dct:publisher | .//dcat:contactPoint', DcatapdeMapper.select)
+
         let records =  DcatapdeMapper.select('./dcat:Catalog/dcat:dataset/dcat:Dataset|./dcat:Dataset', rootNode);
 
         /*

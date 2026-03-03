@@ -122,8 +122,6 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
     });
 
     private readonly record: any;
-    private readonly catalogPage: any;
-    private readonly linkedDistributions: any;
     private harvestTime: any;
 
 //    protected readonly idInfo; // : SelectedValue;
@@ -139,41 +137,16 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
 
     log = log4js.getLogger();
 
-    constructor(settings: DcatapdeSettings, record, harvestTime, summary, catalogPage) {
+    constructor(settings: DcatapdeSettings, record, harvestTime, summary) {
         super(settings, summary);
         this.record = record;
         this.harvestTime = harvestTime;
-        this.catalogPage = catalogPage;
 
         let uuid = DcatapdeMapper.select('./dct:identifier', record, true).textContent;
         if(!uuid) {
             uuid = DcatapdeMapper.select('./dct:identifier/@rdf:resource', record, true).textContent;
         }
         this.uuid = uuid;
-
-        let allDistributions = []
-        let pageDistributions = DcatapdeMapper.select('./dcat:Distribution', catalogPage);
-        let datasetDistributions = DcatapdeMapper.select('./dcat:distribution', record);
-
-        for(const distribution of datasetDistributions) {
-            const localDistribution = DcatapdeMapper.select('./dcat:Distribution', distribution, true);
-
-            if(localDistribution) {
-                allDistributions.push(localDistribution)
-            } else {
-                const distributionID = distribution.getAttribute('rdf:resource')
-                const linkedDistribution = pageDistributions.find(distribution => distribution.getAttribute('rdf:about') == distributionID);
-
-                if(linkedDistribution) {
-                    distribution.appendChild(linkedDistribution);
-                    distribution.removeAttribute('rdf:resource')
-                    allDistributions.push(linkedDistribution)
-                } else {
-                    console.warn(`${uuid} Distribution not found: ${distributionID}`)
-                }
-            }
-        }
-        this.linkedDistributions = allDistributions;
 
         super.init();
     }
@@ -222,13 +195,13 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
     getDistributions():Distribution[] {
         let dists = [];
 
-        if (this.linkedDistributions) {
-            for (let i = 0; i < this.linkedDistributions.length; i++) {
-                this.linkedDistributions[i]
+        const distributions = DcatapdeMapper.select('./dcat:distribution/dcat:Distribution', this.record);
+
+            for (const distribution of distributions) {
 
                 let format: string = "Unbekannt";
-                let formatNode = DcatapdeMapper.select('./dct:format', this.linkedDistributions[i], true);
-                let mediaTypeNode = DcatapdeMapper.select('./dcat:mediaType', this.linkedDistributions[i], true);
+                let formatNode = DcatapdeMapper.select('./dct:format', distribution, true);
+                let mediaTypeNode = DcatapdeMapper.select('./dcat:mediaType', distribution, true);
                 if (formatNode) {
                     let formatLabel = DcatapdeMapper.select('.//rdfs:label', formatNode, true);
                     let formatValue = DcatapdeMapper.select('.//rdf:value', formatNode, true);
@@ -259,26 +232,26 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
 
 
                 let license = undefined;
-                let licenseResource = DcatapdeMapper.select('dct:license', this.linkedDistributions[i], true);
+                let licenseResource = DcatapdeMapper.select('dct:license', distribution, true);
                 if(licenseResource) {
                     license = DcatLicensesUtils.get(licenseResource.getAttribute('rdf:resource'));
 
-                    let licenseAttributionByText = DcatapdeMapper.select('dcatde:licenseAttributionByText', this.linkedDistributions[i], true)?.textContent;
+                    let licenseAttributionByText = DcatapdeMapper.select('dcatde:licenseAttributionByText', distribution, true)?.textContent;
                     if(licenseAttributionByText) {
                         license["attribution_by_text"] = licenseAttributionByText;
                     }
                 }
 
-                let url = DcatapdeMapper.select('./dcat:accessURL', this.linkedDistributions[i], true);
-                let title = DcatapdeMapper.select('./dct:title', this.linkedDistributions[i], true);
-                let description = DcatapdeMapper.select('./dct:description', this.linkedDistributions[i], true);
-                let issued = DcatapdeMapper.select('./dct:issued', this.linkedDistributions[i], true);
-                let modified = DcatapdeMapper.select('./dct:modified', this.linkedDistributions[i], true);
-                let size = DcatapdeMapper.select('./dcat:byteSize', this.linkedDistributions[i], true);
-                let availability = DcatapdeMapper.select('./dcatap:availability', this.linkedDistributions[i], true)?.getAttribute('rdf:resource');
+                let url = DcatapdeMapper.select('./dcat:accessURL', distribution, true);
+                let title = DcatapdeMapper.select('./dct:title', distribution, true);
+                let description = DcatapdeMapper.select('./dct:description', distribution, true);
+                let issued = DcatapdeMapper.select('./dct:issued', distribution, true);
+                let modified = DcatapdeMapper.select('./dct:modified', distribution, true);
+                let size = DcatapdeMapper.select('./dcat:byteSize', distribution, true);
+                let availability = DcatapdeMapper.select('./dcatap:availability', distribution, true)?.getAttribute('rdf:resource');
 
                 let languages = [];
-                let languageNodes  = DcatapdeMapper.select('./dcat:language', this.linkedDistributions[i]);
+                let languageNodes  = DcatapdeMapper.select('./dcat:language', distribution);
                 if (languageNodes) {
                     for (let j = 0; j < languageNodes.length; j++) {
                         let language = languageNodes[j].getAttribute('rdf:resource');
@@ -293,7 +266,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
 
 
                 if(url) {
-                    let distribution = {
+                    let dist = {
                         format: UrlUtils.mapFormat([format], this.getSummary().warnings),
                         access_url: url.getAttribute('rdf:resource')?url.getAttribute('rdf:resource'):url.textContent,
                         title: title ? title.textContent : undefined,
@@ -306,10 +279,9 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
                         languages: languages ? languages : undefined,
                     }
 
-                    dists.push(distribution);
+                    dists.push(dist);
                 }
             }
-        }
 
         return dists;
     }
@@ -325,9 +297,6 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
         let dctPublishers = DcatapdeMapper.select('./dct:publisher', this.record);
         for (let i = 0; i < dctPublishers.length; i++) {
             let organization = DcatapdeMapper.select('./foaf:Organization', dctPublishers[i], true);
-            if(!organization){
-                organization = DcatapdeMapper.select('./foaf:Organization[@rdf:about="'+dctPublishers[i].getAttribute('rdf:resource')+'"]', this.catalogPage, true)
-            }
             if (organization) {
                 let name = DcatapdeMapper.select('./foaf:name', organization, true);
                 if(name) {
@@ -569,8 +538,10 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
             }
         }
         if(!license){
-            for(let i = 0; i < this.linkedDistributions.length; i++) {
-                let licenseResource = DcatapdeMapper.select('dct:license', this.linkedDistributions[i], true);
+            const distributions = DcatapdeMapper.select('./dcat:distribution/dcat:Distribution', this.record);
+
+            for (const distribution of distributions) {
+                let licenseResource = DcatapdeMapper.select('dct:license', distribution, true);
                 if(licenseResource) {
                     license = await DcatLicensesUtils.get(licenseResource.getAttribute('rdf:resource'));
                     break;
@@ -694,9 +665,6 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
         let contact = DcatapdeMapper.select('./dcat:contactPoint', this.record, true);
         if (contact) {
             let organization = DcatapdeMapper.select('./vcard:Organization', contact, true);
-            if(contact.getAttribute('rdf:resource')){
-                organization = DcatapdeMapper.select('(vcard:Organization[./@rdf:about="'+contact.getAttribute('rdf:resource')+'"]|./*/*/vcard:Organization[./@rdf:about="'+contact.getAttribute('rdf:resource')+'"])', this.catalogPage, true)
-            }
             if(organization) {
                 let name = DcatapdeMapper.select('./vcard:fn', organization, true);
                 let org = DcatapdeMapper.select('./organization-name', organization, true);
