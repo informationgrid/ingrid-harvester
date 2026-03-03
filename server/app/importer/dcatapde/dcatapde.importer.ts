@@ -169,7 +169,9 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
             let mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), records[i], rootNode)) as DcatapdeMapper;
 
             let doc: IndexDocument;
+            let dcatapdeDoc: string;
             try {
+                dcatapdeDoc = await mapper.createDcatapdeDocument();
                 doc = await mapper.createEsDocument();
             }
             catch (e) {
@@ -183,7 +185,9 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                     identifier: uuid,
                     source: this.getSettings().sourceURL,
                     collection_id: (await this.database.getCatalog(this.getSettings().catalogId)).id,
+                    catalog_ids: this.getSettings().catalogIds,
                     dataset: doc,
+                    dataset_dcatapde: dcatapdeDoc,
                     original_document: mapper.getHarvestedData()
                 };
                 promises.push(

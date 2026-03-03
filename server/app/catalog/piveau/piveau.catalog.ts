@@ -52,7 +52,7 @@ export class PiveauCatalog extends Catalog<string> {
     async import(transactionHandle: any, settings: ImporterSettings): Promise<void> {
         log.info(`Importing data into Piveau catalog '${this.settings.id}' for source: ${transactionHandle}`);
 
-        const records = await this.database.getDatasetsWithOriginalDocument(transactionHandle);
+        const records = await this.database.getDcatapdeDatasetsBySource(transactionHandle);
         if (!records || records.length === 0) {
             log.warn(`No records found for source: ${transactionHandle}`);
             return;
@@ -67,16 +67,16 @@ export class PiveauCatalog extends Catalog<string> {
         //log.info(`Found ${existingIds.size} existing records in target Piveau catalog`);
 
         for (const record of records) {
-            if (!record.original_document) {
-                log.warn(`Record '${record.identifier}' has no original_document, skipping`);
+            if (!record.dataset_dcatapde) {
+                log.warn(`Record '${record.identifier}' has no dataset_dcatapde, skipping`);
                 this.catalogSummary.numSkipped++;
                 continue;
             }
 
             try {
-                const targetUrl = this.buildTargetUrl(piveauSettings, record.id);
+                const targetUrl = this.buildTargetUrl(piveauSettings, record.identifier);
 
-                const response = await this.postTransaction(targetUrl, piveauSettings, record.original_document);
+                const response = await this.postTransaction(targetUrl, piveauSettings, record.dataset_dcatapde);
 
                 if (response.status == 201) {
                     this.catalogSummary.numInserted++;
@@ -98,7 +98,15 @@ export class PiveauCatalog extends Catalog<string> {
 
     async deleteStaleRecords(sourceId: string): Promise<void> {
         log.info(`Deleting stale records for source '${sourceId}' from Piveau catalog '${this.settings.id}'`);
-        log.warn(`deleteStaleRecords not yet implemented for source '${sourceId}'`);
+
+        const expectingIdentifier = await this.database.getIdentifiersByCatalog(this.settings.id);
+        const existingIdentifier = await this.getIdentifierByPiveauCatalog();
+        const identifierToDelete = existingIdentifier.filter(identifier => !expectingIdentifier.includes(identifier))
+        log.info(`Datasets to delete: ${identifierToDelete.length}`);
+        for(const identifier of identifierToDelete) {
+            log.info(`Delete dataset ${identifier}`);
+            await this.deleteDataset(identifier)
+        }
     }
 
     async deleteAllRecordsForCatalog(sourceId: string): Promise<void> {
@@ -117,7 +125,7 @@ export class PiveauCatalog extends Catalog<string> {
     }
 
     /**
-     * POST a CSW Transaction XML to the target endpoint.
+     * POST a DCAT Dataset to the target endpoint.
      */
     private async postTransaction(targetUrl: string, settings: PiveauCatalogSettings, transactionXml: string): Promise<any> {
         return RequestDelegate.doRequest({
@@ -158,6 +166,40 @@ export class PiveauCatalog extends Catalog<string> {
             headers: {"Content-Type": "application/rdf+xml", "X-API-KEY": piveauSettings.settings["api-key"]},
             body,
         });
+    }
+
+    async getIdentifierByPiveauCatalog(): Promise<string[]> {
+        const piveauSettings = this.settings as PiveauCatalogSettings;
+        const targetUrl = piveauSettings.settings.url + "/catalogues/" + piveauSettings.settings.catalog + "/datasets?valueType=originalIds&limit=100";
+        let result = [];
+        let offset = 0;
+        let count = 0;
+        do {
+            const response = await RequestDelegate.doRequest({
+                uri: targetUrl + "&offset=" + offset,
+                method: 'GET',
+                resolveWithFullResponse: true,
+                headers: {"X-API-KEY": piveauSettings.settings["api-key"]},
+                json: true,
+            });
+            const data = await response.json();
+            count = data.length;
+            offset += count;
+            result = result.concat(data);
+        } while (false) // Limit und Offset werden ignoriert.
+        return result;
+    }
+
+
+    async deleteDataset(originalId: string): Promise<void> {
+        const piveauSettings = this.settings as PiveauCatalogSettings;
+        const targetUrl = piveauSettings.settings.url + "/catalogues/" + piveauSettings.settings.catalog + "/datasets/origin?originalId=" + originalId;
+        await RequestDelegate.doRequest({
+                uri: targetUrl,
+                method: 'DELETE',
+                resolveWithFullResponse: true,
+                headers: {"X-API-KEY": piveauSettings.settings["api-key"]},
+            });
     }
 
     addTraceability(record: string, transactionTimestamp: string, sourceId: string): string {

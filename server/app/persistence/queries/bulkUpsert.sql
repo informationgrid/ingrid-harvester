@@ -1,12 +1,15 @@
 /*
  * Bulk insert of new records, update on conflict
  */
-INSERT INTO public.record (identifier, source, collection_id, dataset, original_document)
+INSERT INTO public.record (identifier, source, collection_id, catalog_ids, dataset, dataset_csw, dataset_dcatapde, original_document)
 SELECT
     identifier,
     source,
     collection_id,
+    catalog_ids,
     dataset,
+    dataset_csw,
+    dataset_dcatapde,
     original_document
 FROM json_populate_recordset(null::public.record, $1)
 ON CONFLICT

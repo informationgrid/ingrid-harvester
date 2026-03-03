@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+ * Copyright (C) 2026 - 2026 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -21,28 +21,8 @@
  * ==================================================
  */
 
-import type { Distribution } from './distribution.js';
-import type { IndexDocument } from './index.document.js';
+import type { IndexDocument } from '../model/index.document.js';
 
-export interface Entity {
-    id?: string     // optional because it is usually set by the DB automatically at the time of insertion
-}
-
-export interface RecordEntity extends Entity {
-    identifier: string,
-    source: string,
-    collection_id: number,
-    catalog_ids?: string[],
-    dataset: IndexDocument, // TODO rename to dataset_elastic, make optional
-    dataset_csw?: any,
-    dataset_dcatapde?: any,
-    original_document: string
-}
-
-// TODO revise coupling handling
-export interface CouplingEntity extends Entity {
-    dataset_identifier: string,
-    service_id: string,
-    service_type: string,
-    distribution: Distribution
+export interface ToDcatapdeMapper {
+    createDcatapdeDocument(): Promise<string>;
 }

@@ -42,8 +42,9 @@ import { UrlUtils } from '../../utils/url.utils.js';
 import type { XPathElementSelect } from '../../utils/xpath.utils.js';
 import { Mapper } from '../mapper.js';
 import type { DcatapdeSettings } from './dcatapde.settings.js';
+import type {ToDcatapdeMapper} from "../to.dcatapde.mapper.js";
 
-export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasticMapper<IndexDocument> {
+export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasticMapper<IndexDocument>, ToDcatapdeMapper {
 
     static DCAT_CATEGORY_URL = 'http://publications.europa.eu/resource/authority/data-theme/';
     static DCAT_LANGUAGE_URL = 'http://publications.europa.eu/resource/authority/language/';
@@ -157,6 +158,10 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
                 metadata: this.getHarvestingMetadata(),
             }
         };
+    }
+
+    async createDcatapdeDocument(): Promise<string> {
+        return this.getHarvestedData();
     }
 
     getDescription() {

@@ -130,6 +130,23 @@ export class PostgresUtils extends DatabaseUtils {
         return result.rows;
     }
 
+
+    async getDcatapdeDatasetsBySource(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'dataset_dcatapde'>[]> {
+        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getDcatapdeDatasetsBySource, [source]);
+        if (result.rowCount == 0) {
+            return [];
+        }
+        return result.rows;
+    }
+
+    async getIdentifiersByCatalog(catalog_id:string): Promise<string[]> {
+        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getIdentifiersByCatalog, [catalog_id]);
+        if (result.rowCount == 0) {
+            return [];
+        }
+        return result.rows.map(row => row.identifier);
+    }
+
     async deleteDatasets(catalogId: number): Promise<void> {
         await PostgresUtils.pool.query(this.queries.deleteRecords, [catalogId]);
     }

@@ -39,7 +39,7 @@ export abstract class DatabaseUtils {
     public static maxBulkSize: number = 50;
     protected configuration: DatabaseConfiguration;
     protected summary: Summary;
-    
+
     public _bulkData: RecordEntity[];
     public _bulkCouples: CouplingEntity[];
 
@@ -52,7 +52,7 @@ export abstract class DatabaseUtils {
     /**
      * Add an entity to the bulk array which will be sent to the database
      * if a certain limit {{maxBulkSize}} is reached.
-     * 
+     *
      * @param entity
      * @param {number} maxBulkSize
      */
@@ -92,6 +92,10 @@ export abstract class DatabaseUtils {
     abstract getDatasets(source: string | number, useTransaction?: boolean): Promise<RecordEntity[]>;
 
     abstract getDatasetsWithOriginalDocument(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'original_document'>[]>;
+
+    abstract getDcatapdeDatasetsBySource(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'dataset_dcatapde'>[]>;
+
+    abstract getIdentifiersByCatalog(catalog_id: string): Promise<string[]>
 
     abstract deleteDatasets(catalogId: number): Promise<void>;
 
