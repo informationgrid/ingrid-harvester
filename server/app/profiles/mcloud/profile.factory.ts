@@ -30,7 +30,7 @@ import { mcloudOaiMapper } from './mapper/mcloud.oai.mapper.js';
 import { mcloudSparqlMapper } from './mapper/mcloud.sparql.mapper.js';
 import type { CkanMapper } from '../../importer/ckan/ckan.mapper.js';
 import type { CswMapper } from '../../importer/csw/csw.mapper.js';
-import type { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
+import type { DcatapdeMapper } from '../../importer/dcatapde/dcatapde.mapper.js';
 import { ElasticQueries } from './persistence/elastic.queries.js';
 import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
 import type { ExcelMapper } from '../../importer/excel/excel.mapper.js';
@@ -43,17 +43,17 @@ import type { PostgresAggregator as AbstractPostgresAggregator} from '../../pers
 import { ProfileFactory } from '../profile.factory.js';
 import type { SparqlMapper } from '../../importer/sparql/sparql.mapper.js';
 
-export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper> {
+export class mcloudFactory extends ProfileFactory<CkanMapper | CswMapper | DcatapdeMapper | ExcelMapper | OaiMapper | SparqlMapper> {
 
     getElasticQueries(): AbstractElasticQueries {
         return ElasticQueries.getInstance();
     }
 
-    getIndexDocumentFactory(mapper: CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper): IndexDocumentFactory<mcloudIndexDocument> {
+    getIndexDocumentFactory(mapper: CkanMapper | CswMapper | DcatapdeMapper | ExcelMapper | OaiMapper | SparqlMapper): IndexDocumentFactory<mcloudIndexDocument> {
         switch (mapper.constructor.name) {
             case 'CkanMapper': return new mcloudCkanMapper(<CkanMapper>mapper);
             case 'CswMapper': return new mcloudCswMapper(<CswMapper>mapper);
-            case 'DcatMapper': return new mcloudDcatMapper(<DcatMapper>mapper);
+            case 'DcatMapper': return new mcloudDcatMapper(<DcatapdeMapper>mapper);
             case 'ExcelMapper': return new mcloudExcelMapper(<ExcelMapper>mapper);
             case 'OaiMapper': return new mcloudOaiMapper(<OaiMapper>mapper);
             case 'SparqlMapper': return new mcloudSparqlMapper(<SparqlMapper>mapper);

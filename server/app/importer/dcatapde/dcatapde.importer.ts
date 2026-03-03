@@ -34,22 +34,24 @@ import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { Importer } from '../importer.js';
-import { DcatMapper } from './dcat.mapper.js';
-import type { DcatSettings } from './dcat.settings.js';
-import { defaultDCATSettings } from './dcat.settings.js';
+import { DcatapdeMapper } from './dcatapde.mapper.js';
+import type { DcatapdeSettings } from './dcatapde.settings.js';
+import { defaultDCATSettings } from './dcatapde.settings.js';
+import {dereferenceRdfElements} from "../../utils/rdf.utils.js";
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
 
-export class DcatImporter extends Importer<DcatSettings> {
+export class DcatapdeImporter extends Importer<DcatapdeSettings> {
 
     protected domParser: DOMParser;
+    protected requestConfig : RequestOptions;
     protected requestDelegate: RequestDelegate;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
 
-    constructor(settings: DcatSettings, requestDelegate?: RequestDelegate) {
+    constructor(settings: DcatapdeSettings, requestDelegate?: RequestDelegate) {
         // merge default settings with configured ones
         settings = MiscUtils.merge(defaultDCATSettings, settings);
         super(settings);
@@ -59,8 +61,8 @@ export class DcatImporter extends Importer<DcatSettings> {
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;
         } else {
-            let requestConfig = DcatImporter.createRequestConfig(settings);
-            this.requestDelegate = new RequestDelegate(requestConfig, DcatImporter.createPaging(settings));
+            this.requestConfig = DcatapdeImporter.createRequestConfig(settings);
+            this.requestDelegate = new RequestDelegate(this.requestConfig);
         }
     }
 
@@ -86,28 +88,19 @@ export class DcatImporter extends Importer<DcatSettings> {
                 retries = 0;
 
                 let numReturned = responseDom.getElementsByTagNameNS(namespaces.DCAT, 'Dataset').length;
-                let itemsPerPage = parseInt(DcatMapper.select('./hydra:itemsPerPage', pagedCollection, true).textContent);
-                this.totalRecords = parseInt(DcatMapper.select('./hydra:totalItems', pagedCollection, true).textContent);
+                this.totalRecords = parseInt(DcatapdeMapper.select('./hydra:totalItems', pagedCollection, true).textContent);
 
                 let thisPageUrl = pagedCollection.getAttribute('rdf:about');
+                let lastPageUrl = DcatapdeMapper.select('./hydra:lastPage', pagedCollection, true)?.textContent;
 
-                let thisPage = Number(DcatImporter.getPageFromUrl(thisPageUrl));
-
-                let lastPage = this.totalRecords/itemsPerPage;
-                let lastPageUrlElement = DcatMapper.select('./hydra:lastPage', pagedCollection, true);
-                if(lastPageUrlElement){
-                    let lastPageUrl = lastPageUrlElement.textContent;
-                    lastPage = Number(DcatImporter.getPageFromUrl(lastPageUrl));
-                }
-
-                isLastPage = thisPage >= lastPage;
+                isLastPage = thisPageUrl === lastPageUrl;
                 if(!isLastPage){
-                    let nextPageUrl = DcatMapper.select('./hydra:nextPage', pagedCollection, true).textContent;
-                    let nextPage = Number(DcatImporter.getPageFromUrl(nextPageUrl));
-                    this.requestDelegate.updateConfig({qs: {page: nextPage}});
+                    let nextPageUrl = DcatapdeMapper.select('./hydra:nextPage', pagedCollection, true).textContent;
+                    this.requestConfig.uri = nextPageUrl;
+                    this.requestDelegate = new RequestDelegate(this.requestConfig);
                 }
 
-                log.debug(`Received ${numReturned} records from ${this.getSettings().sourceURL} - Page: ${thisPage}`);
+                log.debug(`Received ${numReturned} records from ${this.getSettings().sourceURL} - Page: ${thisPageUrl}`);
                 await this.extractRecords(response, harvestTime)
             }
             else {
@@ -137,23 +130,29 @@ export class DcatImporter extends Importer<DcatSettings> {
         let promises = [];
         let xml = this.domParser.parseFromString(getRecordsResponse, 'application/xml');
         let rootNode = xml.getElementsByTagNameNS(namespaces.RDF, 'RDF')[0];
-        let records =  DcatMapper.select('./dcat:Catalog/dcat:dataset/dcat:Dataset|./dcat:Dataset', rootNode);
 
+        dereferenceRdfElements(rootNode, './/dcat:distribution | .//dct:publisher | .//dcat:contactPoint', DcatapdeMapper.select)
+
+        let records =  DcatapdeMapper.select('./dcat:Catalog/dcat:dataset/dcat:Dataset|./dcat:Dataset', rootNode);
+
+        /*
         let ids = [];
         for (let i = 0; i < records.length; i++) {
-            let uuid = DcatMapper.select('./dct:identifier', records[i], true).textContent;
+            let uuid = DcatapdeMapper.select('./dct:identifier', records[i], true).textContent;
             if(!uuid) {
-                uuid = DcatMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
+                uuid = DcatapdeMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
             }
             ids.push(uuid);
         }
 
+         */
+
         for (let i = 0; i < records.length; i++) {
             this.getSummary().numDocs++;
 
-            let uuid = DcatMapper.select('./dct:identifier', records[i], true).textContent;
+            let uuid = DcatapdeMapper.select('./dct:identifier', records[i], true).textContent;
             if(!uuid) {
-                uuid = DcatMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
+                uuid = DcatapdeMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
             }
             if (!this.filterUtils.isIdAllowed(uuid)) {
                 this.getSummary().skippedDocs.push(uuid);
@@ -167,7 +166,7 @@ export class DcatImporter extends Importer<DcatSettings> {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), records[i], rootNode)) as DcatMapper;
+            let mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), records[i], rootNode)) as DcatapdeMapper;
 
             let doc: IndexDocument;
             try {
@@ -205,11 +204,7 @@ export class DcatImporter extends Importer<DcatSettings> {
             .catch(err => log.error('Error indexing DCAT record', err));
     }
 
-    getMapper(settings, record, catalogPage, harvestTime, summary): DcatMapper {
-        return new DcatMapper(settings, record, catalogPage, harvestTime, summary);
-    }
-
-    static createRequestConfig(settings: DcatSettings): RequestOptions {
+    static createRequestConfig(settings: DcatapdeSettings): RequestOptions {
         let requestConfig: RequestOptions = {
             method: "GET",
             uri: settings.sourceURL,
@@ -218,32 +213,8 @@ export class DcatImporter extends Importer<DcatSettings> {
             rejectUnauthorized: settings.rejectUnauthorizedSSL,
             timeout: settings.timeout
         };
-/*
-        requestConfig.qs = {
-            page: 1
-        };
-*/
         return requestConfig;
     }
 
-    static createPaging(settings: DcatSettings) {
-        return {
-            startFieldName: 'page',
-            startPosition: settings.startPosition,
-            numRecords: settings.maxRecords
-        }
-    }
 
-    private static getPageFromUrl(url: string) {
-        let pos = url.indexOf('page=')
-        if (pos !== -1) {
-            url = url.substr(pos + 5);
-            let endPos = url.indexOf('&')
-            if(endPos > -1){
-                url = url.substr(0, endPos);
-            }
-            return url;
-        }
-        return undefined;
-    }
 }

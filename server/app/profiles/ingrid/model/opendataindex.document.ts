@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2026 - 2026 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -21,11 +21,30 @@
  * ==================================================
  */
 
-import dayjs from 'dayjs';
-import 'dayjs/locale/de.js';
-import customParseFormat from 'dayjs/plugin/customParseFormat.js';
+import type { IndexDocument } from '../../../model/index.document.js';
+import type { IngridMetadata } from "./ingrid.metadata.js";
 
-dayjs.locale('de');
-dayjs.extend(customParseFormat);
-
-export default dayjs;
+export type IngridOpendataIndexDocument = IndexDocument & IngridMetadata & {
+    id: string,
+    uuid: string,
+    collection: {
+        name: string
+    },
+    t01_object: any,
+    title: string,
+    content: string[],
+    rdf: string,
+    modified: Date,
+    description: string,
+    dcat: {
+        landingPage: string
+    },
+    contacts: any[],
+    keywords: any[],
+    legalBasis: string
+    distributions: any[],
+    political_geocoding_level_uri: string,
+    spatial: any,
+    temporal: any,
+    sort_hash: string
+}

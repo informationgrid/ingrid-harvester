@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2026 - 2026 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -21,11 +21,22 @@
  * ==================================================
  */
 
-import dayjs from 'dayjs';
-import 'dayjs/locale/de.js';
-import customParseFormat from 'dayjs/plugin/customParseFormat.js';
+import type { Logger } from 'log4js';
+import { CatalogSummary } from '../../model/catalog-summary.js';
 
-dayjs.locale('de');
-dayjs.extend(customParseFormat);
+export class PiveauCatalogSummary extends CatalogSummary {
 
-export default dayjs;
+    protected readonly catalogType = 'Piveau';
+
+    numInserted: number = 0;
+    numUpdated: number = 0;
+    numNotModified: number = 0;
+    numDeleted: number = 0;
+
+    protected printDetails(logger: Logger): void {
+        logger.info(`  Inserted: ${this.numInserted}`);
+        logger.info(`  Updated:  ${this.numUpdated}`);
+        logger.info(`  Not Modified:  ${this.numNotModified}`);
+        logger.info(`  Deleted:  ${this.numDeleted}`);
+    }
+}

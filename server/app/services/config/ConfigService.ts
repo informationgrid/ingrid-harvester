@@ -29,7 +29,7 @@ import log4js from 'log4js';
 import type { CatalogSettings } from '../../catalog/catalog.factory.js';
 import { defaultCKANSettings } from '../../importer/ckan/ckan.settings.js';
 import { defaultCSWSettings } from '../../importer/csw/csw.settings.js';
-import { defaultDCATSettings } from '../../importer/dcat/dcat.settings.js';
+import { defaultDCATSettings } from '../../importer/dcatapde/dcatapde.settings.js';
 import { defaultExcelSettings } from '../../importer/excel/excel.settings.js';
 import { defaultKldSettings } from '../../importer/kld/kld.settings.js';
 import { defaultOAISettings } from '../../importer/oai/oai.settings.js';

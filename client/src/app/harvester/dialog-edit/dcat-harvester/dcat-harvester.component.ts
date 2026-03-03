@@ -22,7 +22,7 @@
  */
 
 import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
-import {DcatSettings} from '../../../../../../server/app/importer/dcat/dcat.settings';
+import {DcatapdeSettings} from '../../../../../../server/app/importer/dcatapde/dcatapde.settings';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
@@ -36,7 +36,7 @@ import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 export class DcatHarvesterComponent implements OnInit, OnDestroy {
 
   @Input() form: UntypedFormGroup;
-  @Input() model: DcatSettings;
+  @Input() model: DcatapdeSettings;
   @Input() rulesTemplate: TemplateRef<any>;
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];

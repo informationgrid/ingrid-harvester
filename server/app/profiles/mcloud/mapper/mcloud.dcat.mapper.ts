@@ -22,9 +22,9 @@
  */
 
 import {mcloudMapper} from "./mcloud.mapper.js";
-import type {DcatMapper} from "../../../importer/dcat/dcat.mapper.js";
+import type {DcatapdeMapper} from "../../../importer/dcatapde/dcatapde.mapper.js";
 
-export class mcloudDcatMapper extends mcloudMapper<DcatMapper> {
+export class mcloudDcatMapper extends mcloudMapper<DcatapdeMapper> {
     getCategories(): string[] {
         let subgroups = [];
         let keywords = this.getKeywords();

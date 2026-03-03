@@ -29,7 +29,7 @@ import log4js from 'log4js';
 import { marked } from 'marked';
 import { throwError } from 'rxjs';
 import mapping from "../../../mappings.json" with { type: "json" };
-import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
+import { DcatapdeMapper } from '../dcatapde/dcatapde.mapper.js';
 import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
 import type { Organization, Person } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
@@ -288,7 +288,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
             mappedThemes = this.getSettings().defaultDCATCategory;
         }
         return mappedThemes
-            .map(category => DcatMapper.DCAT_CATEGORY_URL + category);
+            .map(category => DcatapdeMapper.DCAT_CATEGORY_URL + category);
     }
 
     getTitle() {

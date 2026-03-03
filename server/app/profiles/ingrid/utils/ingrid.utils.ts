@@ -23,7 +23,7 @@
 
 import crypto from 'crypto';
 import type { ImporterSettings } from 'importer.settings.js';
-import type { IngridMetadata } from '../model/index.document.js';
+import type { IngridMetadata } from '../model/ingrid.metadata.js';
 import { Codelist } from './codelist.js';
 
 export function getSortHash(title: string): string {

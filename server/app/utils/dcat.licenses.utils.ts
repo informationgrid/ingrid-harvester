@@ -54,7 +54,7 @@ export class DcatLicensesUtils {
     constructor() {
     }
 
-    static async get(licenseURL) {
+    static get(licenseURL) {
         if(!licenseURL) return undefined;
 
         if (!DcatLicensesUtils.licenses) DcatLicensesUtils.import();

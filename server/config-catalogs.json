@@ -1,0 +1,12 @@
+[
+  {
+    "id": "harvester-index",
+    "type": "elasticsearch",
+    "connectionId": "elastic",
+    "name": "Default",
+    "settings": {
+      "index": "harvester-index",
+      "alias": "harvester"
+    }
+  }
+]

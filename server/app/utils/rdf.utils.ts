@@ -2,7 +2,7 @@
  * ==================================================
  * ingrid-harvester
  * ==================================================
- * Copyright (C) 2026 - 2026 wemove digital solutions GmbH
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
  * ==================================================
  * Licensed under the EUPL, Version 1.2 or - as soon they will be
  * approved by the European Commission - subsequent versions of the
@@ -21,11 +21,19 @@
  * ==================================================
  */
 
-import dayjs from 'dayjs';
-import 'dayjs/locale/de.js';
-import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 
-dayjs.locale('de');
-dayjs.extend(customParseFormat);
+import type {XPathElementSelect} from "./xpath.utils.js";
 
-export default dayjs;
+export function dereferenceRdfElements(document: Element, elementExpression: string, select: XPathElementSelect) {
+    const elements = select(elementExpression, document);
+    for(const element of elements) {
+        const ref = element.getAttribute('rdf:resource');
+        if(ref) {
+            const target = select(`./*[@rdf:about="${ref}"]`, document, true);
+            if(target) {
+                element.appendChild(target);
+                element.removeAttribute('rdf:resource')
+            }
+        }
+    }
+}
