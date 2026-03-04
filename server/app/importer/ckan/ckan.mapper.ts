@@ -35,7 +35,6 @@ import type { Organization, Person } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
-import type { Summary } from '../../model/summary.js';
 import dayjs from '../../utils/dayjs.js';
 import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
 import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
@@ -44,15 +43,16 @@ import { RequestDelegate } from '../../utils/http-request.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 import { Mapper } from '../mapper.js';
 import type { CkanSettings } from './ckan.settings.js';
+import type {ToDcatapdeMapper} from "../to.dcatapde.mapper.js";
+import {namespaces} from "../namespaces.js";
+import {DOMImplementation} from "@xmldom/xmldom";
 
 export interface CkanMapperData {
     harvestTime: Date;
     source: any;
-    currentIndexName: string;
-    summary: Summary;
 }
 
-export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<IndexDocument> {
+export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<IndexDocument>, ToDcatapdeMapper {
 
     protected sizeMap = {
         byte: 1,
@@ -69,15 +69,18 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
     };
 
     log = log4js.getLogger();
+    private dom =  new DOMImplementation();
 
     private readonly source: any;
     private readonly data: CkanMapperData;
+    readonly record: any;
+    private harvestTime: any;
     private resourcesDate: Date[] = null;
 
-    constructor(settings: CkanSettings, data: CkanMapperData) {
-        super(settings, data.summary);
-        this.source = data.source;
-        this.data = data;
+    constructor(settings: CkanSettings, record: object, harvestTime, summary) {
+        super(settings, summary);
+        this.harvestTime = harvestTime;
+        this.source = record;
 
         super.init();
     }
@@ -89,6 +92,12 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
             }
         };
     }
+
+
+    async createDcatapdeDocument(): Promise<string> {
+        return this.getDcatapde();
+    }
+
 
     getAccessRights() {
         return undefined;
@@ -134,7 +143,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
                     };
                     distributions.push(dist);
                 } else {
-                    let msg = `Invalid URL '${res.url} found for item with id: '${this.source.id}', title: '${this.source.title}', index: '${this.data.currentIndexName}'.`;
+                    let msg = `Invalid URL '${res.url} found for item with id: '${this.source.id}', title: '${this.source.title}'.`;
                     urlErrors.push(msg);
                     this.log.warn(msg);
                 }
@@ -357,6 +366,21 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         return JSON.stringify(this.source);
     }
 
+    getDcatapde(): string {
+        let dataset = this.dom.createDocument(namespaces.DCAT, "Dataset");
+
+        dataset.documentElement.appendChild(dataset.createElementNS(namespaces.DCT, "title")).textContent = this.getTitle();
+        dataset.documentElement.appendChild(dataset.createElementNS(namespaces.DCT, "description")).textContent = this.getDescription();
+        dataset.documentElement.appendChild(dataset.createElementNS(namespaces.DCT, "identifier")).textContent = this.getGeneratedId();
+
+        const keywords = this.getKeywords();
+        for(const keyword of keywords) {
+            dataset.documentElement.appendChild(dataset.createElementNS(namespaces.DCAT, "keyword")).textContent = keyword;
+        }
+
+        return dataset.toString();
+    }
+
     private getResourcesData() {
 
         if (this.resourcesDate) {
@@ -421,7 +445,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
     }
 
     getHarvestingDate(): Date {
-        return this.data.harvestTime;
+        return this.harvestTime;
     }
 
     getSubSections(): any[] {
@@ -621,6 +645,10 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
             headers: RequestDelegate.defaultRequestHeaders(),
             proxy: settings.proxy || null,
             rejectUnauthorized: settings.rejectUnauthorizedSSL,
+            qs: <CkanParametersListWithResources> {
+                offset: settings.startPosition,
+                limit: settings.maxRecords
+            },
             timeout: settings.timeout
         };
     }

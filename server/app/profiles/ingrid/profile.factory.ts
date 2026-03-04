@@ -53,6 +53,9 @@ import {ingridDcatapdeMapper} from "./mapper/ingrid.dcatapde.mapper.js";
 import type {DcatapdeSettings} from "../../importer/dcatapde/dcatapde.settings.js";
 import {DcatapdeImporter} from "../../importer/dcatapde/dcatapde.importer.js";
 import {PiveauCatalog, type PiveauCatalogSettings} from "../../catalog/piveau/piveau.catalog.js";
+import type {CkanSettings} from "../../importer/ckan/ckan.settings.js";
+import {ingridCkanMapper} from "./mapper/ingrid.ckan.mapper.js";
+import {CkanImporter} from "../../importer/ckan/ckan.importer.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -116,6 +119,9 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
             case 'DCATAPDE':
                 importer = new DcatapdeImporter(settings as DcatapdeSettings);
                 break;
+            case 'CKAN':
+                importer = new CkanImporter(settings as CkanSettings);
+                break;
             default: {
                 log.error('Importer not found: ' + settings.type);
             }
@@ -129,7 +135,8 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
     async getMapper(settings: ingridSettings, harvestTime: Date, summary: Summary, record: any, generalInfo: any): Promise<Mapper<ingridSettings>> {
         switch (settings.type) {
             case 'CSW': return new ingridCswMapper(settings as CswSettings, record, harvestTime, summary, generalInfo);
-            case 'DCATAPDE': return new ingridDcatapdeMapper(settings as DcatapdeSettings, record, harvestTime, summary, generalInfo);
+            case 'DCATAPDE': return new ingridDcatapdeMapper(settings as DcatapdeSettings, record, harvestTime, summary);
+            case 'CKAN': return new ingridCkanMapper(settings as CkanSettings, record, harvestTime, summary);
             default: {
                 log.error('Mapper not found: ' + settings.type);
             }

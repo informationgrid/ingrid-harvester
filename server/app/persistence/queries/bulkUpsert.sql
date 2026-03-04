@@ -15,7 +15,10 @@ FROM json_populate_recordset(null::public.record, $1)
 ON CONFLICT
 ON CONSTRAINT record_full_identifier
 DO UPDATE SET
+    catalog_ids = EXCLUDED.catalog_ids,
     dataset = EXCLUDED.dataset,
+    dataset_csw = EXCLUDED.dataset_csw,
+    dataset_dcatapde = EXCLUDED.dataset_dcatapde,
     original_document = COALESCE(EXCLUDED.original_document, record.original_document),
     last_modified = NOW(),
     deleted_on = NULL
