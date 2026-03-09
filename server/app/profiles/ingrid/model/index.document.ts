@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import type { Distribution } from 'model/distribution.js';
 import type { IndexDocument } from '../../../model/index.document.js';
 import type { IngridMetadata } from "./ingrid.metadata.js";
 
@@ -32,6 +33,7 @@ export type IngridIndexDocument = IndexDocument & IngridMetadata & {
     collection: {
         name: string
     },
+    distributions?: Distribution[],
     t0: string,
     t1: string,
     t2: string,

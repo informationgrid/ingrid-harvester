@@ -21,13 +21,20 @@
  * ==================================================
  */
 
-import { createEsId } from '../lvr.utils.js';
-import type { Bucket } from '../../../persistence/postgres.utils.js';
+import type { CatalogSettings } from '../../../catalog/catalog.factory.js';
 import type { EsOperation } from '../../../persistence/elastic.utils.js';
-import type { LvrIndexDocument } from '../model/index.document.js';
 import type { PostgresAggregator as AbstractPostgresAggregator } from '../../../persistence/postgres.aggregator.js';
+import type { Bucket } from '../../../persistence/postgres.utils.js';
+import { createEsId } from '../lvr.utils.js';
+import type { LvrIndexDocument } from '../model/index.document.js';
 
 export class PostgresAggregator implements AbstractPostgresAggregator<LvrIndexDocument> {
+
+    private index: string;
+
+    constructor(catalogSettings: CatalogSettings) {
+        this.index = catalogSettings.settings.index;
+    }
 
     public async processBucket(bucket: Bucket<LvrIndexDocument>): Promise<EsOperation[]> {
         let box: EsOperation[] = [];

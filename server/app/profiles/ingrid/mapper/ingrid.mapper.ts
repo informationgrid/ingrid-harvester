@@ -21,17 +21,22 @@
  * ==================================================
  */
 
-import log4js from 'log4js';
-import type {CswMapper} from "../../../importer/csw/csw.mapper.js";
-import type {IndexDocumentFactory} from "../../../model/index.document.factory.js";
-import type {IngridIndexDocument} from "../model/index.document.js";
 import * as crypto from "crypto";
-import type {Distribution} from "../../../model/distribution.js";
-import {Codelist} from "../utils/codelist.js";
-import * as IngridUtils from '../utils/ingrid.utils.js';
+import type { ImporterSettings } from 'importer.settings.js';
+import type { ToElasticMapper } from 'importer/to.elastic.mapper.js';
+import log4js from 'log4js';
+import type { IndexDocument } from 'model/index.document.js';
+import type { CswMapper } from "../../../importer/csw/csw.mapper.js";
+import type { DcatapdeMapper } from '../../../importer/dcatapde/dcatapde.mapper.js';
+import type { Distribution } from "../../../model/distribution.js";
+import type { IndexDocumentFactory } from "../../../model/index.document.factory.js";
+import type { IngridIndexDocument } from "../model/index.document.js";
+import type { IngridMetadata } from '../model/ingrid.metadata.js';
+import { Codelist } from "../utils/codelist.js";
 
-// TODO DEPRECATED
-export abstract class ingridMapper<M extends CswMapper> implements IndexDocumentFactory<IngridIndexDocument>{
+export type ingridMapperType = CswMapper | DcatapdeMapper;
+
+export abstract class ingridMapper<M extends ingridMapperType> implements IndexDocumentFactory<IndexDocument & IngridMetadata>, ToElasticMapper<IndexDocument> {
 
     protected baseMapper: M;
 
@@ -41,15 +46,14 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         this.baseMapper = baseMapper;
     }
 
-    async create() : Promise<IngridIndexDocument> {
-        let result = <IngridIndexDocument>{
-            iPlugId: this.getIPlugId(),
+    async createEsDocument(): Promise<IndexDocument> {
+        return await this.create();
+    }
+
+    async create(): Promise<IndexDocument & IngridMetadata> {
+        let result: IngridIndexDocument = {
+            ...this.getIngridMetadata(this.baseMapper.getSettings()),
             uuid: this.getGeneratedId(),
-            partner: this.getPartner(),
-            provider: this.getProvider(),
-            organisation: this.getOrganisation(),
-            datatype: this.getDataType(),
-            dataSourceName: this.getDataSourceName(),
             collection: {
                 name: this.getDataSourceName(),
             },
@@ -72,9 +76,8 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             t01_object: this.getT01_object(),
             t2: this.getT2(),
             hierarchylevel: this.getHierarchyLevel(),
-            alternatetitle: this.getAlternateTitle(),
+            alternatetitle: this.getAlternateTitle()?.[0],
             t02_address: this.getAddress(),
-            boost: this.baseMapper.getSettings().boost,
             title: this.getTitle(),
             summary: this.getSummary(),
             location: this.getLocation(),
@@ -106,7 +109,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             t0113_dataset_reference: this.getT0113_dataset_reference(),
             t017_url_ref: this.getT017_url_ref(),
             t021_communication: this.getT021_communication(),
-            object_use: this.getObjectUse(),
+            object_use: this.getObjectUse(),    // TODO does not exist in mapping
             object_use_constraint: this.getObjectUseConstraint(),
             object_access: this.getObjectAccess(),
             is_hvd: this.isHvd(),
@@ -115,7 +118,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             content: null, // assigned after
             idf: null // assigned after
         };
-        result.content = IngridUtils.getContent(result);
+        result.content = this.getContent(result);
         // add "idf" at the end, so it does not get included in the "content" array
         result.idf = this.getIDF();
 
@@ -145,7 +148,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
     }
 
     getHierarchyLevel() {
-        return this.baseMapper.getHierarchyLevel();
+        return undefined;
     }
 
     getHarvestedData(): string{
@@ -394,5 +397,33 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
 
     protected transformGeneric(value, map, defaultValue) {
         return map[value] ?? defaultValue;
+    }
+
+    protected getContent(resultObj) {
+        const values = [];
+        const traverse = obj => {
+            if (obj == null) {
+                return;
+            }
+            if (typeof obj !== 'object') {
+                values.push(obj);
+                return;
+            }
+            Object.values(obj).forEach(traverse);
+        };
+        traverse(resultObj);
+        return values;
+    }
+
+    protected getIngridMetadata(settings: ImporterSettings): IngridMetadata {
+        return {
+            iPlugId: settings.iPlugId,
+            partner: settings.partner?.split(",")?.map(p => p.trim()),
+            provider: settings.provider?.split(",")?.map(p => p.trim()),
+            organisation: this.transformToIgcDomainId(settings.provider, "111"),
+            datatype: settings.datatype?.split(",")?.map(p => p.trim()) ?? ["default"],
+            dataSourceName: settings.dataSourceName,
+            boost: settings.boost,
+        };
     }
 }

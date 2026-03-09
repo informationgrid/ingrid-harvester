@@ -96,14 +96,6 @@ export abstract class Catalog<DbColumnType> {
     }
 
     /**
-     * Embed traceability metadata (transactionTimestamp, sourceId) into a record
-     * before pushing it to the target catalog. Format-specific: CSW uses ISO 19139
-     * keywords, a JSON catalog would add a metadata field, etc.
-     * sourceId is ImporterSettings.catalogId — the identifier of the harvest source.
-     */
-    abstract addTraceability(record: DbColumnType, transactionTimestamp: string, sourceId: string): DbColumnType;
-
-    /**
      * Remove records in the target catalog that are no longer present in the current
      * harvest. Records belonging to this source are identified by sourceId
      * (ImporterSettings.catalogId), which was embedded via addTraceability.

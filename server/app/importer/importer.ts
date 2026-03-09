@@ -124,17 +124,17 @@ export abstract class Importer<S extends ImporterSettings> {
                 await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
                 await this.database.commitTransaction();
                 // TODO support concurrency of different catalogs
-                for (const catalogId of this.getSettings().catalogIds) {
+                for (const catalogId of this.settings.catalogIds) {
                     try {
                         const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, this.getSummary());
                         // log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with transaction timestamp ${transactionTimestamp}`);
-                        log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with source ${this.getSettings().sourceURL}`);
+                        log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with source ${this.settings.sourceURL}`);
 
                         // TODO currently this relies on "sourceURL" instead of transactionTimestamp
                         // should this be changed to transactionTimestamp?
                         // for that, we need to consider how to handle "deleted", i.e. non-fetched, datasets
 
-                        await catalog.process(this.getSettings().sourceURL, this.settings);
+                        await catalog.process(this.settings.sourceURL, this.settings);
                     }
                     catch (e) {
                         log.error(`Error while importing into catalog ${catalogId}`, e);

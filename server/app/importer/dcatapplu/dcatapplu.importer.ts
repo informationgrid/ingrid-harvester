@@ -38,6 +38,7 @@ import { Importer } from '../importer.js';
 import { DcatappluMapper } from './dcatapplu.mapper.js';
 import type { DcatappluSettings } from './dcatapplu.settings.js';
 import { defaultDCATAPPLUSettings } from './dcatapplu.settings.js';
+import { ProfileFactory } from 'profiles/profile.factory.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
@@ -208,11 +209,12 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
                         title: 'Globaler Katalog'
                     });
                 }
-                let mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), records[i], catalog, rootNode)) as DcatappluMapper;
+                let mapper = new DcatappluMapper(this.getSettings(), records[i], catalog, rootNode, harvestTime, this.getSummary())
+                let indexDocumentFactory = ProfileFactoryLoader.get().getIndexDocumentFactory(mapper);
 
                 let doc: IndexDocument;
                 try {
-                    doc = await mapper.createEsDocument();
+                    doc = await indexDocumentFactory.create();
                 }
                 catch (e) {
                     log.error('Error creating index document', e);

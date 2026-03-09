@@ -166,11 +166,12 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), records[i], rootNode)) as DcatapdeMapper;
+            let mapper = new DcatapdeMapper(this.getSettings(), records[i], harvestTime, this.getSummary());
+            let indexDocumentFactory = ProfileFactoryLoader.get().getIndexDocumentFactory(mapper);
 
             let doc: IndexDocument;
             try {
-                doc = await mapper.createEsDocument();
+                doc = await indexDocumentFactory.create();
             }
             catch (e) {
                 log.error('Error creating index document', e);

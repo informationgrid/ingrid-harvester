@@ -110,11 +110,12 @@ export class JsonImporter extends Importer<JsonSettings> {
                     logRequest.debug("Record content: ", JSON.stringify(record));
                 }
 
-                const mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), record)) as JsonMapper;
+                const mapper = new JsonMapper(this.getSettings(), record, harvestTime, this.getSummary());
+                let indexDocumentFactory = ProfileFactoryLoader.get().getIndexDocumentFactory(mapper);
 
                 let doc: IndexDocument;
                 try {
-                    doc = await mapper.createEsDocument();
+                    doc = await indexDocumentFactory.create();
                 }
                 catch (e) {
                     log.warn('Error creating index document', e);

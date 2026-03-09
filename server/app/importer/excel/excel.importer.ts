@@ -130,19 +130,20 @@ export class ExcelImporter extends Importer<ExcelSettings> {
                 }
 
                 // create json document and create values with ExcelMapper
-                let mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), {
+                let mapper = new ExcelMapper(this.getSettings(), {
                     id: unit.id,
                     columnValues: unit.columnValues,
                     workbook: workbook,
                     columnMap: columnMap,
                     currentIndexName: this.elastic.indexName,
                     summary: this.getSummary()
-                })) as ExcelMapper;
+                });
+                let indexDocumentFactory = ProfileFactoryLoader.get().getIndexDocumentFactory(mapper);
 
                 // add document to buffer and send to elasticsearch if full
                 let doc: IndexDocument;
                 try {
-                    doc = await mapper.createEsDocument();
+                    doc = await indexDocumentFactory.create();
                 }
                 catch (e) {
                     this.handleIndexDocError(e, mapper);

@@ -58,7 +58,7 @@ export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMap
         themes: null
     };
 
-    constructor(settings: SparqlSettings, record, harvestTime, summary: Summary) {
+    constructor(settings: SparqlSettings, record, harvestTime: Date, summary: Summary) {
         super(settings, summary);
         this.record = record;
         this.harvestTime = harvestTime;

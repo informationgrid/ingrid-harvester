@@ -22,58 +22,64 @@
  */
 
 import log4js from 'log4js';
-import * as IngridUtils from '../utils/ingrid.utils.js';
-import type {IngridOpendataIndexDocument} from "../model/opendataindex.document.js";
-import {DcatapdeMapper} from "../../../importer/dcatapde/dcatapde.mapper.js";
-import type {Distribution} from "../../../model/distribution.js";
-import type {DateRange} from "../../../model/dateRange.js";
+import type { IndexDocument } from 'model/index.document.js';
+import { DcatapdeMapper } from "../../../importer/dcatapde/dcatapde.mapper.js";
+import type { ToElasticMapper } from '../../../importer/to.elastic.mapper.js';
+import type { DateRange } from "../../../model/dateRange.js";
+import type { IngridMetadata } from '../model/ingrid.metadata.js';
+import type { IngridOpendataIndexDocument } from "../model/opendataindex.document.js";
+import { ingridMapper } from './ingrid.mapper.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
-export class ingridDcatapdeMapper extends DcatapdeMapper {
+export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implements ToElasticMapper<IngridOpendataIndexDocument> {
+
+    async create(): Promise<IndexDocument & IngridMetadata> {
+        return await this.createEsDocument();
+    }
 
     async createEsDocument(): Promise<IngridOpendataIndexDocument> {
         let result: IngridOpendataIndexDocument = {
-            ...await super.createEsDocument(),
-            ...IngridUtils.getIngridMetadata(this.getSettings()),
+            // ...await super.createEsDocument(),
+            ...this.getIngridMetadata(this.baseMapper.getSettings()),
             id: this.getGeneratedId(),
             uuid: this.getGeneratedId(),
             modified: this.getModifiedDate(),
             collection: {
-                name: this.getSettings().dataSourceName,
+                name: this.baseMapper.getSettings().dataSourceName,
             },
             extras: {
                 metadata: {
-                    harvested: this.getHarvestingDate(),
+                    harvested: this.baseMapper.getHarvestingDate(),
                     harvesting_errors: null, // get errors after all operations been done
                     issued: null,
                     is_valid: null, // check validity before persisting to ES
                     modified: null,
-                    source: this.getMetadataSource(),
+                    source: this.baseMapper.getMetadataSource(),
                     merged_from: []
                 }
             },
             // distributions: await this.getDistributions(),
-            sort_hash: IngridUtils.getSortHash(this.getTitle()),
+            sort_hash: this.getSortHash(),
             content: null, // assigned after
             rdf: null, // assigned after,
             t01_object: {
                 obj_id: this.getGeneratedId()
             },
             title: this.getTitle(),
-            description: this.getDescription(),
+            description: this.baseMapper.getDescription(),
             dcat: {
-                landingPage: this.getLandingPage()
+                landingPage: this.baseMapper.getLandingPage()
             },
             contacts: this.getContacts(),
             keywords: this.getKeywords(),
-            legalBasis: this.getLegalBasis(),
-            distributions: this.getDistributions(),
-            political_geocoding_level_uri: this.getPoliticalGeocodingLevelURI(),
+            legalBasis: this.baseMapper.getLegalBasis(),
+            distributions: await this.getDistributions(),
+            political_geocoding_level_uri: this.baseMapper.getPoliticalGeocodingLevelURI(),
             spatial: this.getSpatial(),
             temporal: this.getTemporal(),
         };
-        result.content = IngridUtils.getContent(result);
+        result.content = this.getContent(result);
         // add "rdf" at the end, so it does not get included in the "content" array
         result.rdf = this.getHarvestedData();
 
@@ -84,9 +90,9 @@ export class ingridDcatapdeMapper extends DcatapdeMapper {
 
     getKeywords() {
         let result = [];
-        let keywords = super.getKeywords();
+        let keywords = this.baseMapper.getKeywords();
         keywords?.forEach(keyword => {
-            if (IngridUtils.hasValue(keyword) && !result.some(r => r.term === keyword)) {
+            if (this.hasValue(keyword) && !result.some(r => r.term === keyword)) {
                 result.push({
                     term: keyword,
                     type: "free",
@@ -98,18 +104,18 @@ export class ingridDcatapdeMapper extends DcatapdeMapper {
 
     getContacts() {
         return [
-            ...super.getPublisher().map(contact => {return {role: "publisher", ...contact}}),
-            ...super.getCreator().map(contact => {return {role: "creator", ...contact}}),
-            ...super.getMaintainer().map(contact => {return {role: "maintainer", ...contact}}),
-            ...super.getOriginator().map(contact => {return {role: "originator", ...contact}}),
+            ...this.baseMapper.getPublisher().map(contact => {return {role: "publisher", ...contact}}),
+            ...this.baseMapper.getCreator().map(contact => {return {role: "creator", ...contact}}),
+            ...this.baseMapper.getMaintainer().map(contact => {return {role: "maintainer", ...contact}}),
+            ...this.baseMapper.getOriginator().map(contact => {return {role: "originator", ...contact}}),
             ];
     }
 
     getSpatial(): any {
-        return {geometries: [super.getSpatial()]};
+        return {geometries: [this.baseMapper.getSpatial()]};
     }
 
     getTemporal(): DateRange[] {
-        return super.getTemporal();
+        return this.baseMapper.getTemporal();
     }
 }

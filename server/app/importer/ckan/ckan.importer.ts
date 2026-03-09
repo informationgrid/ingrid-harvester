@@ -74,11 +74,12 @@ export class CkanImporter extends Importer<CkanSettings> {
     async importDataset(data: CkanMapperData): Promise<void> {
         try {
             log.debug('Processing CKAN dataset: ' + data.source.name + ' from data-source: ' + this.getSettings().sourceURL);
-            let mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), data.harvestTime, this.getSummary(), data)) as CkanMapper;
+            let mapper = new CkanMapper(this.getSettings(), data);
+            let indexDocumentFactory = ProfileFactoryLoader.get().getIndexDocumentFactory(mapper);
 
             let doc: IndexDocument;
             try {
-                doc = await mapper.createEsDocument();
+                doc = await indexDocumentFactory.create();
                 this.posthandlingDocument(mapper, doc);
             }
             catch (e) {

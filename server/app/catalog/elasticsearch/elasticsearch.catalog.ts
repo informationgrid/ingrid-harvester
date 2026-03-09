@@ -88,4 +88,12 @@ export abstract class ElasticsearchCatalog extends Catalog<object> {
     getElastic(): ElasticsearchUtils {
         return this.elastic;
     }
+
+    deleteStaleRecords(sourceId: string): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    deleteAllRecordsForCatalog(sourceId: string): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
 }

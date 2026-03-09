@@ -22,14 +22,21 @@
  */
 
 import log4js from 'log4js';
+import type { IndexDocument } from 'model/index.document.js';
 import { Catalog as NewCatalog, type CatalogSettings } from '../../catalog/catalog.factory.js';
-import type { ElasticsearchCatalogSettings } from '../../catalog/elasticsearch/elasticsearch.catalog.js';
 import type { CswCatalogSettings } from '../../catalog/csw/csw.catalog.js';
+import type { ElasticsearchCatalogSettings } from '../../catalog/elasticsearch/elasticsearch.catalog.js';
+import { PiveauCatalog, type PiveauCatalogSettings } from "../../catalog/piveau/piveau.catalog.js";
+import { CswImporter } from '../../importer/csw/csw.importer.js';
+import type { CswMapper } from '../../importer/csw/csw.mapper.js';
 import type { CswSettings } from '../../importer/csw/csw.settings.js';
+import { DcatapdeImporter } from "../../importer/dcatapde/dcatapde.importer.js";
+import type { DcatapdeMapper } from '../../importer/dcatapde/dcatapde.mapper.js';
+import type { DcatapdeSettings } from "../../importer/dcatapde/dcatapde.settings.js";
 import type { Importer } from '../../importer/importer.js';
-import type { Mapper } from '../../importer/mapper.js';
 import type { WfsSettings } from '../../importer/wfs/wfs.settings.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
+import type { IndexDocumentFactory } from '../../model/index.document.factory.js';
 import type { Summary } from '../../model/summary.js';
 import { DatabaseFactory } from '../../persistence/database.factory.js';
 import type { DatabaseUtils } from '../../persistence/database.utils.js';
@@ -41,18 +48,15 @@ import { ConfigService } from '../../services/config/ConfigService.js';
 import { ProfileFactory } from '../profile.factory.js';
 import { IngridCswCatalog } from './catalog/csw.catalog.js';
 import { IngridElasticsearchCatalog } from './catalog/elasticsearch.catalog.js';
-import { IngridCswImporter } from './importer/ingrid.csw.importer.js';
 import { ingridCswMapper } from './mapper/ingrid.csw.mapper.js';
+import { ingridDcatapdeMapper } from "./mapper/ingrid.dcatapde.mapper.js";
+import type { ingridMapperType } from './mapper/ingrid.mapper.js';
 import type { IngridIndexDocument } from './model/index.document.js';
+import type { IngridMetadata } from './model/ingrid.metadata.js';
 import { ElasticQueries } from './persistence/elastic.queries.js';
 import mappings from './persistence/ingrid-meta-mapping.json' with { type: 'json' };
 import settings from './persistence/ingrid-meta-settings.json' with { type: 'json' };
 import { PostgresAggregator } from './persistence/postgres.aggregator.js';
-import { CswImporter } from 'importer/csw/csw.importer.js';
-import {ingridDcatapdeMapper} from "./mapper/ingrid.dcatapde.mapper.js";
-import type {DcatapdeSettings} from "../../importer/dcatapde/dcatapde.settings.js";
-import {DcatapdeImporter} from "../../importer/dcatapde/dcatapde.importer.js";
-import {PiveauCatalog, type PiveauCatalogSettings} from "../../catalog/piveau/piveau.catalog.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -110,7 +114,6 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
         let importer: Importer<ingridSettings>;
         switch (settings.type) {
             case 'CSW':
-                // importer = new IngridCswImporter(settings as CswSettings);
                 importer = new CswImporter(settings as CswSettings);
                 break;
             case 'DCATAPDE':
@@ -126,13 +129,20 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
         return importer;
     }
 
-    async getMapper(settings: ingridSettings, harvestTime: Date, summary: Summary, record: any, generalInfo: any): Promise<Mapper<ingridSettings>> {
-        switch (settings.type) {
-            case 'CSW': return new ingridCswMapper(settings as CswSettings, record, harvestTime, summary, generalInfo);
-            case 'DCATAPDE': return new ingridDcatapdeMapper(settings as DcatapdeSettings, record, harvestTime, summary, generalInfo);
-            default: {
-                log.error('Mapper not found: ' + settings.type);
-            }
+    // async getMapper(settings: ingridSettings, harvestTime: Date, summary: Summary, record: any, generalInfo: any): Promise<Mapper<ingridSettings>> {
+    //     switch (settings.type) {
+    //         case 'CSW': return new ingridCswMapper(settings as CswSettings, record, harvestTime, summary, generalInfo);
+    //         case 'DCATAPDE': return new ingridDcatapdeMapper(settings as DcatapdeSettings, record, harvestTime, summary, generalInfo);
+    //         default: {
+    //             log.error('Mapper not found: ' + settings.type);
+    //         }
+    //     }
+    // }
+
+    getIndexDocumentFactory(mapper: ingridMapperType): IndexDocumentFactory<IndexDocument & IngridMetadata> {
+        switch (mapper.constructor.name) {
+            case 'CswMapper': return new ingridCswMapper(mapper as CswMapper);
+            case 'DCATAPDE': return new ingridDcatapdeMapper(mapper as DcatapdeMapper);
         }
     }
 
