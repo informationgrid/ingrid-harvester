@@ -25,9 +25,11 @@ import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
 import log4js from 'log4js';
 import pg from 'pg';
 import Cursor from "pg-cursor";
+import type { Observer } from "rxjs";
 import type { Catalog } from '../model/dcatApPlu.model.js';
 import type { Distribution } from '../model/distribution.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
+import { type ImportLogMessage, ImportResult } from "../model/import.result.js";
 import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
 import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory.js';
@@ -230,15 +232,14 @@ export class PostgresUtils extends DatabaseUtils {
      *
      * @param elastic
      * @param source
-     * @param processBucket
+     * @param observer
      */
-    async pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string, pgAggregator?: PostgresAggregator<IndexDocument>): Promise<void> {
+    async pushToElasticsearch(elastic: ElasticsearchUtils, source: string, observer: Observer<ImportLogMessage>, pgAggregator?: PostgresAggregator<IndexDocument>): Promise<void> {
         // TODO refactor with regards to new catalog concept
         // pgAggregator ??= ProfileFactoryLoader.get().getPostgresAggregator({} as CatalogSettings);
         if (!pgAggregator) {
             throw new Error('Not implemented: pushToElastic3ReturnOfTheJedi without PostgresAggregator');
         }
-
         const client: pg.PoolClient = await PostgresUtils.pool.connect();
         log.debug('Connection started');
         let start = Date.now();
@@ -247,8 +248,13 @@ export class PostgresUtils extends DatabaseUtils {
 
         let catalogs = (await this.listCatalogs()).reduce((map, catalog: Catalog) => (map[catalog.id] = catalog, map), {});
 
+      // right before creating the cursor
+      const { rows: [{ count: totalRows }] } = await client.query(
+        `SELECT COUNT(*)::int AS count FROM (${this.queries.getBuckets}) AS t`,
+        [source]
+      );
+
         const cursor = client.query(new Cursor(this.queries.getBuckets, [source]));
-        // const totalRows = client.query(this.queries.getBuckets, [source]);
         let currentId: string | number;
         let currentBucket: Bucket<any>;
         const maxRows = 100;
@@ -257,6 +263,7 @@ export class PostgresUtils extends DatabaseUtils {
         let numBuckets = 0;
         while (rows.length > 0) {
             log.info(`PQ->ES: Processing rows ${numDatasets} - ${numDatasets + rows.length}`);
+            observer.next(ImportResult.running(numDatasets, totalRows, "Datensätze nach Elasticsearch"));
             for (let row of rows) {
                 numDatasets += 1;
                 if (row.anchor_id != currentId) {

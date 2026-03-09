@@ -22,23 +22,25 @@
  */
 
 import * as crypto from "crypto";
-import type { ImporterSettings } from 'importer.settings.js';
-import type { ToElasticMapper } from 'importer/to.elastic.mapper.js';
+import type { Geometry } from "geojson";
 import log4js from 'log4js';
-import type { IndexDocument } from 'model/index.document.js';
+import type { ImporterSettings } from '../../../importer.settings.js';
 import type { CswMapper } from "../../../importer/csw/csw.mapper.js";
 import type { DcatapdeMapper } from '../../../importer/dcatapde/dcatapde.mapper.js';
+import type { ToElasticMapper } from '../../../importer/to.elastic.mapper.js';
+import type { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
 import type { Distribution } from "../../../model/distribution.js";
 import type { IndexDocumentFactory } from "../../../model/index.document.factory.js";
+import type { IndexDocument } from '../../../model/index.document.js';
 import type { IngridIndexDocument } from "../model/index.document.js";
 import type { IngridMetadata } from '../model/ingrid.metadata.js';
 import { Codelist } from "../utils/codelist.js";
 
-export type ingridMapperType = CswMapper | DcatapdeMapper;
+export type ingridMapperType = CswMapper | DcatapdeMapper | WfsMapper;
 
 export abstract class ingridMapper<M extends ingridMapperType> implements IndexDocumentFactory<IndexDocument & IngridMetadata>, ToElasticMapper<IndexDocument> {
 
-    protected baseMapper: M;
+    readonly baseMapper: M;
 
     private _log = log4js.getLogger();
 
@@ -52,6 +54,8 @@ export abstract class ingridMapper<M extends ingridMapperType> implements IndexD
 
     async create(): Promise<IndexDocument & IngridMetadata> {
         let result: IngridIndexDocument = {
+            // put custom entries first, so they can potentially get overwritten with more specific getters below
+            ...this.getCustomEntries(),
             ...this.getIngridMetadata(this.baseMapper.getSettings()),
             uuid: this.getGeneratedId(),
             collection: {
@@ -79,15 +83,18 @@ export abstract class ingridMapper<M extends ingridMapperType> implements IndexD
             alternatetitle: this.getAlternateTitle()?.[0],
             t02_address: this.getAddress(),
             title: this.getTitle(),
-            summary: this.getSummary(),
+            summary: this.getDescription(),
             location: this.getLocation(),
             x1: this.getX1(),
             x2: this.getX2(),
             y1: this.getY1(),
             y2: this.getY2(),
+            spatial: {
+                geometries: this.getSpatial()
+            },
             modified: this.getModifiedDate(),
             capabilities_url: this.getCapabilitiesURL(),
-            additional_html_1: this.getAdditionalHTML(),
+            additional_html_1: this.getAdditionalHtml(),
             t04_search: this.getT04Search(),
             t0110_avail_format: this.getT0110_avail_format(),
             t011_obj_geo: this.getT011_obj_geo(),
@@ -127,6 +134,10 @@ export abstract class ingridMapper<M extends ingridMapperType> implements IndexD
         return result;
     }
 
+    getCustomEntries(toLower: boolean = true): Object {
+        return {};
+    }
+
     getDistributions(): Promise<Distribution[]>{
         return undefined
     }
@@ -139,12 +150,10 @@ export abstract class ingridMapper<M extends ingridMapperType> implements IndexD
         return this.baseMapper.getModifiedDate();
     }
 
-    getAccessRights(): string[]{
-        return this.baseMapper.getAccessRights();
-    }
-
+    // if the custom entries contain a "uuid", use it
+    // otherwise, use the "generated" id, e.g. gmlId (WFS) or fileIdentifier (CSW)
     getGeneratedId(): string{
-        return this.baseMapper.getGeneratedId()
+        return this.baseMapper.getGeneratedId();
     }
 
     getHierarchyLevel() {
@@ -206,8 +215,8 @@ export abstract class ingridMapper<M extends ingridMapperType> implements IndexD
 
     getT01_object() {
         return {
-            obj_id: this.baseMapper.getGeneratedId(),
-            org_obj_id: this.baseMapper.getGeneratedId()
+            obj_id: this.getGeneratedId(),
+            org_obj_id: this.getGeneratedId()
         }
     }
 
@@ -219,7 +228,7 @@ export abstract class ingridMapper<M extends ingridMapperType> implements IndexD
         return undefined;
     }
 
-    getSummary() {
+    getDescription() {
         return undefined;
     }
 
@@ -243,15 +252,15 @@ export abstract class ingridMapper<M extends ingridMapperType> implements IndexD
         return undefined;
     }
 
-    getIDF() {
-        return undefined;
-    }
+    abstract getSpatial(): Geometry[];
+
+    abstract getIDF();
 
     getCapabilitiesURL() {
         return undefined;
     }
 
-    getAdditionalHTML() {
+    getAdditionalHtml(): string {
         return undefined;
     }
 

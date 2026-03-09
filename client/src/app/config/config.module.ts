@@ -47,6 +47,7 @@ import { ConfigMappingComponent } from './config-mapping/config-mapping.componen
 import { ConfigComponent } from './config.component';
 import { routing } from './config.routing';
 import {ContextHelpDirective} from "../shared/context-help/context-help.directive";
+import { MatTooltip } from "@angular/material/tooltip";
 
 @NgModule({
     declarations: [
@@ -76,7 +77,8 @@ import {ContextHelpDirective} from "../shared/context-help/context-help.directiv
         TranslocoModule,
         PageTemplateModule,
         CronjobFormFieldComponent,
-        ContextHelpDirective
+        ContextHelpDirective,
+        MatTooltip
     ],
     exports: [
         ConfigComponent

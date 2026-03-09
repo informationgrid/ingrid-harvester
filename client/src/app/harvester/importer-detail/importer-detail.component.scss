@@ -21,47 +21,33 @@
  * ==================================================
  */
 
-// Import _variables.css to the component's sass file where you want to use it.
-// @import "src/variables";
-@use "../../../_variables.scss";
+@use "../../../variables";
 
-.align-center {
-  text-align: center;
-}
-
-.progress-description {
-  padding-top: 10px;
-}
-
-.numberCircle {
-  font-size: 32px;
-  margin-top: 10px;
-
-  min-width: 2em;
-  width: auto;
-  height: 2em;
-
-  background: #fff;
-  //border: 0.1em solid #666;
-  color: #666;
-  text-align: center;  
-  border-radius: 20%;
-
-  line-height: 2em;
-  box-sizing: content-box;
-}
 .error {
-  background-color: variables.$error;
   color: white;
-}
-.warning {
-  background-color: variables.$warn;
-  color: white;
+  background-color: variables.$error-color;
 }
 
-/*
- TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.
- */
-.info-cards ::ng-deep .mat-card-header-text {
-  padding-top: 22px;
+.warning {
+  color: white;
+  background-color: variables.$warning-color;
+}
+
+mat-progress-bar {
+  --mat-progress-bar-track-color: #ededed;
+  border-radius: 12px;
+}
+
+mat-list {
+  padding: 12px 0;
+}
+
+mat-list-item {
+  height: unset !important;
+  margin: 12px 0;
+
+  .item-subtitle {
+    font-size: 14px;
+    color: variables.$ige-hint-color;
+  }
 }

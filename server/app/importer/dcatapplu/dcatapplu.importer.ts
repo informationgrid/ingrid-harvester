@@ -38,7 +38,6 @@ import { Importer } from '../importer.js';
 import { DcatappluMapper } from './dcatapplu.mapper.js';
 import type { DcatappluSettings } from './dcatapplu.settings.js';
 import { defaultDCATAPPLUSettings } from './dcatapplu.settings.js';
-import { ProfileFactory } from 'profiles/profile.factory.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');

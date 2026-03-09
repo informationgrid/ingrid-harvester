@@ -55,6 +55,7 @@ export class KldMapper extends Mapper<KldSettings> implements ToElasticMapper<In
 
     async createEsDocument(): Promise<IndexDocument> {
         return {
+            uuid: this.getGeneratedId(),
             extras: {
                 metadata: this.getHarvestingMetadata(),
             }

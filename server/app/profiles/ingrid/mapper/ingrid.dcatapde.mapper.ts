@@ -22,10 +22,10 @@
  */
 
 import log4js from 'log4js';
-import type { IndexDocument } from 'model/index.document.js';
 import { DcatapdeMapper } from "../../../importer/dcatapde/dcatapde.mapper.js";
 import type { ToElasticMapper } from '../../../importer/to.elastic.mapper.js';
 import type { DateRange } from "../../../model/dateRange.js";
+import type { IndexDocument } from '../../../model/index.document.js';
 import type { IngridMetadata } from '../model/ingrid.metadata.js';
 import type { IngridOpendataIndexDocument } from "../model/opendataindex.document.js";
 import { ingridMapper } from './ingrid.mapper.js';
@@ -117,5 +117,9 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implement
 
     getTemporal(): DateRange[] {
         return this.baseMapper.getTemporal();
+    }
+
+    getIDF() {
+        return null;
     }
 }

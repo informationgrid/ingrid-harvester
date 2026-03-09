@@ -21,15 +21,17 @@
  * ==================================================
  */
 
-import type { Summary } from "model/summary.js";
+import { XMLSerializer } from '@xmldom/xmldom';
+import type { ImporterSettings } from "importer.settings.js";
+import log4js from 'log4js';
+import type { Observer } from "rxjs";
+import { namespaces } from "../../importer/namespaces.js";
+import type { ImportLogMessage } from "../../model/import.result.js";
+import type { Summary } from "../../model/summary.js";
+import { RequestDelegate } from "../../utils/http-request.utils.js";
+import { getDomParser } from "../../utils/misc.utils.js";
 import { Catalog, type CatalogSettings } from '../catalog.factory.js';
 import { CswCatalogSummary } from './csw.catalog-summary.js';
-import type { ImporterSettings } from "importer.settings.js";
-import { RequestDelegate } from "../../utils/http-request.utils.js";
-import { namespaces } from "../../importer/namespaces.js";
-import { getDomParser } from "../../utils/misc.utils.js";
-import log4js from 'log4js';
-import { XMLSerializer } from '@xmldom/xmldom';
 
 const log = log4js.getLogger('CswCatalog');
 
@@ -54,7 +56,7 @@ export abstract class CswCatalog extends Catalog<string> {
         super(catalogSettings, summary);
     }
 
-    async import(transactionHandle: any, settings: ImporterSettings): Promise<void> {
+    async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         log.info(`Importing data into CSW catalog '${this.settings.id}' for source: ${transactionHandle}`);
 
         const records = await this.database.getDatasetsWithOriginalDocument(transactionHandle);

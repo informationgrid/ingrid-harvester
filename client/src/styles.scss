@@ -28,6 +28,41 @@
 
 
 // -----------------------------------------------------------
+// Fonts
+// -----------------------------------------------------------
+
+@font-face {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 400;
+  src: url(assets/fonts/roboto-v20-latin-regular.eot);
+  src:
+    local("Roboto"),
+    local("Roboto-Regular"),
+    url(assets/fonts/roboto-v20-latin-regular.eot?#iefix) format("embedded-opentype"),
+    url(assets/fonts/roboto-v20-latin-regular.woff2) format("woff2"),
+    url(assets/fonts/roboto-v20-latin-regular.woff) format("woff"),
+    url(assets/fonts/roboto-v20-latin-regular.ttf) format("truetype"),
+    url(assets/fonts/roboto-v20-latin-regular.svg#Roboto) format("svg");
+}
+
+@font-face {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  src: url(assets/fonts/roboto-v20-latin-500.eot);
+  src:
+    local("Roboto Medium"),
+    local("Roboto-Medium"),
+    url(assets/fonts/roboto-v20-latin-500.eot?#iefix) format("embedded-opentype"),
+    url(assets/fonts/roboto-v20-latin-500.woff2) format("woff2"),
+    url(assets/fonts/roboto-v20-latin-500.woff) format("woff"),
+    url(assets/fonts/roboto-v20-latin-500.ttf) format("truetype"),
+    url(assets/fonts/roboto-v20-latin-500.svg#Roboto) format("svg");
+}
+
+
+// -----------------------------------------------------------
 // Migration form @angular/flex-layout to native css solution
 // -----------------------------------------------------------
 
@@ -86,6 +121,7 @@
 .gap-12 { gap: 12px; }
 .gap-16 { gap: 16px; }
 .gap-20 { gap: 20px; }
+.row-gap-16 { row-gap: 16px; }
 
 // -----------> fxLayoutAlign
 // <div fxLayoutAlign="justify-between center"> → <div class="space-between items-center">
@@ -154,6 +190,10 @@
   width: 100%;
 }
 
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
 mat-card-header {
   margin-bottom: 24px;
 }
@@ -175,6 +215,11 @@ mat-card-header {
  */
 .mat-card-header-text {
   margin: 0 0 !important;
+}
+
+// simulate the offset of hint block from standard inputs
+.mat-hint-offset {
+  margin-bottom: 22px;
 }
 
 .margin-below {
@@ -214,6 +259,9 @@ mat-card-header {
 .text-bottom{
   vertical-align: bottom !important;
 }
+.font-medium {
+  font-weight: 500;
+}
 .font-normal {
   font-weight: normal;
 }
@@ -229,8 +277,23 @@ mat-card-header {
 .mt-0 {
   margin-top: 0;
 }
+.my-0 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.my-4 {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+.my-8 {
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
 .mb-24 {
   margin-bottom: 24px;
+}
+.ml-auto {
+  margin-left: auto;
 }
 .padding {
   padding: 16px !important;
@@ -303,21 +366,6 @@ a {
 
   span.mdc-list-item {
     font-size: 14px;
-  }
-}
-
-button.button-with-text {
-  padding: 0 4px 0;
-  min-width: 36px;
-
-  .mdc-button__label {
-    display: flex;
-    align-items: center;
-    color: variables.$ige-secondary;
-  }
-
-  &.primary .mdc-button__label {
-    color: #ffffff;
   }
 }
 
@@ -469,7 +517,7 @@ h1 {
   font-weight: 400;
 }*/
 
-.upper-case {
+.uppercase {
   text-transform: uppercase;
 }
 
@@ -844,6 +892,10 @@ ige-one-column-wrapper formly-group {
   align-self: flex-end;
 }
 
+.align-self-center {
+  align-self: center;
+}
+
 .justify-content-space-between {
   justify-content: space-between;
 }
@@ -1205,44 +1257,6 @@ mat-icon.mark-color .coloring {
   padding: 24px 0;
 }
 
-/* Material Tabs */
-.page-tabs-routing {
-  &.mat-mdc-tab-nav-bar {
-    border-bottom: none;
-  }
-
-  .mat-mdc-tab-links {
-    background-color: variables.$ige-secondary-dark;
-  }
-
-  .mat-mdc-tab-link {
-    border-bottom: none;
-    height: 56px !important;
-
-    &:hover {
-      background: color.adjust(variables.$ige-secondary, $lightness: 8%);
-    }
-
-    .mdc-tab__text-label {
-      color: #ffffff !important;
-      letter-spacing: 1.25px;
-      text-transform: uppercase;
-      opacity: 0.75;
-    }
-
-    &.active-link .mdc-tab__text-label {
-      opacity: 1;
-      color: #4ba7d0 !important;
-    }
-  }
-
-  .mdc-tab-indicator__content {
-    border-color: variables.$ige-background !important;
-    background-color: variables.$ige-background !important;
-    height: 6px;
-  }
-}
-
 .page-tabs {
   height: 100%;
 
@@ -1279,20 +1293,6 @@ mat-icon.mark-color .coloring {
   /*TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
   & > .mat-tab-body-wrapper {
     flex: 1;
-  }
-}
-
-.page-tabs,
-.page-tabs-routing ~ * {
-  .status {
-    padding: 30px;
-    margin-bottom: 24px;
-    background-color: rgb(223, 223, 223);
-
-    .log {
-      overflow: auto;
-      max-height: 300px;
-    }
   }
 }
 
@@ -1678,4 +1678,131 @@ h2.title-with-context-help {
 }
 .pointer {
   cursor: pointer;
+}
+
+.max-w-content {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding-left: 36px;
+  padding-right: 36px;
+}
+
+@media screen and (max-width: 1024px) {
+  .max-w-content {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+.text-sm {
+  font-size: 14px;
+}
+
+.text-xl {
+  font-size: 20px;
+}
+
+.text-2xl {
+  font-size: 24px;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-hint {
+  color: variables.$ige-hint-color;
+}
+
+.break-word {
+  word-break: break-word;
+}
+
+.sticky-action-bar {
+  height: 56px;
+  margin-top: -56px;
+  background-color: variables.$ige-background;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: end;
+}
+
+@media screen and (max-width: 1024px) {
+  .sticky-action-bar {
+    margin-top: 0;
+  }
+}
+
+// -----------------------------------------------------------
+// Column responsiveness management
+// Every row contains 10 spaces. if 10 is assigned in the class,
+// this means that the element will take up the full width of the row.
+// -----------------------------------------------------------
+
+.ingrid-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -6px;
+}
+
+.ingrid-row > [class*=ingrid-col-] {
+  box-sizing: border-box;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.ingrid-col-none {
+  flex: unset;
+  max-width: unset;
+}
+
+.ingrid-col-5 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.ingrid-col-10 {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+@media (min-width: 800px) {
+  .ingrid-col-md-1 {
+    flex: 0 0 10%;
+    max-width: 10%;
+  }
+
+  .ingrid-col-md-2 {
+    flex: 0 0 20%;
+    max-width: 20%;
+  }
+
+  .ingrid-col-md-3 {
+    flex: 0 0 30%;
+    max-width: 30%;
+  }
+
+  .ingrid-col-md-4 {
+    flex: 0 0 40%;
+    max-width: 40%;
+  }
+
+  .ingrid-col-md-5 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  .ingrid-col-md-6 {
+    flex: 0 0 60%;
+    max-width: 60%;
+  }
+
+  .ingrid-col-md-7 {
+    flex: 0 0 70%;
+    max-width: 70%;
+  }
 }

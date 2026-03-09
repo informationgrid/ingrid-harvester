@@ -31,7 +31,7 @@ export class ZdmWfsImporter extends WfsImporter {
 
     constructor(settings: WfsSettings) {
         super(MiscUtils.merge(settings, { 
-            memberElement: 'gml:featureMember', 
+            memberElements: ['gml:featureMember'], 
             harvestTypes: true,
             requireGeometry: true
         }));

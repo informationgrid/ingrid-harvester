@@ -39,24 +39,39 @@ button.mdc-button {
   text-transform: uppercase;
 }
 
-mat-form-field:hover .mdc-notched-outline__leading,
-mat-form-field:hover .mdc-notched-outline__trailing {
-  //border-color: #979797;
-  //border-width: 2px !important;
+mat-form-field.no-subscript {
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
 }
 
-ige-side-menu .mat-mdc-list-item {
+ige-side-menu .mat-mdc-nav-list .mat-mdc-list-item {
+  border-radius: 0;
+
   &:hover::before,
   &:focus::before {
     opacity: 0;
   }
 
   &:hover {
-    background: color.adjust(variables.$ige-secondary, $lightness: 8%) !important;
+    background: color.adjust(variables.$ige-secondary, $lightness: 8%);
   }
 
-  &.active:hover {
-    background: color.adjust(variables.$ige-primary, $lightness: 8%) !important;
+  &.mdc-list-item--activated {
+    background: variables.$ige-primary;
+
+    &:hover {
+      background: color.adjust(variables.$ige-primary, $lightness: 8%);
+    }
+  }
+
+  .mdc-list-item__primary-text {
+    color: white !important;
+    white-space: normal;
+  }
+
+  .mat-icon {
+    color: #ffffff !important;
   }
 }
 
@@ -220,6 +235,79 @@ mat-icon.dark-blue {
   .mdc-snackbar__surface {
     background-color: variables.$ige-info-background;
   }
+}
+
+.harvester-expansion-panel.mat-expansion-panel {
+  border-radius: 8px;
+  box-shadow: unset !important;
+  border: 1px solid variables.$ige-divider;
+
+  mat-expansion-panel-header {
+    padding: 4px 0;
+  }
+}
+
+.mdc-button {
+  height: auto !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+.mat-icon {
+  display: inline-flex !important;
+}
+
+.mat-mdc-card {
+  border-radius: 8px !important;
+  box-shadow: unset !important;
+  border: 1px solid variables.$ige-divider !important;
+}
+
+.ingrid-tab-nav-bar {
+  &.mat-mdc-tab-nav-bar {
+    background-color: variables.$ige-secondary-dark;
+
+    .mdc-tab {
+      height: 56px;
+
+      .mdc-tab__text-label {
+        color: white;
+      }
+
+      &.mdc-tab--active .mdc-tab__text-label {
+        color: variables.$ige-primary-light;
+      }
+
+      &:hover {
+        background: color.adjust(variables.$ige-secondary, $lightness: 8%);
+
+        .mdc-tab__text-label {
+          color: variables.$ige-primary-light;
+        }
+
+        &.mdc-tab--active .mdc-tab__text-label {
+          color: variables.$ige-primary-light;
+        }
+      }
+    }
+
+    .mdc-tab-indicator__content {
+      border-top-width: 4px;
+      border-color: white !important;
+    }
+
+    .mat-mdc-tab-header-pagination-chevron {
+      border-color: white;
+    }
+  }
+}
+
+button[matbutton] .mdc-button__label {
+  font-weight: normal;
+}
+
+button[matbutton="filled"]:hover {
+  background-color: color.adjust(variables.$ige-secondary, $lightness: 8%);
 }
 
 // Accessibility requirement.

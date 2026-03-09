@@ -21,12 +21,12 @@
  * ==================================================
  */
 
-import type { Distribution } from 'model/distribution.js';
+import type { Geometry } from 'geojson';
+import type { Distribution } from '../../../model/distribution.js';
 import type { IndexDocument } from '../../../model/index.document.js';
 import type { IngridMetadata } from "./ingrid.metadata.js";
 
 export type IngridIndexDocument = IndexDocument & IngridMetadata & {
-    uuid: string,
     extras: {
         hierarchy_level?: string,
     },
@@ -49,6 +49,9 @@ export type IngridIndexDocument = IndexDocument & IngridMetadata & {
     x2: number[],
     y1: number[],
     y2: number[],
+    spatial: {
+        geometries: Geometry[]
+    },
     idf: string,
     modified: Date,
     capabilities_url: string[],

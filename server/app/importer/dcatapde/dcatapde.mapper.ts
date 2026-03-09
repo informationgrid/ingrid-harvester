@@ -153,6 +153,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
 
     async createEsDocument(): Promise<IndexDocument> {
         return {
+            uuid: this.getGeneratedId(),
             extras: {
                 metadata: this.getHarvestingMetadata(),
             }

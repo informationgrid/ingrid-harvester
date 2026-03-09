@@ -21,7 +21,9 @@
  * ==================================================
  */
 
-import type { ImporterSettings } from 'importer.settings.js';
+import type { Observer } from 'rxjs';
+import type { ImporterSettings } from '../../importer.settings.js';
+import type { ImportLogMessage } from '../../model/import.result.js';
 import type { Summary } from '../../model/summary.js';
 import type { DatabaseUtils } from '../../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
@@ -51,8 +53,7 @@ export abstract class ElasticsearchCatalog extends Catalog<object> {
         this.elastic = ElasticsearchFactory.getElasticUtils(ConfigService.getGeneralSettings().elasticsearch, summary);
     }
 
-    // async import(transactionHandle: Date): Promise<void> {
-    async import(transactionHandle: any, settings: ImporterSettings): Promise<void> {
+    async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // import data into Elasticsearch catalog
         console.log(`Importing data for transaction: ${transactionHandle}`);
         
@@ -60,10 +61,10 @@ export abstract class ElasticsearchCatalog extends Catalog<object> {
         // 1) bucket fetching (put into abstract Catalog)
         // 2) transformation, coupling, deduplication (abstract method/s, handle in profile-specific catalogs)
         // 3) push to target (here, ES)
-        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, transactionHandle);
+        await this.database.pushToElasticsearch(this.elastic, transactionHandle, observer);
     }
 
-    async postImport(transactionHandle: any, settings: ImporterSettings): Promise<void> {
+    async postImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // post-import operations, e.g. refreshing indices, updating aliases, etc.
         console.log(`Post-import operations for catalog: ${this.id}`);
     }

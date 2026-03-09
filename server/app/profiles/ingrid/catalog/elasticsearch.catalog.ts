@@ -21,16 +21,19 @@
  * ==================================================
  */
 
+import type { Observer } from 'rxjs';
 import { ElasticsearchCatalog } from '../../../catalog/elasticsearch/elasticsearch.catalog.js';
 import type { ImporterSettings } from '../../../importer.settings.js';
+import type { ImportLogMessage } from '../../../model/import.result.js';
 import { ProfileFactoryLoader } from '../../../profiles/profile.factory.loader.js';
 import { ConfigService } from '../../../services/config/ConfigService.js';
+import { camelize } from '../../../utils/misc.utils.js';
 import { INGRID_META_INDEX } from '../profile.factory.js';
 
 
 export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
 
-    async import(transactionHandle: any): Promise<void> {
+    async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // import data into Elasticsearch catalog
         console.log(`Importing data for transaction: ${transactionHandle}`);
 
@@ -43,7 +46,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         // 2) transformation, coupling, deduplication (abstract method/s, handle in profile-specific catalogs)
         // 3) push to target (here, ES)
         // see below @ "streamBuckets" for a sketch
-        await this.getDatabase().pushToElastic3ReturnOfTheJedi(this.getElastic(), transactionHandle, aggregator);
+        await this.getDatabase().pushToElasticsearch(this.getElastic(), transactionHandle, observer, aggregator);
 
         // streamBuckets needs to accept callbacks for transformation (e.g. coupling), deduplication, and pushing to target
         // await this.getDatabase().streamBuckets(
@@ -54,11 +57,12 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         // );
     }
 
-    async prepareImport(transactionHandle: any, settings: ImporterSettings): Promise<void> {
+    async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // no preparation needed
     }
 
-    async postImport(transactionHandle: any, settings: ImporterSettings): Promise<void> {
+    async postImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+        const iPlugClass = `de.ingrid.iplug.${settings.type.toLowerCase()}.dsc.${camelize(settings.type)}.DscSearchPlug`;
         const meta = await this.getElastic().search(INGRID_META_INDEX,
             {
                 "query": {
@@ -97,7 +101,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
                     "ranking": [
                         "score"
                     ],
-                    "iPlugClass": "de.ingrid.iplug.csw.dsc.CswDscSearchPlug",
+                    "iPlugClass": iPlugClass,
                     "fields": [],
                     "proxyServiceUrl": settings.iPlugId,
                     "useRemoteElasticsearch": true

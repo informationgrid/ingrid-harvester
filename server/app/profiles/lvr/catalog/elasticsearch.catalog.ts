@@ -21,23 +21,23 @@
  * ==================================================
  */
 
+import type { Observer } from 'rxjs';
 import { ElasticsearchCatalog } from '../../../catalog/elasticsearch/elasticsearch.catalog.js';
 import type { ImporterSettings } from '../../../importer.settings.js';
-import { ProfileFactoryLoader } from '../../../profiles/profile.factory.loader.js';
-import { ConfigService } from '../../../services/config/ConfigService.js';
+import type { ImportLogMessage } from '../../../model/import.result.js';
 
 
 export class LvrElasticsearchCatalog extends ElasticsearchCatalog {
 
-    async import(transactionHandle: any, settings: ImporterSettings): Promise<void> {
-        await super.import(transactionHandle, settings);
-    }
+    // async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+    //     await super.import(transactionHandle, settings, observer);
+    // }
 
-    async prepareImport(transactionHandle: any, settings: ImporterSettings): Promise<void> {
+    async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // no preparation needed
     }
 
-    async postImport(transactionHandle: any, settings: ImporterSettings): Promise<void> {
+    async postImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // no aftercare needed
     }
 }

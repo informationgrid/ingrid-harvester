@@ -48,6 +48,7 @@ export class JsonMapper extends Mapper<JsonSettings> implements ToElasticMapper<
 
     async createEsDocument(): Promise<IndexDocument> {
         return {
+            uuid: this.getGeneratedId(),
             extras: {
                 metadata: this.getHarvestingMetadata(),
             }

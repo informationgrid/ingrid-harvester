@@ -71,6 +71,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
 
         let result: LvrIndexDocument = {
             ...ingridDocument,
+            uuid: this.getUrlSafeIdentifier(),
             lvr: {
                 identifier: this.getIdentifier(),
                 genres: this.getGenres(),

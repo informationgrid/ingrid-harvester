@@ -22,7 +22,6 @@
  */
 
 import log4js from 'log4js';
-import type { IndexDocument } from 'model/index.document.js';
 import { Catalog as NewCatalog, type CatalogSettings } from '../../catalog/catalog.factory.js';
 import type { CswCatalogSettings } from '../../catalog/csw/csw.catalog.js';
 import type { ElasticsearchCatalogSettings } from '../../catalog/elasticsearch/elasticsearch.catalog.js';
@@ -34,9 +33,13 @@ import { DcatapdeImporter } from "../../importer/dcatapde/dcatapde.importer.js";
 import type { DcatapdeMapper } from '../../importer/dcatapde/dcatapde.mapper.js';
 import type { DcatapdeSettings } from "../../importer/dcatapde/dcatapde.settings.js";
 import type { Importer } from '../../importer/importer.js';
+import { WfsImporter } from '../../importer/wfs/wfs.importer.js';
+import type { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
 import type { WfsSettings } from '../../importer/wfs/wfs.settings.js';
+import { WfsProfile } from '../../importer/wfs/wfs.settings.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
 import type { IndexDocumentFactory } from '../../model/index.document.factory.js';
+import type { IndexDocument } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
 import { DatabaseFactory } from '../../persistence/database.factory.js';
 import type { DatabaseUtils } from '../../persistence/database.utils.js';
@@ -51,6 +54,9 @@ import { IngridElasticsearchCatalog } from './catalog/elasticsearch.catalog.js';
 import { ingridCswMapper } from './mapper/ingrid.csw.mapper.js';
 import { ingridDcatapdeMapper } from "./mapper/ingrid.dcatapde.mapper.js";
 import type { ingridMapperType } from './mapper/ingrid.mapper.js';
+import { ingridWfsMapper } from './mapper/ingrid.wfs.mapper.js';
+import { PegelonlineWfsMapper } from './mapper/wfs/pegelonline.wfs.mapper.js';
+import { ZdmWfsMapper } from './mapper/wfs/zdm.wfs.mapper.js';
 import type { IngridIndexDocument } from './model/index.document.js';
 import type { IngridMetadata } from './model/ingrid.metadata.js';
 import { ElasticQueries } from './persistence/elastic.queries.js';
@@ -119,6 +125,9 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
             case 'DCATAPDE':
                 importer = new DcatapdeImporter(settings as DcatapdeSettings);
                 break;
+            case 'WFS':
+                importer = new WfsImporter(settings as WfsSettings);
+                break;
             default: {
                 log.error('Importer not found: ' + settings.type);
             }
@@ -143,6 +152,16 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
         switch (mapper.constructor.name) {
             case 'CswMapper': return new ingridCswMapper(mapper as CswMapper);
             case 'DCATAPDE': return new ingridDcatapdeMapper(mapper as DcatapdeMapper);
+            case 'WfsMapper': {
+                let wfsProfile = (mapper as WfsMapper).getSettings().wfsProfile;
+                switch (wfsProfile) {
+                    case WfsProfile.pegelonline: return new PegelonlineWfsMapper(mapper as WfsMapper);
+                    case WfsProfile.zdm: return new ZdmWfsMapper(mapper as WfsMapper);
+                    default: return new ingridWfsMapper(mapper as WfsMapper);
+                }
+            }
+            default:
+                throw new Error(`No mapper "${mapper.constructor.name}" registered`);
         }
     }
 

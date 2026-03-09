@@ -70,6 +70,7 @@ export class ExcelSparseMapper extends Mapper<ExcelSparseSettings> implements To
 
     async createEsDocument(): Promise<IndexDocument> {
         return {
+            uuid: this.getGeneratedId(),
             extras: {
                 metadata: this.getHarvestingMetadata(),
             }

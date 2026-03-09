@@ -21,35 +21,161 @@
     ==================================================
 -->
 
-<page-template label="Import/Export">
-  <aside left-side contextHelp="about_import_export"></aside>
-  <div main-content class="margin-below">
-    <mat-card class="import-export-card">
+<page-template
+  label="Import/Export"
+  *transloco="let t; read 'config'"
+>
+  <ng-container left-side>
+    <aside contextHelp="about_import_export"></aside>
+  </ng-container>
+
+  <ng-container main-content>
+    <div class="sticky-action-bar">
+      <button
+        matButton="filled"
+        color="primary"
+        (click)="exportConfigs()"
+        data-test="exportAll"
+      >
+        Alle Exportieren
+      </button>
+    </div>
+
+    <mat-card>
       <mat-card-content>
-        <div class="flex-col gap-16">
-          <div class="flex-row gap-20 baseline">
-            <label for="configUpload" class="flex-15">Konfiguration</label>
-            <input type="file" #configUpload id="configUpload" name="configUpload" (change)="importGeneralConfig(configUpload.files)" accept="json/*.json" style="display:none;" />
-            <button mat-stroked-button color="primary" class="flex-20" (click)="configUpload.click()" data-test="importConfigGeneral">Import</button>
-            <button mat-flat-button color="primary" class="flex-20" (click)="exportGeneralConfig()" data-test="exportConfigGeneral">Export</button>
+        <div class="flex-col gap-24">
+          <div
+            class="ingrid-row row-gap-16"
+            role="group"
+            aria-label="{{ t('config') }}"
+          >
+            <label
+              class="ingrid-col-md-2 ingrid-col-10"
+              for="configUpload"
+            >
+              {{ t('config') }}
+            </label>
+            <input
+              class="hidden"
+              id="configUpload"
+              type="file" #configUpload
+              name="configUpload"
+              (change)="importGeneralConfig(configUpload.files)"
+              accept="json/*.json"
+            />
+            <div class="ingrid-col-md-2 ingrid-col-5">
+              <button
+                matButton="outlined"
+                color="primary"
+                class="w-full"
+                (click)="configUpload.click()"
+                data-test="importConfigGeneral"
+              >
+                {{ t('import') }}
+              </button>
+            </div>
+            <div class="ingrid-col-md-2 ingrid-col-5">
+              <button
+                matButton="filled"
+                color="primary"
+                class="w-full"
+                (click)="exportGeneralConfig()"
+                data-test="exportConfigGeneral"
+              >
+                {{ t('export') }}
+              </button>
+            </div>
           </div>
-          <div class="flex-row gap-20 baseline">
-            <label for="mappingUpload" class="flex-15">Mapping</label>
-            <input type="file" #mappingUpload id="mappingUpload" name="mappingUpload" (change)="importMappings(mappingUpload.files)" accept="json/*.json" style="display:none;" />
-            <button mat-stroked-button color="primary" class="flex-20" (click)="mappingUpload.click()" data-test="importMapping">Import</button>
-            <button mat-flat-button color="primary" class="flex-20" (click)="exportMappingConfig()" data-test="exportMapping">Export</button>
+
+          <div
+            class="ingrid-row row-gap-16"
+            role="group"
+            aria-label="{{ t('mapping') }}"
+          >
+            <label
+              class="ingrid-col-md-2 ingrid-col-10"
+              for="mappingUpload"
+            >
+              {{ t('mapping') }}
+            </label>
+            <input
+              class="hidden"
+              id="mappingUpload"
+              type="file"
+              #mappingUpload
+              name="mappingUpload"
+              (change)="importMappings(mappingUpload.files)"
+              accept="json/*.json"
+            />
+            <div class="ingrid-col-md-2 ingrid-col-5">
+              <button
+                matButton="outlined"
+                color="primary"
+                class="w-full"
+                (click)="mappingUpload.click()"
+                data-test="importMapping"
+              >
+                {{ t('import') }}
+              </button>
+            </div>
+            <div class="ingrid-col-md-2 ingrid-col-5">
+              <button
+                matButton="filled"
+                color="primary"
+                class="w-full"
+                (click)="exportMappingConfig()"
+                data-test="exportMapping"
+              >
+                {{ t('export') }}
+              </button>
+            </div>
           </div>
-          <div class="flex-row gap-20 baseline">
-            <label for="harvesterUpload" class="flex-15">Harvester</label>
-            <input type="file" #harvesterUpload id="harvesterUpload" name="harvesterUpload" (change)="importHarvester(harvesterUpload.files)" accept="json/*.json" style="display:none;" />
-            <button mat-stroked-button color="primary" class="flex-20" (click)="harvesterUpload.click()" data-test="importHarvester">Import</button>
-            <button mat-flat-button color="primary" class="flex-20" (click)="exportHarvesterConfig()" data-test="exportHarvester">Export</button>
-          </div>
-          <div class="flex-row gap-20 baseline">
-            <button mat-flat-button color="primary" (click)="exportConfigs()" data-test="exportAll">Alle Exportieren</button>
+
+          <div
+            class="ingrid-row row-gap-16"
+            role="group"
+            aria-label="{{ t('harvester') }}"
+          >
+            <label
+              class="ingrid-col-md-2 ingrid-col-10"
+              for="harvesterUpload"
+            >
+              {{ t('harvester') }}
+            </label>
+            <input
+              class="hidden"
+              id="harvesterUpload"
+              type="file"
+              #harvesterUpload
+              name="harvesterUpload"
+              (change)="importHarvester(harvesterUpload.files)"
+              accept="json/*.json"
+            />
+            <div class="ingrid-col-md-2 ingrid-col-5">
+              <button
+                matButton="outlined"
+                color="primary"
+                class="w-full"
+                (click)="harvesterUpload.click()"
+                data-test="importHarvester"
+              >
+                {{ t('import') }}
+              </button>
+            </div>
+            <div class="ingrid-col-md-2 ingrid-col-5">
+              <button
+                matButton="filled"
+                color="primary"
+                class="w-full"
+                (click)="exportHarvesterConfig()"
+                data-test="exportHarvester"
+              >
+                {{ t('export') }}
+              </button>
+            </div>
           </div>
         </div>
       </mat-card-content>
     </mat-card>
-  </div>
+  </ng-container>
 </page-template>

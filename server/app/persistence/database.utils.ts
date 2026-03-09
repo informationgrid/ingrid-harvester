@@ -22,8 +22,10 @@
  */
 
 import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
+import type { Observer } from "rxjs";
 import type { Catalog } from '../model/dcatApPlu.model.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
+import type { ImportLogMessage } from "../model/import.result.js";
 import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
 import type { ElasticsearchUtils } from './elastic.utils.js';
@@ -39,7 +41,7 @@ export abstract class DatabaseUtils {
     public static maxBulkSize: number = 50;
     protected configuration: DatabaseConfiguration;
     protected summary: Summary;
-    
+
     public _bulkData: RecordEntity[];
     public _bulkCouples: CouplingEntity[];
 
@@ -52,7 +54,7 @@ export abstract class DatabaseUtils {
     /**
      * Add an entity to the bulk array which will be sent to the database
      * if a certain limit {{maxBulkSize}} is reached.
-     * 
+     *
      * @param entity
      * @param {number} maxBulkSize
      */
@@ -79,7 +81,7 @@ export abstract class DatabaseUtils {
 
     abstract deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void>;
 
-    abstract pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string, aggregator?: PostgresAggregator<IndexDocument>): Promise<void>;
+    abstract pushToElasticsearch(elastic: ElasticsearchUtils, source: string, observer: Observer<ImportLogMessage>, aggregator?: PostgresAggregator<IndexDocument>): Promise<void>;
 
     abstract getStoredData(ids: string[]): Promise<any[]>;
 

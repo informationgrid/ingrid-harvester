@@ -28,7 +28,7 @@ import type { PluPlanState } from '../../model/dcatApPlu.model.js';
 
 export type WfsSettings = {
     version: '2.0.0' | '1.1.0',
-    memberElement: string,
+    memberElements: string[],
     catalogId: string,
     pluPlanState?: PluPlanState,
     contactCswUrl?: string,
@@ -43,7 +43,9 @@ export type WfsSettings = {
     httpMethod: 'GET' | 'POST',
     featureFilter?: string,
     resolveWithFullResponse?: boolean,
-    requireGeometry?: boolean
+    requireGeometry?: boolean,
+    wfsProfile: WfsProfile,
+    featureTitleAttribute?: string,
 } & ImporterSettings;
 
 export const defaultWfsSettings: Partial<WfsSettings> = {
@@ -51,5 +53,18 @@ export const defaultWfsSettings: Partial<WfsSettings> = {
     eitherKeywords: [],
     httpMethod: 'GET',
     resultType: 'results',
-    memberElement: 'wfs:member'
+    memberElements: ["gml:featureMember/*", "wfs:member/*", "gml:featureMembers/*"],
 };
+
+export enum WfsProfile {
+    // TODO diplanung profiles
+    default = "default",
+    pegelonline = "pegelonline",
+    zdm = "zdm"
+}
+
+export const memberElements = {
+    [WfsProfile.default]: ["gml:featureMember/*", "wfs:member/*", "gml:featureMembers/*"],
+    [WfsProfile.pegelonline]: ["gml:featureMembers/gk:waterlevels"],
+    [WfsProfile.zdm]: ["gml:featureMember"]
+}

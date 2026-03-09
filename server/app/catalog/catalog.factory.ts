@@ -22,8 +22,10 @@
  */
 
 import log4js from 'log4js';
+import type { Observer } from 'rxjs';
 import type { ImporterSettings } from '../importer.settings.js';
 import type { CatalogSummary } from '../model/catalog-summary.js';
+import type { ImportLogMessage } from '../model/import.result.js';
 import type { Summary } from '../model/summary.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
 import type { DatabaseUtils } from '../persistence/database.utils.js';
@@ -57,22 +59,22 @@ export abstract class Catalog<DbColumnType> {
     }
 
     // TODO use transaction start date - type as Date
-    async process(transactionHandle: any, importerSettings: ImporterSettings): Promise<void> {
+    async process(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         this.transactionTimestamp = new Date().toISOString();
-        await this.prepareImport(transactionHandle, importerSettings);
-        await this.import(transactionHandle, importerSettings);
-        await this.postImport(transactionHandle, importerSettings);
+        await this.prepareImport(transactionHandle, importerSettings, observer);
+        await this.import(transactionHandle, importerSettings, observer);
+        await this.postImport(transactionHandle, importerSettings, observer);
         this.catalogSummary.print(log);
     }
 
-    abstract prepareImport(transactionHandle: any, settings: ImporterSettings): Promise<void>;
+    abstract prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void>;
 
     /**
      * Import the database rows matching the transactionHandle into this target catalog.
      * 
      * @param transactionHandle 
      */
-    abstract import(transactionHandle: any, settings: ImporterSettings): Promise<void>;
+    abstract import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void>;
     //  {
     //     // fetch rows from DB using transactionHandle
     //     // * fetch datasets in buckets for deduplication purposes ("internal deduplication")
@@ -91,7 +93,7 @@ export abstract class Catalog<DbColumnType> {
     /**
      * Remove stale records from the target catalog and is called after every harvest.
      */
-    async postImport(transactionHandle: any, importerSettings: ImporterSettings): Promise<void> {
+    async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         await this.deleteStaleRecords(importerSettings.catalogId);
     }
 

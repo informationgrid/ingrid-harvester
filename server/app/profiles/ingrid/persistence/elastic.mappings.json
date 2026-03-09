@@ -137,7 +137,12 @@
             "store": true
         },
         "spatial": {
-            "type": "nested"
+            "type": "nested",
+            "properties": {
+                "geometries": {
+                    "type": "geo_shape"
+                }
+            }
         },
         "idf": {
             "type": "text",

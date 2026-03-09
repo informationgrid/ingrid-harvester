@@ -51,7 +51,7 @@ import type { CswSettings } from './csw.settings.js';
 
 export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<IndexDocument> {
 
-    static select = <XPathElementSelect>xpath.useNamespaces({
+    static readonly cswNsMap = {
         'csw': namespaces.CSW,
         'gmd': namespaces.GMD,
         'gco': namespaces.GCO,
@@ -62,7 +62,8 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
         'plu': namespaces.PLU,
         'srv': namespaces.SRV,
         'xlink': namespaces.XLINK
-    });
+    };
+    static select = <XPathElementSelect>xpath.useNamespaces(CswMapper.cswNsMap);
 
     log = log4js.getLogger();
 
@@ -95,6 +96,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
 
     async createEsDocument(): Promise<IndexDocument> {
         return {
+            uuid: this.getGeneratedId(),
             extras: {
                 metadata: this.getHarvestingMetadata()
             }

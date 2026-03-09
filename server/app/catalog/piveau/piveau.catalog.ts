@@ -21,12 +21,14 @@
  * ==================================================
  */
 
-import  { type Summary } from "model/summary.js";
+import log4js from 'log4js';
+import type { Observer } from "rxjs";
+import type { ImporterSettings } from "../../importer.settings.js";
+import type { ImportLogMessage } from "../../model/import.result.js";
+import { type Summary } from "../../model/summary.js";
+import { RequestDelegate } from "../../utils/http-request.utils.js";
 import { Catalog, type CatalogSettings } from '../catalog.factory.js';
 import { PiveauCatalogSummary } from './piveau.catalog-summary.js';
-import type { ImporterSettings } from "importer.settings.js";
-import { RequestDelegate } from "../../utils/http-request.utils.js";
-import log4js from 'log4js';
 
 const log = log4js.getLogger('PiveauCatalog');
 
@@ -49,7 +51,7 @@ export class PiveauCatalog extends Catalog<string> {
         super(catalogSettings, summary);
     }
 
-    async import(transactionHandle: any, settings: ImporterSettings): Promise<void> {
+    async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         log.info(`Importing data into Piveau catalog '${this.settings.id}' for source: ${transactionHandle}`);
 
         const records = await this.database.getDatasetsWithOriginalDocument(transactionHandle);
@@ -137,7 +139,7 @@ export class PiveauCatalog extends Catalog<string> {
         throw new Error('Method not implemented.');
     }
 
-    async prepareImport(transactionHandle: any, settings: ImporterSettings): Promise<void> {
+    async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         const piveauSettings = this.settings as PiveauCatalogSettings;
         const targetUrl = piveauSettings.settings.url + "/catalogues/" + piveauSettings.settings.catalog;
         const body = '<?xml version="1.0"?>\n' +

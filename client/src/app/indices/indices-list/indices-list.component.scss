@@ -21,64 +21,24 @@
  * ==================================================
  */
 
- :host {
-  // height: 100%;
+:host {
   display: flex;
-  overflow: hidden;
+  overflow-y: auto;
   flex: 1; // IE 11
   flex-direction: column;
 }
 
-
-
-
-#importIndex{
-  margin: 10px 40px;
+mat-card {
+  padding: 4px;
 }
 
-.items {
-  height: calc(100% - 40px);  // 40px = 2 * (16px + 4px) = 2 * (padding + border)
-}
-.items-left {
-  height: calc(100% - 140px);  // 40px = 2 * (16px + 4px) = 2 * (padding + border)
-}
-
-.viewport {
+.preview-viewport {
   height: 100%;
   white-space: pre;
 }
 
-.full {
-  height: 100%;
-}
-
-.scroll {
-  overflow: auto;
-}
-
-mat-list-item {
-  margin: 10px 0;
-  background: var(--mat-expansion-container-background-color);
-  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
-}
-
-.index-list-item {
-  height: auto;
-  padding-top: 16px;
-}
-
-.inset {
-  inset: 0;
-  margin: auto;
-  height: 100%;
-  width: 50%;
-  // padding-top:100px
-}
-
-.search-box {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  box-sizing: border-box;
-  padding-left: 12px;
+@media screen and (max-width: 1024px) {
+  .preview-viewport {
+    height: 80vh;
+  }
 }

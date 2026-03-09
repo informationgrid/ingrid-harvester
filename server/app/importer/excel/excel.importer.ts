@@ -178,7 +178,7 @@ export class ExcelImporter extends Importer<ExcelSettings> {
             await this.database.sendBulkData();
             await this.database.deleteNonFetchedDatasets(this.getSettings().sourceURL, transactionTimestamp);
             await this.database.commitTransaction();
-            await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.getSettings().filePath);
+            await this.database.pushToElasticsearch(this.elastic, this.getSettings().filePath, observer);
             observer.next(ImportResult.message('Running post operations'));
             observer.next(ImportResult.complete(this.getSummary()));
         }

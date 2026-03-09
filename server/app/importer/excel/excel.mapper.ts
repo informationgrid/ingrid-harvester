@@ -61,6 +61,7 @@ export class ExcelMapper extends Mapper<ExcelSettings> implements ToElasticMappe
 
     async createEsDocument(): Promise<IndexDocument> {
         return {
+            uuid: this.getGeneratedId(),
             extras: {
                 metadata: this.getHarvestingMetadata(),
             }
