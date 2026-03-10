@@ -36,6 +36,8 @@ export type ElasticsearchCatalogSettings = CatalogSettings & {
     settings: {
         index: string,
         alias: string,
+        user?: string,
+        password?: string
     }
 }
 

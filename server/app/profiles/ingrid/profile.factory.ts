@@ -22,7 +22,7 @@
  */
 
 import log4js from 'log4js';
-import { Catalog as NewCatalog, type CatalogSettings } from '../../catalog/catalog.factory.js';
+import { Catalog as NewCatalog } from '../../catalog/catalog.factory.js';
 import type { CswCatalogSettings } from '../../catalog/csw/csw.catalog.js';
 import type { ElasticsearchCatalogSettings } from '../../catalog/elasticsearch/elasticsearch.catalog.js';
 import { PiveauCatalog, type PiveauCatalogSettings } from "../../catalog/piveau/piveau.catalog.js";
@@ -194,7 +194,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
         return 'ingrid';
     }
 
-    getPostgresAggregator(settings: CatalogSettings): AbstractPostgresAggregator<IngridIndexDocument> {
+    getPostgresAggregator(settings: ElasticsearchCatalogSettings): AbstractPostgresAggregator<IngridIndexDocument> {
         return new PostgresAggregator(settings);
     }
 

@@ -34,9 +34,11 @@ const log = log4js.getLogger('PiveauCatalog');
 
 export type PiveauCatalogSettings = CatalogSettings & {
     settings: {
-        url: string,
         version: string,
         outputSchema: string,
+        catalog: string,
+        title?: string,
+        description?: string
     }
 }
 
@@ -113,7 +115,7 @@ export class PiveauCatalog extends Catalog<string> {
      * Build the full Piveau target URL with query parameters.
      */
     private buildTargetUrl(piveauSettings: PiveauCatalogSettings, identifier: string): string {
-        const baseUrl = piveauSettings.settings.url;
+        const baseUrl = piveauSettings.url;
         const catalog = piveauSettings.settings.catalog;
         return `${baseUrl}/catalogues/${catalog}/datasets/origin?originalId=${identifier}`;
     }
@@ -141,7 +143,7 @@ export class PiveauCatalog extends Catalog<string> {
 
     async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         const piveauSettings = this.settings as PiveauCatalogSettings;
-        const targetUrl = piveauSettings.settings.url + "/catalogues/" + piveauSettings.settings.catalog;
+        const targetUrl = piveauSettings.url + "/catalogues/" + piveauSettings.settings.catalog;
         const body = '<?xml version="1.0"?>\n' +
             '<rdf:RDF\n' +
             '    xmlns:dct="http://purl.org/dc/terms/"\n' +

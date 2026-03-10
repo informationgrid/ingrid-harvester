@@ -37,7 +37,6 @@ const log = log4js.getLogger('CswCatalog');
 
 export type CswCatalogSettings = CatalogSettings & {
     settings: {
-        url: string,
         version: string,
         outputSchema: string,
     }
@@ -133,7 +132,7 @@ export abstract class CswCatalog extends Catalog<string> {
      * Build the full CSW-T target URL with query parameters.
      */
     private buildTargetUrl(cswSettings: CswCatalogSettings): string {
-        const baseUrl = cswSettings.settings.url;
+        const baseUrl = cswSettings.url;
         const separator = baseUrl.includes('?') ? '&' : '?';
         return `${baseUrl}${separator}SERVICE=CSW&REQUEST=Transaction`;
     }
@@ -187,7 +186,7 @@ export abstract class CswCatalog extends Catalog<string> {
      * Used during import to decide Insert vs Update.
      */
     private fetchExistingIdentifiers(cswSettings: CswCatalogSettings): Promise<Set<string>> {
-        const baseUrl = cswSettings.settings.url;
+        const baseUrl = cswSettings.url;
         return this.paginatedGetRecords(baseUrl, (start, max) => `<?xml version="1.0" encoding="UTF-8"?>
 <csw:GetRecords xmlns:csw="${namespaces.CSW}"
                 xmlns:dc="${namespaces.DC}"

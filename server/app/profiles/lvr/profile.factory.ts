@@ -22,7 +22,7 @@
  */
 
 import log4js from 'log4js';
-import { Catalog as NewCatalog, type CatalogSettings } from '../../catalog/catalog.factory.js';
+import { Catalog as NewCatalog } from '../../catalog/catalog.factory.js';
 import type { ElasticsearchCatalogSettings } from '../../catalog/elasticsearch/elasticsearch.catalog.js';
 import type { Importer } from '../../importer/importer.js';
 import type { JsonMapper } from '../../importer/json/json.mapper.js';
@@ -108,7 +108,7 @@ export class LvrFactory extends ProfileFactory<LvrSettings> {
         return 'lvr';
     }
 
-    getPostgresAggregator(settings: CatalogSettings): AbstractPostgresAggregator<LvrIndexDocument> {
+    getPostgresAggregator(settings: ElasticsearchCatalogSettings): AbstractPostgresAggregator<LvrIndexDocument> {
         return new PostgresAggregator(settings);
     }
 

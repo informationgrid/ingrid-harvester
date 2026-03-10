@@ -119,9 +119,10 @@ export abstract class Catalog<DbColumnType> {
 export type CatalogSettings = {
     id: string,
     type: string,
-    connectionId: string,
-    name: string,
-    settings: Record<string, any>,
+    // ED 2026-03-10: "connections" abstraction will be implemented at a later date; directly use URL for now
+    // connectionId: string,
+    url: string,
+    name: string
 };
 
 enum ImportType {

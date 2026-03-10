@@ -2,8 +2,8 @@
   {
     "id": "harvester-index",
     "type": "elasticsearch",
-    "connectionId": "elastic",
     "name": "Default",
+    "url": "http://localhost:9000",
     "settings": {
       "index": "harvester-index",
       "alias": "harvester"

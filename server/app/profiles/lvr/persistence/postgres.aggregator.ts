@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import type { CatalogSettings } from '../../../catalog/catalog.factory.js';
+import type { ElasticsearchCatalogSettings } from '../../../catalog/elasticsearch/elasticsearch.catalog.js';
 import type { EsOperation } from '../../../persistence/elastic.utils.js';
 import type { PostgresAggregator as AbstractPostgresAggregator } from '../../../persistence/postgres.aggregator.js';
 import type { Bucket } from '../../../persistence/postgres.utils.js';
@@ -32,7 +32,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<LvrIndexDo
 
     private index: string;
 
-    constructor(catalogSettings: CatalogSettings) {
+    constructor(catalogSettings: ElasticsearchCatalogSettings) {
         this.index = catalogSettings.settings.index;
     }
 
