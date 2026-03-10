@@ -22,11 +22,11 @@
  */
 
 import * as fs from 'fs';
-import { getProxyConfig } from '../../../utils/service.utils.js';
-import type { Contact, Organization, Person } from '../../../model/agent.js';
 import { CswMapper } from '../../../importer/csw/csw.mapper.js';
-import { RequestDelegate } from '../../../utils/http-request.utils.js';
 import { WfsImporter } from '../../../importer/wfs/wfs.importer.js';
+import type { Contact, Organization, Person } from '../../../model/agent.js';
+import { RequestDelegate } from '../../../utils/http-request.utils.js';
+import { getProxyConfig } from '../../../utils/service.utils.js';
 import type { XPathNodeSelect } from '../../../utils/xpath.utils.js';
 
 export class DiplanungWfsImporter extends WfsImporter {
@@ -48,9 +48,9 @@ export class DiplanungWfsImporter extends WfsImporter {
         // general metadata contacts
         // role -> contact
         let contacts: Map<string, Contact> = new Map();
-        if (this.settings.contactCswUrl) {
+        if (this.getSettings().contactCswUrl) {
             let response = await RequestDelegate.doRequest({ 
-                uri: this.settings.contactCswUrl,
+                uri: this.getSettings().contactCswUrl,
                 accept: 'text/xml',
                 ...getProxyConfig()
             });
@@ -91,8 +91,8 @@ export class DiplanungWfsImporter extends WfsImporter {
         let pointOfContact: Contact = contacts.get('pointOfContact');
         // fallbacks
         if (!pointOfContact?.fn?.trim()) {
-            if (this.settings.contactMetadata) {
-                pointOfContact = this.settings.contactMetadata;
+            if (this.getSettings().contactMetadata) {
+                pointOfContact = this.getSettings().contactMetadata;
             }
             else {
                 pointOfContact = {
@@ -115,8 +115,8 @@ export class DiplanungWfsImporter extends WfsImporter {
             else if (pointOfContact.fn?.trim()) {
                 maintainer = { name: pointOfContact.fn };
             }
-            else if (this.settings.maintainer?.['name'] || this.settings.maintainer?.['organization']) {
-                maintainer = this.settings.maintainer;
+            else if (this.getSettings().maintainer?.['name'] || this.getSettings().maintainer?.['organization']) {
+                maintainer = this.getSettings().maintainer;
             }
             else {
                 maintainer = {
