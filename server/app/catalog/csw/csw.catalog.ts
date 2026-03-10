@@ -22,9 +22,9 @@
  */
 
 import { XMLSerializer } from '@xmldom/xmldom';
-import type { ImporterSettings } from "importer.settings.js";
 import log4js from 'log4js';
 import type { Observer } from "rxjs";
+import type { ImporterSettings } from "../../importer.settings.js";
 import { namespaces } from "../../importer/namespaces.js";
 import type { ImportLogMessage } from "../../model/import.result.js";
 import type { Summary } from "../../model/summary.js";

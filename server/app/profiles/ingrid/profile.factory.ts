@@ -21,13 +21,13 @@
  * ==================================================
  */
 
-import type { CkanMapper } from 'importer/ckan/ckan.mapper.js';
 import log4js from 'log4js';
 import { Catalog as NewCatalog } from '../../catalog/catalog.factory.js';
 import type { CswCatalogSettings } from '../../catalog/csw/csw.catalog.js';
 import type { ElasticsearchCatalogSettings } from '../../catalog/elasticsearch/elasticsearch.catalog.js';
 import { PiveauCatalog, type PiveauCatalogSettings } from "../../catalog/piveau/piveau.catalog.js";
 import { CkanImporter } from '../../importer/ckan/ckan.importer.js';
+import type { CkanMapper } from '../../importer/ckan/ckan.mapper.js';
 import type { CkanSettings } from '../../importer/ckan/ckan.settings.js';
 import { CswImporter } from '../../importer/csw/csw.importer.js';
 import type { CswMapper } from '../../importer/csw/csw.mapper.js';

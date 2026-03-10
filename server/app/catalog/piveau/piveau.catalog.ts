@@ -174,7 +174,7 @@ export class PiveauCatalog extends Catalog<string> {
 
     async getIdentifierByPiveauCatalog(): Promise<string[]> {
         const piveauSettings = this.settings as PiveauCatalogSettings;
-        const targetUrl = piveauSettings.settings.url + "/catalogues/" + piveauSettings.settings.catalog + "/datasets?valueType=originalIds&limit=100";
+        const targetUrl = piveauSettings.url + "/catalogues/" + piveauSettings.settings.catalog + "/datasets?valueType=originalIds&limit=100";
         let result = [];
         let offset = 0;
         let count = 0;
@@ -197,7 +197,7 @@ export class PiveauCatalog extends Catalog<string> {
 
     async deleteDataset(originalId: string): Promise<void> {
         const piveauSettings = this.settings as PiveauCatalogSettings;
-        const targetUrl = piveauSettings.settings.url + "/catalogues/" + piveauSettings.settings.catalog + "/datasets/origin?originalId=" + originalId;
+        const targetUrl = piveauSettings.url + "/catalogues/" + piveauSettings.settings.catalog + "/datasets/origin?originalId=" + originalId;
         await RequestDelegate.doRequest({
                 uri: targetUrl,
                 method: 'DELETE',
