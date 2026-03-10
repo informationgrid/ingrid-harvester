@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import {DcatHarvesterComponent} from './dcat-harvester.component';
 
@@ -29,7 +29,7 @@ describe('DcatHarvesterComponent', () => {
   let component: DcatHarvesterComponent;
   let fixture: ComponentFixture<DcatHarvesterComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ DcatHarvesterComponent ]
     })

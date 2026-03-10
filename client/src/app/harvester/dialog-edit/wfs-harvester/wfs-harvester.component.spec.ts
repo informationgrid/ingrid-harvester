@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WfsHarvesterComponent } from './wfs-harvester.component';
 
@@ -29,7 +29,7 @@ describe('WfsHarvesterComponent', () => {
   let component: WfsHarvesterComponent;
   let fixture: ComponentFixture<WfsHarvesterComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ WfsHarvesterComponent ]
     })

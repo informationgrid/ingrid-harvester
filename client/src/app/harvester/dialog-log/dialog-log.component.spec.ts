@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DialogLogComponent } from './dialog-log.component';
 
@@ -29,7 +29,7 @@ describe('DialogLogComponent', () => {
   let component: DialogLogComponent;
   let fixture: ComponentFixture<DialogLogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ DialogLogComponent ]
     })

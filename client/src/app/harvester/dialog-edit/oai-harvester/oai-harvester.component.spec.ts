@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OaiHarvesterComponent } from './oai-harvester.component';
 
@@ -29,7 +29,7 @@ describe('OaiHarvesterComponent', () => {
   let component: OaiHarvesterComponent;
   let fixture: ComponentFixture<OaiHarvesterComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ OaiHarvesterComponent ]
     })

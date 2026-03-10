@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MonitoringUrlcheckDetailComponent } from './monitoring-urlcheck-detail.component';
 
@@ -29,7 +29,7 @@ describe('MonitoringUrlcheckDetailComponent', () => {
   let component: MonitoringUrlcheckDetailComponent;
   let fixture: ComponentFixture<MonitoringUrlcheckDetailComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ MonitoringUrlcheckDetailComponent ]
     })

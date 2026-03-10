@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LogComponent } from './log.component';
 
@@ -29,7 +29,7 @@ describe('LogComponent', () => {
   let component: LogComponent;
   let fixture: ComponentFixture<LogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ LogComponent ]
     })

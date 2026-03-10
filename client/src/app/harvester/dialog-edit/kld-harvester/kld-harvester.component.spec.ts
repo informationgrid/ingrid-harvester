@@ -21,14 +21,14 @@
  * ==================================================
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { KldHarvesterComponent } from './kld-harvester.component';
 
 describe('KldHarvesterComponent', () => {
   let component: KldHarvesterComponent;
   let fixture: ComponentFixture<KldHarvesterComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ KldHarvesterComponent ]
     })

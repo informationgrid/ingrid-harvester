@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DialogEditComponent } from './dialog-edit.component';
 
@@ -29,7 +29,7 @@ describe('DialogEditComponent', () => {
   let component: DialogEditComponent;
   let fixture: ComponentFixture<DialogEditComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ DialogEditComponent ]
     })

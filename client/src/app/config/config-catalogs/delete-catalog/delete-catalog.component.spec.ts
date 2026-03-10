@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DeleteCatalogComponent } from './delete-catalog.component';
 
@@ -29,7 +29,7 @@ describe('DeleteCatalogComponent', () => {
   let component: DeleteCatalogComponent;
   let fixture: ComponentFixture<DeleteCatalogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ DeleteCatalogComponent ]
     })

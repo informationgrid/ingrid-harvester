@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddOrEditCatalogComponent } from './add-or-edit-catalog.component';
 
@@ -29,7 +29,7 @@ describe('AddOrEditCatalogComponent', () => {
   let component: AddOrEditCatalogComponent;
   let fixture: ComponentFixture<AddOrEditCatalogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ AddOrEditCatalogComponent ]
     })

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConfigGeneralComponent } from './config-general.component';
 
@@ -29,7 +29,7 @@ describe('ConfigGeneralComponent', () => {
   let component: ConfigGeneralComponent;
   let fixture: ComponentFixture<ConfigGeneralComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ConfigGeneralComponent ]
     })
