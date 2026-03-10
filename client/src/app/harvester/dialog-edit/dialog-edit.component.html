@@ -41,7 +41,6 @@
                 }
                 <mat-option value="DCATAPDE">DCAT-AP.de</mat-option>
                 <mat-option value="DCATAPPLU">DCATAPPLU</mat-option>
-                <mat-option value="EXCEL">EXCEL</mat-option>
                 <mat-option value="JSON">JSON</mat-option>
                 <mat-option value="KLD">KLD</mat-option>
                 <mat-option value="OAI">OAI</mat-option>
@@ -228,15 +227,6 @@
           [rulesTemplate]="rules"
           class="flex-column">
         </app-dcatapplu-harvester>
-      }
-
-      @if (harvesterForm.get('type').value === 'EXCEL') {
-        <app-excel-harvester
-          [form]="harvesterForm"
-          [model]="harvester"
-          [rulesTemplate]="rules"
-          class="flex-column">
-        </app-excel-harvester>
       }
 
       @if (harvesterForm.get('type').value === 'JSON') {

@@ -57,7 +57,6 @@ export class TestUtils {
             if (expected.extras.metadata) {
                 delete expected.extras.metadata.issued;
                 delete expected.extras.metadata.modified;
-                // chai.expect(actual.extras.metadata.harvested).not.to.be.null.and.empty; // is undefined for Excel
                 delete expected.extras.metadata.harvested;
 
                 // check extras metadata

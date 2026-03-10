@@ -30,7 +30,6 @@ import type { CatalogSettings } from '../../catalog/catalog.factory.js';
 import { defaultCKANSettings } from '../../importer/ckan/ckan.settings.js';
 import { defaultCSWSettings } from '../../importer/csw/csw.settings.js';
 import { defaultDCATSettings } from '../../importer/dcatapde/dcatapde.settings.js';
-import { defaultExcelSettings } from '../../importer/excel/excel.settings.js';
 import { defaultKldSettings } from '../../importer/kld/kld.settings.js';
 import { defaultOAISettings } from '../../importer/oai/oai.settings.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
@@ -235,7 +234,6 @@ export class ConfigService {
                         case 'CKAN': defaultSettings = defaultCKANSettings; break;
                         case 'CSW': defaultSettings = defaultCSWSettings; break;
                         case 'DCAT': defaultSettings = defaultDCATSettings; break;
-                        case 'EXCEL': defaultSettings = defaultExcelSettings; break;
                         case 'KLD': defaultSettings = defaultKldSettings; break;
                         case 'OAI': defaultSettings = defaultOAISettings; break;
                         //case 'SPARQL': defaultSettings = SparqlImporter.defaultSettings; break;

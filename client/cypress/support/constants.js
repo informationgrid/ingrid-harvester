@@ -22,12 +22,8 @@ class Constants {
 
   OAI_DWD_ID = '45';
 
-  EXCEL_MCLOUD_ID = '1';
-  EXCEL_TEST_ID = '';
-
   SEED_CKAN_ID = '97';
   SEED_CSW_ID = '98';
-  SEED_EXCEL_ID = '99';
 }
 
 export default Constants;

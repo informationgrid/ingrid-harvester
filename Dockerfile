@@ -50,11 +50,11 @@ ENV IMPORTER_PROFILE=ingrid
 # install tini
 RUN apk add --no-cache tini
 
-# install production dependencies (also: remove large, unused, and not-asked-for-at-all ExcelJS map files)
+# install production dependencies
 WORKDIR /opt/ingrid/harvester
 RUN chown node:node /opt/ingrid/harvester
 COPY --chown=node:node ./server/package*.json ./
-RUN npm run install-production && rm -rf /opt/ingrid/harvester/node_modules/exceljs/dist/*.map
+RUN npm run install-production
 
 # copy built files from server and client
 #WORKDIR /opt/ingrid/harvester

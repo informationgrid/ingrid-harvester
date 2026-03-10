@@ -73,12 +73,6 @@ describe('Harvester operations', () => {
     form.btnIsDisabled(form.saveHarvesterBtn);
   });
 
-  it('should delete a harvester', () => {
-    harvester.seedExcelHarvester(constants.SEED_EXCEL_ID);
-
-    harvester.deleteHarvesterById(constants.SEED_EXCEL_ID);
-  });
-
   it('should find a harvester whose search is activated', () => {
     const docToFind = 'Fahrplandaten mit Linienverlauf';
 
