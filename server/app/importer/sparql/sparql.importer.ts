@@ -152,11 +152,11 @@ export class SparqlImporter extends Importer<SparqlSettings> {
             }
 
             const mapper = new SparqlMapper(this.getSettings(), records[i], harvestTime, this.getSummary());
-            let indexDocumentFactory = ProfileFactoryLoader.get().getIndexDocumentFactory(mapper);
+            let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
             try {
-                doc = await indexDocumentFactory.create();
+                doc = await documentFactory.createIndexDocument();
             }
             catch (e) {
                 log.error('Error creating index document', e);

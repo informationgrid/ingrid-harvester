@@ -21,11 +21,14 @@
  * ==================================================
  */
 
+import type { CkanMapper } from 'importer/ckan/ckan.mapper.js';
 import log4js from 'log4js';
 import { Catalog as NewCatalog } from '../../catalog/catalog.factory.js';
 import type { CswCatalogSettings } from '../../catalog/csw/csw.catalog.js';
 import type { ElasticsearchCatalogSettings } from '../../catalog/elasticsearch/elasticsearch.catalog.js';
 import { PiveauCatalog, type PiveauCatalogSettings } from "../../catalog/piveau/piveau.catalog.js";
+import { CkanImporter } from '../../importer/ckan/ckan.importer.js';
+import type { CkanSettings } from '../../importer/ckan/ckan.settings.js';
 import { CswImporter } from '../../importer/csw/csw.importer.js';
 import type { CswMapper } from '../../importer/csw/csw.mapper.js';
 import type { CswSettings } from '../../importer/csw/csw.settings.js';
@@ -38,7 +41,7 @@ import type { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
 import type { WfsSettings } from '../../importer/wfs/wfs.settings.js';
 import { WfsProfile } from '../../importer/wfs/wfs.settings.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
-import type { IndexDocumentFactory } from '../../model/index.document.factory.js';
+import type { DocumentFactory } from '../../model/index.document.factory.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
 import { DatabaseFactory } from '../../persistence/database.factory.js';
@@ -51,6 +54,7 @@ import { ConfigService } from '../../services/config/ConfigService.js';
 import { ProfileFactory } from '../profile.factory.js';
 import { IngridCswCatalog } from './catalog/csw.catalog.js';
 import { IngridElasticsearchCatalog } from './catalog/elasticsearch.catalog.js';
+import { ingridCkanMapper } from './mapper/ingrid.ckan.mapper.js';
 import { ingridCswMapper } from './mapper/ingrid.csw.mapper.js';
 import { ingridDcatapdeMapper } from "./mapper/ingrid.dcatapde.mapper.js";
 import type { ingridMapperType } from './mapper/ingrid.mapper.js';
@@ -136,12 +140,14 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
             case 'CSW':
                 importer = new CswImporter(settings as CswSettings);
                 break;
+            case 'CKAN':
+                importer = new CkanImporter(settings as CkanSettings);
+                break;
             case 'DCATAPDE':
                 importer = new DcatapdeImporter(settings as DcatapdeSettings);
                 break;
             case 'WFS':
                 importer = new WfsImporter(settings as WfsSettings);
-                break;
             default: {
                 log.error('Importer not found: ' + settings.type);
             }
@@ -152,19 +158,10 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
         return importer;
     }
 
-    // async getMapper(settings: ingridSettings, harvestTime: Date, summary: Summary, record: any, generalInfo: any): Promise<Mapper<ingridSettings>> {
-    //     switch (settings.type) {
-    //         case 'CSW': return new ingridCswMapper(settings as CswSettings, record, harvestTime, summary, generalInfo);
-    //         case 'DCATAPDE': return new ingridDcatapdeMapper(settings as DcatapdeSettings, record, harvestTime, summary, generalInfo);
-    //         default: {
-    //             log.error('Mapper not found: ' + settings.type);
-    //         }
-    //     }
-    // }
-
-    getIndexDocumentFactory(mapper: ingridMapperType): IndexDocumentFactory<IndexDocument & IngridMetadata> {
+    getDocumentFactory(mapper: ingridMapperType): DocumentFactory<IndexDocument & IngridMetadata> {
         switch (mapper.constructor.name) {
             case 'CswMapper': return new ingridCswMapper(mapper as CswMapper);
+            case 'CKAN': return new ingridCkanMapper(mapper as CkanMapper);
             case 'DCATAPDE': return new ingridDcatapdeMapper(mapper as DcatapdeMapper);
             case 'WfsMapper': {
                 let wfsProfile = (mapper as WfsMapper).getSettings().wfsProfile;

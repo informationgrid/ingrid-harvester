@@ -34,7 +34,7 @@ import type { OaiMapper as OaiLidoMapper } from '../../importer/oai/lido/oai.map
 import type { OaiMapper as OaiModsMapper } from '../../importer/oai/mods/oai.mapper.js';
 import { OaiImporter } from '../../importer/oai/oai.importer.js';
 import type { OaiSettings } from '../../importer/oai/oai.settings.js';
-import type { IndexDocumentFactory } from '../../model/index.document.factory.js';
+import type { DocumentFactory } from '../../model/index.document.factory.js';
 import type { Summary } from '../../model/summary.js';
 import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
 import type { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
@@ -60,7 +60,7 @@ export class LvrFactory extends ProfileFactory<LvrSettings> {
         return ElasticQueries.getInstance();
     }
 
-    getIndexDocumentFactory(mapper: JsonMapper | KldMapper | OaiLidoMapper | OaiModsMapper): IndexDocumentFactory<LvrIndexDocument> {
+    getDocumentFactory(mapper: JsonMapper | KldMapper | OaiLidoMapper | OaiModsMapper): DocumentFactory<LvrIndexDocument> {
         switch (mapper.constructor.name) {
             case 'JsonMapper': return new LvrClickRheinMapper(<JsonMapper>mapper);
             case 'KldMapper': return new LvrKldMapper(<KldMapper>mapper);

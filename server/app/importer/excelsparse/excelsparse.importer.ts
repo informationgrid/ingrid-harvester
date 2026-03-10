@@ -120,12 +120,12 @@ export class ExcelSparseImporter extends Importer<ExcelSparseSettings> {
                     currentIndexName: this.elastic.indexName,
                     summary: this.getSummary()
                 }, generalInfo);
-                let indexDocumentFactory = ProfileFactoryLoader.get().getIndexDocumentFactory(mapper);
+                let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
                 // add document to buffer and send to elasticsearch if full
                 let doc: IndexDocument;
                 try {
-                    doc = await indexDocumentFactory.create();
+                    doc = await documentFactory.createIndexDocument();
                 }
                 catch (e) {
                     this.handleIndexDocError(e, mapper);

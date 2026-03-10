@@ -25,20 +25,21 @@ import * as crypto from "crypto";
 import type { Geometry } from "geojson";
 import log4js from 'log4js';
 import type { ImporterSettings } from '../../../importer.settings.js';
+import type { CkanMapper } from "../../../importer/ckan/ckan.mapper.js";
 import type { CswMapper } from "../../../importer/csw/csw.mapper.js";
 import type { DcatapdeMapper } from '../../../importer/dcatapde/dcatapde.mapper.js';
 import type { ToElasticMapper } from '../../../importer/to.elastic.mapper.js';
 import type { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
 import type { Distribution } from "../../../model/distribution.js";
-import type { IndexDocumentFactory } from "../../../model/index.document.factory.js";
+import type { DocumentFactory } from "../../../model/index.document.factory.js";
 import type { IndexDocument } from '../../../model/index.document.js';
 import type { IngridIndexDocument } from "../model/index.document.js";
 import type { IngridMetadata } from '../model/ingrid.metadata.js';
 import { Codelist } from "../utils/codelist.js";
 
-export type ingridMapperType = CswMapper | DcatapdeMapper | WfsMapper;
+export type ingridMapperType = CswMapper | CkanMapper | DcatapdeMapper | WfsMapper;
 
-export abstract class ingridMapper<M extends ingridMapperType> implements IndexDocumentFactory<IndexDocument & IngridMetadata>, ToElasticMapper<IndexDocument> {
+export abstract class ingridMapper<M extends ingridMapperType> implements DocumentFactory<IndexDocument & IngridMetadata>, ToElasticMapper<IndexDocument> {
 
     readonly baseMapper: M;
 
@@ -49,10 +50,21 @@ export abstract class ingridMapper<M extends ingridMapperType> implements IndexD
     }
 
     async createEsDocument(): Promise<IndexDocument> {
-        return await this.create();
+        return await this.createIndexDocument();
     }
 
-    async create(): Promise<IndexDocument & IngridMetadata> {
+    // TODO make abstract
+    createCswIsoDocument(): string {
+        return null;
+    }
+
+    // TODO make abstract
+    createDcatapdeDocument(): string {
+        return null;
+    }
+
+    // TODO make abstract (?)
+    async createIndexDocument(): Promise<IndexDocument & IngridMetadata> {
         let result: IngridIndexDocument = {
             // put custom entries first, so they can potentially get overwritten with more specific getters below
             ...this.getCustomEntries(),
@@ -254,7 +266,9 @@ export abstract class ingridMapper<M extends ingridMapperType> implements IndexD
 
     abstract getSpatial(): Geometry[];
 
-    abstract getIDF();
+    getIDF(): string {
+        return undefined;
+    };
 
     getCapabilitiesURL() {
         return undefined;

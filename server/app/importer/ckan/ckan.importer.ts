@@ -74,12 +74,15 @@ export class CkanImporter extends Importer<CkanSettings> {
     async importDataset(data: CkanMapperData): Promise<void> {
         try {
             log.debug('Processing CKAN dataset: ' + data.source.name + ' from data-source: ' + this.getSettings().sourceURL);
-            let mapper = new CkanMapper(this.getSettings(), data);
-            let indexDocumentFactory = ProfileFactoryLoader.get().getIndexDocumentFactory(mapper);
+            let mapper = new CkanMapper(this.getSettings(), data, data.harvestTime, this.getSummary());
+            let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
+            let dcatapdeDoc: string;
             try {
-                doc = await indexDocumentFactory.create();
+                doc = await documentFactory.createIndexDocument();
+                dcatapdeDoc = documentFactory.createDcatapdeDocument();
+
                 this.posthandlingDocument(mapper, doc);
             }
             catch (e) {
@@ -93,7 +96,7 @@ export class CkanImporter extends Importer<CkanSettings> {
                 return;
             }
 
-            return await this.indexDocument(doc, mapper.getHarvestedData(), data.source.id);
+            return await this.indexDocument(doc, dcatapdeDoc, mapper.getHarvestedData(), data.source.id);
 
         } catch (e) {
             log.error('Error: ' + e);
@@ -104,13 +107,15 @@ export class CkanImporter extends Importer<CkanSettings> {
         // For Profile specific Handling
     }
 
-    private async indexDocument(doc, harvestedData, sourceID) {
+    private async indexDocument(doc, dcatapdeDoc, harvestedData, sourceID) {
         if (!this.getSettings().dryRun) {
             let entity: RecordEntity = {
                 identifier: sourceID,
                 source: this.getSettings().sourceURL,
                 collection_id: (await this.database.getCatalog(this.getSettings().catalogId)).id,
+                catalog_ids: this.getSettings().catalogIds,
                 dataset: doc,
+                dataset_dcatapde: dcatapdeDoc,
                 original_document: harvestedData
             };
             return this.database.addEntityToBulk(entity)
@@ -166,9 +171,7 @@ export class CkanImporter extends Importer<CkanSettings> {
                 promises.push(
                     await this.importDataset({
                         source: filteredResults[i],
-                        harvestTime: now,
-                        currentIndexName: this.elastic.indexName,
-                        summary: this.getSummary()
+                        harvestTime: now
                     }).then(() => this.observer.next(ImportResult.running(++this.getSummary().numDocs, this.totalCount)))
                 );
             }

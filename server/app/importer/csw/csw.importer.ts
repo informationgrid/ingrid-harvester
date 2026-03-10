@@ -462,11 +462,11 @@ export class CswImporter extends Importer<CswSettings> {
             }
 
             let mapper = new CswMapper(this.getSettings(), records[i], harvestTime, this.getSummary(), this.generalInfo);
-            let indexDocumentFactory = ProfileFactoryLoader.get().getIndexDocumentFactory(mapper);
+            let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
             try {
-                doc = await indexDocumentFactory.create();
+                doc = await documentFactory.createIndexDocument();
                 docsToImport.push(doc);
             }
             catch (e) {

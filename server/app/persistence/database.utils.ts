@@ -95,6 +95,10 @@ export abstract class DatabaseUtils {
 
     abstract getDatasetsWithOriginalDocument(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'original_document'>[]>;
 
+    abstract getDcatapdeDatasetsBySource(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'dataset_dcatapde'>[]>;
+
+    abstract getIdentifiersByCatalog(catalog_id: string): Promise<string[]>
+
     abstract deleteDatasets(catalogId: number): Promise<void>;
 
     abstract moveDatasets(catalogId: number, targetCatalogId: number): Promise<void>;

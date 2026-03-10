@@ -167,11 +167,13 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
             }
 
             let mapper = new DcatapdeMapper(this.getSettings(), records[i], harvestTime, this.getSummary());
-            let indexDocumentFactory = ProfileFactoryLoader.get().getIndexDocumentFactory(mapper);
+            let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
+            let dcatapdeDoc: string;
             try {
-                doc = await indexDocumentFactory.create();
+                doc = await documentFactory.createIndexDocument();
+                dcatapdeDoc = documentFactory.createDcatapdeDocument();
             }
             catch (e) {
                 log.error('Error creating index document', e);
@@ -184,7 +186,9 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                     identifier: uuid,
                     source: this.getSettings().sourceURL,
                     collection_id: (await this.database.getCatalog(this.getSettings().catalogId)).id,
+                    catalog_ids: this.getSettings().catalogIds,
                     dataset: doc,
+                    dataset_dcatapde: dcatapdeDoc,
                     original_document: mapper.getHarvestedData()
                 };
                 promises.push(

@@ -217,8 +217,8 @@ export class WfsImporter extends Importer<WfsSettings> {
         this.generalInfo['featureTypeDescription'] = featureTypeDescriptionNode;
         this.generalInfo['geometryType'] = this.extractGeometryType(select, featureTypeDescriptionNode);
         let mapper = this.getMapper(new Date(Date.now()), featureTypeNode);
-        let indexDocumentFactory = ProfileFactoryLoader.get().getIndexDocumentFactory(mapper);
-        let doc: IndexDocument = await indexDocumentFactory.create();
+        let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
+        let doc: IndexDocument = await documentFactory.createIndexDocument();
         if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
             let entity: RecordEntity = {
                 identifier: doc.uuid,
@@ -289,11 +289,11 @@ export class WfsImporter extends Importer<WfsSettings> {
 
             this.generalInfo['idx'] = i;
             const mapper = this.getMapper(harvestTime, features[i]);
-            let indexDocumentFactory = ProfileFactoryLoader.get().getIndexDocumentFactory(mapper);
+            let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
             try {
-                doc = await indexDocumentFactory.create();
+                doc = await documentFactory.createIndexDocument();
             }
             catch (e) {
                 log.error('Error creating index document', e);

@@ -29,7 +29,7 @@ import type { ImporterFactory } from '../importer/importer.factory.js';
 import type { Importer } from '../importer/importer.js';
 import type { Mapper } from '../importer/mapper.js';
 import type { Catalog } from '../model/dcatApPlu.model.js';
-import type { IndexDocumentFactory } from '../model/index.document.factory.js';
+import type { DocumentFactory } from '../model/index.document.factory.js';
 import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
@@ -104,9 +104,7 @@ CatalogFactory {
 
     abstract getImporter(settings: T): Promise<Importer<T>>;
 
-    // abstract getMapper(settings: T, harvestTime: Date, summary: Summary, record: any, ...additionalData: any): Promise<Mapper<T>>;
-
-    abstract getIndexDocumentFactory(mapper: Mapper<ImporterSettings>): IndexDocumentFactory<IndexDocument>;
+    abstract getDocumentFactory(mapper: Mapper<ImporterSettings>): DocumentFactory<IndexDocument>;
 
     abstract getCatalog(catalogId: string, summary: Summary): Promise<NewCatalog<any>>;
 

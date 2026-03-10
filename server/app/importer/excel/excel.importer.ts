@@ -138,12 +138,12 @@ export class ExcelImporter extends Importer<ExcelSettings> {
                     currentIndexName: this.elastic.indexName,
                     summary: this.getSummary()
                 });
-                let indexDocumentFactory = ProfileFactoryLoader.get().getIndexDocumentFactory(mapper);
+                let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
                 // add document to buffer and send to elasticsearch if full
                 let doc: IndexDocument;
                 try {
-                    doc = await indexDocumentFactory.create();
+                    doc = await documentFactory.createIndexDocument();
                 }
                 catch (e) {
                     this.handleIndexDocError(e, mapper);
