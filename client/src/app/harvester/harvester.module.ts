@@ -50,7 +50,6 @@ import { DcatHarvesterComponent } from "./dialog-edit/dcat-harvester/dcat-harves
 import { DcatappluHarvesterComponent } from "./dialog-edit/dcatapplu-harvester/dcatapplu-harvester.component";
 import { DialogEditComponent } from "./dialog-edit/dialog-edit.component";
 import { ExcelHarvesterComponent } from "./dialog-edit/excel-harvester/excel-harvester.component";
-import { ExcelSparseHarvesterComponent } from "./dialog-edit/excel-sparse-harvester/excel-sparse-harvester.component";
 import { JsonHarvesterComponent } from "./dialog-edit/json-harvester/json-harvester.component";
 import { KldHarvesterComponent } from "./dialog-edit/kld-harvester/kld-harvester.component";
 import { OaiHarvesterComponent } from "./dialog-edit/oai-harvester/oai-harvester.component";
@@ -84,7 +83,6 @@ const harvesterRoutes: Routes = [
     DialogEditComponent,
     DialogHistoryComponent,
     ExcelHarvesterComponent,
-    ExcelSparseHarvesterComponent,
     CkanHarvesterComponent,
     CswHarvesterComponent,
     KldHarvesterComponent,

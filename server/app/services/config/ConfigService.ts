@@ -236,7 +236,6 @@ export class ConfigService {
                         case 'CSW': defaultSettings = defaultCSWSettings; break;
                         case 'DCAT': defaultSettings = defaultDCATSettings; break;
                         case 'EXCEL': defaultSettings = defaultExcelSettings; break;
-                        //case 'EXCEL_SPARSE': defaultSettings = ExcelSparseImporter.defaultSettings; break;
                         case 'KLD': defaultSettings = defaultKldSettings; break;
                         case 'OAI': defaultSettings = defaultOAISettings; break;
                         //case 'SPARQL': defaultSettings = SparqlImporter.defaultSettings; break;

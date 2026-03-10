@@ -29,8 +29,6 @@ import type { CswSettings } from '../../importer/csw/csw.settings.js';
 import { DcatappluImporter } from '../../importer/dcatapplu/dcatapplu.importer.js';
 import type { DcatappluMapper } from '../../importer/dcatapplu/dcatapplu.mapper.js';
 import type { DcatappluSettings } from '../../importer/dcatapplu/dcatapplu.settings.js';
-import type { ExcelSparseMapper } from '../../importer/excelsparse/excelsparse.mapper.js';
-import type { ExcelSparseSettings } from '../../importer/excelsparse/excelsparse.settings.js';
 import type { Importer } from '../../importer/importer.js';
 import type { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
 import type { WfsSettings } from '../../importer/wfs/wfs.settings.js';
@@ -55,7 +53,7 @@ import { PostgresAggregator } from './persistence/postgres.aggregator.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
-export type DiplanungSettings = CswSettings | DcatappluSettings | ExcelSparseSettings | WfsSettings;
+export type DiplanungSettings = CswSettings | DcatappluSettings | WfsSettings;
 
 export class DiplanungFactory extends ProfileFactory<DiplanungSettings> {
 
@@ -73,7 +71,7 @@ export class DiplanungFactory extends ProfileFactory<DiplanungSettings> {
         return ElasticQueries.getInstance();
     }
 
-    getDocumentFactory(mapper: CswMapper | DcatappluMapper | ExcelSparseMapper | WfsMapper): DocumentFactory<DiplanungIndexDocument> {
+    getDocumentFactory(mapper: CswMapper | DcatappluMapper | WfsMapper): DocumentFactory<DiplanungIndexDocument> {
         switch (mapper.constructor.name) {
             case 'CswMapper': return new DiplanungCswMapper(<CswMapper>mapper);
             case 'DcatappluMapper': return new DiplanungDcatappluMapper(<DcatappluMapper>mapper);
