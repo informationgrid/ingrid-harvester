@@ -37,6 +37,7 @@ const log = log4js.getLogger(import.meta.filename);
 
 export type ElasticsearchCatalogSettings = CatalogSettings & {
     settings: {
+        version: number,
         index: string,
         alias: string,
         user?: string,
