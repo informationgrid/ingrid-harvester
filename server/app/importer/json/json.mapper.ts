@@ -30,7 +30,6 @@ import type { JsonSettings } from './json.settings.js';
 
 export class JsonMapper extends Mapper<JsonSettings> implements ToElasticMapper<IndexDocument> {
 
-    log = log4js.getLogger();
 
     readonly record: object;
     readonly id: string;

@@ -41,7 +41,6 @@ import type { SparqlSettings } from './sparql.settings.js';
 
 export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMapper<IndexDocument> {
 
-    log = log4js.getLogger();
 
     private readonly record: any;
     private readonly catalogPage: any;

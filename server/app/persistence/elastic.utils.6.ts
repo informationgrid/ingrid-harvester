@@ -325,7 +325,7 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
 
     private handleError(message: string, error: any) {
         this.summary?.elasticErrors?.push(message);
-        log.error(message, error);
+        this.summary?.log.error(message, error);
     }
 
     async deleteIndex(indicesToDelete: string | string[]): Promise<any> {

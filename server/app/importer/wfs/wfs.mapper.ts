@@ -39,7 +39,6 @@ import type { WfsSettings } from './wfs.settings.js';
 
 export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<IndexDocument> {
 
-    log = log4js.getLogger();
 
     readonly featureOrFeatureType: Node & Element;
     readonly featureTypeDescription: Node & Element;

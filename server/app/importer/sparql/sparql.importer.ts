@@ -68,7 +68,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
     }
 
     protected async harvest(): Promise<number> {
-        log.debug('Requesting records');
+        this.log.debug('Requesting records');
 
         let response = "";
 
@@ -88,18 +88,18 @@ export class SparqlImporter extends Importer<SparqlSettings> {
             let hadError = result.status >= 400;
 
             result.body.on('data', data => {
-                log.debug("Receive Data from "+endpointUrl)
+                this.log.debug("Receive Data from "+endpointUrl)
                 response += data.toString();
             });
 
             result.body.on('error', err => {
                 hadError = true;
                 this.getSummary().appErrors.push(err.toString());
-                log.error(err);
+                this.log.error(err);
             })
 
             result.body.on('finish', () => {
-                log.debug("Finished SPARQL Communication.")
+                this.log.debug("Finished SPARQL Communication.")
                 if(!hadError) {
                     try {
                         let json = JSON.parse(response);
@@ -108,7 +108,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
                             resolve(this.numIndexDocs));
                     } catch (e) {
                         this.getSummary().appErrors.push(e.toString());
-                        log.error(e);
+                        this.log.error(e);
                         reject(e);
                     }
                 }
@@ -117,7 +117,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
                 if(hadError) {
                     let message = result.statusText + ' - '+response;
                     this.getSummary().appErrors.push(message);
-                    log.error(message);
+                    this.log.error(message);
                     reject();
                 }
             });
@@ -144,8 +144,8 @@ export class SparqlImporter extends Importer<SparqlSettings> {
                 continue;
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug(`Import document ${i + 1} from ${records.length}`);
+            if (this.log.isDebugEnabled()) {
+                this.log.debug(`Import document ${i + 1} from ${records.length}`);
             }
             if (logRequest.isDebugEnabled()) {
                 logRequest.debug("Record content: ", records[i].toString());
@@ -159,7 +159,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
                 doc = await documentFactory.createIndexDocument();
             }
             catch (e) {
-                log.error('Error creating index document', e);
+                this.log.error('Error creating index document', e);
                 this.getSummary().appErrors.push(e.toString());
                 mapper.skipped = true;
             }
@@ -187,6 +187,6 @@ export class SparqlImporter extends Importer<SparqlSettings> {
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
         }
         await Promise.all(promises)
-            .catch(err => log.error('Error indexing DCAT record', err));
+            .catch(err => this.log.error('Error indexing DCAT record', err));
     }
 }

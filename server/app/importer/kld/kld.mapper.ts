@@ -40,7 +40,6 @@ import type { KldSettings } from './kld.settings.js';
 
 export class KldMapper extends Mapper<KldSettings> implements ToElasticMapper<IndexDocument> {
 
-    log = log4js.getLogger();
 
     private readonly record: ObjectResponse;
     private readonly id: string;

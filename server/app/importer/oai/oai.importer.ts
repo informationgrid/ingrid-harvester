@@ -79,7 +79,7 @@ export class OaiImporter extends Importer<OaiSettings> {
     protected async harvest(): Promise<number> {
         while (true) {
             try {
-                log.debug('Requesting next records');
+                this.log.debug('Requesting next records');
                 let response = await this.requestDelegate.doRequest();
                 let harvestTime = new Date(Date.now());
 
@@ -90,7 +90,7 @@ export class OaiImporter extends Importer<OaiSettings> {
                 }
 
                 let numReturned = resultsNode.getElementsByTagName('record').length;
-                log.debug(`Received ${numReturned} records from ${this.getSettings().sourceURL}`);
+                this.log.debug(`Received ${numReturned} records from ${this.getSettings().sourceURL}`);
                 await this.extractRecords(responseDom, harvestTime);
 
                 let resumptionTokenNode = resultsNode.getElementsByTagName('resumptionToken')[0];
@@ -98,7 +98,7 @@ export class OaiImporter extends Importer<OaiSettings> {
                 if (resumptionTokenNode) {
                     this.totalRecords = parseInt(resumptionTokenNode.getAttribute('completeListSize'));
                     let cursor = resumptionTokenNode.getAttribute('cursor');
-                    log.info(`Next cursor: ${cursor}/${this.totalRecords}`);
+                    this.log.info(`Next cursor: ${cursor}/${this.totalRecords}`);
                 }
                 if (!resumptionToken) {
                     break;
@@ -111,7 +111,7 @@ export class OaiImporter extends Importer<OaiSettings> {
                     throw e;
                 }
                 const message = `Error while fetching OAI Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(e.message)}.`;
-                log.error(message);
+                this.log.error(message);
                 this.getSummary().appErrors.push(message);
             }
         }
@@ -136,8 +136,8 @@ export class OaiImporter extends Importer<OaiSettings> {
             }
             let record = records[i].getElementsByTagNameNS(this.xpaths.nsPrefix, this.xpaths.mdRoot).item(0);
 
-            if (log.isDebugEnabled()) {
-                log.debug(`Import document ${i + 1} from ${records.length}`);
+            if (this.log.isDebugEnabled()) {
+                this.log.debug(`Import document ${i + 1} from ${records.length}`);
             }
             if (logRequest.isDebugEnabled()) {
                 logRequest.debug("Record content: ", record.toString());
@@ -151,7 +151,7 @@ export class OaiImporter extends Importer<OaiSettings> {
                 doc = await documentFactory.createIndexDocument();
             }
             catch (e) {
-                log.error('Error creating index document', e);
+                this.log.error('Error creating index document', e);
                 this.getSummary().appErrors.push(e.toString());
                 mapper.skipped = true;
             }
@@ -171,7 +171,7 @@ export class OaiImporter extends Importer<OaiSettings> {
             }
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
         }
-        await Promise.allSettled(promises).catch(err => log.error('Error indexing OAI record', err));
+        await Promise.allSettled(promises).catch(err => this.log.error('Error indexing OAI record', err));
     }
 
     async getMapper(settings, header, record, harvestTime, summary) {

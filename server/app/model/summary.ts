@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import { type Logger, getLogger } from 'log4js';
 import type {ImporterSettings} from '../importer.settings.js';
 
 export class Summary {
@@ -47,35 +48,38 @@ export class Summary {
 
     private readonly headerTitle: string;
 
+    public readonly log: Logger;
+
     constructor(settings: Partial<ImporterSettings>) {
         this.headerTitle = `${settings.description} (${settings.type})`;
         if (settings.showCompleteSummaryInfo) {
             this.MAX_ITEMS_TO_SHOW = 1000000;
         }
         this.isIncremental = settings.isIncremental;
+        this.log = getLogger(settings.description || 'Summary');
     }
 
-    print(logger) {
-        logger.info(`---------------------------------------------------------`);
-        logger.info(this.headerTitle);
-        logger.info(`---------------------------------------------------------`);
-        logger.info(`Harvest type: ${this.isIncremental ? 'incremental' : 'full'}`);
-        logger.info(`Number of records: ${this.numDocs}`);
-        logger.info(`Skipped records: ${this.skippedDocs.length}`);
-        this.logArray(logger, this.skippedDocs);
+    print() {
+        this.info(`---------------------------------------------------------`);
+        this.info(this.headerTitle);
+        this.info(`---------------------------------------------------------`);
+        this.info(`Harvest type: ${this.isIncremental ? 'incremental' : 'full'}`);
+        this.info(`Number of records: ${this.numDocs}`);
+        this.info(`Skipped records: ${this.skippedDocs.length}`);
+        this.logArray(this.skippedDocs);
 
-        logger.info(`Record-Errors: ${this.numErrors}`);
-        logger.info(`Warnings: ${this.warnings.length}`);
-        this.logArray(logger, this.warnings);
+        this.info(`Record-Errors: ${this.numErrors}`);
+        this.info(`Warnings: ${this.warnings.length}`);
+        this.logArray(this.warnings);
 
-        logger.info(`App-Errors: ${this.appErrors.length}`);
-        this.logArray(logger, this.appErrors);
+        this.info(`App-Errors: ${this.appErrors.length}`);
+        this.logArray(this.appErrors);
 
-        logger.info(`Database-Errors: ${this.databaseErrors.length}`);
-        this.logArray(logger, this.databaseErrors);
+        this.info(`Database-Errors: ${this.databaseErrors.length}`);
+        this.logArray(this.databaseErrors);
 
-        logger.info(`Elasticsearch-Errors: ${this.elasticErrors.length}`);
-        this.logArray(logger, this.elasticErrors);
+        this.info(`Elasticsearch-Errors: ${this.elasticErrors.length}`);
+        this.logArray(this.elasticErrors);
 
         this.additionalSummary();
     }
@@ -100,16 +104,32 @@ export class Summary {
         return result;
     }
 
-    private logArray(logger, list: any) {
-        if (logger.isDebugEnabled() && list.length > 0) {
+    private logArray(list: any) {
+        if (this.log.isDebugEnabled() && list.length > 0) {
             let listString = `\n\t${list.slice(0, this.MAX_ITEMS_TO_SHOW).join('\n\t')}`;
             if (list.length > this.MAX_ITEMS_TO_SHOW) {
                 listString += '\n\t...';
             }
-            logger.debug(listString);
+            this.debug(listString);
         }
     }
 
     additionalSummary() {
+    }
+
+    debug(message: any, ...args: any[]): void {
+        this.log.debug(message, args);
+    }
+
+    info(message: any, ...args: any[]): void{
+        this.log.info(message, args);
+    }
+
+    warn(message: any, ...args: any[]): void{
+        this.log.warn(message, args);
+    }
+
+    error(message: any, ...args: any[]): void{
+        this.log.error(message, args);
     }
 }

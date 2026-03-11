@@ -22,7 +22,6 @@
  */
 
 import type { DOMParser } from '@xmldom/xmldom';
-import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import { namespaces } from '../../importer/namespaces.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
@@ -38,9 +37,6 @@ import { Importer } from '../importer.js';
 import { DcatappluMapper } from './dcatapplu.mapper.js';
 import type { DcatappluSettings } from './dcatapplu.settings.js';
 import { defaultDCATAPPLUSettings } from './dcatapplu.settings.js';
-
-const log = log4js.getLogger(import.meta.filename);
-const logRequest = log4js.getLogger('requests');
 
 export class DcatappluImporter extends Importer<DcatappluSettings> {
 
@@ -74,7 +70,7 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
         // let retries = 0;
 
         // while (true) {
-            log.debug('Requesting next records');
+            this.getSummary().debug('Requesting next records');
             let response = await this.requestDelegate.doRequest();
             let harvestTime = new Date(Date.now());
 
@@ -188,11 +184,9 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
                     continue;
                 }
 
-                if (log.isDebugEnabled()) {
-                    log.debug(`Import document ${i + 1} from ${records.length}`);
-                }
-                if (logRequest.isDebugEnabled()) {
-                    logRequest.debug("Record content: ", records[i].toString());
+                if (this.getSummary().log.isDebugEnabled()) {
+                    this.getSummary().debug(`Import document ${i + 1} from ${records.length}`);
+                    this.getSummary().debug("Record content: ", records[i].toString());
                 }
 
                 let rdfAboutAttribute = DcatappluMapper.select('./@rdf:about', records[i], true)?.textContent;
@@ -216,7 +210,7 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
                     doc = await documentFactory.createIndexDocument();
                 }
                 catch (e) {
-                    log.error('Error creating index document', e);
+                    this.getSummary().error('Error creating index document', e);
                     this.getSummary().appErrors.push(e.toString());
                     mapper.skipped = true;
                 }
@@ -237,7 +231,7 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
                 this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
             }
         }
-        await Promise.all(promises).catch(err => log.error('Error indexing DCAT record', err));
+        await Promise.all(promises).catch(err => this.getSummary().error('Error indexing DCAT record', err));
     }
 
     getMapper(settings, record, catalog, catalogPage, harvestTime, summary): DcatappluMapper {

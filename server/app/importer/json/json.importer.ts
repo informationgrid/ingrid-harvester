@@ -63,7 +63,7 @@ export class JsonImporter extends Importer<JsonSettings> {
      * @returns number
      */
     protected async harvest(): Promise<number> {
-        log.info(`Started requesting records`);
+        this.log.info(`Started requesting records`);
 
         await this.preHarvestingHandling();
 
@@ -74,19 +74,19 @@ export class JsonImporter extends Importer<JsonSettings> {
 
         let numReturned = response?.length;
         if (numReturned) {
-            log.debug(`Received ${numReturned} records from ${this.getSettings().sourceURL}`);
+            this.log.debug(`Received ${numReturned} records from ${this.getSettings().sourceURL}`);
             await this.extractRecords(response, harvestTime);
             
             let processingTime = Math.floor((Date.now() - harvestTime.getTime()) / 1000);
-            log.info(`Finished processing ${numReturned} records in ${processingTime} seconds`);
+            this.log.info(`Finished processing ${numReturned} records in ${processingTime} seconds`);
         }
         else {
             const message = `Error while fetching ClickRhein Records\nServer response: ${MiscUtils.truncateErrorMessage(response?.toString())}.`;
-            log.error(message);
+            this.log.error(message);
             this.getSummary().appErrors.push(message);
         }
 
-        log.info(`Finished requesting records`);
+        this.log.info(`Finished requesting records`);
 
         // persist leftovers
         await this.database.sendBulkData();
@@ -103,8 +103,8 @@ export class JsonImporter extends Importer<JsonSettings> {
                 this.getSummary().skippedDocs.push(id);
             }
             else {
-                if (log.isDebugEnabled()) {
-                    log.debug(`Import document "${id}"`);
+                if (this.log.isDebugEnabled()) {
+                    this.log.debug(`Import document "${id}"`);
                 }
                 if (logRequest.isDebugEnabled()) {
                     logRequest.debug("Record content: ", JSON.stringify(record));
@@ -118,7 +118,7 @@ export class JsonImporter extends Importer<JsonSettings> {
                     doc = await documentFactory.createIndexDocument();
                 }
                 catch (e) {
-                    log.warn('Error creating index document', e);
+                    this.log.warn('Error creating index document', e);
                     this.getSummary().warnings.push(['Indexing error', e.toString()]);
                     mapper.skipped = true;
                 }
@@ -139,7 +139,7 @@ export class JsonImporter extends Importer<JsonSettings> {
                 this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
             }
         }
-        await Promise.allSettled(promises).catch(e => log.error('Error persisting record', e));
+        await Promise.allSettled(promises).catch(e => this.log.error('Error persisting record', e));
     }
 
     protected static createRequestConfig(settings: JsonSettings): RequestOptions {

@@ -46,7 +46,6 @@ export class OaiMapper extends Mapper<OaiSettings> {
         return OaiMapper.select(path, parent, true)?.textContent;
     }
 
-    log = log4js.getLogger();
 
     private readonly header: Element;
     public readonly record: Element;

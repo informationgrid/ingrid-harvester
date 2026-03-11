@@ -61,7 +61,6 @@ export class DcatappluMapper extends Mapper<DcatappluSettings> implements ToElas
         'vcard': namespaces.VCARD
     });
 
-    log = log4js.getLogger();
 
     private readonly record: any;
     private readonly catalogPage: any;

@@ -53,7 +53,6 @@ export class OaiMapper extends Mapper<OaiSettings> {
         'srv': namespaces.SRV
     });
 
-    log = log4js.getLogger();
 
     private readonly header: Element;
     private readonly record: Element;

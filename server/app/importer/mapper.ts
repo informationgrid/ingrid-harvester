@@ -22,7 +22,6 @@
  */
 
 import type { ImporterSettings } from '../importer.settings.js';
-import type { Logger } from 'log4js';
 import type { HarvestingMetadata, MetadataSource } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
 
@@ -41,7 +40,6 @@ export abstract class Mapper<S extends ImporterSettings> {
     protected changed = false;
     protected harvestingNotes = [];
     skipped = false;
-    abstract log: Logger;
     private blacklistedFormats: string[] = [];
 
     constructor(settings: S, summary: Summary) {

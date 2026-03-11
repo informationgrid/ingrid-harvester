@@ -48,7 +48,6 @@ export class OaiMapper extends Mapper<OaiSettings> {
         return this.select(path.replace(/\/(?!@)/g, '/mods:'), parent, true)?.textContent;
     }
 
-    log = log4js.getLogger();
 
     private readonly header: Element;
     public readonly record: Element;

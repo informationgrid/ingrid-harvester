@@ -90,9 +90,9 @@ export abstract class Importer<S extends ImporterSettings> {
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
         if (this.settings.dryRun) {
-            log.debug('Dry run option enabled. Skipping index creation.');
+            this.summary.debug('Dry run option enabled. Skipping index creation.');
             await this.harvest();
-            log.debug('Skipping finalisation of index for dry run.');
+            this.summary.debug('Skipping finalisation of index for dry run.');
             observer.next(ImportResult.complete(this.summary, 'Dry run ... no indexing of data'));
         }
         else {
@@ -128,7 +128,7 @@ export abstract class Importer<S extends ImporterSettings> {
                     try {
                         const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, this.getSummary());
                         // log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with transaction timestamp ${transactionTimestamp}`);
-                        log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with source ${this.settings.sourceURL}`);
+                        this.summary.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with source ${this.settings.sourceURL}`);
 
                         // TODO currently this relies on "sourceURL" instead of transactionTimestamp
                         // should this be changed to transactionTimestamp?
@@ -137,7 +137,7 @@ export abstract class Importer<S extends ImporterSettings> {
                         await catalog.process(this.settings.sourceURL, this.settings, observer);
                     }
                     catch (e) {
-                        log.error(`Error while importing into catalog ${catalogId}`, e);
+                        this.summary.error(`Error while importing into catalog ${catalogId}`, e);
                         this.getSummary().appErrors.push(`Error while importing into catalog ${catalogId}: ${e.message}`);
                     }
                 }
@@ -151,7 +151,7 @@ export abstract class Importer<S extends ImporterSettings> {
                 }
                 await this.database.rollbackTransaction();
                 let msg = this.summary.appErrors.length > 0 ? this.summary.appErrors[0] : this.summary.databaseErrors[0];
-                log.error(err);
+                this.summary.error(err);
                 observer.next(ImportResult.complete(this.summary, msg));
             }
         }

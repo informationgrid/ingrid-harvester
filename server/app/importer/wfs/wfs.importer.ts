@@ -111,13 +111,13 @@ export class WfsImporter extends Importer<WfsSettings> {
 
         // get all FeatureTypes and filter by given
         let featureTypesNodes = select('/*[local-name()="WFS_Capabilities"]/*[local-name()="FeatureTypeList"]/*[local-name()="FeatureType"]', capabilitiesResponseDom);
-        log.info(`Found ${featureTypesNodes.length} FeatureTypes at ${this.getSettings().sourceURL}`);
+        this.log.info(`Found ${featureTypesNodes.length} FeatureTypes at ${this.getSettings().sourceURL}`);
         let featureTypes = {};
         let requestedTypes = this.getSettings().typename ? this.getSettings().typename.split(',').map(t => t.trim()) : null;
         for (let featureType of featureTypesNodes) {
             let typename = select('./*[local-name()="Name"]', featureType, true).textContent;
             if (this.getSettings().requireGeometry && !select('./ows:WGS84BoundingBox/ows:LowerCorner', featureType, true)) {
-                log.warn(`Skipping FeatureType ${typename} because it doesn't contain a geometry`);
+                this.log.warn(`Skipping FeatureType ${typename} because it doesn't contain a geometry`);
                 continue;
             }
             if (!requestedTypes || requestedTypes.includes(typename)) {
@@ -125,7 +125,7 @@ export class WfsImporter extends Importer<WfsSettings> {
             }
         }
         let numFeatureTypes = Object.keys(featureTypes).length;
-        log.info(`Processing ${numFeatureTypes} FeatureTypes after filtering`);
+        this.log.info(`Processing ${numFeatureTypes} FeatureTypes after filtering`);
         this.numItems = numFeatureTypes;
 
         // for each FeatureType, get all Features
@@ -134,7 +134,7 @@ export class WfsImporter extends Importer<WfsSettings> {
             limit(() => this.extractCompleteFeatureType(featureTypeName, featureTypes[featureTypeName]))
         ));
 
-        log.info(`Finished requests`);
+        this.log.info(`Finished requests`);
         await this.database.sendBulkData();
 
         return this.numIndexDocs;
@@ -152,7 +152,7 @@ export class WfsImporter extends Importer<WfsSettings> {
 
     async extractCompleteFeatureType(featureTypeName: string, featureTypeNode: Node): Promise<void> {
         let numFeatures = await this.getNumFeatures(featureTypeName);
-        log.info(`Found ${numFeatures} features at ${this.getSettings().sourceURL} for FeatureType "${featureTypeName}"`);
+        this.log.info(`Found ${numFeatures} features at ${this.getSettings().sourceURL} for FeatureType "${featureTypeName}"`);
         let featureTypeDescriptionNode = await this.getTypeDescription(featureTypeName);
         this.generalInfo['typename'] = featureTypeName;
 
@@ -163,14 +163,14 @@ export class WfsImporter extends Importer<WfsSettings> {
             }
             catch (e) {
                 const message = `Error while fetching FeatureType "${featureTypeName}"\n  ${e.toString()}.`;
-                log.warn(message);
+                this.log.warn(message);
                 this.getSummary().warnings.push(message.split('\n  '));
                 return;
             }
         }
         // skip harvesting features if numFeatures is above limit
         if (this.getSettings().featureLimit && numFeatures > this.getSettings().featureLimit) {
-            log.info(`This exceeds the limit of ${this.getSettings().featureLimit} features; skipping feature harvesting`);
+            this.log.info(`This exceeds the limit of ${this.getSettings().featureLimit} features; skipping feature harvesting`);
             return;
         }
         let requestConfig = this.createRequestConfig({
@@ -179,7 +179,7 @@ export class WfsImporter extends Importer<WfsSettings> {
         });
         let requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(this.getSettings()));
         while (true) {
-            log.info(`Requesting next features for FeatureType ${featureTypeName} (startIndex=${requestDelegate.getStartRecordIndex()})`);
+            this.log.info(`Requesting next features for FeatureType ${featureTypeName} (startIndex=${requestDelegate.getStartRecordIndex()})`);
             let harvestTime = new Date(Date.now());
             let responseDom: Document;
             try {
@@ -189,7 +189,7 @@ export class WfsImporter extends Importer<WfsSettings> {
             }
             catch (e) {
                 const message = `Error while fetching WFS Features for FeatureType ${featureTypeName}. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom?.toString())}.`;
-                log.error(message);
+                this.log.error(message);
                 this.getSummary().appErrors.push(message);
             }
             requestDelegate.incrementStartRecordIndex();
@@ -280,8 +280,8 @@ export class WfsImporter extends Importer<WfsSettings> {
                 continue;
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug(`Import document ${i + 1} from ${features.length}`);
+            if (this.log.isDebugEnabled()) {
+                this.log.debug(`Import document ${i + 1} from ${features.length}`);
             }
             if (logRequest.isDebugEnabled()) {
                 logRequest.debug("Record content: ", features[i].toString());
@@ -296,7 +296,7 @@ export class WfsImporter extends Importer<WfsSettings> {
                 doc = await documentFactory.createIndexDocument();
             }
             catch (e) {
-                log.error('Error creating index document', e);
+                this.log.error('Error creating index document', e);
                 this.getSummary().appErrors.push(e.toString());
                 mapper.skipped = true;
             }
@@ -318,7 +318,7 @@ export class WfsImporter extends Importer<WfsSettings> {
                 this.observer.next(ImportResult.running(++this.numIndexDocs, this.numItems));
             }
         }
-        await Promise.all(promises).catch(err => log.error('Error indexing WFS record', err));
+        await Promise.all(promises).catch(err => this.log.error('Error indexing WFS record', err));
     }
 
     getMapper(harvestTime: Date, feature: Node): WfsMapper {

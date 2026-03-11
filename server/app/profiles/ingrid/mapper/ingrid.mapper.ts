@@ -43,7 +43,9 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
 
     readonly baseMapper: M;
 
-    private _log = log4js.getLogger();
+    public get log(): log4js.Logger {
+        return this.baseMapper.log;
+    }
 
     constructor(baseMapper: M) {
         this.baseMapper = baseMapper;
