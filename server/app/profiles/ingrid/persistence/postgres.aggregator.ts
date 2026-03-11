@@ -125,6 +125,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
             document.refering.object_reference.push(this.createObjRef(additionalDoc, "3600"));
             document.refering_service_uuid ??= [];
             document.refering_service_uuid.push(additionalDoc.uuid+"@@"+additionalDoc.title+"@@"+additionalDoc.capabilities_url+"@@"+document.t011_obj_geo.datasource_uuid);
+            document.capabilities_url = additionalDoc.capabilities_url;
         }
         else {
             // add dataset information to document (service)
