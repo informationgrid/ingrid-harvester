@@ -21,7 +21,6 @@
  * ==================================================
  */
 
-import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import type { ImporterSettings } from '../importer.settings.js';
 import type { CatalogSummary } from '../model/catalog-summary.js';
@@ -30,8 +29,6 @@ import type { Summary } from '../model/summary.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
 import type { DatabaseUtils } from '../persistence/database.utils.js';
 import { ConfigService } from '../services/config/ConfigService.js';
-
-const log = log4js.getLogger('Catalog');
 
 export interface CatalogFactory {
 
@@ -64,7 +61,7 @@ export abstract class Catalog<DbColumnType> {
         await this.prepareImport(transactionHandle, importerSettings, observer);
         await this.import(transactionHandle, importerSettings, observer);
         await this.postImport(transactionHandle, importerSettings, observer);
-        this.catalogSummary.print(log);
+        this.catalogSummary.print(this.summary.log);
     }
 
     abstract prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void>;

@@ -26,7 +26,6 @@
  */
 import type { License } from '@shared/license.model.js';
 import type { Geometry, Point } from 'geojson';
-import log4js from 'log4js';
 import { throwError } from 'rxjs';
 import * as xpath from 'xpath';
 import { DcatapdeMapper } from '../dcatapde/dcatapde.mapper.js';
@@ -64,8 +63,6 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
         'xlink': namespaces.XLINK
     };
     static select = <XPathElementSelect>xpath.useNamespaces(CswMapper.cswNsMap);
-
-    log = log4js.getLogger();
 
     readonly record: any;
     private harvestTime: any;
@@ -490,7 +487,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
         }, false);
         if (!valid) {
             // Don't index metadata-sets without any of the mandatory keywords
-            this.log.info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.getSettings().sourceURL}'.`);
+            this.getSummary().info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.getSettings().sourceURL}'.`);
             this.skipped = true;
         }
 
@@ -680,7 +677,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
                 if (date) {
                     return date;
                 } else {
-                    this.log.warn(`Error parsing begin date, which was '${text}'. It will be ignored.`);
+                    this.getSummary().warn(`Error parsing begin date, which was '${text}'. It will be ignored.`);
                 }
             }
         } catch (e) {
@@ -894,7 +891,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
             let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
             this.getSummary().missingLicense++;
 
-            this.log.warn(msg);
+            this.getSummary().warn(msg);
             this.getSummary().warnings.push(['Missing license', msg]);
             return {
                 id: 'unknown',

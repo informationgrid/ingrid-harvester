@@ -22,7 +22,6 @@
  */
 
 import type { DOMParser } from '@xmldom/xmldom';
-import log4js from 'log4js';
 import pLimit from 'p-limit';
 import type { Observer } from 'rxjs';
 import { namespaces } from '../../importer/namespaces.js';
@@ -46,8 +45,7 @@ import { CswMapper } from './csw.mapper.js';
 import type { CswSettings } from './csw.settings.js';
 import { defaultCSWSettings } from './csw.settings.js';
 
-const log = log4js.getLogger(import.meta.filename);
-const logRequest = log4js.getLogger('requests');
+// const logRequest = log4js.getLogger('requests');
 
 export class CswImporter extends Importer<CswSettings> {
 
@@ -94,9 +92,9 @@ export class CswImporter extends Importer<CswSettings> {
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
         if (this.getSettings().dryRun) {
-            log.debug('Dry run option enabled. Skipping index creation.');
+            this.getSummary().debug('Dry run option enabled. Skipping index creation.');
             await this.harvest();
-            log.debug('Skipping finalisation of index for dry run.');
+            this.getSummary().debug('Skipping finalisation of index for dry run.');
             observer.next(ImportResult.complete(this.getSummary(), 'Dry run ... no indexing of data'));
         }
         else {
@@ -111,7 +109,7 @@ export class CswImporter extends Importer<CswSettings> {
                         this.getSettings().recordFilter = this.appendFilter(lastModifiedFilter);
                     }
                     else {
-                        log.warn(`Changing type of harvesting to "full" because no previous harvesting was found for harvester with id ${this.getSettings().id}`);
+                        this.getSummary().warn(`Changing type of harvesting to "full" because no previous harvesting was found for harvester with id ${this.getSettings().id}`);
                         this.getSettings().isIncremental = false;
                     }
                 }
@@ -157,7 +155,7 @@ export class CswImporter extends Importer<CswSettings> {
                     try {
                         const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, this.getSummary());
                         // log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with transaction timestamp ${transactionTimestamp}`);
-                        log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with source ${this.getSettings().sourceURL}`);
+                        this.getSummary().info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with source ${this.getSettings().sourceURL}`);
 
                         // TODO currently this relies on "sourceURL" instead of transactionTimestamp
                         // should this be changed to transactionTimestamp?
@@ -166,7 +164,7 @@ export class CswImporter extends Importer<CswSettings> {
                         await catalog.process(this.getSettings().sourceURL, this.getSettings(), observer);
                     }
                     catch (e) {
-                        log.error(`Error while importing into catalog ${catalogId}`, e);
+                        this.getSummary().error(`Error while importing into catalog ${catalogId}`, e);
                         this.getSummary().appErrors.push(`Error while importing into catalog ${catalogId}: ${e.message}`);
                     }
                 }
@@ -183,7 +181,7 @@ export class CswImporter extends Importer<CswSettings> {
                 if (this.generalConfig.mail.enabled) {
                     MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
                 }
-                log.error(err);
+                this.getSummary().error(err);
                 observer.next(ImportResult.complete(this.getSummary(), msg));
             }
         }
@@ -191,7 +189,7 @@ export class CswImporter extends Importer<CswSettings> {
     }
 
     protected async harvest(): Promise<number> {
-        log.info(`Started requesting records`);
+        this.getSummary().info(`Started requesting records`);
         let catalog: Catalog = await this.database.getCatalog(this.getSettings().catalogId);
         if (catalog == null) {
             throw new Error(`Catalog with identifier '${this.getSettings().catalogId}' not found.`)
@@ -225,7 +223,7 @@ export class CswImporter extends Importer<CswSettings> {
             throw new Error(hitsResponse);
         }
         this.totalRecords = parseInt(hitsResultsNode.getAttribute('numberOfRecordsMatched'));
-        log.info(`Number of records to fetch: ${this.totalRecords}`);
+        this.getSummary().info(`Number of records to fetch: ${this.totalRecords}`);
 
         // 1) create paged request delegates
         let delegates = [];
@@ -240,7 +238,7 @@ export class CswImporter extends Importer<CswSettings> {
         // 2) run in parallel
         const limit = pLimit(this.getSettings().maxConcurrent);
         await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
-        log.info(`Finished requesting records`);
+        this.getSummary().info(`Finished requesting records`);
         // 3) persist leftovers
         await this.database.sendBulkData();
 
@@ -250,7 +248,7 @@ export class CswImporter extends Importer<CswSettings> {
     async harvestServices(): Promise<void> {
         let datasetIds = await this.database.getDatasetIdentifiers(this.getSettings().sourceURL);
         let numChunks = Math.ceil(datasetIds.length / this.getSettings().maxServices);
-        log.info(`Requesting services for ${datasetIds.length} datasets in ${numChunks} chunks`);
+        this.getSummary().info(`Requesting services for ${datasetIds.length} datasets in ${numChunks} chunks`);
         // 1) create paged request delegates
         let delegates = [];
         for (let i = 0; i < datasetIds.length; i+= this.getSettings().maxServices) {
@@ -271,31 +269,31 @@ export class CswImporter extends Importer<CswSettings> {
         await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
         // 3) persist leftovers
         await this.database.sendBulkData();
-        log.info(`Finished requesting services`);
+        this.getSummary().info(`Finished requesting services`);
     }
 
     async coupleSelf(resolveOgcDistributions: boolean) {
-        log.info(`Started self-coupling`);
+        this.getSummary().info(`Started self-coupling`);
         // get all datasets
         let recordEntities: RecordEntity[] = await this.database.getDatasets(this.getSettings().sourceURL) ?? [];
         // for all services, get WFS, WMS info and merge into dataset
         // 2) run in parallel
         const limit = pLimit(this.getSettings().maxConcurrent);
         await Promise.allSettled(recordEntities.map(recordEntity => limit(() => this.coupleService(recordEntity, resolveOgcDistributions, true))));
-        log.info(`Finished self-coupling`);
+        this.getSummary().info(`Finished self-coupling`);
         // 3) persist leftovers
         await this.database.sendBulkCouples();
     }
 
     async coupleDatasetsServices(resolveOgcDistributions: boolean) {
-        log.info(`Started dataset-service coupling`);
+        this.getSummary().info(`Started dataset-service coupling`);
         // get all services
         let serviceEntities: RecordEntity[] = await this.database.getServices(this.getSettings().sourceURL) ?? [];
         // for all services, get WFS, WMS info and merge into dataset
         // 2) run in parallel
         const limit = pLimit(this.getSettings().maxConcurrent);
         await Promise.allSettled(serviceEntities.map(serviceEntity => limit(() => this.coupleService(serviceEntity, resolveOgcDistributions, false))));
-        log.info(`Finished dataset-service coupling`);
+        this.getSummary().info(`Finished dataset-service coupling`);
         // 3) persist leftovers
         await this.database.sendBulkCouples();
     }
@@ -411,26 +409,26 @@ export class CswImporter extends Importer<CswSettings> {
     }
 
     async handleHarvest(delegate: RequestDelegate): Promise<void> {
-        log.info('Requesting next records, starting at', delegate.getStartRecordIndex());
+        this.getSummary().info('Requesting next records, starting at', delegate.getStartRecordIndex());
         let harvestStart = Date.now();
         let response = await delegate.doRequest();
         let requestingTime = Math.floor((Date.now() - harvestStart) / 1000);
-        log.info(`Finished requesting batch from ${delegate.getStartRecordIndex().toString().padStart(6, ' ')}, ${requestingTime.toString().padStart(3, ' ')}s`);
+        this.getSummary().info(`Finished requesting batch from ${delegate.getStartRecordIndex().toString().padStart(6, ' ')}, ${requestingTime.toString().padStart(3, ' ')}s`);
         let processingStart = Date.now();
 
         let responseDom = this.domParser.parseFromString(response);
         let resultsNode = responseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
         if (resultsNode) {
             let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
-            log.debug(`Received ${numReturned} records from ${this.getSettings().sourceURL}`);
+            this.getSummary().debug(`Received ${numReturned} records from ${this.getSettings().sourceURL}`);
             let importedDocuments = await this.extractRecords(response, processingStart);
             await this.updateRecords(importedDocuments, this.generalInfo['catalog'].id);
             let processingTime = Math.floor((Date.now() - processingStart) / 1000);
-            log.info(`Finished processing batch from ${delegate.getStartRecordIndex().toString().padStart(6, ' ')}, ${processingTime.toString().padStart(3, ' ')}s`);
+            this.getSummary().info(`Finished processing batch from ${delegate.getStartRecordIndex().toString().padStart(6, ' ')}, ${processingTime.toString().padStart(3, ' ')}s`);
         }
         else {
             const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
-            log.error(message);
+            this.getSummary().error(message);
             this.getSummary().appErrors.push(message);
         }
     }
@@ -454,11 +452,9 @@ export class CswImporter extends Importer<CswSettings> {
                 continue;
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug(`Import document ${i + 1} from ${records.length}`);
-            }
-            if (logRequest.isDebugEnabled()) {
-                logRequest.debug("Record content: ", records[i].toString());
+            if (this.getSummary().log.isDebugEnabled()) {
+                this.getSummary().debug(`Import document ${i + 1} from ${records.length}`);
+                this.getSummary().debug("Record content: ", records[i].toString());
             }
 
             let mapper = new CswMapper(this.getSettings(), records[i], harvestTime, this.getSummary(), this.generalInfo);
@@ -470,7 +466,7 @@ export class CswImporter extends Importer<CswSettings> {
                 docsToImport.push(doc);
             }
             catch (e) {
-                log.error('Error creating index document', e);
+                this.getSummary().error('Error creating index document', e);
                 this.getSummary().appErrors.push(e.toString());
                 mapper.skipped = true;
             }
@@ -490,7 +486,7 @@ export class CswImporter extends Importer<CswSettings> {
             }
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
         }
-        await Promise.allSettled(promises).catch(err => log.error('Error persisting CSW record', err));
+        await Promise.allSettled(promises).catch(err => this.getSummary().error('Error persisting CSW record', err));
         // let settledPromises: void | PromiseSettledResult<BulkResponse>[] = await Promise.allSettled(promises).catch(err => log.error('Error persisting CSW record', err));
         // filter for the actually imported documents
         // let insertedIds = settledPromises.filter(result => result.status == 'fulfilled' && !result.value.queued).reduce((ids, result) => {

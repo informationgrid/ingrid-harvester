@@ -25,7 +25,6 @@
  * A mapper for ISO-XML documents harvested over CSW.
  */
 import type { License } from '@shared/license.model.js';
-import log4js from 'log4js';
 import { throwError } from 'rxjs';
 import * as xpath from 'xpath';
 import { namespaces } from '../../importer/namespaces.js';
@@ -136,7 +135,6 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
         themes: null
     };
 
-    log = log4js.getLogger();
 
     constructor(settings: DcatapdeSettings, record, harvestTime, summary) {
         super(settings, summary);
@@ -172,7 +170,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
         }
         if (!description) {
             let msg = `Dataset doesn't have an description. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.getSettings().sourceURL}\'`;
-            this.log.warn(msg);
+            this.getSummary().warn(msg);
             this.getSummary().warnings.push(['No description', msg]);
             this.valid = false;
         } else {
@@ -472,7 +470,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
             if (date) {
                 return date;
             } else {
-                this.log.warn(`Error parsing date, which was '${text}'. It will be ignored.`);
+                this.getSummary().warn(`Error parsing date, which was '${text}'. It will be ignored.`);
             }
         }
     }
@@ -559,7 +557,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
             let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
             this.getSummary().missingLicense++;
 
-            this.log.warn(msg);
+            this.getSummary().warn(msg);
             this.getSummary().warnings.push(['Missing license', msg]);
             return {
                 id: 'unknown',

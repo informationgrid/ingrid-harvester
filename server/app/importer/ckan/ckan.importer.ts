@@ -21,7 +21,6 @@
  * ==================================================
  */
 
-import log4js from 'log4js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { Observer } from 'rxjs';
 import type { RecordEntity } from '../../model/entity.js';
@@ -36,8 +35,6 @@ import type { CkanMapperData } from './ckan.mapper.js';
 import { CkanMapper } from './ckan.mapper.js';
 import type { CkanSettings } from './ckan.settings.js';
 import { defaultCKANSettings } from './ckan.settings.js';
-
-const log = log4js.getLogger(import.meta.filename);
 
 export class CkanImporter extends Importer<CkanSettings> {
 
@@ -73,7 +70,7 @@ export class CkanImporter extends Importer<CkanSettings> {
      */
     async importDataset(data: CkanMapperData): Promise<void> {
         try {
-            log.debug('Processing CKAN dataset: ' + data.source.name + ' from data-source: ' + this.getSettings().sourceURL);
+            this.getSummary().debug('Processing CKAN dataset: ' + data.source.name + ' from data-source: ' + this.getSettings().sourceURL);
             let mapper = new CkanMapper(this.getSettings(), data, data.harvestTime, this.getSummary());
             let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
@@ -86,7 +83,7 @@ export class CkanImporter extends Importer<CkanSettings> {
                 this.posthandlingDocument(mapper, doc);
             }
             catch (e) {
-                log.error('Error creating index document', e);
+                this.getSummary().error('Error creating index document', e);
                 this.getSummary().appErrors.push(e.toString());
                 mapper.skipped = true;
             }
@@ -98,8 +95,9 @@ export class CkanImporter extends Importer<CkanSettings> {
 
             return await this.indexDocument(doc, dcatapdeDoc, mapper.getHarvestedData(), data.source.id);
 
-        } catch (e) {
-            log.error('Error: ' + e);
+        }
+        catch (e) {
+            this.getSummary().error('Error: ' + e);
         }
     }
 
@@ -140,7 +138,7 @@ export class CkanImporter extends Importer<CkanSettings> {
     }
 
     private async handleImportError(message, observer: Observer<ImportLogMessage>) {
-        log.error('error:', message);
+        this.getSummary().error('error:', message);
         this.getSummary().appErrors.push(message);
         this.sendFinishMessage(observer, message);
     }
@@ -159,7 +157,7 @@ export class CkanImporter extends Importer<CkanSettings> {
                 break;
             }
 
-            log.info(`Received ${results.length} records from ${this.getSettings().sourceURL}`);
+            this.getSummary().info(`Received ${results.length} records from ${this.getSettings().sourceURL}`);
             total += results.length;
 
             let filteredResults = this.filterDatasets(results);

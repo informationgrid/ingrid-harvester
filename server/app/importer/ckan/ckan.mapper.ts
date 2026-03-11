@@ -26,7 +26,6 @@
  */
 import type { License } from '@shared/license.model.js';
 import { DOMImplementation } from "@xmldom/xmldom";
-import log4js from 'log4js';
 import { marked } from 'marked';
 import { throwError } from 'rxjs';
 import mapping from "../../../mappings.json" with { type: "json" };
@@ -68,7 +67,6 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         gb: 10000000000,
     };
 
-    log = log4js.getLogger();
     private dom =  new DOMImplementation();
 
     private readonly source: any;
@@ -146,7 +144,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
                 } else {
                     let msg = `Invalid URL '${res.url} found for item with id: '${this.source.id}', title: '${this.source.title}'.`;
                     urlErrors.push(msg);
-                    this.log.warn(msg);
+                    this.getSummary().warn(msg);
                 }
             }
         }
@@ -489,14 +487,14 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
 
         if (this.getSettings().defaultLicense && hasNoLicense) {
             this.getSummary().missingLicense++;
-            this.log.warn(`Missing license for ${this.getGeneratedId()} using default one.`);
+            this.getSummary().warn(`Missing license for ${this.getGeneratedId()} using default one.`);
 
             return this.getSettings().defaultLicense;
         } else if (hasNoLicense) {
             let msg = `No license detected for dataset: ${this.getGeneratedId()} -> ${this.getTitle()}`;
             this.getSummary().missingLicense++;
 
-            this.log.warn(msg);
+            this.getSummary().warn(msg);
             this.getSummary().warnings.push(['Missing license', msg]);
         } else {
             let license = await DcatLicensesUtils.get(this.source.license_url);
@@ -668,7 +666,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
             let message = `Date has incorrect format: ${date}`;
             this.getSummary().numErrors++;
             this.getSummary().appErrors.push(message);
-            this.log.warn(message);
+            this.getSummary().warn(message);
         };
 
         if (date instanceof Date) {
@@ -713,7 +711,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
             let message = `Byte size has incorrect format: ${size}`;
             this.getSummary().numErrors++; //.push(message);
             this.getSummary().appErrors.push(message);
-            this.log.warn(message);
+            this.getSummary().warn(message);
             return undefined;
         }
 

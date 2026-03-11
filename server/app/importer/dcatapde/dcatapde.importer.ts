@@ -75,7 +75,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
         let retries = 0;
 
         while (true) {
-            log.debug('Requesting next records');
+            this.getSummary().debug('Requesting next records');
             let response = await this.requestDelegate.doRequest();
             let harvestTime = new Date(Date.now());
 
@@ -100,7 +100,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                     this.requestDelegate = new RequestDelegate(this.requestConfig);
                 }
 
-                log.debug(`Received ${numReturned} records from ${this.getSettings().sourceURL} - Page: ${thisPageUrl}`);
+                this.getSummary().debug(`Received ${numReturned} records from ${this.getSettings().sourceURL} - Page: ${thisPageUrl}`);
                 await this.extractRecords(response, harvestTime)
             }
             else {
@@ -110,11 +110,11 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                     isLastPage = true;
                 } else {
                     const message = `Error while fetching DCAT Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
-                    log.error(message);
+                    this.getSummary().error(message);
                     this.getSummary().appErrors.push(message);
                     if(retries++ > 3){
                         isLastPage = true;
-                        log.error('Stopped after 3 Retries')
+                        this.getSummary().error('Stopped after 3 Retries')
                     }
                 }
             }
@@ -159,8 +159,8 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                 continue;
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug(`Import document ${i + 1} from ${records.length}`);
+            if (this.getSummary().log.isDebugEnabled()) {
+                this.getSummary().debug(`Import document ${i + 1} from ${records.length}`);
             }
             if (logRequest.isDebugEnabled()) {
                 logRequest.debug("Record content: ", records[i].toString());
@@ -176,7 +176,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                 dcatapdeDoc = documentFactory.createDcatapdeDocument();
             }
             catch (e) {
-                log.error('Error creating index document', e);
+                this.getSummary().error('Error creating index document', e);
                 this.getSummary().appErrors.push(e.toString());
                 mapper.skipped = true;
             }
@@ -206,7 +206,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
         }
         await Promise.all(promises)
-            .catch(err => log.error('Error indexing DCAT record', err));
+            .catch(err => this.getSummary().error('Error indexing DCAT record', err));
     }
 
     static createRequestConfig(settings: DcatapdeSettings): RequestOptions {
