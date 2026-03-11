@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import { ElasticsearchCatalog } from '../../../catalog/elasticsearch/elasticsearch.catalog.js';
 import type { ImporterSettings } from '../../../importer.settings.js';
@@ -30,12 +31,13 @@ import { ConfigService } from '../../../services/config/ConfigService.js';
 import { camelize } from '../../../utils/misc.utils.js';
 import { INGRID_META_INDEX } from '../profile.factory.js';
 
+const log = log4js.getLogger(import.meta.filename);
 
 export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
 
     async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // import data into Elasticsearch catalog
-        console.log(`Importing data for transaction: ${transactionHandle}`);
+        log.info(`Importing data for transaction: ${transactionHandle}`);
 
         // const index = (this.settings as ElasticsearchCatalogSettings).settings.index;
 

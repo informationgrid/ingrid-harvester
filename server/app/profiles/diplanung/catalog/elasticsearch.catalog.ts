@@ -21,18 +21,20 @@
  * ==================================================
  */
 
+import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import { ElasticsearchCatalog } from '../../../catalog/elasticsearch/elasticsearch.catalog.js';
 import type { ImporterSettings } from '../../../importer.settings.js';
 import type { ImportLogMessage } from '../../../model/import.result.js';
 import { ProfileFactoryLoader } from '../../../profiles/profile.factory.loader.js';
 
+const log = log4js.getLogger(import.meta.filename);
 
 export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog {
 
     async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // import data into Elasticsearch catalog
-        console.log(`Importing data for transaction: ${transactionHandle}`);
+        log.info(`Importing data for transaction: ${transactionHandle}`);
 
         // const index = (this.settings as ElasticsearchCatalogSettings).settings.index;
 

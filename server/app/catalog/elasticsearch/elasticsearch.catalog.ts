@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import type { ImporterSettings } from '../../importer.settings.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
@@ -31,6 +32,8 @@ import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
 import { Catalog, type CatalogSettings } from '../catalog.factory.js';
 import { ElasticsearchCatalogSummary } from './elasticsearch.catalog-summary.js';
+
+const log = log4js.getLogger(import.meta.filename);
 
 export type ElasticsearchCatalogSettings = CatalogSettings & {
     settings: {
@@ -57,7 +60,7 @@ export abstract class ElasticsearchCatalog extends Catalog<object> {
 
     async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // import data into Elasticsearch catalog
-        console.log(`Importing data for transaction: ${transactionHandle}`);
+        log.info(`Importing data for transaction: ${transactionHandle}`);
         
         // TODO split this into
         // 1) bucket fetching (put into abstract Catalog)
@@ -68,7 +71,7 @@ export abstract class ElasticsearchCatalog extends Catalog<object> {
 
     async postImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // post-import operations, e.g. refreshing indices, updating aliases, etc.
-        console.log(`Post-import operations for catalog: ${this.id}`);
+        log.info(`Post-import operations for catalog: ${this.id}`);
     }
 
     async serialize(input: object): Promise<object> {
