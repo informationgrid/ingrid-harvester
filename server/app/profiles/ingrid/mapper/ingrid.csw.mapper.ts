@@ -151,8 +151,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         let url = this.text(`./srv:SV_ServiceIdentification[
                 ./srv:serviceType/gco:LocalName/text() = 'WMS'
                 or ./srv:serviceType/gco:LocalName/text() = 'view'
-                or ./srv:serviceType/gco:LocalName/text() = 'WFS'
-                or ./srv:serviceType/gco:LocalName/text() = 'download'
+                or ./srv:serviceType/gco:LocalName/text() = 'WMTS'
             ]//srv:containsOperations/srv:SV_OperationMetadata/srv:operationName/gco:CharacterString[text() = 'GetCapabilities']/../../srv:connectPoint//gmd:URL`, this.baseMapper.idInfo);
         return url ? [url] : [];
     }
