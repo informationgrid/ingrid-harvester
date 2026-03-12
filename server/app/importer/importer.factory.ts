@@ -21,12 +21,9 @@
  * ==================================================
  */
 
-import { Harvester } from '@shared/harvester';
-import { Importer } from './importer';
+import type { ImporterSettings } from 'importer.settings.js';
+import type { Importer } from './importer.js';
 
-export * from "./importer"
-
-export abstract class ImporterFactory {
-
-    public abstract get(config: Harvester): Promise<Importer>;
+export interface ImporterFactory<T extends ImporterSettings> {
+    getImporter(settings: T): Promise<Importer<T>>;
 }

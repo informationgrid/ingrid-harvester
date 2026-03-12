@@ -40,9 +40,10 @@ import { SocketService } from './socket.service';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-harvester',
-  templateUrl: './harvester.component.html',
-  styleUrls: ['./harvester.component.scss']
+    selector: 'app-harvester',
+    templateUrl: './harvester.component.html',
+    styleUrls: ['./harvester.component.scss'],
+    standalone: false
 })
 export class HarvesterComponent implements OnInit, OnDestroy {
 

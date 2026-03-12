@@ -24,23 +24,24 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import { getLogger } from 'log4js';
+import type { License } from '@shared/license.model.js';
+import log4js from 'log4js';
 import { throwError } from 'rxjs';
-import { BaseMapper } from '../base.mapper';
-import { DateRange } from '../../model/dateRange';
-import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils';
-import { Distribution } from '../../model/distribution';
-import { ImporterSettings } from '../../importer.settings';
-import { License } from '@shared/license.model';
-import { MetadataSource } from '../../model/index.document';
-import { Person } from '../../model/agent';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { SparqlSettings } from './sparql.settings';
-import { Summary } from '../../model/summary';
+import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
+import type { Person } from '../../model/agent.js';
+import type { DateRange } from '../../model/dateRange.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
+import type { Summary } from '../../model/summary.js';
+import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
+import type { RequestOptions } from '../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import { Mapper } from '../mapper.js';
+import type { SparqlSettings } from './sparql.settings.js';
 
-export class SparqlMapper extends BaseMapper {
+export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMapper<IndexDocument> {
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     private readonly record: any;
     private readonly catalogPage: any;
@@ -48,9 +49,7 @@ export class SparqlMapper extends BaseMapper {
     private harvestTime: any;
 
 //    protected readonly idInfo; // : SelectedValue;
-    private settings: SparqlSettings;
     private readonly uuid: string;
-    private summary: Summary;
 
     private keywordsAlreadyFetched = false;
     private fetched: any = {
@@ -59,25 +58,22 @@ export class SparqlMapper extends BaseMapper {
         themes: null
     };
 
-
-    constructor(settings, record, harvestTime, summary) {
-        super();
-        this.settings = settings;
+    constructor(settings: SparqlSettings, record, harvestTime, summary: Summary) {
+        super(settings, summary);
         this.record = record;
         this.harvestTime = harvestTime;
-        this.summary = summary;
 
         this.uuid = record.id.value;
 
         super.init();
     }
 
-    public getSettings(): ImporterSettings {
-        return this.settings;
-    }
-
-    public getSummary(): Summary{
-        return this.summary;
+    async createEsDocument(): Promise<IndexDocument> {
+        return {
+            extras: {
+                metadata: this.getHarvestingMetadata(),
+            }
+        };
     }
 
     getDescription() {
@@ -109,7 +105,7 @@ export class SparqlMapper extends BaseMapper {
         let publishers = [];
 
         if (publishers.length === 0) {
-            this.summary.missingPublishers++;
+            this.getSummary().missingPublishers++;
             return undefined;
         } else {
             return publishers;
@@ -141,7 +137,7 @@ export class SparqlMapper extends BaseMapper {
                 if (k === 'aviation' || k === 'luft--und-raumfahrt') subgroups.push('aviation');
             });
         }
-        if (subgroups.length === 0) subgroups.push(...this.settings.defaultMcloudSubgroup);
+        if (subgroups.length === 0) subgroups.push(...this.getSettings().defaultMcloudSubgroup);
         return subgroups;
     }
 
@@ -172,7 +168,7 @@ export class SparqlMapper extends BaseMapper {
             keywords = this.record.keywords.value.split(',').map(s => s.trim()).filter(s => s.length > 0)
         }
 
-        if(this.settings.filterTags && this.settings.filterTags.length > 0 && !keywords.some(keyword => this.settings.filterTags.includes(keyword))){
+        if(this.getSettings().filterTags && this.getSettings().filterTags.length > 0 && !keywords.some(keyword => this.getSettings().filterTags.includes(keyword))){
             this.skipped = true;
         }
 
@@ -183,11 +179,11 @@ export class SparqlMapper extends BaseMapper {
         let dcatLink; //=  DcatMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.source_link.value;
         return {
-            source_base: this.settings.sourceURL,
+            source_base: this.getSettings().sourceURL,
             raw_data_source: dcatLink,
             source_type: 'sparql',
             portal_link: portalLink,
-            attribution: this.settings.defaultAttribution
+            attribution: this.getSettings().defaultAttribution
         };
     }
 
@@ -238,10 +234,10 @@ export class SparqlMapper extends BaseMapper {
 
         if (!license) {
             let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
-            this.summary.missingLicense++;
+            this.getSummary().missingLicense++;
 
             this.log.warn(msg);
-            this.summary.warnings.push(['Missing license', msg]);
+            this.getSummary().warnings.push(['Missing license', msg]);
             return {
                 id: 'unknown',
                 title: 'Unbekannt',
@@ -253,7 +249,7 @@ export class SparqlMapper extends BaseMapper {
     }
 
     getErrorSuffix(uuid, title) {
-        return `Id: '${uuid}', title: '${title}', source: '${this.settings.sourceURL}'.`;
+        return `Id: '${uuid}', title: '${title}', source: '${this.getSettings().sourceURL}'.`;
     }
 
     getHarvestedData(): string {
@@ -307,8 +303,8 @@ export class SparqlMapper extends BaseMapper {
             uri: uri
         };
 
-        if (this.settings.proxy) {
-            config.proxy = this.settings.proxy;
+        if (this.getSettings().proxy) {
+            config.proxy = this.getSettings().proxy;
         }
 
         return config;
@@ -320,8 +316,8 @@ export class SparqlMapper extends BaseMapper {
 
     executeCustomCode(doc: any) {
         try {
-            if (this.settings.customCode) {
-                eval(this.settings.customCode);doc
+            if (this.getSettings().customCode) {
+                eval(this.getSettings().customCode);doc
             }
         } catch (error) {
             throwError('An error occurred in custom code: ' + error.message);

@@ -21,36 +21,45 @@
  * ==================================================
  */
 
-import { CswMapper } from '../../importer/csw/csw.mapper';
-import { ImporterFactory } from '../../importer/importer.factory';
-import { Catalog } from '../../model/dcatApPlu.model';
-import { IndexDocumentFactory } from '../../model/index.document.factory';
-import { DatabaseFactory } from '../../persistence/database.factory';
-import { DatabaseUtils } from '../../persistence/database.utils';
-import { ElasticsearchFactory } from '../../persistence/elastic.factory';
-import { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries';
-import { IndexSettings } from '../../persistence/elastic.setting';
-import { ElasticsearchUtils } from '../../persistence/elastic.utils';
-import { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator';
-import { ConfigService } from '../../services/config/ConfigService';
-import { ProfileFactory } from '../profile.factory';
-import { IngridImporterFactory } from './importer/ingrid.importer.factory';
-import { ingridCswMapper } from './mapper/ingrid.csw.mapper';
-import { IngridIndexDocument } from './model/index.document';
-import { ElasticQueries } from './persistence/elastic.queries';
-import { PostgresAggregator } from './persistence/postgres.aggregator';
+import log4js from 'log4js';
+import { Catalog as NewCatalog, type CatalogSettings, type ElasticsearchCatalogSettings } from '../../catalog/catalog.factory.js';
+import type { CswSettings } from '../../importer/csw/csw.settings.js';
+import type { Importer } from '../../importer/importer.js';
+import type { Mapper } from '../../importer/mapper.js';
+import type { WfsSettings } from '../../importer/wfs/wfs.settings.js';
+import type { Catalog } from '../../model/dcatApPlu.model.js';
+import type { Summary } from '../../model/summary.js';
+import { DatabaseFactory } from '../../persistence/database.factory.js';
+import type { DatabaseUtils } from '../../persistence/database.utils.js';
+import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
+import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
+import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import type { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
+import { ConfigService } from '../../services/config/ConfigService.js';
+import { ProfileFactory } from '../profile.factory.js';
+import { IngridElasticsearchCatalog } from './catalog/elasticsearch.catalog.js';
+import { IngridCswImporter } from './importer/ingrid.csw.importer.js';
+import { ingridCswMapper } from './mapper/ingrid.csw.mapper.js';
+import type { IngridIndexDocument } from './model/index.document.js';
+import { ElasticQueries } from './persistence/elastic.queries.js';
+import mappings from './persistence/ingrid-meta-mapping.json' with { type: 'json' };
+import settings from './persistence/ingrid-meta-settings.json' with { type: 'json' };
+import { PostgresAggregator } from './persistence/postgres.aggregator.js';
+import { CswImporter } from 'importer/csw/csw.importer.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export const INGRID_META_INDEX = 'ingrid_meta';
 
-export class ingridFactory extends ProfileFactory<CswMapper> {
+export type ingridSettings = CswSettings | WfsSettings;
+
+export class ingridFactory extends ProfileFactory<ingridSettings> {
 
     async init(): Promise<{ database: DatabaseUtils, elastic: ElasticsearchUtils }> {
         const { database, elastic } = await super.init();
 
         // create collections/catalogs and indices that occur in the configured harvesters, if they not already exist
-        const catalogIdentifiers = new Set(ConfigService.get().map(harvester => harvester.catalogId));
+        const catalogIdentifiers = new Set(ConfigService.get().map(harvester => harvester.catalogId).filter(id => id != null));
         for (let identifier of catalogIdentifiers) {
             await this.createCatalogIfNotExist(identifier, database, elastic);
         }
@@ -58,9 +67,7 @@ export class ingridFactory extends ProfileFactory<CswMapper> {
         // create ingrid_meta index
         let isIngridMeta = await elastic.isIndexPresent(INGRID_META_INDEX);
         if (!isIngridMeta) {
-            const mappings = require('./persistence/ingrid-meta-mapping.json');
-            const settings = require('./persistence/ingrid-meta-settings.json');
-            await elastic.prepareIndexWithName(INGRID_META_INDEX, mappings, settings);
+            await elastic.prepareIndexWithName(INGRID_META_INDEX, mappings, settings as any);
         }
         return null;
     }
@@ -92,22 +99,47 @@ export class ingridFactory extends ProfileFactory<CswMapper> {
         return ElasticQueries.getInstance();
     }
 
-    getImporterFactory(): ImporterFactory {
-        return new IngridImporterFactory();
+    async getImporter(settings: ingridSettings): Promise<Importer<ingridSettings>> {
+        let importer: Importer<ingridSettings>;
+        switch (settings.type) {
+            case 'CSW':
+                // importer = new IngridCswImporter(settings as CswSettings);
+                importer = new CswImporter(settings as CswSettings);
+                break;
+            default: {
+                log.error('Importer not found: ' + settings.type);
+            }
+        }
+        if (importer) {
+            await importer.database.init();
+        }
+        return importer;
+    }
+
+    async getMapper(settings: ingridSettings, harvestTime: Date, summary: Summary, record: any, generalInfo: any): Promise<Mapper<ingridSettings>> {
+        switch (settings.type) {
+            case 'CSW': return new ingridCswMapper(settings as CswSettings, record, harvestTime, summary, generalInfo);
+            default: {
+                log.error('Mapper not found: ' + settings.type);
+            }
+        }
+    }
+
+    async getCatalog(catalogId: string, summary: Summary): Promise<NewCatalog<any>> {
+        const catalogSettings = ConfigService.getCatalogSettings().find(config => config.id === catalogId);
+        switch (catalogSettings.type) {
+            case 'elasticsearch': return new IngridElasticsearchCatalog(catalogSettings as ElasticsearchCatalogSettings, summary);
+            default: log.error(`Catalog type not found: ${catalogSettings.type}`);
+        }
+        return null;
     }
 
     getProfileName(): string {
         return 'ingrid';
     }
 
-    getIndexDocumentFactory(mapper: CswMapper ): IndexDocumentFactory<IngridIndexDocument> {
-        switch (mapper.constructor.name) {
-            case 'CswMapper': return new ingridCswMapper(<CswMapper>mapper);
-        }
-    }
-
-    getPostgresAggregator(): AbstractPostgresAggregator<IngridIndexDocument> {
-        return new PostgresAggregator();
+    getPostgresAggregator(settings: CatalogSettings): AbstractPostgresAggregator<IngridIndexDocument> {
+        return new PostgresAggregator(settings);
     }
 
     useIndexPerCatalog(): boolean {

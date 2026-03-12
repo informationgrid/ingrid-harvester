@@ -28,8 +28,8 @@
           Existierende Indizes
           <app-context-help-button/>
         </h2>
-        <input type="file" #indexUpload id="indexUpload" name="harvesterUpload" (change)="importIndex(this.indexUpload.files)" accept="json/*.json" style="display:none;" />
-        <button mat-flat-button id="importIndex" color="primary" (click)="this.indexUpload.click()" data-test="importIndex">Importieren</button>
+        <input type="file" #indexUpload id="indexUpload" name="harvesterUpload" (change)="importIndex(indexUpload.files)" accept="json/*.json" style="display:none;" />
+        <button mat-flat-button id="importIndex" color="primary" (click)="indexUpload.click()" data-test="importIndex">Importieren</button>
       </div>
       <aside contextHelp="about_indices" [className]="pageContextHelpIsVisible ? '' : 'hidden'"></aside>
       <mat-list class="items-left scroll padding" >

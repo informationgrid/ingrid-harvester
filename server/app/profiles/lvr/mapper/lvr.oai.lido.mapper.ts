@@ -21,20 +21,16 @@
  * ==================================================
  */
 
-import { License } from '@shared/license.model';
-import 'dayjs/locale/de';
-import { Link } from '../../../importer/oai/lido/lido.model';
-import { OaiMapper } from '../../../importer/oai/lido/oai.mapper';
-import { GeometryInformation, Temporal } from '../../../model/index.document';
-import * as GeoJsonUtils from '../../../utils/geojson.utils';
-import { Keyword } from '../../../model/ingrid.index.document';
-import { LvrMapper } from './lvr.mapper';
-import { Media, Person, Relation, Source } from '../model/index.document';
-import * as MiscUtils from '../../../utils/misc.utils';
-import { UrlUtils } from '../../../utils/url.utils';
-
-const dayjs = require('dayjs');
-dayjs.locale('de');
+import type { License } from '@shared/license.model.js';
+import type { Link } from '../../../importer/oai/lido/lido.model.js';
+import { OaiMapper } from '../../../importer/oai/lido/oai.mapper.js';
+import type { GeometryInformation, Temporal } from '../../../model/index.document.js';
+import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
+import type { Keyword } from '../../../model/ingrid.index.document.js';
+import { LvrMapper } from './lvr.mapper.js';
+import type { Media, Person, Relation, Source } from '../model/index.document.js';
+import * as MiscUtils from '../../../utils/misc.utils.js';
+import { UrlUtils } from '../../../utils/url.utils.js';
 
 export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
 
@@ -119,7 +115,7 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
         return null;
     }
 
-    getMedia(): Media[] {
+    async getMedia(): Promise<Media[]> {
 
         const findFirstURL = (links: Link[], attributes: string[]) => {
             let url = '';
@@ -129,7 +125,7 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
             return url;
         };
 
-        let media = [];
+        let media: Media[] = [];
         for (let resource of this.baseMapper.getResources()) {
             switch (resource.type) {
                 case 'digitales Bild': {
@@ -139,7 +135,8 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
                         type: 'image',
                         url: fullURL,
                         thumbnail: thumbnailURL,
-                        description: resource.description
+                        description: resource.description,
+                        dimensions: await MiscUtils.getImageDimensionsFromURL(fullURL)
                     });
                     break;
                 }
@@ -168,6 +165,7 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
                 default: {
                     for (let link of resource.links) {
                         media.push({
+                            // @ts-expect-error TODO investigate this case
                             type: link.format,
                             url: link.url,
                             description: resource.description
@@ -176,7 +174,7 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
                 }
             }
         }
-        return media;
+        return await Promise.all(media);
     }
 
     getRelations(): Relation[] {
@@ -192,7 +190,8 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
             let subLicenses = resource.rights.map(right => ({
                 id: resource.id,
                 title: right.licenseName,
-                url: right.licenseURL
+                url: right.licenseURL,
+                holder: right.holder
             }));
             licenses.push(...subLicenses);
         });
@@ -223,7 +222,7 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
                         return 'digiCULT (Preußen)';
                     }
                     else if (relationIds.includes('DE-2086/lido/57a2eb58249101.94114332')
-                        || conceptIds.includes('http://digicult.vocnet.org/portal/p0326')) {
+                            || conceptIds.includes('http://digicult.vocnet.org/portal/p0326')) {
                         return 'digiCULT (Geschichte)';
                     }
                     // console.log("NO PORTAL: " + this.getIdentifier());

@@ -24,21 +24,19 @@
 /**
  * A mapper for METS/MODS XML documents harvested over OAI.
  */
+import log4js from 'log4js';
 import * as xpath from 'xpath';
-import * as MiscUtils from '../../../utils/misc.utils';
-import { getLogger } from 'log4js';
-import { oaiXPaths } from '../oai.paths';
-import { BaseMapper } from '../../base.mapper';
-import { GeometryInformation, Temporal } from '../../../model/index.document';
-import { ImporterSettings } from '../../../importer.settings';
-import { Keyword } from '../../../model/ingrid.index.document';
-import { Media, Person, Relation } from '../../../profiles/lvr/model/index.document';
-import { MetadataSource } from '../../../model/index.document';
-import { OaiSettings } from '../oai.settings';
-import { Summary } from '../../../model/summary';
-import { XPathElementSelect } from '../../../utils/xpath.utils';
+import type { GeometryInformation, MetadataSource, Temporal } from '../../../model/index.document.js';
+import type { Keyword } from '../../../model/ingrid.index.document.js';
+import type { Summary } from '../../../model/summary.js';
+import type { Media, MediaType, Person, Relation } from '../../../profiles/lvr/model/index.document.js';
+import * as MiscUtils from '../../../utils/misc.utils.js';
+import type { XPathElementSelect } from '../../../utils/xpath.utils.js';
+import { Mapper } from '../../mapper.js';
+import { oaiXPaths } from '../oai.paths.js';
+import type { OaiSettings } from '../oai.settings.js';
 
-export class OaiMapper extends BaseMapper {
+export class OaiMapper extends Mapper<OaiSettings> {
 
     static select = <XPathElementSelect>xpath.useNamespaces(oaiXPaths.mods.prefixMap);
 
@@ -50,24 +48,20 @@ export class OaiMapper extends BaseMapper {
         return this.select(path.replace(/\/(?!@)/g, '/mods:'), parent, true)?.textContent;
     }
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     private readonly header: Element;
     public readonly record: Element;
     private harvestTime: any;
 
     protected readonly idInfo; // : SelectedValue;
-    private settings: OaiSettings;
     private readonly uuid: string;
-    private summary: Summary;
 
-    constructor(settings, header: Element, record: Element, harvestTime, summary) {
-        super();
-        this.settings = settings;
+    constructor(settings: OaiSettings, header: Element, record: Element, harvestTime, summary: Summary) {
+        super(settings, summary);
         this.header = header;
         this.record = record;
         this.harvestTime = harvestTime;
-        this.summary = summary;
 
         super.init();
     }
@@ -150,24 +144,31 @@ export class OaiMapper extends BaseMapper {
         return persons;
     }
 
-    getLocations(): Media[] {
+    async getLocations(): Promise<Media[]> {
         const getMediaType = (obj: string) => {
             // TODO extend ?
             if (obj?.includes('MCRZipServlet') || obj.includes('MCRFileNodeServlet')) {
-                return 'document' as const;
+                return 'document' as MediaType;
             }
-            return null;
+            return '' as MediaType;
         };
         let locationNodes: Element[] = this.select('./mods:location');
-        let media = locationNodes.map(location => ({
-            type: getMediaType(OaiMapper.text('./url[@access="raw object"]', location)),
-            // TODO decide which one
-            url: OaiMapper.text('./url[@access="object in context"]', location),
-            // url: OaiMapper.text('./url[@access="raw object"]', location),
-            description: '',
-            thumbnail: OaiMapper.text('./url[@access="preview"]', location)
+        return await Promise.all(locationNodes.map(async location => {
+            let mediaURL = OaiMapper.text('./url[@access="object in context"]', location);
+            let mediaType = getMediaType(OaiMapper.text('./url[@access="raw object"]', location));
+            let media: Media = {
+                type: mediaType,
+                // TODO decide which one
+                url: mediaURL,
+                // url: OaiMapper.text('./url[@access="raw object"]', location),
+                description: '',
+                thumbnail: OaiMapper.text('./url[@access="preview"]', location)
+            };
+            if (mediaType == 'image') {
+                media.dimensions = await MiscUtils.getImageDimensionsFromURL(mediaURL);
+            }
+            return media;
         }));
-        return media;
     }
 
     getLicenses() {
@@ -178,14 +179,6 @@ export class OaiMapper extends BaseMapper {
             url: node.getAttribute('xlink:href')
         }));
         return licenses;
-    }
-
-    getSettings(): ImporterSettings {
-        return this.settings;
-    }
-
-    getSummary(): Summary {
-        return this.summary;
     }
 
     getHarvestedData(): string {
@@ -206,11 +199,11 @@ export class OaiMapper extends BaseMapper {
     }
 
     getMetadataSource(): MetadataSource {
-        let link = `${this.settings.sourceURL}?verb=GetRecord&metadataPrefix=${this.settings.metadataPrefix}&identifier=oai:www.mycore.de:${this.getId()}`;
+        let link = `${this.getSettings().sourceURL}?verb=GetRecord&metadataPrefix=${this.getSettings().metadataPrefix}&identifier=oai:www.mycore.de:${this.getId()}`;
         return {
-            source_base: this.settings.sourceURL,
+            source_base: this.getSettings().sourceURL,
             raw_data_source: link,
-            source_type: this.settings.metadataPrefix
+            source_type: this.getSettings().metadataPrefix
         };
     }
 }

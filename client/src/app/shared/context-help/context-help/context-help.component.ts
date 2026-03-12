@@ -18,19 +18,18 @@ import { MatIcon } from "@angular/material/icon";
 import { MatIconButton } from "@angular/material/button";
 
 @Component({
-  selector: "ige-context-help",
-  templateUrl: "./context-help.component.html",
-  styleUrls: ["./context-help.component.scss"],
-  imports: [
-    CdkDrag,
-    CdkDragHandle,
-    MatIcon,
-    MatDialogTitle,
-    MatIconButton,
-    MatDialogClose,
-    MatDialogContent,
-  ],
-  standalone: true
+    selector: "ige-context-help",
+    templateUrl: "./context-help.component.html",
+    styleUrls: ["./context-help.component.scss"],
+    imports: [
+        CdkDrag,
+        CdkDragHandle,
+        MatIcon,
+        MatDialogTitle,
+        MatIconButton,
+        MatDialogClose,
+        MatDialogContent,
+    ]
 })
 export class ContextHelpComponent implements OnInit, OnDestroy {
   @ViewChild("contextHelpContainer") container: ElementRef;

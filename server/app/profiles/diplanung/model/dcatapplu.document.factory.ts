@@ -21,15 +21,14 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../utils/misc.utils';
-import { Catalog, ProcessStep, Record } from '../../../model/dcatApPlu.model';
-import { ConfigService } from '../../../services/config/ConfigService';
-import { Contact, Organization, Person } from '../../../model/agent';
-import { DateRange } from '../../../model/dateRange';
-import { DiplanungIndexDocument } from './index.document';
-import { Distribution } from '../../../model/distribution';
-
-const esc = require('xml-escape');
+import * as MiscUtils from '../../../utils/misc.utils.js';
+import type { Catalog, ProcessStep, Record } from '../../../model/dcatApPlu.model.js';
+import { ConfigService } from '../../../services/config/ConfigService.js';
+import type { Contact, Organization, Person } from '../../../model/agent.js';
+import type { DateRange } from '../../../model/dateRange.js';
+import type { DiplanungIndexDocument } from './index.document.js';
+import type { Distribution } from '../../../model/distribution.js';
+import esc from "xml-escape";
 
 function optional(wrapper: string | Function, variable: any | any[], ...remainder: any) {
     if (variable == null) {
@@ -93,7 +92,6 @@ export class DcatApPluDocumentFactory {// no can do with TS: extends ExportDocum
                 <dct:title>${esc(document.title)}</dct:title>
                 <plu:planState rdf:resource="${diplanUriPrefix}/planState#${document.plan_state}"/>
                 <plu:procedureState rdf:resource="${diplanUriPrefix}/procedureState#${document.procedure_state}"/>
-                ${optional('plu:procedureStartDate', dateAsIsoString(document.procedure_start_date))}
                 <dct:spatial>
                     <dct:Location>
                         ${DcatApPluDocumentFactory.xmlSpatial('dcat:bbox', document.bounding_box)}
@@ -214,10 +212,6 @@ export class DcatApPluDocumentFactory {// no can do with TS: extends ExportDocum
     }
 
     private static xmlAdmsIdentifier(admsIdentifier: string) {
-        return`<adms:identifier>
-            <adms:Identifier>
-                ${optional('skos:notation', esc(admsIdentifier))}
-            </adms:Identifier>
-        </adms:identifier>`;
+        return`<adms:identifier rdf:resource="${diplanUriPrefix}/authority#${esc(admsIdentifier)}"/>`;
     }
 }

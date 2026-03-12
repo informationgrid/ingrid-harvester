@@ -30,9 +30,10 @@ import { MonitoringUrlcheckDetailComponent } from './monitoring-urlcheck-detail/
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-monitoring-urlcheck',
-  templateUrl: './monitoring-urlcheck.component.html',
-  styleUrls: ['./monitoring-urlcheck.component.scss']
+    selector: 'app-monitoring-urlcheck',
+    templateUrl: './monitoring-urlcheck.component.html',
+    styleUrls: ['./monitoring-urlcheck.component.scss'],
+    standalone: false
 })
 export class MonitoringUrlCheckComponent implements OnInit {
 

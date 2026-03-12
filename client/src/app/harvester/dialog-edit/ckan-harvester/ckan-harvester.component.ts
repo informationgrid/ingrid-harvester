@@ -26,9 +26,10 @@ import {CkanSettings} from '../../../../../../server/app/importer/ckan/ckan.sett
 import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 
 @Component({
-  selector: 'app-ckan-harvester',
-  templateUrl: './ckan-harvester.component.html',
-  styleUrls: ['./ckan-harvester.component.scss']
+    selector: 'app-ckan-harvester',
+    templateUrl: './ckan-harvester.component.html',
+    styleUrls: ['./ckan-harvester.component.scss'],
+    standalone: false
 })
 export class CkanHarvesterComponent implements OnInit, OnDestroy {
 

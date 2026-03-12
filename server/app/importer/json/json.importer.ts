@@ -21,36 +21,31 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../utils/misc.utils';
-import { getLogger } from 'log4js';
-import { BulkResponse } from '../../persistence/elastic.utils';
-import { Importer } from '../importer';
-import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { IndexDocument } from '../../model/index.document';
-import { JsonMapper } from './json.mapper';
-import { JsonSettings } from './json.settings';
-import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../profiles/profile.factory';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
-import { RecordEntity } from '../../model/entity';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { Summary } from '../../model/summary';
+import log4js from 'log4js';
+import type { Observer } from 'rxjs';
+import type { RecordEntity } from '../../model/entity.js';
+import type { ImportLogMessage } from '../../model/import.result.js';
+import { ImportResult } from '../../model/import.result.js';
+import type { IndexDocument } from '../../model/index.document.js';
+import type { BulkResponse } from '../../persistence/elastic.utils.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import type { RequestOptions } from '../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import { Importer } from '../importer.js';
+import { JsonMapper } from './json.mapper.js';
+import type { JsonSettings } from './json.settings.js';
 
-const log = getLogger(__filename);
-const logRequest = getLogger('requests');
+const log = log4js.getLogger(import.meta.filename);
+const logRequest = log4js.getLogger('requests');
 
-export class JsonImporter extends Importer {
-
-    protected profile: ProfileFactory<JsonMapper>;
-    declare protected settings: JsonSettings;
+export class JsonImporter extends Importer<JsonSettings> {
 
     private totalRecords = 0;
     private numIndexDocs = 0;
 
     constructor(settings: JsonSettings) {
         super(settings);
-        this.profile = ProfileFactoryLoader.get();
-        this.settings = settings;
     }
 
     // only here for documentation - use the "default" exec function
@@ -72,23 +67,23 @@ export class JsonImporter extends Importer {
 
         await this.preHarvestingHandling();
 
-        const requestConfig = JsonImporter.createRequestConfig(this.settings);
+        const requestConfig = JsonImporter.createRequestConfig(this.getSettings());
         const requestDelegate = new RequestDelegate(requestConfig);
         let harvestTime = new Date(Date.now());
         let response = await requestDelegate.doRequest();
 
         let numReturned = response?.length;
         if (numReturned) {
-            log.debug(`Received ${numReturned} records from ${this.settings.sourceURL}`);
+            log.debug(`Received ${numReturned} records from ${this.getSettings().sourceURL}`);
             await this.extractRecords(response, harvestTime);
-
+            
             let processingTime = Math.floor((Date.now() - harvestTime.getTime()) / 1000);
             log.info(`Finished processing ${numReturned} records in ${processingTime} seconds`);
         }
         else {
             const message = `Error while fetching ClickRhein Records\nServer response: ${MiscUtils.truncateErrorMessage(response?.toString())}.`;
             log.error(message);
-            this.summary.appErrors.push(message);
+            this.getSummary().appErrors.push(message);
         }
 
         log.info(`Finished requesting records`);
@@ -102,10 +97,10 @@ export class JsonImporter extends Importer {
     protected async extractRecords(records: object[], harvestTime: Date): Promise<void> {
         const promises: Promise<BulkResponse>[] = [];
         for (let record of records) {
-            this.summary.numDocs++;
-            let id = record[this.settings.idProperty];
+            this.getSummary().numDocs++;
+            let id = record[this.getSettings().idProperty];
             if (!this.filterUtils.isIdAllowed(id)) {
-                this.summary.skippedDocs.push(id);
+                this.getSummary().skippedDocs.push(id);
             }
             else {
                 if (log.isDebugEnabled()) {
@@ -115,39 +110,35 @@ export class JsonImporter extends Importer {
                     logRequest.debug("Record content: ", JSON.stringify(record));
                 }
 
-                const mapper = this.getMapper(this.settings, record, harvestTime, this.summary);
+                const mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), record)) as JsonMapper;
 
                 let doc: IndexDocument;
                 try {
-                    doc = await this.profile.getIndexDocumentFactory(mapper).create();
+                    doc = await mapper.createEsDocument();
                 }
                 catch (e) {
                     log.warn('Error creating index document', e);
-                    this.summary.warnings.push(['Indexing error', e.toString()]);
+                    this.getSummary().warnings.push(['Indexing error', e.toString()]);
                     mapper.skipped = true;
                 }
 
-                if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+                if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
                     let entity: RecordEntity = {
                         identifier: id,
-                        source: this.settings.sourceURL,
-                        collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
+                        source: this.getSettings().sourceURL,
+                        collection_id: (await this.database.getCatalog(this.getSettings().catalogId)).id,
                         dataset: doc,
                         original_document: mapper.getHarvestedData()
                     };
                     promises.push(this.database.addEntityToBulk(entity));
                 }
                 else {
-                    this.summary.skippedDocs.push(id);
+                    this.getSummary().skippedDocs.push(id);
                 }
                 this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
             }
         }
         await Promise.allSettled(promises).catch(e => log.error('Error persisting record', e));
-    }
-
-    getMapper(settings: JsonSettings, record: object, harvestTime: Date, summary: Summary): JsonMapper {
-        return new JsonMapper(settings, record, harvestTime, summary);
     }
 
     protected static createRequestConfig(settings: JsonSettings): RequestOptions {
@@ -160,9 +151,5 @@ export class JsonImporter extends Importer {
             timeout: settings.timeout
         };
         return requestConfig;
-    }
-
-    getSummary(): Summary {
-        return this.summary;
     }
 }

@@ -23,22 +23,22 @@
 
 import { Emit, Input, Namespace, Nsp, Socket, SocketService, SocketSession } from '@tsed/socketio';
 import { CronJob } from 'cron';
-import { getLogger } from 'log4js';
+import log4js from 'log4js';
 import * as SocketIO from 'socket.io';
-import { ImportLogMessage } from '../model/import.result';
-import { ElasticsearchFactory } from '../persistence/elastic.factory';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
-import { ConfigService } from '../services/config/ConfigService';
-import { SummaryService } from '../services/config/SummaryService';
-import { StatisticUtils } from '../statistic/statistic.utils';
-import * as MiscUtils from '../utils/misc.utils';
-import { MailServer } from '../utils/nodemailer.utils';
+import type { ImportLogMessage } from '../model/import.result.js';
+import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
+import { ConfigService } from '../services/config/ConfigService.js';
+import { SummaryService } from '../services/config/SummaryService.js';
+import { StatisticUtils } from '../statistic/statistic.utils.js';
+import * as MiscUtils from '../utils/misc.utils.js';
+import { MailServer } from '../utils/nodemailer.utils.js';
 
 @SocketService('/import')
 export class ImportSocketService {
     @Nsp nsp: Namespace;
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     constructor(private summaryService: SummaryService) {
     }
@@ -72,7 +72,7 @@ export class ImportSocketService {
             if (profile.useIndexPerCatalog()) {
                 profile.createCatalogIfNotExist(configHarvester.catalogId);
             }
-            let importer = await profile.getImporterFactory().get(configHarvester);
+            let importer = await profile.getImporter(configHarvester);
             let mode = isIncremental ? 'incr' : 'full';
             this.log.info(`>> Running importer: [${configHarvester.type}] ${configHarvester.description}`);
 

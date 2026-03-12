@@ -21,17 +21,14 @@
  * ==================================================
  */
 
-import * as GeoJsonUtils from '../../../utils/geojson.utils';
-import 'dayjs/locale/de';
-import { GeometryInformation, Temporal } from '../../../model/index.document';
-import { Keyword } from '../../../model/ingrid.index.document';
-import { KldMapper } from '../../../importer/kld/kld.mapper';
-import { License } from '@shared/license.model';
-import { LvrMapper } from './lvr.mapper';
-import { LvrDateRange, Media, Person, Relation, Source } from '../model/index.document';
-
-const dayjs = require('dayjs');
-dayjs.locale('de');
+import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
+import { convertBBCode } from '../lvr.utils.js';
+import type { GeometryInformation, Temporal } from '../../../model/index.document.js';
+import type { Keyword } from '../../../model/ingrid.index.document.js';
+import type { KldMapper } from '../../../importer/kld/kld.mapper.js';
+import type { License } from '@shared/license.model.js';
+import { LvrMapper } from './lvr.mapper.js';
+import type { LvrDateRange, Media, Person, Relation, Source } from '../model/index.document.js';
 
 export class LvrKldMapper extends LvrMapper<KldMapper> {
 
@@ -48,7 +45,8 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
     }
 
     getDescription(): string[] {
-        return [this.baseMapper.getDescription()];
+        let description = convertBBCode(this.baseMapper.getDescription());
+        return [description];
     }
 
     getSpatial(): GeometryInformation[] {
@@ -97,7 +95,7 @@ export class LvrKldMapper extends LvrMapper<KldMapper> {
         return null;
     }
 
-    getMedia(): Media[] {
+    async getMedia(): Promise<Media[]> {
         return this.baseMapper.getMedia();
     }
 

@@ -21,16 +21,12 @@
  * ==================================================
  */
 
-import 'dayjs/locale/de';
-import { GeometryInformation, Temporal } from '../../../model/index.document';
-import { Keyword } from '../../../model/ingrid.index.document';
-import { License } from '@shared/license.model';
-import { LvrMapper } from './lvr.mapper';
-import { Media, Person, Relation, Source } from '../model/index.document';
-import { OaiMapper } from '../../../importer/oai/mods/oai.mapper';
-
-const dayjs = require('dayjs');
-dayjs.locale('de');
+import type { GeometryInformation, Temporal } from '../../../model/index.document.js';
+import type { Keyword } from '../../../model/ingrid.index.document.js';
+import type { License } from '@shared/license.model.js';
+import { LvrMapper } from './lvr.mapper.js';
+import type { Media, Person, Relation, Source } from '../model/index.document.js';
+import { OaiMapper } from '../../../importer/oai/mods/oai.mapper.js';
 
 export class LvrOaiModsMapper extends LvrMapper<OaiMapper> {
 
@@ -71,7 +67,7 @@ export class LvrOaiModsMapper extends LvrMapper<OaiMapper> {
         return this.baseMapper.getNames();
     }
 
-    getMedia(): Media[] {
+    async getMedia(): Promise<Media[]> {
         return this.baseMapper.getLocations();
     }
 

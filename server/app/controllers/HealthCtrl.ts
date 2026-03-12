@@ -21,13 +21,13 @@
  * ==================================================
  */
 
-import { ConfigService } from '../services/config/ConfigService';
+import { ConfigService } from '../services/config/ConfigService.js';
 import { ContentType } from '@tsed/schema';
 import { Controller, Get } from '@tsed/common';
-import { DatabaseFactory } from '../persistence/database.factory';
-import { DatabaseUtils } from '../persistence/database.utils';
-import { ElasticsearchFactory } from '../persistence/elastic.factory';
-import { ElasticsearchUtils } from '../persistence/elastic.utils';
+import { DatabaseFactory } from '../persistence/database.factory.js';
+import { DatabaseUtils } from '../persistence/database.utils.js';
+import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
+import { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 
 @Controller('/health')
 export class HealthCtrl {

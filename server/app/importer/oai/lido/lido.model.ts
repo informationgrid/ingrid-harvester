@@ -21,8 +21,8 @@
  * ==================================================
  */
 
-import { DateRange } from '../../../model/dateRange';
-import { Geometries } from '@turf/helpers';
+import type { DateRange } from '../../../model/dateRange.js';
+import type { Geometry } from 'geojson';
 
 export interface Actor {
     displayName?: string,
@@ -65,7 +65,7 @@ export interface Link {
 
 export interface Place {
     displayPlace: string,
-    geometry: Geometries,
+    geometry: Geometry,
     id: string,
     name: string
 }

@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+@use "sass:map";
 @use '@angular/material' as mat;
 
 // @import '@angular/material/theming';
@@ -39,7 +40,8 @@
 //  you can delete this line and instead use:
 //    `@include mat.legacy-typography-hierarchy(mat.define-typography-config());`
 @include mat.all-component-typographies();
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 $ingrid-blue: (
 50: #e8e9f1,
@@ -92,21 +94,21 @@ $ingrid-green: (
 );
 
 
-$ingrid-primary: mat.define-palette($ingrid-green);
-$ingrid-accent: mat.define-palette($ingrid-blue);
+$ingrid-primary: mat.m2-define-palette($ingrid-green);
+$ingrid-accent: mat.m2-define-palette($ingrid-blue);
 
 
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$candy-app-primary: mat.define-palette($ingrid-primary, 700);
-$candy-app-accent: mat.define-palette($ingrid-accent, 700);
+$candy-app-primary: mat.m2-define-palette($ingrid-primary, 700);
+$candy-app-accent: mat.m2-define-palette($ingrid-accent, 700);
 // The warn palette is optional (defaults to red).
-$candy-app-warn: mat.define-palette(mat.$red-palette);
+$candy-app-warn: mat.m2-define-palette(mat.$m2-red-palette);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$candy-app-theme: mat.define-dark-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
+$candy-app-theme: mat.m2-define-dark-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
@@ -126,12 +128,12 @@ input.custom-autofill {
 
 @mixin importer-components-theme($theme) {
   // Extract the palettes you need from the theme definition.
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
+  $primary: map.get($theme, primary);
+  $accent: map.get($theme, accent);
 
   // Define any styles affected by the theme.
   .active-link {
-    border-left: 3px solid mat.get-color-from-palette($primary);
+    border-left: 3px solid mat.m2-get-color-from-palette($primary);
   }
   .mat-mdc-card {
     margin-bottom: 20px;

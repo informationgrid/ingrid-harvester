@@ -22,9 +22,9 @@
  */
 
 import * as Express from 'express';
-import * as Passport from 'passport';
+import passport from 'passport';
 import { BodyParams, Controller, Get, Post, Req, Res } from '@tsed/common';
-import { IUser } from '../../model/User';
+import type { IUser } from '../../model/User.js';
 import { Required } from '@tsed/schema';
 
 @Controller('/passport')
@@ -43,7 +43,7 @@ export class PassportCtrl {
                 @Res() response: Express.Response) {
 
         return new Promise<IUser>((resolve, reject) => {
-            Passport
+            passport
                 .authenticate('login', (err, user: IUser) => {
                     if (err) {
                         reject(err);

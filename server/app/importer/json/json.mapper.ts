@@ -21,47 +21,43 @@
  * ==================================================
  */
 
-import { getLogger } from 'log4js';
-import { BaseMapper } from '../base.mapper';
-import { ImporterSettings } from '../../importer.settings';
-import { MetadataSource } from '../../model/index.document';
-import { JsonSettings } from './json.settings';
-import { Summary } from '../../model/summary';
+import log4js from 'log4js';
+import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
+import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
+import type { Summary } from '../../model/summary.js';
+import { Mapper } from '../mapper.js';
+import type { JsonSettings } from './json.settings.js';
 
-export class JsonMapper extends BaseMapper {
+export class JsonMapper extends Mapper<JsonSettings> implements ToElasticMapper<IndexDocument> {
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     readonly record: object;
     readonly id: string;
 
-    private settings: JsonSettings;
     private harvestTime: Date;
-    private summary: Summary;
 
     constructor(settings: JsonSettings, record: object, harvestTime: Date, summary: Summary) {
-        super();
-        this.settings = settings;
+        super(settings, summary);
         this.record = record;
-        this.id = record[this.settings.idProperty];
+        this.id = record[this.getSettings().idProperty];
         this.harvestTime = harvestTime;
-        this.summary = summary;
 
         super.init();
     }
 
-    getSettings(): JsonSettings {
-        return this.settings;
-    }
-
-    getSummary(): Summary {
-        return this.summary;
+    async createEsDocument(): Promise<IndexDocument> {
+        return {
+            extras: {
+                metadata: this.getHarvestingMetadata(),
+            }
+        };
     }
 
     getMetadataSource(): MetadataSource {
         return {
-            source_base: this.settings.sourceURL,
-            raw_data_source: this.settings.sourceURL,
+            source_base: this.getSettings().sourceURL,
+            raw_data_source: this.getSettings().sourceURL,
             source_type: 'json'
         };
     }

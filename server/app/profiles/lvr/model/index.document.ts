@@ -21,9 +21,10 @@
  * ==================================================
  */
 
-import { IndexDocument } from '../../../model/index.document';
-import { IngridIndexDocument } from '../../../model/ingrid.index.document';
-import { License } from '@shared/license.model';
+import type { Dimensions } from '../../../model/dimensions.js';
+import type { IndexDocument } from '../../../model/index.document.js';
+import type { IngridIndexDocument } from '../../../model/ingrid.index.document.js';
+import type { License } from '@shared/license.model.js';
 
 export type LvrIndexDocument = IngridIndexDocument & IndexDocument & {
     lvr: {
@@ -44,11 +45,14 @@ export type LvrIndexDocument = IngridIndexDocument & IndexDocument & {
 };
 
 export type Media = {
-    type: 'image' | 'audio' | 'video' | 'document' | '',//string,
+    type: MediaType,//string,
     url: string,
     thumbnail?: string,
-    description: string
+    description: string,
+    dimensions?: Dimensions
 };
+
+export type MediaType = 'image' | 'audio' | 'video' | 'document' | '';
 
 export type Person = {
     type: string,

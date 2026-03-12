@@ -21,34 +21,47 @@
  * ==================================================
  */
 
-import { ConfigService } from '../services/config/ConfigService';
-import { DatabaseFactory } from '../persistence/database.factory';
-import { DatabaseUtils } from '../persistence/database.utils';
-import { ElasticsearchFactory } from '../persistence/elastic.factory';
-import { ElasticsearchUtils } from '../persistence/elastic.utils';
-import { FilterUtils } from '../utils/filter.utils';
-import { GeneralSettings } from '@shared/general-config.settings';
-import { ImporterSettings } from '../importer.settings';
-import { ImportLogMessage, ImportResult } from '../model/import.result';
-import { IndexConfiguration } from '../persistence/elastic.setting';
-import { MailServer } from '../utils/nodemailer.utils';
-import { Observable, Observer } from 'rxjs';
-import { Summary } from '../model/summary';
+import type { GeneralSettings } from '@shared/general-config.settings.js';
+import log4js from 'log4js';
+import type { Observer } from 'rxjs';
+import { Observable } from 'rxjs';
+import type { ImporterSettings } from '../importer.settings.js';
+import type { ImportLogMessage } from '../model/import.result.js';
+import { ImportResult } from '../model/import.result.js';
+import { Summary } from '../model/summary.js';
+import { DatabaseFactory } from '../persistence/database.factory.js';
+import type { DatabaseUtils } from '../persistence/database.utils.js';
+import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
+import type { IndexConfiguration } from '../persistence/elastic.setting.js';
+import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
+import { ConfigService } from '../services/config/ConfigService.js';
+import { FilterUtils } from '../utils/filter.utils.js';
+import { MailServer } from '../utils/nodemailer.utils.js';
 
-const log = require('log4js').getLogger(__filename)
+const log = log4js.getLogger(import.meta.filename)
 
-export abstract class Importer {
+/**
+ * Base class for all importers.
+ * 
+ * An importer is responsible for the overall harvesting process.
+ * This includes
+ * - fetching data from third-party sources
+ * - splitting the data into singular records and handing them to the appropriate mapper
+ * - managing the transaction and pushing the transformed data to the database and the configured catalogs
+ */
+export abstract class Importer<S extends ImporterSettings> {
 
+    private readonly settings: S;
+    private readonly summary: Summary;
     protected filterUtils: FilterUtils;
     protected generalConfig: GeneralSettings;
     protected observer: Observer<ImportLogMessage>;
-    protected settings: ImporterSettings;
-    protected summary: Summary;
 
     readonly database: DatabaseUtils;
     readonly elastic: ElasticsearchUtils;
 
-    protected constructor(settings: ImporterSettings) {
+    protected constructor(settings: S) {
         this.filterUtils = new FilterUtils(settings);
         this.generalConfig = ConfigService.getGeneralSettings();
         this.summary = new Summary(settings);
@@ -59,6 +72,7 @@ export abstract class Importer {
             dryRun: settings.dryRun,
             addAlias: !settings.disable
         };
+
         this.database = DatabaseFactory.getDatabaseUtils(this.generalConfig.database, this.summary);
         this.elastic = ElasticsearchFactory.getElasticUtils(elasticsearchConfig, this.summary);
 
@@ -109,7 +123,26 @@ export abstract class Importer {
 
                 await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
                 await this.database.commitTransaction();
-                await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
+                // TODO support concurrency of different catalogs
+                for (const catalogId of this.getSettings().catalogIds) {
+                    try {
+                        const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, this.getSummary());
+                        // log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with transaction timestamp ${transactionTimestamp}`);
+                        log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with source ${this.getSettings().sourceURL}`);
+
+                        // TODO currently this relies on "sourceURL" instead of transactionTimestamp
+                        // should this be changed to transactionTimestamp?
+                        // for that, we need to consider how to handle "deleted", i.e. non-fetched, datasets
+
+                        await catalog.process(this.getSettings().sourceURL, this.settings);
+                    }
+                    catch (e) {
+                        log.error(`Error while importing into catalog ${catalogId}`, e);
+                        this.getSummary().appErrors.push(`Error while importing into catalog ${catalogId}: ${e.message}`);
+                    }
+                }
+                // await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
+                await this.postHarvestingHandling();
                 observer.next(ImportResult.complete(this.summary));
             }
             catch (err) {
@@ -126,6 +159,14 @@ export abstract class Importer {
     }
 
     protected abstract harvest(): Promise<number>;
+
+    protected async postHarvestingHandling() {
+        // For Profile specific Handling
+    }
+
+    getSettings(): S {
+        return this.settings;
+    }
 
     getSummary(): Summary {
         return this.summary;

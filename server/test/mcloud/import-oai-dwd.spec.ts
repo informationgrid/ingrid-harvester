@@ -25,18 +25,16 @@ import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import {configure, getLogger} from "log4js";
 import * as sinon from "sinon";
-import {TestUtils} from "../utils/test-utils";
-import {IndexDocument} from '../../app/model/index.document';
-import {OaiSettings} from "../../app/importer/oai/oai.settings";
-import {OaiImporter} from "../../app/importer/oai/oai.importer";
-import {ProfileFactoryLoader} from "../../app/profiles/profile.factory.loader";
-import {mcloudDocument} from "../../app/profiles/mcloud/model/index.document";
+import {TestUtils} from "../utils/test-utils.js";
+import {IndexDocument} from '../../app/model/index.document.js';
+import type {OaiSettings} from "../../app/importer/oai/oai.settings.js";
+import {OaiImporter} from "../../app/importer/oai/oai.importer.js";
+import {ProfileFactoryLoader} from "../../app/profiles/profile.factory.loader.js";
+import {mcloudDocument} from "../../app/profiles/mcloud/model/index.document.js";
+import resultWMSDienst from "../data/result_oai_dwd_WMS-Dienst.json" with { type: "json" };
 
 let log = getLogger();
 configure('./log4js.json');
-
-let resultWMSDienst = require('../data/result_oai_dwd_WMS-Dienst.json');
-
 chai.use(chaiAsPromised);
 
 describe('Import OAI DWD', function () {

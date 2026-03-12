@@ -21,14 +21,15 @@
  * ==================================================
  */
 
-import { uniqBy } from 'lodash';
-import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
-import { Contact, Organization, Person } from '../../../model/agent';
-import { CswMapper } from '../../../importer/csw/csw.mapper';
-import { DateRange } from '../../../model/dateRange';
-import { DiplanungMapper } from './diplanung.mapper';
-import { Distribution } from '../../../model/distribution';
-import { Geometry, GeometryCollection, Point } from '@turf/helpers';
+import { uniqBy } from 'lodash-es';
+import type { Catalog, ProcessStep } from '../../../model/dcatApPlu.model.js';
+import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType } from '../../../model/dcatApPlu.model.js';
+import type { Contact, Organization, Person } from '../../../model/agent.js';
+import { CswMapper } from '../../../importer/csw/csw.mapper.js';
+import type { DateRange } from '../../../model/dateRange.js';
+import { DiplanungMapper } from './diplanung.mapper.js';
+import type { Distribution } from '../../../model/distribution.js';
+import type { Geometry, Point } from 'geojson';
 
 const alternateTitleBlacklist = ['B-Plan', 'F-Plan'];
 
@@ -155,10 +156,14 @@ export class DiplanungCswMapper extends DiplanungMapper<CswMapper> {
         return undefined;
     }
 
+    // Source of mapping -> https://www.dev.diplanung.de/DefaultCollection/EfA%20DiPlanung/_workitems/edit/20548
     getPluProcedureState(): PluProcedureState {
         switch (this.getPluPlanState()) {
-            case PluPlanState.FESTGES: return PluProcedureState.ABGESCHLOSSEN;
+            case PluPlanState.SIMULIERT: return PluProcedureState.SIMULIERT;
             case PluPlanState.IN_AUFST: return PluProcedureState.LAUFEND;
+            case PluPlanState.FESTGES: return PluProcedureState.ABGESCHLOSSEN;
+            case PluPlanState.GANZ_AUFGEHOBEN: return PluProcedureState.GANZ_AUFGEHOBEN;
+            case PluPlanState.EINGESTELLT: return PluProcedureState.EINGESTELLT;
             default: return PluProcedureState.UNBEKANNT;
         }
     }
@@ -175,7 +180,7 @@ export class DiplanungCswMapper extends DiplanungMapper<CswMapper> {
         return undefined;
     }
 
-    getBoundingBox(): Geometry | GeometryCollection {
+    getBoundingBox(): Geometry {
         return this.baseMapper.getGeometry(true);
     }
 
@@ -183,7 +188,7 @@ export class DiplanungCswMapper extends DiplanungMapper<CswMapper> {
         return this.baseMapper.getCentroid();
     }
 
-    getSpatial(): Geometry | GeometryCollection {
+    getSpatial(): Geometry {
         return this.baseMapper.getSpatial();
     }
 

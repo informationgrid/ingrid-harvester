@@ -32,9 +32,10 @@ import {ConfigService} from "../../config/config.service";
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 @Component({
-  selector: 'app-indices-list',
-  templateUrl: './indices-list.component.html',
-  styleUrls: ['./indices-list.component.scss']
+    selector: 'app-indices-list',
+    templateUrl: './indices-list.component.html',
+    styleUrls: ['./indices-list.component.scss'],
+    standalone: false
 })
 export class IndicesListComponent implements OnInit {
 

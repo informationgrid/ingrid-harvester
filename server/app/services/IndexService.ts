@@ -21,20 +21,22 @@
  * ==================================================
  */
 
-import { Index } from '@shared/index.model';
+import log4js from 'log4js';
+import type { Index } from '@shared/index.model.js';
 import { Service } from '@tsed/di';
 import * as fs from "fs";
-import { Summary } from '../model/summary';
-import { ElasticsearchFactory } from '../persistence/elastic.factory';
-import { IndexConfiguration } from '../persistence/elastic.setting';
-import { BulkResponse, ElasticsearchUtils } from '../persistence/elastic.utils';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader';
-import { ConfigService } from './config/ConfigService';
+import { Summary } from '../model/summary.js';
+import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
+import type { IndexConfiguration } from '../persistence/elastic.setting.js';
+import { ElasticsearchUtils } from '../persistence/elastic.utils.js';
+import type { BulkResponse } from '../persistence/elastic.utils.js';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
+import { ConfigService } from './config/ConfigService.js';
+import { Readable } from 'stream';
+import path from "path";
+import zlib from "zlib";
 
-const log = require('log4js').getLogger(__filename);
-const path = require('path');
-const zlib = require('zlib');
-const Readable = require('stream').Readable
+const log = log4js.getLogger(import.meta.filename);
 
 @Service()
 export class IndexService {
@@ -98,7 +100,7 @@ export class IndexService {
         let indices = await this.elasticUtils.getIndicesFromBasename('');
         let systemIndices = ['harvester_statistic', 'url_check_history', 'index_check_history', 'ingrid_meta']
             .map(i => this.elasticUtils.config.prefix + i);
-        return indices.filter(index => !systemIndices.includes(index.name));
+        return indices.filter(index => !systemIndices.includes(index.name) && !index.name.startsWith('.'));
     }
 
     deleteIndex(name: string) {

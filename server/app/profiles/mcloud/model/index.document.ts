@@ -21,11 +21,11 @@
  * ==================================================
  */
 
-import { Agent, Contact, Organization, Person } from '../../../model/agent';
-import { DateRange } from '../../../model/dateRange';
-import { Distribution } from '../../../model/distribution';
-import { IndexDocument, MetadataSource } from '../../../model/index.document';
-import { License } from '@shared/license.model';
+import type { Agent, Contact, Organization, Person } from '../../../model/agent.js';
+import type { DateRange } from '../../../model/dateRange.js';
+import type { Distribution } from '../../../model/distribution.js';
+import type { IndexDocument, MetadataSource } from '../../../model/index.document.js';
+import type { License } from '@shared/license.model.js';
 
 export type mcloudIndexDocument = IndexDocument & {
     priority: number,

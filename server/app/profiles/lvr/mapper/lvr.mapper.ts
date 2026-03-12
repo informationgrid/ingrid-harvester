@@ -21,21 +21,20 @@
  * ==================================================
  */
 
-import * as GeoJsonUtils from '../../../utils/geojson.utils';
-import 'dayjs/locale/de';
-import { createEsId } from '../lvr.utils';
-import { GeometryInformation, Temporal } from '../../../model/index.document';
-import { IndexDocumentFactory } from '../../../model/index.document.factory';
-import { IngridIndexDocument, Keyword, Spatial } from '../../../model/ingrid.index.document';
-import { JsonMapper } from '../../../importer/json/json.mapper';
-import { KldMapper } from '../../../importer/kld/kld.mapper';
-import { License } from '@shared/license.model';
-import { LvrIndexDocument, Media, Person, Relation, Source } from '../model/index.document';
-import { OaiMapper as OaiLidoMapper } from '../../../importer/oai/lido/oai.mapper';
-import { OaiMapper as OaiModsMapper } from '../../../importer/oai/mods/oai.mapper';
+import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
+import { createEsId } from '../lvr.utils.js';
+import { v5 as uuidv5 } from 'uuid';
+import type { GeometryInformation, Temporal } from '../../../model/index.document.js';
+import type { IndexDocumentFactory } from '../../../model/index.document.factory.js';
+import type { IngridIndexDocument, Keyword, Spatial } from '../../../model/ingrid.index.document.js';
+import type { JsonMapper } from '../../../importer/json/json.mapper.js';
+import type { KldMapper } from '../../../importer/kld/kld.mapper.js';
+import type { License } from '@shared/license.model.js';
+import type { LvrIndexDocument, Media, Person, Relation, Source } from '../model/index.document.js';
+import type { OaiMapper as OaiLidoMapper } from '../../../importer/oai/lido/oai.mapper.js';
+import type { OaiMapper as OaiModsMapper } from '../../../importer/oai/mods/oai.mapper.js';
 
-const dayjs = require('dayjs');
-dayjs.locale('de');
+const UUID_NAMESPACE = '0afd6f59-d498-4da3-8919-1890d718d69e'; // randomly generated using uuid.v4
 
 export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMapper | JsonMapper> implements IndexDocumentFactory<LvrIndexDocument> {
 
@@ -51,7 +50,8 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
 
         let ingridDocument: IngridIndexDocument = {
             id: this.getUrlSafeIdentifier(),
-            schema_version: '1.0.0',
+            sort_uuid: this.getGeneratedUUID(),
+            schema_version: '0.0.2-SNAPSHOT',
             title: this.getTitle()?.join('\n'),
             description: this.getDescription()?.join('\n'),
             spatial: this.getIngridSpatial(),
@@ -75,7 +75,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
                 identifier: this.getIdentifier(),
                 genres: this.getGenres(),
                 persons: this.getPersons(),
-                media: this.getMedia(),
+                media: await this.getMedia(),
                 relations: this.getRelations(),
                 licenses: this.getLicense(),
                 vector: this.getVector(),
@@ -142,7 +142,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
 
     abstract getPersons(): Person[];
 
-    abstract getMedia(): Media[];
+    abstract getMedia(): Promise<Media[]>;
 
     abstract getRelations(): Relation[];
 
@@ -155,6 +155,10 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
     abstract getIssued(): Date;
 
     abstract getModified(): Date;
+
+    getGeneratedUUID(): string {
+        return uuidv5(this.getUrlSafeIdentifier(), UUID_NAMESPACE);
+    }
 }
 
 function first(strOrArr: string | string[]): string {

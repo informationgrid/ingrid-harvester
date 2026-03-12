@@ -21,48 +21,45 @@
  * ==================================================
  */
 
+import type { DOMParser } from '@xmldom/xmldom';
+import log4js from 'log4js';
+import type { Observer } from 'rxjs';
 import * as xpath from 'xpath';
-import * as MiscUtils from '../../utils/misc.utils';
-import { defaultOAISettings, OaiSettings } from './oai.settings';
-import { getLogger } from 'log4js';
-import { oaiXPaths, OaiXPaths } from './oai.paths';
-import { DOMParser } from '@xmldom/xmldom';
-import { Importer } from '../importer';
-import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { IndexDocument } from '../../model/index.document';
-import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../profiles/profile.factory';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
-import { RecordEntity } from '../../model/entity';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { Summary } from '../../model/summary';
-import { BaseMapper } from '../../importer/base.mapper';
+import type { RecordEntity } from '../../model/entity.js';
+import type { ImportLogMessage } from '../../model/import.result.js';
+import { ImportResult } from '../../model/import.result.js';
+import type { IndexDocument } from '../../model/index.document.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import type { RequestOptions } from '../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import { Importer } from '../importer.js';
+import type { OaiXPaths } from './oai.paths.js';
+import { oaiXPaths } from './oai.paths.js';
+import type { OaiSettings } from './oai.settings.js';
+import { defaultOAISettings } from './oai.settings.js';
 
-const log = require('log4js').getLogger(__filename);
-const logRequest = getLogger('requests');
+const log = log4js.getLogger(import.meta.filename);
+const logRequest = log4js.getLogger('requests');
 
-export class OaiImporter extends Importer {
+export class OaiImporter extends Importer<OaiSettings> {
 
     protected domParser: DOMParser;
-    protected profile: ProfileFactory<BaseMapper>;
     protected requestDelegate: RequestDelegate;
-    declare protected settings: OaiSettings;
 
     private xpaths: OaiXPaths;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
 
-    private readonly OaiMapper;
+    private OaiMapper;
 
     constructor(settings, requestDelegate?: RequestDelegate) {
-        super(settings);
-
-        this.profile = ProfileFactoryLoader.get();
-        this.domParser = MiscUtils.getDomParser();
-
         // merge default settings with configured ones
         settings = MiscUtils.merge(defaultOAISettings, settings);
+        super(settings);
+
+        this.domParser = MiscUtils.getDomParser();
 
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;
@@ -71,9 +68,7 @@ export class OaiImporter extends Importer {
             let requestConfig = OaiImporter.createRequestConfig(settings);
             this.requestDelegate = new RequestDelegate(requestConfig);
         }
-        this.settings = settings;
-        this.xpaths = oaiXPaths[this.settings.metadataPrefix?.toLowerCase()];
-        this.OaiMapper = require(`./${this.settings.metadataPrefix}/oai.mapper`).OaiMapper;
+        this.xpaths = oaiXPaths[this.getSettings().metadataPrefix?.toLowerCase()];
     }
 
     // only here for documentation - use the "default" exec function
@@ -91,11 +86,11 @@ export class OaiImporter extends Importer {
                 let responseDom = this.domParser.parseFromString(response, 'application/xml');
                 let resultsNode = responseDom.getElementsByTagName('ListRecords')[0];
                 if (!resultsNode) {
-                    throw new Error('Could not find ListRecords node in response DOM: ' + responseDom?.toString());
+                    throw new Error('Could not find ListRecords node in response DOM:\n' + responseDom?.toString());
                 }
 
                 let numReturned = resultsNode.getElementsByTagName('record').length;
-                log.debug(`Received ${numReturned} records from ${this.settings.sourceURL}`);
+                log.debug(`Received ${numReturned} records from ${this.getSettings().sourceURL}`);
                 await this.extractRecords(responseDom, harvestTime);
 
                 let resumptionTokenNode = resultsNode.getElementsByTagName('resumptionToken')[0];
@@ -108,13 +103,16 @@ export class OaiImporter extends Importer {
                 if (!resumptionToken) {
                     break;
                 }
-                let requestConfig = OaiImporter.createRequestConfig(this.settings, resumptionToken);
+                let requestConfig = OaiImporter.createRequestConfig(this.getSettings(), resumptionToken);
                 this.requestDelegate = new RequestDelegate(requestConfig);
             }
             catch (e) {
+                if (e.message?.startsWith('Could not find ListRecords node in response DOM')) {
+                    throw e;
+                }
                 const message = `Error while fetching OAI Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(e.message)}.`;
                 log.error(message);
-                this.summary.appErrors.push(message);
+                this.getSummary().appErrors.push(message);
             }
         }
         this.database.sendBulkData();
@@ -127,13 +125,13 @@ export class OaiImporter extends Importer {
         let records: HTMLCollectionOf<Element> = xml.getElementsByTagName('record');
 
         for (let i = 0; i < records.length; i++) {
-            this.summary.numDocs++;
+            this.getSummary().numDocs++;
             let header = records[i].getElementsByTagName('header').item(0);
-            const uuid = MiscUtils.substringAfterLast((xpath.useNamespaces(this.xpaths.prefixMap)(this.xpaths.idElem, header, true) as Node)?.textContent, ':');
+            const uuid = MiscUtils.substringAfterLast((xpath.useNamespaces(this.xpaths.prefixMap)(this.xpaths.idElem, header, true) as Node)?.textContent, ':', true);
 
             let isDeleted: boolean = header.attributes.getNamedItem('status')?.textContent == 'deleted';
             if (!this.filterUtils.isIdAllowed(uuid) || isDeleted) {
-                this.summary.skippedDocs.push(uuid);
+                this.getSummary().skippedDocs.push(uuid);
                 continue;
             }
             let record = records[i].getElementsByTagNameNS(this.xpaths.nsPrefix, this.xpaths.mdRoot).item(0);
@@ -145,37 +143,40 @@ export class OaiImporter extends Importer {
                 logRequest.debug("Record content: ", record.toString());
             }
 
-            let mapper = this.getMapper(this.settings, header, record, harvestTime, this.summary);
+            let mapper = await this.getMapper(this.getSettings(), header, record, harvestTime, this.getSummary());
 
             let doc: IndexDocument;
             try {
-                doc = await this.profile.getIndexDocumentFactory(mapper).create();
+                doc = await ProfileFactoryLoader.get().getIndexDocumentFactory(mapper).create();
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.summary.appErrors.push(e.toString());
+                this.getSummary().appErrors.push(e.toString());
                 mapper.skipped = true;
             }
 
-            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+            if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: uuid,
-                    source: this.settings.sourceURL,
-                    collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
+                    source: this.getSettings().sourceURL,
+                    collection_id: (await this.database.getCatalog(this.getSettings().catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };
                 promises.push(this.database.addEntityToBulk(entity));
             }
             else {
-                this.summary.skippedDocs.push(uuid);
+                this.getSummary().skippedDocs.push(uuid);
             }
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
         }
         await Promise.allSettled(promises).catch(err => log.error('Error indexing OAI record', err));
     }
 
-    getMapper(settings, header, record, harvestTime, summary) {
+    async getMapper(settings, header, record, harvestTime, summary) {
+        if (!this.OaiMapper) {
+            this.OaiMapper = (await import(`./${this.getSettings().metadataPrefix}/oai.mapper.js`)).OaiMapper;
+        }
         return new this.OaiMapper(settings, header, record, harvestTime, summary);
     }
 
@@ -194,7 +195,7 @@ export class OaiImporter extends Importer {
             requestConfig.qs = {
                 verb: 'ListRecords',
                 metadataPrefix: settings.metadataPrefix,
-                set: settings.set
+                set: settings.set ?? ''
             };
             if (settings.from) {
                 requestConfig.qs.from = settings.from;
@@ -218,9 +219,4 @@ export class OaiImporter extends Importer {
             resumptionToken: resumptionToken
         }
     }
-
-    getSummary(): Summary {
-        return this.summary;
-    }
-
 }

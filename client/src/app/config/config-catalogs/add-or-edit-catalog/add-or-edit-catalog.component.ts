@@ -28,9 +28,10 @@ import { of } from 'rxjs';
 import { Catalog } from '../../../../../../server/app/model/dcatApPlu.model';
 
 @Component({
-  selector: 'app-add-or-edit-catalog',
-  templateUrl: './add-or-edit-catalog.component.html',
-  styleUrls: ['./add-or-edit-catalog.component.scss']
+    selector: 'app-add-or-edit-catalog',
+    templateUrl: './add-or-edit-catalog.component.html',
+    styleUrls: ['./add-or-edit-catalog.component.scss'],
+    standalone: false
 })
 export class AddOrEditCatalogComponent implements OnInit {
 

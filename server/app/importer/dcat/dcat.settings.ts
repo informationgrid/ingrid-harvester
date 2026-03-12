@@ -21,7 +21,8 @@
  * ==================================================
  */
 
-import {DefaultImporterSettings, ImporterSettings} from '../../importer.settings';
+import type { ImporterSettings} from '../../importer.settings.js';
+import {DefaultImporterSettings} from '../../importer.settings.js';
 
 export type DCATProviderField = 'contactPoint' | 'creator' | 'originator' | 'maintainer' | 'publisher';
 

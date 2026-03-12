@@ -28,8 +28,9 @@ import {Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    standalone: false
 })
 export class LoginComponent implements OnInit {
 

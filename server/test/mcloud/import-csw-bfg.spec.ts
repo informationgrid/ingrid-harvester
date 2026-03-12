@@ -25,18 +25,16 @@ import * as chai from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import {configure, getLogger} from "log4js";
 import * as sinon from "sinon";
-import {TestUtils} from "../utils/test-utils";
-import {CswSettings} from '../../app/importer/csw/csw.settings';
-import {CswImporter} from '../../app/importer/csw/csw.importer';
-import {ProfileFactoryLoader} from "../../app/profiles/profile.factory.loader";
-import {IndexDocument} from "../../app/model/index.document";
-import {mcloudDocument} from "../../app/profiles/mcloud/model/index.document";
+import {TestUtils} from "../utils/test-utils.js";
+import type {CswSettings} from '../../app/importer/csw/csw.settings.js';
+import {CswImporter} from '../../app/importer/csw/csw.importer.js';
+import {ProfileFactoryLoader} from "../../app/profiles/profile.factory.loader.js";
+import {IndexDocument} from "../../app/model/index.document.js";
+import {mcloudDocument} from "../../app/profiles/mcloud/model/index.document.js";
+import resultFlussgebietseinheiten from "../data/result_csw_bfg_Flussgebietseinheiten.json" with { type: "json" };
 
 let log = getLogger();
 configure('./log4js.json');
-
-let resultFlussgebietseinheiten = require('../data/result_csw_bfg_Flussgebietseinheiten.json');
-
 chai.use(chaiAsPromised);
 
 describe('Import CSW BFG', function () {

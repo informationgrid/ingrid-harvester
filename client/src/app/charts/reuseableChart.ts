@@ -25,7 +25,7 @@ import { Chart } from "chart.js";
 import { formatDateAndTime, formatDay } from "../utils/dateUtils";
 
 
-const customTitle = (tooltipItems, data) => { 
+const customTitle = (tooltipItems, data) => {
   let nr: number;
   tooltipItems.forEach(tooltipItem => { nr = tooltipItem.dataIndex });
   return formatDateAndTime(data[nr].timestamp)
@@ -51,7 +51,7 @@ const customFooter = (tooltipItems, data) => {
   if(entry.warnings && entry.warnings.length>0){
     result += "\nWarnungen:\n";
     entry.warnings.sort((a, b) => b.count - a.count).slice(0, 5).forEach(warning => result += "· "+warning.message+(warning.count>1?" ("+warning.count+")":"")+"\n");
-  } 
+  }
   if (entry.status && entry.status.filter(status => isNaN(status.code) && status.code !== 'ftp').length > 0) {
     result += "\nFehler:\n";
     entry.status.filter(status => isNaN(status.code) && status.code !== 'ftp').forEach(status => result += "* " + status.code + "\n");
@@ -64,7 +64,7 @@ export function historyChart(chartName, data){
         type: 'line',
         data: {
           labels: data.map(entry => formatDay(entry.timestamp)),
-          datasets: 
+          datasets:
           [
             {
               label: "Datensätze",
@@ -101,7 +101,6 @@ export function historyChart(chartName, data){
               fill: false,
               cubicInterpolationMode: 'monotone',
               yAxisID: 'right-y-axis',
-              hidden: true
             }
           ],
         },
@@ -233,7 +232,6 @@ export function urlCheckChart(chartName, data){
               fill: false,
               cubicInterpolationMode: 'monotone',
               yAxisID: 'right-y-axis',
-              hidden: true
             },
           ],
         },
@@ -310,7 +308,7 @@ export function urlCheckChart(chartName, data){
                     }
                 }
             }
-            
+
         }
     }
     )
@@ -321,7 +319,7 @@ export function indexCheckChart(chartName, data){
       type: 'line',
       data: {
         labels: data.map(entry => formatDay(entry.timestamp)),
-        datasets: 
+        datasets:
         [
           {
             label: "Valid",

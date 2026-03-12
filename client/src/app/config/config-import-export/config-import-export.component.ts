@@ -31,9 +31,10 @@ import {ConfigGeneralComponent} from "../config-general/config-general.component
 import {ConfigModule} from "../config.module";
 
 @Component({
-  selector: 'app-config-import-export',
-  templateUrl: './config-import-export.component.html',
-  styleUrls: ['./config-import-export.component.scss']
+    selector: 'app-config-import-export',
+    templateUrl: './config-import-export.component.html',
+    styleUrls: ['./config-import-export.component.scss'],
+    standalone: false
 })
 export class ConfigImportExportComponent implements OnInit {
 

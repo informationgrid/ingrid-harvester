@@ -23,14 +23,15 @@
 
 import * as fs from 'fs';
 import * as xpath from 'xpath';
-import { getLogger } from 'log4js';
-import { namespaces } from '../importer/namespaces';
-import { License } from '@shared/license.model';
-import { XPathElementSelect } from './xpath.utils';
+import log4js from 'log4js';
+import { namespaces } from '../importer/namespaces.js';
+import { DOMParser } from '@xmldom/xmldom';
+import type { License } from '@shared/license.model.js';
+import type { XPathElementSelect } from './xpath.utils.js';
 
 export class DcatLicensesUtils {
 
-    private static log = getLogger();
+    private static log = log4js.getLogger();
 
     private static licenses: License[];
 
@@ -68,8 +69,7 @@ export class DcatLicensesUtils {
         try {
             const data = fs.readFileSync('def_licenses.rdf');
 
-            let DomParser = require('@xmldom/xmldom').DOMParser;
-            let responseDom = new DomParser().parseFromString(data.toString());
+            let responseDom = new DOMParser().parseFromString(data.toString());
 
             let concepts = responseDom.getElementsByTagNameNS(namespaces.SKOS, 'Concept');
 

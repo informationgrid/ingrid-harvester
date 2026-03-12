@@ -1,5 +1,5 @@
-chown -R ingrid /opt/ingrid/mcloud-importer
-chgrp -R ingrid /opt/ingrid/mcloud-importer
-cd /opt/ingrid/mcloud-importer
+chown -R ingrid /opt/ingrid/ingrid-harvester
+chgrp -R ingrid /opt/ingrid/ingrid-harvester
+cd /opt/ingrid/ingrid-harvester
 #npm run install-production
-systemctl restart mcloud-importer
+systemctl restart ingrid-harvester

@@ -27,9 +27,10 @@ import {ImportLogMessage} from "../../../../../server/app/model/import.result";
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 @Component({
-  selector: 'app-dialog-log',
-  templateUrl: './dialog-log.component.html',
-  styleUrls: ['./dialog-log.component.scss']
+    selector: 'app-dialog-log',
+    templateUrl: './dialog-log.component.html',
+    styleUrls: ['./dialog-log.component.scss'],
+    standalone: false
 })
 export class DialogLogComponent implements OnInit {
 

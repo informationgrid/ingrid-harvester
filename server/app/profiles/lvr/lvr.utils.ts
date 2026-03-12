@@ -21,8 +21,78 @@
  * ==================================================
  */
 
-import { LvrIndexDocument } from './model/index.document';
+// import { html as bbobHTML } from '@bbob/html';
+// import presetHTML5 from '@bbob/preset-html5';
+import { createRequire } from 'module';
+import type { LvrIndexDocument } from './model/index.document.js';
+import type { TagNode } from "@bbob/plugin-helper";
 
 export function createEsId(document: LvrIndexDocument): string {
     return document.id;
+}
+
+// workaround for https://github.com/JiLiZART/BBob/issues/214
+const require = createRequire(import.meta.url);
+const bbobHTML = require('@bbob/html').default;
+const presetHTML5 = require('@bbob/preset-html5').default;
+
+/**
+ * - null-values denote default handling
+ * - non-listed tags are passed through
+ */
+const ALLOWED_BBCODE_TAGS = {
+    b: (node: TagNode) => ({
+        tag: 'strong',
+        content: node.content,
+    }),
+    url: null,
+    i: (node: TagNode) => ({
+        tag: 'i',
+        content: node.content,
+    }),
+    list: null,
+    a: (node: TagNode) => {
+        // remove "nach oben"-Links: https://redmine.wemove.com/issues/5377#note-6
+        if (Object.values(node.attrs)[0] == 'TOP') {
+            return null;
+        }
+        return {
+            tag: 'a',
+            attrs: {
+                href: `#${Object.values(node.attrs)[0]}`
+            },
+            content: node.content
+        }
+    },
+    id: (node: TagNode) => null,
+    author: (node: TagNode) => node.content,
+    right: (node: TagNode) => ({
+        tag: 'span',
+        attrs: {
+            class: 'right'
+        },
+        content: node.content,
+    }),
+    td: null,
+    tr: null,
+    center: null,
+    u: null,
+    sup: null, 
+    table: null,
+    sub: null,
+    '*': null,
+    h1: null
+};
+
+const presetKuladig = presetHTML5.extend((tags) => ({
+    ...tags, // keep original tag handlers from html5Preset
+    ...Object.fromEntries(Object.entries(ALLOWED_BBCODE_TAGS).filter(([key, value]) => value !== null))
+}));
+
+export function convertBBCode(text: string, convertNewlines: boolean = true): string {
+    text = bbobHTML(text, presetKuladig(), { onlyAllowTags: Object.keys(ALLOWED_BBCODE_TAGS) });
+    if (convertNewlines) {
+        text = text.replaceAll('\r\n', '\n').replaceAll('\r', '\n').replaceAll('\n', '<br>');
+    }
+    return text;
 }

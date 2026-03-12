@@ -21,13 +21,15 @@
  * ==================================================
  */
 
-import { Client as Client6 } from 'elasticsearch6';
-import { Client as Client7 } from 'elasticsearch7';
-import { Client as Client8 } from 'elasticsearch8';
-import { ElasticQueries } from './elastic.queries';
-import { Index } from '@shared/index.model';
-import { IndexConfiguration, IndexSettings } from './elastic.setting';
-import { Summary } from '../model/summary';
+import type { Client as Client6 } from 'elasticsearch6';
+import type { Client as Client7 } from 'elasticsearch7';
+import type { Client as Client8 } from 'elasticsearch8';
+import type { Client as Client9 } from 'elasticsearch9';
+import type { ElasticQueries } from './elastic.queries.js';
+import type { Index } from '@shared/index.model.js';
+import type { IndexConfiguration, IndexSettings } from './elastic.setting.js';
+import type { Summary } from '../model/summary.js';
+import { INGRID_META_INDEX } from '../profiles/ingrid/profile.factory.js';
 
 export interface BulkResponse {
     queued: boolean;
@@ -47,7 +49,7 @@ export interface EsOperation {
 
 export abstract class ElasticsearchUtils {
 
-    protected client: Client6 | Client7 | Client8;
+    protected client: Client6 | Client7 | Client8 | Client9;
     protected summary: Summary;
 
     public static maxBulkSize: number = 50;
@@ -224,6 +226,11 @@ export abstract class ElasticsearchUtils {
     }
 
     protected addPrefixIfNotExists(index: string | string[]): string | string[] {
+        // system level exceptions, e.g. for ingrid_meta
+        if (index == INGRID_META_INDEX) {
+            return index;
+        }
+
         const addPrefix = (index: string) => {
             let prefix = '';
             if (index != this.config.alias && !index.startsWith(this.config.prefix)) {

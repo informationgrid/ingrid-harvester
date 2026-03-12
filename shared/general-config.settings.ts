@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { ConnectionOptions } from 'tls';
+import type { ConnectionOptions } from 'tls';
 
 export type GeneralSettings = {
     elasticsearch: ElasticsearchConfiguration,

@@ -32,9 +32,10 @@ import { delay } from 'rxjs/operators';
 import { ActivatedRoute } from "@angular/router";
 
 @Component({
-  selector: 'app-config-general',
-  templateUrl: './config-general.component.html',
-  styleUrls: ['./config-general.component.scss']
+    selector: 'app-config-general',
+    templateUrl: './config-general.component.html',
+    styleUrls: ['./config-general.component.scss'],
+    standalone: false
 })
 export class ConfigGeneralComponent implements OnInit {
 

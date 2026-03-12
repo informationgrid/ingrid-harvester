@@ -21,6 +21,8 @@
  * ==================================================
  */
 
+@use "sass:color";
+
  :host {
   display: flex;
   overflow: hidden;
@@ -33,7 +35,7 @@
   padding-left: 20px;
   overflow: auto;
   height: 100%;
-  color: invert($color: #000000);
+  color: color.invert($color: #000000);
   background-color: #2e2e2e;
 }
 

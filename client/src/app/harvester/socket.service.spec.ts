@@ -29,7 +29,7 @@ describe('SocketService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: SocketService = TestBed.get(SocketService);
+    const service: SocketService = TestBed.inject(SocketService);
     expect(service).toBeTruthy();
   });
 });

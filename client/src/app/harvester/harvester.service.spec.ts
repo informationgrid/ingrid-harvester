@@ -29,7 +29,7 @@ describe('HarvesterService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: HarvesterService = TestBed.get(HarvesterService);
+    const service: HarvesterService = TestBed.inject(HarvesterService);
     expect(service).toBeTruthy();
   });
 });

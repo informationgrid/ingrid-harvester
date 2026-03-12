@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import {Distribution} from "./distribution";
+import type {Distribution} from "./distribution.js";
 
 export class RuleResult {
     constructor(

@@ -21,19 +21,19 @@
  * ==================================================
  */
 
-import { mcloudIndexDocument } from '../model/index.document';
-import { Agent, Contact, Organization, Person } from '../../../model/agent';
-import { CkanMapper } from '../../../importer/ckan/ckan.mapper';
-import { CswMapper } from '../../../importer/csw/csw.mapper';
-import { DateRange } from '../../../model/dateRange';
-import { DcatMapper } from '../../../importer/dcat/dcat.mapper';
-import { Distribution } from '../../../model/distribution';
-import { ExcelMapper } from '../../../importer/excel/excel.mapper';
-import { IndexDocumentFactory } from '../../../model/index.document.factory';
-import { License } from '@shared/license.model';
-import { MetadataSource } from '../../../model/index.document';
-import { OaiMapper } from '../../../importer/oai/iso19139/oai.mapper';
-import { SparqlMapper } from '../../../importer/sparql/sparql.mapper';
+import type { mcloudIndexDocument } from '../model/index.document.js';
+import type { Agent, Contact, Organization, Person } from '../../../model/agent.js';
+import type { CkanMapper } from '../../../importer/ckan/ckan.mapper.js';
+import type { CswMapper } from '../../../importer/csw/csw.mapper.js';
+import type { DateRange } from '../../../model/dateRange.js';
+import type { DcatMapper } from '../../../importer/dcat/dcat.mapper.js';
+import type { Distribution } from '../../../model/distribution.js';
+import type { ExcelMapper } from '../../../importer/excel/excel.mapper.js';
+import type { IndexDocumentFactory } from '../../../model/index.document.factory.js';
+import type { License } from '@shared/license.model.js';
+import type { MetadataSource } from '../../../model/index.document.js';
+import type { OaiMapper } from '../../../importer/oai/iso19139/oai.mapper.js';
+import type { SparqlMapper } from '../../../importer/sparql/sparql.mapper.js';
 
 export abstract class mcloudMapper<M extends CkanMapper | CswMapper | DcatMapper | ExcelMapper | OaiMapper | SparqlMapper> implements IndexDocumentFactory<mcloudIndexDocument> {
 

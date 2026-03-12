@@ -21,9 +21,8 @@
  * ==================================================
  */
 
-import { ElasticQueries as IElasticQueries } from '../../../persistence/elastic.queries';
-
-const dayjs = require('dayjs');
+import type { ElasticQueries as IElasticQueries } from '../../../persistence/elastic.queries.js';
+import dayjs from '../../../utils/dayjs.js';
 
 export class ElasticQueries implements IElasticQueries {
 

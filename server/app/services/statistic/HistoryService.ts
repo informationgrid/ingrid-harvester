@@ -22,14 +22,14 @@
  */
 
 import { Service } from '@tsed/di';
-import { Summary } from '../../model/summary';
-import { ElasticsearchFactory } from '../../persistence/elastic.factory';
-import { ElasticQueries } from '../../persistence/elastic.queries';
-import { IndexSettings } from '../../persistence/elastic.setting';
-import { ElasticsearchUtils } from '../../persistence/elastic.utils';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
-import { elasticsearchMapping } from '../../statistic/statistic.mapping';
-import { ConfigService } from '../config/ConfigService';
+import { Summary } from '../../model/summary.js';
+import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
+import type { ElasticQueries } from '../../persistence/elastic.queries.js';
+import type { IndexSettings } from '../../persistence/elastic.setting.js';
+import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import { elasticsearchMapping } from '../../statistic/statistic.mapping.js';
+import { ConfigService } from '../config/ConfigService.js';
 
 @Service()
 export class HistoryService {
@@ -57,11 +57,8 @@ export class HistoryService {
     }
 
     async getHistory(id: number): Promise<any> {
+        await this.ensureIndexExists();
         const harvester = ConfigService.get().find(h => h.id === id);
-        let indexExists = await this.elasticUtils.isIndexPresent(this.elasticUtils.indexName);
-        if (!indexExists) {
-            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
-        }
         let index = ProfileFactoryLoader.get().useIndexPerCatalog() ? harvester.catalogId : this.elasticUtils.indexName;
         let history = await this.elasticUtils.getHistory(this.elasticQueries.findHistory(index));
         return {
@@ -70,9 +67,17 @@ export class HistoryService {
         }
     }
 
+    async ensureIndexExists() {
+        let indexExists = await this.elasticUtils.isIndexPresent(this.elasticUtils.indexName);
+        if (!indexExists) {
+            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
+        }
+    }
+
     private SUM = (accumulator, currentValue) => accumulator + currentValue;
 
     async getHistoryAll(): Promise<any> {
+        await this.ensureIndexExists();
         let { history } = await this.elasticUtils.getHistory(this.elasticQueries.findHistories(), 1000);
 
         let dates = [];

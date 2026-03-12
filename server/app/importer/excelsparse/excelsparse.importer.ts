@@ -21,47 +21,39 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../utils/misc.utils';
-import { defaultExcelSparseSettings, ExcelSparseSettings } from './excelsparse.settings';
-import { ElasticsearchUtils } from '../../persistence/elastic.utils';
-import { ExcelSparseMapper } from './excelsparse.mapper';
-import { Importer } from '../importer';
-import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../profiles/profile.factory';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
-import { RecordEntity } from '../../model/entity';
-import { Summary } from '../../model/summary';
-import { Workbook, Worksheet } from 'exceljs';
+import exceljs from 'exceljs';
+import log4js from 'log4js';
+import type { Observer } from 'rxjs';
+import type { RecordEntity } from '../../model/entity.js';
+import type { ImportLogMessage } from '../../model/import.result.js';
+import { ImportResult } from '../../model/import.result.js';
+import type { IndexDocument } from '../../model/index.document.js';
+import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import { Importer } from '../importer.js';
+import { ExcelSparseMapper } from './excelsparse.mapper.js';
+import type { ExcelSparseSettings } from './excelsparse.settings.js';
+import { defaultExcelSparseSettings } from './excelsparse.settings.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 
-export class ExcelSparseImporter extends Importer {
-
-    protected profile: ProfileFactory<ExcelSparseMapper>;
-    declare protected settings: ExcelSparseSettings;
+export class ExcelSparseImporter extends Importer<ExcelSparseSettings> {
 
     excelFilepath: string;
     names = {};
     columnMap: Columns;
 
-    /**
-     * Create the importer and initialize with settings.
-     * @param { {filePath, mapper} }settings
-     */
-    constructor(settings) {
-        super(settings);
-
-        this.profile = ProfileFactoryLoader.get();
-
+    constructor(settings: ExcelSparseSettings) {
         // merge default settings with configured ones
         settings = MiscUtils.merge(defaultExcelSparseSettings, settings);
+        super(settings);
 
-        this.settings = settings;
         this.excelFilepath = settings.filePath;
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
+        let harvestTime = new Date(Date.now());
 
         observer.next(ImportResult.message('Starting Excel Importer'));
 
@@ -76,11 +68,11 @@ export class ExcelSparseImporter extends Importer {
             KONTAKT_EMAIL_2: null
         };
 
-        let workbook = new Workbook();
+        let workbook = new exceljs.Workbook();
 
         let promises = [];
         try {
-            // if (this.settings.dryRun) {
+            // if (this.getSettings().dryRun) {
             //     log.debug('Dry run option enabled. Skipping index creation.');
             // } else {
             //     await this.elastic.prepareIndex(this.profile.getIndexMappings(), this.profile.getIndexSettings());
@@ -90,7 +82,7 @@ export class ExcelSparseImporter extends Importer {
             log.debug('done loading file');
 
             let generalInfo = {};
-            generalInfo = MiscUtils.merge(generalInfo, this.settings.catalog);
+            generalInfo = MiscUtils.merge(generalInfo, this.getSettings().catalog);
             generalInfo['publisher'] = [{ name: '' }];
             generalInfo['contactPoint'] = {};
 
@@ -112,42 +104,52 @@ export class ExcelSparseImporter extends Importer {
             // await Promise.all(workUnits.map(async (unit, idx) => {
             for (let idx=0; idx<workUnits.length; idx++) {
                 let unit = workUnits[idx];
-                this.summary.numDocs++;
+                this.getSummary().numDocs++;
 
                 if (!this.filterUtils.isIdAllowed(unit.id)) {
-                    this.summary.skippedDocs.push(unit.id);
+                    this.getSummary().skippedDocs.push(unit.id);
                     continue;
                 }
 
                 // create json document and create values with ExcelMapper
-                let mapper = new ExcelSparseMapper(this.settings, {
+                let mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), {
                     id: unit.id,
                     columnValues: unit.columnValues,
                     workbook: workbook,
                     columnMap: this.columnMap,
                     currentIndexName: this.elastic.indexName,
-                    summary: this.summary
-                }, generalInfo);
+                    summary: this.getSummary()
+                }), generalInfo) as ExcelSparseMapper;
 
                 // add document to buffer and send to elasticsearch if full
-                if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
-                    let doc = await this.profile.getIndexDocumentFactory(mapper).create().catch(e => this.handleIndexDocError(e, mapper));
+                let doc: IndexDocument;
+                try {
+                    doc = await mapper.createEsDocument();
+                }
+                catch (e) {
+                    this.handleIndexDocError(e, mapper);
+                }
+
+                if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
                     let entity: RecordEntity = {
                         identifier: unit.id,
-                        source: this.settings.filePath,
-                        collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
+                        source: this.getSettings().filePath,
+                        collection_id: (await this.database.getCatalog(this.getSettings().catalogId)).id,
                         dataset: doc,
                         original_document: mapper.getHarvestedData()
                     };
                     promises.push(
                         this.database.addEntityToBulk(entity).then(response => {
                             if (!response.queued) {
-                                //let currentPos = this.summary.numDocs++;
+                                //let currentPos = this.getSummary().numDocs++;
                                 numIndexDocs += ElasticsearchUtils.maxBulkSize;
                                 observer.next(ImportResult.running(numIndexDocs, workUnits.length));
                             }
                         })
                     );
+                }
+                else {
+                    this.getSummary().skippedDocs.push(unit.id);
                 }
             }
 
@@ -155,17 +157,17 @@ export class ExcelSparseImporter extends Importer {
             let transactionTimestamp = await this.database.beginTransaction();
             await Promise.allSettled(promises).catch(err => log.error('Error importing excel row', err));
             await this.database.sendBulkData();
-            await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
+            await this.database.deleteNonFetchedDatasets(this.getSettings().sourceURL, transactionTimestamp);
             await this.database.commitTransaction();
-            await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.filePath);
+            await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.getSettings().filePath);
             observer.next(ImportResult.message('Running post operations'));
-            observer.next(ImportResult.complete(this.summary));
+            observer.next(ImportResult.complete(this.getSummary()));
         }
         catch(error) {
             log.error('Error reading excel workbook', error);
-            this.summary.numErrors++;
-            this.summary.appErrors.push('Error reading excel workbook: ' + error);
-            observer.next(ImportResult.complete(this.summary));
+            this.getSummary().numErrors++;
+            this.getSummary().appErrors.push('Error reading excel workbook: ' + error);
+            observer.next(ImportResult.complete(this.getSummary()));
 
             // clean up index
             // await this.elastic.deleteIndex(this.elastic.indexName);
@@ -180,7 +182,7 @@ export class ExcelSparseImporter extends Importer {
 
     private handleIndexDocError(e, mapper) {
         log.error('Error creating index document', e);
-        this.summary.appErrors.push(e.toString());
+        this.getSummary().appErrors.push(e.toString());
         mapper.skipped = true;
     }
 
@@ -202,7 +204,7 @@ export class ExcelSparseImporter extends Importer {
         return candidate;
     }
 
-    private prepareExcelRows(worksheet: Worksheet) {
+    private prepareExcelRows(worksheet: exceljs.Worksheet) {
         let workUnits = [];
 
         worksheet.eachRow((row, rowNumber) => {
@@ -238,10 +240,6 @@ export class ExcelSparseImporter extends Importer {
             }
         });
         return workUnits;
-    }
-
-    getSummary(): Summary {
-        return this.summary;
     }
 }
 

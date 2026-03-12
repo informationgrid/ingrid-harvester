@@ -24,24 +24,25 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import * as xpath from 'xpath';
-import * as MiscUtils from '../../utils/misc.utils';
-import { getLogger } from 'log4js';
-import { namespaces } from '../../importer/namespaces';
+import type { Geometry, Point } from 'geojson';
+import log4js from 'log4js';
 import { throwError } from 'rxjs';
-import { Agent, Contact } from '../../model/agent';
-import { BaseMapper } from '../base.mapper';
-import { DateRange } from '../../model/dateRange';
-import { DcatappluSettings } from './dcatapplu.settings';
-import { Distribution } from '../../model/distribution';
-import { Geometry, Point } from '@turf/helpers';
-import { ImporterSettings } from '../../importer.settings';
-import { MetadataSource } from '../../model/index.document';
-import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep, PluProcessStepType, Catalog } from '../../model/dcatApPlu.model';
-import { Summary } from '../../model/summary';
-import { XPathElementSelect } from '../../utils/xpath.utils';
+import * as xpath from 'xpath';
+import { namespaces } from '../../importer/namespaces.js';
+import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
+import type { Agent, Contact } from '../../model/agent.js';
+import type { DateRange } from '../../model/dateRange.js';
+import type { Catalog, ProcessStep } from '../../model/dcatApPlu.model.js';
+import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, PluProcessStepType } from '../../model/dcatApPlu.model.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
+import type { Summary } from '../../model/summary.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import type { XPathElementSelect } from '../../utils/xpath.utils.js';
+import { Mapper } from '../mapper.js';
+import type { DcatappluSettings } from './dcatapplu.settings.js';
 
-export class DcatappluMapper extends BaseMapper {
+export class DcatappluMapper extends Mapper<DcatappluSettings> implements ToElasticMapper<IndexDocument> {
 
     static select = <XPathElementSelect>xpath.useNamespaces({
         'adms': namespaces.ADMS,
@@ -60,7 +61,7 @@ export class DcatappluMapper extends BaseMapper {
         'vcard': namespaces.VCARD
     });
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     private readonly record: any;
     private readonly catalogPage: any;
@@ -69,9 +70,7 @@ export class DcatappluMapper extends BaseMapper {
     private harvestTime: any;
 
     //    protected readonly idInfo; // : SelectedValue;
-    private settings: DcatappluSettings;
     private readonly uuid: string;
-    private summary: Summary;
 
     private keywordsAlreadyFetched = false;
     private fetched: any = {
@@ -83,13 +82,11 @@ export class DcatappluMapper extends BaseMapper {
         themes: null
     };
 
-    constructor(settings, record, catalog, catalogPage, harvestTime, summary) {
-        super();
-        this.settings = settings;
+    constructor(settings: DcatappluSettings, record, catalog, catalogPage, harvestTime, summary: Summary) {
+        super(settings, summary);
         this.record = record;
         this.fetched.catalog = catalog;
         this.harvestTime = harvestTime;
-        this.summary = summary;
         this.catalogPage = catalogPage;
         this.linkedDistributions = DcatappluMapper.select('./dcat:Distribution', catalogPage);
         this.linkedProcessSteps = DcatappluMapper.select('./plu:ProcessStep', catalogPage);
@@ -101,6 +98,14 @@ export class DcatappluMapper extends BaseMapper {
         this.uuid = uuid;
 
         super.init();
+    }
+    
+    async createEsDocument(): Promise<IndexDocument> {
+        return {
+            extras: {
+                metadata: this.getHarvestingMetadata(),
+            }
+        };
     }
 
     async getContactPoint(): Promise<Contact> {
@@ -325,7 +330,7 @@ export class DcatappluMapper extends BaseMapper {
         let node = DcatappluMapper.select('./dct:publisher', this.record);
         let publishers: any[] = this.getAgent(node);
         if (publishers.length === 0) {
-            this.summary.missingPublishers++;
+            this.getSummary().missingPublishers++;
             return undefined;
         } else {
             this.fetched.publishers = publishers;
@@ -371,11 +376,11 @@ export class DcatappluMapper extends BaseMapper {
         let dcatLink; //=  DcatappluMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.getAttribute('rdf:about');
         return {
-            source_base: this.settings.sourceURL,
+            source_base: this.getSettings().sourceURL,
             raw_data_source: dcatLink,
             source_type: 'dcatapplu',
             portal_link: portalLink,
-            attribution: this.settings.defaultAttribution
+            attribution: this.getSettings().defaultAttribution
         };
     }
 
@@ -388,18 +393,10 @@ export class DcatappluMapper extends BaseMapper {
         return geographicName;
     }
 
-    public getSettings(): ImporterSettings {
-        return this.settings;
-    }
-
-    public getSummary(): Summary {
-        return this.summary;
-    }
-
     executeCustomCode(doc: any) {
         try {
-            if (this.settings.customCode) {
-                eval(this.settings.customCode); doc
+            if (this.getSettings().customCode) {
+                eval(this.getSettings().customCode); doc
             }
         } catch (error) {
             throwError('An error occurred in custom code: ' + error.message);

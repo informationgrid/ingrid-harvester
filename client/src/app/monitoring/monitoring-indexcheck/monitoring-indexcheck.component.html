@@ -22,14 +22,19 @@
 -->
 
 <mat-card class="h-full">
-  <mat-card-header class="flex-row">
-    <h2 class="flex-1">Index Prüfung</h2>
-    <button mat-raised-button (click)="indexCheck()" data-test="indexCheck">
-      Index Check manuell starten
-    </button>
+
+  <mat-card-header class="flex-row"  contextHelp="monitoring_indexcheck">
+    <mat-card-title>Index Prüfung</mat-card-title>
   </mat-card-header>
 
   <mat-card-content class="chart-container">
     <canvas id="chart_indexcheck"></canvas>
   </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-stroked-button (click)="indexCheck()" data-test="indexCheck">
+      Manuell starten
+    </button>
+  </mat-card-actions>
+
 </mat-card>

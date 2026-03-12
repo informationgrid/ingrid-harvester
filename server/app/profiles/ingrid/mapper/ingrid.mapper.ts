@@ -21,31 +21,28 @@
  * ==================================================
  */
 
-import 'dayjs/locale/de';
-import {getLogger} from "log4js";
-import {CswMapper} from "../../../importer/csw/csw.mapper";
-import {IndexDocumentFactory} from "../../../model/index.document.factory";
-import {IngridIndexDocument} from "../model/index.document";
+import log4js from 'log4js';
+import type {CswMapper} from "../../../importer/csw/csw.mapper.js";
+import type {IndexDocumentFactory} from "../../../model/index.document.factory.js";
+import type {IngridIndexDocument} from "../model/index.document.js";
 import * as crypto from "crypto";
-import {Distribution} from "../../../model/distribution";
-import {Codelist} from "../utils/codelist";
+import type {Distribution} from "../../../model/distribution.js";
+import {Codelist} from "../utils/codelist.js";
+import * as IngridUtils from '../utils/ingrid.utils.js';
 
-const dayjs = require('dayjs');
-dayjs.locale('de');
-
+// TODO DEPRECATED
 export abstract class ingridMapper<M extends CswMapper> implements IndexDocumentFactory<IngridIndexDocument>{
 
     protected baseMapper: M;
 
-    private _log = getLogger();
+    private _log = log4js.getLogger();
 
-    private blacklistedFormats: string[] = [];
     constructor(baseMapper: M) {
         this.baseMapper = baseMapper;
     }
 
     async create() : Promise<IngridIndexDocument> {
-        let result = await {
+        let result = <IngridIndexDocument>{
             iPlugId: this.getIPlugId(),
             uuid: this.getGeneratedId(),
             partner: this.getPartner(),
@@ -53,6 +50,9 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             organisation: this.getOrganisation(),
             datatype: this.getDataType(),
             dataSourceName: this.getDataSourceName(),
+            collection: {
+                name: this.getDataSourceName(),
+            },
             extras: {
                 // harvested_data: mapper.getHarvestedData(),
                 hierarchy_level: this.getHierarchyLevel(),    // only csw
@@ -74,7 +74,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             hierarchylevel: this.getHierarchyLevel(),
             alternatetitle: this.getAlternateTitle(),
             t02_address: this.getAddress(),
-            boost: this.getBoost(),
+            boost: this.baseMapper.getSettings().boost,
             title: this.getTitle(),
             summary: this.getSummary(),
             location: this.getLocation(),
@@ -115,7 +115,7 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
             content: null, // assigned after
             idf: null // assigned after
         };
-        result.content = this.getContent(result);
+        result.content = IngridUtils.getContent(result);
         // add "idf" at the end, so it does not get included in the "content" array
         result.idf = this.getIDF();
 
@@ -216,28 +216,8 @@ export abstract class ingridMapper<M extends CswMapper> implements IndexDocument
         return undefined;
     }
 
-    getBoost() {
-        return this.baseMapper.getSettings().boost;
-    }
-
     getSummary() {
         return undefined;
-    }
-
-    getContent(resultObj) {
-        const values = [];
-        const traverse = obj => {
-            if (obj == null) {
-                return;
-            }
-            if (typeof obj !== 'object') {
-                values.push(obj);
-                return;
-            }        
-            Object.values(obj).forEach(traverse);
-        };
-        traverse(resultObj);
-        return values;
     }
 
     getLocation() {

@@ -29,7 +29,7 @@ describe('IndicesService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: IndicesService = TestBed.get(IndicesService);
+    const service: IndicesService = TestBed.inject(IndicesService);
     expect(service).toBeTruthy();
   });
 });

@@ -21,11 +21,11 @@
  * ==================================================
  */
 
-import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
-import { DateRange } from '../../../model/dateRange';
-import { Distribution } from '../../../model/distribution';
-import { IndexDocument } from '../../../model/index.document';
-import { Organization, Person } from '../../../model/agent';
+import type { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model.js';
+import type { DateRange } from '../../../model/dateRange.js';
+import type { Distribution } from '../../../model/distribution.js';
+import type { IndexDocument } from '../../../model/index.document.js';
+import type { Organization, Person } from '../../../model/agent.js';
 
 export type DiplanungIndexDocument = IndexDocument & {
     // mandatory
@@ -65,7 +65,6 @@ export type DiplanungIndexDocument = IndexDocument & {
     relation: string,
     notification: string,
     procedure_import_date: Date,
-    procedure_start_date: Date, // deprecated
     development_freeze_period: DateRange,
     maintainers: Person[] | Organization[],
     contributors: Person[] | Organization[],
@@ -73,7 +72,6 @@ export type DiplanungIndexDocument = IndexDocument & {
     spatial_text: string,
     // additional information and metadata
     catalog: Catalog,
-    plan_or_procedure_start_date: Date, // deprecated
     extras: {
         hierarchy_level: string
     }

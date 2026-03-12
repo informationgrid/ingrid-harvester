@@ -21,43 +21,40 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../utils/misc.utils';
-import { getLogger } from 'log4js';
-import { namespaces } from '../../importer/namespaces';
-import { DcatMapper } from './dcat.mapper';
-import { DcatSettings, defaultDCATSettings } from './dcat.settings';
-import { DOMParser } from '@xmldom/xmldom';
-import { Importer } from '../importer';
-import { ImportLogMessage, ImportResult } from '../../model/import.result';
-import { IndexDocument } from '../../model/index.document';
-import { Observer } from 'rxjs';
-import { ProfileFactory } from '../../profiles/profile.factory';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
-import { RecordEntity } from '../../model/entity';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { Summary } from '../../model/summary';
+import type { DOMParser } from '@xmldom/xmldom';
+import log4js from 'log4js';
+import type { Observer } from 'rxjs';
+import { namespaces } from '../../importer/namespaces.js';
+import type { RecordEntity } from '../../model/entity.js';
+import type { ImportLogMessage } from '../../model/import.result.js';
+import { ImportResult } from '../../model/import.result.js';
+import type { IndexDocument } from '../../model/index.document.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import type { RequestOptions } from '../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import { Importer } from '../importer.js';
+import { DcatMapper } from './dcat.mapper.js';
+import type { DcatSettings } from './dcat.settings.js';
+import { defaultDCATSettings } from './dcat.settings.js';
 
-const log = getLogger(__filename);
-const logRequest = getLogger('requests');
+const log = log4js.getLogger(import.meta.filename);
+const logRequest = log4js.getLogger('requests');
 
-export class DcatImporter extends Importer {
+export class DcatImporter extends Importer<DcatSettings> {
 
     protected domParser: DOMParser;
-    protected profile: ProfileFactory<DcatMapper>;
     protected requestDelegate: RequestDelegate;
-    declare protected settings: DcatSettings;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
-        super(settings);
-
-        this.profile = ProfileFactoryLoader.get();
-        this.domParser = MiscUtils.getDomParser();
-
+    constructor(settings: DcatSettings, requestDelegate?: RequestDelegate) {
         // merge default settings with configured ones
         settings = MiscUtils.merge(defaultDCATSettings, settings);
+        super(settings);
+
+        this.domParser = MiscUtils.getDomParser();
 
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;
@@ -65,7 +62,6 @@ export class DcatImporter extends Importer {
             let requestConfig = DcatImporter.createRequestConfig(settings);
             this.requestDelegate = new RequestDelegate(requestConfig, DcatImporter.createPaging(settings));
         }
-        this.settings = settings;
     }
 
     // only here for documentation - use the "default" exec function
@@ -111,7 +107,7 @@ export class DcatImporter extends Importer {
                     this.requestDelegate.updateConfig({qs: {page: nextPage}});
                 }
 
-                log.debug(`Received ${numReturned} records from ${this.settings.sourceURL} - Page: ${thisPage}`);
+                log.debug(`Received ${numReturned} records from ${this.getSettings().sourceURL} - Page: ${thisPage}`);
                 await this.extractRecords(response, harvestTime)
             }
             else {
@@ -122,7 +118,7 @@ export class DcatImporter extends Importer {
                 } else {
                     const message = `Error while fetching DCAT Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
                     log.error(message);
-                    this.summary.appErrors.push(message);
+                    this.getSummary().appErrors.push(message);
                     if(retries++ > 3){
                         isLastPage = true;
                         log.error('Stopped after 3 Retries')
@@ -153,14 +149,14 @@ export class DcatImporter extends Importer {
         }
 
         for (let i = 0; i < records.length; i++) {
-            this.summary.numDocs++;
+            this.getSummary().numDocs++;
 
             let uuid = DcatMapper.select('./dct:identifier', records[i], true).textContent;
             if(!uuid) {
                 uuid = DcatMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
             }
             if (!this.filterUtils.isIdAllowed(uuid)) {
-                this.summary.skippedDocs.push(uuid);
+                this.getSummary().skippedDocs.push(uuid);
                 continue;
             }
 
@@ -171,23 +167,23 @@ export class DcatImporter extends Importer {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = this.getMapper(this.settings, records[i], rootNode, harvestTime, this.summary);
+            let mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), records[i], rootNode)) as DcatMapper;
 
             let doc: IndexDocument;
             try {
-                doc = await this.profile.getIndexDocumentFactory(mapper).create();
+                doc = await mapper.createEsDocument();
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.summary.appErrors.push(e.toString());
+                this.getSummary().appErrors.push(e.toString());
                 mapper.skipped = true;
             }
 
-            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+            if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: uuid,
-                    source: this.settings.sourceURL,
-                    collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
+                    source: this.getSettings().sourceURL,
+                    collection_id: (await this.database.getCatalog(this.getSettings().catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };
@@ -201,7 +197,7 @@ export class DcatImporter extends Importer {
                         })
                 );
             } else {
-                this.summary.skippedDocs.push(uuid);
+                this.getSummary().skippedDocs.push(uuid);
             }
             this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
         }
@@ -236,10 +232,6 @@ export class DcatImporter extends Importer {
             startPosition: settings.startPosition,
             numRecords: settings.maxRecords
         }
-    }
-
-    getSummary(): Summary {
-        return this.summary;
     }
 
     private static getPageFromUrl(url: string) {

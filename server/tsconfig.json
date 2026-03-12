@@ -1,20 +1,22 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "es2021",
     "lib": [
-      "ES2022",
+      "es2021",
       "dom",
       "dom.iterable"
     ],
     "typeRoots": [
       "./node_modules/@types"
     ],
-    "module": "commonjs",
-    "moduleResolution": "Node16",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "experimentalDecorators":true,
     "emitDecoratorMetadata": true,
     "allowSyntheticDefaultImports": true,
-    "sourceMap": false,
+    "verbatimModuleSyntax": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
     "baseUrl": "./app",
     "paths": {
       "@shared/*": ["../../shared/*"]

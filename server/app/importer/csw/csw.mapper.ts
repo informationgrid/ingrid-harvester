@@ -24,30 +24,32 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import * as xpath from 'xpath';
-import * as GeoJsonUtils from '../../utils/geojson.utils';
-import * as MiscUtils from '../../utils/misc.utils';
-import * as ServiceUtils from '../../utils/service.utils';
-import { getLogger } from 'log4js';
-import { namespaces } from '../../importer/namespaces';
+import type { License } from '@shared/license.model.js';
+import type { Geometry, Point } from 'geojson';
+import log4js from 'log4js';
 import { throwError } from 'rxjs';
-import { Agent, Contact, Organization, Person } from '../../model/agent';
-import { BaseMapper } from '../base.mapper';
-import { CswSettings } from './csw.settings';
-import { DateRange } from '../../model/dateRange';
-import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils';
-import { DcatMapper } from '../../importer/dcat/dcat.mapper';
-import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils';
-import { Distribution } from '../../model/distribution';
-import { Geometry, GeometryCollection, Point } from '@turf/helpers';
-import { License } from '@shared/license.model';
-import { MetadataSource } from '../../model/index.document';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { Summary } from '../../model/summary';
-import { UrlUtils } from '../../utils/url.utils';
-import { XPathElementSelect } from '../../utils/xpath.utils';
+import * as xpath from 'xpath';
+import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
+import { namespaces } from '../../importer/namespaces.js';
+import type { Agent, Contact, Organization, Person } from '../../model/agent.js';
+import type { DateRange } from '../../model/dateRange.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
+import type { Summary } from '../../model/summary.js';
+import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
+import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
+import * as GeoJsonUtils from '../../utils/geojson.utils.js';
+import type { RequestOptions } from '../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import * as ServiceUtils from '../../utils/service.utils.js';
+import { UrlUtils } from '../../utils/url.utils.js';
+import type { XPathElementSelect } from '../../utils/xpath.utils.js';
+import { Mapper } from '../mapper.js';
+import type { ToElasticMapper } from '../to.elastic.mapper.js';
+import type { CswSettings } from './csw.settings.js';
 
-export class CswMapper extends BaseMapper {
+export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<IndexDocument> {
 
     static select = <XPathElementSelect>xpath.useNamespaces({
         'csw': namespaces.CSW,
@@ -62,15 +64,13 @@ export class CswMapper extends BaseMapper {
         'xlink': namespaces.XLINK
     });
 
-    log = getLogger();
+    log = log4js.getLogger();
 
     readonly record: any;
     private harvestTime: any;
 
     readonly idInfo; // : SelectedValue;
-    readonly settings: CswSettings;
     private readonly uuid: string;
-    protected summary: Summary;
 
     private keywordsAlreadyFetched = false;
     fetched = {
@@ -80,12 +80,10 @@ export class CswMapper extends BaseMapper {
         themes: null
     };
 
-    constructor(settings, record, harvestTime, summary, generalInfo) {
-        super();
-        this.settings = settings;
+    constructor(settings: CswSettings, record, harvestTime, summary: Summary, generalInfo) {
+        super(settings, summary);
         this.record = record;
         this.harvestTime = harvestTime;
-        this.summary = summary;
         this.fetched = MiscUtils.merge(this.fetched, generalInfo);
 
         this.uuid = CswMapper.getCharacterStringContent(record, 'fileIdentifier');
@@ -95,12 +93,12 @@ export class CswMapper extends BaseMapper {
         super.init();
     }
 
-    public getSettings(): CswSettings {
-        return this.settings;
-    }
-
-    public getSummary(): Summary {
-        return this.summary;
+    async createEsDocument(): Promise<IndexDocument> {
+        return {
+            extras: {
+                metadata: this.getHarvestingMetadata()
+            }
+        }
     }
 
     // _getResourceIdentifier() {
@@ -167,9 +165,9 @@ export class CswMapper extends BaseMapper {
                 let title = CswMapper.select('gmd:name/gco:CharacterString', onlineResource, true)?.textContent;
                 let protocol = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource, true)?.textContent;
                 if (url) {
-                    if (!this.settings.skipUrlCheckOnHarvest) {
+                    if (!this.getSettings().skipUrlCheckOnHarvest) {
                         let requestConfig = this.getUrlCheckRequestConfig(url);
-                        url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
+                        url = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
                     }
                     const formatArray = protocol ? [protocol] : formats;
                     let dist: Distribution = {
@@ -237,7 +235,7 @@ export class CswMapper extends BaseMapper {
                 let currentTitle = operationName ? title + " - " + operationName : title;
 
                 let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                let url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
+                let url = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
                 if (url && !urlsFound.includes(url)) {
                     serviceLinks.push({
                         accessURL: url,
@@ -275,7 +273,7 @@ export class CswMapper extends BaseMapper {
                 let url = null;
                 if (urlNode) {
                     let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
                 }
 
                 let infos: any = {};
@@ -294,7 +292,7 @@ export class CswMapper extends BaseMapper {
 
         if (publishers.length === 0) {
             // if (otherContacts.length === 0) {
-            this.summary.missingPublishers++;
+            this.getSummary().missingPublishers++;
             return undefined;
             // }
             // else {
@@ -328,7 +326,7 @@ export class CswMapper extends BaseMapper {
                 let url = null;
                 if (urlNode) {
                     let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
                 }
 
                 let infos: any = {};
@@ -353,15 +351,15 @@ export class CswMapper extends BaseMapper {
         return title && title.trim() !== '' ? title : undefined;
     }
 
-    _getAlternateTitle() {
+    _getAlternateTitle(): string[] {
         let result = []
         let alternateTitles = CswMapper.select('./*/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString', this.idInfo);
         for(let alternateTitle of alternateTitles){
-            if(alternateTitle.textContent && alternateTitle.textContent.trim() !== ''){
-                result.push(alternateTitle.textContent)
+            if(alternateTitle.textContent?.trim() !== ''){
+                result.push(alternateTitle.textContent);
             }
         }
-        return result.length? result : undefined;
+        return result.length ? result : undefined;
     }
 
     /**
@@ -468,7 +466,7 @@ export class CswMapper extends BaseMapper {
      * have this keyword defined, then it will be skipped from the index.
      */
     getKeywords(): string[] {
-        let mandatoryKws = this.settings.eitherKeywords || [];
+        let mandatoryKws = this.getSettings().eitherKeywords || [];
         let keywords = this.fetched.keywords[mandatoryKws.join()];
         if (keywords) {
             return keywords;
@@ -490,13 +488,13 @@ export class CswMapper extends BaseMapper {
         }, false);
         if (!valid) {
             // Don't index metadata-sets without any of the mandatory keywords
-            this.log.info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.settings.sourceURL}'.`);
+            this.log.info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.getSettings().sourceURL}'.`);
             this.skipped = true;
         }
 
         // Update the statistics
         if (!this.keywordsAlreadyFetched && valid) {
-            this.summary.opendata++;
+            this.getSummary().opendata++;
         }
 
         this.keywordsAlreadyFetched = true;
@@ -507,13 +505,13 @@ export class CswMapper extends BaseMapper {
 
     getMetadataSource(): MetadataSource {
         let gmdEncoded = encodeURIComponent(namespaces.GMD);
-        let cswLink = `${this.settings.sourceURL}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=${gmdEncoded}&Id=${this.uuid}`;
+        let cswLink = `${this.getSettings().sourceURL}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=${gmdEncoded}&Id=${this.uuid}`;
         return {
-            source_base: this.settings.sourceURL,
+            source_base: this.getSettings().sourceURL,
             raw_data_source: cswLink,
             source_type: 'csw',
-            portal_link: this.settings.defaultAttributionLink,
-            attribution: this.settings.defaultAttribution
+            portal_link: this.getSettings().defaultAttributionLink,
+            attribution: this.getSettings().defaultAttribution
         };
     }
 
@@ -522,11 +520,11 @@ export class CswMapper extends BaseMapper {
         return modified ? new Date(modified) : undefined;
     }
 
-    getSpatial(): Geometry | GeometryCollection {
+    getSpatial(): Geometry {
         return this.getGeometry(false);
     }
 
-    getGeometry(forcePolygon: boolean): Geometry | GeometryCollection {
+    getGeometry(forcePolygon: boolean): Geometry {
         let geographicBoundingBoxes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox', this.idInfo);
         let geometries = [];
         for (let i=0; i < geographicBoundingBoxes.length; i++){
@@ -620,7 +618,7 @@ export class CswMapper extends BaseMapper {
 
     getCentroid(): Point {
         let spatial = this.getSpatial();
-        return GeoJsonUtils.getCentroid(<Geometry | GeometryCollection>spatial);
+        return GeoJsonUtils.getCentroid(<Geometry>spatial);
     }
 
     getTemporal(): DateRange[] {
@@ -685,7 +683,7 @@ export class CswMapper extends BaseMapper {
             }
         } catch (e) {
             // this.log.error(`Cannot extract time range.`, e);
-            this.summary.warnings.push([`Could not extract time range for ${this.uuid}.`]);
+            this.getSummary().warnings.push([`Could not extract time range for ${this.uuid}.`]);
         }
     }
 
@@ -717,7 +715,7 @@ export class CswMapper extends BaseMapper {
 
         if (!themes || themes.length === 0) {
             // Fall back to default value
-            themes = this.settings.defaultDCATCategory
+            themes = this.getSettings().defaultDCATCategory
                 .map(category => DcatMapper.DCAT_CATEGORY_URL + category);
         }
 
@@ -853,7 +851,7 @@ export class CswMapper extends BaseMapper {
         if (freq.length > 0) {
             let periodicity = DcatPeriodicityUtils.getPeriodicity(freq[0].getAttribute('codeListValue'))
             if(!periodicity){
-                this.summary.warnings.push(["Unbekannte Periodizität", freq[0].getAttribute('codeListValue')]);
+                this.getSummary().warnings.push(["Unbekannte Periodizität", freq[0].getAttribute('codeListValue')]);
             }
             return periodicity;
         }
@@ -881,7 +879,7 @@ export class CswMapper extends BaseMapper {
                             license = {
                                 id: json.id,
                                 title: json.name,
-                                url: await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest)
+                                url: await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest)
                             };
                         }
                     } catch (ignored) {
@@ -892,10 +890,10 @@ export class CswMapper extends BaseMapper {
 
         if (!license) {
             let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
-            this.summary.missingLicense++;
+            this.getSummary().missingLicense++;
 
             this.log.warn(msg);
-            this.summary.warnings.push(['Missing license', msg]);
+            this.getSummary().warnings.push(['Missing license', msg]);
             return {
                 id: 'unknown',
                 title: 'Unbekannt',
@@ -907,7 +905,7 @@ export class CswMapper extends BaseMapper {
     }
 
     getErrorSuffix(uuid, title) {
-        return `Id: '${uuid}', title: '${title}', source: '${this.settings.sourceURL}'.`;
+        return `Id: '${uuid}', title: '${title}', source: '${this.getSettings().sourceURL}'.`;
     }
 
     getHarvestedData(): string {
@@ -1067,7 +1065,7 @@ export class CswMapper extends BaseMapper {
                 let url = null;
                 if (urlNode) {
                     let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
                 }
 
                 let infos: Contact & { role?: string } = {
@@ -1147,8 +1145,8 @@ export class CswMapper extends BaseMapper {
             uri: uri
         };
 
-        if (this.settings.proxy) {
-            config.proxy = this.settings.proxy;
+        if (this.getSettings().proxy) {
+            config.proxy = this.getSettings().proxy;
         }
 
         return config;
@@ -1211,8 +1209,8 @@ export class CswMapper extends BaseMapper {
 
     executeCustomCode(doc: any) {
         try {
-            if (this.settings.customCode) {
-                eval(this.settings.customCode);
+            if (this.getSettings().customCode) {
+                eval(this.getSettings().customCode);
             }
         } catch (error) {
             throwError('An error occurred in custom code: ' + error.message);

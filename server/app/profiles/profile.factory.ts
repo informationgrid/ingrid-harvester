@@ -21,25 +21,31 @@
  * ==================================================
  */
 
-import { BaseMapper } from '../importer/base.mapper';
-import { ImporterFactory } from '../importer/importer.factory';
-import { Catalog } from '../model/dcatApPlu.model';
-import { IndexDocument } from '../model/index.document';
-import { IndexDocumentFactory } from '../model/index.document.factory';
-import { DatabaseFactory } from '../persistence/database.factory';
-import { DatabaseUtils } from '../persistence/database.utils';
-import { ElasticsearchFactory } from '../persistence/elastic.factory';
-import { ElasticQueries } from '../persistence/elastic.queries';
-import { IndexSettings } from '../persistence/elastic.setting';
-import { ElasticsearchUtils } from '../persistence/elastic.utils';
-import { PostgresAggregator } from '../persistence/postgres.aggregator';
-import { PostgresQueries } from '../persistence/postgres.queries';
-import { ConfigService } from '../services/config/ConfigService';
-import * as MiscUtils from '../utils/misc.utils';
+import log4js from 'log4js';
+import { createRequire } from 'module';
+import type { Catalog as NewCatalog, CatalogFactory, CatalogSettings } from '../catalog/catalog.factory.js';
+import type { ImporterSettings } from '../importer.settings.js';
+import type { ImporterFactory } from '../importer/importer.factory.js';
+import type { Importer } from '../importer/importer.js';
+import type { MapperFactory } from '../importer/mapper.factory.js';
+import type { Mapper } from '../importer/mapper.js';
+import type { Catalog } from '../model/dcatApPlu.model.js';
+import type { IndexDocument } from '../model/index.document.js';
+import type { Summary } from '../model/summary.js';
+import { DatabaseFactory } from '../persistence/database.factory.js';
+import type { DatabaseUtils } from '../persistence/database.utils.js';
+import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
+import type { ElasticQueries } from '../persistence/elastic.queries.js';
+import type { IndexSettings } from '../persistence/elastic.setting.js';
+import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
+import type { PostgresAggregator } from '../persistence/postgres.aggregator.js';
+import { PostgresQueries } from '../persistence/postgres.queries.js';
+import { ConfigService } from '../services/config/ConfigService.js';
+import * as MiscUtils from '../utils/misc.utils.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 
-export abstract class ProfileFactory<M extends BaseMapper> {
+export abstract class ProfileFactory<T extends ImporterSettings> implements ImporterFactory<T>, MapperFactory<T>, CatalogFactory {
 
     /**
      * Set up profile specific environment.
@@ -79,10 +85,12 @@ export abstract class ProfileFactory<M extends BaseMapper> {
     dateReplacer = MiscUtils.dateReplacer;
 
     getIndexMappings(): any {
+        const require = createRequire(import.meta.url);
         return require(`./${this.getProfileName()}/persistence/elastic.mappings.json`);
     }
 
     getIndexSettings(): IndexSettings {
+        const require = createRequire(import.meta.url);
         return require(`./${this.getProfileName()}/persistence/elastic.settings.json`);
     }
 
@@ -91,9 +99,16 @@ export abstract class ProfileFactory<M extends BaseMapper> {
     }
 
     abstract getElasticQueries(): ElasticQueries;
-    abstract getImporterFactory(): ImporterFactory;
-    abstract getIndexDocumentFactory(mapper: M): IndexDocumentFactory<IndexDocument>;
-    abstract getPostgresAggregator(): PostgresAggregator<IndexDocument>;
+
+    abstract getImporter(settings: T): Promise<Importer<T>>;
+
+    abstract getMapper(settings: T, harvestTime: Date, summary: Summary, record: any, ...additionalData: any): Promise<Mapper<T>>;
+
+    abstract getCatalog(catalogId: string, summary: Summary): Promise<NewCatalog<any>>;
+
+    abstract getPostgresAggregator(settings: CatalogSettings): PostgresAggregator<IndexDocument>;
+
     abstract getProfileName(): string;
+
     abstract useIndexPerCatalog(): boolean;
 }

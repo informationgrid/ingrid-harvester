@@ -1,5 +1,3 @@
 .git
-.gradle
-**/build
-**/dist
-**/node_modules
+server/node_modules
+client/node_modules

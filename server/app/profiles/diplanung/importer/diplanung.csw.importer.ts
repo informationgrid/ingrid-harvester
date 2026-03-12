@@ -21,17 +21,19 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../utils/misc.utils';
-import { generateXplanWmsDistributions } from '../diplanung.utils';
-import { CswImporter } from '../../../importer/csw/csw.importer';
-import { DiplanungIndexDocument } from '../model/index.document';
-import { Distribution } from '../../../model/distribution';
-import { PluPlanType } from '../../../model/dcatApPlu.model';
-import { RecordEntity } from '../../../model/entity';
+import * as MiscUtils from '../../../utils/misc.utils.js';
+import log4js from 'log4js';
+import pLimit from 'p-limit';
+import { generateXplanWmsDistributions } from '../diplanung.utils.js';
+import { CswImporter } from '../../../importer/csw/csw.importer.js';
+import type { DiplanungIndexDocument } from '../model/index.document.js';
+import type { Distribution } from '../../../model/distribution.js';
+import type { PluPlanType } from '../../../model/dcatApPlu.model.js';
+import type { RecordEntity } from '../../../model/entity.js';
 // import { RequestDelegate } from '../../../utils/http-request.utils';
 // import { WmsXPath } from './wms.xpath';
 
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 const WMS_PARAMS = ['service', 'request', 'version'];
 
 export class DiplanungCswImporter extends CswImporter {
@@ -62,9 +64,9 @@ export class DiplanungCswImporter extends CswImporter {
                 //     // copy and/or create relevant metadata structure
                 //     updateDoc.extras = MiscUtils.merge(MiscUtils.structuredClone(doc.extras), updateDoc.extras);
                 //     // if not, try to swap lat and lon
-                //     let flippedBbox = GeoJsonUtils.flip<Geometry | GeometryCollection>(doc.bounding_box);
+                //     let flippedBbox = GeoJsonUtils.flip<Geometry>(doc.bounding_box);
                 //     if (GeoJsonUtils.within(flippedBbox, GeoJsonUtils.BBOX_GERMANY)) {
-                //         updateDoc.spatial = GeoJsonUtils.flip<Geometry | GeometryCollection>(doc.spatial);
+                //         updateDoc.spatial = GeoJsonUtils.flip<Geometry>(doc.spatial);
                 //         updateDoc.bounding_box = flippedBbox;
                 //         updateDoc.centroid = GeoJsonUtils.flip<Point>(doc.centroid);
                 //         updateQuality(updateDoc, 'Swapped lat and lon', null, true);
@@ -94,9 +96,6 @@ export class DiplanungCswImporter extends CswImporter {
                 }
             }));
         }
-        // // TODO move import somewhere outside
-        // // TODO possible with dynamic imports?
-        const pLimit = (await import('p-limit')).default; // use dynamic import because this module is ESM-only
         // TODO 10 seems to hit a sweet spot. 20 is already too much with our default fetch timeout of 20sec
         const limit = pLimit(10);
         let results = (await Promise.allSettled(promises.map(pf => limit(pf)))).filter(result => result.status === 'fulfilled');

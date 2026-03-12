@@ -21,18 +21,19 @@
  * ==================================================
  */
 
-import { elasticsearchMapping } from '../../statistic/index_check.mapping';
-import { ConfigService } from '../config/ConfigService';
-import { ElasticQueries } from '../../persistence/elastic.queries';
-import { ElasticsearchFactory } from '../../persistence/elastic.factory';
-import { ElasticsearchUtils } from '../../persistence/elastic.utils';
-import { IndexSettings } from '../../persistence/elastic.setting';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
+import log4js from 'log4js';
+import { elasticsearchMapping } from '../../statistic/index_check.mapping.js';
+import { ConfigService } from '../config/ConfigService.js';
+import type { ElasticQueries } from '../../persistence/elastic.queries.js';
+import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
+import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import type { IndexSettings } from '../../persistence/elastic.setting.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { Service } from '@tsed/di';
-import { Summary } from '../../model/summary';
+import { Summary } from '../../model/summary.js';
+import dayjs from '../../utils/dayjs.js';
 
-const dayjs = require('dayjs');
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 
 @Service()
 export class IndexCheckService {
@@ -60,11 +61,15 @@ export class IndexCheckService {
     }
 
     async getHistory() {
+        await this.ensureIndexExists();
+        return this.elasticUtils.getHistory(this.elasticQueries.getIndexCheckHistory());
+    }
+
+    async ensureIndexExists() {
         let indexExists = await this.elasticUtils.isIndexPresent(this.elasticUtils.indexName);
         if (!indexExists) {
             await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
         }
-        return this.elasticUtils.getHistory(this.elasticQueries.getIndexCheckHistory());
     }
 
     async start() {

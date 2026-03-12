@@ -28,9 +28,10 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-dialog-scheduler',
-  templateUrl: './dialog-scheduler.component.html',
-  styleUrls: ['./dialog-scheduler.component.scss']
+    selector: 'app-dialog-scheduler',
+    templateUrl: './dialog-scheduler.component.html',
+    styleUrls: ['./dialog-scheduler.component.scss'],
+    standalone: false
 })
 export class DialogSchedulerComponent implements OnInit {
 

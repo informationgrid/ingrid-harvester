@@ -21,49 +21,47 @@
  * ==================================================
  */
 
-import * as GeoJsonUtils from '../../utils/geojson.utils';
-import { getLogger } from 'log4js';
-import { Catalog, PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../model/dcatApPlu.model';
+import type { Geometry, Point } from 'geojson';
+import log4js from 'log4js';
 import { throwError } from 'rxjs';
-import { BaseMapper } from '../base.mapper';
-import { Contact, Organization, Person } from '../../model/agent';
-import { DateRange } from '../../model/dateRange';
-import { Distribution } from '../../model/distribution';
-import { Geometry, GeometryCollection, Point } from '@turf/helpers';
-import { ImporterSettings } from '../../importer.settings';
-import { MetadataSource } from '../../model/index.document';
-import { RequestDelegate, RequestOptions } from '../../utils/http-request.utils';
-import { Summary } from '../../model/summary';
-import { WfsSettings } from './wfs.settings';
-import { XPathNodeSelect } from '../../utils/xpath.utils';
+import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
+import type { Contact, Organization, Person } from '../../model/agent.js';
+import type { Catalog } from '../../model/dcatApPlu.model.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
+import type { Summary } from '../../model/summary.js';
+import * as GeoJsonUtils from '../../utils/geojson.utils.js';
+import type { RequestOptions } from '../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
+import { Mapper } from '../mapper.js';
+import type { WfsSettings } from './wfs.settings.js';
 
-export abstract class WfsMapper extends BaseMapper {
+export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<IndexDocument> {
 
-    log = getLogger();
+    log = log4js.getLogger();
 
-    protected readonly feature: Node & Element;
+    readonly featureOrFeatureType: Node & Element;
+    readonly featureTypeDescription: Node & Element;
+    readonly fetched: any;
+    readonly uuid: string;
+
     private harvestTime: any;
 
-    private settings: WfsSettings;
-    protected readonly uuid: string;
-    private summary: Summary;
+    select: XPathNodeSelect;
 
-    protected fetched: any = {
-        boundingBox: null,
-        contactPoint: null,
-        keywords: {},
-        themes: null
-    };
-
-    protected select: XPathNodeSelect;
-
-    constructor(settings, feature, harvestTime, summary, generalInfo) {
-        super();
-        this.settings = settings;
-        this.feature = feature;
+    constructor(settings: WfsSettings, featureOrFeatureType, harvestTime, summary: Summary, generalInfo) {
+        super(settings, summary);
+        this.featureOrFeatureType = featureOrFeatureType;
+        this.featureTypeDescription = generalInfo['featureTypeDescription'];
         this.harvestTime = harvestTime;
-        this.summary = summary;
-        this.fetched = {...this.fetched, ...generalInfo};
+        this.fetched = {
+            boundingBox: null,
+            contactPoint: null,
+            keywords: {},
+            themes: null,
+            ...generalInfo
+        };
         this.select = (...args: any[]) => {
             try {
                 return generalInfo['select'](...args);
@@ -73,17 +71,18 @@ export abstract class WfsMapper extends BaseMapper {
                 return undefined;
             }
         };
-        this.uuid = this.getTextContent(`./*/@gml:id`);
+        let path = this.isFeatureType() ? './wfs:Name' : './*/@gml:id';
+        this.uuid = this.getTextContent(path);
 
         super.init();
     }
 
-    getSettings(): ImporterSettings {
-        return this.settings;
-    }
-
-    getSummary(): Summary {
-        return this.summary;
+    async createEsDocument(): Promise<IndexDocument> {
+        return {
+            extras: {
+                metadata: this.getHarvestingMetadata(),
+            }
+        };
     }
 
     async getPublisher(): Promise<Person[] | Organization[]> {
@@ -98,13 +97,36 @@ export abstract class WfsMapper extends BaseMapper {
         return undefined
     }
 
-    abstract getTitle(): string;
+    getTitle(): string {
+        return this.fetched.title;
+        // if (this.isFeatureType()) {
+        //     return this.select('./wfs:Title', this.featureOrFeatureType, true)?.textContent;
+        // }
+        // else {
+        //     return this.getTextContent('./*/*[local-name()="name"]|./*/@gml:id')?.trim();
+        // }
+    }
 
-    abstract getDescription(): string;
+    getDescription(): string {
+        if (this.isFeatureType()) {
+            return this.select('./wfs:Abstract', this.featureOrFeatureType, true)?.textContent;
+        }
+        else {
+            return undefined;
+        }
+    }
 
-    abstract getDistributions(): Promise<Distribution[]>;
+    getDistributions(): Promise<Distribution[]> {
+        return undefined;
+    }
 
-    abstract getPlanName(): string;
+    isFeatureType(): boolean {
+        return this.featureOrFeatureType.localName == 'FeatureType';
+    }
+
+    getNumberOfFeatures(): number {
+        return this.fetched.numFeatures;
+    }
 
     getGeneratedId(): string {
         return this.uuid;
@@ -112,17 +134,19 @@ export abstract class WfsMapper extends BaseMapper {
 
     // TODO:check
     getMetadataSource(): MetadataSource {
-        let wfsLink = `${this.settings.sourceURL}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.settings.version}&outputFormat=application/xml&featureId=${this.uuid}`;
+        let wfsLink = `${this.getSettings().sourceURL}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.getSettings().version}&outputFormat=application/xml&featureId=${this.uuid}`;
         return {
-            source_base: this.settings.sourceURL,
+            source_base: this.getSettings().sourceURL,
             raw_data_source: wfsLink,
             source_type: 'wfs',
-            portal_link: this.settings.defaultAttributionLink,
-            attribution: this.settings.defaultAttribution
+            portal_link: this.getSettings().defaultAttributionLink,
+            attribution: this.getSettings().defaultAttribution
         };
     }
 
-    abstract getIssued(): Date;
+    getIssued(): Date {
+        return undefined;
+    }
 
     // TODO
     getModifiedDate(): Date {
@@ -130,19 +154,48 @@ export abstract class WfsMapper extends BaseMapper {
         // return new Date(this.select('./gmd:dateStamp/gco:Date|./gmd:dateStamp/gco:DateTime', this.feature, true).textContent);
     }
 
-    getProcedureImportDate(): Date {
+    getBoundingBox(): Geometry {
+        let obbox = this.getOriginalBoundingBox();
+        return obbox ? GeoJsonUtils.getBoundingBox(obbox.lowerCorner, obbox.upperCorner, obbox.crs) : undefined;
+    }
+
+    getOriginalBoundingBox(): Record<string, string> {
+        let lowerCorner: string, upperCorner: string, crs: string;
+        if (this.isFeatureType()) {
+            let bbox = this.select('./ows:WGS84BoundingBox', this.featureOrFeatureType, true);
+            if (!bbox) {
+                return null;
+            }
+            lowerCorner = this.select('./ows:LowerCorner', bbox, true)?.textContent;
+            upperCorner = this.select('./ows:UpperCorner', bbox, true)?.textContent;
+            crs = 'WGS84';
+            if (!lowerCorner || !upperCorner) {
+                return null;
+            }
+        }
+        else {
+            let bbox = this.select('./*/gml:boundedBy/gml:Envelope', this.featureOrFeatureType, true);
+            if (!bbox) {
+                return null;
+            }
+            lowerCorner = this.select('./gml:lowerCorner', bbox, true)?.textContent;
+            upperCorner = this.select('./gml:upperCorner', bbox, true)?.textContent;
+            crs = (<Element>bbox).getAttribute('srsName') || this.fetched['defaultCrs'];
+        }
+        return { lowerCorner, upperCorner, crs };
+    }
+
+    getSpatial(): Geometry {
         return undefined;
     }
 
-    abstract getBoundingBox(): Geometry;
-
-    abstract getSpatial(): Geometry | GeometryCollection;
-
-    abstract getSpatialText(): string;
+    getSpatialText(): string {
+        return undefined;
+    }
 
     getCentroid(): Point {
         let spatial = this.getSpatial() ?? this.getBoundingBox();
-        return GeoJsonUtils.getCentroid(<Geometry | GeometryCollection>spatial);
+        return GeoJsonUtils.getCentroid(<Geometry>spatial);
     }
 
     isRealtime(): boolean {
@@ -153,40 +206,8 @@ export abstract class WfsMapper extends BaseMapper {
         return this.fetched.catalog;
     }
 
-    getPluDevelopmentFreezePeriod(): DateRange {
-        return undefined;
-    }
-
-    abstract getPluDocType(code: string): PluDocType;
-
-    getPluPlanState(): PluPlanState {
-        return this.settings.pluPlanState;
-    }
-
-    abstract getPluPlanType(): PluPlanType;
-
-    abstract getPluPlanTypeFine(): string;
-
-    getPluProcedureState(): PluProcedureState {
-        switch (this.getPluPlanState()) {
-            case PluPlanState.FESTGES: return PluProcedureState.ABGESCHLOSSEN;
-            case PluPlanState.IN_AUFST: return PluProcedureState.LAUFEND;
-            default: return PluProcedureState.UNBEKANNT;
-        }
-    }
-
-    abstract getPluProcedureType(): PluProcedureType;
-
-    abstract getPluProcessSteps(): ProcessStep[];
-
-    abstract getPluProcedurePeriod(): DateRange;
-
-    getAdmsIdentifier(): string {
-        return undefined;
-    }
-
     getHarvestedData(): string {
-        return this.feature.toString();
+        return this.featureOrFeatureType.toString();
     }
 
     getHarvestingDate(): Date {
@@ -209,26 +230,32 @@ export abstract class WfsMapper extends BaseMapper {
             uri: uri
         };
 
-        if (this.settings.proxy) {
-            config.proxy = this.settings.proxy;
+        if (this.getSettings().proxy) {
+            config.proxy = this.getSettings().proxy;
         }
 
         return config;
     }
 
-    protected getTextContent(xpathStr: string, searchNode: Node = this.feature) {
-        return (<Element>this.select(xpathStr, searchNode, true))?.textContent;
+    getTextContent(xpathStr: string, searchNode: Node = this.featureOrFeatureType) {
+        return this.select(xpathStr, searchNode, true)?.textContent;
     }
 
-    protected getTypename(toLowerCase: boolean = true): string {
-        let typename = (<Element>this.select('./*', this.feature, true))?.localName;
+    getTypename(toLowerCase: boolean = false): string {
+        let typename: string;
+        if (this.isFeatureType()) {
+            typename = this.select('./wfs:Name', this.featureOrFeatureType, true)?.textContent;
+        }
+        else {
+            typename = (this.select('./*', this.featureOrFeatureType, true) as Element)?.localName;
+        }
         return toLowerCase ? typename.toLowerCase() : typename;
     }
 
     executeCustomCode(doc: any) {
         try {
-            if (this.settings.customCode) {
-                eval(this.settings.customCode);
+            if (this.getSettings().customCode) {
+                eval(this.getSettings().customCode);
             }
         } catch (error) {
             throwError('An error occurred in custom code: ' + error.message);

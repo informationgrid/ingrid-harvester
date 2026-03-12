@@ -21,8 +21,9 @@
  * ==================================================
  */
 
-import { DefaultImporterSettings, ImporterSettings } from '../../importer.settings';
-import { PluPlanState } from '../../model/dcatApPlu.model';
+import type { ImporterSettings } from '../../importer.settings.js';
+import { DefaultImporterSettings } from '../../importer.settings.js';
+import type { PluPlanState } from '../../model/dcatApPlu.model.js';
 
 export type CswSettings = {
     resultType?: 'hits' | 'results',

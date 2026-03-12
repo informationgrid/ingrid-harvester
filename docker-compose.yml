@@ -25,3 +25,33 @@ services:
       - 8090:8090
     working_dir: /opt/ingrid/harvester/server
     command: node app/index.js
+
+  rpm:
+    image: docker-registry.wemove.com/ingrid-rpmbuilder-jdk21-improved
+    volumes:
+      - ./rpm/ingrid-harvester.spec:/root/rpmbuild/SPECS/ingrid-harvester.spec
+      - ./rpm/ingrid-harvester.service:/rpm/ingrid-harvester.service
+      - ./output-rpm:/root/rpmbuild/RPMS
+      - .:/root/rpmbuild/BUILD
+    command: >
+      bash -c "
+        rpmbuild -bb /root/rpmbuild/SPECS/ingrid-harvester.spec &&
+      tail -f /dev/null &&
+      expect /rpm-sign.exp /root/rpmbuild/RPMS/noarch/*.rpm
+      "
+
+  rpm-demo:
+    build: ./rpm
+    privileged: true
+    volumes:
+      - ./output-rpm:/install-rpm
+      - ./rpm/systemctl.py:/usr/bin/systemctl
+    ports:
+      - "8090:8090"
+    command: >
+      bash -c "
+      alien -i install-rpm/noarch/ingrid-harvester-*.rpm &&
+      tail -f /dev/null &&
+      systemctl enable ingrid-harvester &&
+      systemctl start ingrid-harvester &&
+      tail -f /dev/null"

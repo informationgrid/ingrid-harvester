@@ -27,9 +27,10 @@ import {MatChipInputEvent} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 
 @Component({
-  selector: 'app-chip-list',
-  templateUrl: './chip-list.component.html',
-  styleUrls: ['./chip-list.component.scss']
+    selector: 'app-chip-list',
+    templateUrl: './chip-list.component.html',
+    styleUrls: ['./chip-list.component.scss'],
+    standalone: false
 })
 export class ChipListComponent implements OnInit {
 

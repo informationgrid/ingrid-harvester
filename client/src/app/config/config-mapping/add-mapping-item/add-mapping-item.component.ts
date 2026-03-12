@@ -26,9 +26,10 @@ import {MappingItem} from '@shared/mapping.model';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 
 @Component({
-  selector: 'app-add-mapping-item',
-  templateUrl: './add-mapping-item.component.html',
-  styleUrls: ['./add-mapping-item.component.scss']
+    selector: 'app-add-mapping-item',
+    templateUrl: './add-mapping-item.component.html',
+    styleUrls: ['./add-mapping-item.component.scss'],
+    standalone: false
 })
 export class AddMappingItemComponent implements OnInit {
 

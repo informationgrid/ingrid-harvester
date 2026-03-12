@@ -30,9 +30,10 @@ import { AddOrEditCatalogComponent } from '../../config/config-catalogs/add-or-e
 import { ConfigService } from '../../config/config.service';
 
 @Component({
-  selector: 'app-dialog-edit',
-  templateUrl: './dialog-edit.component.html',
-  styleUrls: ['./dialog-edit.component.scss']
+    selector: 'app-dialog-edit',
+    templateUrl: './dialog-edit.component.html',
+    styleUrls: ['./dialog-edit.component.scss'],
+    standalone: false
 })
 export class DialogEditComponent implements OnInit {
 

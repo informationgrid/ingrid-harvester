@@ -21,17 +21,18 @@
  * ==================================================
  */
 
-import { DcatImporter } from '../../../importer/dcat/dcat.importer';
-import { ExcelImporter } from '../../../importer/excel/excel.importer';
-import { Importer } from '../../../importer/importer';
-import { ImporterFactory } from '../../../importer/importer.factory';
-import { Harvester } from '@shared/harvester';
-import { McloudCkanImporter } from './mcloud.ckan.importer';
-import { McloudCswImporter } from './mcloud.csw.importer';
-import { OaiImporter } from '../../../importer/oai/oai.importer';
-import { SparqlImporter } from '../../../importer/sparql/sparql.importer';
+import log4js from 'log4js';
+import { DcatImporter } from '../../../importer/dcat/dcat.importer.js';
+import { ExcelImporter } from '../../../importer/excel/excel.importer.js';
+import type { Importer } from '../../../importer/importer.js';
+import { ImporterFactory } from '../../../importer/importer.factory.js';
+import type { Harvester } from '@shared/harvester.js';
+import { McloudCkanImporter } from './mcloud.ckan.importer.js';
+import { McloudCswImporter } from './mcloud.csw.importer.js';
+import { OaiImporter } from '../../../importer/oai/oai.importer.js';
+import { SparqlImporter } from '../../../importer/sparql/sparql.importer.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export class McloudImporterFactory extends ImporterFactory{
 

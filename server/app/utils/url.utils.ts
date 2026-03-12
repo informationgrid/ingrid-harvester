@@ -21,15 +21,14 @@
  * ==================================================
  */
 
-'use strict';
-
 import * as fs from 'fs';
-import * as MiscUtils from './misc.utils';
 import fetch from 'node-fetch';
-import { ConfigService } from '../services/config/ConfigService';
-import { RequestDelegate, RequestOptions } from './http-request.utils';
+import log4js from 'log4js';
+import { ConfigService } from '../services/config/ConfigService.js';
+import type { RequestOptions } from './http-request.utils.js';
+import { RequestDelegate } from './http-request.utils.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export class UrlUtils {
 
@@ -77,7 +76,12 @@ export class UrlUtils {
                 }
             }
             else {
-                // if URL is just a domain name with no protocol then first check if 'https://' works
+                // if URL is just a domain name with no protocol then first check if it may be a local path instead
+                // examples: /data/file.xml, \\data\file.xml, <Geoserver>\data\file.xml
+                if (!/^[a-zA-Z]/.test(url)) {
+                    return url;
+                }
+                // if not, check if 'https://' works
                 requestConfig.uri = `https://${url}`;
                 if (await UrlUtils.checkUrlWithProtocol(requestConfig)) {
                     return requestConfig.uri;

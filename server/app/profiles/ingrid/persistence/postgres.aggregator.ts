@@ -21,13 +21,21 @@
  * ==================================================
  */
 
-import { EsOperation } from '../../../persistence/elastic.utils';
-import { PostgresAggregator as AbstractPostgresAggregator } from '../../../persistence/postgres.aggregator';
-import { Bucket } from '../../../persistence/postgres.utils';
-import { createEsId } from '../ingrid.utils';
-import { IngridIndexDocument } from '../model/index.document';
+import type { EsOperation } from '../../../persistence/elastic.utils.js';
+import type { PostgresAggregator as AbstractPostgresAggregator } from '../../../persistence/postgres.aggregator.js';
+import type { Bucket } from '../../../persistence/postgres.utils.js';
+import { createEsId } from '../ingrid.utils.js';
+import type { IngridIndexDocument } from '../model/index.document.js';
+import * as MiscUtils from '../../../utils/misc.utils.js';
+import type { CatalogSettings } from 'catalog/catalog.factory.js';
 
 export class PostgresAggregator implements AbstractPostgresAggregator<IngridIndexDocument> {
+
+    private index: string;
+
+    constructor(catalogSettings: CatalogSettings) {
+        this.index = catalogSettings.settings.index;
+    }
 
     public async processBucket(bucket: Bucket<IngridIndexDocument>): Promise<EsOperation[]> {
         let box: EsOperation[] = [];
@@ -45,7 +53,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         let deleteDocument = document.extras.metadata.deleted != null;
         bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.extras.metadata.deleted != null);
         if (deleteDocument) {
-            return [{ operation: 'delete', _index: document['catalog'].identifier, _id: createEsId(document) }];
+            return [{ operation: 'delete', _index: this.index, _id: createEsId(document) }];
         }
 
         // deduplication
@@ -57,16 +65,16 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
             document.extras.metadata.merged_from.push(duplicate_id);
             // remove dataset with old_id if it differs from the newly created id
             if (old_id != document_id) {
-                box.push({ operation: 'delete', _index: document['catalog'].identifier, _id: old_id });
+                box.push({ operation: 'delete', _index: this.index, _id: old_id });
             }
             // remove data with duplicate _id if it differs from the newly created id
             if (duplicate_id != document_id) {
-                box.push({ operation: 'delete', _index: document['catalog'].identifier, _id: duplicate_id });
+                box.push({ operation: 'delete', _index: this.index, _id: duplicate_id });
             }
         }
         document = this.sanitize(document);
         // document = MiscUtils.merge(document, { extras: { transformed_data: { dcat_ap_plu: DcatApPluDocumentFactory.create(document) } } });
-        box.push({ operation: 'index', _index: document['catalog'].identifier, _id: createEsId(document), document });
+        box.push({ operation: 'index', _index: this.index, _id: createEsId(document), document });
         return box;
     }
 
@@ -136,7 +144,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
     private addCrossReference(idf: string, additionalDoc: IngridIndexDocument): string {
         let direction = additionalDoc.hierarchylevel == 'service' ? 'IN' : 'OUT';
         // let objectType = additionalDoc.hierarchylevel == 'service' ? 3 : 1;
-        let crossReference = `
+        let crossReference = escapeIdf`
 <idf:crossReference direction="${direction}" orig-uuid="${additionalDoc.uuid}" uuid="${additionalDoc.uuid}">
     <idf:objectName>${additionalDoc.title}</idf:objectName>
     <idf:attachedToField entry-id="3600" list-id="2000">Gekoppelte Daten</idf:attachedToField>
@@ -144,7 +152,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
     <idf:description>${additionalDoc.summary}</idf:description>`;
         if (additionalDoc.hierarchylevel == 'service') {
             let idx = additionalDoc.t011_obj_serv_operation?.findIndex(op => op.name?.toLowerCase() == 'getcapabilities');
-            crossReference += `
+            crossReference += escapeIdf`
     <idf:serviceType>${additionalDoc.t011_obj_serv?.type ?? ""}</idf:serviceType>
     <idf:serviceVersion>${additionalDoc.t011_obj_serv_version?.version_value ?? ""}</idf:serviceVersion>
     <idf:serviceOperation>${additionalDoc.t011_obj_serv_operation?.[idx]?.name ?? ""}</idf:serviceOperation>
@@ -153,7 +161,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         let addHtml = Array.isArray(additionalDoc.additional_html_1) ? additionalDoc.additional_html_1[0] : additionalDoc.additional_html_1;
         let browseGraphic = addHtml?.match(/<img src=["'](.*?)["'].*/)?.[1];
         if (browseGraphic) {
-            crossReference += `
+            crossReference += escapeIdf`
     <idf:graphicOverview>${browseGraphic}</idf:graphicOverview>`
         }
         else {
@@ -162,7 +170,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         }
         crossReference += `
 </idf:crossReference>`;
-        return idf.replace('</idf:idfMdMetadata>', `${crossReference.replaceAll("&", "&amp;")}\n</idf:idfMdMetadata>`);
+        return idf.replace('</idf:idfMdMetadata>', `${crossReference}\n</idf:idfMdMetadata>`);
     }
 
     private createObjRef(doc: IngridIndexDocument, special_ref: string, skeletonOnly: boolean = false) {
@@ -177,4 +185,12 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
             version: skeletonOnly ? "" : doc.t011_obj_serv_version?.version_value ?? ""
         }
     }
+}
+
+function escapeIdf(literals: TemplateStringsArray, ...substitutions: any[]) {
+    return literals.reduce((result, literal, i) => {
+        const value = substitutions[i];
+        const escaped = typeof value === 'string' ? MiscUtils.escapeXml(value) : value;
+        return result + literal + (escaped ?? '');
+    }, '');
 }

@@ -28,21 +28,22 @@ import { animate, style, transition, trigger } from "@angular/animations";
 import { MainMenuService } from "../menu/main-menu.service";
 
 @Component({
-  selector: 'ige-side-menu',
-  templateUrl: './side-menu.component.html',
-  styleUrl: './side-menu.component.scss',
-  animations: [
-    trigger("toggle", [
-      transition("collapsed => expanded", [
-        style({ width: 56 }),
-        animate("300ms ease-in", style({ width: 300 })),
-      ]),
-      transition("* => collapsed", [
-        style({ width: 300 }),
-        animate("300ms ease-out", style({ width: 56 })),
-      ]),
-    ]),
-  ],
+    selector: 'ige-side-menu',
+    templateUrl: './side-menu.component.html',
+    styleUrl: './side-menu.component.scss',
+    animations: [
+        trigger("toggle", [
+            transition("collapsed => expanded", [
+                style({ width: 56 }),
+                animate("300ms ease-in", style({ width: 300 })),
+            ]),
+            transition("* => collapsed", [
+                style({ width: 300 }),
+                animate("300ms ease-out", style({ width: 56 })),
+            ]),
+        ]),
+    ],
+    standalone: false
 })
 export class SideMenuComponent {
 

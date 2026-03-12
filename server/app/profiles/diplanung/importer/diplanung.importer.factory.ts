@@ -21,18 +21,16 @@
  * ==================================================
  */
 
-import { DcatappluImporter } from '../../../importer/dcatapplu/dcatapplu.importer';
-import { DiplanungCswImporter } from './diplanung.csw.importer';
-import { ExcelSparseImporter } from '../../../importer/excelsparse/excelsparse.importer';
-import { FisWfsImporter } from '../../../importer/wfs/fis/fis.wfs.importer';
-import { Harvester } from '@shared/harvester';
-import { Importer } from '../../../importer/importer';
-import { ImporterFactory } from '../../../importer/importer.factory';
-import { MsWfsImporter } from '../../../importer/wfs/ms/ms.wfs.importer';
-import { XplanSynWfsImporter } from '../../../importer/wfs/xplan/syn/xplan.syn.wfs.importer';
-import { XplanWfsImporter } from '../../../importer/wfs/xplan/xplan.wfs.importer';
+import log4js from 'log4js';
+import { DcatappluImporter } from '../../../importer/dcatapplu/dcatapplu.importer.js';
+import { DiplanungCswImporter } from './diplanung.csw.importer.js';
+import { DiplanungWfsImporter } from './diplanung.wfs.importer.js';
+import type { Harvester } from '@shared/harvester.js';
+import type { Importer } from '../../../importer/importer.js';
+import { ImporterFactory } from '../../../importer/importer.factory.js';
+import type { WfsSettings } from '../../../importer/wfs/wfs.settings.js';
 
-const log = require('log4js').getLogger(__filename);
+const log = log4js.getLogger(import.meta.filename);
 
 export class DiplanungImporterFactory extends ImporterFactory {
 
@@ -45,20 +43,11 @@ export class DiplanungImporterFactory extends ImporterFactory {
             case 'DCATAPPLU': 
                 importer = new DcatappluImporter(config);
                 break;
-            case 'EXCEL_SPARSE': 
-                importer = new ExcelSparseImporter(config);
-                break;
-            case 'WFS.FIS': 
-                importer = new FisWfsImporter(config);
-                break;
-            case 'WFS.MS': 
-                importer = new MsWfsImporter(config);
-                break;
-            case 'WFS.XPLAN': 
-                importer = new XplanWfsImporter(config);
-                break;
+            case 'WFS.FIS':
+            case 'WFS.MS':
+            case 'WFS.XPLAN':
             case 'WFS.XPLAN.SYN': 
-                importer = new XplanSynWfsImporter(config);
+                importer = new DiplanungWfsImporter(config as WfsSettings);
                 break;
             default: {
                 log.error('Importer not found: ' + config.type);

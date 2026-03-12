@@ -21,25 +21,26 @@
  * ==================================================
  */
 
-import { GeneralSettings } from '@shared/general-config.settings';
-import { Harvester } from '@shared/harvester';
-import { MappingDistribution, MappingItem } from '@shared/mapping.model';
+import type { GeneralSettings } from '@shared/general-config.settings.js';
+import type { Harvester } from '@shared/harvester.js';
+import type { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
 import * as fs from 'fs';
-import { getLogger } from 'log4js';
-import { defaultCKANSettings } from '../../importer/ckan/ckan.settings';
-import { defaultCSWSettings } from '../../importer/csw/csw.settings';
-import { defaultDCATSettings } from '../../importer/dcat/dcat.settings';
-import { defaultExcelSettings } from '../../importer/excel/excel.settings';
-import { defaultKldSettings } from '../../importer/kld/kld.settings';
-import { defaultOAISettings } from '../../importer/oai/oai.settings';
-import { Catalog } from '../../model/dcatApPlu.model';
-import { DatabaseFactory } from '../../persistence/database.factory';
-import { ElasticsearchFactory } from '../../persistence/elastic.factory';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader';
-import * as MiscUtils from '../../utils/misc.utils';
-import { UrlUtils } from '../../utils/url.utils';
+import log4js from 'log4js';
+import type { CatalogSettings } from '../../catalog/catalog.factory.js';
+import { defaultCKANSettings } from '../../importer/ckan/ckan.settings.js';
+import { defaultCSWSettings } from '../../importer/csw/csw.settings.js';
+import { defaultDCATSettings } from '../../importer/dcat/dcat.settings.js';
+import { defaultExcelSettings } from '../../importer/excel/excel.settings.js';
+import { defaultKldSettings } from '../../importer/kld/kld.settings.js';
+import { defaultOAISettings } from '../../importer/oai/oai.settings.js';
+import type { Catalog } from '../../model/dcatApPlu.model.js';
+import { DatabaseFactory } from '../../persistence/database.factory.js';
+import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import { UrlUtils } from '../../utils/url.utils.js';
 
-const log = getLogger();
+const log = log4js.getLogger();
 
 function parseIntOrUndefined(n: string): number {
     let parsedN = parseInt(n);
@@ -53,6 +54,8 @@ function parseBooleanOrUndefined(b: string): boolean {
 export class ConfigService {
 
     private static GENERAL_CONFIG_FILE = "config-general.json";
+
+    private static CATALOG_CONFIG_FILE = "config-catalogs.json";
 
     private static HARVESTER_CONFIG_FILE = "config.json";
 
@@ -85,7 +88,7 @@ export class ConfigService {
             numberOfReplicas: parseIntOrUndefined(process.env.ELASTIC_NUM_REPLICAS) ?? 0
         },
         mappingLogLevel: 'warn',
-        proxy: process.env.PROXY_URL || null,
+        proxy: process.env.PROXY_URL,
         allowAllUnauthorizedSSL: parseBooleanOrUndefined(process.env.ALLOW_ALL_UNAUTHORIZED) ?? false,
         portalUrl: process.env.PORTAL_URL,
         urlCheck:{
@@ -202,7 +205,7 @@ export class ConfigService {
                 numberOfShards: parseIntOrUndefined(process.env.ELASTIC_NUM_SHARDS),
                 numberOfReplicas: parseIntOrUndefined(process.env.ELASTIC_NUM_REPLICAS)
             },
-            proxy: process.env.PROXY_URL || null,
+            proxy: process.env.PROXY_URL,
             allowAllUnauthorizedSSL: parseBooleanOrUndefined(process.env.ALLOW_ALL_UNAUTHORIZED),
             portalUrl: process.env.PORTAL_URL
         };
@@ -308,6 +311,22 @@ export class ConfigService {
 
         fs.writeFileSync(this.GENERAL_CONFIG_FILE, JSON.stringify(config, null, 2));
     }
+
+    static getCatalogSettings(): CatalogSettings[] {
+        const configExists = fs.existsSync(this.CATALOG_CONFIG_FILE);
+        if (configExists) {
+            let contents = fs.readFileSync(this.CATALOG_CONFIG_FILE);
+            return JSON.parse(contents.toString());
+        }
+        else {
+            log.warn("No catalog config file found (config-catalogs.json).");
+            return [];
+        }
+     }
+
+     static setCatalogSettings(config: CatalogSettings[]) {
+        fs.writeFileSync(this.CATALOG_CONFIG_FILE, JSON.stringify(config, null, 2));
+     }
 
     private static getDbUtils() {
         let generalConfig = ConfigService.getGeneralSettings();

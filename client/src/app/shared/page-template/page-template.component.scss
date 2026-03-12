@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-@import "../../../variables";
+@use "../../../variables";
 
 :host {
   //display: flex;
@@ -68,7 +68,7 @@
     font-size: 34px;
     letter-spacing: 0.25px;
     line-height: 44px;
-    color: $ige-primary;
+    color: variables.$ige-primary;
   }
 }
 

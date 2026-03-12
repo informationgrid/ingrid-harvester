@@ -35,6 +35,7 @@ export const namespaces = {
     GML_3_2: 'http://www.opengis.net/gml/3.2',
     GMX: 'http://www.isotc211.org/2005/gmx',
     HYDRA: 'http://www.w3.org/ns/hydra/core#',
+    IDF: 'http://www.portalu.de/IDF/1.0',
     INSPIRE_COMMON: 'http://inspire.ec.europa.eu/schemas/common/1.0',
     INSPIRE_VS: 'http://inspire.ec.europa.eu/schemas/inspire_vs/1.0',
     LIDO: 'http://www.lido-schema.org',
@@ -56,6 +57,7 @@ export const namespaces = {
     VOID: 'http://rdfs.org/ns/void#',
     WMS: 'http://www.opengis.net/wms',
     XLINK: 'http://www.w3.org/1999/xlink',
+    XML: 'http://www.w3.org/XML/1998/namespace',
     XSD: 'http://www.w3.org/2001/XMLSchema',
     XSI: 'http://www.w3.org/2001/XMLSchema-instance',
 };

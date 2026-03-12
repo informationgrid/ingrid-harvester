@@ -21,17 +21,17 @@
  * ==================================================
  */
 
-import { createEsId } from '../diplanung.utils';
-import { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model';
-import { Contact, Organization, Person } from '../../../model/agent';
-import { CswMapper } from '../../../importer/csw/csw.mapper';
-import { DateRange } from '../../../model/dateRange';
-import { DiplanungIndexDocument } from '../model/index.document';
-import { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper';
-import { Distribution } from '../../../model/distribution';
-import { Geometries, Geometry, GeometryCollection, Point } from '@turf/helpers';
-import { IndexDocumentFactory } from '../../../model/index.document.factory';
-import { WfsMapper } from '../../../importer/wfs/wfs.mapper';
+import { createEsId } from '../diplanung.utils.js';
+import type { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model.js';
+import type { Contact, Organization, Person } from '../../../model/agent.js';
+import type { CswMapper } from '../../../importer/csw/csw.mapper.js';
+import type { DateRange } from '../../../model/dateRange.js';
+import type { DiplanungIndexDocument } from '../model/index.document.js';
+import type { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper.js';
+import type { Distribution } from '../../../model/distribution.js';
+import type { Geometry, Point } from 'geojson';
+import type { IndexDocumentFactory } from '../../../model/index.document.factory.js';
+import type { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
 
 export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | WfsMapper> implements IndexDocumentFactory<DiplanungIndexDocument> {
 
@@ -66,13 +66,11 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
             // plan and procedure information
             development_freeze_period: this.getPluDevelopmentFreezePeriod(),
             plan_name: this.getPluPlanName(),
-            plan_or_procedure_start_date: this.getPluProcedurePeriod()?.gte, // deprecated
             plan_state: this.getPluPlanState(),
             plan_type: this.getPluPlanType(),
             plan_type_fine: this.getPluPlanTypeFine(),
             procedure_import_date: this.getProcedureImportDate(),
             procedure_state: this.getPluProcedureState(),
-            procedure_start_date: this.getPluProcedurePeriod()?.gte, // deprecated
             procedure_period: this.getPluProcedurePeriod(),
             procedure_type: this.getPluProcedureType(),
             process_steps: this.getPluProcessSteps(),
@@ -149,11 +147,11 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
     abstract getPluNotification(): string;
 
     // spatial features
-    abstract getBoundingBox(): Geometry | GeometryCollection;
+    abstract getBoundingBox(): Geometry;
 
     abstract getCentroid(): Point;
 
-    abstract getSpatial(): Geometries | Geometry | GeometryCollection;
+    abstract getSpatial(): Geometry;
 
     abstract getSpatialText(): string;
 
