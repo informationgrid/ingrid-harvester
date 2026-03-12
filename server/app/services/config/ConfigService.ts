@@ -38,6 +38,7 @@ import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
+import {defaultGenesisSettings} from "../../importer/genesis/genesis.settings.js";
 
 const log = log4js.getLogger();
 
@@ -236,6 +237,7 @@ export class ConfigService {
                         case 'DCAT': defaultSettings = defaultDCATSettings; break;
                         case 'KLD': defaultSettings = defaultKldSettings; break;
                         case 'OAI': defaultSettings = defaultOAISettings; break;
+                        case 'GENESIS': defaultSettings = defaultGenesisSettings; break;
                         //case 'SPARQL': defaultSettings = SparqlImporter.defaultSettings; break;
                         //case 'WFS': defaultSettings = WfsImporter.defaultSettings; break;
                     }

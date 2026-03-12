@@ -685,5 +685,37 @@
     "contactMetadata": null,
     "maintainer": null,
     "featureLimit": "50"
+  },
+  {
+    "id": 25,
+    "type": "GENESIS",
+    "description": "GENESIS Online Statistics (Template)",
+    "disable": true,
+    "catalogId": "genesis",
+    "sourceURL": "https://genesis.sachsen-anhalt.de/genesisWSLSA/rest/2020",
+    "typeConfig": {
+      "username": "Gast",
+      "password": "Gast",
+      "apiToken": "",
+      "requestDelayMs": 500,
+      "tableSelections": []
+    },
+    "iPlugId": "",
+    "partner": "",
+    "provider": "",
+    "datatype": "",
+    "dataSourceName": "",
+    "rejectUnauthorizedSSL": true,
+    "timeout": 60000,
+    "cron": {
+      "full": {
+        "pattern": "0 3 * * *",
+        "active": false
+      },
+      "incr": {
+        "pattern": "",
+        "active": false
+      }
+    }
   }
 ]

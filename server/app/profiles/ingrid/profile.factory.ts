@@ -63,12 +63,15 @@ import { ElasticQueries } from './persistence/elastic.queries.js';
 import mappings from './persistence/ingrid-meta-mapping.json' with { type: 'json' };
 import settings from './persistence/ingrid-meta-settings.json' with { type: 'json' };
 import { PostgresAggregator } from './persistence/postgres.aggregator.js';
+import type {GenesisSettings} from "../../importer/genesis/genesis.settings.js";
+import {ingridGenesisMapper} from "./mapper/ingrid.genesis.mapper.js";
+import type {GenesisMapper} from "../../importer/genesis/genesis.mapper.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
 export const INGRID_META_INDEX = 'ingrid_meta';
 
-export type ingridSettings = CswSettings | WfsSettings | DcatapdeSettings;
+export type ingridSettings = CswSettings | WfsSettings | DcatapdeSettings | GenesisSettings;
 
 export class ingridFactory extends ProfileFactory<ingridSettings> {
 
@@ -150,6 +153,10 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
                 const { WfsImporter } = await import('../../importer/wfs/wfs.importer.js');
                 importer = new WfsImporter(settings as WfsSettings);
                 break;
+            case 'GENESIS':
+                const { GenesisImporter } = await import('../../importer/genesis/genesis.importer.js');
+                importer = new GenesisImporter(settings as GenesisSettings);
+                break;
             default: {
                 log.error('Importer not found: ' + settings.type);
             }
@@ -173,6 +180,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
                     default: return new ingridWfsMapper(mapper as WfsMapper);
                 }
             }
+            case 'GenesisMapper': return new ingridGenesisMapper(mapper as GenesisMapper);
             default:
                 throw new Error(`No mapper "${mapper.constructor.name}" registered`);
         }

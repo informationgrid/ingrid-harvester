@@ -36,8 +36,9 @@ import type { IndexDocument } from '../../../model/index.document.js';
 import type { IngridIndexDocument } from "../model/index.document.js";
 import type { IngridMetadata } from '../model/ingrid.metadata.js';
 import { Codelist } from "../utils/codelist.js";
+import type {GenesisMapper} from "../../../importer/genesis/genesis.mapper.js";
 
-export type ingridMapperType = CswMapper | CkanMapper | DcatapdeMapper | WfsMapper;
+export type ingridMapperType = CswMapper | CkanMapper | DcatapdeMapper | WfsMapper | GenesisMapper;
 
 export abstract class ingridMapper<M extends ingridMapperType> implements DocumentFactory<IndexDocument & IngridMetadata>, ToElasticMapper<IndexDocument> {
 
