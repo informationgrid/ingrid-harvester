@@ -21,22 +21,31 @@
  * ==================================================
  */
 
-import { Context, Middleware, Req} from '@tsed/common';
-import type { MiddlewareMethods } from '@tsed/common';
-import { Unauthorized } from '@tsed/exceptions';
+
+import {Context, Inject, Middleware, type MiddlewareMethods, Req} from "@tsed/common";
+import {KeycloakService} from "../../services/keycloak/KeycloakService.js";
+import {Unauthorized} from "@tsed/exceptions";
 
 @Middleware()
 export class AuthMiddleware implements MiddlewareMethods {
+  @Inject()
+  protected keycloakService: KeycloakService;
 
-    use(@Req() request: Express.Request, @Context() ctx: Context) {
+  public use(@Req() request: Express.Request, @Context() ctx: Context) {
+    let grant = ctx.getRequest().kauth.grant;
+    if (grant) {
+      this.keycloakService.setToken(grant.access_token);
+      // return
+      return this.keycloakService.getKeycloakInstance().protect();
+    } else {
+      //retrieve Options passed to the Authenticated() decorators.
+      const options = ctx.endpoint.store.get(AuthMiddleware) || {};
+      //$log.debug("AuthMiddleware =>", options);
+      //$log.debug("AuthMiddleware isAuthenticated ? =>", request.isAuthenticated());
 
-        //retrieve Options passed to the Authenticated() decorators.
-        const options = ctx.endpoint.store.get(AuthMiddleware) || {};
-        //$log.debug("AuthMiddleware =>", options);
-        //$log.debug("AuthMiddleware isAuthenticated ? =>", request.isAuthenticated());
-
-        if (!request.isAuthenticated()) {
-            throw new Unauthorized("Unauthorized");
-        }
+      if (!request.isAuthenticated()) {
+        throw new Unauthorized("Unauthorized");
+      }
     }
+  }
 }

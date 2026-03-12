@@ -26,6 +26,7 @@ import { BodyParams, Controller, Get, UseAuth } from '@tsed/common';
 import { HistoryService } from "../services/statistic/HistoryService.js";
 import { IndexCheckService } from "../services/statistic/IndexCheckService.js";
 import { UrlCheckService } from "../services/statistic/UrlCheckService.js";
+import {KeycloakAuth} from "../decorators/KeycloakAuthOptions.js";
 
 @Controller('/api/monitoring')
 @UseAuth(AuthMiddleware)
@@ -51,6 +52,7 @@ export class MonitoringCtrl {
     }
 
     @Get('/harvester')
+    @KeycloakAuth({role: "realm:harvester-admin"})
     getAllHarvesterHistory(@BodyParams() request: any) {
         // re-initialize in case settings have changed
         this.historyService.initialize();

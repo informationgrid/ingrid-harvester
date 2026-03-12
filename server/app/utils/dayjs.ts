@@ -22,7 +22,7 @@
  */
 
 import dayjs from 'dayjs';
-import 'dayjs/locale/de';
+import 'dayjs/locale/de.js';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 
 dayjs.locale('de');

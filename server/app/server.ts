@@ -28,7 +28,7 @@ import * as path from 'path';
 import { ProfileFactoryLoader } from './profiles/profile.factory.loader.js';
 import { ConfigService } from './services/config/ConfigService.js';
 import { jsonLayout } from './utils/log4js.json.layout.js';
-import {KeycloakService} from "./services/keycloak/KeycloakService";
+import {KeycloakService} from "./services/keycloak/KeycloakService.js";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import createMemoryStore from 'memorystore';
@@ -114,7 +114,7 @@ export class Server {
         // on startup make sure the configuration has IDs for each harvester
         ConfigService.fixIDs();
 
-        this.app
+      this.app
             .use(PlatformAcceptMimesMiddleware)
             .use(cookieParser())
             .use(compress({}))
@@ -127,6 +127,7 @@ export class Server {
                 secret: ConfigService.getGeneralSettings().sessionSecret,
                 resave: true,
                 saveUninitialized: true,
+                // @ts-ignore
                 maxAge: 36000,
                 cookie: {
                     path: createRelativePath(baseURL),
@@ -138,8 +139,8 @@ export class Server {
                 // store: new MemoryStore({
                 //     checkPeriod: 86400000 // prune expired entries every 24h
                 // })
-            }));
-        this.app.use(this.keycloakService.getKeycloakInstance().middleware());
+            }))
+            .use(this.keycloakService.getKeycloakInstance().middleware());
 
         return null;
     }

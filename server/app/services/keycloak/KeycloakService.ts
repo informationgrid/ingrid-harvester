@@ -1,8 +1,8 @@
 import {Service} from "@tsed/di";
 import {MemoryStore} from "express-session";
 import {$log} from "@tsed/logger";
-import {Token} from "keycloak-connect";
-import KeycloakConnect = require("keycloak-connect");
+import type {Token} from "keycloak-connect";
+import KeycloakConnect from "keycloak-connect";
 
 @Service()
 export class KeycloakService {
