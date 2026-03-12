@@ -27,12 +27,10 @@ import type { ElasticsearchCatalogSettings } from '../../catalog/elasticsearch/e
 import type { Importer } from '../../importer/importer.js';
 import type { JsonMapper } from '../../importer/json/json.mapper.js';
 import type { JsonSettings } from '../../importer/json/json.settings.js';
-import { KldImporter } from '../../importer/kld/kld.importer.js';
 import type { KldMapper } from '../../importer/kld/kld.mapper.js';
 import type { KldSettings } from '../../importer/kld/kld.settings.js';
 import type { OaiMapper as OaiLidoMapper } from '../../importer/oai/lido/oai.mapper.js';
 import type { OaiMapper as OaiModsMapper } from '../../importer/oai/mods/oai.mapper.js';
-import { OaiImporter } from '../../importer/oai/oai.importer.js';
 import type { OaiSettings } from '../../importer/oai/oai.settings.js';
 import type { DocumentFactory } from '../../model/index.document.factory.js';
 import type { Summary } from '../../model/summary.js';
@@ -41,7 +39,6 @@ import type { PostgresAggregator as AbstractPostgresAggregator } from '../../per
 import { ConfigService } from '../../services/config/ConfigService.js';
 import { ProfileFactory } from '../profile.factory.js';
 import { LvrElasticsearchCatalog } from './catalog/elasticsearch.catalog.js';
-import { LvrClickRheinImporter } from './importer/lvr.clickrhein.importer.js';
 import { LvrClickRheinMapper } from './mapper/lvr.clickrhein.mapper.js';
 import { LvrKldMapper } from './mapper/lvr.kld.mapper.js';
 import { LvrOaiLidoMapper } from './mapper/lvr.oai.lido.mapper.js';
@@ -73,16 +70,20 @@ export class LvrFactory extends ProfileFactory<LvrSettings> {
         }
     }
 
+    // TODO solve this more elegantly than using dynamic imports - maybe using a registry?
     async getImporter(settings: LvrSettings): Promise<Importer<LvrSettings>> {
         let importer: Importer<LvrSettings>;
         switch (settings.type) {
             case 'JSON':
+                const { LvrClickRheinImporter } = await import('./importer/lvr.clickrhein.importer.js');
                 importer = new LvrClickRheinImporter(settings as JsonSettings);
                 break;
             case 'KLD':
+                const { KldImporter } = await import('../../importer/kld/kld.importer.js');
                 importer = new KldImporter(settings as KldSettings);
                 break;
             case 'OAI':
+                const { OaiImporter } = await import('../../importer/oai/oai.importer.js');
                 importer = new OaiImporter(settings as OaiSettings);
                 break;
             default: {

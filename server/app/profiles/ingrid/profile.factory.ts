@@ -26,17 +26,13 @@ import { Catalog as NewCatalog } from '../../catalog/catalog.factory.js';
 import type { CswCatalogSettings } from '../../catalog/csw/csw.catalog.js';
 import type { ElasticsearchCatalogSettings } from '../../catalog/elasticsearch/elasticsearch.catalog.js';
 import { PiveauCatalog, type PiveauCatalogSettings } from "../../catalog/piveau/piveau.catalog.js";
-import { CkanImporter } from '../../importer/ckan/ckan.importer.js';
 import type { CkanMapper } from '../../importer/ckan/ckan.mapper.js';
 import type { CkanSettings } from '../../importer/ckan/ckan.settings.js';
-import { CswImporter } from '../../importer/csw/csw.importer.js';
 import type { CswMapper } from '../../importer/csw/csw.mapper.js';
 import type { CswSettings } from '../../importer/csw/csw.settings.js';
-import { DcatapdeImporter } from "../../importer/dcatapde/dcatapde.importer.js";
 import type { DcatapdeMapper } from '../../importer/dcatapde/dcatapde.mapper.js';
 import type { DcatapdeSettings } from "../../importer/dcatapde/dcatapde.settings.js";
 import type { Importer } from '../../importer/importer.js';
-import { WfsImporter } from '../../importer/wfs/wfs.importer.js';
 import type { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
 import type { WfsSettings } from '../../importer/wfs/wfs.settings.js';
 import { WfsProfile } from '../../importer/wfs/wfs.settings.js';
@@ -134,20 +130,26 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
         return ElasticQueries.getInstance();
     }
 
+    // TODO solve this more elegantly than using dynamic imports - maybe using a registry?
     async getImporter(settings: ingridSettings): Promise<Importer<ingridSettings>> {
         let importer: Importer<ingridSettings>;
         switch (settings.type) {
             case 'CSW':
+                const { CswImporter } = await import('../../importer/csw/csw.importer.js');
                 importer = new CswImporter(settings as CswSettings);
                 break;
             case 'CKAN':
+                const { CkanImporter } = await import('../../importer/ckan/ckan.importer.js');
                 importer = new CkanImporter(settings as CkanSettings);
                 break;
             case 'DCATAPDE':
+                const { DcatapdeImporter } = await import('../../importer/dcatapde/dcatapde.importer.js');
                 importer = new DcatapdeImporter(settings as DcatapdeSettings);
                 break;
             case 'WFS':
+                const { WfsImporter } = await import('../../importer/wfs/wfs.importer.js');
                 importer = new WfsImporter(settings as WfsSettings);
+                break;
             default: {
                 log.error('Importer not found: ' + settings.type);
             }

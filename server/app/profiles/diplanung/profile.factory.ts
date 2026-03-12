@@ -26,7 +26,6 @@ import { Catalog as NewCatalog } from '../../catalog/catalog.factory.js';
 import type { ElasticsearchCatalogSettings } from '../../catalog/elasticsearch/elasticsearch.catalog.js';
 import type { CswMapper } from '../../importer/csw/csw.mapper.js';
 import type { CswSettings } from '../../importer/csw/csw.settings.js';
-import { DcatappluImporter } from '../../importer/dcatapplu/dcatapplu.importer.js';
 import type { DcatappluMapper } from '../../importer/dcatapplu/dcatapplu.mapper.js';
 import type { DcatappluSettings } from '../../importer/dcatapplu/dcatapplu.settings.js';
 import type { Importer } from '../../importer/importer.js';
@@ -39,8 +38,6 @@ import type { PostgresAggregator as AbstractPostgresAggregator } from '../../per
 import { ConfigService } from '../../services/config/ConfigService.js';
 import { ProfileFactory } from '../profile.factory.js';
 import { DiplanungElasticsearchCatalog } from './catalog/elasticsearch.catalog.js';
-import { DiplanungCswImporter } from './importer/diplanung.csw.importer.js';
-import { DiplanungWfsImporter } from './importer/diplanung.wfs.importer.js';
 import { DiplanungCswMapper } from './mapper/diplanung.csw.mapper.js';
 import { DiplanungDcatappluMapper } from './mapper/diplanung.dcatapplu.mapper.js';
 import { FisWfsMapper } from './mapper/wfs/fis.wfs.mapper.js';
@@ -86,19 +83,23 @@ export class DiplanungFactory extends ProfileFactory<DiplanungSettings> {
         }
     }
 
+    // TODO solve this more elegantly than using dynamic imports - maybe using a registry?
     async getImporter(settings: DiplanungSettings): Promise<Importer<DiplanungSettings>> {
         let importer: Importer<DiplanungSettings>;
         switch (settings.type) {
-            case 'CSW': 
+            case 'CSW':
+                const { DiplanungCswImporter } = await import('./importer/diplanung.csw.importer.js');
                 importer = new DiplanungCswImporter(settings as CswSettings);
                 break;
-            case 'DCATAPPLU': 
+            case 'DCATAPPLU':
+                const { DcatappluImporter } = await import('../../importer/dcatapplu/dcatapplu.importer.js');
                 importer = new DcatappluImporter(settings as DcatappluSettings);
                 break;
             case 'WFS.FIS':
             case 'WFS.MS':
             case 'WFS.XPLAN':
-            case 'WFS.XPLAN.SYN': 
+            case 'WFS.XPLAN.SYN':
+                const { DiplanungWfsImporter } = await import('./importer/diplanung.wfs.importer.js');
                 importer = new DiplanungWfsImporter(settings as WfsSettings);
                 break;
             default: {
