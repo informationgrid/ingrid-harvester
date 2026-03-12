@@ -1,6 +1,6 @@
 [
   {
-    "id": "ingrid-elastic-1",
+    "id": 1,
     "type": "elasticsearch",
     "connectionId": "default",
     "name": "Ingrid Elasticsearch",
@@ -11,7 +11,7 @@
     }
   },
   {
-    "id": "py-csw",
+    "id": 2,
     "type": "csw",
     "connectionId": "default",
     "name": "PY CSW Target",
@@ -22,7 +22,7 @@
     }
   },
   {
-    "id": "piveau-catalog",
+    "id": 3,
     "type": "piveau",
     "connectionId": "default",
     "name": "Piveau",
