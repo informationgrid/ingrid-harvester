@@ -106,7 +106,7 @@ CatalogFactory {
 
     abstract getDocumentFactory(mapper: Mapper<ImporterSettings>): DocumentFactory<IndexDocument>;
 
-    abstract getCatalog(catalogId: string, summary: Summary): Promise<NewCatalog<any>>;
+    abstract getCatalog(catalogId: number, summary: Summary): Promise<NewCatalog<any>>;
 
     abstract getPostgresAggregator(settings: CatalogSettings): PostgresAggregator<IndexDocument>;
 

@@ -141,7 +141,7 @@ export class PostgresUtils extends DatabaseUtils {
         return result.rows;
     }
 
-    async getIdentifiersByCatalog(catalog_id:string): Promise<string[]> {
+    async getIdentifiersByCatalog(catalog_id: number): Promise<string[]> {
         let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getIdentifiersByCatalog, [catalog_id]);
         if (result.rowCount == 0) {
             return [];

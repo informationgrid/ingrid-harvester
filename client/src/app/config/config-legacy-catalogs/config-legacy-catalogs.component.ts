@@ -27,16 +27,16 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { combineLatest, map, Observable } from 'rxjs';
 import { Catalog } from '../../../../../server/app/model/dcatApPlu.model';
 import { ConfigService } from '../config.service';
-import { AddOrEditCatalogComponent } from './add-or-edit-catalog/add-or-edit-catalog.component';
-import { DeleteCatalogComponent } from './delete-catalog/delete-catalog.component';
+import { AddOrEditLegacyCatalogComponent } from './add-or-edit-legacy-catalog/add-or-edit-legacy-catalog.component';
+import { DeleteLegacyCatalogComponent } from './delete-legacy-catalog/delete-legacy-catalog.component';
 
 @Component({
-    selector: 'app-config-catalogs',
-    templateUrl: './config-catalogs.component.html',
-    styleUrls: ['./config-catalogs.component.scss'],
+    selector: 'app-config-legacy-catalogs',
+    templateUrl: './config-legacy-catalogs.component.html',
+    styleUrls: ['./config-legacy-catalogs.component.scss'],
     standalone: false
 })
-export class ConfigCatalogsComponent implements OnInit {
+export class ConfigLegacyCatalogsComponent implements OnInit {
 
   catalogsWrapper: Observable<{ catalog: Catalog, count: any }[]>;
 
@@ -58,7 +58,7 @@ export class ConfigCatalogsComponent implements OnInit {
   }
 
   addOrEditCatalog(catalog: Catalog) {
-    this.dialog.open(AddOrEditCatalogComponent, {
+    this.dialog.open(AddOrEditLegacyCatalogComponent, {
       data: catalog
     }).afterClosed().subscribe(result => {
       if (result) {
@@ -72,7 +72,7 @@ export class ConfigCatalogsComponent implements OnInit {
   }
 
   deleteCatalog(catalog: Catalog) {
-    this.dialog.open(DeleteCatalogComponent, {
+    this.dialog.open(DeleteLegacyCatalogComponent, {
       data: {
         catalog,
         catalogsWrapper: this.catalogsWrapper
