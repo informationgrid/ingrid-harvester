@@ -4,6 +4,7 @@
     "type": "elasticsearch",
     "connectionId": "default",
     "name": "Ingrid Elasticsearch",
+    "url": "http://localhost:9200",
     "settings": {
       "index": "harvester-index",
       "alias": "harvester"
@@ -14,8 +15,8 @@
     "type": "csw",
     "connectionId": "default",
     "name": "PY CSW Target",
+    "url": "http://localhost:8000/csw",
     "settings": {
-      "url": "http://localhost:8000/csw",
       "version": "2.0.2",
       "outputSchema": "http://www.isotc211.org/2005/gmd"
     }
@@ -25,8 +26,8 @@
     "type": "piveau",
     "connectionId": "default",
     "name": "Piveau",
+    "url": "http://localhost:8081",
     "settings": {
-      "url": "http://localhost:8081",
       "catalog": "ingrid-harvester",
       "api-key": "yourRepoApiKey",
       "title": "InGrid-Harvester",
