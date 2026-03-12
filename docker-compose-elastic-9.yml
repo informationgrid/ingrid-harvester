@@ -57,7 +57,7 @@ services:
       - harvester-network
 
   postgres:
-    image: postgres
+    image: postgres:14.4-alpine
     container_name: postgresql
     restart: unless-stopped
     environment:
@@ -72,7 +72,7 @@ services:
     volumes:
       - postgresdata:/var/lib/postgresql/data
     ports:
-      - "5434:5432"
+      - "5432:5432"
     networks:
       - harvester-network
 
@@ -101,6 +101,41 @@ services:
         condition: service_healthy
     environment:
       - PYCSW_CONFIG=/etc/pycsw/pycsw.cfg
+
+  harvester:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ingrid-harvester
+    image: ingrid-harvester
+    environment:
+      - IMPORTER_PROFILE=diplanung
+      - DB_URL=postgres
+      - ELASTIC_URL=http://elastic:9200
+      - ELASTIC_VERSION=9
+      - ELASTIC_ALIAS=harvester
+      - ELASTIC_USER=elastic
+      - ELASTIC_PASSWORD=elastic
+      - BASE_URL=/harvester/
+    working_dir: /opt/ingrid/harvester
+    command: node app/index.js
+    volumes:
+      - ./client/src/assets/config.json:/opt/ingrid/harvester/server/app/webapp/assets/config.json
+#    ports:
+#      - "8091:8090"
+    networks:
+      - harvester-network
+
+  apache:
+    image: httpd:2.4
+    container_name: apache
+    ports:
+      - "8090:80"
+    volumes:
+      - ./apache/proxy.conf:/usr/local/apache2/conf/conf.d/proxy.conf:ro
+      - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
+    networks:
+      - harvester-network
 
 volumes:
   esdata:
