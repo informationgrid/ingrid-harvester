@@ -1122,7 +1122,6 @@ export class CswMapper extends BaseMapper {
             let position = CswMapper.select('./gmd:positionName/gco:CharacterString', contact, true)?.textContent;
             if(role) {
                 let infos = {
-                    identificationinfo_administrative_area_value: region,
                     institution: org,
                     lastname: name,
                     street: delPt,
@@ -1133,6 +1132,14 @@ export class CswMapper extends BaseMapper {
                     job: position,
                     descr: contactInstructions
                 };
+                // (#8604): only set identificationinfo_administrative_area_value for 
+                // * MD_Metadata/identificationInfo/MD_DataIdentification/pointOfContact/*/contactInfo/*/address/*/administrativeArea
+                // * MD_Metadata/identificationInfo/SV_ServiceIdentification/pointOfContact/*/contactInfo/*/address/*/administrativeArea
+                let grandparent = (contact?.parentNode?.parentNode as Element);
+                if ((grandparent?.parentNode as Element)?.localName == 'identificationInfo' &&
+                    (grandparent?.localName == 'MD_DataIdentification' || grandparent?.localName == "SV_ServiceIdentification")) {
+                    infos["identificationinfo_administrative_area_value"] = region;
+                }
 
                 results.push(infos);
             }
