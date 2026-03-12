@@ -30,6 +30,7 @@ import type { CatalogSettings } from '../../catalog/catalog.factory.js';
 import { defaultCKANSettings } from '../../importer/ckan/ckan.settings.js';
 import { defaultCSWSettings } from '../../importer/csw/csw.settings.js';
 import { defaultDCATSettings } from '../../importer/dcatapde/dcatapde.settings.js';
+import { defaultGenesisSettings } from "../../importer/genesis/genesis.settings.js";
 import { defaultKldSettings } from '../../importer/kld/kld.settings.js';
 import { defaultOAISettings } from '../../importer/oai/oai.settings.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
@@ -38,7 +39,6 @@ import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
-import {defaultGenesisSettings} from "../../importer/genesis/genesis.settings.js";
 
 const log = log4js.getLogger();
 
@@ -324,9 +324,55 @@ export class ConfigService {
         }
      }
 
-     static setCatalogSettings(config: CatalogSettings[]) {
+    static setCatalogSettings(config: CatalogSettings[]) {
         fs.writeFileSync(this.getCatalogConfigFile(), JSON.stringify(config, null, 2));
-     }
+    }
+
+    static getCatalogs() {
+        return ConfigService.getCatalogSettings();
+    }
+
+    static getCatalog(id: number) {
+        const catalog = ConfigService.getCatalogSettings().find(settings => settings.id == id);
+        if (!catalog) {
+            throw new Error(`No catalog found with id ${id}`);
+        }
+        return catalog;
+    }
+
+    static addOrEditCatalog(settings: CatalogSettings) {
+        const createId = (settings: CatalogSettings[]) => {
+            const ids = settings.map(s => s.id).sort();
+            const maxId = ids.length > 0 ? Math.max(...ids) : 0;
+            return maxId + 1;
+        };
+        const existingSettings = ConfigService.getCatalogSettings();
+        // if id is given, update the pertaining catalog settings
+        if (settings.id) {
+            const catalogIndex = existingSettings.findIndex(catalog => catalog.id == settings.id);
+            if (!catalogIndex) {
+                throw new Error(`Catalog with id ${settings.id} not found`);
+            }
+            existingSettings[catalogIndex] = settings;
+        }
+        // else add catalog settings to list
+        else {
+            settings.id = createId(existingSettings);
+            existingSettings.push(settings);
+        }
+        // persist changes
+        ConfigService.setCatalogSettings(existingSettings);
+    }
+
+    static removeCatalog(id: number) {
+        const existingSettings = ConfigService.getCatalogSettings();
+        const catalogIndex = existingSettings.findIndex(catalog => catalog.id == id);
+        if (!catalogIndex) {
+            throw new Error(`Catalog with id ${id} not found`);
+        }
+        // persist changes
+        ConfigService.setCatalogSettings(existingSettings.filter(catalog => catalog.id != id));
+    }
 
     private static getDbUtils() {
         let generalConfig = ConfigService.getGeneralSettings();
