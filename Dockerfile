@@ -39,6 +39,7 @@ COPY . .
 WORKDIR /opt/ingrid/harvester/client
 RUN npm run prod
 
+
 #
 # IMAGE: final
 #
@@ -49,23 +50,21 @@ ENV IMPORTER_PROFILE=ingrid
 # install tini
 RUN apk add --no-cache tini
 
-# install production dependencies (also: remove large, unused, and not-asked-for-at-all ExcelJS map files)
 WORKDIR /opt/ingrid/harvester
+
+# install production dependencies (also: remove large, unused, and not-asked-for-at-all ExcelJS map files)
 RUN chown node:node /opt/ingrid/harvester
 COPY --chown=node:node ./server/package*.json ./
 RUN npm run install-production && rm -rf /opt/ingrid/harvester/node_modules/exceljs/dist/*.map
 
 # copy built files from server and client
-#WORKDIR /opt/ingrid/harvester
 COPY --chown=node:node --from=build-server /opt/ingrid/harvester/server/build/server .
 COPY --chown=node:node --from=build-client /opt/ingrid/harvester/client/dist/webapp ./app/webapp
+COPY --chown=node:node entrypoint.sh ./entrypoint.sh
 
 EXPOSE 8090
 
-COPY --chmod=755 entrypoint.sh /entrypoint.sh
-
 USER node
 
-WORKDIR /opt/ingrid/harvester
-ENTRYPOINT ["/entrypoint.sh", "/sbin/tini", "--"]
+ENTRYPOINT ["/sbin/tini", "--", "./entrypoint.sh"]
 CMD ["node", "app/index.js"]
