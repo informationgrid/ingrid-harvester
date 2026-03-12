@@ -44,13 +44,8 @@ export class CatalogCtrl {
     }
 
     @Post('/')
-    addCatalog(@BodyParams() settings: CatalogSettings): void {
-        ConfigService.addOrEditCatalog(settings);
-    }
-
-    @Post('/:identifier')
-    editCatalog(@BodyParams() settings: CatalogSettings): void {
-        ConfigService.addOrEditCatalog(settings);
+    addOrEditCatalog(@BodyParams() settings: CatalogSettings): CatalogSettings {
+        return ConfigService.addOrEditCatalog(settings);
     }
 
     // @Put('/:identifier')

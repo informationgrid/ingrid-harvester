@@ -335,12 +335,12 @@ export class ConfigService {
     static getCatalog(id: number) {
         const catalog = ConfigService.getCatalogSettings().find(settings => settings.id == id);
         if (!catalog) {
-            throw new Error(`No catalog found with id ${id}`);
+            throw new Error(`Catalog with id ${id} not found`);
         }
         return catalog;
     }
 
-    static addOrEditCatalog(settings: CatalogSettings) {
+    static addOrEditCatalog(settings: CatalogSettings): CatalogSettings {
         const createId = (settings: CatalogSettings[]) => {
             const ids = settings.map(s => s.id).sort();
             const maxId = ids.length > 0 ? Math.max(...ids) : 0;
@@ -355,13 +355,14 @@ export class ConfigService {
             }
             existingSettings[catalogIndex] = settings;
         }
-        // else add catalog settings to list
+        // else create id and add new catalog settings to list
         else {
             settings.id = createId(existingSettings);
             existingSettings.push(settings);
         }
         // persist changes
         ConfigService.setCatalogSettings(existingSettings);
+        return settings;
     }
 
     static removeCatalog(id: number) {
