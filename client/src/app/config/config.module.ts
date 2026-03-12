@@ -37,9 +37,9 @@ import { TranslocoModule } from '@ngneat/transloco';
 import { CronjobFormFieldComponent } from '../shared/cronjob-form-field/cronjob-form-field.component';
 import { PageTemplateModule } from '../shared/page-template/page-template.module';
 import { SharedModule } from '../shared/shared.module';
-import { AddOrEditCatalogComponent } from './config-catalogs/add-or-edit-catalog/add-or-edit-catalog.component';
-import { ConfigCatalogsComponent } from './config-catalogs/config-catalogs.component';
-import { DeleteCatalogComponent } from './config-catalogs/delete-catalog/delete-catalog.component';
+import { AddOrEditLegacyCatalogComponent } from './config-legacy-catalogs/add-or-edit-legacy-catalog/add-or-edit-legacy-catalog.component';
+import { ConfigLegacyCatalogsComponent } from './config-legacy-catalogs/config-legacy-catalogs.component';
+import { DeleteLegacyCatalogComponent } from './config-legacy-catalogs/delete-legacy-catalog/delete-legacy-catalog.component';
 import { ConfigGeneralComponent } from './config-general/config-general.component';
 import { ConfigImportExportComponent } from './config-import-export/config-import-export.component';
 import { AddMappingItemComponent } from './config-mapping/add-mapping-item/add-mapping-item.component';
@@ -55,10 +55,10 @@ import { MatTooltip } from "@angular/material/tooltip";
         ConfigMappingComponent,
         ConfigGeneralComponent,
         ConfigImportExportComponent,
-        ConfigCatalogsComponent,
+        ConfigLegacyCatalogsComponent,
         AddMappingItemComponent,
-        AddOrEditCatalogComponent,
-        DeleteCatalogComponent
+        AddOrEditLegacyCatalogComponent,
+        DeleteLegacyCatalogComponent
     ],
     imports: [
         CommonModule,

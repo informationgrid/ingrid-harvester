@@ -23,21 +23,21 @@
 
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddOrEditCatalogComponent } from './add-or-edit-catalog.component';
+import { AddOrEditLegacyCatalogComponent } from './add-or-edit-legacy-catalog.component';
 
-describe('AddOrEditCatalogComponent', () => {
-  let component: AddOrEditCatalogComponent;
-  let fixture: ComponentFixture<AddOrEditCatalogComponent>;
+describe('AddOrEditLegacyCatalogComponent', () => {
+  let component: AddOrEditLegacyCatalogComponent;
+  let fixture: ComponentFixture<AddOrEditLegacyCatalogComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddOrEditCatalogComponent ]
+      declarations: [ AddOrEditLegacyCatalogComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddOrEditCatalogComponent);
+    fixture = TestBed.createComponent(AddOrEditLegacyCatalogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

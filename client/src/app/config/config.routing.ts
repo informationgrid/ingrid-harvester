@@ -22,7 +22,7 @@
  */
 
 import { RouterModule } from '@angular/router';
-import { ConfigCatalogsComponent } from './config-catalogs/config-catalogs.component';
+import { ConfigLegacyCatalogsComponent } from './config-legacy-catalogs/config-legacy-catalogs.component';
 import { ConfigGeneralComponent } from './config-general/config-general.component';
 import { ConfigImportExportComponent } from './config-import-export/config-import-export.component';
 import { ConfigMappingComponent } from './config-mapping/config-mapping.component';
@@ -48,7 +48,7 @@ export const routing = RouterModule.forChild([
       },
       {
         path: "catalogs",
-        component: ConfigCatalogsComponent,
+        component: ConfigLegacyCatalogsComponent,
         data: {
           title: "Katalogverwaltung",
         },

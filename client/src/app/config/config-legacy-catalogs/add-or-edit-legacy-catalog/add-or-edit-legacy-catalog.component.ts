@@ -28,19 +28,19 @@ import { of } from 'rxjs';
 import { Catalog } from '../../../../../../server/app/model/dcatApPlu.model';
 
 @Component({
-    selector: 'app-add-or-edit-catalog',
-    templateUrl: './add-or-edit-catalog.component.html',
-    styleUrls: ['./add-or-edit-catalog.component.scss'],
+    selector: 'app-add-or-edit-legacy-catalog',
+    templateUrl: './add-or-edit-legacy-catalog.component.html',
+    styleUrls: ['./add-or-edit-legacy-catalog.component.scss'],
     standalone: false
 })
-export class AddOrEditCatalogComponent implements OnInit {
+export class AddOrEditLegacyCatalogComponent implements OnInit {
 
   catalog: Catalog;
 
   catalogForm: FormGroup;
 
   constructor(@Inject(MAT_DIALOG_DATA) private data: Catalog,
-      public dialogRef: MatDialogRef<AddOrEditCatalogComponent>, private formBuilder: FormBuilder) {
+      public dialogRef: MatDialogRef<AddOrEditLegacyCatalogComponent>, private formBuilder: FormBuilder) {
     this.buildForm(data);
   }
 
@@ -63,7 +63,7 @@ export class AddOrEditCatalogComponent implements OnInit {
   private buildForm(catalog: Catalog) {
     this.catalogForm = this.formBuilder.group({
       description: [catalog?.description, Validators.required],
-      identifier: [catalog?.identifier, Validators.required, AddOrEditCatalogComponent.identifierValidator],
+      identifier: [catalog?.identifier, Validators.required, AddOrEditLegacyCatalogComponent.identifierValidator],
       publisher: this.formBuilder.group({
         name: [catalog?.publisher?.['name']],
       }),

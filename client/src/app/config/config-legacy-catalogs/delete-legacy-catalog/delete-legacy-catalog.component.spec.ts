@@ -23,21 +23,21 @@
 
 import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConfigCatalogsComponent } from './config-catalogs.component';
+import { DeleteLegacyCatalogComponent } from './delete-legacy-catalog.component';
 
-describe('ConfigCatalogsComponent', () => {
-  let component: ConfigCatalogsComponent;
-  let fixture: ComponentFixture<ConfigCatalogsComponent>;
+describe('DeleteLegacyCatalogComponent', () => {
+  let component: DeleteLegacyCatalogComponent;
+  let fixture: ComponentFixture<DeleteLegacyCatalogComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConfigCatalogsComponent ]
+      declarations: [ DeleteLegacyCatalogComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConfigCatalogsComponent);
+    fixture = TestBed.createComponent(DeleteLegacyCatalogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
