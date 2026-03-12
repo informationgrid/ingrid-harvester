@@ -112,7 +112,7 @@ export class DiplanungFactory extends ProfileFactory<DiplanungSettings> {
         return importer;
     }
     
-    async getCatalog(catalogId: string, summary: Summary): Promise<NewCatalog<any>> {
+    async getCatalog(catalogId: number, summary: Summary): Promise<NewCatalog<any>> {
         const catalogSettings = ConfigService.getCatalogSettings().find(config => config.id === catalogId);
         switch (catalogSettings.type) {
             case 'elasticsearch': return new DiplanungElasticsearchCatalog(catalogSettings as ElasticsearchCatalogSettings, summary);

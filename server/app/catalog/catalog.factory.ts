@@ -36,7 +36,7 @@ const log = log4js.getLogger('Catalog');
 export interface CatalogFactory {
 
     // TODO improve typing
-    getCatalog(catalogId: string, summary: Summary): Promise<Catalog<any>>;
+    getCatalog(catalogId: number, summary: Summary): Promise<Catalog<any>>;
 }
 
 /**
@@ -117,7 +117,7 @@ export abstract class Catalog<DbColumnType> {
 };
 
 export type CatalogSettings = {
-    id: string,
+    id: number,
     type: string,
     // ED 2026-03-10: "connections" abstraction will be implemented at a later date; directly use URL for now
     // connectionId: string,

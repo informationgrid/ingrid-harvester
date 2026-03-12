@@ -97,7 +97,7 @@ export abstract class DatabaseUtils {
 
     abstract getDcatapdeDatasetsBySource(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'dataset_dcatapde'>[]>;
 
-    abstract getIdentifiersByCatalog(catalog_id: string): Promise<string[]>
+    abstract getIdentifiersByCatalog(catalog_id: number): Promise<string[]>
 
     abstract deleteDatasets(catalogId: number): Promise<void>;
 
