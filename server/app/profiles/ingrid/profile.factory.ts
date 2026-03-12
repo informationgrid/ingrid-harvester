@@ -92,7 +92,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
             .reduce((acc, obj) => (acc[obj.id] = (obj as ElasticsearchCatalogSettings).settings.index, acc), {});
         for (let identifier of catalogIdentifiers) {
             const index = catalogMap[identifier];
-            if (!await elastic.isIndexPresent(index)) {
+            if (index && !await elastic.isIndexPresent(index)) {
                 await elastic.prepareIndexWithName(index, this.getIndexMappings(), this.getIndexSettings());
                 await elastic.addAlias(index, ConfigService.getGeneralSettings().elasticsearch.alias);
             }
