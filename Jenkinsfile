@@ -184,7 +184,7 @@ def determineRpmReleasePart() {
         if (env.TAG_NAME.startsWith("RPM-")) {
             return env.TAG_NAME.substring(env.TAG_NAME.lastIndexOf("-") + 1)
         }
-        return '1'
+        return currentBuild.number
     } else {
         return 'dev'
     }
@@ -193,7 +193,7 @@ def determineRpmReleasePart() {
 def shouldBuildDevOrRelease() {
     // If no tag is being built OR it is the first build of a tag
     boolean isTag = env.TAG_NAME != null && env.TAG_NAME.trim() != ''
-    return !isTag || (isTag && currentBuild.number == 1)
+    return !isTag || (isTag && currentBuild.number >= 1)
 }
 
 def shouldBuildDockerImage() {
