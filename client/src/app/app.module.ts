@@ -53,7 +53,6 @@ import { TranslocoService } from "@ngneat/transloco";
 import { TranslocoRootModule } from "./transloco-root.module";
 import { MainHeaderComponent } from "./main-header/main-header.component";
 import { routes } from "./app.router";
-import { KeycloakAngularModule, KeycloakService as KeycloakAngularService } from 'keycloak-angular';
 
 registerLocaleData(localeDe);
 
@@ -94,8 +93,7 @@ const appRoutes: Routes = routes
         MatInputModule,
         MatButtonModule,
         MatTooltipModule,
-        TranslocoRootModule,
-        KeycloakAngularModule,], providers: [
+        TranslocoRootModule,], providers: [
         {
             provide: LOCALE_ID,
             useValue: 'de'
@@ -115,7 +113,6 @@ const appRoutes: Routes = routes
         },
         { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline', floatLabel: 'auto' } },
         { provide: MAT_CARD_CONFIG, useValue: { appearance: 'raised' } },
-        KeycloakAngularService,
         KeycloakService,
         provideHttpClient(withInterceptorsFromDi()),
     ] })

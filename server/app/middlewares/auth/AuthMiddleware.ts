@@ -32,11 +32,21 @@ export class AuthMiddleware implements MiddlewareMethods {
   protected keycloakService: KeycloakService;
 
   public use(@Req() request: Express.Request, @Context() ctx: Context) {
-    let grant = ctx.getRequest().kauth.grant;
+    if (request.session && request.session['keycloak-token']) {
+      const token = JSON.parse(request.session['keycloak-token']);
+      this.keycloakService.setToken(token);
+      return;
+    }
+
+    let grant = ctx.getRequest().kauth?.grant;
     if (grant) {
       this.keycloakService.setToken(grant.access_token);
-      // return
-      return this.keycloakService.getKeycloakInstance().protect();
+      // Store tokens in session for BFF
+      if (request.session) {
+        request.session['keycloak-token'] = JSON.stringify(grant.access_token);
+        request.session['keycloak-refresh-token'] = JSON.stringify(grant.refresh_token);
+      }
+      return;
     } else {
       //retrieve Options passed to the Authenticated() decorators.
       const options = ctx.endpoint.store.get(AuthMiddleware) || {};

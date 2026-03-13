@@ -4,6 +4,12 @@ import {$log} from "@tsed/logger";
 import type {Token} from "keycloak-connect";
 import KeycloakConnect from "keycloak-connect";
 
+export interface kAuthRequest extends Express.Request {
+    kauth: {
+        grant?: any;
+    };
+}
+
 @Service()
 export class KeycloakService {
     private keycloak: KeycloakConnect.Keycloak;

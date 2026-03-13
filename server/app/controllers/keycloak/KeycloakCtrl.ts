@@ -1,5 +1,4 @@
 /*
-/!*
  * ==================================================
  * ingrid-harvester
  * ==================================================
@@ -20,97 +19,85 @@
  * See the Licence for the specific language governing permissions and
  * limitations under the Licence.
  * ==================================================
- *!/
+ */
 
 import * as Express from 'express';
-import { Controller, Get, Post, Req, Res, UseAuth } from '@tsed/common';
-import {kAuthRequest, KeycloakService} from '../../services/keycloak/KeycloakService';
-import { UsersService } from '../../services/users/UsersService';
+import { Controller, Get, Req, Res } from '@tsed/common';
+import { KeycloakService } from '../../services/keycloak/KeycloakService.js';
+import { UsersService } from '../../services/users/UsersService.js';
 import { Unauthorized } from '@tsed/exceptions';
-import * as Passport from 'passport';
 
-
-
-@Controller('/keycloak')
+@Controller('/auth/keycloak')
 export class KeycloakCtrl {
     constructor(
         private keycloakService: KeycloakService,
         private usersService: UsersService
     ) {}
 
-    /!**
+    /**
      * Endpoint to check if a user is authenticated with Keycloak
      * @param request
-     * @param response
-     *!/
+     */
     @Get('/check')
-    @UseAuth(KeycloakService, { role: 'user' })
-    async check(@Req() request: kAuthRequest, @Res() response: Express.Response) {
-        // If we get here, the user is authenticated with Keycloak
-        // The user information is available in request.user
-        if (request.user) {
-            const username = request.user.username;
-
-            // Check if user exists in our system
+    async check(@Req() request: Express.Request) {
+        if (request.session && request.session['keycloak-token']) {
+            const token = JSON.parse(request.session['keycloak-token']);
+            // Minimal check: if we have a token in session, consider authenticated for now
+            // In a real app, you'd validate the token here.
+            const username = token.preferred_username || token.sub;
             const user = await this.usersService.findByEmail(username);
 
             if (user) {
-                // Return user info without password
                 const { password, ...userInfo } = user;
                 return userInfo;
             }
+            return { username };
         }
 
-        throw new Unauthorized('User not authenticated or not found');
+        throw new Unauthorized('User not authenticated');
     }
 
-    /!**
-     * Endpoint to authenticate with Keycloak
-     * @param request
-     * @param response
-     *!/
-    @Post('/login')
+    /**
+     * Redirect to Keycloak login page
+     */
+    @Get('/login')
     async login(@Req() request: Express.Request, @Res() response: Express.Response) {
-        return new Promise<any>((resolve, reject) => {
-            Passport.authenticate('keycloak', (err, user) => {
-                if (err) {
-                    return reject(err);
-                }
-
-                if (!user) {
-                    return reject(new Unauthorized('Authentication failed'));
-                }
-
-                request.logIn(user, (err) => {
-                    if (err) {
-                        return reject(err);
-                    }
-
-                    resolve(user);
-                });
-            })(request, response, () => {});
+        const keycloak = this.keycloakService.getKeycloakInstance();
+        // Use keycloak.protect() to trigger the login flow.
+        // This will handle the redirect to Keycloak and the callback automatically.
+      console.log("Protect during login check")
+        const protect = keycloak.protect();
+        protect(request, response, () => {
+          console.log("we are logged in")
+            // If we reach here, the user is already authenticated.
+            // This might happen if they call /login while already logged in.
+            response.redirect('/');
         });
     }
 
-    /!**
+    /**
      * Endpoint to logout from Keycloak
      * @param request
      * @param response
-     *!/
+     */
     @Get('/logout')
     async logout(@Req() request: Express.Request, @Res() response: Express.Response) {
-        // Use the Keycloak logout URL
-        const keycloak = this.keycloakService.getKeycloak();
+        const keycloak = this.keycloakService.getKeycloakInstance();
+
+        if (request.session) {
+            delete request.session['keycloak-token'];
+            delete request.session['keycloak-refresh-token'];
+        }
+
         const logoutUrl = keycloak.logoutUrl("/");
 
-        // Clear the session
         request.logout((err) => {
             if (err) {
                 console.error('Error during logout:', err);
             }
         });
 
-        return { logoutUrl };
+        response.redirect(logoutUrl);
     }
 }
-*/
+

@@ -22,9 +22,9 @@
  */
 
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse} from '@angular/common/http';
-import {Observable, from, throwError} from 'rxjs';
-import {catchError, switchMap, tap} from 'rxjs/operators';
-import {AuthenticationService, AuthMethod} from './authentication.service';
+import {Observable, throwError} from 'rxjs';
+import {catchError, tap} from 'rxjs/operators';
+import {AuthenticationService} from './authentication.service';
 import {Router} from '@angular/router';
 import {KeycloakService} from './keycloak.service';
 
@@ -37,28 +37,6 @@ export class UnauthorizedInterceptor implements HttpInterceptor {
   ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Add Authorization header for Keycloak if authenticated
-    if (this.auth.currentAuthMethod === AuthMethod.KEYCLOAK) {
-      return this.keycloakService.getToken().pipe(
-        switchMap(token => {
-          if (token) {
-            // Clone the request and add the Authorization header
-            const authReq = request.clone({
-              setHeaders: {
-                Authorization: `Bearer ${token}`
-              }
-            });
-            return this.handleRequest(authReq, next);
-          }
-          return this.handleRequest(request, next);
-        }),
-        catchError(error => {
-          console.error('Error getting Keycloak token', error);
-          return this.handleRequest(request, next);
-        })
-      );
-    }
-
     return this.handleRequest(request, next);
   }
 

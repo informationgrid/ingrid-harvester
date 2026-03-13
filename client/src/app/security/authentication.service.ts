@@ -69,30 +69,11 @@ export class AuthenticationService {
 
   login(username, password, authMethod = AuthMethod.LOCAL) {
     if (authMethod === AuthMethod.KEYCLOAK) {
-      return from(this.keycloakService.login()).pipe(
-        switchMap(() => this.keycloakService.isAuthenticated()),
-        map(authenticated => {
-          if (authenticated) {
-            this.authMethod = AuthMethod.KEYCLOAK;
-            const user = {
-              username: this.keycloakService.getUsername(),
-              authMethod: AuthMethod.KEYCLOAK
-            };
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            this.currentUserSubject.next(user);
-            return user;
-          } else {
-            throw new Error('Keycloak authentication failed');
-          }
-        }),
-        catchError(error => {
-          console.error('Keycloak login error', error);
-          return of(null);
-        })
-      );
+      this.keycloakService.login();
+      return of(null);
     } else {
       // Local authentication
-      return this.http.post<any>(`rest/passport/login`, {username, password})
+      return this.http.post<any>(`/rest/passport/login`, {username, password})
         .pipe(map(user => {
           // store user details and jwt token in local storage to keep user logged in between page refreshes
           user.authMethod = AuthMethod.LOCAL;
@@ -106,21 +87,13 @@ export class AuthenticationService {
 
   logout(): Observable<any> {
     if (this.authMethod === AuthMethod.KEYCLOAK) {
-      return from(this.keycloakService.logout()).pipe(
-        tap(() => {
-          localStorage.removeItem('currentUser');
-          this.currentUserSubject.next(null);
-        }),
-        catchError(error => {
-          console.error('Keycloak logout error', error);
-          localStorage.removeItem('currentUser');
-          this.currentUserSubject.next(null);
-          return of(null);
-        })
-      );
+      this.keycloakService.logout();
+      localStorage.removeItem('currentUser');
+      this.currentUserSubject.next(null);
+      return of(null);
     } else {
       // Local logout
-      return this.http.get('rest/passport/logout', {responseType: 'text'}).pipe(
+      return this.http.get('/rest/passport/logout', {responseType: 'text'}).pipe(
         tap(() => {
           localStorage.removeItem('currentUser');
           this.currentUserSubject.next(null);
