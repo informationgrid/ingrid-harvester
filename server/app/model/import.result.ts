@@ -53,14 +53,14 @@ export class ImportResult {
         }
     }
 
-    static running(current: number, total: number, message?: string): ImportLogMessage {
+    static running(current: number, total: number, message: string): ImportLogMessage {
         return {
             complete: false,
             progress: {
                 current: current,
                 total: total
             },
-            message: message ? message : undefined
+            message: message
         };
     }
 

@@ -172,7 +172,7 @@ export class CkanImporter extends Importer<CkanSettings> {
                     await this.importDataset({
                         source: filteredResults[i],
                         harvestTime: now
-                    }).then(() => this.observer.next(ImportResult.running(++this.getSummary().numDocs, this.totalCount)))
+                    }).then(() => this.observer.next(ImportResult.running(++this.getSummary().numDocs, this.totalCount, this.getDownloadMessage())))
                 );
             }
 

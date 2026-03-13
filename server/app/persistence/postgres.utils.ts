@@ -280,7 +280,7 @@ export class PostgresUtils extends DatabaseUtils {
         let numBuckets = 0;
         while (rows.length > 0) {
             log.info(`PQ->ES: Processing rows ${numDatasets} - ${numDatasets + rows.length}`);
-            observer.next(ImportResult.running(numDatasets, totalRows, "Datensätze nach Elasticsearch"));
+            observer.next(ImportResult.running(numDatasets, totalRows, 'Datensätze werden publiziert'));
             for (let row of rows) {
                 numDatasets += 1;
                 if (row.anchor_id != currentId) {

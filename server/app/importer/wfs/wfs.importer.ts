@@ -233,7 +233,7 @@ export class WfsImporter extends Importer<WfsSettings> {
             this.getSummary().skippedDocs.push(featureTypeName);
         }
         if (this.getSettings().harvestTypes) {
-            this.observer.next(ImportResult.running(++this.numIndexDocs, this.numItems, "FeatureTypes"));
+            this.observer.next(ImportResult.running(++this.numIndexDocs, this.numItems, 'FeatureTypes werden heruntergeladen'));
         }
     }
 
@@ -315,7 +315,7 @@ export class WfsImporter extends Importer<WfsSettings> {
             }
             // disable updating feature count if harvesting FeatureTypes
             if (!this.getSettings().harvestTypes) {
-                this.observer.next(ImportResult.running(++this.numIndexDocs, this.numItems));
+                this.observer.next(ImportResult.running(++this.numIndexDocs, this.numItems, 'Features werden heruntergeladen'));
             }
         }
         await Promise.all(promises).catch(err => log.error('Error indexing WFS record', err));
