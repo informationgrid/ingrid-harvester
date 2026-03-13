@@ -44,7 +44,7 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
     readonly featureOrFeatureType: Node & Element;
     readonly featureTypeDescription: Node & Element;
     readonly fetched: any;
-    readonly uuid: string;
+    readonly gmlId: string;
 
     private harvestTime: any;
 
@@ -71,14 +71,20 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
                 return undefined;
             }
         };
-        let path = this.isFeatureType() ? './wfs:Name' : './*/@gml:id';
-        this.uuid = this.getTextContent(path);
+        let paths = this.isFeatureType() ? ['./wfs:Name'] : ['./@gml:id', './*/@gml:id'];
+        for (let path of paths) {
+            this.gmlId = this.getTextContent(path);
+            if (this.gmlId) {
+                break;
+            }
+        }
 
         super.init();
     }
 
     async createEsDocument(): Promise<IndexDocument> {
         return {
+            uuid: this.getGeneratedId(),
             extras: {
                 metadata: this.getHarvestingMetadata(),
             }
@@ -129,12 +135,12 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
     }
 
     getGeneratedId(): string {
-        return this.uuid;
+        return this.gmlId;
     }
 
     // TODO:check
     getMetadataSource(): MetadataSource {
-        let wfsLink = `${this.getSettings().sourceURL}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.getSettings().version}&outputFormat=application/xml&featureId=${this.uuid}`;
+        let wfsLink = `${this.getSettings().sourceURL}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.getSettings().version}&outputFormat=application/xml&featureId=${this.gmlId}`;
         return {
             source_base: this.getSettings().sourceURL,
             raw_data_source: wfsLink,
@@ -174,19 +180,28 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
             }
         }
         else {
-            let bbox = this.select('./*/gml:boundedBy/gml:Envelope', this.featureOrFeatureType, true);
+            let bbox = this.select('.//gml:boundedBy/gml:Envelope', this.featureOrFeatureType, true);
             if (!bbox) {
                 return null;
             }
             lowerCorner = this.select('./gml:lowerCorner', bbox, true)?.textContent;
             upperCorner = this.select('./gml:upperCorner', bbox, true)?.textContent;
-            crs = (<Element>bbox).getAttribute('srsName') || this.fetched['defaultCrs'];
+            crs = (bbox as Element).getAttribute('srsName') || this.fetched['defaultCrs'];
+            if (crs?.endsWith("WGS84") || crs?.endsWith(":4326")) {
+                crs = "WGS84_latlon";
+            }
         }
         return { lowerCorner, upperCorner, crs };
     }
 
     getSpatial(): Geometry {
-        return undefined;
+        if (this.isFeatureType()) {
+            return null;
+        }
+        let geometryType = this.fetched['geometryType'];
+        let xpath = `./*[local-name()="${this.getTypename()}"]/*[local-name()="${geometryType}"]/*`;
+        let geometry = this.select(xpath, this.featureOrFeatureType, true);
+        return GeoJsonUtils.parse(geometry, null, this.fetched.nsMap);
     }
 
     getSpatialText(): string {
@@ -195,7 +210,7 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
 
     getCentroid(): Point {
         let spatial = this.getSpatial() ?? this.getBoundingBox();
-        return GeoJsonUtils.getCentroid(<Geometry>spatial);
+        return GeoJsonUtils.getCentroid(spatial as Geometry);
     }
 
     isRealtime(): boolean {
@@ -242,14 +257,7 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
     }
 
     getTypename(toLowerCase: boolean = false): string {
-        let typename: string;
-        if (this.isFeatureType()) {
-            typename = this.select('./wfs:Name', this.featureOrFeatureType, true)?.textContent;
-        }
-        else {
-            typename = (this.select('./*', this.featureOrFeatureType, true) as Element)?.localName;
-        }
-        return toLowerCase ? typename.toLowerCase() : typename;
+        return toLowerCase ? this.fetched['typename'].toLowerCase() : this.fetched['typename'];
     }
 
     executeCustomCode(doc: any) {

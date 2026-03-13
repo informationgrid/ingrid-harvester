@@ -58,7 +58,13 @@ export async function parseWfsFeatureCollection(url: string, typeNames: string, 
     let nsMap = getNsMap(dom);
     let select = <XPathNodeSelect>xpath.useNamespaces(nsMap);
     let localGeometryNames = ['extent', 'raeumlicherGeltungsbereich', 'the_geom', 'geometry'].map(ln => `local-name()='${ln}'`).join(' or ');
-    let geometryNodes = select(`./wfs:FeatureCollection/${this.settings.memberElement}/*/*[${localGeometryNames}]/*`, dom);
+    let geometryNodes = [];
+    for (let memberElement of this.settings.memberElements) {
+        geometryNodes = select(`./wfs:FeatureCollection/${memberElement}/*/*[${localGeometryNames}]/*`, dom);
+        if (geometryNodes.length > 0) {
+            break;
+        }
+    }
     let geometries: Geometry[] = [];
     for (let geometryNode of geometryNodes) {
         let geom = GeoJsonUtils.parse(geometryNode, { }, nsMap);

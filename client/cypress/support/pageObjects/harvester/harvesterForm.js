@@ -23,7 +23,6 @@ class HarvesterForm {
   getRecordsUrl = '[formcontrolname="getRecordsUrl"]';
   recordFilter = '[formcontrolname="recordFilter"]';
   keywords = '[placeholder="Either keywords"]';
-  excelFilePath = '[formcontrolname="filePath"]';
 
   blacklistedId = 'input[placeholder="Ausgeschlossene IDs"]';
   whitelistedId = 'input[placeholder="Nicht auszuschließende IDs"]';

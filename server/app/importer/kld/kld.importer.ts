@@ -294,11 +294,12 @@ export class KldImporter extends Importer<KldSettings> {
                 logRequest.debug("Record content: ", JSON.stringify(record));
             }
 
-            const mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), record)) as KldMapper;
+            const mapper = new KldMapper(this.getSettings(), record, harvestTime, this.getSummary());
+            let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
             try {
-                doc = await mapper.createEsDocument();
+                doc = await documentFactory.createIndexDocument();
             }
             catch (e) {
                 log.warn('Error creating index document', e);

@@ -59,6 +59,7 @@ export class WfsImporter extends Importer<WfsSettings> {
     private generalInfo: object = {};
     protected nsMap: {};
 
+    // TODO get from server capabilities
     protected supportsPaging: boolean = false;
 
     constructor(settings: WfsSettings) {
@@ -75,7 +76,7 @@ export class WfsImporter extends Importer<WfsSettings> {
     }
 
     protected async harvest(): Promise<number> {
-        let capabilitiesRequestConfig = WfsImporter.createRequestConfig({ ...this.getSettings(), resolveWithFullResponse: true }, 'GetCapabilities');
+        let capabilitiesRequestConfig = this.createRequestConfig({ ...this.getSettings(), resolveWithFullResponse: true }, 'GetCapabilities');
         let capabilitiesRequestDelegate = new RequestDelegate(capabilitiesRequestConfig);
         let capabilitiesResponse: Response = await capabilitiesRequestDelegate.doRequest();
         let contentType = capabilitiesResponse.headers.get('content-type')?.split(';');
@@ -98,6 +99,10 @@ export class WfsImporter extends Importer<WfsSettings> {
             throw new Error(`Could not retrieve WFS_Capabilities from ${capabilitiesRequestDelegate.getFullURL()}: ${responseBody}`);
         }
 
+        // detect paging support
+        const pagingVar = select('/*[local-name()="WFS_Capabilities"]/*[local-name()="OperationsMetadata"]/*[local-name()="Constraint"][@name="ImplementsResultPaging"]/*[local-name()="DefaultValue"]', capabilitiesResponseDom, true);
+        this.supportsPaging = pagingVar?.textContent?.toLowerCase() === "true";
+
         this.generalInfo = await this.prepareImport(this.generalInfo, capabilitiesResponseDom, select);
 
         // retrieve catalog info from database
@@ -111,7 +116,7 @@ export class WfsImporter extends Importer<WfsSettings> {
         let requestedTypes = this.getSettings().typename ? this.getSettings().typename.split(',').map(t => t.trim()) : null;
         for (let featureType of featureTypesNodes) {
             let typename = select('./*[local-name()="Name"]', featureType, true).textContent;
-            if (this.getSettings().requireGeometry && !select('./ows:WGS84BoundingBox/@dimensions', featureType, true)) {
+            if (this.getSettings().requireGeometry && !select('./ows:WGS84BoundingBox/ows:LowerCorner', featureType, true)) {
                 log.warn(`Skipping FeatureType ${typename} because it doesn't contain a geometry`);
                 continue;
             }
@@ -149,6 +154,7 @@ export class WfsImporter extends Importer<WfsSettings> {
         let numFeatures = await this.getNumFeatures(featureTypeName);
         log.info(`Found ${numFeatures} features at ${this.getSettings().sourceURL} for FeatureType "${featureTypeName}"`);
         let featureTypeDescriptionNode = await this.getTypeDescription(featureTypeName);
+        this.generalInfo['typename'] = featureTypeName;
 
         // if harvesting FeatureTypes, do it here (to include the feature names)
         if (this.getSettings().harvestTypes) {
@@ -167,19 +173,17 @@ export class WfsImporter extends Importer<WfsSettings> {
             log.info(`This exceeds the limit of ${this.getSettings().featureLimit} features; skipping feature harvesting`);
             return;
         }
+        let requestConfig = this.createRequestConfig({
+            ...this.getSettings(),
+            typename: featureTypeName
+        });
+        let requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(this.getSettings()));
         while (true) {
-            log.info(`Requesting next features for FeatureType ${featureTypeName}`);
-            let requestConfig = WfsImporter.createRequestConfig({
-                ...this.getSettings(),
-                typename: featureTypeName
-            });
+            log.info(`Requesting next features for FeatureType ${featureTypeName} (startIndex=${requestDelegate.getStartRecordIndex()})`);
             let harvestTime = new Date(Date.now());
-            let requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(this.getSettings()));
-            // let response = await requestDelegate.doRequest();
-            // let responseDom = this.domParser.parseFromString(response);
             let responseDom: Document;
             try {
-                let responseDom = await this.getDom(requestDelegate);
+                responseDom = await this.getDom(requestDelegate);
                 // let resultsNode = responseDom.getElementsByTagNameNS(this.nsMap['wfs'], 'FeatureCollection')[0];
                 await this.extractFeatures(responseDom, harvestTime);
             }
@@ -211,11 +215,13 @@ export class WfsImporter extends Importer<WfsSettings> {
         this.generalInfo['numFeatures'] = numFeatures;
         this.generalInfo['title'] = select('./wfs:Title', featureTypeNode, true)?.textContent;
         this.generalInfo['featureTypeDescription'] = featureTypeDescriptionNode;
-        let mapper = await this.getMapper(new Date(Date.now()), featureTypeNode);
-        let doc: IndexDocument = await mapper.createEsDocument();
+        this.generalInfo['geometryType'] = this.extractGeometryType(select, featureTypeDescriptionNode);
+        let mapper = this.getMapper(new Date(Date.now()), featureTypeNode);
+        let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
+        let doc: IndexDocument = await documentFactory.createIndexDocument();
         if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
             let entity: RecordEntity = {
-                identifier: featureTypeName,
+                identifier: doc.uuid,
                 source: this.getSettings().sourceURL,
                 collection_id: (await this.database.getCatalog(this.getSettings().catalogId)).id,
                 dataset: doc,
@@ -227,7 +233,7 @@ export class WfsImporter extends Importer<WfsSettings> {
             this.getSummary().skippedDocs.push(featureTypeName);
         }
         if (this.getSettings().harvestTypes) {
-            this.observer.next(ImportResult.running(++this.numIndexDocs, this.numItems));
+            this.observer.next(ImportResult.running(++this.numIndexDocs, this.numItems, "FeatureTypes"));
         }
     }
 
@@ -238,7 +244,7 @@ export class WfsImporter extends Importer<WfsSettings> {
         // this.nsMap = { ...XPathUtils.getNsMap(xml), ...XPathUtils.getExtendedNsMap(xml) };
         // TODO: the above does not work, because it doesn't contain the NS for the FeatureType;
         let nsMap = MiscUtils.merge(this.nsMap, getNsMap(xml));
-        let select = <XPathNodeSelect>xpath.useNamespaces(nsMap);
+        let select = xpath.useNamespaces(nsMap) as XPathNodeSelect;
 
         // store xpath handling stuff in general info
         this.generalInfo['nsMap'] = nsMap;
@@ -249,19 +255,28 @@ export class WfsImporter extends Importer<WfsSettings> {
         if (envelope) {
             let lowerCorner = select('./gml:lowerCorner', envelope, true)?.textContent;
             let upperCorner = select('./gml:upperCorner', envelope, true)?.textContent;
-            let crs = (<Element>envelope).getAttribute('srsName') || this.generalInfo['defaultCrs'];
+            let crs = (envelope as Element).getAttribute('srsName') || this.generalInfo['defaultCrs'];
             this.generalInfo['boundingBox'] = GeoJsonUtils.getBoundingBox(lowerCorner, upperCorner, crs);
         }
 
         // some documents may use wfs:member, some gml:featureMember, some maybe something else: use settings
-        let features = select(`/wfs:FeatureCollection/${this.getSettings().memberElement}`, xml);
+        let features = [];
+        for (let memberElement of this.getSettings().memberElements) {
+            features = select(`/wfs:FeatureCollection/${memberElement}`, xml);
+            if (features.length > 0) {
+                break;
+            }
+        }
         for (let i = 0; i < features.length; i++) {
             this.getSummary().numDocs++;
 
             // TODO use ID-property from settings (tbi)
-            const uuid = firstElementChild(features[i]).getAttributeNS(nsMap['gml'], 'id');
-            if (!uuid || !this.filterUtils.isIdAllowed(uuid)) {
-                this.getSummary().skippedDocs.push(uuid);
+            let gmlId = (features[i] as Element).getAttributeNS(nsMap['gml'], 'id');
+            if (!gmlId) {
+                gmlId = firstElementChild(features[i]).getAttributeNS(nsMap['gml'], 'id');
+            }
+            if (!gmlId || !this.filterUtils.isIdAllowed(gmlId)) {
+                this.getSummary().skippedDocs.push(gmlId);
                 continue;
             }
 
@@ -273,11 +288,12 @@ export class WfsImporter extends Importer<WfsSettings> {
             }
 
             this.generalInfo['idx'] = i;
-            const mapper = await this.getMapper(harvestTime, features[i]);
+            const mapper = this.getMapper(harvestTime, features[i]);
+            let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
             try {
-                doc = await mapper.createEsDocument();
+                doc = await documentFactory.createIndexDocument();
             }
             catch (e) {
                 log.error('Error creating index document', e);
@@ -287,7 +303,7 @@ export class WfsImporter extends Importer<WfsSettings> {
 
             if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
-                    identifier: uuid,
+                    identifier: doc.uuid,
                     source: this.getSettings().sourceURL,
                     collection_id: (await this.database.getCatalog(this.getSettings().catalogId)).id,
                     dataset: doc,
@@ -295,7 +311,7 @@ export class WfsImporter extends Importer<WfsSettings> {
                 };
                 promises.push(this.database.addEntityToBulk(entity));
             } else {
-                this.getSummary().skippedDocs.push(uuid);
+                this.getSummary().skippedDocs.push(gmlId);
             }
             // disable updating feature count if harvesting FeatureTypes
             if (!this.getSettings().harvestTypes) {
@@ -305,12 +321,12 @@ export class WfsImporter extends Importer<WfsSettings> {
         await Promise.all(promises).catch(err => log.error('Error indexing WFS record', err));
     }
 
-    async getMapper(harvestTime: Date, feature: any): Promise<WfsMapper> {
-        return (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), feature, this.generalInfo)) as WfsMapper;
+    getMapper(harvestTime: Date, feature: Node): WfsMapper {
+        return new WfsMapper(this.getSettings(), feature, harvestTime, this.getSummary(), this.generalInfo);
     }
 
     async getNumFeatures(featureTypeName: string): Promise<number> {
-        let requestDelegate = new RequestDelegate(WfsImporter.createRequestConfig({
+        let requestDelegate = new RequestDelegate(this.createRequestConfig({
             ...this.getSettings(),
             typename: featureTypeName,
             maxRecords: undefined,
@@ -322,7 +338,7 @@ export class WfsImporter extends Importer<WfsSettings> {
     }
 
     async getTypeDescription(featureTypeName: string): Promise<Node> {
-        let requestDelegate = new RequestDelegate(WfsImporter.createRequestConfig({
+        let requestDelegate = new RequestDelegate(this.createRequestConfig({
             ...this.getSettings(),
             typename: featureTypeName
         }, 'DescribeFeatureType'));
@@ -330,7 +346,14 @@ export class WfsImporter extends Importer<WfsSettings> {
         return responseDom.documentElement;
     }
 
-    static createRequestConfig(settings: WfsSettings, request = 'GetFeature'): RequestOptions {
+    extractGeometryType(select: XPathNodeSelect, featureTypeDescriptionNode: Node): string {
+        let typeConditions = GML_GEOMETRY_PROPERTY_TYPES.map(type => `contains(@type, '${type}')`).join(' or ');
+        let pathNames: string[] = ["schema", "complexType", "complexContent", "extension", "sequence", "element"];
+        let path = pathNames.map(step => `*[local-name()='${step}']`).join('/');
+        return (select(`/${path}[${typeConditions}]/@name`, featureTypeDescriptionNode, true) as Attr)?.value;
+    }
+
+    createRequestConfig(settings: WfsSettings, request = 'GetFeature'): RequestOptions {
         let requestConfig: RequestOptions = {
             method: settings.httpMethod || "GET",
             uri: settings.sourceURL,
@@ -346,6 +369,7 @@ export class WfsImporter extends Importer<WfsSettings> {
         // * correct namespaces
         // * check filter
         // * support paging if server supports it
+        //      * GetCapabilities -> ImplementsResultPaging
         if (settings.httpMethod === "POST") {
             if (request === 'GetFeature') {
                 requestConfig.body = `<?xml version="1.0" encoding="UTF-8"?>
@@ -377,12 +401,12 @@ export class WfsImporter extends Importer<WfsSettings> {
                 resultType: settings.resultType,
                 typename: settings.typename,
                 CONSTRAINTLANGUAGE: 'FILTER',
-                CONSTRAINT_LANGUAGE_VERSION: '1.1.0'
+                CONSTRAINT_LANGUAGE_VERSION: settings.version
             };
             if (settings.featureFilter) {
                 requestConfig.qs.constraint = settings.featureFilter;
             }
-            if (settings.maxRecords) {
+            if (this.supportsPaging && settings.maxRecords) {
                 requestConfig.qs.startIndex = settings.startPosition;
                 requestConfig.qs.maxFeatures = settings.maxRecords;
             }
@@ -405,3 +429,21 @@ export class WfsImporter extends Importer<WfsSettings> {
         return this.domParser.parseFromString(response);
     }
 }
+
+const GML_GEOMETRY_PROPERTY_TYPES: string[] = [
+    "PointPropertyType",
+    "LineStringPropertyType",
+    "PolygonPropertyType",
+    "CurvePropertyType",
+    "SurfacePropertyType",
+    "SolidPropertyType",
+    "MultiPointPropertyType",
+    "MultiLineStringPropertyType",
+    "MultiCurvePropertyType",
+    "MultiPolygonPropertyType",
+    "MultiSurfacePropertyType",
+    "MultiSolidPropertyType",
+    "MultiGeometryPropertyType",
+    "GeometryPropertyType",
+    "AbstractGeometryPropertyType"
+];

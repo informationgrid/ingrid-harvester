@@ -60,12 +60,13 @@ import proj4jsMappings from '../../proj4.json' with { type: 'json' };
 
 // prepare proj4js
 proj4.defs(Object.entries(proj4jsMappings));
+proj4.defs('WGS84_latlon', "+title=WGS 84 (lat/long) +proj=longlat +ellps=WGS84 +datum=WGS84 +units=degrees +axis=neu");
 const transformer: Function = (crs: string) => (x: number, y: number) => project(x, y, normalizeCRS(crs), 'WGS84');
 const normalizeCRS = (crs: string) => {
-    if (crs == 'WGS84') {
+    if (crs == 'WGS84' || crs == 'WGS84_latlon') {
         return crs;
     }
-    crs = crs.replace('urn:ogc:def:crs:EPSG::', '').replace('EPSG:', '');
+    crs = crs.replace('urn:ogc:def:crs:EPSG::', '').replace('urn:x-ogc:def:crs:EPSG:', '').replace('EPSG:', '');
     if (!/^\d+$/.test(crs)) {
         throw Error(`CRS is not a valid EPSG identifier: ${crs}`);
     }
@@ -86,7 +87,7 @@ const BBOX_GERMANY = buffer({
 }, 50, {units: 'kilometers'});
 
 export function project(x: number, y: number, sourceCRS: string, targetCRS: string) {
-    return proj4(sourceCRS, targetCRS).forward([x, y]);
+    return proj4(sourceCRS, targetCRS).forward([x, y], true);
 }
 
 export function getBbox(spatial: AllGeoJSON): Geometry {
@@ -254,7 +255,7 @@ export function projectFeatureCollection(featureCollection: FeatureCollection, s
     return projectedFeatureCollection;
 }
 
-export function getBoundingBox(lowerCorner: string, upperCorner: string, crs?: string): Geometry {
+export function getBoundingBox(lowerCorner: string, upperCorner: string, crs: string): Geometry {
     const transformCoords = transformer(crs);
     let [west, south] = transformCoords(...lowerCorner.trim().split(' ').map(parseFloat));
     let [east, north] = transformCoords(...upperCorner.trim().split(' ').map(parseFloat));
@@ -363,6 +364,42 @@ export function parse(_: Node, opts: { crs?: any, stride?: number } = { crs: nul
             throw new Error('invalid gml:Point element, expected a gml:pos subelement');
         }
         return parsePos(pos, opts, childCtx);
+    };
+
+    const parseEnvelope = (_, opts, ctx = {}) => {
+        const childCtx = createChildContext(_, opts, ctx);
+        const lowerCorner = findIn(_, 'gml:lowerCorner');
+        const upperCorner = findIn(_, 'gml:upperCorner');
+        if (!lowerCorner || !upperCorner) {
+            throw new Error('invalid gml:Envelope element, expected a gml:lowerCorner and a gml:upperCorner subelement');
+        }
+        let lower: number[] = parsePos(lowerCorner, opts, childCtx);
+        let upper: number[] = parsePos(upperCorner, opts, childCtx);
+        if (lower?.every((val, idx) => val == upper[idx])) {
+            return {
+                type: 'Point',
+                // coordinates: [lower[1], lower[0]]
+                coordinates: [lower[0], lower[1]]
+            }
+        }
+        else {
+            return {
+                type: 'Polygon',
+                coordinates: [
+                    // [lower[1], lower[0]],
+                    // [upper[1], lower[0]],
+                    // [upper[1], upper[0]],
+                    // [lower[1], upper[0]],
+                    // [lower[1], lower[0]]
+                    [lower[0], lower[1]],
+                    [upper[0], lower[1]],
+                    [upper[0], upper[1]],
+                    [lower[0], upper[1]],
+                    [lower[0], lower[1]]
+                ]
+            };
+        }
+        return [];
     };
 
     const parseLinearRingOrLineString = (_, opts, ctx = {}) => { // or a LineStringSegment
@@ -555,7 +592,10 @@ export function parse(_: Node, opts: { crs?: any, stride?: number } = { crs: nul
         // observed Patterns for CRS are
         // - urn:ogc:def:crs:EPSG::4326
         // - http://www.opengis.net/def/crs/EPSG/0/4326
-        opts.crs = (<Element>_).getAttribute('srsName')?.replace(/^.*?(\d+)$/, '$1');
+        opts.crs = (_ as Element).getAttribute('srsName')?.replace(/^.*?(\d+)$/, '$1');
+        if (opts.crs == '4326') {
+            opts.crs = 'WGS84_latlon';
+        }
     }
 
     try {
@@ -570,6 +610,8 @@ export function parse(_: Node, opts: { crs?: any, stride?: number } = { crs: nul
                     type: 'LineString',
                     coordinates: parseLinearRingOrLineString(_, opts, childCtx)
                 }) as Geometry;
+            case 'gml:Envelope':
+                return parseEnvelope(_, opts, childCtx) as Geometry;
             case 'gml:MultiCurve':
                 return {
                     type: 'MultiLineString',

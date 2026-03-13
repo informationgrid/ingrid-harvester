@@ -21,19 +21,19 @@
  * ==================================================
  */
 
-import { createEsId } from '../diplanung.utils.js';
-import type { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model.js';
-import type { Contact, Organization, Person } from '../../../model/agent.js';
-import type { CswMapper } from '../../../importer/csw/csw.mapper.js';
-import type { DateRange } from '../../../model/dateRange.js';
-import type { DiplanungIndexDocument } from '../model/index.document.js';
-import type { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper.js';
-import type { Distribution } from '../../../model/distribution.js';
 import type { Geometry, Point } from 'geojson';
-import type { IndexDocumentFactory } from '../../../model/index.document.factory.js';
+import type { CswMapper } from '../../../importer/csw/csw.mapper.js';
+import type { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper.js';
 import type { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
+import type { Contact, Organization, Person } from '../../../model/agent.js';
+import type { DateRange } from '../../../model/dateRange.js';
+import type { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model.js';
+import type { Distribution } from '../../../model/distribution.js';
+import type { DocumentFactory } from '../../../model/index.document.factory.js';
+import { createEsId } from '../diplanung.utils.js';
+import type { DiplanungIndexDocument } from '../model/index.document.js';
 
-export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | WfsMapper> implements IndexDocumentFactory<DiplanungIndexDocument> {
+export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | WfsMapper> implements DocumentFactory<DiplanungIndexDocument> {
 
     protected baseMapper: M;
 
@@ -41,9 +41,18 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
         this.baseMapper = baseMapper;
     }
 
-    async create(): Promise<DiplanungIndexDocument> {
+    createCswIsoDocument(): string {
+        return null;
+    }
+
+    createDcatapdeDocument(): string {
+        return null;
+    }
+
+    async createIndexDocument(): Promise<DiplanungIndexDocument> {
         let contactPoint: Contact = await this.getContactPoint() ?? { fn: '' };
         let result: DiplanungIndexDocument = {
+            uuid: this.getUuid(),
             // basic information
             contact_point: {
                 fn: contactPoint.fn,

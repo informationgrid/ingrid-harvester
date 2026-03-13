@@ -25,9 +25,11 @@ import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
 import log4js from 'log4js';
 import pg from 'pg';
 import Cursor from "pg-cursor";
+import type { Observer } from "rxjs";
 import type { Catalog } from '../model/dcatApPlu.model.js';
 import type { Distribution } from '../model/distribution.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
+import { type ImportLogMessage, ImportResult } from "../model/import.result.js";
 import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
 import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory.js';
@@ -102,7 +104,7 @@ export class PostgresUtils extends DatabaseUtils {
         // TODO
         // let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getIdentifiers, [source]);
         // let result: pg.QueryResult<any> = await this.transactionClient.query("SELECT * from public.record WHERE source = $1", [source]);
-        let result: pg.QueryResult<any> = await this.transactionClient.query("SELECT identifier from public.record WHERE source = $1 and dataset->'extras'->>'hierarchy_level'!='service'", [source]);
+        let result: pg.QueryResult<any> = await PostgresUtils.pool.query("SELECT identifier from public.record WHERE source = $1 and dataset->'extras'->>'hierarchy_level'!='service'", [source]);
         if (result.rowCount == 0) {
             return [];
         }
@@ -120,6 +122,31 @@ export class PostgresUtils extends DatabaseUtils {
             return null;
         }
         return result.rows;
+    }
+
+    async getDatasetsWithOriginalDocument(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'original_document'>[]> {
+        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getDatasetsBySourceWithOriginal, [source]);
+        if (result.rowCount == 0) {
+            return [];
+        }
+        return result.rows;
+    }
+
+
+    async getDcatapdeDatasetsBySource(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'dataset_dcatapde'>[]> {
+        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getDcatapdeDatasetsBySource, [source]);
+        if (result.rowCount == 0) {
+            return [];
+        }
+        return result.rows;
+    }
+
+    async getIdentifiersByCatalog(catalog_id: number): Promise<string[]> {
+        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getIdentifiersByCatalog, [catalog_id]);
+        if (result.rowCount == 0) {
+            return [];
+        }
+        return result.rows.map(row => row.identifier);
     }
 
     async deleteDatasets(catalogId: number): Promise<void> {
@@ -222,15 +249,14 @@ export class PostgresUtils extends DatabaseUtils {
      *
      * @param elastic
      * @param source
-     * @param processBucket
+     * @param observer
      */
-    async pushToElastic3ReturnOfTheJedi(elastic: ElasticsearchUtils, source: string, pgAggregator?: PostgresAggregator<IndexDocument>): Promise<void> {
+    async pushToElasticsearch(elastic: ElasticsearchUtils, source: string, observer: Observer<ImportLogMessage>, pgAggregator?: PostgresAggregator<IndexDocument>): Promise<void> {
         // TODO refactor with regards to new catalog concept
         // pgAggregator ??= ProfileFactoryLoader.get().getPostgresAggregator({} as CatalogSettings);
         if (!pgAggregator) {
             throw new Error('Not implemented: pushToElastic3ReturnOfTheJedi without PostgresAggregator');
         }
-
         const client: pg.PoolClient = await PostgresUtils.pool.connect();
         log.debug('Connection started');
         let start = Date.now();
@@ -239,8 +265,13 @@ export class PostgresUtils extends DatabaseUtils {
 
         let catalogs = (await this.listCatalogs()).reduce((map, catalog: Catalog) => (map[catalog.id] = catalog, map), {});
 
+      // right before creating the cursor
+      const { rows: [{ count: totalRows }] } = await client.query(
+        `SELECT COUNT(*)::int AS count FROM (${this.queries.getBuckets}) AS t`,
+        [source]
+      );
+
         const cursor = client.query(new Cursor(this.queries.getBuckets, [source]));
-        // const totalRows = client.query(this.queries.getBuckets, [source]);
         let currentId: string | number;
         let currentBucket: Bucket<any>;
         const maxRows = 100;
@@ -249,6 +280,7 @@ export class PostgresUtils extends DatabaseUtils {
         let numBuckets = 0;
         while (rows.length > 0) {
             log.info(`PQ->ES: Processing rows ${numDatasets} - ${numDatasets + rows.length}`);
+            observer.next(ImportResult.running(numDatasets, totalRows, "Datensätze nach Elasticsearch"));
             for (let row of rows) {
                 numDatasets += 1;
                 if (row.anchor_id != currentId) {

@@ -163,7 +163,7 @@ export class CswImporter extends Importer<CswSettings> {
                         // should this be changed to transactionTimestamp?
                         // for that, we need to consider how to handle "deleted", i.e. non-fetched, datasets
 
-                        await catalog.process(this.getSettings().sourceURL, this.getSettings());
+                        await catalog.process(this.getSettings().sourceURL, this.getSettings(), observer);
                     }
                     catch (e) {
                         log.error(`Error while importing into catalog ${catalogId}`, e);
@@ -461,11 +461,12 @@ export class CswImporter extends Importer<CswSettings> {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), records[i], this.generalInfo)) as CswMapper;
+            let mapper = new CswMapper(this.getSettings(), records[i], harvestTime, this.getSummary(), this.generalInfo);
+            let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
             try {
-                doc = await mapper.createEsDocument();
+                doc = await documentFactory.createIndexDocument();
                 docsToImport.push(doc);
             }
             catch (e) {

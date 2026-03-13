@@ -25,6 +25,7 @@ import type { DateRange } from './dateRange.js';
 import type { Geometry, Point } from 'geojson';
 
 export type IndexDocument = {
+    uuid: string,
     extras: {
         metadata: HarvestingMetadata
     }

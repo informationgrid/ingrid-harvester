@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "type": "elasticsearch",
+    "name": "Default",
+    "url": "http://localhost:9200",
+    "settings": {
+      "index": "harvester-index",
+      "alias": "harvester"
+    }
+  }
+]

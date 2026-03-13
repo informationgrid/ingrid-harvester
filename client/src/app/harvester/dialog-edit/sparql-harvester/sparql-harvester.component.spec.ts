@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SparqlHarvesterComponent } from './sparql-harvester.component';
 
@@ -29,7 +29,7 @@ describe('SparqlHarvesterComponent', () => {
   let component: SparqlHarvesterComponent;
   let fixture: ComponentFixture<SparqlHarvesterComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SparqlHarvesterComponent ]
     })

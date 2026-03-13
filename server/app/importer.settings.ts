@@ -54,7 +54,7 @@ export type ImporterSettings = {
     priority?: number,
     blacklistedIds?: string[],
     catalogId: string,  // deprecated - this is the old, DiPlanung-centric catalog
-    catalogIds: string[],
+    catalogIds: number[],
     cron?: {
         full: CronData,
         incr: CronData

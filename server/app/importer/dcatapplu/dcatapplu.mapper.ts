@@ -102,6 +102,7 @@ export class DcatappluMapper extends Mapper<DcatappluSettings> implements ToElas
     
     async createEsDocument(): Promise<IndexDocument> {
         return {
+            uuid: this.getGeneratedId(),
             extras: {
                 metadata: this.getHarvestingMetadata(),
             }

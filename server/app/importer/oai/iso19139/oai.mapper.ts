@@ -28,7 +28,7 @@ import type { License } from '@shared/license.model.js';
 import log4js from 'log4js';
 import { throwError } from 'rxjs';
 import * as xpath from 'xpath';
-import { DcatMapper } from '../../../importer/dcat/dcat.mapper.js';
+import { DcatapdeMapper } from '../../dcatapde/dcatapde.mapper.js';
 import type { Agent, Contact, Organization, Person } from '../../../model/agent.js';
 import type { DateRange } from '../../../model/dateRange.js';
 import type { Distribution } from '../../../model/distribution.js';
@@ -551,13 +551,13 @@ export class OaiMapper extends Mapper<OaiSettings> {
         // Evaluate the themes
         let xpath = './/gmd:descriptiveKeywords/gmd:MD_Keywords[./gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString/text()="Data theme (EU MDR)"]/gmd:keyword/gco:CharacterString';
         let themes = OaiMapper.select(xpath, this.record)
-            .map(node => DcatMapper.dcatThemeUriFromKeyword(node.textContent))
+            .map(node => DcatapdeMapper.dcatThemeUriFromKeyword(node.textContent))
             .filter(theme => theme); // Filter out falsy values
 
         if (!themes || themes.length === 0) {
             // Fall back to default value
             themes = this.getSettings().defaultDCATCategory
-                .map( category => DcatMapper.DCAT_CATEGORY_URL + category);
+                .map( category => DcatapdeMapper.DCAT_CATEGORY_URL + category);
         }
 
         this.fetched.themes = themes;

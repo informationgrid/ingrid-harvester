@@ -21,27 +21,38 @@
  * ==================================================
  */
 
+import log4js from 'log4js';
+import { Catalog as NewCatalog } from '../../catalog/catalog.factory.js';
+import type { ElasticsearchCatalogSettings } from '../../catalog/elasticsearch/elasticsearch.catalog.js';
 import type { CswMapper } from '../../importer/csw/csw.mapper.js';
+import type { CswSettings } from '../../importer/csw/csw.settings.js';
 import type { DcatappluMapper } from '../../importer/dcatapplu/dcatapplu.mapper.js';
+import type { DcatappluSettings } from '../../importer/dcatapplu/dcatapplu.settings.js';
+import type { Importer } from '../../importer/importer.js';
+import type { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
+import type { WfsSettings } from '../../importer/wfs/wfs.settings.js';
+import type { DocumentFactory } from '../../model/index.document.factory.js';
+import type { Summary } from '../../model/summary.js';
+import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
+import type { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
+import { ConfigService } from '../../services/config/ConfigService.js';
+import { ProfileFactory } from '../profile.factory.js';
+import { DiplanungElasticsearchCatalog } from './catalog/elasticsearch.catalog.js';
 import { DiplanungCswMapper } from './mapper/diplanung.csw.mapper.js';
 import { DiplanungDcatappluMapper } from './mapper/diplanung.dcatapplu.mapper.js';
-import { DiplanungImporterFactory } from './importer/diplanung.importer.factory.js';
-import type { DiplanungIndexDocument } from './model/index.document.js';
-import { ElasticQueries } from './persistence/elastic.queries.js';
-import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
-import type { ExcelSparseMapper } from '../../importer/excelsparse/excelsparse.mapper.js';
 import { FisWfsMapper } from './mapper/wfs/fis.wfs.mapper.js';
-import type { ImporterFactory } from '../../importer/importer.factory.js';
-import type { IndexDocumentFactory } from '../../model/index.document.factory.js';
 import { MsWfsMapper } from './mapper/wfs/ms.wfs.mapper.js';
-import { PostgresAggregator } from './persistence/postgres.aggregator.js';
-import type { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
-import { ProfileFactory } from '../profile.factory.js';
-import type { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
 import { XplanSynWfsMapper } from './mapper/wfs/xplan.syn.wfs.mapper.js';
 import { XplanWfsMapper } from './mapper/wfs/xplan.wfs.mapper.js';
+import type { DiplanungIndexDocument } from './model/index.document.js';
+import { ElasticQueries } from './persistence/elastic.queries.js';
+import { PostgresAggregator } from './persistence/postgres.aggregator.js';
 
-export class DiplanungFactory extends ProfileFactory<CswMapper | DcatappluMapper | ExcelSparseMapper | WfsMapper> {
+const log = log4js.getLogger(import.meta.filename);
+
+export type DiplanungSettings = CswSettings | DcatappluSettings | WfsSettings;
+
+export class DiplanungFactory extends ProfileFactory<DiplanungSettings> {
 
     dateReplacer = (key: string, value: any): any => {
         // when used as a JSON.stringify callback, `this` refers to the to-be-stringified object
@@ -57,7 +68,7 @@ export class DiplanungFactory extends ProfileFactory<CswMapper | DcatappluMapper
         return ElasticQueries.getInstance();
     }
 
-    getIndexDocumentFactory(mapper: CswMapper | DcatappluMapper | ExcelSparseMapper | WfsMapper): IndexDocumentFactory<DiplanungIndexDocument> {
+    getDocumentFactory(mapper: CswMapper | DcatappluMapper | WfsMapper): DocumentFactory<DiplanungIndexDocument> {
         switch (mapper.constructor.name) {
             case 'CswMapper': return new DiplanungCswMapper(<CswMapper>mapper);
             case 'DcatappluMapper': return new DiplanungDcatappluMapper(<DcatappluMapper>mapper);
@@ -72,16 +83,50 @@ export class DiplanungFactory extends ProfileFactory<CswMapper | DcatappluMapper
         }
     }
 
-    getImporterFactory(): ImporterFactory {
-        return new DiplanungImporterFactory();
+    // TODO solve this more elegantly than using dynamic imports - maybe using a registry?
+    async getImporter(settings: DiplanungSettings): Promise<Importer<DiplanungSettings>> {
+        let importer: Importer<DiplanungSettings>;
+        switch (settings.type) {
+            case 'CSW':
+                const { DiplanungCswImporter } = await import('./importer/diplanung.csw.importer.js');
+                importer = new DiplanungCswImporter(settings as CswSettings);
+                break;
+            case 'DCATAPPLU':
+                const { DcatappluImporter } = await import('../../importer/dcatapplu/dcatapplu.importer.js');
+                importer = new DcatappluImporter(settings as DcatappluSettings);
+                break;
+            case 'WFS.FIS':
+            case 'WFS.MS':
+            case 'WFS.XPLAN':
+            case 'WFS.XPLAN.SYN':
+                const { DiplanungWfsImporter } = await import('./importer/diplanung.wfs.importer.js');
+                importer = new DiplanungWfsImporter(settings as WfsSettings);
+                break;
+            default: {
+                log.error('Importer not found: ' + settings.type);
+            }
+        }
+        if (importer) {
+            await importer.database.init();
+        }
+        return importer;
     }
-
-    getPostgresAggregator(): AbstractPostgresAggregator<DiplanungIndexDocument> {
-        return new PostgresAggregator();
+    
+    async getCatalog(catalogId: number, summary: Summary): Promise<NewCatalog<any>> {
+        const catalogSettings = ConfigService.getCatalogSettings().find(config => config.id === catalogId);
+        switch (catalogSettings.type) {
+            case 'elasticsearch': return new DiplanungElasticsearchCatalog(catalogSettings as ElasticsearchCatalogSettings, summary);
+            default: log.error(`Catalog type not found: ${catalogSettings.type}`);
+        }
+        return null;
     }
 
     getProfileName(): string {
         return 'diplanung';
+    }
+
+    getPostgresAggregator(): AbstractPostgresAggregator<DiplanungIndexDocument> {
+        return new PostgresAggregator();
     }
 
     useIndexPerCatalog(): boolean {

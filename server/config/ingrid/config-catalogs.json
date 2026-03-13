@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "type": "elasticsearch",
+    "connectionId": "default",
+    "name": "Ingrid Elasticsearch",
+    "url": "http://localhost:9200",
+    "settings": {
+      "index": "harvester-index",
+      "alias": "harvester"
+    }
+  },
+  {
+    "id": 2,
+    "type": "csw",
+    "connectionId": "default",
+    "name": "PY CSW Target",
+    "url": "http://localhost:8000/csw",
+    "settings": {
+      "version": "2.0.2",
+      "outputSchema": "http://www.isotc211.org/2005/gmd"
+    }
+  },
+  {
+    "id": 3,
+    "type": "piveau",
+    "connectionId": "default",
+    "name": "Piveau",
+    "url": "http://localhost:8081",
+    "settings": {
+      "catalog": "ingrid-harvester",
+      "api-key": "yourRepoApiKey",
+      "title": "InGrid-Harvester",
+      "description": "InGrid-Harvester Katalog"
+    }
+  }
+]

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChipListComponent } from './chip-list.component';
 
@@ -29,7 +29,7 @@ describe('ChipListComponent', () => {
   let component: ChipListComponent;
   let fixture: ComponentFixture<ChipListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ChipListComponent ]
     })

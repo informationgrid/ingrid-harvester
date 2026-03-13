@@ -208,11 +208,12 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
                         title: 'Globaler Katalog'
                     });
                 }
-                let mapper = (await ProfileFactoryLoader.get().getMapper(this.getSettings(), harvestTime, this.getSummary(), records[i], catalog, rootNode)) as DcatappluMapper;
+                let mapper = new DcatappluMapper(this.getSettings(), records[i], catalog, rootNode, harvestTime, this.getSummary())
+                let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
                 let doc: IndexDocument;
                 try {
-                    doc = await mapper.createEsDocument();
+                    doc = await documentFactory.createIndexDocument();
                 }
                 catch (e) {
                     log.error('Error creating index document', e);

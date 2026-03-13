@@ -21,19 +21,19 @@
  * ==================================================
  */
 
+import type { ElasticsearchCatalogSettings } from '../../../catalog/elasticsearch/elasticsearch.catalog.js';
 import type { EsOperation } from '../../../persistence/elastic.utils.js';
 import type { PostgresAggregator as AbstractPostgresAggregator } from '../../../persistence/postgres.aggregator.js';
 import type { Bucket } from '../../../persistence/postgres.utils.js';
+import * as MiscUtils from '../../../utils/misc.utils.js';
 import { createEsId } from '../ingrid.utils.js';
 import type { IngridIndexDocument } from '../model/index.document.js';
-import * as MiscUtils from '../../../utils/misc.utils.js';
-import type { CatalogSettings } from 'catalog/catalog.factory.js';
 
 export class PostgresAggregator implements AbstractPostgresAggregator<IngridIndexDocument> {
 
     private index: string;
 
-    constructor(catalogSettings: CatalogSettings) {
+    constructor(catalogSettings: ElasticsearchCatalogSettings) {
         this.index = catalogSettings.settings.index;
     }
 
@@ -53,7 +53,7 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
         let deleteDocument = document.extras.metadata.deleted != null;
         bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.extras.metadata.deleted != null);
         if (deleteDocument) {
-            return [{ operation: 'delete', _index: this.index, _id: createEsId(document) }];
+            return [{ operation: 'delete', _index: this.index, _id: document.uuid }];
         }
 
         // deduplication
@@ -72,6 +72,8 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
                 box.push({ operation: 'delete', _index: this.index, _id: duplicate_id });
             }
         }
+        // handle WFS
+        this.createIdfForWfs(document, duplicates);
         document = this.sanitize(document);
         // document = MiscUtils.merge(document, { extras: { transformed_data: { dcat_ap_plu: DcatApPluDocumentFactory.create(document) } } });
         box.push({ operation: 'index', _index: this.index, _id: createEsId(document), document });
@@ -184,6 +186,15 @@ export class PostgresAggregator implements AbstractPostgresAggregator<IngridInde
             type: skeletonOnly ? "" : doc.t011_obj_serv?.type ?? "",
             version: skeletonOnly ? "" : doc.t011_obj_serv_version?.version_value ?? ""
         }
+    }
+
+    private createIdfForWfs(document: IngridIndexDocument, duplicates: Map<string | number, IngridIndexDocument>) {
+        // create idf
+        let features = [];
+        for (let [id, featureDocument] of duplicates) {
+            features.push(featureDocument.idf);
+        }
+        document.idf = document.idf.replace('<h2>Features:</h2>', '<h2>Features:</h2>\n' + features.join('\n'));
     }
 }
 

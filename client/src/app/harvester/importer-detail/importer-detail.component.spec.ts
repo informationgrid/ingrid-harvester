@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ImporterDetailComponent } from './importer-detail.component';
 
@@ -29,7 +29,7 @@ describe('ImportDetailComponent', () => {
   let component: ImporterDetailComponent;
   let fixture: ComponentFixture<ImporterDetailComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ImporterDetailComponent ]
     })

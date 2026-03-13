@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddMappingItemComponent } from './add-mapping-item.component';
 
@@ -29,7 +29,7 @@ describe('AddMappingItemComponent', () => {
   let component: AddMappingItemComponent;
   let fixture: ComponentFixture<AddMappingItemComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ AddMappingItemComponent ]
     })

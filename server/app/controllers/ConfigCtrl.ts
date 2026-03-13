@@ -87,29 +87,29 @@ export class ConfigCtrl {
 
     @Get('/catalogs')
     async getCatalogs(): Promise<Catalog[]> {
-        return await ConfigService.getCatalogs();
+        return await ConfigService.getLegacyCatalogs();
     }
 
     @Get('/catalogsizes')
     async getCatalogSizes(): Promise<any[]> {
-        return await ConfigService.getCatalogSizes();
+        return await ConfigService.getLegacyCatalogSizes();
     }
 
     @Post('/catalogs')
     async addOrEditCatalog(@BodyParams() catalog: Catalog): Promise<void> {
-        await ConfigService.addOrEditCatalog(catalog);
+        await ConfigService.addOrEditLegacyCatalog(catalog);
     }
 
     @Put('/catalogs/:identifier')
     async enableCatalog(@PathParams('identifier') catalogIdentifier: string,
             @QueryParams('enable') enable: boolean) {
-        await ConfigService.enableCatalog(catalogIdentifier, enable);
+        await ConfigService.enableLegacyCatalog(catalogIdentifier, enable);
     }
 
     @Delete('/catalogs/:identifier')
     async deleteCatalog(@PathParams('identifier') catalogIdentifier: string,
             @QueryParams('target') target: string) {
-        await ConfigService.removeCatalog(catalogIdentifier, target);
+        await ConfigService.removeLegacyCatalog(catalogIdentifier, target);
     }
 
     @Get('/mapping/distribution')

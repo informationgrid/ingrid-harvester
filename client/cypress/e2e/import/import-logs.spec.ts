@@ -13,24 +13,6 @@ describe('Import log operations', () => {
     auth.apiLogIn();
   });
 
-  it('should show errors in the error-log if error/warning occurred during an import', () => {
-    harvester.seedExcelHarvester(constants.SEED_EXCEL_ID);
-    harvester.openFormById(constants.SEED_EXCEL_ID);
-    form.setFields({excelFilePath: '-./data.xlsx'});
-    form.saveHarvesterConfig();
-    harvester.importHarvesterById(constants.SEED_EXCEL_ID);
-    harvester.openHarvesterLog(constants.SEED_EXCEL_ID);
-
-    harvester.errorLogHasMsg('Error reading excel workbook: ');
-    harvester.closeErrorLog();
-
-    harvester.openFormById(constants.SEED_EXCEL_ID);
-    form.setFields({excelFilePath: './data.xlsx'});
-    form.saveHarvesterConfig();
-    harvester.importHarvesterById(constants.SEED_EXCEL_ID);
-    harvester.deleteHarvesterById(constants.SEED_EXCEL_ID);
-  });
-
   it('should show no error in the logs after a successful import', () => {
     harvester.importHarvesterByIdAndWait(constants.CKAN_RNV_ID);
     harvester.checkNoErrors(constants.CKAN_RNV_ID);
@@ -76,19 +58,5 @@ describe('Import log operations', () => {
     harvester.errorLogHasMsg('Error: Invalid URI');
     harvester.closeErrorLog();
     harvester.deleteHarvesterById(constants.SEED_CSW_ID);
-  });
-
-  it('should show an error in the harvester logs if the Excel path is not valid', () => {
-    harvester.seedExcelHarvester(constants.SEED_EXCEL_ID);
-    harvester.openFormById(constants.SEED_EXCEL_ID);
-    form.setFields({excelFilePath: './da-ta.xlsx'});
-    form.saveHarvesterConfig();
-    harvester.importHarvesterById(constants.SEED_EXCEL_ID);
-    harvester.openHarvesterLog(constants.SEED_EXCEL_ID);
-
-    harvester.errorLogHasMsg('Error reading excel workbook: Error: File not found');
-    harvester.closeErrorLog();
-
-    harvester.deleteHarvesterById(constants.SEED_EXCEL_ID);
   });
 });

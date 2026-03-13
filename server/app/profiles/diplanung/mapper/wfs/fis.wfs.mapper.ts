@@ -72,7 +72,7 @@ export class FisWfsMapper extends DiplanungWfsMapper {
         let spatialContainer = this.baseMapper.select('./*/fis:SHAPE_25833/*', this.baseMapper.featureOrFeatureType, true);
         if (!spatialContainer) {
             // use bounding box as fallback
-            this.baseMapper.log.debug(`${this.baseMapper.uuid}: no geometry found, using bounding box instead`);
+            this.baseMapper.log.debug(`${this.baseMapper.getGeneratedId()}: no geometry found, using bounding box instead`);
             return this.baseMapper.fetched.boundingBox;
         }
         let geojson = GeoJsonUtils.parse(spatialContainer, { crs: '25833' }, this.baseMapper.fetched.nsMap);
@@ -175,11 +175,11 @@ export class FisWfsMapper extends DiplanungWfsMapper {
         let end = this.baseMapper.getTextContent(endXpath);
         if (end) {
             if (!start) {
-                this.baseMapper.log.warn(`Skipping ProcessStep.temporal: An end date (${endXpath}) was specified but a start date (${startXpath}) is missing:`, this.baseMapper.uuid);
+                this.baseMapper.log.warn(`Skipping ProcessStep.temporal: An end date (${endXpath}) was specified but a start date (${startXpath}) is missing:`, this.baseMapper.getGeneratedId());
                 return null;
             }
             else if (start > end) {
-                this.baseMapper.log.warn(`Skipping ProcessStep.temporal: The start date (${start}) is later than the end date (${end}):`, this.baseMapper.uuid);
+                this.baseMapper.log.warn(`Skipping ProcessStep.temporal: The start date (${start}) is later than the end date (${end}):`, this.baseMapper.getGeneratedId());
                 return null;
             }
             period.lte = MiscUtils.normalizeDateTime(end);

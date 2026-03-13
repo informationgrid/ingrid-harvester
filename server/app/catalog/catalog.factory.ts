@@ -21,15 +21,22 @@
  * ==================================================
  */
 
+import log4js from 'log4js';
+import type { Observer } from 'rxjs';
 import type { ImporterSettings } from '../importer.settings.js';
-import type { RecordEntity } from '../model/entity.js';
+import type { CatalogSummary } from '../model/catalog-summary.js';
+import type { ImportLogMessage } from '../model/import.result.js';
 import type { Summary } from '../model/summary.js';
-import type { Bucket } from '../persistence/postgres.utils.js';
+import { DatabaseFactory } from '../persistence/database.factory.js';
+import type { DatabaseUtils } from '../persistence/database.utils.js';
+import { ConfigService } from '../services/config/ConfigService.js';
+
+const log = log4js.getLogger('Catalog');
 
 export interface CatalogFactory {
 
     // TODO improve typing
-    getCatalog(catalogId: string, summary: Summary): Promise<Catalog<any>>;
+    getCatalog(catalogId: number, summary: Summary): Promise<Catalog<any>>;
 }
 
 /**
@@ -41,27 +48,33 @@ export abstract class Catalog<DbColumnType> {
 
     readonly settings: CatalogSettings;
     readonly summary: Summary;
+    protected readonly database: DatabaseUtils;
+    protected transactionTimestamp: string;
+    protected abstract readonly catalogSummary: CatalogSummary;
 
     constructor(settings: CatalogSettings, summary: Summary) {
         this.settings = settings;
         this.summary = summary;
+        this.database = DatabaseFactory.getDatabaseUtils(ConfigService.getGeneralSettings().database, summary);
     }
 
     // TODO use transaction start date - type as Date
-    async process(transactionHandle: any, importerSettings: ImporterSettings): Promise<void> {
-        this.prepareImport(transactionHandle, importerSettings);
-        this.import(transactionHandle, importerSettings);
-        this.postImport(transactionHandle, importerSettings);
+    async process(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+        this.transactionTimestamp = new Date().toISOString();
+        await this.prepareImport(transactionHandle, importerSettings, observer);
+        await this.import(transactionHandle, importerSettings, observer);
+        await this.postImport(transactionHandle, importerSettings, observer);
+        this.catalogSummary.print(log);
     }
 
-    abstract prepareImport(transactionHandle: any, settings: ImporterSettings): Promise<void>;
+    abstract prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void>;
 
     /**
      * Import the database rows matching the transactionHandle into this target catalog.
      * 
      * @param transactionHandle 
      */
-    abstract import(transactionHandle: any, settings: ImporterSettings): Promise<void>;
+    abstract import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void>;
     //  {
     //     // fetch rows from DB using transactionHandle
     //     // * fetch datasets in buckets for deduplication purposes ("internal deduplication")
@@ -77,7 +90,26 @@ export abstract class Catalog<DbColumnType> {
     //     }
     // }
 
-    abstract postImport(transactionHandle: any, importerSettings: ImporterSettings): Promise<void>;
+    /**
+     * Remove stale records from the target catalog and is called after every harvest.
+     */
+    async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+        await this.deleteStaleRecords(importerSettings.catalogId);
+    }
+
+    /**
+     * Remove records in the target catalog that are no longer present in the current
+     * harvest. Records belonging to this source are identified by sourceId
+     * (ImporterSettings.catalogId), which was embedded via addTraceability.
+     */
+    abstract deleteStaleRecords(sourceId: string): Promise<void>;
+
+    /**
+     * Remove ALL records in the target catalog that originated from the given source
+     * (identified by sourceId = ImporterSettings.catalogId).
+     * Called when a data source is deleted by a user.
+     */
+    abstract deleteAllRecordsForCatalog(sourceId: string): Promise<void>;
 
     abstract transform(rows: DbColumnType[]): DbColumnType[];
 
@@ -85,19 +117,13 @@ export abstract class Catalog<DbColumnType> {
 };
 
 export type CatalogSettings = {
-    id: string,
+    id: number,
     type: string,
-    connectionId: string,
-    name: string,
-    settings: Record<string, any>,
+    // ED 2026-03-10: "connections" abstraction will be implemented at a later date; directly use URL for now
+    // connectionId: string,
+    url: string,
+    name: string
 };
-
-export type ElasticsearchCatalogSettings = CatalogSettings & {
-    settings: {
-        index: string,
-        alias: string,
-    }
-}
 
 enum ImportType {
     CSW_ISO,

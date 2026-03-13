@@ -21,32 +21,43 @@
  * ==================================================
  */
 
-import { ElasticQueries } from './persistence/elastic.queries.js';
-import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
-import type { ImporterFactory } from '../../importer/importer.factory.js';
-import type { IndexDocumentFactory } from '../../model/index.document.factory.js';
-import type { JsonMapper } from '.../../importer/json/json.mapper.js';
+import log4js from 'log4js';
+import { Catalog as NewCatalog } from '../../catalog/catalog.factory.js';
+import type { ElasticsearchCatalogSettings } from '../../catalog/elasticsearch/elasticsearch.catalog.js';
+import type { Importer } from '../../importer/importer.js';
+import type { JsonMapper } from '../../importer/json/json.mapper.js';
+import type { JsonSettings } from '../../importer/json/json.settings.js';
 import type { KldMapper } from '../../importer/kld/kld.mapper.js';
-import { LvrClickRheinMapper } from './mapper/lvr.clickrhein.mapper.js';
-import { LvrImporterFactory } from './importer/lvr.importer.factory.js';
-import type { LvrIndexDocument } from './model/index.document.js';
-import { LvrKldMapper } from './mapper/lvr.kld.mapper.js';
-import { LvrOaiLidoMapper } from './mapper/lvr.oai.lido.mapper.js';
-import { LvrOaiModsMapper } from './mapper/lvr.oai.mods.mapper.js';
+import type { KldSettings } from '../../importer/kld/kld.settings.js';
 import type { OaiMapper as OaiLidoMapper } from '../../importer/oai/lido/oai.mapper.js';
 import type { OaiMapper as OaiModsMapper } from '../../importer/oai/mods/oai.mapper.js';
 import type { OaiSettings } from '../../importer/oai/oai.settings.js';
-import { PostgresAggregator } from './persistence/postgres.aggregator.js';
-import type { PostgresAggregator as AbstractPostgresAggregator} from '../../persistence/postgres.aggregator.js';
+import type { DocumentFactory } from '../../model/index.document.factory.js';
+import type { Summary } from '../../model/summary.js';
+import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
+import type { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
+import { ConfigService } from '../../services/config/ConfigService.js';
 import { ProfileFactory } from '../profile.factory.js';
+import { LvrElasticsearchCatalog } from './catalog/elasticsearch.catalog.js';
+import { LvrClickRheinMapper } from './mapper/lvr.clickrhein.mapper.js';
+import { LvrKldMapper } from './mapper/lvr.kld.mapper.js';
+import { LvrOaiLidoMapper } from './mapper/lvr.oai.lido.mapper.js';
+import { LvrOaiModsMapper } from './mapper/lvr.oai.mods.mapper.js';
+import type { LvrIndexDocument } from './model/index.document.js';
+import { ElasticQueries } from './persistence/elastic.queries.js';
+import { PostgresAggregator } from './persistence/postgres.aggregator.js';
 
-export class LvrFactory extends ProfileFactory<JsonMapper | KldMapper | OaiLidoMapper | OaiModsMapper> {
+const log = log4js.getLogger(import.meta.filename);
+
+export type LvrSettings = JsonSettings | KldSettings | OaiSettings;
+
+export class LvrFactory extends ProfileFactory<LvrSettings> {
 
     getElasticQueries(): AbstractElasticQueries {
         return ElasticQueries.getInstance();
     }
 
-    getIndexDocumentFactory(mapper: JsonMapper | KldMapper | OaiLidoMapper | OaiModsMapper): IndexDocumentFactory<LvrIndexDocument> {
+    getDocumentFactory(mapper: JsonMapper | KldMapper | OaiLidoMapper | OaiModsMapper): DocumentFactory<LvrIndexDocument> {
         switch (mapper.constructor.name) {
             case 'JsonMapper': return new LvrClickRheinMapper(<JsonMapper>mapper);
             case 'KldMapper': return new LvrKldMapper(<KldMapper>mapper);
@@ -59,16 +70,47 @@ export class LvrFactory extends ProfileFactory<JsonMapper | KldMapper | OaiLidoM
         }
     }
 
-    getImporterFactory(): ImporterFactory {
-        return new LvrImporterFactory();
+    // TODO solve this more elegantly than using dynamic imports - maybe using a registry?
+    async getImporter(settings: LvrSettings): Promise<Importer<LvrSettings>> {
+        let importer: Importer<LvrSettings>;
+        switch (settings.type) {
+            case 'JSON':
+                const { LvrClickRheinImporter } = await import('./importer/lvr.clickrhein.importer.js');
+                importer = new LvrClickRheinImporter(settings as JsonSettings);
+                break;
+            case 'KLD':
+                const { KldImporter } = await import('../../importer/kld/kld.importer.js');
+                importer = new KldImporter(settings as KldSettings);
+                break;
+            case 'OAI':
+                const { OaiImporter } = await import('../../importer/oai/oai.importer.js');
+                importer = new OaiImporter(settings as OaiSettings);
+                break;
+            default: {
+                log.error('Importer not found: ' + settings.type);
+            }
+        }
+        if (importer) {
+            await importer.database.init();
+        }
+        return importer;
     }
-
-    getPostgresAggregator(): AbstractPostgresAggregator<LvrIndexDocument> {
-        return new PostgresAggregator();
+    
+    async getCatalog(catalogId: number, summary: Summary): Promise<NewCatalog<any>> {
+        const catalogSettings = ConfigService.getCatalogSettings().find(config => config.id === catalogId);
+        switch (catalogSettings.type) {
+            case 'elasticsearch': return new LvrElasticsearchCatalog(catalogSettings as ElasticsearchCatalogSettings, summary);
+            default: log.error(`Catalog type not found: ${catalogSettings.type}`);
+        }
+        return null;
     }
 
     getProfileName(): string {
         return 'lvr';
+    }
+
+    getPostgresAggregator(settings: ElasticsearchCatalogSettings): AbstractPostgresAggregator<LvrIndexDocument> {
+        return new PostgresAggregator(settings);
     }
 
     useIndexPerCatalog(): boolean {

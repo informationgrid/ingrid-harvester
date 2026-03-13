@@ -144,10 +144,11 @@ export class OaiImporter extends Importer<OaiSettings> {
             }
 
             let mapper = await this.getMapper(this.getSettings(), header, record, harvestTime, this.getSummary());
+            let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
             try {
-                doc = await ProfileFactoryLoader.get().getIndexDocumentFactory(mapper).create();
+                doc = await documentFactory.createIndexDocument();
             }
             catch (e) {
                 log.error('Error creating index document', e);

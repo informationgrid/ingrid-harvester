@@ -336,3 +336,19 @@ export function escapeXml(unsafe: string): string {
         }
     });
 }
+
+/**
+ * Converts a string to camelCase. Supported word boundaries are spaces.
+ * 
+ * @param s the string to convert to camelCase
+ * @param  lowerFirst if the first character should be converted to lower
+ * @returns the camelCased string
+ */
+export const camelize = (s: string, lowerFirst: boolean = true) => {
+    return s.split(' ').map(function(word, index) {
+        if (index == 0) {
+            return word.toLowerCase();
+        }
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    }).join('');
+};

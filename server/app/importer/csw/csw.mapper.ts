@@ -29,7 +29,7 @@ import type { Geometry, Point } from 'geojson';
 import log4js from 'log4js';
 import { throwError } from 'rxjs';
 import * as xpath from 'xpath';
-import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
+import { DcatapdeMapper } from '../dcatapde/dcatapde.mapper.js';
 import { namespaces } from '../../importer/namespaces.js';
 import type { Agent, Contact, Organization, Person } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
@@ -51,7 +51,7 @@ import type { CswSettings } from './csw.settings.js';
 
 export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<IndexDocument> {
 
-    static select = <XPathElementSelect>xpath.useNamespaces({
+    static readonly cswNsMap = {
         'csw': namespaces.CSW,
         'gmd': namespaces.GMD,
         'gco': namespaces.GCO,
@@ -62,7 +62,8 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
         'plu': namespaces.PLU,
         'srv': namespaces.SRV,
         'xlink': namespaces.XLINK
-    });
+    };
+    static select = <XPathElementSelect>xpath.useNamespaces(CswMapper.cswNsMap);
 
     log = log4js.getLogger();
 
@@ -95,6 +96,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
 
     async createEsDocument(): Promise<IndexDocument> {
         return {
+            uuid: this.getGeneratedId(),
             extras: {
                 metadata: this.getHarvestingMetadata()
             }
@@ -701,22 +703,22 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
             themes = this.mapCategoriesToThemes(categories, keywords);
         }
 
-        keywords.filter(keyword => DcatMapper.DCAT_THEMES.includes(keyword)).forEach(keyword => themes.push(DcatMapper.DCAT_CATEGORY_URL + keyword));
+        keywords.filter(keyword => DcatapdeMapper.DCAT_THEMES.includes(keyword)).forEach(keyword => themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + keyword));
 
         themes = themes.concat(CswMapper.select(xpath, this.record)
-            .map(node => DcatMapper.dcatThemeUriFromKeyword(node.textContent))
+            .map(node => DcatapdeMapper.dcatThemeUriFromKeyword(node.textContent))
             .filter(theme => theme)); // Filter out falsy values
 
         // Evaluate the themes
         xpath = './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords[./gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString/text()="Data theme (EU MDR)"]/gmd:keyword/gco:CharacterString';
         themes = themes.concat(CswMapper.select(xpath, this.record)
-            .map(node => DcatMapper.dcatThemeUriFromKeyword(node.textContent))
+            .map(node => DcatapdeMapper.dcatThemeUriFromKeyword(node.textContent))
             .filter(theme => theme)); // Filter out falsy values
 
         if (!themes || themes.length === 0) {
             // Fall back to default value
             themes = this.getSettings().defaultDCATCategory
-                .map(category => DcatMapper.DCAT_CATEGORY_URL + category);
+                .map(category => DcatapdeMapper.DCAT_CATEGORY_URL + category);
         }
 
         themes = themes.filter((keyword, index, self) => self.indexOf(keyword) === index);
@@ -731,100 +733,100 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
         categories.map(category => category.textContent).forEach(category => {
             switch (category) {
                 case "farming":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'AGRI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'AGRI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'ENVI');
                     break;
                 case "biota":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'ENVI');
                     break;
                 case "boundaries":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'REGI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'GOVE');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'REGI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'GOVE');
                     break;
                 case "climatologyMeteorology Atmosphere":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TECH');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'TECH');
                     break;
                 case "economy":
                     themes.push('ECON');
                     if (keywords.includes("Energiequellen")) {
-                        themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENER');
-                        themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
-                        themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TECH');
+                        themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'ENER');
+                        themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'ENVI');
+                        themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'TECH');
                     }
                     if (keywords.includes("Mineralische Bodenschätze")) {
-                        themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
-                        themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TECH');
+                        themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'ENVI');
+                        themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'TECH');
                     }
                     break;
                 case "elevation":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'GOVE');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TECH');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'GOVE');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'TECH');
                     break;
                 case "environment":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'ENVI');
                     break;
                 case "geoscientificInformation":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'REGI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TECH');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'REGI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'TECH');
                     break;
                 case "health":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'HEAL');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'HEAL');
                     break;
                 case "imageryBaseMapsEarthCover ":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'GOVE');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TECH');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'REGI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'AGRI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'GOVE');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'TECH');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'REGI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'AGRI');
                     break;
                 case "intelligenceMilitary":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'JUST');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'JUST');
                     break;
                 case "inlandWaters":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TRAN');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'AGRI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'TRAN');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'AGRI');
                     break;
                 case "location":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'REGI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'GOVE');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'REGI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'GOVE');
                     break;
                 case "oceans":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TRAN');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'AGRI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'TRAN');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'AGRI');
                     break;
                 case "planningCadastre":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'REGI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'GOVE');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'REGI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'GOVE');
                     if (keywords.includes("Flurstücke/Grundstücke")) {
-                        themes.push(DcatMapper.DCAT_CATEGORY_URL + 'JUST');
+                        themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'JUST');
                     }
                     break;
                 case "society":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'SOCI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'EDUC');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'SOCI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'EDUC');
                     break;
                 case "structure":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'REGI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TRAN');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'REGI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'TRAN');
                     if (keywords.includes("Produktions- und Industrieanlagen")) {
-                        themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ECON');
+                        themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'ECON');
                     }
                     if (keywords.includes("Umweltüberwachung")) {
-                        themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
+                        themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'ENVI');
                     }
                     break;
                 case "transportation":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TRAN');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'TRAN');
                     break;
                 case "utilitiesCommunication":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENER');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'GOVE');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'ENER');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DcatapdeMapper.DCAT_CATEGORY_URL + 'GOVE');
                     break;
             }
         });
@@ -1118,7 +1120,6 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
             let position = CswMapper.select('./gmd:positionName/gco:CharacterString', contact, true)?.textContent;
             if(role) {
                 let infos = {
-                    identificationinfo_administrative_area_value: region,
                     institution: org,
                     lastname: name,
                     street: delPt,
@@ -1129,6 +1130,14 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
                     job: position,
                     descr: contactInstructions
                 };
+                // (#8604): only set identificationinfo_administrative_area_value for 
+                // * MD_Metadata/identificationInfo/MD_DataIdentification/pointOfContact/*/contactInfo/*/address/*/administrativeArea
+                // * MD_Metadata/identificationInfo/SV_ServiceIdentification/pointOfContact/*/contactInfo/*/address/*/administrativeArea
+                let grandparent = (contact?.parentNode?.parentNode as Element);
+                if ((grandparent?.parentNode as Element)?.localName == 'identificationInfo' &&
+                    (grandparent?.localName == 'MD_DataIdentification' || grandparent?.localName == "SV_ServiceIdentification")) {
+                    infos["identificationinfo_administrative_area_value"] = region;
+                }
 
                 results.push(infos);
             }

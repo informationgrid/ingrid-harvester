@@ -21,14 +21,14 @@
  * ==================================================
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 import { JsonHarvesterComponent } from './json-harvester.component';
 
 describe('JsonHarvesterComponent', () => {
   let component: JsonHarvesterComponent;
   let fixture: ComponentFixture<JsonHarvesterComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ JsonHarvesterComponent ]
     })

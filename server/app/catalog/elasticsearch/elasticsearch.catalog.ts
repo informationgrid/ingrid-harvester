@@ -21,44 +21,58 @@
  * ==================================================
  */
 
-import type { ImporterSettings } from 'importer.settings.js';
+import log4js from 'log4js';
+import type { Observer } from 'rxjs';
+import type { ImporterSettings } from '../../importer.settings.js';
+import type { ImportLogMessage } from '../../model/import.result.js';
 import type { Summary } from '../../model/summary.js';
-import { DatabaseFactory } from '../../persistence/database.factory.js';
 import type { DatabaseUtils } from '../../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
-import { Catalog, type CatalogSettings, type ElasticsearchCatalogSettings } from '../catalog.factory.js';
+import { Catalog, type CatalogSettings } from '../catalog.factory.js';
+import { ElasticsearchCatalogSummary } from './elasticsearch.catalog-summary.js';
+
+const log = log4js.getLogger(import.meta.filename);
+
+export type ElasticsearchCatalogSettings = CatalogSettings & {
+    settings: {
+        version: number,
+        index: string,
+        alias: string,
+        user?: string,
+        password?: string
+    }
+}
 
 export abstract class ElasticsearchCatalog extends Catalog<object> {
 
     readonly id: string = 'elastic-catalog';
     readonly type: string = 'elasticsearch';
 
-    private readonly database: DatabaseUtils;
+    protected readonly catalogSummary = new ElasticsearchCatalogSummary();
+
     private readonly elastic: ElasticsearchUtils;
 
     constructor(catalogSettings: ElasticsearchCatalogSettings, summary: Summary) {
         super(catalogSettings, summary);
-        this.database = DatabaseFactory.getDatabaseUtils(ConfigService.getGeneralSettings().database, summary);
         this.elastic = ElasticsearchFactory.getElasticUtils(ConfigService.getGeneralSettings().elasticsearch, summary);
     }
 
-    // async import(transactionHandle: Date): Promise<void> {
-    async import(transactionHandle: any, settings: ImporterSettings): Promise<void> {
+    async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // import data into Elasticsearch catalog
-        console.log(`Importing data for transaction: ${transactionHandle}`);
+        log.info(`Importing data for transaction: ${transactionHandle}`);
         
         // TODO split this into
         // 1) bucket fetching (put into abstract Catalog)
         // 2) transformation, coupling, deduplication (abstract method/s, handle in profile-specific catalogs)
         // 3) push to target (here, ES)
-        await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, transactionHandle);
+        await this.database.pushToElasticsearch(this.elastic, transactionHandle, observer);
     }
 
-    async postImport(transactionHandle: any, settings: ImporterSettings): Promise<void> {
+    async postImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // post-import operations, e.g. refreshing indices, updating aliases, etc.
-        console.log(`Post-import operations for catalog: ${this.id}`);
+        log.info(`Post-import operations for catalog: ${this.id}`);
     }
 
     async serialize(input: object): Promise<object> {
@@ -80,5 +94,13 @@ export abstract class ElasticsearchCatalog extends Catalog<object> {
 
     getElastic(): ElasticsearchUtils {
         return this.elastic;
+    }
+
+    deleteStaleRecords(sourceId: string): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    deleteAllRecordsForCatalog(sourceId: string): Promise<void> {
+        throw new Error('Method not implemented.');
     }
 }

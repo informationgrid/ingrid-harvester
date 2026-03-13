@@ -55,6 +55,9 @@ export class PostgresQueries {
     readonly deleteNonFetchedRecords = this.readFile('deleteNonFetchedRecords');
     readonly getStoredData = this.readFile('getStoredData');
     readonly getDatasetsBySource = this.readFile('getDatasetsBySource');
+    readonly getDatasetsBySourceWithOriginal = this.readFile('getDatasetsBySourceWithOriginal');
+    readonly getDcatapdeDatasetsBySource = this.readFile('getDcatapdeDatasetsBySource');
+    readonly getIdentifiersByCatalog = this.readFile('getIdentifiersByCatalog');
     readonly getDatasetsByCollection = this.readFile('getDatasetsByCollection');
     readonly getServices = this.readFile('getServices');
     readonly getBuckets = this.readFile('getBuckets');

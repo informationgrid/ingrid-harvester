@@ -29,8 +29,8 @@ import log4js from 'log4js';
 import type { CatalogSettings } from '../../catalog/catalog.factory.js';
 import { defaultCKANSettings } from '../../importer/ckan/ckan.settings.js';
 import { defaultCSWSettings } from '../../importer/csw/csw.settings.js';
-import { defaultDCATSettings } from '../../importer/dcat/dcat.settings.js';
-import { defaultExcelSettings } from '../../importer/excel/excel.settings.js';
+import { defaultDCATSettings } from '../../importer/dcatapde/dcatapde.settings.js';
+import { defaultGenesisSettings } from "../../importer/genesis/genesis.settings.js";
 import { defaultKldSettings } from '../../importer/kld/kld.settings.js';
 import { defaultOAISettings } from '../../importer/oai/oai.settings.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
@@ -235,10 +235,9 @@ export class ConfigService {
                         case 'CKAN': defaultSettings = defaultCKANSettings; break;
                         case 'CSW': defaultSettings = defaultCSWSettings; break;
                         case 'DCAT': defaultSettings = defaultDCATSettings; break;
-                        case 'EXCEL': defaultSettings = defaultExcelSettings; break;
-                        //case 'EXCEL_SPARSE': defaultSettings = ExcelSparseImporter.defaultSettings; break;
                         case 'KLD': defaultSettings = defaultKldSettings; break;
                         case 'OAI': defaultSettings = defaultOAISettings; break;
+                        case 'GENESIS': defaultSettings = defaultGenesisSettings; break;
                         //case 'SPARQL': defaultSettings = SparqlImporter.defaultSettings; break;
                         //case 'WFS': defaultSettings = WfsImporter.defaultSettings; break;
                     }
@@ -313,9 +312,10 @@ export class ConfigService {
     }
 
     static getCatalogSettings(): CatalogSettings[] {
-        const configExists = fs.existsSync(this.CATALOG_CONFIG_FILE);
+        const catalogConfigFile = this.getCatalogConfigFile();
+        const configExists = fs.existsSync(catalogConfigFile);
         if (configExists) {
-            let contents = fs.readFileSync(this.CATALOG_CONFIG_FILE);
+            let contents = fs.readFileSync(catalogConfigFile);
             return JSON.parse(contents.toString());
         }
         else {
@@ -324,9 +324,56 @@ export class ConfigService {
         }
      }
 
-     static setCatalogSettings(config: CatalogSettings[]) {
-        fs.writeFileSync(this.CATALOG_CONFIG_FILE, JSON.stringify(config, null, 2));
-     }
+    static setCatalogSettings(config: CatalogSettings[]) {
+        fs.writeFileSync(this.getCatalogConfigFile(), JSON.stringify(config, null, 2));
+    }
+
+    static getCatalogs() {
+        return ConfigService.getCatalogSettings();
+    }
+
+    static getCatalog(id: number) {
+        const catalog = ConfigService.getCatalogSettings().find(settings => settings.id == id);
+        if (!catalog) {
+            throw new Error(`Catalog with id ${id} not found`);
+        }
+        return catalog;
+    }
+
+    static addOrEditCatalog(settings: CatalogSettings): CatalogSettings {
+        const createId = (settings: CatalogSettings[]) => {
+            const ids = settings.map(s => s.id).sort();
+            const maxId = ids.length > 0 ? Math.max(...ids) : 0;
+            return maxId + 1;
+        };
+        const existingSettings = ConfigService.getCatalogSettings();
+        // if id is given, update the pertaining catalog settings
+        if (settings.id) {
+            const catalogIndex = existingSettings.findIndex(catalog => catalog.id == settings.id);
+            if (!catalogIndex) {
+                throw new Error(`Catalog with id ${settings.id} not found`);
+            }
+            existingSettings[catalogIndex] = settings;
+        }
+        // else create id and add new catalog settings to list
+        else {
+            settings.id = createId(existingSettings);
+            existingSettings.push(settings);
+        }
+        // persist changes
+        ConfigService.setCatalogSettings(existingSettings);
+        return settings;
+    }
+
+    static removeCatalog(id: number) {
+        const existingSettings = ConfigService.getCatalogSettings();
+        const catalogIndex = existingSettings.findIndex(catalog => catalog.id == id);
+        if (!catalogIndex) {
+            throw new Error(`Catalog with id ${id} not found`);
+        }
+        // persist changes
+        ConfigService.setCatalogSettings(existingSettings.filter(catalog => catalog.id != id));
+    }
 
     private static getDbUtils() {
         let generalConfig = ConfigService.getGeneralSettings();
@@ -338,11 +385,11 @@ export class ConfigService {
         return ElasticsearchFactory.getElasticUtils(generalConfig.elasticsearch, null);
     }
 
-    static async getCatalogSizes(): Promise<any[]> {
+    static async getLegacyCatalogSizes(): Promise<any[]> {
         return await ConfigService.getDbUtils().getCatalogSizes(false);
     }
 
-    static async getCatalogs(): Promise<Catalog[]> {
+    static async getLegacyCatalogs(): Promise<Catalog[]> {
         let catalogs = await ConfigService.getDbUtils().listCatalogs();
         let esUtils = ConfigService.getEsUtils();
         let alias = ConfigService.getGeneralSettings().elasticsearch.alias;
@@ -353,7 +400,7 @@ export class ConfigService {
         return catalogs;
     }
 
-    static async addOrEditCatalog(catalog: Catalog) {
+    static async addOrEditLegacyCatalog(catalog: Catalog) {
         if (catalog.id) {
             return await ConfigService.getDbUtils().updateCatalog(catalog);
         }
@@ -370,7 +417,7 @@ export class ConfigService {
         }
     }
 
-    static async enableCatalog(catalogIdentifier: string, enable: boolean) {
+    static async enableLegacyCatalog(catalogIdentifier: string, enable: boolean) {
         let alias = ConfigService.getGeneralSettings().elasticsearch.alias;
         if (enable) {
             await this.getEsUtils().addAlias(catalogIdentifier, alias);
@@ -380,7 +427,7 @@ export class ConfigService {
         }
     }
 
-    static async removeCatalog(catalogIdentifier: string, datasetTarget: string) {
+    static async removeLegacyCatalog(catalogIdentifier: string, datasetTarget: string) {
         let database = this.getDbUtils();
         let { id: catalogId } = await database.getCatalog(catalogIdentifier);
         // if no target is specified, delete datasets
@@ -477,14 +524,22 @@ export class ConfigService {
         return ordered;
     }
 
-    private static getHarvesterConfigFile() {
+    private static getConfigFile(filename: string) {
         let configDir = process.env.IMPORTER_CONFIG_DIR;
         if (!configDir) {
             configDir = process.argv.find(arg => arg.toLowerCase().startsWith('--config_dir=')) ?? '';
             configDir = configDir.toLowerCase().replace('--config_dir=', '');
         }
         return configDir
-            ? configDir + '/' + this.HARVESTER_CONFIG_FILE
-            : this.HARVESTER_CONFIG_FILE;
+            ? configDir + '/' + filename
+            : filename;
+    }
+
+    private static getHarvesterConfigFile() {
+        return this.getConfigFile(this.HARVESTER_CONFIG_FILE);
+    }
+
+    private static getCatalogConfigFile() {
+        return this.getConfigFile(this.CATALOG_CONFIG_FILE);
     }
 }

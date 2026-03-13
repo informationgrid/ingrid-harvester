@@ -103,7 +103,7 @@ export class DiplanungCswMapper extends DiplanungMapper<CswMapper> {
     }
 
     getPluPlanState(): PluPlanState {
-        return this.baseMapper.settings.pluPlanState;
+        return this.baseMapper.getSettings().pluPlanState;
     }
 
     /**
@@ -119,7 +119,7 @@ export class DiplanungCswMapper extends DiplanungMapper<CswMapper> {
 
 
         // TODO hack for MROK presentation, remove again and improve/refine the if-cascade below
-        if (this.baseMapper.settings.sourceURL == 'https://numis.niedersachsen.de/202/csw') {
+        if (this.baseMapper.getSettings().sourceURL == 'https://numis.niedersachsen.de/202/csw') {
             return PluPlanType.RAUM_ORDN_PLAN;
         }
 

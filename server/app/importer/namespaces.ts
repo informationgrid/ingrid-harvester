@@ -26,6 +26,7 @@ export const namespaces = {
     CSW: 'http://www.opengis.net/cat/csw/2.0.2',
     DC: 'http://purl.org/dc/elements/1.1/',
     DCAT: 'http://www.w3.org/ns/dcat#',
+    DCATAP: 'http://data.europa.eu/r5r/',
     DCATDE: 'http://dcat-ap.de/def/dcatde/',
     DCT: 'http://purl.org/dc/terms/',
     FOAF: 'http://xmlns.com/foaf/0.1/',

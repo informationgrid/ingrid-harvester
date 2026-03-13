@@ -283,28 +283,6 @@ class HarvesterPage {
     cy.reload();
   }
 
-  seedExcelHarvester(id) {
-    cy.request({
-      method: 'POST',
-      url: 'rest/api/harvester/' + id,
-      body: {
-        "id": parseInt(id),
-        "disable": false,
-        "type": "EXCEL",
-        "description": "excel_test_api",
-        "index": "excel_index_api",
-        "defaultDCATCategory": ["SOCI"],
-        "defaultMcloudSubgroup": ["railway"],
-        "defaultAttribution": "attr_name",
-        "defaultAttributionLink": "attr_link",
-        "maxRecords": 50,
-        "startPosition": 1,
-        "filePath": "./data.xlsx"
-      }
-    });
-    cy.reload();
-  }
-
 }
 
 export default HarvesterPage;

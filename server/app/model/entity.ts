@@ -32,9 +32,10 @@ export interface RecordEntity extends Entity {
     identifier: string,
     source: string,
     collection_id: number,
+    catalog_ids?: number[],
     dataset: IndexDocument, // TODO rename to dataset_elastic, make optional
     dataset_csw?: any,
-    dataset_dcat?: any,
+    dataset_dcatapde?: any,
     original_document: string
 }
 

@@ -23,13 +23,13 @@
 
 import log4js from 'log4js';
 import { createRequire } from 'module';
-import type { Catalog as NewCatalog, CatalogFactory, CatalogSettings } from '../catalog/catalog.factory.js';
+import type { CatalogFactory, CatalogSettings, Catalog as NewCatalog } from '../catalog/catalog.factory.js';
 import type { ImporterSettings } from '../importer.settings.js';
 import type { ImporterFactory } from '../importer/importer.factory.js';
 import type { Importer } from '../importer/importer.js';
-import type { MapperFactory } from '../importer/mapper.factory.js';
 import type { Mapper } from '../importer/mapper.js';
 import type { Catalog } from '../model/dcatApPlu.model.js';
+import type { DocumentFactory } from '../model/index.document.factory.js';
 import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
@@ -45,7 +45,9 @@ import * as MiscUtils from '../utils/misc.utils.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
-export abstract class ProfileFactory<T extends ImporterSettings> implements ImporterFactory<T>, MapperFactory<T>, CatalogFactory {
+export abstract class ProfileFactory<T extends ImporterSettings> implements ImporterFactory<T>, 
+// MapperFactory<T>, 
+CatalogFactory {
 
     /**
      * Set up profile specific environment.
@@ -102,9 +104,9 @@ export abstract class ProfileFactory<T extends ImporterSettings> implements Impo
 
     abstract getImporter(settings: T): Promise<Importer<T>>;
 
-    abstract getMapper(settings: T, harvestTime: Date, summary: Summary, record: any, ...additionalData: any): Promise<Mapper<T>>;
+    abstract getDocumentFactory(mapper: Mapper<ImporterSettings>): DocumentFactory<IndexDocument>;
 
-    abstract getCatalog(catalogId: string, summary: Summary): Promise<NewCatalog<any>>;
+    abstract getCatalog(catalogId: number, summary: Summary): Promise<NewCatalog<any>>;
 
     abstract getPostgresAggregator(settings: CatalogSettings): PostgresAggregator<IndexDocument>;
 

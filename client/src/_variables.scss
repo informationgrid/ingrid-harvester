@@ -27,6 +27,7 @@
 // @import '@angular/material/theming';
 
 $max-width-panel: 1000px;
+$header-height: 56px;
 
 // Copy the palettes from your selected theme (usually theme.scss).
 $app-primary: mat.m2-define-palette(mat.$m2-grey-palette);
@@ -42,21 +43,25 @@ $error: mat.m2-get-color-from-palette($app-error);
 
 
 $ige-primary: #196ea2; /* Middle blue, i.e. title */
+$ige-primary-light: #4ba7d0; /* accessibility */
 $ige-secondary: #28225b; /* Dark blue, i.e. button / link text */
 $ige-secondary-dark: #161243; /* Darkest blue, background sidebar menu */
 $ige-comment-color: #979797; /* Middle grey, i.e. input outlines, placeholder, icons */
 
 $ige-mark-color: #eef8ff; /* Light blue background of selected / highlighted */
 
-$ige-background: #f3f3f3; /* Light grey background, i.e. toolbar */
+$ige-background: #fafafa; /* Light grey background, i.e. toolbar */
 $ige-background-bar: #dfdfdf; /* Middle grey background, i.e. header data set */
+
+$ige-divider: #d4d4d4;
 
 $ige-info-background: #dcf5d8; /* Green background, i.e. tree drop zone */
 
 $state-working-color: #e96d00; /* Orange */
 
 $error-background: #f6e5e8;
-$error-color: #b00020;
+$error-color: #b71c1c;
+$warning-color: #fb8c00;
 
 $ige-check-color: #398c32; /* Green, checkboxes and radio buttons */
 $ige-check-background-color: #ecffebff;

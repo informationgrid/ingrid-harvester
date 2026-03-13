@@ -23,13 +23,11 @@
 
 import type { CkanSettings } from '../server/app/importer/ckan/ckan.settings';
 import type { CswSettings } from '../server/app/importer/csw/csw.settings';
-import type { DcatSettings } from '../server/app/importer/dcat/dcat.settings';
-import type { ExcelSettings } from '../server/app/importer/excel/excel.settings';
-import type { ExcelSparseSettings } from '../server/app/importer/excelsparse/excelsparse.settings';
+import type { DcatapdeSettings } from '../server/app/importer/dcatapde/dcatapde.settings';
 import type { JsonSettings } from '../server/app/importer/json/json.settings';
 import type { KldSettings } from '../server/app/importer/kld/kld.settings';
 import type { OaiSettings } from '../server/app/importer/oai/oai.settings';
 import type { SparqlSettings } from '../server/app/importer/sparql/sparql.settings';
 import type { WfsSettings } from '../server/app/importer/wfs/wfs.settings';
 
-export type Harvester = CkanSettings | CswSettings | DcatSettings | ExcelSettings | ExcelSparseSettings | JsonSettings | KldSettings | OaiSettings | SparqlSettings | WfsSettings;
+export type Harvester = CkanSettings | CswSettings | DcatapdeSettings | JsonSettings | KldSettings | OaiSettings | SparqlSettings | WfsSettings;
