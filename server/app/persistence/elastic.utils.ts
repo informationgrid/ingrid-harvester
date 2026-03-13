@@ -21,15 +21,16 @@
  * ==================================================
  */
 
+import type { Index } from '@shared/index.model.js';
 import type { Client as Client6 } from 'elasticsearch6';
 import type { Client as Client7 } from 'elasticsearch7';
 import type { Client as Client8 } from 'elasticsearch8';
 import type { Client as Client9 } from 'elasticsearch9';
-import type { ElasticQueries } from './elastic.queries.js';
-import type { Index } from '@shared/index.model.js';
-import type { IndexConfiguration, IndexSettings } from './elastic.setting.js';
 import type { Summary } from '../model/summary.js';
 import { INGRID_META_INDEX } from '../profiles/ingrid/profile.factory.js';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
+import type { ElasticQueries } from './elastic.queries.js';
+import type { IndexConfiguration, IndexSettings } from './elastic.setting.js';
 
 export interface BulkResponse {
     queued: boolean;
@@ -50,14 +51,17 @@ export interface EsOperation {
 export abstract class ElasticsearchUtils {
 
     protected client: Client6 | Client7 | Client8 | Client9;
-    protected summary: Summary;
 
     public static maxBulkSize: number = 50;
     public elasticQueries: ElasticQueries;
     public indexName: string;
     public _bulkOperationChunks: object;//any[][];
 
-    constructor(readonly config: IndexConfiguration) {
+    constructor(readonly config: IndexConfiguration, readonly summary: Summary) {
+        this._bulkOperationChunks = [];
+        this.indexName = config.prefix + config.index;
+        let profile = ProfileFactoryLoader.get();
+        this.elasticQueries = profile.getElasticQueries();
     }
 
     /**
