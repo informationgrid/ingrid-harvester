@@ -25,13 +25,15 @@ import log4js from 'log4js';
 import { Catalog as NewCatalog } from '../../catalog/catalog.factory.js';
 import type { CswCatalogSettings } from '../../catalog/csw/csw.catalog.js';
 import type { ElasticsearchCatalogSettings } from '../../catalog/elasticsearch/elasticsearch.catalog.js';
-import { PiveauCatalog, type PiveauCatalogSettings } from "../../catalog/piveau/piveau.catalog.js";
+import type { PiveauCatalogSettings } from "../../catalog/piveau/piveau.catalog.js";
 import type { CkanMapper } from '../../importer/ckan/ckan.mapper.js';
 import type { CkanSettings } from '../../importer/ckan/ckan.settings.js';
 import type { CswMapper } from '../../importer/csw/csw.mapper.js';
 import type { CswSettings } from '../../importer/csw/csw.settings.js';
 import type { DcatapdeMapper } from '../../importer/dcatapde/dcatapde.mapper.js';
 import type { DcatapdeSettings } from "../../importer/dcatapde/dcatapde.settings.js";
+import type { GenesisMapper } from "../../importer/genesis/genesis.mapper.js";
+import type { GenesisSettings } from "../../importer/genesis/genesis.settings.js";
 import type { Importer } from '../../importer/importer.js';
 import type { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
 import type { WfsSettings } from '../../importer/wfs/wfs.settings.js';
@@ -48,11 +50,10 @@ import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import type { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
 import { ProfileFactory } from '../profile.factory.js';
-import { IngridCswCatalog } from './catalog/csw.catalog.js';
-import { IngridElasticsearchCatalog } from './catalog/elasticsearch.catalog.js';
 import { ingridCkanMapper } from './mapper/ingrid.ckan.mapper.js';
 import { ingridCswMapper } from './mapper/ingrid.csw.mapper.js';
 import { ingridDcatapdeMapper } from "./mapper/ingrid.dcatapde.mapper.js";
+import { ingridGenesisMapper } from "./mapper/ingrid.genesis.mapper.js";
 import type { ingridMapperType } from './mapper/ingrid.mapper.js';
 import { ingridWfsMapper } from './mapper/ingrid.wfs.mapper.js';
 import { PegelonlineWfsMapper } from './mapper/wfs/pegelonline.wfs.mapper.js';
@@ -63,9 +64,6 @@ import { ElasticQueries } from './persistence/elastic.queries.js';
 import mappings from './persistence/ingrid-meta-mapping.json' with { type: 'json' };
 import settings from './persistence/ingrid-meta-settings.json' with { type: 'json' };
 import { PostgresAggregator } from './persistence/postgres.aggregator.js';
-import type {GenesisSettings} from "../../importer/genesis/genesis.settings.js";
-import {ingridGenesisMapper} from "./mapper/ingrid.genesis.mapper.js";
-import type {GenesisMapper} from "../../importer/genesis/genesis.mapper.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -189,10 +187,17 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
     async getCatalog(catalogId: number, summary: Summary): Promise<NewCatalog<any>> {
         const catalogSettings = ConfigService.getCatalogSettings().find(config => config.id === catalogId);
         switch (catalogSettings.type) {
-            case 'elasticsearch': return new IngridElasticsearchCatalog(catalogSettings as ElasticsearchCatalogSettings, summary);
-            case 'csw': return new IngridCswCatalog(catalogSettings as CswCatalogSettings, summary);
-            case 'piveau': return new PiveauCatalog(catalogSettings as PiveauCatalogSettings, summary);
-            default: log.error(`Catalog type not found: ${catalogSettings.type}`);
+            case 'elasticsearch': 
+                const { IngridElasticsearchCatalog } = await import('./catalog/elasticsearch.catalog.js');
+                return new IngridElasticsearchCatalog(catalogSettings as ElasticsearchCatalogSettings, summary);
+            case 'csw':
+                const { IngridCswCatalog } = await import('./catalog/csw.catalog.js');
+                return new IngridCswCatalog(catalogSettings as CswCatalogSettings, summary);
+            case 'piveau':
+                const { PiveauCatalog } = await import('../../catalog/piveau/piveau.catalog.js');
+                return new PiveauCatalog(catalogSettings as PiveauCatalogSettings, summary);
+            default:
+                log.error(`Catalog type not found: ${catalogSettings.type}`);
         }
         return null;
     }
