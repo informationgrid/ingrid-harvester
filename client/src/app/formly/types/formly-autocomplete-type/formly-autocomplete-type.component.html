@@ -21,34 +21,34 @@
     ==================================================
 -->
 
-<app-dialog-header
-  [title]="
-    harvester.id !== -1 ? 'Harvester bearbeiten' : 'Neuen Harvester anlegen'
-  "
-  svgIcon="Add"
-></app-dialog-header>
+<mat-form-field class="width-100">
+  <mat-label>{{ props.label }}</mat-label>
 
-<mat-dialog-content>
-  @if (fields) {
-    <formly-form
-      [form]="form"
-      [fields]="fields"
-      [model]="model"
-      [options]="options"
-      (modelChange)="console.log($event)"
-    ></formly-form>
+  <input
+    matInput
+    type="text"
+    [formControl]="formControl"
+    [matAutocomplete]="auto"
+    [formlyAttributes]="field"
+    [required]="props.required"
+  />
+  <mat-autocomplete #auto="matAutocomplete">
+    @for (option of filteredOptions | async; track option.id) {
+      <mat-option value="{{ option.value }}">
+        {{ option.label }}
+      </mat-option>
+    }
+  </mat-autocomplete>
+  @if (showError) {
+    <mat-error>
+      <formly-validation-message [field]="field"></formly-validation-message>
+    </mat-error>
   }
-</mat-dialog-content>
 
-<mat-dialog-actions>
-  <button matButton mat-dialog-close>Abbrechen</button>
-  <div class="flex-1"></div>
-  <button
-    matButton="filled"
-    color="primary"
-    (click)="submit()"
-    data-test="dlg-update"
-  >
-    {{ harvester.id > -1 ? "Aktualisieren" : "Anlegen" }}
-  </button>
-</mat-dialog-actions>
+  @if (props.contextHelpId) {
+    <app-context-help-button
+      matSuffix
+      [helpKey]="props.contextHelpId"
+    ></app-context-help-button>
+  }
+</mat-form-field>

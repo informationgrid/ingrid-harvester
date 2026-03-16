@@ -21,34 +21,33 @@
     ==================================================
 -->
 
-<app-dialog-header
-  [title]="
-    harvester.id !== -1 ? 'Harvester bearbeiten' : 'Neuen Harvester anlegen'
-  "
-  svgIcon="Add"
-></app-dialog-header>
+@if (props.label) {
+  <h4>
+    {{ props.label }}
+  </h4>
+}
 
-<mat-dialog-content>
-  @if (fields) {
-    <formly-form
-      [form]="form"
-      [fields]="fields"
-      [model]="model"
-      [options]="options"
-      (modelChange)="console.log($event)"
-    ></formly-form>
-  }
-</mat-dialog-content>
+@for (field of field.fieldGroup; track field; let i = $index) {
+  <div class="flex-row align-items-center gap-8 self-stretch">
+    <div class="flex-1">
+      <formly-field [field]="field"></formly-field>
+    </div>
+    <button
+      matIconButton
+      class="field-bottom-space"
+      color="warn"
+      matTooltip="Entfernen"
+      (click)="remove(i)"
+    >
+      <mat-icon svgIcon="Delete"></mat-icon>
+    </button>
+  </div>
+}
 
-<mat-dialog-actions>
-  <button matButton mat-dialog-close>Abbrechen</button>
-  <div class="flex-1"></div>
-  <button
-    matButton="filled"
-    color="primary"
-    (click)="submit()"
-    data-test="dlg-update"
-  >
-    {{ harvester.id > -1 ? "Aktualisieren" : "Anlegen" }}
-  </button>
-</mat-dialog-actions>
+<button matButton="filled" color="primary" (click)="add()">
+  {{ props.buttonText ?? "Hinzufügen" }}
+</button>
+
+<mat-error>
+  <formly-validation-message [field]="field"></formly-validation-message>
+</mat-error>

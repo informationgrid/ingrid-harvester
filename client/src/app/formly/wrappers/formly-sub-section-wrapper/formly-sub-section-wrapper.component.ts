@@ -21,21 +21,17 @@
  * ==================================================
  */
 
-import { Component, input } from "@angular/core";
-import { MatDialogClose, MatDialogTitle } from "@angular/material/dialog";
-import { MatIcon } from "@angular/material/icon";
+import { Component } from "@angular/core";
+import { FieldTypeConfig, FieldWrapper } from "@ngx-formly/core";
 import { MatIconButton } from "@angular/material/button";
+import { MatIcon } from "@angular/material/icon";
+import { ContextHelpDirective } from "../../../shared/context-help/context-help.directive";
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
-  selector: "app-dialog-header",
-  templateUrl: "./dialog-header.component.html",
-  imports: [MatDialogTitle, MatIcon, MatIconButton, MatDialogClose],
-  standalone: true,
-  styleUrls: ["./dialog-header.component.scss"],
+  selector: "formly-sub-section-wrapper",
+  templateUrl: "./formly-sub-section-wrapper.component.html",
+  styleUrls: ["./formly-sub-section-wrapper.component.scss"],
+  imports: [MatIconButton, MatIcon, ContextHelpDirective, MatTooltip],
 })
-export class DialogHeaderComponent {
-  title = input<string>();
-  svgIcon = input<string>();
-
-  constructor() {}
-}
+export class FormlySubSectionWrapperComponent extends FieldWrapper<FieldTypeConfig> {}

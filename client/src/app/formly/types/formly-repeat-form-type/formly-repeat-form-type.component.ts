@@ -21,21 +21,21 @@
  * ==================================================
  */
 
-import { Component, input } from "@angular/core";
-import { MatDialogClose, MatDialogTitle } from "@angular/material/dialog";
-import { MatIcon } from "@angular/material/icon";
-import { MatIconButton } from "@angular/material/button";
+import { Component } from "@angular/core";
+import {
+  FieldArrayType,
+  FieldTypeConfig,
+  FormlyModule,
+} from "@ngx-formly/core";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltip } from "@angular/material/tooltip";
+import { MatError } from "@angular/material/input";
 
 @Component({
-  selector: "app-dialog-header",
-  templateUrl: "./dialog-header.component.html",
-  imports: [MatDialogTitle, MatIcon, MatIconButton, MatDialogClose],
-  standalone: true,
-  styleUrls: ["./dialog-header.component.scss"],
+  selector: "formly-repeat-form-type",
+  templateUrl: "./formly-repeat-form-type.component.html",
+  styleUrls: ["./formly-repeat-form-type.component.scss"],
+  imports: [MatButtonModule, FormlyModule, MatIconModule, MatTooltip, MatError],
 })
-export class DialogHeaderComponent {
-  title = input<string>();
-  svgIcon = input<string>();
-
-  constructor() {}
-}
+export class FormlyRepeatFormTypeComponent extends FieldArrayType<FieldTypeConfig> {}

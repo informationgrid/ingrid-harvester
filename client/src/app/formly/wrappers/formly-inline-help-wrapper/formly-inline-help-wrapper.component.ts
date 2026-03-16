@@ -21,21 +21,29 @@
  * ==================================================
  */
 
-import { Component, input } from "@angular/core";
-import { MatDialogClose, MatDialogTitle } from "@angular/material/dialog";
-import { MatIcon } from "@angular/material/icon";
-import { MatIconButton } from "@angular/material/button";
+import {
+  AfterViewInit,
+  Component,
+  TemplateRef,
+  ViewChild,
+} from "@angular/core";
+import { FieldTypeConfig, FieldWrapper } from "@ngx-formly/core";
+import { ContextHelpButtonComponent } from "../../../shared/context-help/context-help-button/context-help-button.component";
 
 @Component({
-  selector: "app-dialog-header",
-  templateUrl: "./dialog-header.component.html",
-  imports: [MatDialogTitle, MatIcon, MatIconButton, MatDialogClose],
-  standalone: true,
-  styleUrls: ["./dialog-header.component.scss"],
+  selector: "formly-inline-help-wrapper",
+  templateUrl: "./formly-inline-help-wrapper.component.html",
+  imports: [ContextHelpButtonComponent],
 })
-export class DialogHeaderComponent {
-  title = input<string>();
-  svgIcon = input<string>();
+export class FormlyInlineHelpWrapperComponent
+  extends FieldWrapper<FieldTypeConfig>
+  implements AfterViewInit
+{
+  @ViewChild("matSuffix", { static: true }) matSuffix!: TemplateRef<any>;
 
-  constructor() {}
+  ngAfterViewInit(): void {
+    if (this.matSuffix) {
+      this.props.suffix = this.matSuffix;
+    }
+  }
 }

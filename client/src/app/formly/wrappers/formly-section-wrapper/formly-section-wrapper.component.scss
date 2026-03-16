@@ -21,21 +21,19 @@
  * ==================================================
  */
 
-import { Component, input } from "@angular/core";
-import { MatDialogClose, MatDialogTitle } from "@angular/material/dialog";
-import { MatIcon } from "@angular/material/icon";
-import { MatIconButton } from "@angular/material/button";
+.leading {
+  margin-bottom: 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
 
-@Component({
-  selector: "app-dialog-header",
-  templateUrl: "./dialog-header.component.html",
-  imports: [MatDialogTitle, MatIcon, MatIconButton, MatDialogClose],
-  standalone: true,
-  styleUrls: ["./dialog-header.component.scss"],
-})
-export class DialogHeaderComponent {
-  title = input<string>();
-  svgIcon = input<string>();
+h3 {
+  margin: 0;
+  font-size: 20px;
+}
 
-  constructor() {}
+mat-divider {
+  margin-top: 4px;
+  margin-bottom: 28px;
 }

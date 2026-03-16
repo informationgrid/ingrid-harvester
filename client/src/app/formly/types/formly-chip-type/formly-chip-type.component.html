@@ -21,34 +21,24 @@
     ==================================================
 -->
 
-<app-dialog-header
-  [title]="
-    harvester.id !== -1 ? 'Harvester bearbeiten' : 'Neuen Harvester anlegen'
-  "
-  svgIcon="Add"
-></app-dialog-header>
+<mat-form-field class="width-100">
+  <mat-label>{{ props.label }}</mat-label>
+  <mat-chip-grid #chipGrid>
+    @for (value of formControl.value; track value) {
+      <mat-chip-row [removable]="true" (removed)="remove(value)">
+        {{ value }}
+        <button matChipRemove>
+          <mat-icon svgIcon="close" />
+        </button>
+      </mat-chip-row>
+    }
 
-<mat-dialog-content>
-  @if (fields) {
-    <formly-form
-      [form]="form"
-      [fields]="fields"
-      [model]="model"
-      [options]="options"
-      (modelChange)="console.log($event)"
-    ></formly-form>
-  }
-</mat-dialog-content>
-
-<mat-dialog-actions>
-  <button matButton mat-dialog-close>Abbrechen</button>
-  <div class="flex-1"></div>
-  <button
-    matButton="filled"
-    color="primary"
-    (click)="submit()"
-    data-test="dlg-update"
-  >
-    {{ harvester.id > -1 ? "Aktualisieren" : "Anlegen" }}
-  </button>
-</mat-dialog-actions>
+    <input
+      autocomplete="off"
+      [matChipInputFor]="chipGrid"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      [matChipInputAddOnBlur]="true"
+      (matChipInputTokenEnd)="add($event)"
+    />
+  </mat-chip-grid>
+</mat-form-field>
