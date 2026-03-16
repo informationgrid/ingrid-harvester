@@ -59,6 +59,7 @@ export class HarvesterCtrl {
         const updatedID = ConfigService.update(+id, config);
 
         let profile = ProfileFactoryLoader.get();
+        // TODO legacy - remove ()
         if (profile.useIndexPerCatalog()) {
             profile.createCatalogIfNotExist(config.catalogId);
         }
