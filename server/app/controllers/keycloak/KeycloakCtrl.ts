@@ -47,10 +47,20 @@ export class KeycloakCtrl {
 
         // handle keycloak authentication
         if (request.session && request.session['keycloak-token']) {
-            const token = JSON.parse(request.session['keycloak-token']);
+            let token = JSON.parse(request.session['keycloak-token']);
+
+            // If it's a string, it's probably the JWT itself and needs decoding
+            if (typeof token === 'string') {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = Buffer.from(base64, 'base64').toString();
+                token = JSON.parse(jsonPayload);
+            }
+
             // Minimal check: if we have a token in session, consider authenticated for now
             // In a real app, you'd validate the token here.
-            const username = token.preferred_username || token.sub;
+            const content = token.content || token;
+            const username = content.preferred_username || content.sub;
             const user = await this.usersService.findByEmail(username);
 
             if (user) {
@@ -71,10 +81,8 @@ export class KeycloakCtrl {
         const keycloak = this.keycloakService.getKeycloakInstance();
         // Use keycloak.protect() to trigger the login flow.
         // This will handle the redirect to Keycloak and the callback automatically.
-      console.log("Protect during login check")
         const protect = keycloak.protect();
         protect(request, response, () => {
-          console.log("we are logged in")
             // If we reach here, the user is already authenticated.
             // This might happen if they call /login while already logged in.
             response.redirect('/');

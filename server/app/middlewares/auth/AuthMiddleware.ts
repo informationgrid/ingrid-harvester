@@ -32,7 +32,7 @@ export class AuthMiddleware implements MiddlewareMethods {
   @Inject()
   protected keycloakService: KeycloakService;
 
-  public use(@Req() request: Express.Request, @Context() ctx: Context) {
+  public async use(@Req() request: Express.Request, @Context() ctx: Context) {
     const options: KeycloakAuthOptions = ctx.endpoint.store.get(AuthMiddleware) || {};
     const keycloak = this.keycloakService.getKeycloakInstance();
 
@@ -56,6 +56,24 @@ export class AuthMiddleware implements MiddlewareMethods {
         request.session['keycloak-token'] = JSON.stringify(grant.access_token);
         request.session['keycloak-refresh-token'] = JSON.stringify(grant.refresh_token);
       }
+    } else if (request.session && request.session['keycloak-token']) {
+      try {
+        let tokenStr = JSON.parse(request.session['keycloak-token']);
+        // If it's just the JWT string, we need to wrap it
+        const accessToken = typeof tokenStr === 'string' ? tokenStr : (tokenStr.token || tokenStr.access_token);
+
+        // Use grantManager to create a grant from the token string
+        // This ensures the token is a proper Keycloak Token object with hasRole methods
+        const grantObj = await keycloak.grantManager.createGrant({
+          access_token: accessToken,
+          refresh_token: request.session['keycloak-refresh-token'] ? JSON.parse(request.session['keycloak-refresh-token']) : undefined
+        });
+
+        (request as any).kauth = { grant: grantObj };
+        this.keycloakService.setToken(grantObj.access_token);
+      } catch (e) {
+        console.error('Error reconstructing Keycloak grant from session:', e);
+      }
     }
 
     // 3. Enforce protection and check for expiration/roles
@@ -63,6 +81,17 @@ export class AuthMiddleware implements MiddlewareMethods {
     // - Token validation (including expiration)
     // - Redirecting to login if not authenticated (for browser requests)
     // - Checking roles if provided
-    return keycloak.enforcer(options.role, {response_mode: 'token'});
+    // return keycloak.enforcer(options.role, {response_mode: 'token'});
+    // return keycloak.protect(options.role);
+    const protectMiddleware = keycloak.protect(options.role);
+    return new Promise((resolve, reject) => {
+      protectMiddleware(request, ctx.getResponse(), (err: any) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(undefined);
+        }
+      });
+    });
   }
 }
