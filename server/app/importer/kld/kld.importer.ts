@@ -320,7 +320,7 @@ export class KldImporter extends Importer<KldSettings> {
             else {
                 this.getSummary().skippedDocs.push(id);
             }
-            this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
+            this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.allSettled(promises).catch(e => log.error('Error persisting record', e));
     }

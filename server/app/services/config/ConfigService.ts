@@ -385,10 +385,12 @@ export class ConfigService {
         return ElasticsearchFactory.getElasticUtils(generalConfig.elasticsearch, null);
     }
 
+    // TODO legacy - remove
     static async getLegacyCatalogSizes(): Promise<any[]> {
         return await ConfigService.getDbUtils().getCatalogSizes(false);
     }
 
+    // TODO legacy - remove
     static async getLegacyCatalogs(): Promise<Catalog[]> {
         let catalogs = await ConfigService.getDbUtils().listCatalogs();
         let esUtils = ConfigService.getEsUtils();
@@ -400,6 +402,7 @@ export class ConfigService {
         return catalogs;
     }
 
+    // TODO legacy - remove
     static async addOrEditLegacyCatalog(catalog: Catalog) {
         if (catalog.id) {
             return await ConfigService.getDbUtils().updateCatalog(catalog);
@@ -417,6 +420,7 @@ export class ConfigService {
         }
     }
 
+    // TODO legacy - remove
     static async enableLegacyCatalog(catalogIdentifier: string, enable: boolean) {
         let alias = ConfigService.getGeneralSettings().elasticsearch.alias;
         if (enable) {
@@ -427,6 +431,7 @@ export class ConfigService {
         }
     }
 
+    // TODO legacy - remove
     static async removeLegacyCatalog(catalogIdentifier: string, datasetTarget: string) {
         let database = this.getDbUtils();
         let { id: catalogId } = await database.getCatalog(catalogIdentifier);

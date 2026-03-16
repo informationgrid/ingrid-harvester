@@ -21,14 +21,13 @@
  * ==================================================
  */
 
+import type { Index } from '@shared/index.model.js';
+import { Client } from 'elasticsearch6';
 import log4js from 'log4js';
+import type { Summary } from '../model/summary.js';
+import type { IndexConfiguration, IndexSettings } from './elastic.setting.js';
 import type { BulkResponse, EsOperation } from './elastic.utils.js';
 import { ElasticsearchUtils } from './elastic.utils.js';
-import { Client } from 'elasticsearch6';
-import type { Index } from '@shared/index.model.js';
-import type { IndexConfiguration, IndexSettings } from './elastic.setting.js';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
-import type { Summary } from '../model/summary.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -37,8 +36,7 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
     declare protected client: Client;
 
     constructor(config: IndexConfiguration, summary: Summary) {
-        super(config);
-        this.summary = summary;
+        super(config, summary);
 
         // timeout is set to 86400000 as per recommendation (NodeJS ES 6.x uses HttpConnection)
         // https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/timeout-best-practices.html
@@ -53,11 +51,6 @@ export class ElasticsearchUtils6 extends ElasticsearchUtils {
                 rejectUnauthorized: config.rejectUnauthorized
             }
         });
-        this._bulkOperationChunks = [];
-        this.indexName = config.prefix + config.index;
-
-        let profile = ProfileFactoryLoader.get();
-        this.elasticQueries = profile.getElasticQueries();
     }
 
     async cloneIndex(mapping, settings: IndexSettings) {

@@ -37,7 +37,6 @@ import type { ElasticQueries as AbstractElasticQueries } from '../../persistence
 import type { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
 import { ProfileFactory } from '../profile.factory.js';
-import { DiplanungElasticsearchCatalog } from './catalog/elasticsearch.catalog.js';
 import { DiplanungCswMapper } from './mapper/diplanung.csw.mapper.js';
 import { DiplanungDcatappluMapper } from './mapper/diplanung.dcatapplu.mapper.js';
 import { FisWfsMapper } from './mapper/wfs/fis.wfs.mapper.js';
@@ -115,8 +114,11 @@ export class DiplanungFactory extends ProfileFactory<DiplanungSettings> {
     async getCatalog(catalogId: number, summary: Summary): Promise<NewCatalog<any>> {
         const catalogSettings = ConfigService.getCatalogSettings().find(config => config.id === catalogId);
         switch (catalogSettings.type) {
-            case 'elasticsearch': return new DiplanungElasticsearchCatalog(catalogSettings as ElasticsearchCatalogSettings, summary);
-            default: log.error(`Catalog type not found: ${catalogSettings.type}`);
+            case 'elasticsearch':
+                const { DiplanungElasticsearchCatalog } = await import('./catalog/elasticsearch.catalog.js');
+                return new DiplanungElasticsearchCatalog(catalogSettings as ElasticsearchCatalogSettings, summary);
+            default:
+                log.error(`Catalog type not found: ${catalogSettings.type}`);
         }
         return null;
     }

@@ -171,4 +171,8 @@ export abstract class Importer<S extends ImporterSettings> {
     getSummary(): Summary {
         return this.summary;
     }
+
+    getDownloadMessage(): string {
+        return 'Datensätze werden heruntergeladen';
+    }
 }

@@ -43,17 +43,7 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { RouterModule, Routes } from "@angular/router";
 import { CronjobFormFieldComponent } from "../shared/cronjob-form-field/cronjob-form-field.component";
 import { SharedModule } from "../shared/shared.module";
-import { ChipListComponent } from "./dialog-edit/chip-list/chip-list.component";
-import { CkanHarvesterComponent } from "./dialog-edit/ckan-harvester/ckan-harvester.component";
-import { CswHarvesterComponent } from "./dialog-edit/csw-harvester/csw-harvester.component";
-import { DcatHarvesterComponent } from "./dialog-edit/dcat-harvester/dcat-harvester.component";
-import { DcatappluHarvesterComponent } from "./dialog-edit/dcatapplu-harvester/dcatapplu-harvester.component";
 import { DialogEditComponent } from "./dialog-edit/dialog-edit.component";
-import { JsonHarvesterComponent } from "./dialog-edit/json-harvester/json-harvester.component";
-import { KldHarvesterComponent } from "./dialog-edit/kld-harvester/kld-harvester.component";
-import { OaiHarvesterComponent } from "./dialog-edit/oai-harvester/oai-harvester.component";
-import { SparqlHarvesterComponent } from "./dialog-edit/sparql-harvester/sparql-harvester.component";
-import { WfsHarvesterComponent } from "./dialog-edit/wfs-harvester/wfs-harvester.component";
 import { DialogHistoryComponent } from "./dialog-history/dialog-history.component";
 import { DialogLogComponent } from "./dialog-log/dialog-log.component";
 import { DialogSchedulerComponent } from "./dialog-scheduler/dialog-scheduler.component";
@@ -66,12 +56,15 @@ import { ContextHelpButtonComponent } from "../shared/context-help/context-help-
 import { TranslocoDirective } from "@ngneat/transloco";
 import { StatIndicatorComponent } from "../shared/stat-indicator/stat-indicator.component";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
+import { DialogHeaderComponent } from "../shared/dialog-header/dialog-header.component";
+import { FormlyModule } from "@ngx-formly/core";
+import { FormlyMaterialModule } from "@ngx-formly/material";
 
 const harvesterRoutes: Routes = [
   {
     path: "",
-    component: HarvesterComponent
-  }
+    component: HarvesterComponent,
+  },
 ];
 
 @NgModule({
@@ -81,17 +74,7 @@ const harvesterRoutes: Routes = [
     DialogLogComponent,
     DialogEditComponent,
     DialogHistoryComponent,
-    CkanHarvesterComponent,
-    CswHarvesterComponent,
-    KldHarvesterComponent,
-    JsonHarvesterComponent,
-    OaiHarvesterComponent,
-    DcatHarvesterComponent,
-    DcatappluHarvesterComponent,
-    SparqlHarvesterComponent,
-    WfsHarvesterComponent,
     ImporterDetailComponent,
-    ChipListComponent
   ],
   imports: [
     CommonModule,
@@ -124,11 +107,11 @@ const harvesterRoutes: Routes = [
     StatIndicatorComponent,
     MatMenu,
     MatMenuTrigger,
-    MatMenuItem
+    MatMenuItem,
+    DialogHeaderComponent,
+    FormlyModule,
+    FormlyMaterialModule,
   ],
-  exports: [
-    HarvesterComponent
-  ]
+  exports: [HarvesterComponent],
 })
-export class HarvesterModule {
-}
+export class HarvesterModule {}

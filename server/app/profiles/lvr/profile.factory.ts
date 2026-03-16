@@ -38,7 +38,6 @@ import type { ElasticQueries as AbstractElasticQueries } from '../../persistence
 import type { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
 import { ProfileFactory } from '../profile.factory.js';
-import { LvrElasticsearchCatalog } from './catalog/elasticsearch.catalog.js';
 import { LvrClickRheinMapper } from './mapper/lvr.clickrhein.mapper.js';
 import { LvrKldMapper } from './mapper/lvr.kld.mapper.js';
 import { LvrOaiLidoMapper } from './mapper/lvr.oai.lido.mapper.js';
@@ -99,8 +98,11 @@ export class LvrFactory extends ProfileFactory<LvrSettings> {
     async getCatalog(catalogId: number, summary: Summary): Promise<NewCatalog<any>> {
         const catalogSettings = ConfigService.getCatalogSettings().find(config => config.id === catalogId);
         switch (catalogSettings.type) {
-            case 'elasticsearch': return new LvrElasticsearchCatalog(catalogSettings as ElasticsearchCatalogSettings, summary);
-            default: log.error(`Catalog type not found: ${catalogSettings.type}`);
+            case 'elasticsearch':
+                const { LvrElasticsearchCatalog } = await import('./catalog/elasticsearch.catalog.js');
+                return new LvrElasticsearchCatalog(catalogSettings as ElasticsearchCatalogSettings, summary);
+            default:
+                log.error(`Catalog type not found: ${catalogSettings.type}`);
         }
         return null;
     }

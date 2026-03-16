@@ -214,7 +214,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
             this.getSummary().skippedDocs.push(entry.Code);
         }
 
-        this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
+        this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
     }
 
     /**

@@ -69,6 +69,7 @@ export class ImportSocketService {
             let configHarvester = MiscUtils.merge(configData, configGeneral, { isIncremental });
 
             let profile = ProfileFactoryLoader.get();
+            // TODO legacy - remove
             if (profile.useIndexPerCatalog()) {
                 profile.createCatalogIfNotExist(configHarvester.catalogId);
             }
@@ -91,6 +92,7 @@ export class ImportSocketService {
                     // save old summary to compare
                     let summaryLastRun: ImportLogMessage = this.summaryService.get(id);
 
+                    // TODO this must be done for each catalog - by the importer?
                     importer.getSummary().print(this.log);
                     this.summaryService.update(response);
                     let statisticUtils = new StatisticUtils(configGeneral);
