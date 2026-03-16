@@ -25,6 +25,7 @@
 import {Context, Inject, Middleware, type MiddlewareMethods, Req} from "@tsed/common";
 import {KeycloakService} from "../../services/keycloak/KeycloakService.js";
 import {Unauthorized} from "@tsed/exceptions";
+import type {KeycloakAuthOptions} from "../../decorators/KeycloakAuthOptions.js";
 
 @Middleware()
 export class AuthMiddleware implements MiddlewareMethods {
@@ -32,12 +33,21 @@ export class AuthMiddleware implements MiddlewareMethods {
   protected keycloakService: KeycloakService;
 
   public use(@Req() request: Express.Request, @Context() ctx: Context) {
-    if (request.session && request.session['keycloak-token']) {
-      const token = JSON.parse(request.session['keycloak-token']);
-      this.keycloakService.setToken(token);
+    const options: KeycloakAuthOptions = ctx.endpoint.store.get(AuthMiddleware) || {};
+    const keycloak = this.keycloakService.getKeycloakInstance();
+
+    // Allow Passport authenticated users
+    if (request.isAuthenticated && request.isAuthenticated()) {
       return;
     }
 
+    // 1. Try to recover token from session
+    if (request.session && request.session['keycloak-token']) {
+      const token = JSON.parse(request.session['keycloak-token']);
+      this.keycloakService.setToken(token);
+    }
+
+    // 2. Check if keycloak-connect already authenticated the request
     let grant = ctx.getRequest().kauth?.grant;
     if (grant) {
       this.keycloakService.setToken(grant.access_token);
@@ -46,16 +56,13 @@ export class AuthMiddleware implements MiddlewareMethods {
         request.session['keycloak-token'] = JSON.stringify(grant.access_token);
         request.session['keycloak-refresh-token'] = JSON.stringify(grant.refresh_token);
       }
-      return;
-    } else {
-      //retrieve Options passed to the Authenticated() decorators.
-      const options = ctx.endpoint.store.get(AuthMiddleware) || {};
-      //$log.debug("AuthMiddleware =>", options);
-      //$log.debug("AuthMiddleware isAuthenticated ? =>", request.isAuthenticated());
-
-      if (!request.isAuthenticated()) {
-        throw new Unauthorized("Unauthorized");
-      }
     }
+
+    // 3. Enforce protection and check for expiration/roles
+    // keycloak.protect() returns a middleware function that handles:
+    // - Token validation (including expiration)
+    // - Redirecting to login if not authenticated (for browser requests)
+    // - Checking roles if provided
+    return keycloak.enforcer(options.role, {response_mode: 'token'});
   }
 }

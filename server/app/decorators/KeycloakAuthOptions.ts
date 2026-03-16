@@ -2,7 +2,7 @@ import {Returns} from "@tsed/schema";
 import {UseAuth} from "@tsed/common";
 import {useDecorators} from "@tsed/core";
 import {Security} from "@tsed/schema";
-import {KeycloakMiddleware} from "../middlewares/KeycloakMiddleware.js";
+import {AuthMiddleware} from "../middlewares/auth/AuthMiddleware.js";
 
 export interface KeycloakAuthOptions extends Record<string, any> {
     role?: string;
@@ -10,5 +10,5 @@ export interface KeycloakAuthOptions extends Record<string, any> {
 }
 
 export function KeycloakAuth(options: KeycloakAuthOptions = {}): Function {
-    return useDecorators(UseAuth(KeycloakMiddleware, options), Security("oauth2", ...(options.scopes || [])), Returns(403));
+    return useDecorators(UseAuth(AuthMiddleware, options), Security("oauth2", ...(options.scopes || [])), Returns(403));
 }

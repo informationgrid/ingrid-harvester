@@ -40,6 +40,12 @@ export class KeycloakCtrl {
      */
     @Get('/check')
     async check(@Req() request: Express.Request) {
+        // Allow Passport authenticated users
+        if (request.isAuthenticated && request.isAuthenticated()) {
+          return;
+        }
+
+        // handle keycloak authentication
         if (request.session && request.session['keycloak-token']) {
             const token = JSON.parse(request.session['keycloak-token']);
             // Minimal check: if we have a token in session, consider authenticated for now
