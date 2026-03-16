@@ -107,6 +107,7 @@ export class DialogEditComponent {
   getInitialValues(harvester: any) {
     const values = { ...harvester };
 
+    // Modify values for the format of the input field.
     if (values.additionalSettings) {
       values.additionalSettings = Object.entries(values.additionalSettings).map(
         ([key, value]) => ({ key, value }),
@@ -119,6 +120,7 @@ export class DialogEditComponent {
   getSubmitValues(oldValues, newValues) {
     const values = { ...oldValues, ...newValues };
 
+    // Reverse values to the server format.
     if (values.additionalSettings) {
       values.additionalSettings = values.additionalSettings.reduce(
         (acc, cur) => {

@@ -43,19 +43,7 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { RouterModule, Routes } from "@angular/router";
 import { CronjobFormFieldComponent } from "../shared/cronjob-form-field/cronjob-form-field.component";
 import { SharedModule } from "../shared/shared.module";
-import { ChipListComponent } from "./dialog-edit/chip-list/chip-list.component";
-import { CkanHarvesterComponent } from "./dialog-edit/ckan-harvester/ckan-harvester.component";
-import { CswHarvesterComponent } from "./dialog-edit/csw-harvester/csw-harvester.component";
-import { DcatHarvesterComponent } from "./dialog-edit/dcat-harvester/dcat-harvester.component";
-import { DcatappluHarvesterComponent } from "./dialog-edit/dcatapplu-harvester/dcatapplu-harvester.component";
 import { DialogEditComponent } from "./dialog-edit/dialog-edit.component";
-import { ExcelHarvesterComponent } from "./dialog-edit/excel-harvester/excel-harvester.component";
-import { ExcelSparseHarvesterComponent } from "./dialog-edit/excel-sparse-harvester/excel-sparse-harvester.component";
-import { JsonHarvesterComponent } from "./dialog-edit/json-harvester/json-harvester.component";
-import { KldHarvesterComponent } from "./dialog-edit/kld-harvester/kld-harvester.component";
-import { OaiHarvesterComponent } from "./dialog-edit/oai-harvester/oai-harvester.component";
-import { SparqlHarvesterComponent } from "./dialog-edit/sparql-harvester/sparql-harvester.component";
-import { WfsHarvesterComponent } from "./dialog-edit/wfs-harvester/wfs-harvester.component";
 import { DialogHistoryComponent } from "./dialog-history/dialog-history.component";
 import { DialogLogComponent } from "./dialog-log/dialog-log.component";
 import { DialogSchedulerComponent } from "./dialog-scheduler/dialog-scheduler.component";
@@ -86,19 +74,7 @@ const harvesterRoutes: Routes = [
     DialogLogComponent,
     DialogEditComponent,
     DialogHistoryComponent,
-    ExcelHarvesterComponent,
-    ExcelSparseHarvesterComponent,
-    CkanHarvesterComponent,
-    CswHarvesterComponent,
-    KldHarvesterComponent,
-    JsonHarvesterComponent,
-    OaiHarvesterComponent,
-    DcatHarvesterComponent,
-    DcatappluHarvesterComponent,
-    SparqlHarvesterComponent,
-    WfsHarvesterComponent,
     ImporterDetailComponent,
-    ChipListComponent,
   ],
   imports: [
     CommonModule,
