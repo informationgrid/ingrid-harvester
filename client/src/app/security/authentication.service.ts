@@ -22,9 +22,9 @@
  */
 
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, from, of} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {KeycloakService} from './keycloak.service';
 
 export enum AuthMethod {

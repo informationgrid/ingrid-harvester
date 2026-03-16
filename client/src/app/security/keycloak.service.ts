@@ -22,74 +22,46 @@
  */
 
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, from, Observable, of} from 'rxjs';
-import {catchError} from 'rxjs/operators';
-import {KeycloakOptions, KeycloakService as KeycloakAngularService} from 'keycloak-angular';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class KeycloakService {
   private authenticated = new BehaviorSubject<boolean>(false);
-  private keycloakConfig = {
-    url: 'http://localhost:8080', // Replace with your Keycloak server URL
-    realm: 'InGrid', // Replace with your realm
-    clientId: 'harvester' // Replace with your client ID
-  };
+  private username: string = '';
 
-  constructor(private keycloakAngular: KeycloakAngularService) {
+  constructor(private http: HttpClient) {
   }
 
   init(): Promise<boolean> {
-    const options: KeycloakOptions = {
-      config: this.keycloakConfig,
-      initOptions: {
-        onLoad: 'check-sso',
-        silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html',
-        // checkLoginIframe: false
-      },
-      enableBearerInterceptor: false // We'll handle this manually in the UnauthorizedInterceptor
-    };
-
-    return this.keycloakAngular.init(options)
-      .then(authenticated => {
-        this.authenticated.next(authenticated);
-        return authenticated;
+    return this.http.get<any>('rest/auth/keycloak/check')
+      .toPromise()
+      .then(user => {
+        this.authenticated.next(true);
+        this.username = user.username || '';
+        return true;
       })
-      .catch(error => {
-        console.error('Failed to initialize Keycloak', error);
+      .catch(() => {
+        this.authenticated.next(false);
         return false;
       });
   }
 
-  login(): Promise<void> {
-    return this.keycloakAngular.login();
+  login(): void {
+    window.location.href = 'rest/auth/keycloak/login';
   }
 
-  logout(): Promise<void> {
-    return this.keycloakAngular.logout();
+  logout(): void {
+    window.location.href = 'rest/auth/keycloak/logout';
   }
 
   isAuthenticated(): Observable<boolean> {
     return this.authenticated.asObservable();
   }
 
-  getToken(): Observable<string> {
-    return from(this.keycloakAngular.getToken()).pipe(
-      catchError(error => {
-        console.error('Failed to get token', error);
-        return of('');
-      })
-    );
-  }
-
   getUsername(): string {
-    try {
-      const userProfile = this.keycloakAngular.getKeycloakInstance().tokenParsed;
-      return userProfile?.preferred_username || '';
-    } catch (error) {
-      console.error('Error getting username', error);
-      return '';
-    }
+    return this.username;
   }
 }
