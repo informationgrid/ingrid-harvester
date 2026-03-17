@@ -23,24 +23,21 @@
 
 import type { Logger } from 'log4js';
 import log4js from 'log4js';
-import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
+import type { DateRange } from '../../model/dateRange.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { MetadataSource } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
 import { Mapper } from '../mapper.js';
-import type { ToElasticMapper } from '../to.elastic.mapper.js';
 import type { GenesisSettings } from './genesis.settings.js';
 
 /**
  * Base mapper for GENESIS Online REST API records.
  *
- * Phase 1 implementation: produces a minimal IndexDocument containing only the
- * required harvesting metadata. The raw GENESIS JSON is stored as
- * `original_document` by the importer.
- *
- * Profile-specific subclasses (e.g. IngridGenesisMapper) should override
- * `createEsDocument()` to produce a richer target format (e.g. IngridIndexDocument
- * or a DCAT-AP.de representation) once the mapping requirements are defined.
+ * Extracts fields from the raw GENESIS JSON response. Profile-specific mappers
+ * (e.g. ingridGenesisMapper) wrap this via composition and implement
+ * `createIndexDocument()` to produce the target schema.
  */
-export class GenesisMapper extends Mapper<GenesisSettings> implements ToElasticMapper<IndexDocument> {
+export class GenesisMapper extends Mapper<GenesisSettings> {
 
     log: Logger = log4js.getLogger(import.meta.filename);
 
@@ -51,20 +48,6 @@ export class GenesisMapper extends Mapper<GenesisSettings> implements ToElasticM
         super(settings, summary);
         this.record = record;
         this.harvestTime = harvestTime;
-    }
-
-    /**
-     * Creates a minimal Elasticsearch/database document.
-     * Only the fields required by the IndexDocument base type are populated.
-     * Profile-specific subclasses override this for richer output.
-     */
-    async createEsDocument(): Promise<IndexDocument> {
-        return {
-            uuid: this.record.Object.Code,
-            extras: {
-                metadata: this.getHarvestingMetadata(),
-            },
-        };
     }
 
     /**
@@ -91,12 +74,91 @@ export class GenesisMapper extends Mapper<GenesisSettings> implements ToElasticM
         return this.record?.Object?.Content ?? '';
     }
 
+    getDescription(): string {
+        return this.getTitle();
+    }
+
     getModifiedDate(): Date {
         return this.parseGenesisDate(this.record.Object.Updated);
     }
 
-    getGeneratedId(): string {
+    getCode(): string {
         return this.record?.Object?.Code ?? '';
+    }
+
+    getGeneratedId(): string {
+        const sourceURL = this.getSettings().sourceURL;
+        return sourceURL != null ? `${sourceURL}/table/${this.getCode()}` : this.getCode();
+    }
+
+    getTemporal(): DateRange | undefined {
+        const from = this.record?.Object?.Time?.From;
+        const to = this.record?.Object?.Time?.To;
+        if (!from && !to) return undefined;
+        return {
+            gte: from ? new Date(parseInt(from), 0, 1) : undefined,
+            lte: to   ? new Date(parseInt(to),   11, 31) : undefined,
+        };
+    }
+
+    getKeywords(): string[] {
+        const structure = this.record?.Object?.Structure;
+        if (!structure) return [];
+        const contents = new Set<string>();
+        this.collectContent(structure.Head, contents);
+        (structure.Columns ?? []).forEach(col => this.collectContent(col, contents));
+        (structure.Rows   ?? []).forEach(row => this.collectContent(row, contents));
+        return Array.from(contents);
+    }
+
+    getLanguage(): string | undefined {
+        return this.record?.Parameter?.language;
+    }
+
+    getCopyright(): string | undefined {
+        return this.record?.Copyright;
+    }
+
+    getPublisher(): { name: string; email?: string } | undefined {
+        return this.getSettings().typeConfig.publisher;
+    }
+
+    getTheme(): string | undefined {
+        return this.getSettings().typeConfig.theme;
+    }
+
+    getLicenseUrl(): string | undefined {
+        return this.getSettings().typeConfig.licenseUrl;
+    }
+
+    getContributorId(): string | undefined {
+        return this.getSettings().typeConfig.contributorId;
+    }
+
+    getDistributions(): Distribution[] {
+        const code = this.getCode();
+        const template = this.getSettings().typeConfig.downloadUrlTemplate;
+        if (!code || !template) return [];
+        const downloadURL = template.replace('{code}', code);
+        return [{
+            accessURL: downloadURL,
+            downloadURL,
+            format: ['text/csv'],
+            description: this.getTitle(),
+        }];
+    }
+
+    private collectContent(node: any, result: Set<string>): void {
+        if (!node) return;
+        const content = node.Content;
+        if (content && content !== 'see parent') result.add(content);
+        const children = node.Structure;
+        if (!children) return;
+        if (Array.isArray(children)) {
+            children.forEach(child => this.collectContent(child, result));
+        } else {
+            this.collectContent(children, result);
+        }
     }
 
     private parseGenesisDate(dateStr: string): Date {

@@ -22,13 +22,54 @@
  */
 
 import type { Geometry } from "geojson";
-import {GenesisMapper} from '../../../importer/genesis/genesis.mapper.js';
-import {ingridMapper} from "./ingrid.mapper.js";
-import log4js from "log4js";
-
-const log = log4js.getLogger(import.meta.filename);
+import { GenesisMapper } from '../../../importer/genesis/genesis.mapper.js';
+import type { IngridOpendataIndexDocument } from '../model/opendataindex.document.js';
+import { ingridMapper } from "./ingrid.mapper.js";
 
 export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
+
+    async createIndexDocument(): Promise<IngridOpendataIndexDocument> {
+        let result: IngridOpendataIndexDocument = {
+            ...this.getIngridMetadata(this.baseMapper.getSettings()),
+            id: this.getGeneratedId(),
+            uuid: this.getGeneratedId(),
+            title: this.getTitle(),
+            description: this.baseMapper.getDescription(),
+            modified: this.getModifiedDate(),
+            collection: {
+                name: this.baseMapper.getSettings().dataSourceName,
+            },
+            t01_object: {
+                obj_id: this.getGeneratedId(),
+            },
+            extras: {
+                metadata: {
+                    harvested: this.baseMapper.getHarvestingDate(),
+                    harvesting_errors: null,
+                    issued: null,
+                    is_valid: null,
+                    modified: null,
+                    source: this.baseMapper.getMetadataSource(),
+                    merged_from: [],
+                },
+            },
+            spatial: null,
+            temporal: [this.baseMapper.getTemporal()].filter(Boolean),
+            contacts: [],
+            keywords: this.baseMapper.getKeywords().map(term => ({ term, type: 'free' })),
+            distributions: this.baseMapper.getDistributions(),
+            dcat: { landingPage: null },
+            legalBasis: null,
+            political_geocoding_level_uri: null,
+            rdf: null,
+            sort_hash: this.getSortHash(),
+            content: null,
+        };
+        result.content = [...new Set(this.getContent(result))];
+        this.executeCustomCode(result);
+        return result;
+    }
+
     getSpatial(): Geometry[] {
         return null;
     }

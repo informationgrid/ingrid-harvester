@@ -107,5 +107,117 @@
         "active": false
       }
     }
+  },
+  {
+    "id": 25,
+    "type": "GENESIS",
+    "description": "GENESIS Online – Statistisches Landesamt Sachsen-Anhalt",
+
+    "sourceURL": "https://genesis.sachsen-anhalt.de/webservice/rest/2020",
+
+    "typeConfig": {
+      "username": "GAST",
+      "password": "GAST",
+      "requestDelayMs": 500,
+      "tableSelections": ["111*"],
+      "downloadUrlTemplate": "https://genesis.sachsen-anhalt.de/.../{code}.csv",
+      "publisher": {
+        "name": "Statistisches Landesamt Sachsen-Anhalt",
+        "email": "mailto:poststelle@stala.mi.sachsen-anhalt.de"
+      },
+      "theme": "http://publications.europa.eu/resource/authority/data-theme/GOVE",
+      "licenseUrl": "http://dcat-ap.de/def/licenses/dl-by-de/2.0",
+      "contributorId": "http://dcat-ap.de/def/contributors/genesisLsa"
+    },
+
+    "catalogId": "genesis-lsa",
+    "catalogIds": [],
+
+    "iPlugId": "/ingrid-group:genesis-lsa",
+    "partner": "la",
+    "provider": "lsa",
+    "datatype": "research",
+    "dataSourceName": "GENESIS Online Sachsen-Anhalt",
+    "boost": null,
+
+    "maxConcurrent": 1,
+    "timeout": 60000,
+    "isIncremental": false,
+    "rejectUnauthorizedSSL": true,
+
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "customCode": null,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+
+    "disable": true,
+    "cron": {
+      "full": {
+        "pattern": "0 3 * * *",
+        "active": false
+      },
+      "incr": {
+        "pattern": "",
+        "active": false
+      }
+    }
+  },
+  {
+    "id": 26,
+    "type": "GENESIS",
+    "description": "GENESIS DESTATIS – Statistisches Bundesamt",
+
+    "sourceURL": "https://www-genesis.destatis.de/genesisWS/rest/2020",
+
+    "typeConfig": {
+      "username": "GAST",
+      "password": "GAST",
+      "requestDelayMs": 500,
+      "tableSelections": ["111*"],
+      "downloadUrlTemplate": "https://www-genesis.destatis.de/genesis-old/downloads/00/tables/{code}_00.csv",
+      "publisher": {
+        "name": "Statistisches Bundesamt",
+        "email": "mailto:https://www.destatis.de/kontakt"
+      },
+      "theme": "http://publications.europa.eu/resource/authority/data-theme/GOVE",
+      "licenseUrl": "http://dcat-ap.de/def/licenses/dl-by-de/2.0",
+      "contributorId": "http://dcat-ap.de/def/contributors/genesisDestatis"
+    },
+
+    "catalogId": "genesis-lsa",
+    "catalogIds": [],
+
+    "iPlugId": "/ingrid-group:genesis-lsa",
+    "partner": "la",
+    "provider": "lsa",
+    "datatype": "research",
+    "dataSourceName": "GENESIS Online Sachsen-Anhalt",
+    "boost": null,
+
+    "maxConcurrent": 1,
+    "timeout": 60000,
+    "isIncremental": false,
+    "rejectUnauthorizedSSL": true,
+
+    "blacklistedIds": [],
+    "whitelistedIds": [],
+    "customCode": null,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+
+    "disable": true,
+    "cron": {
+      "full": {
+        "pattern": "0 3 * * *",
+        "active": false
+      },
+      "incr": {
+        "pattern": "",
+        "active": false
+      }
+    }
   }
 ]

@@ -198,7 +198,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
 
         if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
             const entity: RecordEntity = {
-                identifier: entry.Code,
+                identifier: mapper.getGeneratedId(),
                 source: this.getSettings().sourceURL,
                 collection_id: this.collectionId,
                 dataset: doc,
@@ -274,7 +274,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
     protected buildAuthHeaders(): Record<string, string> {
         const { apiToken, username, password } = this.getSettings().typeConfig;
         if (apiToken) {
-            return { username: 'Gast', password: apiToken };
+            return { username: apiToken };
         }
         return {
             username: username ?? 'Gast',
