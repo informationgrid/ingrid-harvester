@@ -73,6 +73,9 @@ export class AuthMiddleware implements MiddlewareMethods {
         this.keycloakService.setToken(grantObj.access_token);
       } catch (e) {
         console.error('Error reconstructing Keycloak grant from session:', e);
+        delete request.session['keycloak-token'];
+        delete request.session['keycloak-refresh-token'];
+        throw new Unauthorized('Invalid session');
       }
     }
 
