@@ -51,8 +51,6 @@
     "dayjs": "^1.11.7",
     "deep-equal": "^2.2.0",
     "elasticsearch-streams": "^0.0.10",
-    "elasticsearch6": "npm:@elastic/elasticsearch@^6.8.7",
-    "elasticsearch7": "npm:@elastic/elasticsearch@^7.17.0",
     "elasticsearch8": "npm:@elastic/elasticsearch@^8.5.0",
     "elasticsearch9": "npm:@elastic/elasticsearch@^9.0.3",
     "express": "^4.17.1",
