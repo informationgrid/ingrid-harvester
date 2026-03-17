@@ -21,32 +21,28 @@
  * ==================================================
  */
 
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {inject, Injectable} from '@angular/core';
+import {BehaviorSubject, firstValueFrom, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class KeycloakService {
+  private http = inject(HttpClient)
   private authenticated = new BehaviorSubject<boolean>(false);
   private username: string = '';
 
-  constructor(private http: HttpClient) {
-  }
-
-  init(): Promise<boolean> {
-    return this.http.get<any>('rest/auth/keycloak/check')
-      .toPromise()
-      .then(user => {
-        this.authenticated.next(true);
-        this.username = user.username || '';
-        return true;
-      })
-      .catch(() => {
-        this.authenticated.next(false);
-        return false;
-      });
+  async init(): Promise<boolean> {
+    try {
+      const user = await firstValueFrom(this.http.get<any>('rest/auth/keycloak/check'));
+      this.authenticated.next(true);
+      this.username = user.username || '';
+      return true;
+    } catch {
+      this.authenticated.next(false);
+      return false;
+    }
   }
 
   login(): void {

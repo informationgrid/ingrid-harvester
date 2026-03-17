@@ -30,6 +30,7 @@ import {KeycloakAuth} from "../decorators/KeycloakAuthOptions.js";
 
 @Controller('/api/monitoring')
 @UseAuth(AuthMiddleware)
+@KeycloakAuth({role: "admin"})
 export class MonitoringCtrl {
 
     constructor(private urlCheckService: UrlCheckService,
@@ -52,7 +53,6 @@ export class MonitoringCtrl {
     }
 
     @Get('/harvester')
-    @KeycloakAuth({role: "realm:harvester-admin"})
     getAllHarvesterHistory(@BodyParams() request: any) {
         // re-initialize in case settings have changed
         this.historyService.initialize();

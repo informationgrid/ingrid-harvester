@@ -47,7 +47,7 @@ export class KeycloakCtrl {
 
         // handle keycloak authentication
         if (request.session && request.session['keycloak-token']) {
-            let token = JSON.parse(request.session['keycloak-token']);
+            let token = JSON.parse(request.session['keycloak-token'])?.access_token;
 
             // If it's a string, it's probably the JWT itself and needs decoding
             if (typeof token === 'string') {

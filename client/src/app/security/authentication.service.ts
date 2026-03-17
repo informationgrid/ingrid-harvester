@@ -85,9 +85,11 @@ export class AuthenticationService {
     }
   }
 
-  logout(): Observable<any> {
+  logout(fullKeycloakLogout: boolean = true): Observable<any> {
     if (this.authMethod === AuthMethod.KEYCLOAK) {
-      this.keycloakService.logout();
+      if (fullKeycloakLogout) {
+        this.keycloakService.logout();
+      }
       localStorage.removeItem('currentUser');
       this.currentUserSubject.next(null);
       return of(null);

@@ -50,8 +50,10 @@ export class UnauthorizedInterceptor implements HttpInterceptor {
       catchError((err: any) => {
         if (err instanceof HttpErrorResponse) {
           if (err.status === 401) {
-            // redirect to the login route based on the current auth method
-            this.auth.logout().subscribe(() => this.router.navigate(['login']));
+            // Only clear local session and redirect to login, but don't log out from Keycloak.
+            // This is because the token could not be refreshed (refresh token expired)
+            // or the session is just gone.
+            this.auth.logout(false).subscribe(() => this.router.navigate(['login']));
           }
         }
         return throwError(err);
