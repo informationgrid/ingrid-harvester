@@ -29,6 +29,7 @@ import type { MetadataSource } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
 import { Mapper } from '../mapper.js';
 import type { GenesisSettings } from './genesis.settings.js';
+import { generateUuid } from "../../profiles/ingrid/ingrid.utils.js";
 
 /**
  * Base mapper for GENESIS Online REST API records.
@@ -87,8 +88,7 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
     }
 
     getGeneratedId(): string {
-        const sourceURL = this.getSettings().sourceURL;
-        return sourceURL != null ? `${sourceURL}/table/${this.getCode()}` : this.getCode();
+        return generateUuid(this.getSettings().sourceURL, [this.getCode()])
     }
 
     getTemporal(): DateRange | undefined {

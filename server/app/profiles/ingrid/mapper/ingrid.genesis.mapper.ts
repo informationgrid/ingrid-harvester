@@ -28,13 +28,14 @@ import { namespaces } from '../../../importer/namespaces.js';
 import { UrlUtils } from '../../../utils/url.utils.js';
 import type { IngridOpendataIndexDocument } from '../model/opendataindex.document.js';
 import { ingridMapper } from "./ingrid.mapper.js";
+import {ensureNoEndSlash} from "../ingrid.utils.js";
 
 export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
 
     async createIndexDocument(): Promise<IngridOpendataIndexDocument> {
         let result: IngridOpendataIndexDocument = {
             ...this.getIngridMetadata(this.baseMapper.getSettings()),
-            id: this.getGeneratedId(),
+            id: this.baseMapper.getCode(),
             uuid: this.getGeneratedId(),
             title: this.getTitle(),
             description: this.baseMapper.getDescription(),
@@ -88,8 +89,10 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
 
         dataset.appendChild(doc.createElement('dct:title')).textContent = this.baseMapper.getTitle();
         dataset.appendChild(doc.createElement('dct:description')).textContent = this.baseMapper.getDescription();
+
+        const tableUri = ensureNoEndSlash(this.baseMapper.getSettings().sourceURL) + '/table/' + this.baseMapper.getCode();
         const identifierEl = doc.createElement('dct:identifier');
-        identifierEl.setAttribute('rdf:resource', this.getGeneratedId());
+        identifierEl.setAttribute('rdf:resource', tableUri);
         dataset.appendChild(identifierEl);
 
         const addDate = (parent: Element, tag: string, date: Date) => {
