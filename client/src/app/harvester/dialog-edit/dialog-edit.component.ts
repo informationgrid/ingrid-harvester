@@ -40,6 +40,7 @@ import { KldType } from "./fields/types/kld.type";
 import { OaiType } from "./fields/types/oai.type";
 import { SparqlType } from "./fields/types/sparql.type";
 import { WfsType } from "./fields/types/wfs.type";
+import { GenesisType } from "./fields/types/genesis.type";
 
 @Component({
   selector: "app-dialog-edit",
@@ -89,6 +90,7 @@ export class DialogEditComponent {
         ...OaiType.fields(),
         ...SparqlType.fields(),
         ...WfsType.fields(),
+        ...GenesisType.fields(),
         ...SharedFields.additional(),
       ];
     });

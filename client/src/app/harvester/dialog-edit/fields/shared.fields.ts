@@ -42,6 +42,7 @@ export abstract class SharedFields {
                       { label: "EXCEL", value: "EXCEL" },
                       { label: "EXCEL (SPARSE)", value: "EXCEL_SPARSE" },
                       { label: "JSON", value: "JSON" },
+                      { label: "GENESIS", value: "GENESIS" },
                       { label: "KLD", value: "KLD" },
                       { label: "OAI", value: "OAI" },
                       { label: "SPARQL", value: "SPARQL" },
