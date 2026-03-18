@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
 
   submit() {
     if (this.form.valid) {
-      this.authService.login(this.form.get('username').value, this.form.get('password').value)
+      this.authService.login(this.form.get('username').value, this.form.get('password').value, AuthMethod.LOCAL)
         .pipe(
           catchError((error: HttpErrorResponse) => {
             console.error('Error logging in:', error);
@@ -82,7 +82,7 @@ export class LoginComponent implements OnInit {
   }
 
   loginWithKeycloak() {
-    this.authService.login(null, null)
+    this.authService.login(null, null, AuthMethod.KEYCLOAK)
       .pipe(
         catchError((error) => {
           console.error('Error during Keycloak login', error);

@@ -55,8 +55,9 @@ export class AuthenticationService {
     );
   }
 
-  private get strategy(): AuthStrategy {
-    return this.currentUser.getValue().authMethod === AuthMethod.KEYCLOAK ? this.keycloakService : this.passportService;
+  private getStrategy(overrideStrategy?: AuthMethod): AuthStrategy {
+    const strategy = overrideStrategy || this.currentUser.getValue().authMethod;
+    return strategy === AuthMethod.KEYCLOAK ? this.keycloakService : this.passportService;
   }
 
   isAuthenticated(): Observable<boolean> {
@@ -77,8 +78,8 @@ export class AuthenticationService {
     return user ? user.username : '';
   }
 
-  login(username: string, password: string) {
-    return this.strategy.login(username, password).pipe(
+  login(username: string, password: string, strategy?: AuthMethod): Observable<any> {
+    return this.getStrategy(strategy).login(username, password).pipe(
       tap(user => {
         if (user) {
           this.currentUser.next(user);
@@ -92,7 +93,7 @@ export class AuthenticationService {
       this.currentUser.next(null);
       return of(null);
     }
-    return this.strategy.logout().pipe(
+    return this.getStrategy().logout().pipe(
       tap(() => {
         this.currentUser.next(null);
       })
