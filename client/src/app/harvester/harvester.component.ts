@@ -237,7 +237,6 @@ export class HarvesterComponent implements OnInit, OnDestroy {
       const dialogRef = this.dialog.open(DialogHistoryComponent, {
         data: data,
         width: "950px",
-        disableClose: true,
       });
 
       dialogRef.afterClosed().subscribe((result: Harvester) => {
@@ -295,62 +294,17 @@ export class HarvesterComponent implements OnInit, OnDestroy {
       );
   }
 
-  hasAnyErrors(id: number) {
-    const detail = this.importDetail[id];
-
-    if (detail && detail.summary) {
-      return (
-        detail.summary.numErrors > 0 ||
-        detail.summary.databaseErrors.length > 0 ||
-        detail.summary.elasticErrors.length > 0 ||
-        detail.summary.appErrors.length > 0
-      );
-    }
-    return false;
-  }
-
-  hasOnlyWarnings(id: number) {
-    const detail = this.importDetail[id];
-
-    if (detail && detail.summary) {
-      return (
-        detail.summary.warnings.length > 0 &&
-        detail.summary.numErrors === 0 &&
-        detail.summary.appErrors.length === 0 &&
-        detail.summary.databaseErrors.length === 0 &&
-        detail.summary.elasticErrors.length === 0
-      );
-    }
-    return false;
-  }
-
-  hasAnyProblems(id: number) {
-    const detail = this.importDetail[id];
-
-    if (detail && detail.summary) {
-      return (
-        detail.summary.numErrors > 0 ||
-        detail.summary.databaseErrors.length > 0 ||
-        detail.summary.elasticErrors.length > 0 ||
-        detail.summary.warnings.length > 0 ||
-        detail.summary.appErrors.length > 0
-      );
-    }
-    return false;
-  }
-
-  deleteHarvester(harvester: Harvester) {
+  onDeleteDatasource(datasource: Harvester) {
     this.dialog
       .open(ConfirmDialogComponent, {
         data: "Wollen Sie diesen Harvester wirklich löschen?",
       })
       .afterClosed()
       .subscribe((result) => {
-        if (result) {
-          this.harvesterService
-            .delete(harvester.id)
-            .subscribe(() => this.fetchHarvester());
-        }
+        if (!result) return;
+        this.harvesterService
+          .delete(datasource.id)
+          .subscribe(() => this.fetchHarvester());
       });
   }
 }

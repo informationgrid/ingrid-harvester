@@ -70,7 +70,7 @@
         "tooltip": "Harvesting deaktiviert"
       },
       "cron": {
-        "icon": "Schedule",
+        "icon": "schedule",
         "title": "Scheduled",
         "tooltip": "Komplettes Harvesting geplant"
       },
@@ -80,7 +80,7 @@
         "tooltip": "Datensätze werden gerade importiert"
       },
       "error": {
-        "icon": "Error",
+        "icon": "error",
         "title": "Fehler",
         "tooltip": "{{num}} Fehler beim letzten Import"
       }

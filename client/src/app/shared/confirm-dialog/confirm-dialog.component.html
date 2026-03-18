@@ -21,18 +21,26 @@
     ==================================================
 -->
 
-<h2 mat-dialog-title>Bestätigung</h2>
+<harvester-dialog-header
+  title="Löschen"
+  svgIcon="delete"
+></harvester-dialog-header>
 
 <mat-dialog-content>
-
-  <p>{{message}}</p>
-
+  <p>{{ message }}</p>
 </mat-dialog-content>
 
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Abbrechen</button>
-  <div class="flex-space"></div>
-  <button mat-button color="primary"
-          [mat-dialog-close]="true"
-          data-test="dlg-schedule">Löschen</button>
+
+  <div class="flex-1"></div>
+
+  <button
+    matButton="filled"
+    color="primary"
+    [mat-dialog-close]="true"
+    data-test="dlg-schedule"
+  >
+    Löschen
+  </button>
 </mat-dialog-actions>

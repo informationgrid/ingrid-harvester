@@ -21,60 +21,79 @@
  * ==================================================
  */
 
-import { ActivatedRouteSnapshot, DetachedRouteHandle, Route, RouteReuseStrategy, RouterModule, Routes } from "@angular/router";
-import {LoginComponent} from './security/login.component';
-  
-  export const routes: Routes = [
+import {
+  ActivatedRouteSnapshot,
+  DetachedRouteHandle,
+  Route,
+  RouteReuseStrategy,
+  RouterModule,
+  Routes
+} from "@angular/router";
+import { LoginComponent } from "./security/login.component";
+
+export const routes: Routes = [
     {
-        path: 'dashboard', 
-        loadChildren: () => import('./monitoring/monitoring.module').then(mod => mod.MonitoringModule),
-        data: {
-            icon: "Uebersicht",
-            partOfMenu: true
-        },
+      path: "dashboard",
+      loadChildren: () =>
+        import("./monitoring/monitoring.module").then(
+          (mod) => mod.MonitoringModule,
+        ),
+      data: {
+        icon: "Uebersicht",
+        partOfMenu: true,
+      },
     },
     {
-        path: 'harvester', 
-        loadChildren: () => import('./harvester/harvester.module').then(mod => mod.HarvesterModule),
-        data: {
-            icon: "Harvester",
-            partOfMenu: true
-        },
+      path: "harvester",
+      loadChildren: () =>
+        import("./harvester/harvester.module").then(
+          (mod) => mod.HarvesterModule,
+        ),
+      data: {
+        icon: "Harvester",
+        partOfMenu: true,
+      },
     },
     {
-        path: 'config', 
-        loadChildren: () => import('./config/config.module').then(mod => mod.ConfigModule),
-        data: {
-            icon: "Configuration",
-            partOfMenu: true
-        },
+      path: "config",
+      loadChildren: () =>
+        import("./config/config.module").then((mod) => mod.ConfigModule),
+      data: {
+        icon: "Configuration",
+        partOfMenu: true,
+      },
     },
     {
-        path: 'indices', 
-        loadChildren: () => import('./indices/indices.module').then(mod => mod.IndicesModule),
-        data: {
-            icon: "Indices",
-            partOfMenu: true
-        },
+      path: "indices",
+      loadChildren: () =>
+        import("./indices/indices.module").then((mod) => mod.IndicesModule),
+      data: {
+        icon: "Indices",
+        partOfMenu: true,
+      },
     },
     {
-        path: 'log', 
-        loadChildren: () => import('./log/log.module').then(mod => mod.LogModule),
-        data: {
-            icon: "Logging",
-            partOfMenu: true
-        },
+      path: "log",
+      loadChildren: () =>
+        import("./log/log.module").then((mod) => mod.LogModule),
+      data: {
+        icon: "logging",
+        partOfMenu: true,
+      },
     },
     {
-        path: 'login', component: LoginComponent,
-        data: {
-          icon: "Logging",
-          partOfMenu: false
-        },
+      path: "login",
+      component: LoginComponent,
+      data: {
+        icon: "logging",
+        partOfMenu: false,
+      },
     },
     {
-        path: '', redirectTo: '/dashboard', pathMatch: 'full'
-    }
+      path: "",
+      redirectTo: "/dashboard",
+      pathMatch: "full",
+    },
   ];
   
   // export const appRoutingProviders: any[] = [];

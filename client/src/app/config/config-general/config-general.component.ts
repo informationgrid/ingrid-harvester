@@ -21,48 +21,45 @@
  * ==================================================
  */
 
-import {Component, OnInit} from '@angular/core';
-import {ConfigService} from '../config.service';
-import {HarvesterService} from '../../harvester/harvester.service';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {of} from 'rxjs';
-import {GeneralSettings} from '@shared/general-config.settings';
+import { Component, OnInit } from "@angular/core";
+import { ConfigService } from "../config.service";
+import { HarvesterService } from "../../harvester/harvester.service";
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
+import { of } from "rxjs";
+import { GeneralSettings } from "@shared/general-config.settings";
 
-import { delay } from 'rxjs/operators';
+import { delay } from "rxjs/operators";
 import { ActivatedRoute } from "@angular/router";
 
 @Component({
-    selector: 'app-config-general',
-    templateUrl: './config-general.component.html',
-    styleUrls: ['./config-general.component.scss'],
-    standalone: false
+  selector: "app-config-general",
+  templateUrl: "./config-general.component.html",
+  styleUrls: ["./config-general.component.scss"],
+  standalone: false,
 })
 export class ConfigGeneralComponent implements OnInit {
-
   configForm: UntypedFormGroup;
 
   profile: string;
 
   constructor(
-    private formBuilder: UntypedFormBuilder, 
-    private configService: ConfigService, 
+    private formBuilder: UntypedFormBuilder,
+    private configService: ConfigService,
     private harvesterService: HarvesterService,
     private route: ActivatedRoute,
-  ) {
-  }
-
+  ) {}
 
   ngOnInit() {
     this.reset();
-    this.configService.getProfileName().subscribe(data => {
+    this.configService.getProfileName().subscribe((data) => {
       this.profile = data;
     });
   }
 
   private static noWhitespaceValidator(control: UntypedFormControl) {
-    const isWhitespace = (control.value || '').trim().length === 0;
+    const isWhitespace = (control.value || "").trim().length === 0;
     const isValid = !isWhitespace;
-    return of(isValid ? null : {'whitespace': true});
+    return of(isValid ? null : { whitespace: true });
   }
 
   private static elasticUrlValidator(control: UntypedFormControl) {
@@ -72,21 +69,21 @@ export class ConfigGeneralComponent implements OnInit {
 
     let isValid = false;
 
-    const protocolPart = control.value.split('://');
+    const protocolPart = control.value.split("://");
     if (protocolPart.length === 2) {
-      const portPart = protocolPart[1].split(':');
+      const portPart = protocolPart[1].split(":");
       if (portPart.length === 2) {
         const port = portPart[1];
         isValid = !isNaN(port) && port > 0 && port < 10000;
       }
     }
-    return of(isValid ? null : {'elasticUrl': true});
+    return of(isValid ? null : { elasticUrl: true });
   }
 
   connectionStatus = {
-    success: ['Success', 'Test erfolgreich', 'accent'],
-    fail: ['Error', 'Test fehlgeschlagen', 'warn'],
-    working: ['cloud_sync', '... wird getestet', 'primary']
+    success: ["Success", "Test erfolgreich", "accent"],
+    fail: ["error", "Test fehlgeschlagen", "warn"],
+    working: ["cloud_sync", "... wird getestet", "primary"],
   };
 
   statusIcon(value: string) {
@@ -102,32 +99,34 @@ export class ConfigGeneralComponent implements OnInit {
   }
 
   checkDbConnection() {
-    this.dbConnectionCheck = 'working';
+    this.dbConnectionCheck = "working";
     let checkResult = this.configService.checkDbConnection({
-      type: this.configForm.get('database.type').value,
-      connectionString: this.configForm.get('database.connectionString').value,
-      host: this.configForm.get('database.host').value,
-      port: this.configForm.get('database.port').value,
-      database: this.configForm.get('database.database').value,
-      user: this.configForm.get('database.user').value,
-      password: this.configForm.get('database.password').value
+      type: this.configForm.get("database.type").value,
+      connectionString: this.configForm.get("database.connectionString").value,
+      host: this.configForm.get("database.host").value,
+      port: this.configForm.get("database.port").value,
+      database: this.configForm.get("database.database").value,
+      user: this.configForm.get("database.user").value,
+      password: this.configForm.get("database.password").value,
     });
-    checkResult.pipe(delay(1000)).subscribe(response => {
-      this.dbConnectionCheck = response ? 'success' : 'fail';
+    checkResult.pipe(delay(1000)).subscribe((response) => {
+      this.dbConnectionCheck = response ? "success" : "fail";
     });
   }
 
   checkEsConnection() {
-    this.esConnectionCheck = 'working';
+    this.esConnectionCheck = "working";
     let checkResult = this.configService.checkEsConnection({
-      url: this.configForm.get('elasticsearch.url').value,
-      version: this.configForm.get('elasticsearch.version').value,
-      user: this.configForm.get('elasticsearch.user').value,
-      password: this.configForm.get('elasticsearch.password').value,
-      rejectUnauthorized: this.configForm.get('elasticsearch.rejectUnauthorized').value
+      url: this.configForm.get("elasticsearch.url").value,
+      version: this.configForm.get("elasticsearch.version").value,
+      user: this.configForm.get("elasticsearch.user").value,
+      password: this.configForm.get("elasticsearch.password").value,
+      rejectUnauthorized: this.configForm.get(
+        "elasticsearch.rejectUnauthorized",
+      ).value,
     });
-    checkResult.pipe(delay(1000)).subscribe(response => {
-      this.esConnectionCheck = response ? 'success' : 'fail';
+    checkResult.pipe(delay(1000)).subscribe((response) => {
+      this.esConnectionCheck = response ? "success" : "fail";
     });
   }
 
@@ -136,16 +135,15 @@ export class ConfigGeneralComponent implements OnInit {
   }
 
   reset() {
-    this.configService.fetch().subscribe(data => this.buildForm(data));
+    this.configService.fetch().subscribe((data) => this.buildForm(data));
   }
 
   private buildForm(settings: GeneralSettings) {
-
     if (!settings.urlCheck) {
       settings.urlCheck = {
         active: false,
-        pattern: ""
-      }
+        pattern: "",
+      };
     }
 
     if (!settings.mail) {
@@ -156,17 +154,17 @@ export class ConfigGeneralComponent implements OnInit {
           port: 451,
           secure: false,
           tls: {
-              rejectUnauthorized: true
+            rejectUnauthorized: true,
           },
           auth: {
             user: "",
-            pass: ""
-          }
+            pass: "",
+          },
         },
         from: "",
         to: "",
-        subjectTag: ""
-      }
+        subjectTag: "",
+      };
     }
 
     this.configForm = this.formBuilder.group({
@@ -177,7 +175,7 @@ export class ConfigGeneralComponent implements OnInit {
         port: [settings.database.port],
         database: [settings.database.database],
         user: [settings.database.user],
-        password: [settings.database.password]
+        password: [settings.database.password],
       }),
       elasticsearch: this.formBuilder.group({
         url: [settings.elasticsearch.url, Validators.required],
@@ -185,11 +183,15 @@ export class ConfigGeneralComponent implements OnInit {
         user: [settings.elasticsearch.user],
         password: [settings.elasticsearch.password],
         rejectUnauthorized: [settings.elasticsearch.rejectUnauthorized],
-        alias: [settings.elasticsearch.alias, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
+        alias: [
+          settings.elasticsearch.alias,
+          Validators.required,
+          ConfigGeneralComponent.noWhitespaceValidator,
+        ],
         prefix: [settings.elasticsearch.prefix],
         index: [settings.elasticsearch.index],
         numberOfShards: [settings.elasticsearch.numberOfShards],
-        numberOfReplicas: [settings.elasticsearch.numberOfReplicas]
+        numberOfReplicas: [settings.elasticsearch.numberOfReplicas],
       }),
       cronOffset: [settings.cronOffset],
       mappingLogLevel: [settings.mappingLogLevel],
@@ -198,11 +200,11 @@ export class ConfigGeneralComponent implements OnInit {
       portalUrl: [settings.portalUrl],
       urlCheck: this.formBuilder.group({
         active: [settings.urlCheck.active],
-        pattern: [settings.urlCheck.pattern]
+        pattern: [settings.urlCheck.pattern],
       }),
       indexCheck: this.formBuilder.group({
         active: [settings.indexCheck.active],
-        pattern: [settings.indexCheck.pattern]
+        pattern: [settings.indexCheck.pattern],
       }),
       mail: this.formBuilder.group({
         enabled: [settings.mail.enabled],
@@ -211,37 +213,38 @@ export class ConfigGeneralComponent implements OnInit {
           port: [settings.mail.mailServer.port],
           secure: [settings.mail.mailServer.secure],
           tls: this.formBuilder.group({
-            rejectUnauthorized: [settings.mail.mailServer.tls.rejectUnauthorized]
+            rejectUnauthorized: [
+              settings.mail.mailServer.tls.rejectUnauthorized,
+            ],
           }),
           auth: this.formBuilder.group({
             user: [settings.mail.mailServer.auth.user],
-            pass: [settings.mail.mailServer.auth.pass]
-          })
+            pass: [settings.mail.mailServer.auth.pass],
+          }),
         }),
         from: [settings.mail.from],
         to: [settings.mail.to],
-        subjectTag: [settings.mail.subjectTag]
+        subjectTag: [settings.mail.subjectTag],
       }),
       indexBackup: this.formBuilder.group({
         active: [settings.indexBackup.active],
         indexPattern: [settings.indexBackup.indexPattern],
         cronPattern: [settings.indexBackup.cronPattern],
-        dir: [settings.indexBackup.dir]
+        dir: [settings.indexBackup.dir],
       }),
       harvesting: this.formBuilder.group({
         mail: this.formBuilder.group({
           enabled: [settings.harvesting.mail.enabled],
-          minDifference: [settings.harvesting.mail.minDifference]
+          minDifference: [settings.harvesting.mail.minDifference],
         }),
         cancel: this.formBuilder.group({
           enabled: [settings.harvesting.cancel.enabled],
-          minDifference: [settings.harvesting.cancel.minDifference]
-        })
-      })
-    })
+          minDifference: [settings.harvesting.cancel.minDifference],
+        }),
+      }),
+    });
   }
 
   dbConnectionCheck: string;
   esConnectionCheck: string;
-  
 }

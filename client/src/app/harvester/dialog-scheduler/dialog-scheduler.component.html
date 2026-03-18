@@ -21,37 +21,45 @@
     ==================================================
 -->
 
-<h2 mat-dialog-title>Ausführung planen</h2>
+<harvester-dialog-header
+  title="Ausführung planen"
+  svgIcon="schedule"
+></harvester-dialog-header>
 
 <mat-dialog-content>
+  <harvester-cronjob-form-field
+    title="Komplettes Harvesting"
+    [form]="schedulerForm"
+    formKey="full"
+    activeKeyName="active"
+    cronKeyName="pattern"
+  />
 
-  <harvester-cronjob-form-field 
-    title="Komplettes Harvesting" 
-    [form]="schedulerForm" 
-    formKey="full" 
-    activeKeyName="active" 
-    cronKeyName="pattern"/>
+  @if (harvesterType == "CSW") {
+    <mat-divider class="padding-below"></mat-divider>
 
-  @if (harvesterType == 'CSW') {
-  <mat-divider class="padding-below"></mat-divider>
-
-  <harvester-cronjob-form-field 
-    title="Inkrementelles Harvesting" 
-    [form]="schedulerForm" 
-    formKey="incr" 
-    activeKeyName="active" 
-    cronKeyName="pattern"/>
+    <harvester-cronjob-form-field
+      title="Inkrementelles Harvesting"
+      [form]="schedulerForm"
+      formKey="incr"
+      activeKeyName="active"
+      cronKeyName="pattern"
+    />
   }
-
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close>Abbrechen</button>
-  <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
-  <div class="flex-space"></div>
-  <button mat-button color="primary"
+  <button matButton mat-dialog-close>Abbrechen</button>
+
+  <div class="flex-1"></div>
+
+  <button
+    matButton="filled"
+    color="primary"
     [mat-dialog-close]="schedulerForm || null"
     [disabled]="!schedulerForm.valid"
-    data-test="dlg-schedule">Aktualisieren</button>
-
+    data-test="dlg-schedule"
+  >
+    Aktualisieren
+  </button>
 </mat-dialog-actions>

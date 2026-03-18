@@ -21,37 +21,89 @@
     ==================================================
 -->
 
-<mat-tab-group [animationDuration]="'0ms'" [dynamicHeight]="false" mat-align-tabs="center" [selectedIndex]="getInitialIndex()">
+<harvester-dialog-header
+  title="Error-Log"
+  svgIcon="error"
+></harvester-dialog-header>
+
+<mat-tab-group
+  [animationDuration]="'0ms'"
+  [dynamicHeight]="false"
+  mat-align-tabs="center"
+  [selectedIndex]="getInitialIndex()"
+>
   <mat-tab>
     <ng-template mat-tab-label>
-      <span [matBadge]="appErrors.length" [matBadgeColor]="appErrors.length > 0 ? 'warn' : 'accent'" matBadgeOverlap="false">Fehler</span>
+      <span
+        [matBadge]="appErrors.length"
+        [matBadgeColor]="appErrors.length > 0 ? 'warn' : 'accent'"
+        matBadgeOverlap="false"
+        >Fehler</span
+      >
     </ng-template>
-    <cdk-virtual-scroll-viewport class="logContainer" itemSize="20" minBufferPx="500" maxBufferPx="500">
-      <div *cdkVirtualFor="let error of appErrors">{{error}}</div>
+    <cdk-virtual-scroll-viewport
+      class="logContainer"
+      itemSize="20"
+      minBufferPx="500"
+      maxBufferPx="500"
+    >
+      <div *cdkVirtualFor="let error of appErrors">{{ error }}</div>
     </cdk-virtual-scroll-viewport>
   </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>
-      <span [matBadge]="databaseErrors.length" [matBadgeColor]="databaseErrors.length > 0 ? 'warn' : 'accent'" matBadgeOverlap="false">Datenbank-Fehler</span>
+      <span
+        [matBadge]="databaseErrors.length"
+        [matBadgeColor]="databaseErrors.length > 0 ? 'warn' : 'accent'"
+        matBadgeOverlap="false"
+        >Datenbank-Fehler</span
+      >
     </ng-template>
-    <cdk-virtual-scroll-viewport class="logContainer" itemSize="20" minBufferPx="500" maxBufferPx="500">
-      <div *cdkVirtualFor="let error of databaseErrors">{{error}}</div>
+    <cdk-virtual-scroll-viewport
+      class="logContainer"
+      itemSize="20"
+      minBufferPx="500"
+      maxBufferPx="500"
+    >
+      <div *cdkVirtualFor="let error of databaseErrors">{{ error }}</div>
     </cdk-virtual-scroll-viewport>
   </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>
-      <span [matBadge]="elasticsearchErrors.length" [matBadgeColor]="elasticsearchErrors.length > 0 ? 'warn' : 'accent'" matBadgeOverlap="false">Elasticsearch-Fehler</span>
+      <span
+        [matBadge]="elasticsearchErrors.length"
+        [matBadgeColor]="elasticsearchErrors.length > 0 ? 'warn' : 'accent'"
+        matBadgeOverlap="false"
+        >Elasticsearch-Fehler</span
+      >
     </ng-template>
-    <cdk-virtual-scroll-viewport class="logContainer" itemSize="20" minBufferPx="500" maxBufferPx="500">
-      <div *cdkVirtualFor="let error of elasticsearchErrors">{{error}}</div>
+    <cdk-virtual-scroll-viewport
+      class="logContainer"
+      itemSize="20"
+      minBufferPx="500"
+      maxBufferPx="500"
+    >
+      <div *cdkVirtualFor="let error of elasticsearchErrors">{{ error }}</div>
     </cdk-virtual-scroll-viewport>
   </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>
-      <span [matBadge]="appWarnings.length" [matBadgeColor]="appWarnings.length > 0 ? 'warn' : 'accent'" matBadgeOverlap="false">Warnungen</span>
+      <span
+        [matBadge]="appWarnings.length"
+        [matBadgeColor]="appWarnings.length > 0 ? 'warn' : 'accent'"
+        matBadgeOverlap="false"
+        >Warnungen</span
+      >
     </ng-template>
-    <cdk-virtual-scroll-viewport class="logContainer" itemSize="20" minBufferPx="500" maxBufferPx="500">
-      <div *cdkVirtualFor="let warning of appWarnings">{{warning[0]}}: {{warning[1]}}</div>
+    <cdk-virtual-scroll-viewport
+      class="logContainer"
+      itemSize="20"
+      minBufferPx="500"
+      maxBufferPx="500"
+    >
+      <div *cdkVirtualFor="let warning of appWarnings">
+        {{ warning[0] }}: {{ warning[1] }}
+      </div>
     </cdk-virtual-scroll-viewport>
   </mat-tab>
 </mat-tab-group>

@@ -21,20 +21,25 @@
  * ==================================================
  */
 
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { Component, Inject, OnInit } from "@angular/core";
+import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent } from "@angular/material/dialog";
+import { DialogHeaderComponent } from "../dialog-header/dialog-header.component";
+import { MatButton } from "@angular/material/button";
 
 @Component({
-    selector: 'app-confirm-dialog',
-    templateUrl: './confirm-dialog.component.html',
-    styleUrls: ['./confirm-dialog.component.scss'],
-    standalone: false
+  selector: "app-confirm-dialog",
+  templateUrl: "./confirm-dialog.component.html",
+  styleUrls: ["./confirm-dialog.component.scss"],
+  imports: [
+    DialogHeaderComponent,
+    MatDialogContent,
+    MatDialogActions,
+    MatDialogClose,
+    MatButton,
+  ],
 })
 export class ConfirmDialogComponent implements OnInit {
+  constructor(@Inject(MAT_DIALOG_DATA) public message: string) {}
 
-  constructor(@Inject(MAT_DIALOG_DATA) public message: string) { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }
