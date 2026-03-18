@@ -39,13 +39,12 @@ import { SocketService } from "./socket.service";
 
 @UntilDestroy()
 @Component({
-    selector: 'app-harvester',
-    templateUrl: './harvester.component.html',
-    styleUrls: ['./harvester.component.scss'],
-    standalone: false
+  selector: "app-harvester",
+  templateUrl: "./harvester.component.html",
+  styleUrls: ["./harvester.component.scss"],
+  standalone: false,
 })
 export class HarvesterComponent implements OnInit, OnDestroy {
-
   harvesters: { [x: string]: Harvester[] } = {};
 
   importDetail: { [x: number]: ImportLogMessage } = {};
@@ -55,62 +54,61 @@ export class HarvesterComponent implements OnInit, OnDestroy {
   numberOfHarvesters: number;
   private subscription: Subscription;
 
-  constructor(public dialog: MatDialog,
-              private snackBar: MatSnackBar,
-              private harvesterService: HarvesterService,
-              private socketService: SocketService,
-  ) {
-  }
+  constructor(
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar,
+    private harvesterService: HarvesterService,
+    private socketService: SocketService,
+  ) {}
 
   ngOnInit() {
-
     this.subscription = this.socketService.log$
       .pipe(untilDestroyed(this))
-      .subscribe(data => this.importDetail[data.id] = data);
+      .subscribe((data) => (this.importDetail[data.id] = data));
 
     this.fetchHarvester();
     this.fetchLastImportInformation();
 
     this.socketService.connectionLost$
       .pipe(untilDestroyed(this))
-      .subscribe(isLost => {
+      .subscribe((isLost) => {
         if (isLost) {
-          this.snackBar.open('Verbindung zum Backend verloren');
+          this.snackBar.open("Verbindung zum Backend verloren");
         } else {
-          this.snackBar.open('Verbindung zum Backend hergestellt', null, {duration: 1000});
+          this.snackBar.open("Verbindung zum Backend hergestellt", null, {
+            duration: 1000,
+          });
           this.fetchLastImportInformation();
           if (!this.harvesterLoaded) {
             this.fetchHarvester();
           }
         }
       });
-
   }
 
   private fetchLastImportInformation() {
-    this.harvesterService.getLastLogs().subscribe(logs => {
-      logs.forEach(log => this.importDetail[log.id] = log);
+    this.harvesterService.getLastLogs().subscribe((logs) => {
+      logs.forEach((log) => (this.importDetail[log.id] = log));
     });
   }
 
-  ngOnDestroy(): void {
-  }
+  ngOnDestroy(): void {}
 
   schedule(harvester: Harvester) {
     const dialogRef = this.dialog.open(DialogSchedulerComponent, {
-      width: '500px',
+      width: "500px",
       data: { harvesterType: harvester.type, cron: harvester.cron },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log("after scheduler:", result)
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log("after scheduler:", result);
       if (result) {
         // update immediately component cronpattern
         harvester.cron = result.value;
 
         // update schedule and set next execution time
-        this.harvesterService.schedule(harvester.id, harvester.cron)
-          .subscribe(nextExecutions => {
+        this.harvesterService.schedule(harvester.id, harvester.cron).subscribe(
+          (nextExecutions) => {
             for (let nextExecution of nextExecutions) {
               // update immediately next execution time which is only calculated to the server
               const detailElement = this.importDetail[harvester.id];
@@ -118,31 +116,31 @@ export class HarvesterComponent implements OnInit, OnDestroy {
                 detailElement.nextExecution = nextExecution;
               }
             }
-          }, (error: Error) => this.showError(error));
+          },
+          (error: Error) => this.showError(error),
+        );
       }
     });
   }
 
   showLog(id: number) {
     this.dialog.open(DialogLogComponent, {
-      width: '900px',
-      height: '600px',
+      width: "900px",
+      height: "600px",
       data: {
-        content: this.importDetail[id]
-      }
+        content: this.importDetail[id],
+      },
     });
   }
 
   startImport(id: number, isIncremental: boolean = false) {
-
     this.harvesterService.runImport(id, isIncremental).subscribe();
 
-    this.snackBar.open('Import gestartet', null, {
-      duration: 3 * 1000
+    this.snackBar.open("Import gestartet", null, {
+      duration: 3 * 1000,
     });
 
-    this.importDetail[id] = {complete: false};
-
+    this.importDetail[id] = { complete: false };
   }
 
   copy(harvester: Harvester) {
@@ -150,18 +148,19 @@ export class HarvesterComponent implements OnInit, OnDestroy {
       data: {
         ...JSON.parse(JSON.stringify(harvester)),
         id: -1,
-        index: '',
-        description: harvester.description + ' (Copy)'
+        index: "",
+        description: harvester.description + " (Copy)",
       },
-      width: '950px',
-      disableClose: true
+      width: "950px",
+      disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe((result: Harvester) => {
       if (result) {
         this.harvesterService.updateHarvester(result).subscribe(
           () => this.fetchHarvester(),
-          err => alert(err.message));
+          (err) => alert(err.message),
+        );
       }
     });
   }
@@ -169,34 +168,43 @@ export class HarvesterComponent implements OnInit, OnDestroy {
   edit(harvester: Harvester) {
     const dialogRef = this.dialog.open(DialogEditComponent, {
       data: JSON.parse(JSON.stringify(harvester)),
-      width: '950px',
+      width: "950px",
       disableClose: true,
-      autoFocus: false
+      autoFocus: false,
     });
 
     dialogRef.afterClosed().subscribe((result: Harvester) => {
       if (result) {
         // this is a really ugly hack, someone fix this in wfs-harvester.component.ts instead
-        if ('contactMetadata' in result) {
+        if ("contactMetadata" in result) {
           try {
-            result.contactMetadata = result.contactMetadata as unknown != "" ? JSON.parse(result.contactMetadata as unknown as string) : null;
-          }
-          catch (e) {
+            result.contactMetadata =
+              (result.contactMetadata as unknown) != ""
+                ? JSON.parse(result.contactMetadata as unknown as string)
+                : null;
+          } catch (e) {
             // swallow errors
           }
         }
-        if ('maintainer' in result) {
+        if ("maintainer" in result) {
           try {
-            result.maintainer = result.maintainer as unknown != "" ? JSON.parse(result.maintainer as unknown as string) : null;
-          }
-          catch (e) {
+            result.maintainer =
+              (result.maintainer as unknown) != ""
+                ? JSON.parse(result.maintainer as unknown as string)
+                : null;
+          } catch (e) {
             // swallow errors
           }
         }
-        this.harvesterService.updateHarvester(result).subscribe(() => {
-          // update view by modifying original object
-          Object.keys(harvester).forEach(key => harvester[key] = result[key]);
-        }, err => alert(err.message));
+        this.harvesterService.updateHarvester(result).subscribe(
+          () => {
+            // update view by modifying original object
+            Object.keys(harvester).forEach(
+              (key) => (harvester[key] = result[key]),
+            );
+          },
+          (err) => alert(err.message),
+        );
       }
     });
   }
@@ -205,76 +213,98 @@ export class HarvesterComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(DialogEditComponent, {
       data: {
         id: -1,
-        rules: {}
+        rules: {},
       },
-      width: '900px',
-      disableClose: true
+      width: "900px",
+      disableClose: true,
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.harvesterService.updateHarvester(result).subscribe(
           () => this.fetchHarvester(),
-          err => alert(err.message));
+          (err) => alert(err.message),
+        );
       }
     });
   }
 
   async showHistory(harvester: Harvester) {
-    let data = await this.harvesterService.getHarvesterHistory(harvester.id).toPromise();
-    if(data && data.history.length > 0){
-    const dialogRef = this.dialog.open(DialogHistoryComponent, {
-      data: data,
-      width: '950px',
-      disableClose: true
-    });
+    let data = await this.harvesterService
+      .getHarvesterHistory(harvester.id)
+      .toPromise();
+    if (data && data.history.length > 0) {
+      const dialogRef = this.dialog.open(DialogHistoryComponent, {
+        data: data,
+        width: "950px",
+        disableClose: true,
+      });
 
-    dialogRef.afterClosed().subscribe((result: Harvester) => {
-      if (result) {
-        this.harvesterService.updateHarvester(result).subscribe(() => {
-          // update view by modifying original object
-          Object.keys(harvester).forEach(key => harvester[key] = result[key]);
-        }, err => alert(err.message));
-      }
-    });
-    }
-    else {
-      alert('Keine Historie für diesen Importer vorhanden!');
+      dialogRef.afterClosed().subscribe((result: Harvester) => {
+        if (result) {
+          this.harvesterService.updateHarvester(result).subscribe(
+            () => {
+              // update view by modifying original object
+              Object.keys(harvester).forEach(
+                (key) => (harvester[key] = result[key]),
+              );
+            },
+            (err) => alert(err.message),
+          );
+        }
+      });
+    } else {
+      alert("Keine Historie für diesen Importer vorhanden!");
     }
   }
 
   private showError(error: Error) {
-    console.error('Error occurred', error);
-    this.snackBar.open(error.message, null, {panelClass: 'error', duration: 10000});
+    console.error("Error occurred", error);
+    this.snackBar.open(error.message, null, {
+      panelClass: "error",
+      duration: 10000,
+    });
   }
 
   importAll() {
     this.harvesterService.runImport(null).subscribe();
-    this.snackBar.open('Import von allen Harvestern gestartet', null, {duration: 10000});
+    this.snackBar.open("Import von allen Harvestern gestartet", null, {
+      duration: 10000,
+    });
   }
 
   private fetchHarvester() {
-    this.harvesterService.getHarvester().pipe(
-      tap(items => this.numberOfHarvesters = items.length),
-      flatMap(items => of(...items)),
-      groupBy(harvester => harvester.type.endsWith('CSW') ? 'CSW' : harvester.type),
-      mergeMap(group => zip(of(group.key), group.pipe(toArray())))
-    ).subscribe(data => {
-        this.harvesters[data[0]] = data[1].sort((a, b) => a.description.localeCompare(b.description)) as Harvester[];
-      },
-      (error) => console.error(error),
-      () => this.harvesterLoaded = true
-    );
+    this.harvesterService
+      .getHarvester()
+      .pipe(
+        tap((items) => (this.numberOfHarvesters = items.length)),
+        flatMap((items) => of(...items)),
+        groupBy((harvester) =>
+          harvester.type.endsWith("CSW") ? "CSW" : harvester.type,
+        ),
+        mergeMap((group) => zip(of(group.key), group.pipe(toArray()))),
+      )
+      .subscribe(
+        (data) => {
+          this.harvesters[data[0]] = data[1].sort((a, b) =>
+            a.description.localeCompare(b.description),
+          ) as Harvester[];
+        },
+        (error) => console.error(error),
+        () => (this.harvesterLoaded = true),
+      );
   }
 
   hasAnyErrors(id: number) {
     const detail = this.importDetail[id];
 
     if (detail && detail.summary) {
-      return detail.summary.numErrors > 0
-        || detail.summary.databaseErrors.length > 0
-        || detail.summary.elasticErrors.length > 0
-        || detail.summary.appErrors.length > 0;
+      return (
+        detail.summary.numErrors > 0 ||
+        detail.summary.databaseErrors.length > 0 ||
+        detail.summary.elasticErrors.length > 0 ||
+        detail.summary.appErrors.length > 0
+      );
     }
     return false;
   }
@@ -283,11 +313,13 @@ export class HarvesterComponent implements OnInit, OnDestroy {
     const detail = this.importDetail[id];
 
     if (detail && detail.summary) {
-      return detail.summary.warnings.length > 0
-        && detail.summary.numErrors === 0
-        && detail.summary.appErrors.length === 0
-        && detail.summary.databaseErrors.length === 0
-        && detail.summary.elasticErrors.length === 0;
+      return (
+        detail.summary.warnings.length > 0 &&
+        detail.summary.numErrors === 0 &&
+        detail.summary.appErrors.length === 0 &&
+        detail.summary.databaseErrors.length === 0 &&
+        detail.summary.elasticErrors.length === 0
+      );
     }
     return false;
   }
@@ -296,20 +328,29 @@ export class HarvesterComponent implements OnInit, OnDestroy {
     const detail = this.importDetail[id];
 
     if (detail && detail.summary) {
-      return detail.summary.numErrors > 0
-        || detail.summary.databaseErrors.length > 0
-        || detail.summary.elasticErrors.length > 0
-        || detail.summary.warnings.length > 0
-        || detail.summary.appErrors.length > 0;
+      return (
+        detail.summary.numErrors > 0 ||
+        detail.summary.databaseErrors.length > 0 ||
+        detail.summary.elasticErrors.length > 0 ||
+        detail.summary.warnings.length > 0 ||
+        detail.summary.appErrors.length > 0
+      );
     }
     return false;
   }
 
   deleteHarvester(harvester: Harvester) {
-    this.dialog.open(ConfirmDialogComponent, {data: 'Wollen Sie diesen Harvester wirklich löschen?'}).afterClosed().subscribe(result => {
-      if (result) {
-        this.harvesterService.delete(harvester.id).subscribe(() => this.fetchHarvester());
-      }
-    });
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        data: "Wollen Sie diesen Harvester wirklich löschen?",
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.harvesterService
+            .delete(harvester.id)
+            .subscribe(() => this.fetchHarvester());
+        }
+      });
   }
 }

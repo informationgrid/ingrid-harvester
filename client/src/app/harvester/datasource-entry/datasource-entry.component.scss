@@ -21,31 +21,35 @@
  * ==================================================
  */
 
-import { Component, input, output } from "@angular/core";
-import { MatIconButton } from "@angular/material/button";
-import { MatIcon } from "@angular/material/icon";
-import { MatTooltip } from "@angular/material/tooltip";
-import { TranslocoDirective } from "@ngneat/transloco";
+@use "../../../variables" as vars;
 
-@Component({
-  selector: "stat-indicator",
-  templateUrl: "./stat-indicator.component.html",
-  imports: [
-    MatIconButton,
-    MatIcon,
-    MatTooltip,
-    TranslocoDirective
-  ],
-  styleUrls: ["./stat-indicator.component.scss"]
-})
-export class StatIndicatorComponent {
-  leading = input<string>();
-  value = input<number>();
-  text = input<string>();
-
-  canOpenDetail = input<boolean>(false);
-  openDetail = output<void>();
-
-  constructor() {
+:host ::ng-deep {
+  mat-expansion-panel {
+    border: var(--mat-divider-width) solid var(--mat-divider-color);
   }
+
+  .mat-content.mat-content-hide-toggle {
+    gap: 12px;
+    margin-right: 0;
+  }
+
+  .mat-expansion-panel-body {
+    padding: 0 16px 16px;
+  }
+}
+
+mat-expansion-panel {
+  margin: 0 var(--harvester-side-spacing) 12px;
+  --mat-expansion-container-shape: 8px;
+  --mat-expansion-container-elevation-shadow: none;
+}
+
+mat-expansion-panel-header {
+  padding: 12px 16px 12px 16px;
+}
+
+
+.\-mx-4 {
+  margin-left: -16px;
+  margin-right: -16px;
 }

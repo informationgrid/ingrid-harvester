@@ -21,37 +21,18 @@
  * ==================================================
  */
 
-@use "../../../variables";
-
-:host {
-  min-width: 120px;
-  background-color: #fafafa;
-  border: 1px solid variables.$ige-divider;
-  border-radius: 12px;
-  padding: 16px;
-  line-height: 1.28;
+:host > div {
+  margin-top: 12px;
 }
 
-.stat-indicator-title {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  font-size: 18px;
-}
+mat-progress-spinner {
+  z-index: 1;
+  --mat-progress-spinner-active-indicator-color: rgba(25, 110, 162, 1);
 
-.stat-indicator-value {
-  font-size: 32px;
-  font-weight: 500;
-  margin-top: 8px;
-  margin-bottom: 4px;
-}
-
-.stat-indicator-subtitle {
-  font-size: 14px;
-  color: variables.$ige-hint-color;
-}
-
-.stat-indicator-btn {
-  background-color: white;
-  box-shadow: 0 0 0 1px variables.$ige-divider;
+  &.track {
+    z-index: 0;
+    inset: 0;
+    position: absolute;
+    --mat-progress-spinner-active-indicator-color: rgba(25, 110, 162, 0.2);
+  }
 }

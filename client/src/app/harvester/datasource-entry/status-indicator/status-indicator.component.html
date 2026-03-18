@@ -1,0 +1,54 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+@if (statuses().length) {
+  <div class="flex-row gap-8" *transloco="let t; read: 'harvester'">
+    @for (status of statuses(); track status) {
+      @switch (status) {
+        @case ("error") {
+          <div
+            class="status {{ status }}"
+            [matTooltip]="t('status.error.tooltip', { num: errorNum() })"
+            matTooltipPosition="right"
+          >
+            <mat-icon [svgIcon]="t('status.error.icon')"></mat-icon>
+            <span class="font-normal">{{ t("status.error.title") }}</span>
+          </div>
+        }
+        @default {
+          <div
+            class="status {{ status }}"
+            [matTooltip]="t('status.' + status + '.tooltip')"
+            matTooltipPosition="right"
+            data-test="icon-schedule"
+          >
+            <mat-icon [svgIcon]="t('status.' + status + '.icon')"></mat-icon>
+            <span class="font-normal">{{
+              t("status." + status + ".title")
+            }}</span>
+          </div>
+        }
+      }
+    }
+  </div>
+}

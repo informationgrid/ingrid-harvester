@@ -21,39 +21,33 @@
     ==================================================
 -->
 
-@if (leading() || canOpenDetail()) {
-  <div
-    class="stat-indicator-title"
-    *transloco="let t; read: 'harvester'"
-  >
-    @if (leading()) {
-      {{ leading() }}
-    }
+@if (importLog() !== undefined && !importLog().complete) {
+  <div class="flex-row gap-8" *transloco="let t; read: 'harvester'">
+    <div class="relative isolate">
+      <mat-progress-spinner
+        diameter="16"
+        strokeWidth="2.5"
+        [mode]="importProgress() ? 'determinate' : 'indeterminate'"
+        [value]="importProgress()"
+      ></mat-progress-spinner>
+      <mat-progress-spinner
+        class="track"
+        diameter="16"
+        strokeWidth="2.5"
+        mode="determinate"
+        value="100"
+      ></mat-progress-spinner>
+    </div>
 
-    @if (canOpenDetail()) {
-      <button
-        matIconButton
-        color="primary"
-        class="stat-indicator-btn"
-        aria-label="{{ t('showDetail') }}"
-        matTooltip="{{ t('showDetail') }}"
-        (click)="openDetail.emit()"
-      >
-        <mat-icon svgIcon="external"></mat-icon>
-      </button>
-    }
-  </div>
-}
+    <div class="flex-row flex-wrap gap-4 font-normal">
+      <span>{{ importLog()?.message ?? t("importing") }}</span>
 
-@if (value() !== undefined) {
-  <div class="stat-indicator-value">
-    {{ value() }}
-  </div>
-}
-
-
-@if (text()) {
-  <div class="stat-indicator-subtitle">
-    {{ text() }}
+      @if (importLog()?.progress) {
+        <span>
+          ({{ importLog().progress.current }} /
+          {{ importLog().progress.total }})
+        </span>
+      }
+    </div>
   </div>
 }

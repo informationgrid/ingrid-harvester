@@ -20,80 +20,39 @@
  * limitations under the Licence.
  * ==================================================
  */
-@use "../../variables" as vars;
 
-:host {
+.entry {
   display: flex;
-  overflow: hidden;
-  flex: 1; // IE 11
-
-  --harvester-side-spacing: 24px;
-}
-
-@media screen and (max-width: 600px) {
-  :host {
-    --harvester-side-spacing: 16px;
-  }
-}
-
-.mat-expansion-panel {
-  margin-bottom: 20px;
-}
-
-.mat-mdc-slide-toggle {
-  // height: 48px;
-  padding: 0 20px;
-}
-
-::ng-deep mat-slide-toggle .mat-mdc-slide-toggle-thumb-container {
-  cursor: pointer;
-}
-
-.example-headers-align .mat-expansion-panel-header-title,
-.example-headers-align .mat-expansion-panel-header-description {
-  flex-basis: 0;
-}
-
-.example-headers-align .mat-expansion-panel-header-description {
+  gap: 12px;
   align-items: center;
-  flex-grow: 0;
-  margin-right: 0;
+  padding: 10px;
 }
 
-.success {
-  color: #5dc57b;
+.bordered {
+  border-radius: 4px;
+  background-color: #fafafa;
+  border: 1px solid #dddddd;
 }
 
-.warn {
-  color: #ff0000;
-}
-
-.warning {
-  color: #ff9e00;
-}
-
-.no-harvester {
+.label {
   display: flex;
-  justify-content: center;
+  gap: 8px;
   align-items: center;
-  width: 100%;
-
-  mat-spinner {
-    display: inline-block;
-  }
+  align-self: start;
 }
 
-.status-icon {
-  width: 56px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.value {
+  flex: 1;
+  font-size: 16px;
+  word-break: break-word;
 }
 
-.scheduled-icon {
-  width: 24px;
-  height: 24px;
-  align-self: center;
-  margin-right: 8px;
+mat-icon {
+  width: 16px;
+  height: 16px;
+}
+
+button {
+  background-color: #ffffff;
+  outline: 1.5px solid #dddddd;
 }

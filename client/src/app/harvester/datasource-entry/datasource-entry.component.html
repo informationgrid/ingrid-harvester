@@ -1,0 +1,117 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<mat-expansion-panel *transloco="let t; read: 'harvester'" [hideToggle]="true">
+  <mat-expansion-panel-header expandedHeight="auto" collapsedHeight="auto">
+    <div class="w-full flex-col align-items-stretch">
+      <div class="flex-col gap-8">
+        <h3 class="text-lg my-0 break-word">
+          {{ datasource().description }}
+        </h3>
+
+        <div class="text-hint font-normal break-word line-clamp-1">
+          {{ datasource().sourceURL }}
+        </div>
+      </div>
+
+      <harvester-status-indicator
+        [datasource]="datasource()"
+        [importLog]="importLog()"
+      />
+
+      <harvester-progress-indicator [importLog]="importLog()" />
+    </div>
+
+    <div class="flex-row align-self-center">
+      <button
+        #actionMenuBtn="matMenuTrigger"
+        matIconButton
+        color="primary"
+        matTooltip="{{ t('more') }}"
+        aria-label="{{ t('more') }}"
+        (click)="openActionMenu($event)"
+        (keydown.enter)="openActionMenu($event)"
+        [matMenuTriggerFor]="actionMenu"
+        data-test="more"
+      >
+        <mat-icon svgIcon="Options" />
+      </button>
+      <mat-menu data-test="action-menu" #actionMenu>
+        <button
+          mat-menu-item
+          [disabled]="importLog() !== undefined && !importLog().complete"
+          (click)="onImport.emit()"
+          data-test="import"
+        >
+          <mat-icon svgIcon="Harvester" />
+          {{ t("import") }}
+        </button>
+        <button
+          mat-menu-item
+          [disabled]="importLog() !== undefined && !importLog().complete"
+          (click)="onIncrementImport.emit()"
+          data-test="importIncrement"
+        >
+          <mat-icon svgIcon="Harvester" />
+          {{ t("importIncrement") }}
+        </button>
+        <button mat-menu-item (click)="onEdit.emit()" data-test="edit">
+          <mat-icon svgIcon="cursor-edit" />
+          {{ t("edit") }}
+        </button>
+        <button mat-menu-item (click)="onDelete.emit()" data-test="delete">
+          <mat-icon color="warn" svgIcon="Delete" />
+          {{ t("delete") }}
+        </button>
+        <button
+          mat-menu-item
+          (click)="onDuplicate.emit()"
+          data-test="duplicate"
+        >
+          <mat-icon svgIcon="Copy" />
+          {{ t("duplicate") }}
+        </button>
+        <button mat-menu-item (click)="onSchedule.emit()" data-test="schedule">
+          <mat-icon svgIcon="Schedule" />
+          {{ t("schedule") }}
+        </button>
+        <button mat-menu-item (click)="onHistory.emit()" data-test="history">
+          <mat-icon svgIcon="Timeline" />
+          {{ t("history") }}
+        </button>
+        <button mat-menu-item (click)="onOpenErrorLog.emit()" data-test="log">
+          <mat-icon svgIcon="Logging" />
+          {{ t("log") }}
+        </button>
+      </mat-menu>
+    </div>
+  </mat-expansion-panel-header>
+
+  <mat-divider class="-mx-4" />
+  <harvester-datasource-detail
+    [datasource]="datasource()"
+    [importLog]="importLog()"
+    (onOpenErrorLog)="onOpenErrorLog.emit()"
+    (onOpenWarningLog)="onOpenWarningLog.emit()"
+  />
+</mat-expansion-panel>

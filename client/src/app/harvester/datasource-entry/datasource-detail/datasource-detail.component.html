@@ -1,0 +1,77 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<div class="flex-col gap-12" *transloco="let t; read: 'harvester'">
+  <div class="flex-row flex-wrap gap-12">
+    <harvester-datasource-detail-entry
+      class="flex-1"
+      icon="available"
+      [title]="t('lastImport')"
+      [value]="lastExecution()"
+    />
+
+    <harvester-datasource-detail-entry
+      class="flex-1"
+      icon="timer"
+      [title]="t('durationImport')"
+      [value]="executionDuration()"
+    />
+
+    <harvester-datasource-detail-entry
+      class="flex-1"
+      icon="upcoming"
+      [title]="t('nextImport')"
+      [value]="nextExecution()"
+    />
+  </div>
+
+  <div class="flex-row flex-wrap gap-12">
+    <harvester-datasource-detail-entry
+      class="flex-1"
+      icon="document"
+      [title]="t('documents')"
+      [value]="docNum()"
+      data-test="num-docs"
+    />
+
+    <harvester-datasource-detail-entry
+      class="flex-1"
+      icon="Error"
+      [title]="t('errors')"
+      [value]="errorNum()"
+      [hasNavigation]="errorNum() != '-'"
+      (onNavigate)="onOpenErrorLog.emit()"
+      data-test="num-errors"
+    />
+
+    <harvester-datasource-detail-entry
+      class="flex-1"
+      icon="warning"
+      [title]="t('warnings')"
+      [value]="warningNum()"
+      [hasNavigation]="warningNum() != '-'"
+      (onNavigate)="onOpenWarningLog.emit()"
+      data-test="num-warnings"
+    />
+  </div>
+</div>

@@ -54,11 +54,12 @@ import { MatTooltip } from "@angular/material/tooltip";
 import { MatGridList, MatGridTile } from "@angular/material/grid-list";
 import { ContextHelpButtonComponent } from "../shared/context-help/context-help-button/context-help-button.component";
 import { TranslocoDirective } from "@ngneat/transloco";
-import { StatIndicatorComponent } from "../shared/stat-indicator/stat-indicator.component";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { DialogHeaderComponent } from "../shared/dialog-header/dialog-header.component";
 import { FormlyModule } from "@ngx-formly/core";
 import { FormlyMaterialModule } from "@ngx-formly/material";
+import { DatasourceEntryComponent } from "./datasource-entry/datasource-entry.component";
+import { OverviewTemplateComponent } from "../shared/overview-template/overview-template.component";
 
 const harvesterRoutes: Routes = [
   {
@@ -104,13 +105,14 @@ const harvesterRoutes: Routes = [
     MatGridTile,
     ContextHelpButtonComponent,
     TranslocoDirective,
-    StatIndicatorComponent,
     MatMenu,
     MatMenuTrigger,
     MatMenuItem,
     DialogHeaderComponent,
     FormlyModule,
     FormlyMaterialModule,
+    DatasourceEntryComponent,
+    OverviewTemplateComponent,
   ],
   exports: [HarvesterComponent],
 })
