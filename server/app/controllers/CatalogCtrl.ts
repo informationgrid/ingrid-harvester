@@ -46,6 +46,7 @@ export class CatalogCtrl {
     }
 
     @Post('/')
+    @KeycloakAuth({role: ["admin"]})
     addOrEditCatalog(@BodyParams() settings: CatalogSettings): CatalogSettings {
         return ConfigService.addOrEditCatalog(settings);
     }
@@ -57,6 +58,7 @@ export class CatalogCtrl {
     // }
 
     @Delete('/:identifier')
+    @KeycloakAuth({role: ["admin"]})
     async deleteCatalog(@PathParams('identifier') id: number): Promise<void> {
         await ConfigService.removeCatalog(id);
     }

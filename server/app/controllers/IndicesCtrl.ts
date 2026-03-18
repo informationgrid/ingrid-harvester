@@ -44,6 +44,7 @@ export class IndicesCtrl {
     }
 
     @Delete('/:name')
+    @KeycloakAuth({role: ["admin"]})
     async deleteIndex(@PathParams('name') name: string): Promise<void> {
         return this.indexService.deleteIndex(name);
     }
@@ -54,6 +55,7 @@ export class IndicesCtrl {
     }
 
     @Post('/')
+    @KeycloakAuth({role: ["admin"]})
     async importMappingFile(@BodyParams() file: any): Promise<void> {
         if(file.index && file.settings && file.mappings && file.data)
             await this.indexService.importIndex(file);

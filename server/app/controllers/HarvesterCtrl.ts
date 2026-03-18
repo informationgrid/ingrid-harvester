@@ -27,7 +27,6 @@ import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from '../services/config/ConfigService.js';
-import { IndexService } from '../services/IndexService.js';
 import { ScheduleService } from '../services/ScheduleService.js';
 import { HistoryService } from '../services/statistic/HistoryService.js';
 import {KeycloakAuth} from "../decorators/KeycloakAuthOptions.js";
@@ -40,7 +39,6 @@ const log = log4js.getLogger(import.meta.filename);
 export class HarvesterCtrl {
 
     constructor(
-        private indexService: IndexService,
         private scheduleService: ScheduleService,
         private historyService: HistoryService) {
     }
@@ -51,12 +49,14 @@ export class HarvesterCtrl {
     }
 
     @Post('/filecontent')
+    @KeycloakAuth({role: ["admin", "editor"]})
     importHarvesterConfigs(@BodyParams() config: Harvester[]) {
         if(config && config.length > 0 && config[0].type)
             ConfigService.importHarvester(config);
     }
 
     @Post('/:id')
+    @KeycloakAuth({role: ["admin", "editor"]})
     updateHarvesterConfig(@PathParams('id') id: number, @BodyParams() config: Harvester) {
         const updatedID = ConfigService.update(+id, config);
 
@@ -82,6 +82,7 @@ export class HarvesterCtrl {
     }
 
     @Delete('/:id')
+    @KeycloakAuth({role: ["admin", "editor"]})
     deleteHarvesterConfig(@PathParams('id') id: number) {
 
         // // remove from search index/alias

@@ -120,7 +120,13 @@ export class AuthMiddleware implements MiddlewareMethods {
     // - Checking roles if provided
     // return keycloak.enforcer(options.role, {response_mode: 'token'});
     // return keycloak.protect(options.role);
-    const protectMiddleware = keycloak.protect(options.role);
+    let protect: any = options.role;
+    if (Array.isArray(options.role)) {
+      protect = (token: any) => {
+        return (options.role as string[]).some((role: string) => token.hasRole(role));
+      };
+    }
+    const protectMiddleware = keycloak.protect(protect);
     return new Promise((resolve, reject) => {
       // @ts-ignore
       protectMiddleware(request, ctx.getResponse(), (err: any) => {

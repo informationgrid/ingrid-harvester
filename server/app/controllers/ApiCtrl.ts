@@ -52,11 +52,13 @@ export class ApiCtrl {
     }
 
     @Post('/import/:id')
+    @KeycloakAuth({role: ["admin", "editor"]})
     importFromHarvester(@PathParams('id') id: number, @QueryParams('isIncremental') isIncremental: boolean) {
         this.importSocketService.runImport(+id, isIncremental);
     }
 
     @Post('/importAll')
+    @KeycloakAuth({role: ["admin", "editor"]})
     async importAllFromHarvester() {
         if (this.importAllProcessIsRunning) {
             log.info('Import process for all harvesters is already running - not starting again');
@@ -88,16 +90,19 @@ export class ApiCtrl {
     }
 
     @Post('/schedule/:id')
+    @KeycloakAuth({role: ["admin", "editor"]})
     schedule(@PathParams('id') id: number, @BodyParams('cron') cron: { full: CronData, incr: CronData }): Date[] {
         return this.scheduleService.set(+id, cron);
     }
 
     @Post('/url_check')
+    @KeycloakAuth({role: ["admin", "editor"]})
     async checkURLs() {
         this.urlCheckService.start();
     }
 
     @Post('/index_check')
+    @KeycloakAuth({role: ["admin", "editor"]})
     async checkIndices() {
         this.indexCheckService.start();
     }
