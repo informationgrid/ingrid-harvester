@@ -25,6 +25,8 @@ import {inject, Injectable} from '@angular/core';
 import {BehaviorSubject, firstValueFrom, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 
+type Role = 'admin' | 'editor' | 'viewer';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -32,12 +34,14 @@ export class KeycloakService {
   private http = inject(HttpClient)
   private authenticated = new BehaviorSubject<boolean>(false);
   private username: string = '';
+  private role: Role = null;
 
   async init(): Promise<boolean> {
     try {
       const user = await firstValueFrom(this.http.get<any>('rest/auth/keycloak/check'));
       this.authenticated.next(true);
       this.username = user.username || '';
+      this.role = user.role || null;
       return true;
     } catch {
       this.authenticated.next(false);

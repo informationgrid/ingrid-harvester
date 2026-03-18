@@ -14,7 +14,7 @@ export interface kAuthRequest extends Express.Request {
 export class KeycloakService {
     private keycloak: KeycloakConnect.Keycloak;
     private memoryStore: MemoryStore;
-    private token: Token;
+    // private token: Token;
 
     constructor() {
         this.initKeycloak();
@@ -40,11 +40,27 @@ export class KeycloakService {
         return this.memoryStore;
     }
 
-    public getToken(): Token {
+    /*public getToken(): Token {
         return this.token;
+    }*/
+
+    /**
+     * @deprecated
+     */
+    public setToken(token: Token): void {
+        // this.token = token;
     }
 
-    public setToken(token: Token): void {
-        this.token = token;
+    public getRoles(token: any): string[] {
+        if (!token) return [];
+
+        const clientId = (this.keycloak as any).config.clientId;
+        const resourceAccess = token.resource_access;
+
+        if (resourceAccess && resourceAccess[clientId] && resourceAccess[clientId].roles) {
+            return resourceAccess[clientId].roles;
+        }
+
+        return [];
     }
 }

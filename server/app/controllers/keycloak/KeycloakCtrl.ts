@@ -65,9 +65,9 @@ export class KeycloakCtrl {
 
             if (user) {
                 const { password, ...userInfo } = user;
-                return userInfo;
+                return { ...userInfo, roles: this.keycloakService.getRoles(token) };
             }
-            return { username };
+            return { username, roles: this.keycloakService.getRoles(token) };
         }
 
         throw new Unauthorized('User not authenticated');
