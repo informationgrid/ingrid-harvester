@@ -188,8 +188,10 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
         let doc: IndexDocument;
+        let dcatapdeDoc: string;
         try {
             doc = await documentFactory.createIndexDocument();
+            dcatapdeDoc = documentFactory.createDcatapdeDocument();
         } catch (e) {
             log.error(`Error creating index document for ${entry.Code}`, e);
             this.getSummary().appErrors.push(`Error creating document for ${entry.Code}: ${e.message}`);
@@ -202,6 +204,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
                 source: this.getSettings().sourceURL,
                 collection_id: this.collectionId,
                 dataset: doc,
+                dataset_dcatapde: dcatapdeDoc,
                 original_document: mapper.getHarvestedData(),
             };
 

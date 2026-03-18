@@ -265,7 +265,9 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
         return undefined;
     }
 
-    abstract getSpatial(): Geometry[];
+    getSpatial(): Geometry[] {
+        return undefined;
+    }
 
     getIDF(): string {
         return undefined;

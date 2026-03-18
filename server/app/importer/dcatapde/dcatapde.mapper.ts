@@ -47,8 +47,18 @@ import type {ToDcatapdeMapper} from "../to.dcatapde.mapper.js";
 export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasticMapper<IndexDocument>, ToDcatapdeMapper {
 
     static DCAT_CATEGORY_URL = 'http://publications.europa.eu/resource/authority/data-theme/';
+    static DCAT_FILE_TYPE_URL = 'http://publications.europa.eu/resource/authority/file-type/';
     static DCAT_LANGUAGE_URL = 'http://publications.europa.eu/resource/authority/language/';
     static DCAT_AVAILABILTY_URL = 'http://publications.europa.eu/resource/authority/planned-availability/';
+
+    /** Maps ISO 639-1 two-letter codes to ISO 639-3 three-letter codes used by the EU language authority vocabulary. */
+    static ISO_639_1_TO_3: Record<string, string> = {
+        de: 'DEU', en: 'ENG', fr: 'FRA', es: 'SPA', it: 'ITA',
+        pl: 'POL', nl: 'NLD', pt: 'POR', cs: 'CES', hu: 'HUN',
+        ro: 'RON', sv: 'SWE', da: 'DAN', fi: 'FIN', sk: 'SLK',
+        bg: 'BUL', hr: 'HRV', lt: 'LIT', lv: 'LAV', et: 'EST',
+        sl: 'SLV', ga: 'GLE', mt: 'MLT',
+    };
 
     static DCAT_THEMES = ['AGRI', 'ECON', 'EDUC','ENER','ENVI','GOVE','HEAL','INTR','JUST','REGI','SOCI','TECH','TRAN'];
 

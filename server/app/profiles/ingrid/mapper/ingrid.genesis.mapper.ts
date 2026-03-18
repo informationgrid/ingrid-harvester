@@ -21,10 +21,27 @@
  * ==================================================
  */
 
-import type { Geometry } from "geojson";
+import { DOMImplementation } from "@xmldom/xmldom";
 import { GenesisMapper } from '../../../importer/genesis/genesis.mapper.js';
+import { DcatapdeMapper } from '../../../importer/dcatapde/dcatapde.mapper.js';
+import { namespaces } from '../../../importer/namespaces.js';
+import { UrlUtils } from '../../../utils/url.utils.js';
 import type { IngridOpendataIndexDocument } from '../model/opendataindex.document.js';
 import { ingridMapper } from "./ingrid.mapper.js";
+
+function formatXml(xml: string, indent = '  '): string {
+    let pad = 0;
+    return xml
+        .replace(/(>)(<)(\/*)/g, '$1\n$2$3')
+        .split('\n')
+        .map(line => {
+            if (line.match(/^<\/\w/)) pad = Math.max(0, pad - 1);
+            const padding = indent.repeat(pad);
+            if (line.match(/^<\w[^>]*[^/]>/) && !line.match(/<\/\w/)) pad++;
+            return padding + line;
+        })
+        .join('\n');
+}
 
 export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
 
@@ -70,7 +87,127 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         return result;
     }
 
-    getSpatial(): Geometry[] {
-        return null;
+    createDcatapdeDocument(): string {
+        const dom = new DOMImplementation();
+        const doc = dom.createDocument(namespaces.RDF, 'rdf:RDF', null);
+        const rdfRoot = doc.documentElement;
+        rdfRoot.setAttribute('xmlns:dcat', namespaces.DCAT);
+        rdfRoot.setAttribute('xmlns:dct', namespaces.DCT);
+        rdfRoot.setAttribute('xmlns:dcatde', namespaces.DCATDE);
+        rdfRoot.setAttribute('xmlns:foaf', namespaces.FOAF);
+        rdfRoot.setAttribute('xmlns:vcard', namespaces.VCARD);
+
+        const dataset = doc.createElement('dcat:Dataset');
+        rdfRoot.appendChild(dataset);
+
+        dataset.appendChild(doc.createElement('dct:title')).textContent = this.baseMapper.getTitle();
+        dataset.appendChild(doc.createElement('dct:description')).textContent = this.baseMapper.getDescription();
+        const identifierEl = doc.createElement('dct:identifier');
+        identifierEl.setAttribute('rdf:resource', this.getGeneratedId());
+        dataset.appendChild(identifierEl);
+
+        const addDate = (parent: Element, tag: string, date: Date) => {
+            const el = doc.createElement(tag);
+            el.setAttribute('rdf:datatype', namespaces.XSD + '#dateTime');
+            el.textContent = date.toISOString();
+            parent.appendChild(el);
+        };
+
+        const modified = this.getModifiedDate();
+        if (modified) {
+            addDate(dataset, 'dct:modified', modified);
+        }
+
+        const temporal = this.baseMapper.getTemporal();
+        if (temporal) {
+            const period = doc.createElement('dct:temporal');
+            const periodOfTime = doc.createElement('dct:PeriodOfTime');
+            if (temporal.gte) {
+                addDate(periodOfTime, 'dcat:startDate', temporal.gte);
+            }
+            if (temporal.lte) {
+                addDate(periodOfTime, 'dcat:endDate', temporal.lte);
+            }
+            period.appendChild(periodOfTime);
+            dataset.appendChild(period);
+        }
+
+        for (const keyword of this.baseMapper.getKeywords()) {
+            dataset.appendChild(doc.createElement('dcat:keyword')).textContent = keyword;
+        }
+
+        const theme = this.baseMapper.getTheme();
+        if (theme) {
+            const themeEl = doc.createElement('dcat:theme');
+            themeEl.setAttribute('rdf:resource', theme);
+            dataset.appendChild(themeEl);
+        }
+
+        const licenseUrl = this.baseMapper.getLicenseUrl();
+        const distributions = this.baseMapper.getDistributions();
+        for (const dist of distributions) {
+            const distEl = doc.createElement('dcat:distribution');
+            const distNode = doc.createElement('dcat:Distribution');
+            if (dist.accessURL) {
+                const accessEl = doc.createElement('dcat:accessURL');
+                accessEl.setAttribute('rdf:resource', dist.accessURL);
+                distNode.appendChild(accessEl);
+            }
+            if (dist.downloadURL) {
+                const downloadEl = doc.createElement('dcat:downloadURL');
+                downloadEl.setAttribute('rdf:resource', dist.downloadURL);
+                distNode.appendChild(downloadEl);
+            }
+            if (dist.format?.[0]) {
+                const formatCode = UrlUtils.mapFormat([dist.format[0]])[0];
+                const formatIri = formatCode.startsWith('http')
+                    ? formatCode
+                    : DcatapdeMapper.DCAT_FILE_TYPE_URL + formatCode;
+                const formatEl = doc.createElement('dct:format');
+                formatEl.setAttribute('rdf:resource', formatIri);
+                distNode.appendChild(formatEl);
+            }
+            if (licenseUrl) {
+                const licEl = doc.createElement('dct:license');
+                licEl.setAttribute('rdf:resource', licenseUrl);
+                distNode.appendChild(licEl);
+            }
+            distEl.appendChild(distNode);
+            dataset.appendChild(distEl);
+        }
+
+        const publisher = this.baseMapper.getPublisher();
+        if (publisher) {
+            const pubEl = doc.createElement('dct:publisher');
+            const orgEl = doc.createElement('foaf:Organization');
+            orgEl.appendChild(doc.createElement('foaf:name')).textContent = publisher.name;
+            pubEl.appendChild(orgEl);
+            dataset.appendChild(pubEl);
+
+            if (publisher.email) {
+                const contactEl = doc.createElement('dcat:contactPoint');
+                const vcardEl = doc.createElement('vcard:Organization');
+                vcardEl.appendChild(doc.createElement('vcard:hasEmail')).textContent = publisher.email;
+                contactEl.appendChild(vcardEl);
+                dataset.appendChild(contactEl);
+            }
+        }
+
+        const contributorId = this.baseMapper.getContributorId();
+        if (contributorId) {
+            const contribEl = doc.createElement('dcatde:contributorID');
+            contribEl.setAttribute('rdf:resource', contributorId);
+            dataset.appendChild(contribEl);
+        }
+
+        const language = this.baseMapper.getLanguage();
+        if (language) {
+            const iso3 = DcatapdeMapper.ISO_639_1_TO_3[language] ?? language.toUpperCase();
+            const langEl = doc.createElement('dct:language');
+            langEl.setAttribute('rdf:resource', DcatapdeMapper.DCAT_LANGUAGE_URL + iso3);
+            dataset.appendChild(langEl);
+        }
+
+        return '<?xml version="1.0" encoding="utf-8"?>\n' + formatXml(doc.toString());
     }
 }
