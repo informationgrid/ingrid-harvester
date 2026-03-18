@@ -30,11 +30,13 @@ import { ConfigService } from '../services/config/ConfigService.js';
 import { IndexService } from '../services/IndexService.js';
 import { ScheduleService } from '../services/ScheduleService.js';
 import { HistoryService } from '../services/statistic/HistoryService.js';
+import {KeycloakAuth} from "../decorators/KeycloakAuthOptions.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
 @Controller('/api/harvester')
 @UseAuth(AuthMiddleware)
+@KeycloakAuth({role: ["admin", "editor", "viewer"]})
 export class HarvesterCtrl {
 
     constructor(

@@ -25,9 +25,11 @@ import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '@tsed/common';
 import type { Index } from '@shared/index.model.js';
 import { IndexService } from '../services/IndexService.js';
+import {KeycloakAuth} from "../decorators/KeycloakAuthOptions.js";
 
 @Controller('/api/indices')
 @UseAuth(AuthMiddleware)
+@KeycloakAuth({role: ["admin", "editor", "viewer"]})
 export class IndicesCtrl {
 
     constructor(private indexService: IndexService) {

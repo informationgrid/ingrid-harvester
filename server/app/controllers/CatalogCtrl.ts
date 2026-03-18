@@ -26,11 +26,13 @@ import log4js from 'log4js';
 import type { CatalogSettings } from '../catalog/catalog.factory.js';
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { ConfigService } from '../services/config/ConfigService.js';
+import {KeycloakAuth} from "../decorators/KeycloakAuthOptions.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
 @Controller('/api/catalogs')
 @UseAuth(AuthMiddleware)
+@KeycloakAuth({role: ["admin", "editor", "viewer"]})
 export class CatalogCtrl {
 
     @Get('/')

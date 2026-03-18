@@ -33,11 +33,13 @@ import { LogService } from '../services/storage/LogService.js';
 import { ScheduleService } from '../services/ScheduleService.js';
 import { SummaryService } from '../services/config/SummaryService.js';
 import { UrlCheckService } from '../services/statistic/UrlCheckService.js';
+import {KeycloakAuth} from "../decorators/KeycloakAuthOptions.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
 @Controller('/api')
 @UseAuth(AuthMiddleware)
+@KeycloakAuth({role: ["admin", "editor", "viewer"]})
 export class ApiCtrl {
     private importAllProcessIsRunning = false;
 
