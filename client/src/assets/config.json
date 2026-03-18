@@ -1,5 +1,7 @@
 {
   "url": "",
   "contextPath": "",
-  "version": "@@VERSION@@"
+  "version": "@@VERSION@@",
+  "passportEnabled": true,
+  "keycloakEnabled": true
 }

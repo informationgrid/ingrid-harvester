@@ -22,11 +22,12 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {FormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {FormControl, FormGroup, UntypedFormGroup, Validators} from '@angular/forms';
 import {AuthenticationService} from './authentication.service';
 import {Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 import {catchError, of} from 'rxjs';
+import {ConfigService} from '../config.service';
 import {AuthMethod} from "./AuthStrategy";
 
 @Component({
@@ -36,20 +37,20 @@ import {AuthMethod} from "./AuthStrategy";
 })
 export class LoginComponent implements OnInit {
 
-  form: UntypedFormGroup = new UntypedFormGroup({
+  form: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
   });
   showErrorMessage = false;
+  passportEnabled = true;
+  keycloakEnabled = true;
 
-  constructor(private router: Router, private authService: AuthenticationService) {
+  constructor(private router: Router, private authService: AuthenticationService, private configService: ConfigService) {
   }
 
   ngOnInit(): void {
-    // Initialize Keycloak
-    /*this.authService.initKeycloak().catch(error => {
-      console.error('Error initializing Keycloak', error);
-    });*/
+    this.passportEnabled = this.configService.config.passportEnabled !== false;
+    this.keycloakEnabled = this.configService.config.keycloakEnabled !== false;
 
     this.authService.currentUser.subscribe({
       next: (user) => {
@@ -81,7 +82,7 @@ export class LoginComponent implements OnInit {
   }
 
   loginWithKeycloak() {
-    this.authService.login(null, null, AuthMethod.KEYCLOAK)
+    this.authService.login(null, null)
       .pipe(
         catchError((error) => {
           console.error('Error during Keycloak login', error);

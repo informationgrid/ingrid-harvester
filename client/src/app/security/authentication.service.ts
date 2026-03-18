@@ -32,7 +32,6 @@ import {HttpClient} from "@angular/common/http";
 @Injectable({providedIn: 'root'})
 export class AuthenticationService {
   private http = inject(HttpClient);
-  private authMethod: AuthMethod = AuthMethod.LOCAL;
   public currentUser: BehaviorSubject<any>;
 
   constructor(
@@ -46,7 +45,6 @@ export class AuthenticationService {
     return this.http.get<any>(`/rest/auth/check`).pipe(
       tap(user => {
         if (user) {
-          this.authMethod = user.authMethod;
           this.currentUser.next(user);
         }
       }),
@@ -58,7 +56,7 @@ export class AuthenticationService {
   }
 
   private get strategy(): AuthStrategy {
-    return this.authMethod === AuthMethod.KEYCLOAK ? this.keycloakService : this.passportService;
+    return this.currentUser.getValue().authMethod === AuthMethod.KEYCLOAK ? this.keycloakService : this.passportService;
   }
 
   isAuthenticated(): Observable<boolean> {
@@ -79,8 +77,7 @@ export class AuthenticationService {
     return user ? user.username : '';
   }
 
-  login(username: string, password: string, authMethod = AuthMethod.LOCAL) {
-    this.authMethod = authMethod;
+  login(username: string, password: string) {
     return this.strategy.login(username, password).pipe(
       tap(user => {
         if (user) {
@@ -91,7 +88,7 @@ export class AuthenticationService {
   }
 
   logout(fullKeycloakLogout: boolean = true): Observable<any> {
-    if (this.authMethod === AuthMethod.KEYCLOAK && !fullKeycloakLogout) {
+    if (this.currentUser.getValue().authMethod === AuthMethod.KEYCLOAK && !fullKeycloakLogout) {
       this.currentUser.next(null);
       return of(null);
     }
