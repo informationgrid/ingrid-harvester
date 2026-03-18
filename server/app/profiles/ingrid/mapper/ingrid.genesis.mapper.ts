@@ -23,25 +23,11 @@
 
 import { DOMImplementation } from "@xmldom/xmldom";
 import { GenesisMapper } from '../../../importer/genesis/genesis.mapper.js';
-import { DcatapdeMapper } from '../../../importer/dcatapde/dcatapde.mapper.js';
+import { DCAT_FILE_TYPE_URL, DCAT_LANGUAGE_URL, ISO_639_1_TO_3, prettyPrintXml } from '../../../importer/dcatapde/dcatapde.utils.js';
 import { namespaces } from '../../../importer/namespaces.js';
 import { UrlUtils } from '../../../utils/url.utils.js';
 import type { IngridOpendataIndexDocument } from '../model/opendataindex.document.js';
 import { ingridMapper } from "./ingrid.mapper.js";
-
-function formatXml(xml: string, indent = '  '): string {
-    let pad = 0;
-    return xml
-        .replace(/(>)(<)(\/*)/g, '$1\n$2$3')
-        .split('\n')
-        .map(line => {
-            if (line.match(/^<\/\w/)) pad = Math.max(0, pad - 1);
-            const padding = indent.repeat(pad);
-            if (line.match(/^<\w[^>]*[^/]>/) && !line.match(/<\/\w/)) pad++;
-            return padding + line;
-        })
-        .join('\n');
-}
 
 export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
 
@@ -162,7 +148,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
                 const formatCode = UrlUtils.mapFormat([dist.format[0]])[0];
                 const formatIri = formatCode.startsWith('http')
                     ? formatCode
-                    : DcatapdeMapper.DCAT_FILE_TYPE_URL + formatCode;
+                    : DCAT_FILE_TYPE_URL + formatCode;
                 const formatEl = doc.createElement('dct:format');
                 formatEl.setAttribute('rdf:resource', formatIri);
                 distNode.appendChild(formatEl);
@@ -202,12 +188,12 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
 
         const language = this.baseMapper.getLanguage();
         if (language) {
-            const iso3 = DcatapdeMapper.ISO_639_1_TO_3[language] ?? language.toUpperCase();
+            const iso3 = ISO_639_1_TO_3[language] ?? language.toUpperCase();
             const langEl = doc.createElement('dct:language');
-            langEl.setAttribute('rdf:resource', DcatapdeMapper.DCAT_LANGUAGE_URL + iso3);
+            langEl.setAttribute('rdf:resource', DCAT_LANGUAGE_URL + iso3);
             dataset.appendChild(langEl);
         }
 
-        return '<?xml version="1.0" encoding="utf-8"?>\n' + formatXml(doc.toString());
+        return '<?xml version="1.0" encoding="utf-8"?>\n' + prettyPrintXml(doc.toString());
     }
 }

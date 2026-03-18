@@ -41,7 +41,7 @@ import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
 import type { CkanParameters, CkanParametersListWithResources, RequestOptions, RequestPaging } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
-import { DcatapdeMapper } from '../dcatapde/dcatapde.mapper.js';
+import { DCAT_CATEGORY_URL } from '../dcatapde/dcatapde.utils.js';
 import { Mapper } from '../mapper.js';
 import { namespaces } from "../namespaces.js";
 import type { ToDcatapdeMapper } from "../to.dcatapde.mapper.js";
@@ -298,7 +298,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
             mappedThemes = this.getSettings().defaultDCATCategory;
         }
         return mappedThemes
-            .map(category => DcatapdeMapper.DCAT_CATEGORY_URL + category);
+            .map(category => DCAT_CATEGORY_URL + category);
     }
 
     getTitle() {
