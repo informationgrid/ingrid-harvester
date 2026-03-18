@@ -30,6 +30,7 @@
       <aside class="my-4" contextHelp="about_harvester"></aside>
 
       <div class="flex-row flex-wrap gap-16">
+        @if (authService.hasRole('admin')) {
         <button
           matButton="filled"
           color="primary"
@@ -61,6 +62,7 @@
           <mat-icon svgIcon="info"/>
           Ausführung planen
         </button>
+        }
 
         <button
           matButton="outlined"
@@ -124,6 +126,7 @@
             <div class="flex-row flex-wrap space-between gap-8">
               <!-- primary action buttons -->
               <div class="flex-row flex-wrap gap-12">
+                @if (authService.hasRole('admin')) {
                 @if (item.key === 'CSW') {
                   <button
                     matButton="outlined"
@@ -146,10 +149,12 @@
                   <mat-icon svgIcon="Harvester"/>
                   {{ t("import") }}
                 </button>
+                }
               </div>
 
               <!-- secondary action buttons -->
               <div class="flex-row flex-wrap gap-12">
+                @if (authService.hasRole('admin')) {
                 <button
                   matIconButton
                   color="primary"
@@ -171,6 +176,7 @@
                 >
                   <mat-icon svgIcon="Delete"/>
                 </button>
+                }
 
                 <button
                   matIconButton
@@ -183,6 +189,7 @@
                   <mat-icon svgIcon="Options"/>
                 </button>
                 <mat-menu data-test="action-menu" #actionMenu>
+                  @if (authService.hasRole('admin')) {
                   <button
                     mat-menu-item
                     (click)="copy(harvester)"
@@ -199,6 +206,7 @@
                     <mat-icon svgIcon="Schedule"/>
                     {{ t('schedule') }}
                   </button>
+                  }
                   <button
                     mat-menu-item
                     (click)="showHistory(harvester)"

@@ -26,6 +26,7 @@ import { Observable, map } from "rxjs";
 import { NavigationEnd, Route, Router } from "@angular/router";
 import { animate, style, transition, trigger } from "@angular/animations";
 import { MainMenuService } from "../menu/main-menu.service";
+import { AuthenticationService } from "../security/authentication.service";
 
 @Component({
     selector: 'ige-side-menu',
@@ -50,7 +51,16 @@ export class SideMenuComponent {
   showDrawer: Observable<boolean>;
 
   menuItems: Observable<Route[]> = this.menuService.menu$.pipe(
-    map((routes) => routes.filter((route) => route.data.partOfMenu == true)),
+    map((routes) => routes.filter((route) => {
+      if (route.data.partOfMenu !== true) {
+        return false;
+      }
+      const requiredRoles = route.data['roles'] as string[];
+      if (!requiredRoles || requiredRoles.length === 0) {
+        return true;
+      }
+      return requiredRoles.some(role => this.authService.hasRole(role));
+    })),
   );
 
   menuIsExpanded = false;
@@ -63,6 +73,7 @@ export class SideMenuComponent {
   constructor(
     private router: Router,
     private menuService: MainMenuService,
+    private authService: AuthenticationService,
   ) {}
 
   ngOnInit() {

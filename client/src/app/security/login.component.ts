@@ -21,22 +21,23 @@
  * ==================================================
  */
 
-import {Input, Component, Output, EventEmitter, OnInit} from '@angular/core';
-import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {AuthenticationService, AuthMethod} from './authentication.service';
 import {Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
+import {catchError, of} from 'rxjs';
 
 @Component({
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
-    standalone: false
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
+  standalone: false
 })
 export class LoginComponent implements OnInit {
 
   form: UntypedFormGroup = new UntypedFormGroup({
-    username: new UntypedFormControl(''),
-    password: new UntypedFormControl(''),
+    username: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required]),
   });
   showErrorMessage = false;
 
@@ -49,43 +50,44 @@ export class LoginComponent implements OnInit {
       console.error('Error initializing Keycloak', error);
     });*/
 
-    this.authService.currentUser.subscribe(user => {
-      if (user) {
-        this.router.navigate(['/']);
+    this.authService.currentUser.subscribe({
+      next: (user) => {
+        if (user) {
+          this.router.navigate(['/']);
+        }
       }
     });
   }
 
   submit() {
     if (this.form.valid) {
-      this.authService.login(this.form.get('username').value, this.form.get('password').value).subscribe(response => {
-        console.log('Response', response);
-        this.router.navigate(['/']);
-      }, (error: HttpErrorResponse) => {
-        console.log('Error logging in:', error);
-        if (error.status === 404) {
-          this.showErrorMessage = true;
-        }
-      });
+      this.authService.login(this.form.get('username').value, this.form.get('password').value)
+        .pipe(
+          catchError((error: HttpErrorResponse) => {
+            console.error('Error logging in:', error);
+            if (error.status === 404) {
+              this.showErrorMessage = true;
+            }
+            return of(null);
+          })
+        )
+        .subscribe((response) => {
+            if (response) {
+              this.router.navigate(['/']);
+            }
+        });
     }
   }
 
   loginWithKeycloak() {
-    this.showErrorMessage = false;
-    this.authService.login(null, null, AuthMethod.KEYCLOAK).subscribe(
-      response => {
-        if (response) {
-          console.log('Keycloak login successful', response);
-          this.router.navigate(['/']);
-        } else {
-          console.error('Keycloak login failed');
+    this.authService.login(null, null, AuthMethod.KEYCLOAK)
+      .pipe(
+        catchError((error) => {
+          console.error('Error during Keycloak login', error);
           this.showErrorMessage = true;
-        }
-      },
-      error => {
-        console.error('Error during Keycloak login', error);
-        this.showErrorMessage = true;
-      }
-    );
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 }

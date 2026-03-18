@@ -26,14 +26,12 @@ import {Observable, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {AuthenticationService} from './authentication.service';
 import {Router} from '@angular/router';
-import {KeycloakService} from './keycloak.service';
 
 export class UnauthorizedInterceptor implements HttpInterceptor {
 
   constructor(
     private router: Router,
     public auth: AuthenticationService,
-    private keycloakService: KeycloakService
   ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

@@ -5,7 +5,7 @@ import {Security} from "@tsed/schema";
 import {AuthMiddleware} from "../middlewares/auth/AuthMiddleware.js";
 
 export interface KeycloakAuthOptions extends Record<string, any> {
-    role?: string;
+    role?: string | string[];
     scopes?: string[];
 }
 

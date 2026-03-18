@@ -23,86 +23,88 @@
 
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
-import {map, tap} from 'rxjs/operators';
+import {tap} from 'rxjs/operators';
 import {KeycloakService} from './keycloak.service';
+import {PassportService} from './passport.service';
 
 export enum AuthMethod {
   LOCAL = 'local',
   KEYCLOAK = 'keycloak'
 }
 
+export interface AuthStrategy {
+  isAuthenticated(): Observable<boolean>;
+  getRoles(): string[];
+  hasRole(role: string): boolean;
+  login(username?: string, password?: string): Observable<any>;
+  logout(): Observable<any>;
+}
+
 @Injectable({providedIn: 'root'})
 export class AuthenticationService {
-  private currentUserSubject: BehaviorSubject<any>;
-  public currentUser: Observable<any>;
   private authMethod: AuthMethod = AuthMethod.LOCAL;
+  public currentUser: BehaviorSubject<any>;
 
   constructor(
-    private http: HttpClient,
-    private keycloakService: KeycloakService
+    private keycloakService: KeycloakService,
+    private passportService: PassportService
   ) {
-    this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('currentUser')));
-    this.currentUser = this.currentUserSubject.asObservable();
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    this.currentUser = new BehaviorSubject<any>(user);
+
+    if (user && user.authMethod) {
+      this.authMethod = user.authMethod;
+    }
 
     // Check if user is already authenticated with Keycloak
     this.keycloakService.isAuthenticated().subscribe(authenticated => {
       if (authenticated) {
         this.authMethod = AuthMethod.KEYCLOAK;
-        const user = {
+        const keycloakUser = {
           username: this.keycloakService.getUsername(),
           authMethod: AuthMethod.KEYCLOAK
         };
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        this.currentUserSubject.next(user);
+        localStorage.setItem('currentUser', JSON.stringify(keycloakUser));
+        this.currentUser.next(keycloakUser);
       }
     });
   }
 
-  public get currentUserValue() {
-    return this.currentUserSubject.value;
+  private get strategy(): AuthStrategy {
+    return this.authMethod === AuthMethod.KEYCLOAK ? this.keycloakService : this.passportService;
   }
 
-  public get currentAuthMethod() {
-    return this.authMethod;
+  isAuthenticated(): Observable<boolean> {
+    return this.strategy.isAuthenticated();
   }
 
-  login(username, password, authMethod = AuthMethod.LOCAL) {
-    if (authMethod === AuthMethod.KEYCLOAK) {
-      this.keycloakService.login();
-      return of(null);
-    } else {
-      // Local authentication
-      return this.http.post<any>(`/rest/passport/login`, {username, password})
-        .pipe(map(user => {
-          // store user details and jwt token in local storage to keep user logged in between page refreshes
-          user.authMethod = AuthMethod.LOCAL;
-          localStorage.setItem('currentUser', JSON.stringify(user));
-          this.authMethod = AuthMethod.LOCAL;
-          this.currentUserSubject.next(user);
-          return user;
-        }));
-    }
+  hasRole(role: string): boolean {
+    return this.strategy.hasRole(role);
+  }
+
+  login(username: string, password: string, authMethod = AuthMethod.LOCAL) {
+    this.authMethod = authMethod;
+    return this.strategy.login(username, password).pipe(
+      tap(user => {
+        if (user) {
+          this.currentUser.next(user);
+        }
+      })
+    );
   }
 
   logout(fullKeycloakLogout: boolean = true): Observable<any> {
-    if (this.authMethod === AuthMethod.KEYCLOAK) {
-      if (fullKeycloakLogout) {
-        this.keycloakService.logout();
-      }
+    if (this.authMethod === AuthMethod.KEYCLOAK && !fullKeycloakLogout) {
       localStorage.removeItem('currentUser');
-      this.currentUserSubject.next(null);
+      this.currentUser.next(null);
       return of(null);
-    } else {
-      // Local logout
-      return this.http.get('/rest/passport/logout', {responseType: 'text'}).pipe(
-        tap(() => {
-          localStorage.removeItem('currentUser');
-          this.currentUserSubject.next(null);
-        })
-      );
     }
-    // return of(null);
+    return this.strategy.logout().pipe(
+      tap(() => {
+        localStorage.removeItem('currentUser');
+        this.currentUser.next(null);
+      })
+    );
   }
 
   initKeycloak(): Promise<boolean> {

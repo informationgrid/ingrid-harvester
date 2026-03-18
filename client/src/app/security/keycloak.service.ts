@@ -22,15 +22,16 @@
  */
 
 import {inject, Injectable} from '@angular/core';
-import {BehaviorSubject, firstValueFrom, Observable} from 'rxjs';
+import {BehaviorSubject, firstValueFrom, Observable, of} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
+import {AuthStrategy} from './authentication.service';
 
 type Role = 'admin' | 'editor' | 'viewer';
 
 @Injectable({
   providedIn: 'root'
 })
-export class KeycloakService {
+export class KeycloakService implements AuthStrategy {
   private http = inject(HttpClient)
   private authenticated = new BehaviorSubject<boolean>(false);
   private username: string = '';
@@ -39,6 +40,8 @@ export class KeycloakService {
   async init(): Promise<boolean> {
     try {
       const user = await firstValueFrom(this.http.get<any>('rest/auth/keycloak/check'));
+      this.username = user.username || '';
+      this.roles = user.roles || null;
       this.authenticated.next(true);
       this.username = user.username || '';
       this.role = user.role || null;
@@ -63,5 +66,21 @@ export class KeycloakService {
 
   getUsername(): string {
     return this.username;
+  }
+
+  isAuthenticated(): Observable<boolean> {
+    return this.authenticated.asObservable();
+  }
+
+  getUsername(): string {
+    return this.username;
+  }
+
+  getRoles(): string[] {
+    return (this.roles as string[]) || [];
+  }
+
+  hasRole(role: string): boolean {
+    return this.roles && this.roles.includes(role as Role);
   }
 }

@@ -23,46 +23,57 @@
 
 import { ActivatedRouteSnapshot, DetachedRouteHandle, Route, RouteReuseStrategy, RouterModule, Routes } from "@angular/router";
 import {LoginComponent} from './security/login.component';
-  
+import {authGuard} from './security/auth.guard';
+
   export const routes: Routes = [
     {
-        path: 'dashboard', 
+        path: 'dashboard',
+        canActivate: [authGuard],
         loadChildren: () => import('./monitoring/monitoring.module').then(mod => mod.MonitoringModule),
         data: {
             icon: "Uebersicht",
-            partOfMenu: true
+            partOfMenu: true,
+            roles: ['admin', 'editor', 'viewer']
         },
     },
     {
-        path: 'harvester', 
+        path: 'harvester',
+        canActivate: [authGuard],
         loadChildren: () => import('./harvester/harvester.module').then(mod => mod.HarvesterModule),
         data: {
             icon: "Harvester",
-            partOfMenu: true
+            partOfMenu: true,
+            roles: ['admin', 'editor', "viewer"]
         },
     },
     {
-        path: 'config', 
+        path: 'config',
+        canActivate: [authGuard],
         loadChildren: () => import('./config/config.module').then(mod => mod.ConfigModule),
         data: {
             icon: "Configuration",
-            partOfMenu: true
+            partOfMenu: true,
+            roles: ['admin']
         },
     },
     {
-        path: 'indices', 
+        path: 'indices',
+        canActivate: [authGuard],
         loadChildren: () => import('./indices/indices.module').then(mod => mod.IndicesModule),
         data: {
             icon: "Indices",
-            partOfMenu: true
+            partOfMenu: true,
+            roles: ['admin']
         },
     },
     {
-        path: 'log', 
+        path: 'log',
+        canActivate: [authGuard],
         loadChildren: () => import('./log/log.module').then(mod => mod.LogModule),
         data: {
             icon: "Logging",
-            partOfMenu: true
+            partOfMenu: true,
+            roles: ['admin']
         },
     },
     {
@@ -76,24 +87,24 @@ import {LoginComponent} from './security/login.component';
         path: '', redirectTo: '/dashboard', pathMatch: 'full'
     }
   ];
-  
+
   // export const appRoutingProviders: any[] = [];
-  
+
   export const routing = RouterModule.forRoot(routes, {
     // preloadingStrategy: PreloadAllModules,
     // relativeLinkResolution: "legacy",
     enableTracing: false,
   });
-  
+
 
 
 
   export class CustomReuseStrategy implements RouteReuseStrategy {
     routesToCache: string[] = [
     ];
-  
+
     private handlers: Map<Route, DetachedRouteHandle> = new Map();
-  
+
     constructor() {
     //   configService.$userInfo
     //     .pipe(filter((user) => user !== null))
@@ -104,14 +115,14 @@ import {LoginComponent} from './security/login.component';
     //       );
     //     });
     }
-  
+
     public shouldDetach(_route: ActivatedRouteSnapshot): boolean {
       return this.routesToCache.some(
         // @ts-ignore
         (definiton) => _route._routerState.url.indexOf(definiton) === 0,
       );
     }
-  
+
     public store(
       route: ActivatedRouteSnapshot,
       handle: DetachedRouteHandle,
@@ -119,17 +130,17 @@ import {LoginComponent} from './security/login.component';
       if (!route.routeConfig) return;
       this.handlers.set(route.routeConfig, handle);
     }
-  
+
     public shouldAttach(route: ActivatedRouteSnapshot): boolean {
       return !!route.routeConfig && !!this.handlers.get(route.routeConfig);
     }
-  
+
     public retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle | null {
       if (!route.routeConfig || !this.handlers.has(route.routeConfig))
         return null;
       return this.handlers.get(route.routeConfig)!;
     }
-  
+
     public shouldReuseRoute(
       future: ActivatedRouteSnapshot,
       curr: ActivatedRouteSnapshot,
@@ -137,4 +148,3 @@ import {LoginComponent} from './security/login.component';
       return future.routeConfig === curr.routeConfig;
     }
   }
-  

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, inject } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
@@ -36,6 +36,7 @@ import { DialogLogComponent } from "./dialog-log/dialog-log.component";
 import { DialogSchedulerComponent } from "./dialog-scheduler/dialog-scheduler.component";
 import { HarvesterService } from "./harvester.service";
 import { SocketService } from "./socket.service";
+import { AuthenticationService } from "../security/authentication.service";
 
 @UntilDestroy()
 @Component({
@@ -45,6 +46,7 @@ import { SocketService } from "./socket.service";
     standalone: false
 })
 export class HarvesterComponent implements OnInit, OnDestroy {
+  public authService = inject(AuthenticationService);
 
   harvesters: { [x: string]: Harvester[] } = {};
 
