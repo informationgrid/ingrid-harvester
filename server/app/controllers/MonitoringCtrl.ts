@@ -30,7 +30,7 @@ import {KeycloakAuth} from "../decorators/KeycloakAuthOptions.js";
 
 @Controller('/api/monitoring')
 @UseAuth(AuthMiddleware)
-@KeycloakAuth({role: "admin"})
+@KeycloakAuth({role: ["admin", "editor", "viewer"]})
 export class MonitoringCtrl {
 
     constructor(private urlCheckService: UrlCheckService,
