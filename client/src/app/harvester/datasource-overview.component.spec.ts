@@ -21,15 +21,28 @@
  * ==================================================
  */
 
-import { TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HarvesterService } from './harvester.service';
+import { DatasourceOverviewComponent } from './datasource-overview.component';
 
-describe('HarvesterService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+describe('HarvesterComponent', () => {
+  let component: DatasourceOverviewComponent;
+  let fixture: ComponentFixture<DatasourceOverviewComponent>;
 
-  it('should be created', () => {
-    const service: HarvesterService = TestBed.inject(HarvesterService);
-    expect(service).toBeTruthy();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [ DatasourceOverviewComponent ]
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(DatasourceOverviewComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 });

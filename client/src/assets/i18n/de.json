@@ -20,6 +20,7 @@
     "dashboard": "Übersicht",
     "config": "Konfiguration",
     "harvester": "Harvester",
+    "datasources": "Datenquellen",
     "indices": "Indizes",
     "log": "Log",
     "login": "Login",
@@ -37,14 +38,18 @@
     "formSingular": "Datensatz"
   },
   "harvester": {
-    "title": "Datasources",
     "importAll": "Alle importieren",
     "add": "Hinzufügen",
+    "addDatasource": "Neue Datenquelle anlegen",
+    "editDatasource": "Datenquelle bearbeiten",
     "showDetail": "Detail anzeigen",
     "import": "Import starten",
     "importIncrement": "Import starten (inkrementell)",
+    "importStarted": "Import gestartet.",
+    "allImportStarted": "Import aller Datenquellen gestartet.",
     "importing": "Import läuft...",
-    "type": "Typ",
+    "lostConnection": "Verbindung zum Backend verloren.",
+    "recoverConnection": "Verbindung zum Backend hergestellt.",
     "documents": "Dokumente",
     "errors": "Fehler",
     "warnings": "Warnungen",
@@ -54,9 +59,12 @@
     "edit": "Bearbeiten",
     "duplicate": "Duplizieren",
     "delete": "Entfernen",
+    "deleteConfirmation": "Wollen Sie diese Datenquelle wirklich löschen?",
     "schedule": "Planen",
     "history": "Historie",
+    "noHistory": "Keine Historie vorhanden.",
     "log": "Error-Log",
+    "noLogs": "Keine Log-Dateien vorhanden.",
     "more": "Mehr",
     "status": {
       "success": {
@@ -67,12 +75,13 @@
       "disable": {
         "icon": "warning",
         "title": "Deaktiviert",
-        "tooltip": "Harvesting deaktiviert"
+        "tooltip": "Datenquelle deaktiviert"
       },
       "cron": {
         "icon": "schedule",
         "title": "Scheduled",
-        "tooltip": "Komplettes Harvesting geplant"
+        "tooltip": "Auto-Import geplant",
+        "tooltipWithDate": "Auto-Import um {{date}} geplant"
       },
       "importing": {
         "icon": "Harvester",

@@ -35,6 +35,22 @@
             <span class="font-normal">{{ t("status.error.title") }}</span>
           </div>
         }
+        @case ("cron") {
+          <div
+            class="status {{ status }}"
+            [matTooltip]="
+              importLog()?.nextExecution
+                ? t('status.cron.tooltipWithDate', {
+                    date: importLog().nextExecution | date: 'short',
+                  })
+                : t('status.cron.tooltip')
+            "
+            matTooltipPosition="right"
+          >
+            <mat-icon [svgIcon]="t('status.cron.icon')"></mat-icon>
+            <span class="font-normal">{{ t("status.cron.title") }}</span>
+          </div>
+        }
         @default {
           <div
             class="status {{ status }}"

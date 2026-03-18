@@ -23,7 +23,7 @@
 
 import { Component, OnInit } from "@angular/core";
 import { ConfigService } from "../config.service";
-import { HarvesterService } from "../../harvester/harvester.service";
+import { DatasourceService } from "../../harvester/datasource.service";
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import { of } from "rxjs";
 import { GeneralSettings } from "@shared/general-config.settings";
@@ -45,7 +45,7 @@ export class ConfigGeneralComponent implements OnInit {
   constructor(
     private formBuilder: UntypedFormBuilder,
     private configService: ConfigService,
-    private harvesterService: HarvesterService,
+    private harvesterService: DatasourceService,
     private route: ActivatedRoute,
   ) {}
 

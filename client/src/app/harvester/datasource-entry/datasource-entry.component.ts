@@ -23,7 +23,10 @@
 
 import { Component, input, output, ViewChild } from "@angular/core";
 import { Harvester } from "@shared/harvester";
-import { MatExpansionPanel, MatExpansionPanelHeader } from "@angular/material/expansion";
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+} from "@angular/material/expansion";
 import { ImportLogMessage } from "../../../../../server/app/model/import.result";
 import { MatDivider } from "@angular/material/list";
 import { TranslocoDirective } from "@ngneat/transloco";
@@ -74,9 +77,6 @@ export class DatasourceEntryComponent {
   constructor() {}
 
   openActionMenu(evt) {
-    console.log(this.datasource());
-    console.log(this.importLog());
-
     evt.stopPropagation();
     this.menuBtn.openMenu();
   }

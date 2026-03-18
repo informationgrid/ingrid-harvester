@@ -21,33 +21,15 @@
  * ==================================================
  */
 
-@use "../../../variables";
+import { TestBed } from '@angular/core/testing';
 
-.error {
-  color: white;
-  background-color: variables.$error-color;
-}
+import { DatasourceService } from './datasource.service';
 
-.warning {
-  color: white;
-  background-color: variables.$warning-color;
-}
+describe('HarvesterService', () => {
+  beforeEach(() => TestBed.configureTestingModule({}));
 
-mat-progress-bar {
-  --mat-progress-bar-track-color: #ededed;
-  border-radius: 12px;
-}
-
-mat-list {
-  padding: 12px 0;
-}
-
-mat-list-item {
-  height: unset !important;
-  margin: 12px 0;
-
-  .item-subtitle {
-    font-size: 14px;
-    color: variables.$ige-hint-color;
-  }
-}
+  it('should be created', () => {
+    const service: DatasourceService = TestBed.inject(DatasourceService);
+    expect(service).toBeTruthy();
+  });
+});

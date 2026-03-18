@@ -27,6 +27,7 @@ import { MatIcon } from "@angular/material/icon";
 import { Harvester } from "@shared/harvester";
 import { MatTooltip } from "@angular/material/tooltip";
 import { TranslocoDirective } from "@ngneat/transloco";
+import { DatePipe } from "@angular/common";
 
 type ImportStatus = "success" | "cron" | "disable" | "importing" | "error";
 
@@ -34,7 +35,7 @@ type ImportStatus = "success" | "cron" | "disable" | "importing" | "error";
   selector: "harvester-status-indicator",
   templateUrl: "./status-indicator.component.html",
   styleUrls: ["./status-indicator.component.scss"],
-  imports: [MatIcon, MatTooltip, TranslocoDirective],
+  imports: [MatIcon, MatTooltip, TranslocoDirective, DatePipe],
 })
 export class StatusIndicatorComponent {
   datasource = input.required<Harvester>();

@@ -44,10 +44,10 @@ export const routes: Routes = [
       },
     },
     {
-      path: "harvester",
+      path: "datasources",
       loadChildren: () =>
-        import("./harvester/harvester.module").then(
-          (mod) => mod.HarvesterModule,
+        import("./harvester/datasource.module").then(
+          (mod) => mod.DatasourceModule,
         ),
       data: {
         icon: "Harvester",

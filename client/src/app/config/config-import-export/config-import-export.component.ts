@@ -23,7 +23,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {ConfigService} from '../config.service';
-import {HarvesterService} from '../../harvester/harvester.service';
+import {DatasourceService} from '../../harvester/datasource.service';
 import {UntypedFormBuilder, FormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {forkJoin, of} from 'rxjs';
 import {GeneralSettings} from '@shared/general-config.settings';
@@ -40,7 +40,7 @@ export class ConfigImportExportComponent implements OnInit {
 
   configForm: UntypedFormGroup;
 
-  constructor(private formBuilder: UntypedFormBuilder, private configService: ConfigService, private harvesterService: HarvesterService) {
+  constructor(private formBuilder: UntypedFormBuilder, private configService: ConfigService, private harvesterService: DatasourceService) {
   }
 
   ngOnInit() {
@@ -48,7 +48,7 @@ export class ConfigImportExportComponent implements OnInit {
 
   exportConfigs() {
     forkJoin([
-      this.harvesterService.getHarvester(),
+      this.harvesterService.getDatasources(),
       this.configService.getMappingFileContent(),
       this.configService.fetch()
     ]).subscribe(result => {
@@ -76,7 +76,7 @@ export class ConfigImportExportComponent implements OnInit {
 
   exportHarvesterConfig() {
     forkJoin([
-      this.harvesterService.getHarvester()
+      this.harvesterService.getDatasources()
     ]).subscribe(result => {
       ConfigService.downLoadFile('config.json', JSON.stringify(result[0], null, 2));
     });
@@ -87,7 +87,7 @@ export class ConfigImportExportComponent implements OnInit {
   }
 
   importHarvester(files: FileList){
-    this.harvesterService.uploadHarvesterConfig(files[0]).subscribe();
+    this.harvesterService.uploadDatasourceConfig(files[0]).subscribe();
   }
 
   importGeneralConfig(files: FileList){

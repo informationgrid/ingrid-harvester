@@ -22,9 +22,8 @@
 -->
 
 <harvester-dialog-header
-  [title]="
-    harvester.id !== -1 ? 'Harvester bearbeiten' : 'Neuen Harvester anlegen'
-  "
+  *transloco="let t; read: 'harvester'"
+  [title]="harvester.id !== -1 ? t('editDatasource') : t('addDatasource')"
   svgIcon="Add"
 ></harvester-dialog-header>
 

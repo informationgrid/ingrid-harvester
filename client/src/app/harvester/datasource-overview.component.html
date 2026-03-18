@@ -21,17 +21,17 @@
     ==================================================
 -->
 
-@if (harvesterLoaded) {
+@if (datasourcesLoaded()) {
   <harvester-overview-template
-    *transloco="let t; read: 'harvester'"
-    [title]="t('title')"
+    *transloco="let t"
+    [title]="t('menu.datasources')"
     contextHelpId="about_harvester"
   >
-    <ng-container header-actions>
+    <ng-container header-actions *transloco="let t; read: 'harvester'">
       <button
         matButton="filled"
         color="primary"
-        (click)="addHarvester()"
+        (click)="onAdd()"
         aria-label="{{ t('add') }}"
         id="btnAddHarvester"
       >
@@ -51,8 +51,8 @@
       <mat-menu data-test="action-menu" #optionMenu>
         <button
           mat-menu-item
-          [disabled]="numberOfHarvesters === 0"
-          (click)="importAll()"
+          [disabled]="!hasDatasources()"
+          (click)="onImportAll()"
           data-test="import-all"
         >
           <mat-icon svgIcon="Harvester" />
@@ -63,29 +63,25 @@
 
     <ng-container content>
       <mat-accordion>
-        @for (item of harvesters | keyvalue; track item) {
-          @for (datasource of item.value; track datasource) {
-            <harvester-datasource-entry
-              [datasource]="datasource"
-              [importLog]="importDetail[datasource.id]"
-              (onImport)="startImport(datasource.id)"
-              (onIncrementImport)="startImport(datasource.id, true)"
-              (onEdit)="edit(datasource)"
-              (onDelete)="onDeleteDatasource(datasource)"
-              (onDuplicate)="copy(datasource)"
-              (onSchedule)="schedule(datasource)"
-              (onHistory)="showHistory(datasource)"
-              (onOpenErrorLog)="showLog(datasource.id)"
-              (onOpenWarningLog)="showLog(datasource.id)"
-            />
-          }
+        @for (item of datasources() | keyvalue; track item.key) {
+          <harvester-datasource-entry
+            [datasource]="item.value"
+            [importLog]="importLogs() ? importLogs()[item.value.id] : undefined"
+            (onImport)="onImport(item.value.id)"
+            (onIncrementImport)="onImport(item.value.id, true)"
+            (onEdit)="onEdit(item.value)"
+            (onDelete)="onDelete(item.value)"
+            (onDuplicate)="onDuplicate(item.value)"
+            (onSchedule)="onSchedule(item.value)"
+            (onHistory)="showHistory(item.value)"
+            (onOpenErrorLog)="onShowLogs(item.value.id)"
+            (onOpenWarningLog)="onShowLogs(item.value.id)"
+          />
         }
       </mat-accordion>
     </ng-container>
   </harvester-overview-template>
-}
-
-@if (!harvesterLoaded) {
+} @else {
   <div class="no-harvester">
     <mat-spinner diameter="100"></mat-spinner>
   </div>

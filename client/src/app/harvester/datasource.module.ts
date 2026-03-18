@@ -47,8 +47,7 @@ import { DialogEditComponent } from "./dialog-edit/dialog-edit.component";
 import { DialogHistoryComponent } from "./dialog-history/dialog-history.component";
 import { DialogLogComponent } from "./dialog-log/dialog-log.component";
 import { DialogSchedulerComponent } from "./dialog-scheduler/dialog-scheduler.component";
-import { HarvesterComponent } from "./harvester.component";
-import { ImporterDetailComponent } from "./importer-detail/importer-detail.component";
+import { DatasourceOverviewComponent } from "./datasource-overview.component";
 import { ContextHelpDirective } from "../shared/context-help/context-help.directive";
 import { MatTooltip } from "@angular/material/tooltip";
 import { MatGridList, MatGridTile } from "@angular/material/grid-list";
@@ -61,25 +60,24 @@ import { FormlyMaterialModule } from "@ngx-formly/material";
 import { DatasourceEntryComponent } from "./datasource-entry/datasource-entry.component";
 import { OverviewTemplateComponent } from "../shared/overview-template/overview-template.component";
 
-const harvesterRoutes: Routes = [
+const datasourceRoutes: Routes = [
   {
     path: "",
-    component: HarvesterComponent,
+    component: DatasourceOverviewComponent,
   },
 ];
 
 @NgModule({
   declarations: [
-    HarvesterComponent,
+    DatasourceOverviewComponent,
     DialogSchedulerComponent,
     DialogLogComponent,
     DialogEditComponent,
     DialogHistoryComponent,
-    ImporterDetailComponent,
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild(harvesterRoutes),
+    RouterModule.forChild(datasourceRoutes),
     SharedModule,
     MatDialogModule,
     MatButtonModule,
@@ -114,6 +112,6 @@ const harvesterRoutes: Routes = [
     DatasourceEntryComponent,
     OverviewTemplateComponent,
   ],
-  exports: [HarvesterComponent],
+  exports: [DatasourceOverviewComponent],
 })
-export class HarvesterModule {}
+export class DatasourceModule {}
