@@ -21,27 +21,17 @@
  * ==================================================
  */
 
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import {catchError, map, tap} from 'rxjs/operators';
 import {KeycloakService} from './keycloak.service';
 import {PassportService} from './passport.service';
-
-export enum AuthMethod {
-  LOCAL = 'local',
-  KEYCLOAK = 'keycloak'
-}
-
-export interface AuthStrategy {
-  isAuthenticated(): Observable<boolean>;
-  getRoles(): string[];
-  hasRole(role: string): boolean;
-  login(username?: string, password?: string): Observable<any>;
-  logout(): Observable<any>;
-}
+import {AuthMethod, AuthStrategy} from "./AuthStrategy";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({providedIn: 'root'})
 export class AuthenticationService {
+  private http = inject(HttpClient);
   private authMethod: AuthMethod = AuthMethod.LOCAL;
   public currentUser: BehaviorSubject<any>;
 
@@ -49,25 +39,22 @@ export class AuthenticationService {
     private keycloakService: KeycloakService,
     private passportService: PassportService
   ) {
-    const user = JSON.parse(localStorage.getItem('currentUser'));
-    this.currentUser = new BehaviorSubject<any>(user);
+    this.currentUser = new BehaviorSubject<any>(null);
+  }
 
-    if (user && user.authMethod) {
-      this.authMethod = user.authMethod;
-    }
-
-    // Check if user is already authenticated with Keycloak
-    this.keycloakService.isAuthenticated().subscribe(authenticated => {
-      if (authenticated) {
-        this.authMethod = AuthMethod.KEYCLOAK;
-        const keycloakUser = {
-          username: this.keycloakService.getUsername(),
-          authMethod: AuthMethod.KEYCLOAK
-        };
-        localStorage.setItem('currentUser', JSON.stringify(keycloakUser));
-        this.currentUser.next(keycloakUser);
-      }
-    });
+  public checkAuthentication(): Observable<any> {
+    return this.http.get<any>(`/rest/auth/check`).pipe(
+      tap(user => {
+        if (user) {
+          this.authMethod = user.authMethod;
+          this.currentUser.next(user);
+        }
+      }),
+      catchError(() => {
+        this.currentUser.next(null);
+        return of(null);
+      })
+    );
   }
 
   private get strategy(): AuthStrategy {
@@ -75,11 +62,21 @@ export class AuthenticationService {
   }
 
   isAuthenticated(): Observable<boolean> {
-    return this.strategy.isAuthenticated();
+    return this.currentUser.pipe(map(user => !!user));
+  }
+
+  getRoles(): string[] {
+    const user = this.currentUser.getValue();
+    return user ? user.roles || [] : [];
   }
 
   hasRole(role: string): boolean {
-    return this.strategy.hasRole(role);
+    return this.getRoles().includes(role);
+  }
+
+  getUsername(): string {
+    const user = this.currentUser.getValue();
+    return user ? user.username : '';
   }
 
   login(username: string, password: string, authMethod = AuthMethod.LOCAL) {
@@ -95,19 +92,14 @@ export class AuthenticationService {
 
   logout(fullKeycloakLogout: boolean = true): Observable<any> {
     if (this.authMethod === AuthMethod.KEYCLOAK && !fullKeycloakLogout) {
-      localStorage.removeItem('currentUser');
       this.currentUser.next(null);
       return of(null);
     }
     return this.strategy.logout().pipe(
       tap(() => {
-        localStorage.removeItem('currentUser');
         this.currentUser.next(null);
       })
     );
   }
 
-  initKeycloak(): Promise<boolean> {
-    return this.keycloakService.init();
-  }
 }

@@ -23,48 +23,24 @@
 
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
-import {AuthMethod, AuthStrategy} from './authentication.service';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {AuthMethod, AuthStrategy} from "./AuthStrategy";
 
 @Injectable({providedIn: 'root'})
 export class PassportService implements AuthStrategy {
 
   private http = inject(HttpClient);
 
-  private get currentUserValue() {
-    return JSON.parse(localStorage.getItem('currentUser'));
-  }
-
-  isAuthenticated(): Observable<boolean> {
-    return of(!!this.currentUserValue);
-  }
-
-  getRoles(): string[] {
-    const user = this.currentUserValue;
-    return (user && user.roles) || [];
-  }
-
-  hasRole(role: string): boolean {
-    const roles = this.getRoles();
-    return roles.includes(role);
-  }
-
   login(username: string, password: string): Observable<any> {
     return this.http.post<any>(`/rest/passport/login`, {username, password})
       .pipe(map(user => {
-        // store user details and jwt token in local storage to keep user logged in between page refreshes
         user.authMethod = AuthMethod.LOCAL;
-        localStorage.setItem('currentUser', JSON.stringify(user));
         return user;
       }));
   }
 
   logout(): Observable<any> {
-    return this.http.get('/rest/passport/logout', {responseType: 'text'}).pipe(
-      tap(() => {
-        localStorage.removeItem('currentUser');
-      })
-    );
+    return this.http.get('/rest/passport/logout', {responseType: 'text'});
   }
 }

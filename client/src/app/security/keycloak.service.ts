@@ -21,66 +21,22 @@
  * ==================================================
  */
 
-import {inject, Injectable} from '@angular/core';
-import {BehaviorSubject, firstValueFrom, Observable, of} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
-import {AuthStrategy} from './authentication.service';
-
-type Role = 'admin' | 'editor' | 'viewer';
+import {Injectable} from '@angular/core';
+import {Observable, of} from 'rxjs';
+import {AuthStrategy} from "./AuthStrategy";
 
 @Injectable({
   providedIn: 'root'
 })
 export class KeycloakService implements AuthStrategy {
-  private http = inject(HttpClient)
-  private authenticated = new BehaviorSubject<boolean>(false);
-  private username: string = '';
-  private role: Role = null;
 
-  async init(): Promise<boolean> {
-    try {
-      const user = await firstValueFrom(this.http.get<any>('rest/auth/keycloak/check'));
-      this.username = user.username || '';
-      this.roles = user.roles || null;
-      this.authenticated.next(true);
-      this.username = user.username || '';
-      this.role = user.role || null;
-      return true;
-    } catch {
-      this.authenticated.next(false);
-      return false;
-    }
-  }
-
-  login(): void {
+  login(_username?: string, _password?: string): Observable<any> {
     window.location.href = 'rest/auth/keycloak/login';
+    return of(null);
   }
 
-  logout(): void {
+  logout(): Observable<any> {
     window.location.href = 'rest/auth/keycloak/logout';
-  }
-
-  isAuthenticated(): Observable<boolean> {
-    return this.authenticated.asObservable();
-  }
-
-  getUsername(): string {
-    return this.username;
-  }
-
-  isAuthenticated(): Observable<boolean> {
-    return this.authenticated.asObservable();
-  }
-
-  getUsername(): string {
-    return this.username;
-  }
-
-  getRoles(): string[] {
-    return (this.roles as string[]) || [];
-  }
-
-  hasRole(role: string): boolean {
-    return this.roles && this.roles.includes(role as Role);
+    return of(null);
   }
 }

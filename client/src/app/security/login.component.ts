@@ -23,10 +23,11 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {AuthenticationService, AuthMethod} from './authentication.service';
+import {AuthenticationService} from './authentication.service';
 import {Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 import {catchError, of} from 'rxjs';
+import {AuthMethod} from "./AuthStrategy";
 
 @Component({
   templateUrl: './login.component.html',

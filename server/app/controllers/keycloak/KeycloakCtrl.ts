@@ -34,44 +34,6 @@ export class KeycloakCtrl {
         private usersService: UsersService
     ) {}
 
-    /**
-     * Endpoint to check if a user is authenticated with Keycloak
-     * @param request
-     */
-    @Get('/check')
-    async check(@Req() request: Express.Request) {
-        // Allow Passport authenticated users
-        if (request.isAuthenticated && request.isAuthenticated()) {
-          return;
-        }
-
-        // handle keycloak authentication
-        if (request.session && request.session['keycloak-token']) {
-            let token = JSON.parse(request.session['keycloak-token'])?.access_token;
-
-            // If it's a string, it's probably the JWT itself and needs decoding
-            if (typeof token === 'string') {
-                const base64Url = token.split('.')[1];
-                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                const jsonPayload = Buffer.from(base64, 'base64').toString();
-                token = JSON.parse(jsonPayload);
-            }
-
-            // Minimal check: if we have a token in session, consider authenticated for now
-            // In a real app, you'd validate the token here.
-            const content = token.content || token;
-            const username = content.preferred_username || content.sub;
-            const user = await this.usersService.findByEmail(username);
-
-            if (user) {
-                const { password, ...userInfo } = user;
-                return { ...userInfo, roles: this.keycloakService.getRoles(token) };
-            }
-            return { username, roles: this.keycloakService.getRoles(token) };
-        }
-
-        throw new Unauthorized('User not authenticated');
-    }
 
     /**
      * Redirect to Keycloak login page

@@ -21,30 +21,40 @@
  * ==================================================
  */
 
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse} from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+  HttpResponse
+} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
 import {AuthenticationService} from './authentication.service';
 import {Router} from '@angular/router';
+import {inject, Injectable, Injector} from "@angular/core";
 
+@Injectable()
 export class UnauthorizedInterceptor implements HttpInterceptor {
 
+  private auth: AuthenticationService;
+  private router = inject(Router);
+
   constructor(
-    private router: Router,
-    public auth: AuthenticationService,
-  ) {}
+    private injector: Injector,
+  ) {
+  }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (!this.auth) {
+      this.auth = this.injector.get(AuthenticationService);
+    }
     return this.handleRequest(request, next);
   }
 
   private handleRequest(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
-      tap((event: HttpEvent<any>) => {
-        if (event instanceof HttpResponse) {
-          // do stuff with response if you want
-        }
-      }),
       catchError((err: any) => {
         if (err instanceof HttpErrorResponse) {
           if (err.status === 401) {
@@ -54,7 +64,7 @@ export class UnauthorizedInterceptor implements HttpInterceptor {
             this.auth.logout(false).subscribe(() => this.router.navigate(['login']));
           }
         }
-        return throwError(err);
+        throw err;
       })
     );
   }
