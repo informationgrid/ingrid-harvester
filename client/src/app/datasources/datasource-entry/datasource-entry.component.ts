@@ -23,12 +23,7 @@
 
 import { Component, input, output, ViewChild } from "@angular/core";
 import { Harvester } from "@shared/harvester";
-import {
-  MatExpansionPanel,
-  MatExpansionPanelHeader,
-} from "@angular/material/expansion";
 import { ImportLogMessage } from "../../../../../server/app/model/import.result";
-import { MatDivider } from "@angular/material/list";
 import { TranslocoDirective } from "@ngneat/transloco";
 import { StatusIndicatorComponent } from "./status-indicator/status-indicator.component";
 import { MatIcon } from "@angular/material/icon";
@@ -37,15 +32,13 @@ import { MatTooltip } from "@angular/material/tooltip";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { ProgressIndicatorComponent } from "./progress-indicator/progress-indicator.component";
 import { DatasourceDetailComponent } from "./datasource-detail/datasource-detail.component";
+import { ListItemExpandableComponent } from "../../shared/list-item-expandable/list-item-expandable.component";
 
 @Component({
   selector: "harvester-datasource-entry",
   templateUrl: "./datasource-entry.component.html",
   styleUrl: "./datasource-entry.component.scss",
   imports: [
-    MatExpansionPanel,
-    MatExpansionPanelHeader,
-    MatDivider,
     TranslocoDirective,
     StatusIndicatorComponent,
     MatIcon,
@@ -56,6 +49,7 @@ import { DatasourceDetailComponent } from "./datasource-detail/datasource-detail
     MatMenuTrigger,
     ProgressIndicatorComponent,
     DatasourceDetailComponent,
+    ListItemExpandableComponent,
   ],
 })
 export class DatasourceEntryComponent {

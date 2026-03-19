@@ -20,7 +20,7 @@
  * limitations under the Licence.
  * ==================================================
  */
-@use "../../variables" as vars;
+@use "../../../variables" as vars;
 
 :host {
   display: flex;
@@ -34,66 +34,4 @@
   :host {
     --harvester-side-spacing: 16px;
   }
-}
-
-.mat-expansion-panel {
-  margin-bottom: 20px;
-}
-
-.mat-mdc-slide-toggle {
-  // height: 48px;
-  padding: 0 20px;
-}
-
-::ng-deep mat-slide-toggle .mat-mdc-slide-toggle-thumb-container {
-  cursor: pointer;
-}
-
-.example-headers-align .mat-expansion-panel-header-title,
-.example-headers-align .mat-expansion-panel-header-description {
-  flex-basis: 0;
-}
-
-.example-headers-align .mat-expansion-panel-header-description {
-  align-items: center;
-  flex-grow: 0;
-  margin-right: 0;
-}
-
-.success {
-  color: #5dc57b;
-}
-
-.warn {
-  color: #ff0000;
-}
-
-.warning {
-  color: #ff9e00;
-}
-
-.no-harvester {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-
-  mat-spinner {
-    display: inline-block;
-  }
-}
-
-.status-icon {
-  width: 56px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.scheduled-icon {
-  width: 24px;
-  height: 24px;
-  align-self: center;
-  margin-right: 8px;
 }

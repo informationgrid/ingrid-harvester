@@ -25,11 +25,10 @@ import { Component, input } from "@angular/core";
 import { ContextHelpDirective } from "../context-help/context-help.directive";
 
 @Component({
-  selector: "harvester-overview-template",
+  selector: "ingrid-overview-template",
   templateUrl: "./overview-template.component.html",
-  imports: [ContextHelpDirective],
-  standalone: true,
   styleUrls: ["./overview-template.component.scss"],
+  imports: [ContextHelpDirective],
 })
 export class OverviewTemplateComponent {
   title = input<string>();

@@ -46,8 +46,8 @@ export const routes: Routes = [
     {
       path: "datasources",
       loadChildren: () =>
-        import("./harvester/datasource.module").then(
-          (mod) => mod.DatasourceModule,
+        import("./datasources/datasources.module").then(
+          (mod) => mod.DatasourcesModule,
         ),
       data: {
         icon: "Harvester",

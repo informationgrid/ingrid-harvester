@@ -21,33 +21,45 @@
     ==================================================
 -->
 
-<harvester-dialog-header
-  *transloco="let t; read: 'harvester'"
-  [title]="harvester.id !== -1 ? t('editDatasource') : t('addDatasource')"
-  svgIcon="Add"
-></harvester-dialog-header>
+<ingrid-dialog-header
+  title="Ausführung planen"
+  svgIcon="schedule"
+></ingrid-dialog-header>
 
 <mat-dialog-content>
-  @if (fields) {
-    <formly-form
-      [form]="form"
-      [fields]="fields"
-      [model]="model"
-      [options]="options"
-      (modelChange)="console.log($event)"
-    ></formly-form>
+  <harvester-cronjob-form-field
+    title="Komplettes Harvesting"
+    [form]="schedulerForm"
+    formKey="full"
+    activeKeyName="active"
+    cronKeyName="pattern"
+  />
+
+  @if (harvesterType == "CSW") {
+    <mat-divider class="padding-below"></mat-divider>
+
+    <harvester-cronjob-form-field
+      title="Inkrementelles Harvesting"
+      [form]="schedulerForm"
+      formKey="incr"
+      activeKeyName="active"
+      cronKeyName="pattern"
+    />
   }
 </mat-dialog-content>
 
 <mat-dialog-actions>
   <button matButton mat-dialog-close>Abbrechen</button>
+
   <div class="flex-1"></div>
+
   <button
     matButton="filled"
     color="primary"
-    (click)="submit()"
-    data-test="dlg-update"
+    [mat-dialog-close]="schedulerForm || null"
+    [disabled]="!schedulerForm.valid"
+    data-test="dlg-schedule"
   >
-    {{ harvester.id > -1 ? "Aktualisieren" : "Anlegen" }}
+    Aktualisieren
   </button>
 </mat-dialog-actions>

@@ -21,21 +21,29 @@
  * ==================================================
  */
 
-import { Component, input } from "@angular/core";
-import { MatDialogClose, MatDialogTitle } from "@angular/material/dialog";
-import { MatIcon } from "@angular/material/icon";
-import { MatIconButton } from "@angular/material/button";
+@use "../../../variables" as vars;
 
-@Component({
-  selector: "ingrid-dialog-header",
-  templateUrl: "./dialog-header.component.html",
-  imports: [MatDialogTitle, MatIcon, MatIconButton, MatDialogClose],
-  standalone: true,
-  styleUrls: ["./dialog-header.component.scss"],
-})
-export class DialogHeaderComponent {
-  title = input<string>();
-  svgIcon = input<string>();
+:host ::ng-deep {
+  mat-expansion-panel {
+    border: var(--mat-divider-width) solid var(--mat-divider-color);
+  }
 
-  constructor() {}
+  .mat-content.mat-content-hide-toggle {
+    gap: 12px;
+    margin-right: 0;
+  }
+
+  .mat-expansion-panel-body {
+    padding: 0 16px 16px;
+  }
+}
+
+mat-expansion-panel {
+  margin: 0 var(--harvester-side-spacing, 24px) 12px;
+  --mat-expansion-container-shape: 8px;
+  --mat-expansion-container-elevation-shadow: none;
+}
+
+mat-expansion-panel-header {
+  padding: 12px 16px 12px 16px;
 }

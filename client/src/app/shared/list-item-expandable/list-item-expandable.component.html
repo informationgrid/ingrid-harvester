@@ -21,26 +21,29 @@
     ==================================================
 -->
 
-<ingrid-dialog-header
-  title="Löschen"
-  svgIcon="delete"
-></ingrid-dialog-header>
+<mat-expansion-panel [hideToggle]="hideToggle()">
+  <mat-expansion-panel-header expandedHeight="auto" collapsedHeight="auto">
+    <div class="w-full flex-col align-items-stretch">
+      <div class="flex-col gap-8">
+        @if (title()) {
+          <h3 class="text-lg my-0 break-word">
+            {{ title() }}
+          </h3>
+        }
 
-<mat-dialog-content>
-  <p>{{ message }}</p>
-</mat-dialog-content>
+        @if (subtitle()) {
+          <div class="text-hint font-normal break-word line-clamp-1">
+            {{ subtitle() }}
+          </div>
+        }
+      </div>
 
-<mat-dialog-actions>
-  <button mat-button mat-dialog-close>Abbrechen</button>
+      <ng-content select="[header]"></ng-content>
+    </div>
 
-  <div class="flex-1"></div>
+    <ng-content select="[actions]"></ng-content>
+  </mat-expansion-panel-header>
 
-  <button
-    matButton="filled"
-    color="primary"
-    [mat-dialog-close]="true"
-    data-test="dlg-schedule"
-  >
-    Löschen
-  </button>
-</mat-dialog-actions>
+  <mat-divider class="-mx-4" />
+  <ng-content select="[content]"></ng-content>
+</mat-expansion-panel>

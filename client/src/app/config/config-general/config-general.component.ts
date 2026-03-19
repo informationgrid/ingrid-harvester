@@ -23,7 +23,7 @@
 
 import { Component, OnInit } from "@angular/core";
 import { ConfigService } from "../config.service";
-import { DatasourceService } from "../../harvester/datasource.service";
+import { DatasourceService } from "../../datasources/services/datasource.service";
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import { of } from "rxjs";
 import { GeneralSettings } from "@shared/general-config.settings";

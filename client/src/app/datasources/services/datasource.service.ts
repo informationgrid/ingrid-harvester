@@ -25,9 +25,9 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { Harvester } from "@shared/harvester";
 import { HttpClient } from "@angular/common/http";
-import { ImportLogMessage } from "../../../../server/app/model/import.result";
-import { CkanSettings } from "../../../../server/app/importer/ckan/ckan.settings";
-import { CronData } from "../../../../server/app/importer.settings";
+import { ImportLogMessage } from "../../../../../server/app/model/import.result";
+import { CkanSettings } from "../../../../../server/app/importer/ckan/ckan.settings";
+import { CronData } from "../../../../../server/app/importer.settings";
 
 @Injectable({
   providedIn: "root",

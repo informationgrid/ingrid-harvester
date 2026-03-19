@@ -26,16 +26,16 @@ import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { Harvester } from "@shared/harvester";
-import { ImportLogMessage } from "../../../../server/app/model/import.result";
-import { ConfirmDialogComponent } from "../shared/confirm-dialog/confirm-dialog.component";
-import { DialogEditComponent } from "./dialog-edit/dialog-edit.component";
-import { DialogHistoryComponent } from "./dialog-history/dialog-history.component";
-import { DialogLogComponent } from "./dialog-log/dialog-log.component";
-import { DialogSchedulerComponent } from "./dialog-scheduler/dialog-scheduler.component";
-import { DatasourceService } from "./datasource.service";
-import { SocketService } from "./socket.service";
+import { ImportLogMessage } from "../../../../../server/app/model/import.result";
+import { ConfirmDialogComponent } from "../../shared/confirm-dialog/confirm-dialog.component";
+import { DialogEditComponent } from "../dialog-edit/dialog-edit.component";
+import { DialogHistoryComponent } from "../dialog-history/dialog-history.component";
+import { DialogLogComponent } from "../dialog-log/dialog-log.component";
+import { DialogSchedulerComponent } from "../dialog-scheduler/dialog-scheduler.component";
+import { DatasourceService } from "../services/datasource.service";
+import { SocketService } from "../services/socket.service";
 import { TranslocoPipe } from "@ngneat/transloco";
-import { getLatestDate } from "../utils/dateUtils";
+import { getLatestDate } from "../../utils/dateUtils";
 
 @UntilDestroy()
 @Component({

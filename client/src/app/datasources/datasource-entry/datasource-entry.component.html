@@ -21,27 +21,21 @@
     ==================================================
 -->
 
-<mat-expansion-panel *transloco="let t; read: 'harvester'" [hideToggle]="true">
-  <mat-expansion-panel-header expandedHeight="auto" collapsedHeight="auto">
-    <div class="w-full flex-col align-items-stretch">
-      <div class="flex-col gap-8">
-        <h3 class="text-lg my-0 break-word">
-          {{ datasource().description }}
-        </h3>
+<ingrid-list-item-expandable
+  *transloco="let t; read: 'harvester'"
+  [title]="datasource().description"
+  [subtitle]="datasource().sourceURL"
+>
+  <ng-container header>
+    <harvester-status-indicator
+      [datasource]="datasource()"
+      [importLog]="importLog()"
+    />
 
-        <div class="text-hint font-normal break-word line-clamp-1">
-          {{ datasource().sourceURL }}
-        </div>
-      </div>
+    <harvester-progress-indicator [importLog]="importLog()" />
+  </ng-container>
 
-      <harvester-status-indicator
-        [datasource]="datasource()"
-        [importLog]="importLog()"
-      />
-
-      <harvester-progress-indicator [importLog]="importLog()" />
-    </div>
-
+  <ng-container actions>
     <div class="flex-row align-self-center">
       <button
         #actionMenuBtn="matMenuTrigger"
@@ -105,13 +99,14 @@
         </button>
       </mat-menu>
     </div>
-  </mat-expansion-panel-header>
+  </ng-container>
 
-  <mat-divider class="-mx-4" />
-  <harvester-datasource-detail
-    [datasource]="datasource()"
-    [importLog]="importLog()"
-    (onOpenErrorLog)="onOpenErrorLog.emit()"
-    (onOpenWarningLog)="onOpenWarningLog.emit()"
-  />
-</mat-expansion-panel>
+  <ng-container content>
+    <harvester-datasource-detail
+      [datasource]="datasource()"
+      [importLog]="importLog()"
+      (onOpenErrorLog)="onOpenErrorLog.emit()"
+      (onOpenWarningLog)="onOpenWarningLog.emit()"
+    />
+  </ng-container>
+</ingrid-list-item-expandable>

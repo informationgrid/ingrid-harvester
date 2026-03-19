@@ -21,21 +21,26 @@
  * ==================================================
  */
 
-import { Component, input } from "@angular/core";
-import { MatDialogClose, MatDialogTitle } from "@angular/material/dialog";
-import { MatIcon } from "@angular/material/icon";
-import { MatIconButton } from "@angular/material/button";
+import { Component, input, OnInit } from "@angular/core";
+import { MatExpansionPanel, MatExpansionPanelHeader } from "@angular/material/expansion";
+import { MatDivider } from "@angular/material/list";
 
 @Component({
-  selector: "ingrid-dialog-header",
-  templateUrl: "./dialog-header.component.html",
-  imports: [MatDialogTitle, MatIcon, MatIconButton, MatDialogClose],
-  standalone: true,
-  styleUrls: ["./dialog-header.component.scss"],
+  selector: "ingrid-list-item-expandable",
+  templateUrl: "./list-item-expandable.component.html",
+  styleUrls: ["./list-item-expandable.component.scss"],
+  imports: [
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatDivider,
+  ],
 })
-export class DialogHeaderComponent {
+export class ListItemExpandableComponent implements OnInit {
   title = input<string>();
-  svgIcon = input<string>();
+  subtitle = input<string>();
+  hideToggle = input<boolean>(true);
 
   constructor() {}
+
+  ngOnInit(): void {}
 }

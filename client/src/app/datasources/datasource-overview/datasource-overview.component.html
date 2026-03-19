@@ -22,7 +22,7 @@
 -->
 
 @if (datasourcesLoaded()) {
-  <harvester-overview-template
+  <ingrid-overview-template
     *transloco="let t"
     [title]="t('menu.datasources')"
     contextHelpId="about_harvester"
@@ -80,7 +80,7 @@
         }
       </mat-accordion>
     </ng-container>
-  </harvester-overview-template>
+  </ingrid-overview-template>
 } @else {
   <div class="no-harvester">
     <mat-spinner diameter="100"></mat-spinner>

@@ -23,9 +23,9 @@
 
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
-import {ConfigService} from '../config.service';
+import {ConfigService} from '../../config.service';
 import {Subject} from 'rxjs';
-import {ImportLogMessage} from '../../../../server/app/model/import.result';
+import {ImportLogMessage} from '../../../../../server/app/model/import.result';
 
 @Injectable({
   providedIn: 'root'
