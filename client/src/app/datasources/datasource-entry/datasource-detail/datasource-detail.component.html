@@ -23,21 +23,21 @@
 
 <div class="flex-col gap-12" *transloco="let t; read: 'harvester'">
   <div class="flex-row flex-wrap gap-12">
-    <harvester-datasource-detail-entry
+    <ingrid-detail-item
       class="flex-1"
       icon="available"
       [title]="t('lastImport')"
       [value]="lastExecution()"
     />
 
-    <harvester-datasource-detail-entry
+    <ingrid-detail-item
       class="flex-1"
       icon="timer"
       [title]="t('durationImport')"
       [value]="executionDuration()"
     />
 
-    <harvester-datasource-detail-entry
+    <ingrid-detail-item
       class="flex-1"
       icon="upcoming"
       [title]="t('nextImport')"
@@ -46,7 +46,7 @@
   </div>
 
   <div class="flex-row flex-wrap gap-12">
-    <harvester-datasource-detail-entry
+    <ingrid-detail-item
       class="flex-1"
       icon="document"
       [title]="t('documents')"
@@ -54,7 +54,7 @@
       data-test="num-docs"
     />
 
-    <harvester-datasource-detail-entry
+    <ingrid-detail-item
       class="flex-1"
       icon="error"
       [title]="t('errors')"
@@ -64,7 +64,7 @@
       data-test="num-errors"
     />
 
-    <harvester-datasource-detail-entry
+    <ingrid-detail-item
       class="flex-1"
       icon="warning"
       [title]="t('warnings')"

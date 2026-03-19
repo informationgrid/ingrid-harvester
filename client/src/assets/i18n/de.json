@@ -1,6 +1,14 @@
 {
   "delete": "Löschen",
   "edit": "Editieren",
+  "common": {
+    "confirm": "Bestätigen",
+    "cancel": "Abbrechen",
+    "create": "Erstellen",
+    "edit": "Bearbeiten",
+    "update": "Aktualisieren",
+    "duplicate": "Duplizieren"
+  },
   "pageTitle": {
     "default": "InGrid Harvester",
     "dashboard": "Übersicht",
@@ -21,6 +29,7 @@
     "config": "Konfiguration",
     "harvester": "Harvester",
     "datasources": "Datenquellen",
+    "catalogs": "Kataloge",
     "indices": "Indizes",
     "log": "Log",
     "login": "Login",
@@ -94,6 +103,13 @@
         "tooltip": "{{num}} Fehler beim letzten Import"
       }
     }
+  },
+  "catalogs": {
+    "add": "Hinzufügen",
+    "addCatalog": "Neunen Katalog hinzufügen",
+    "editCatalog": "Katalog bearbeiten",
+    "duplicateCatalog": "Katalog duplizieren",
+    "deleteConfirmation": "Wollen Sie diesen Katalog wirklich löschen?"
   },
   "config": {
     "catalogs": "Kataloge",

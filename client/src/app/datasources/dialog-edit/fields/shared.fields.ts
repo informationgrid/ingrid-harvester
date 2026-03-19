@@ -212,6 +212,7 @@ export abstract class SharedFields {
         props: {
           label: "Weitere Einstellungen",
           contextHelpId: "harvester_settings_extras",
+          noDivider: true,
         },
         fieldGroup: [
           {

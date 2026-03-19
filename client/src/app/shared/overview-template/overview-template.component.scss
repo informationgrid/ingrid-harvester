@@ -31,10 +31,20 @@
   max-width: 1024px;
   margin-left: auto;
   margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
+@media screen and (max-width: 600px) {
+  .overview-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+
 .header {
-  margin: 32px var(--harvester-side-spacing) 24px;
+  margin: 32px 0 24px;
 
   h2 {
     margin: 0;

@@ -36,4 +36,6 @@
 
 <ng-container #fieldComponent></ng-container>
 
-<mat-divider></mat-divider>
+@if (!props.noDivider) {
+  <mat-divider></mat-divider>
+}

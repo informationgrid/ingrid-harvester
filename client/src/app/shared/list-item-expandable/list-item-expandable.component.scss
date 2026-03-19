@@ -36,10 +36,14 @@
   .mat-expansion-panel-body {
     padding: 0 16px 16px;
   }
+
+  .mat-expansion-panel-spacing {
+    margin-top: 0;
+  }
 }
 
 mat-expansion-panel {
-  margin: 0 var(--harvester-side-spacing, 24px) 12px;
+  margin-bottom: 12px;
   --mat-expansion-container-shape: 8px;
   --mat-expansion-container-elevation-shadow: none;
 }

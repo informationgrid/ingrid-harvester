@@ -21,8 +21,24 @@
  * ==================================================
  */
 
-:host {
-  display: flex;
-  overflow: hidden;
-  flex: 1; // IE 11
+import { Component, input, output } from "@angular/core";
+import { MatIcon } from "@angular/material/icon";
+import { MatIconButton } from "@angular/material/button";
+
+@Component({
+  selector: "ingrid-detail-item",
+  templateUrl: "./detail-item.component.html",
+  styleUrls: ["./detail-item.component.scss"],
+  imports: [MatIcon, MatIconButton],
+})
+export class DetailItemComponent {
+  icon = input<string>();
+  title = input.required<string>();
+  value = input<string | number>();
+  bordered = input<boolean>(true);
+
+  hasNavigation = input<boolean>(false);
+  onNavigate = output<void>();
+
+  constructor() {}
 }

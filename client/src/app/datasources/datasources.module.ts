@@ -55,10 +55,9 @@ import { ContextHelpButtonComponent } from "../shared/context-help/context-help-
 import { TranslocoDirective } from "@ngneat/transloco";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { DialogHeaderComponent } from "../shared/dialog-header/dialog-header.component";
-import { FormlyModule } from "@ngx-formly/core";
-import { FormlyMaterialModule } from "@ngx-formly/material";
 import { DatasourceEntryComponent } from "./datasource-entry/datasource-entry.component";
 import { OverviewTemplateComponent } from "../shared/overview-template/overview-template.component";
+import { FormlyForm } from "@ngx-formly/core";
 
 const routes: Routes = [
   {
@@ -107,10 +106,9 @@ const routes: Routes = [
     MatMenuTrigger,
     MatMenuItem,
     DialogHeaderComponent,
-    FormlyModule,
-    FormlyMaterialModule,
     DatasourceEntryComponent,
     OverviewTemplateComponent,
+    FormlyForm,
   ],
   exports: [DatasourceOverviewComponent],
 })

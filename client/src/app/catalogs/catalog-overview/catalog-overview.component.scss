@@ -21,24 +21,26 @@
  * ==================================================
  */
 
-import { Component, input, output } from "@angular/core";
-import { MatIcon } from "@angular/material/icon";
-import { MatIconButton } from "@angular/material/button";
+@use "../../../variables" as vars;
 
-@Component({
-  selector: "harvester-datasource-detail-entry",
-  templateUrl: "./datasource-detail-entry.component.html",
-  styleUrls: ["./datasource-detail-entry.component.scss"],
-  imports: [MatIcon, MatIconButton],
-})
-export class DatasourceDetailEntryComponent {
-  icon = input<string>();
-  title = input.required<string>();
-  value = input<string | number>();
-  bordered = input<boolean>(true);
+:host {
+  display: flex;
+  overflow: hidden;
+  flex: 1; // IE 11
+}
 
-  hasNavigation = input<boolean>(false);
-  onNavigate = output<void>();
+h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  margin-left: 6px;
+  margin-top: 36px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
 
-  constructor() {}
+  mat-icon {
+    width: 16px;
+    height: 16px;
+  }
 }

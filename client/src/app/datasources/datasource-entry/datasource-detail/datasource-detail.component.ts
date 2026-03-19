@@ -26,13 +26,13 @@ import { TranslocoDirective, TranslocoPipe } from "@ngneat/transloco";
 import { Harvester } from "@shared/harvester";
 import { ImportLogMessage } from "../../../../../../server/app/model/import.result";
 import { DatePipe } from "@angular/common";
-import { DatasourceDetailEntryComponent } from "./datasource-detail-entry/datasource-detail-entry.component";
+import { DetailItemComponent } from "../../../shared/detail-item/detail-item.component";
 
 @Component({
   selector: "harvester-datasource-detail",
   templateUrl: "./datasource-detail.component.html",
   styleUrls: ["./datasource-detail.component.scss"],
-  imports: [TranslocoDirective, DatasourceDetailEntryComponent],
+  imports: [TranslocoDirective, DetailItemComponent],
   providers: [DatePipe, TranslocoPipe],
 })
 export class DatasourceDetailComponent {

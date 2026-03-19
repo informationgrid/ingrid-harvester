@@ -63,8 +63,8 @@ import { TranslocoService } from "@ngneat/transloco";
 import { TranslocoRootModule } from "./transloco-root.module";
 import { MainHeaderComponent } from "./main-header/main-header.component";
 import { routes } from "./app.router";
-import { provideFormlyCore } from "@ngx-formly/core";
-import { withFormlyMaterial } from "@ngx-formly/material";
+import { FormlyModule, provideFormlyCore } from "@ngx-formly/core";
+import { FormlyMaterialModule, withFormlyMaterial } from "@ngx-formly/material";
 import { FormlySectionWrapperComponent } from "./formly/wrappers/formly-section-wrapper/formly-section-wrapper.component";
 import { FormlyInlineHelpWrapperComponent } from "./formly/wrappers/formly-inline-help-wrapper/formly-inline-help-wrapper.component";
 import { FormlyChipTypeComponent } from "./formly/types/formly-chip-type/formly-chip-type.component";
@@ -112,6 +112,8 @@ const appRoutes: Routes = routes;
     MatButtonModule,
     MatTooltipModule,
     TranslocoRootModule,
+    FormlyModule.forRoot(),
+    FormlyMaterialModule,
   ],
   providers: [
     {

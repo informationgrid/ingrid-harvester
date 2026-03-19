@@ -23,18 +23,9 @@
 
 <ingrid-list-item-expandable
   *transloco="let t; read: 'harvester'"
-  [title]="datasource().description"
-  [subtitle]="datasource().sourceURL"
+  [title]="catalog().name"
+  [subtitle]="catalog().url"
 >
-  <ng-container header-content>
-    <harvester-status-indicator
-      [datasource]="datasource()"
-      [importLog]="importLog()"
-    />
-
-    <harvester-progress-indicator [importLog]="importLog()" />
-  </ng-container>
-
   <ng-container header-end>
     <div class="flex-row align-self-center">
       <button
@@ -51,31 +42,9 @@
         <mat-icon svgIcon="Options" />
       </button>
       <mat-menu data-test="action-menu" #actionMenu>
-        <button
-          mat-menu-item
-          [disabled]="importLog() !== undefined && !importLog().complete"
-          (click)="onImport.emit()"
-          data-test="import"
-        >
-          <mat-icon svgIcon="Harvester" />
-          {{ t("import") }}
-        </button>
-        <button
-          mat-menu-item
-          [disabled]="importLog() !== undefined && !importLog().complete"
-          (click)="onIncrementImport.emit()"
-          data-test="importIncrement"
-        >
-          <mat-icon svgIcon="Harvester" />
-          {{ t("importIncrement") }}
-        </button>
         <button mat-menu-item (click)="onEdit.emit()" data-test="edit">
           <mat-icon svgIcon="cursor-edit" />
           {{ t("edit") }}
-        </button>
-        <button mat-menu-item (click)="onDelete.emit()" data-test="delete">
-          <mat-icon color="warn" svgIcon="delete" />
-          {{ t("delete") }}
         </button>
         <button
           mat-menu-item
@@ -85,28 +54,25 @@
           <mat-icon svgIcon="Copy" />
           {{ t("duplicate") }}
         </button>
-        <button mat-menu-item (click)="onSchedule.emit()" data-test="schedule">
-          <mat-icon svgIcon="schedule" />
-          {{ t("schedule") }}
-        </button>
-        <button mat-menu-item (click)="onHistory.emit()" data-test="history">
-          <mat-icon svgIcon="Timeline" />
-          {{ t("history") }}
-        </button>
-        <button mat-menu-item (click)="onOpenErrorLog.emit()" data-test="log">
-          <mat-icon svgIcon="logging" />
-          {{ t("log") }}
+        <button mat-menu-item (click)="onDelete.emit()" data-test="delete">
+          <mat-icon color="warn" svgIcon="delete" />
+          {{ t("delete") }}
         </button>
       </mat-menu>
     </div>
   </ng-container>
 
-  <ng-container content>
-    <harvester-datasource-detail
-      [datasource]="datasource()"
-      [importLog]="importLog()"
-      (onOpenErrorLog)="onOpenErrorLog.emit()"
-      (onOpenWarningLog)="onOpenWarningLog.emit()"
-    />
-  </ng-container>
+  @if (catalog().settings) {
+    <ng-container content>
+      <div class="settings">
+        @for (setting of catalog().settings | keyvalue; track setting.key) {
+          <ingrid-detail-item
+            [title]="setting.key"
+            [value]="setting.value"
+            icon="info"
+          />
+        }
+      </div>
+    </ng-container>
+  }
 </ingrid-list-item-expandable>

@@ -55,6 +55,17 @@ export const routes: Routes = [
       },
     },
     {
+      path: "catalogs",
+      loadChildren: () =>
+        import("./catalogs/catalogs.module").then(
+          (mod) => mod.CatalogsModule,
+        ),
+      data: {
+        icon: "catalogs",
+        partOfMenu: true,
+      },
+    },
+    {
       path: "config",
       loadChildren: () =>
         import("./config/config.module").then((mod) => mod.ConfigModule),
