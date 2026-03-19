@@ -30,7 +30,6 @@ import type { Summary } from '../../model/summary.js';
 import type { DatabaseUtils } from '../../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
-import { ConfigService } from '../../services/config/ConfigService.js';
 import { Catalog } from '../catalog.factory.js';
 import { ElasticsearchCatalogSummary } from './elasticsearch.catalog-summary.js';
 
@@ -47,7 +46,7 @@ export abstract class ElasticsearchCatalog extends Catalog<object> {
 
     constructor(catalogSettings: ElasticsearchCatalogSettings, summary: Summary) {
         super(catalogSettings, summary);
-        this.elastic = ElasticsearchFactory.getElasticUtils(ConfigService.getGeneralSettings().elasticsearch, summary);
+        this.elastic = ElasticsearchFactory.getElasticUtils(catalogSettings.settings, summary);
     }
 
     async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {

@@ -21,6 +21,8 @@
  * ==================================================
  */
 
+import type { ElasticsearchConfiguration } from './general-config.settings';
+
 export type CatalogSettings = {
   id: number,
   type: string,
@@ -42,13 +44,7 @@ export type PiveauCatalogSettings = CatalogSettings & {
 }
 
 export type ElasticsearchCatalogSettings = CatalogSettings & {
-  settings: {
-    version: number,
-    index: string,
-    alias: string,
-    user?: string,
-    password?: string
-  }
+  settings: ElasticsearchConfiguration
 }
 
 export type CswCatalogSettings = CatalogSettings & {
