@@ -21,26 +21,8 @@
  * ==================================================
  */
 
-@use "../../../variables" as vars;
-
 :host {
   display: flex;
   overflow: hidden;
   flex: 1; // IE 11
-}
-
-h3 {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  margin-left: 6px;
-  margin-top: 36px;
-  margin-bottom: 12px;
-  text-transform: uppercase;
-
-  mat-icon {
-    width: 16px;
-    height: 16px;
-  }
 }

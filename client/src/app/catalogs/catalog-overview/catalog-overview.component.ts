@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Component, computed, OnInit, signal } from "@angular/core";
+import { Component, computed, OnInit, Signal, signal } from "@angular/core";
 import { CatalogsService } from "../services/catalogs.service";
 import { MatDialog } from "@angular/material/dialog";
 import { FormDialogComponent } from "../../shared/form-dialog/form-dialog.component";
@@ -41,7 +41,7 @@ import { ConfirmDialogComponent } from "../../shared/confirm-dialog/confirm-dial
 })
 export class CatalogOverviewComponent implements OnInit {
   catalogs = signal<Record<number, any>>(undefined);
-  groupedCatalogs = computed(() => {
+  groupedCatalogs: Signal<any> = computed(() => {
     if (!this.catalogs()) return {};
     return Object.values(this.catalogs()).reduce((acc, catalog) => {
       if (!acc[catalog.type]) {

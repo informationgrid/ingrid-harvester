@@ -48,6 +48,18 @@ import { getLatestDate } from "../../utils/dateUtils";
 export class DatasourceOverviewComponent implements OnInit, OnDestroy {
   datasources = signal<Record<number, Harvester>>(undefined);
   importLogs = signal<Record<number, ImportLogMessage>>(undefined);
+  groupedDatasources = computed(() => {
+    if (!this.datasources()) return {};
+    return Object.values(this.datasources()).reduce<
+      Record<string, Harvester[]>
+    >((acc, catalog) => {
+      if (!acc[catalog.type]) {
+        acc[catalog.type] = [];
+      }
+      acc[catalog.type].push(catalog);
+      return acc;
+    }, {});
+  });
 
   datasourcesLoaded = computed(() => this.datasources() !== undefined);
   hasDatasources = computed(() => {
@@ -60,7 +72,7 @@ export class DatasourceOverviewComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private datasourceService: DatasourceService,
     private socketService: SocketService,
-    private translocoPipe: TranslocoPipe,
+    private transloco: TranslocoPipe,
   ) {}
 
   ngOnInit() {
@@ -119,13 +131,13 @@ export class DatasourceOverviewComponent implements OnInit, OnDestroy {
       .subscribe((isLost) => {
         if (isLost) {
           this.snackBar.open(
-            this.translocoPipe.transform("harvester.lostConnection"),
+            this.transloco.transform("harvester.lostConnection"),
             null,
             { duration: 2 * 1000 },
           );
         } else {
           this.snackBar.open(
-            this.translocoPipe.transform("harvester.recoverConnection"),
+            this.transloco.transform("harvester.recoverConnection"),
             null,
             { duration: 2 * 1000 },
           );
@@ -140,7 +152,7 @@ export class DatasourceOverviewComponent implements OnInit, OnDestroy {
   onImport(id: number, isIncremental: boolean = false) {
     this.datasourceService.runImport(id, isIncremental).subscribe();
     this.snackBar.open(
-      this.translocoPipe.transform("harvester.importStarted"),
+      this.transloco.transform("harvester.importStarted"),
       null,
       { duration: 3 * 1000 },
     );
@@ -155,7 +167,7 @@ export class DatasourceOverviewComponent implements OnInit, OnDestroy {
   onImportAll() {
     this.datasourceService.runImport(null).subscribe();
     this.snackBar.open(
-      this.translocoPipe.transform("harvester.allImportStarted"),
+      this.transloco.transform("harvester.allImportStarted"),
       null,
       { duration: 3 * 1000 },
     );
@@ -184,7 +196,7 @@ export class DatasourceOverviewComponent implements OnInit, OnDestroy {
   onDelete(datasource: Harvester) {
     this.dialog
       .open(ConfirmDialogComponent, {
-        data: this.translocoPipe.transform("harvester.deleteConfirmation"),
+        data: this.transloco.transform("harvester.deleteConfirmation"),
       })
       .afterClosed()
       .subscribe((result) => {
@@ -309,7 +321,7 @@ export class DatasourceOverviewComponent implements OnInit, OnDestroy {
     this.datasourceService.getHistory(harvester.id).subscribe({
       next: (data) => {
         if (!data || data.history.length === 0) {
-          return alert(this.translocoPipe.transform("harvester.noHistory"));
+          return alert(this.transloco.transform("harvester.noHistory"));
         }
         this.dialog.open(DialogHistoryComponent, {
           data: data,
@@ -332,11 +344,9 @@ export class DatasourceOverviewComponent implements OnInit, OnDestroy {
         },
       });
     } else {
-      this.snackBar.open(
-        this.translocoPipe.transform("harvester.noLogs"),
-        null,
-        { duration: 2 * 1000 },
-      );
+      this.snackBar.open(this.transloco.transform("harvester.noLogs"), null, {
+        duration: 2 * 1000,
+      });
     }
   }
 

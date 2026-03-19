@@ -63,20 +63,29 @@
 
     <ng-container content>
       <mat-accordion>
-        @for (item of datasources() | keyvalue; track item.key) {
-          <harvester-datasource-entry
-            [datasource]="item.value"
-            [importLog]="importLogs() ? importLogs()[item.value.id] : undefined"
-            (onImport)="onImport(item.value.id)"
-            (onIncrementImport)="onImport(item.value.id, true)"
-            (onEdit)="onEdit(item.value)"
-            (onDelete)="onDelete(item.value)"
-            (onDuplicate)="onDuplicate(item.value)"
-            (onSchedule)="onSchedule(item.value)"
-            (onHistory)="showHistory(item.value)"
-            (onOpenErrorLog)="onShowLogs(item.value.id)"
-            (onOpenWarningLog)="onShowLogs(item.value.id)"
-          />
+        @for (group of groupedDatasources() | keyvalue; track group.key) {
+          <h3>
+            <mat-icon svgIcon="Harvester" aria-hidden="true" />
+            <span>{{ group.key }}</span>
+          </h3>
+
+          @for (datasource of group.value; track datasource.id) {
+            <harvester-datasource-entry
+              [datasource]="datasource"
+              [importLog]="
+                importLogs() ? importLogs()[datasource.id] : undefined
+              "
+              (onImport)="onImport(datasource.id)"
+              (onIncrementImport)="onImport(datasource.id, true)"
+              (onEdit)="onEdit(datasource)"
+              (onDelete)="onDelete(datasource)"
+              (onDuplicate)="onDuplicate(datasource)"
+              (onSchedule)="onSchedule(datasource)"
+              (onHistory)="showHistory(datasource)"
+              (onOpenErrorLog)="onShowLogs(datasource.id)"
+              (onOpenWarningLog)="onShowLogs(datasource.id)"
+            />
+          }
         }
       </mat-accordion>
     </ng-container>
