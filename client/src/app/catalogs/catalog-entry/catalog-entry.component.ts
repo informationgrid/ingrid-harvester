@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Component, computed, input, output, ViewChild } from "@angular/core";
+import { Component, input, output, ViewChild } from "@angular/core";
 import { ListItemExpandableComponent } from "../../shared/list-item-expandable/list-item-expandable.component";
 import { MatIcon } from "@angular/material/icon";
 import { MatIconButton } from "@angular/material/button";
@@ -30,6 +30,7 @@ import { MatTooltip } from "@angular/material/tooltip";
 import { TranslocoDirective } from "@ngneat/transloco";
 import { KeyValuePipe } from "@angular/common";
 import { DetailItemComponent } from "../../shared/detail-item/detail-item.component";
+import { Catalog } from "@shared/catalog";
 
 @Component({
   selector: "harvester-catalog-entry",
@@ -51,7 +52,7 @@ import { DetailItemComponent } from "../../shared/detail-item/detail-item.compon
 export class CatalogEntryComponent {
   @ViewChild("actionMenuBtn") menuBtn!: MatMenuTrigger;
 
-  catalog = input.required<any>();
+  catalog = input.required<Catalog>();
 
   onEdit = output<void>();
   onDuplicate = output<void>();

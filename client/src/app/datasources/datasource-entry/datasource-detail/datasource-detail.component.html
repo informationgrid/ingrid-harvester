@@ -26,28 +26,24 @@
   *transloco="let t; read: 'harvester'"
 >
   <ingrid-detail-item
-    class="flex-1"
     icon="available"
     [title]="t('lastImport')"
     [value]="lastExecution()"
   />
 
   <ingrid-detail-item
-    class="flex-1"
     icon="timer"
     [title]="t('durationImport')"
     [value]="executionDuration()"
   />
 
   <ingrid-detail-item
-    class="flex-1"
     icon="upcoming"
     [title]="t('nextImport')"
     [value]="nextExecution()"
   />
 
   <ingrid-detail-item
-    class="flex-1"
     icon="document"
     [title]="t('documents')"
     [value]="docNum()"
@@ -55,7 +51,6 @@
   />
 
   <ingrid-detail-item
-    class="flex-1"
     icon="error"
     [title]="t('errors')"
     [value]="errorNum()"
@@ -65,7 +60,6 @@
   />
 
   <ingrid-detail-item
-    class="flex-1"
     icon="warning"
     [title]="t('warnings')"
     [value]="warningNum()"

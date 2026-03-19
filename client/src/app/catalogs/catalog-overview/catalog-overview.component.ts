@@ -31,6 +31,7 @@ import CswFields from "../form-fields/csw.fields";
 import ElasticsearchFields from "../form-fields/elasticsearch.fields";
 import PiveauFields from "../form-fields/piveau.fields";
 import { ConfirmDialogComponent } from "../../shared/confirm-dialog/confirm-dialog.component";
+import { Catalog } from "@shared/catalog";
 
 @Component({
   selector: "harvester-catalog-overview",
@@ -40,8 +41,8 @@ import { ConfirmDialogComponent } from "../../shared/confirm-dialog/confirm-dial
   standalone: false,
 })
 export class CatalogOverviewComponent implements OnInit {
-  catalogs = signal<Record<number, any>>(undefined);
-  groupedCatalogs: Signal<any> = computed(() => {
+  catalogs = signal<Record<number, Catalog>>(undefined);
+  groupedCatalogs: Signal<Record<string, Catalog[]>> = computed(() => {
     if (!this.catalogs()) return {};
     return Object.values(this.catalogs()).reduce((acc, catalog) => {
       if (!acc[catalog.type]) {
@@ -80,7 +81,7 @@ export class CatalogOverviewComponent implements OnInit {
   }
 
   onEdit(
-    initialValues?: any,
+    initialValues?: Catalog,
     options?: {
       title?: string;
       submitText?: string;
@@ -134,7 +135,7 @@ export class CatalogOverviewComponent implements OnInit {
       });
   }
 
-  onDuplicate(initialValues: any) {
+  onDuplicate(initialValues: Catalog) {
     const _initialValues = {
       ...initialValues,
       id: null,
@@ -147,7 +148,7 @@ export class CatalogOverviewComponent implements OnInit {
     });
   }
 
-  onDelete(catalog: any) {
+  onDelete(catalog: Catalog) {
     this.dialog
       .open(ConfirmDialogComponent, {
         data: this.transloco.transform("catalogs.deleteConfirmation"),
