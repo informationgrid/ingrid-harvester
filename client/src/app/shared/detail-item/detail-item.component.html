@@ -21,7 +21,7 @@
     ==================================================
 -->
 
-<div class="entry" [class.bordered]="bordered()" style="min-width: 200px">
+<div class="entry">
   <div class="flex-1 flex-col gap-4">
     <div class="label">
       <mat-icon [svgIcon]="icon()" />
@@ -38,7 +38,7 @@
   </div>
 
   @if (hasNavigation()) {
-    <button matIconButton (click)="onNavigate.emit()">
+    <button class="self-center" matIconButton (click)="onNavigate.emit()">
       <mat-icon svgIcon="external"></mat-icon>
     </button>
   }

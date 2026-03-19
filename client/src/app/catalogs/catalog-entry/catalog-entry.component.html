@@ -22,18 +22,18 @@
 -->
 
 <ingrid-list-item-expandable
-  *transloco="let t; read: 'harvester'"
+  *transloco="let t"
   [title]="catalog().name"
   [subtitle]="catalog().url"
 >
   <ng-container header-end>
-    <div class="flex-row align-self-center">
+    <div class="flex-row self-center">
       <button
         #actionMenuBtn="matMenuTrigger"
         matIconButton
         color="primary"
-        matTooltip="{{ t('more') }}"
-        aria-label="{{ t('more') }}"
+        matTooltip="{{ t('common.more') }}"
+        aria-label="{{ t('common.more') }}"
         (click)="openActionMenu($event)"
         (keydown.enter)="openActionMenu($event)"
         [matMenuTriggerFor]="actionMenu"
@@ -44,7 +44,7 @@
       <mat-menu data-test="action-menu" #actionMenu>
         <button mat-menu-item (click)="onEdit.emit()" data-test="edit">
           <mat-icon svgIcon="cursor-edit" />
-          {{ t("edit") }}
+          {{ t("common.edit") }}
         </button>
         <button
           mat-menu-item
@@ -52,11 +52,11 @@
           data-test="duplicate"
         >
           <mat-icon svgIcon="Copy" />
-          {{ t("duplicate") }}
+          {{ t("common.duplicate") }}
         </button>
         <button mat-menu-item (click)="onDelete.emit()" data-test="delete">
           <mat-icon color="warn" svgIcon="delete" />
-          {{ t("delete") }}
+          {{ t("common.delete") }}
         </button>
       </mat-menu>
     </div>
@@ -64,10 +64,10 @@
 
   @if (catalog().settings) {
     <ng-container content>
-      <div class="settings">
+      <div class="pt-4 grid gap-12 grid-cols-3 grid-cols-md-2 grid-cols-sm-1">
         @for (setting of catalog().settings | keyvalue; track setting.key) {
           <ingrid-detail-item
-            [title]="setting.key"
+            [title]="t('catalogs.formLabel.' + setting.key)"
             [value]="setting.value"
             icon="info"
           />

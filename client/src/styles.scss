@@ -680,6 +680,10 @@ mat-card-header {
   margin-left: auto;
 }
 
+.pt-4 {
+  padding-top: 16px;
+}
+
 .padding {
   padding: 16px !important;
 }
@@ -1279,12 +1283,12 @@ ige-one-column-wrapper formly-group {
   align-self: flex-start;
 }
 
-.self-end {
-  align-self: flex-end;
+.self-center {
+  align-self: center;
 }
 
-.align-self-center {
-  align-self: center;
+.self-end {
+  align-self: flex-end;
 }
 
 .self-stretch {
@@ -2192,6 +2196,19 @@ mat-form-field .context-help-button {
 
   .mdc-text-field {
     padding: 0 4px;
+  }
+}
+
+
+@media (max-width: 1000px) {
+  .grid-cols-md-2 {
+    grid-template-columns: repeat(2, 1fr)
+  }
+}
+
+@media (max-width: 700px) {
+  .grid-cols-sm-1 {
+    grid-template-columns: repeat(1, 1fr)
   }
 }
 

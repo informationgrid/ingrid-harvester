@@ -66,7 +66,12 @@ export class FormDialogComponent implements OnDestroy {
     this.icon = this.data?.icon ?? "Add";
     this.submitText = this.data?.submitText;
     this.fields = this.data?.fields ?? [];
-    this.model = this.data?.initialValues ? this.data.initialValues : {};
+
+    // Mirror the initial values to the model
+    // to prevent modifying the original object.
+    this.model = this.data?.initialValues
+      ? JSON.parse(JSON.stringify(this.data.initialValues))
+      : {};
   }
 
   ngOnDestroy() {

@@ -2,12 +2,15 @@
   "delete": "Löschen",
   "edit": "Editieren",
   "common": {
+    "add": "Hinzufügen",
     "confirm": "Bestätigen",
     "cancel": "Abbrechen",
     "create": "Erstellen",
     "edit": "Bearbeiten",
     "update": "Aktualisieren",
-    "duplicate": "Duplizieren"
+    "duplicate": "Duplizieren",
+    "delete": "Löschen",
+    "more": "Mehr"
   },
   "pageTitle": {
     "default": "InGrid Harvester",
@@ -105,11 +108,20 @@
     }
   },
   "catalogs": {
-    "add": "Hinzufügen",
     "addCatalog": "Neunen Katalog hinzufügen",
     "editCatalog": "Katalog bearbeiten",
-    "duplicateCatalog": "Katalog duplizieren",
-    "deleteConfirmation": "Wollen Sie diesen Katalog wirklich löschen?"
+    "deleteConfirmation": "Wollen Sie diesen Katalog wirklich löschen?",
+    "formLabel": {
+      "outputSchema": "Output-Schema",
+      "version": "Version",
+      "alias": "Alias",
+      "index": "Index",
+      "catalog": "Katalog",
+      "description": "Beschreibung",
+      "title": "Titel",
+      "user": "Benutzername",
+      "password": "Passwort"
+    }
   },
   "config": {
     "catalogs": "Kataloge",

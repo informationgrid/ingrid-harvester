@@ -21,57 +21,56 @@
     ==================================================
 -->
 
-<div class="flex-col gap-12" *transloco="let t; read: 'harvester'">
-  <div class="flex-row flex-wrap gap-12">
-    <ingrid-detail-item
-      class="flex-1"
-      icon="available"
-      [title]="t('lastImport')"
-      [value]="lastExecution()"
-    />
+<div
+  class="pt-4 grid gap-12 grid-cols-3 grid-cols-md-2 grid-cols-sm-1"
+  *transloco="let t; read: 'harvester'"
+>
+  <ingrid-detail-item
+    class="flex-1"
+    icon="available"
+    [title]="t('lastImport')"
+    [value]="lastExecution()"
+  />
 
-    <ingrid-detail-item
-      class="flex-1"
-      icon="timer"
-      [title]="t('durationImport')"
-      [value]="executionDuration()"
-    />
+  <ingrid-detail-item
+    class="flex-1"
+    icon="timer"
+    [title]="t('durationImport')"
+    [value]="executionDuration()"
+  />
 
-    <ingrid-detail-item
-      class="flex-1"
-      icon="upcoming"
-      [title]="t('nextImport')"
-      [value]="nextExecution()"
-    />
-  </div>
+  <ingrid-detail-item
+    class="flex-1"
+    icon="upcoming"
+    [title]="t('nextImport')"
+    [value]="nextExecution()"
+  />
 
-  <div class="flex-row flex-wrap gap-12">
-    <ingrid-detail-item
-      class="flex-1"
-      icon="document"
-      [title]="t('documents')"
-      [value]="docNum()"
-      data-test="num-docs"
-    />
+  <ingrid-detail-item
+    class="flex-1"
+    icon="document"
+    [title]="t('documents')"
+    [value]="docNum()"
+    data-test="num-docs"
+  />
 
-    <ingrid-detail-item
-      class="flex-1"
-      icon="error"
-      [title]="t('errors')"
-      [value]="errorNum()"
-      [hasNavigation]="errorNum() != '-'"
-      (onNavigate)="onOpenErrorLog.emit()"
-      data-test="num-errors"
-    />
+  <ingrid-detail-item
+    class="flex-1"
+    icon="error"
+    [title]="t('errors')"
+    [value]="errorNum()"
+    [hasNavigation]="errorNum() != '-'"
+    (onNavigate)="onOpenErrorLog.emit()"
+    data-test="num-errors"
+  />
 
-    <ingrid-detail-item
-      class="flex-1"
-      icon="warning"
-      [title]="t('warnings')"
-      [value]="warningNum()"
-      [hasNavigation]="warningNum() != '-'"
-      (onNavigate)="onOpenWarningLog.emit()"
-      data-test="num-warnings"
-    />
-  </div>
+  <ingrid-detail-item
+    class="flex-1"
+    icon="warning"
+    [title]="t('warnings')"
+    [value]="warningNum()"
+    [hasNavigation]="warningNum() != '-'"
+    (onNavigate)="onOpenWarningLog.emit()"
+    data-test="num-warnings"
+  />
 </div>

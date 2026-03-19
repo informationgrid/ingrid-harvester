@@ -21,14 +21,14 @@
  * ==================================================
  */
 
+:host {
+  display: inherit;
+}
+
 .entry {
   display: flex;
   gap: 12px;
-  align-items: center;
   padding: 10px;
-}
-
-.bordered {
   border-radius: 4px;
   background-color: #fafafa;
   border: 1px solid #dddddd;

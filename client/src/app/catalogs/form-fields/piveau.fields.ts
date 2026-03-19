@@ -1,7 +1,11 @@
 import { FormlyFieldConfig } from "@ngx-formly/core";
+import { inject } from "@angular/core";
+import { TranslocoPipe } from "@ngneat/transloco";
 
 export default abstract class PiveauFields {
   static fields(): FormlyFieldConfig[] {
+    const transloco = inject(TranslocoPipe);
+
     return [
       {
         expressions: {
@@ -24,7 +28,33 @@ export default abstract class PiveauFields {
                     type: "input",
                     className: "ingrid-col-10 ingrid-col-md-auto",
                     props: {
-                      label: "Katalog",
+                      label: transloco.transform("catalogs.formLabel.catalog"),
+                      required: true,
+                    },
+                  },
+                  {
+                    key: "version",
+                    type: "input",
+                    className: "ingrid-col-10 ingrid-col-md-auto",
+                    props: {
+                      label: transloco.transform("catalogs.formLabel.version"),
+                      required: true,
+                    },
+                  },
+                ],
+              },
+              {
+                fieldGroupClassName: "ingrid-row",
+                fieldGroup: [
+                  {
+                    key: "outputSchema",
+                    type: "input",
+                    className: "ingrid-col-10 ingrid-col-md-auto",
+                    props: {
+                      label: transloco.transform(
+                        "catalogs.formLabel.outputSchema",
+                      ),
+                      required: true,
                     },
                   },
                   {
@@ -32,7 +62,7 @@ export default abstract class PiveauFields {
                     type: "input",
                     className: "ingrid-col-10 ingrid-col-md-auto",
                     props: {
-                      label: "Titel",
+                      label: transloco.transform("catalogs.formLabel.title"),
                     },
                   },
                 ],
@@ -40,9 +70,8 @@ export default abstract class PiveauFields {
               {
                 key: "description",
                 type: "input",
-                className: "ingrid-col-10",
                 props: {
-                  label: "Beschreibung",
+                  label: transloco.transform("catalogs.formLabel.description"),
                 },
               },
             ],

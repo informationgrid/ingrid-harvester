@@ -1,7 +1,11 @@
 import { FormlyFieldConfig } from "@ngx-formly/core";
+import { inject } from "@angular/core";
+import { TranslocoPipe } from "@ngneat/transloco";
 
 export default abstract class ElasticsearchFields {
   static fields(): FormlyFieldConfig[] {
+    const transloco = inject(TranslocoPipe);
+
     return [
       {
         expressions: {
@@ -24,7 +28,8 @@ export default abstract class ElasticsearchFields {
                     type: "input",
                     className: "ingrid-col-10 ingrid-col-md-auto",
                     props: {
-                      label: "Alias",
+                      label: transloco.transform("catalogs.formLabel.alias"),
+                      required: true,
                     },
                   },
                   {
@@ -32,7 +37,8 @@ export default abstract class ElasticsearchFields {
                     type: "input",
                     className: "ingrid-col-10 ingrid-col-md-auto",
                     props: {
-                      label: "Index",
+                      label: transloco.transform("catalogs.formLabel.index"),
+                      required: true,
                     },
                   },
                   {
@@ -40,12 +46,27 @@ export default abstract class ElasticsearchFields {
                     type: "input",
                     className: "ingrid-col-10 ingrid-col-md-auto",
                     props: {
-                      label: "Version",
+                      label: transloco.transform("catalogs.formLabel.version"),
+                      required: true,
                       type: "number",
                       min: 1,
                     },
                   },
                 ],
+              },
+              {
+                key: "user",
+                type: "input",
+                props: {
+                  label: transloco.transform("catalogs.formLabel.user"),
+                },
+              },
+              {
+                key: "password",
+                type: "input",
+                props: {
+                  label: transloco.transform("catalogs.formLabel.password"),
+                },
               },
             ],
           },

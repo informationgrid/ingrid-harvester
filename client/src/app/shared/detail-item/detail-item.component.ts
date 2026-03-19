@@ -35,7 +35,6 @@ export class DetailItemComponent {
   icon = input<string>();
   title = input.required<string>();
   value = input<string | number>();
-  bordered = input<boolean>(true);
 
   hasNavigation = input<boolean>(false);
   onNavigate = output<void>();

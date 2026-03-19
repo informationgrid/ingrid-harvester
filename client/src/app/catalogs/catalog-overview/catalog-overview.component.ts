@@ -102,7 +102,7 @@ export class CatalogOverviewComponent implements OnInit {
             ),
           icon: options?.icon ?? (initialValues ? "Edit" : "Add"),
           fields: this.catalogFields,
-          initialValues: { ...initialValues },
+          initialValues: initialValues,
         },
         width: "700px",
         disableClose: true,
@@ -141,7 +141,7 @@ export class CatalogOverviewComponent implements OnInit {
       name: initialValues.name + " (Duplikat)",
     };
     this.onEdit(_initialValues, {
-      title: this.transloco.transform("catalogs.duplicateCatalog"),
+      title: this.transloco.transform("catalogs.addCatalog"),
       submitText: this.transloco.transform("common.duplicate"),
       icon: "Copy",
     });
