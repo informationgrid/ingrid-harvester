@@ -65,16 +65,8 @@ export abstract class Importer<S extends ImporterSettings> {
         this.filterUtils = new FilterUtils(settings);
         this.generalConfig = ConfigService.getGeneralSettings();
         this.summary = new Summary(settings);
-
-        let elasticsearchConfig: IndexConfiguration = {
-            ...this.generalConfig.elasticsearch,
-            includeTimestamp: true,
-            dryRun: settings.dryRun,
-            addAlias: !settings.disable
-        };
-
         this.database = DatabaseFactory.getDatabaseUtils(this.generalConfig.database, this.summary);
-        this.elastic = ElasticsearchFactory.getElasticUtils(elasticsearchConfig, this.summary);
+        this.elastic = ElasticsearchFactory.getElasticUtils(this.generalConfig.elasticsearch, this.summary);
 
         // override harvester-specific setting if the general config param is set
         if (this.generalConfig.allowAllUnauthorizedSSL) {

@@ -21,15 +21,15 @@
  * ==================================================
  */
 
-import type { ElasticsearchUtils } from './elastic.utils.js';
+import type { ElasticsearchConfiguration } from '@shared/general-config.settings.js';
+import type { Summary } from '../model/summary.js';
 import { ElasticsearchUtils8 } from './elastic.utils.8.js';
 import { ElasticsearchUtils9 } from "./elastic.utils.9.js";
-import type { IndexConfiguration } from './elastic.setting.js';
-import type { Summary } from '../model/summary.js';
+import type { ElasticsearchUtils } from './elastic.utils.js';
 
 export class ElasticsearchFactory {
 
-    public static getElasticUtils(config: IndexConfiguration, summary: Summary): ElasticsearchUtils {
+    public static getElasticUtils(config: ElasticsearchConfiguration, summary: Summary): ElasticsearchUtils {
         switch (config.version) {
             case '8':
                 return new ElasticsearchUtils8(config, summary);

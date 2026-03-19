@@ -21,11 +21,12 @@
  * ==================================================
  */
 
+import type { ElasticsearchConfiguration } from '@shared/general-config.settings.js';
 import type { Index } from '@shared/index.model.js';
 import { Client } from 'elasticsearch9';
 import log4js from 'log4js';
 import type { Summary } from '../model/summary.js';
-import type { IndexConfiguration, IndexSettings } from './elastic.setting.js';
+import type { IndexSettings } from './elastic.setting.js';
 import type { BulkResponse, EsOperation } from './elastic.utils.js';
 import { ElasticsearchUtils } from './elastic.utils.js';
 
@@ -35,7 +36,7 @@ export class ElasticsearchUtils9 extends ElasticsearchUtils {
 
     protected client: Client;
 
-    constructor(config: IndexConfiguration, summary: Summary) {
+    constructor(config: ElasticsearchConfiguration, summary: Summary) {
         super(config, summary);
 
         // timeout is set to 0 as per recommendation (NodeJS ES 8.x uses UndiciConnection)
@@ -125,11 +126,6 @@ export class ElasticsearchUtils9 extends ElasticsearchUtils {
     }
 
     async finishIndex(closeIndex: boolean = true) {
-        if (this.config.dryRun) {
-            log.debug('Skipping finalisation of index for dry run.');
-            return;
-        }
-
         try {
             await this.client.cluster.health({ wait_for_status: 'yellow' });
             await this.sendBulkOperations();

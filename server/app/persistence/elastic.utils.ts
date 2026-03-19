@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import type { ElasticsearchConfiguration } from '@shared/general-config.settings.js';
 import type { Index } from '@shared/index.model.js';
 import type { Client as Client8 } from 'elasticsearch8';
 import type { Client as Client9 } from 'elasticsearch9';
@@ -28,7 +29,7 @@ import type { Summary } from '../model/summary.js';
 import { INGRID_META_INDEX } from '../profiles/ingrid/profile.factory.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import type { ElasticQueries } from './elastic.queries.js';
-import type { IndexConfiguration, IndexSettings } from './elastic.setting.js';
+import type { IndexSettings } from './elastic.setting.js';
 
 export interface BulkResponse {
     queued: boolean;
@@ -55,7 +56,7 @@ export abstract class ElasticsearchUtils {
     public indexName: string;
     public _bulkOperationChunks: object;//any[][];
 
-    constructor(readonly config: IndexConfiguration, readonly summary: Summary) {
+    constructor(readonly config: ElasticsearchConfiguration, readonly summary: Summary) {
         this._bulkOperationChunks = [];
         this.indexName = config.prefix + config.index;
         let profile = ProfileFactoryLoader.get();
