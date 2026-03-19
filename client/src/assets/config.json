@@ -2,6 +2,6 @@
   "url": "",
   "contextPath": "",
   "version": "@@VERSION@@",
-  "passportEnabled": true,
+  "passportEnabled": false,
   "keycloakEnabled": true
 }
