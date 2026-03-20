@@ -53,7 +53,7 @@ import {authGuard} from './security/auth.guard';
         data: {
             icon: "Configuration",
             partOfMenu: true,
-            roles: ['admin']
+            roles: ['admin', 'editor']
         },
     },
     {
@@ -73,7 +73,7 @@ import {authGuard} from './security/auth.guard';
         data: {
             icon: "Logging",
             partOfMenu: true,
-            roles: ['admin']
+            roles: ['admin', 'editor']
         },
     },
     {

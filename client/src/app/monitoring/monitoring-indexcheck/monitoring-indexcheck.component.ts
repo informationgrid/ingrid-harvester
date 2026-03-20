@@ -23,11 +23,12 @@
 
 import { indexCheckChart } from '../../charts/reuseableChart';
 import { Chart } from 'chart.js';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MonitoringIndexCheckDetailComponent } from './monitoring-indexcheck-detail/monitoring-indexcheck-detail.component';
 import { Observable } from 'rxjs';
+import { AuthenticationService } from '../../security/authentication.service';
 
 @Component({
     selector: 'app-monitoring-indexcheck',
@@ -42,6 +43,11 @@ export class MonitoringIndexCheckComponent implements OnInit {
 
   private chartIndexCheck : Chart;
   private dialog: MatDialog;
+  private authService = inject(AuthenticationService);
+
+  get canStart(): boolean {
+    return !this.authService.hasRole('viewer');
+  }
 
 
   constructor(private http: HttpClient, private _dialog: MatDialog) {

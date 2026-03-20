@@ -32,31 +32,31 @@ import { SessionService, Tab } from "../services/session.service";
     styleUrls: ['./config.component.scss'],
     standalone: false
 })
-export class ConfigComponent implements OnInit {
+export class ConfigComponent {
   tabs: Tab[];
 
   constructor(
     private router: Router,
     private activeRoute: ActivatedRoute,
-    private sessionService: SessionService,
+    sessionService: SessionService,
     ) {
       this.tabs = sessionService.getTabsFromRoute(activeRoute.snapshot);
       // only update tab from route if it was set explicitly in URL
       // otherwise the remembered state from store is used
-      const currentPath = this.router.parseUrl(this.router.url).root.children
-        .primary.segments[1].path;
-      const activeTabIndex = this.tabs.findIndex(
-        (tab) => tab.path === currentPath,
-      );
-      if (activeTabIndex !== 0) {
-        this.updateTab(activeTabIndex);
+      const urlSegments = this.router.parseUrl(this.router.url).root.children.primary?.segments;
+      if (urlSegments && urlSegments.length > 1) {
+        const currentPath = urlSegments[1].path;
+        const activeTabIndex = this.tabs.findIndex(
+          (tab) => tab.path === currentPath,
+        );
+        if (activeTabIndex !== -1) {
+          this.updateTab(activeTabIndex);
+        }
+      } else if (this.tabs.length > 0) {
+        // Redirect to the first available tab if no specific sub-route is provided
+        this.router.navigate([this.tabs[0].path], { relativeTo: this.activeRoute });
       }
   }
-
-  ngOnInit() {
-  }
-
-
 
   updateTab(index: number) {
     // const tabPaths = this.sessionService.getTabPaths(this.activeRoute.snapshot);

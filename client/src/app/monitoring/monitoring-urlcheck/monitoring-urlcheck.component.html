@@ -30,9 +30,11 @@
     <canvas id="chart_urlcheck"></canvas>
   </mat-card-content>
 
-  <mat-card-actions>
-    <button matButton="outlined" (click)="urlCheck()" data-test="indexCheck">
-      Manuell starten
-    </button>
-  </mat-card-actions>
+  @if (canStart) {
+    <mat-card-actions>
+      <button matButton="outlined" (click)="urlCheck()" data-test="indexCheck">
+        Manuell starten
+      </button>
+    </mat-card-actions>
+  }
 </mat-card>

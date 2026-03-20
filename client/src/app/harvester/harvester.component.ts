@@ -55,7 +55,6 @@ export class HarvesterComponent implements OnInit, OnDestroy {
   harvesterLoaded = false;
 
   numberOfHarvesters: number;
-  private subscription: Subscription;
 
   constructor(public dialog: MatDialog,
               private snackBar: MatSnackBar,
@@ -66,7 +65,7 @@ export class HarvesterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.subscription = this.socketService.log$
+    this.socketService.log$
       .pipe(untilDestroyed(this))
       .subscribe(data => this.importDetail[data.id] = data);
 

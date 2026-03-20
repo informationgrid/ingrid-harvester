@@ -30,7 +30,7 @@
       <aside class="my-4" contextHelp="about_harvester"></aside>
 
       <div class="flex-row flex-wrap gap-16">
-        @if (authService.hasRole('admin')) {
+        @if (!authService.hasRole('viewer')) {
         <button
           matButton="filled"
           color="primary"
@@ -126,7 +126,7 @@
             <div class="flex-row flex-wrap space-between gap-8">
               <!-- primary action buttons -->
               <div class="flex-row flex-wrap gap-12">
-                @if (authService.hasRole('admin')) {
+                @if (!authService.hasRole('viewer')) {
                 @if (item.key === 'CSW') {
                   <button
                     matButton="outlined"
@@ -154,7 +154,7 @@
 
               <!-- secondary action buttons -->
               <div class="flex-row flex-wrap gap-12">
-                @if (authService.hasRole('admin')) {
+                @if (!authService.hasRole('viewer')) {
                 <button
                   matIconButton
                   color="primary"
@@ -189,7 +189,7 @@
                   <mat-icon svgIcon="Options"/>
                 </button>
                 <mat-menu data-test="action-menu" #actionMenu>
-                  @if (authService.hasRole('admin')) {
+                  @if (!authService.hasRole('viewer')) {
                   <button
                     mat-menu-item
                     (click)="copy(harvester)"
