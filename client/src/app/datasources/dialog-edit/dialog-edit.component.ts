@@ -29,12 +29,10 @@ import { ConfigService } from "../../config/config.service";
 import { FormlyFieldConfig, FormlyFormOptions } from "@ngx-formly/core";
 import { SharedFields } from "./fields/shared.fields";
 import { IngridProfile } from "./fields/profiles/ingrid.profile";
-import { ExcelType } from "./fields/types/excel.type";
 import { CkanType } from "./fields/types/ckan.type";
 import { CswType } from "./fields/types/csw.type";
 import { DcatType } from "./fields/types/dcat.type";
 import { DecatappluType } from "./fields/types/dcatapplu.type";
-import { ExcelSparseType } from "./fields/types/excel-sparse.type";
 import { JsonType } from "./fields/types/json.type";
 import { KldType } from "./fields/types/kld.type";
 import { OaiType } from "./fields/types/oai.type";
@@ -83,8 +81,6 @@ export class DialogEditComponent {
         ...CswType.fields(),
         ...DcatType.fields(),
         ...DecatappluType.fields(),
-        ...ExcelSparseType.fields(),
-        ...ExcelType.fields(),
         ...JsonType.fields(),
         ...KldType.fields(),
         ...OaiType.fields(),

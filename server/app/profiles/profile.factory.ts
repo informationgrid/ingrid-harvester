@@ -21,9 +21,10 @@
  * ==================================================
  */
 
+import type { CatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
 import { createRequire } from 'module';
-import type { CatalogFactory, CatalogSettings, Catalog as NewCatalog } from '../catalog/catalog.factory.js';
+import type { CatalogFactory, Catalog as NewCatalog } from '../catalog/catalog.factory.js';
 import type { ImporterSettings } from '../importer.settings.js';
 import type { ImporterFactory } from '../importer/importer.factory.js';
 import type { Importer } from '../importer/importer.js';

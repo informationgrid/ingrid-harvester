@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import type { CatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import type { ImporterSettings } from '../importer.settings.js';
@@ -114,15 +115,6 @@ export abstract class Catalog<DbColumnType> {
     abstract transform(rows: DbColumnType[]): DbColumnType[];
 
     abstract deduplicate(datasets: DbColumnType[]): DbColumnType[];
-};
-
-export type CatalogSettings = {
-    id: number,
-    type: string,
-    // ED 2026-03-10: "connections" abstraction will be implemented at a later date; directly use URL for now
-    // connectionId: string,
-    url: string,
-    name: string
 };
 
 enum ImportType {

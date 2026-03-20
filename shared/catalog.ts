@@ -21,10 +21,41 @@
  * ==================================================
  */
 
-import type { CatalogSettings } from "../server/app/catalog/catalog.factory";
-import type { PiveauCatalogSettings } from "../server/app/catalog/piveau/piveau.catalog";
-import type { ElasticsearchCatalogSettings } from "../server/app/catalog/elasticsearch/elasticsearch.catalog";
-import type { CswCatalogSettings } from "../server/app/catalog/csw/csw.catalog";
+export type CatalogSettings = {
+  id: number,
+  type: string,
+  // ED 2026-03-10: "connections" abstraction will be implemented at a later date; directly use URL for now
+  // connectionId: string,
+  url: string,
+  name: string
+};
+
+export type PiveauCatalogSettings = CatalogSettings & {
+  settings: {
+    version: string,
+    outputSchema: string,
+    catalog: string,
+    title?: string,
+    description?: string
+  }
+}
+
+export type ElasticsearchCatalogSettings = CatalogSettings & {
+  settings: {
+    version: number,
+    index: string,
+    alias: string,
+    user?: string,
+    password?: string
+  }
+}
+
+export type CswCatalogSettings = CatalogSettings & {
+  settings: {
+    version: string,
+    outputSchema: string,
+  }
+}
 
 export type Catalog = CatalogSettings
   & Partial<PiveauCatalogSettings>

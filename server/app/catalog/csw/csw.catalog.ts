@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import type { CswCatalogSettings } from '@shared/catalog.js';
 import { XMLSerializer } from '@xmldom/xmldom';
 import log4js from 'log4js';
 import type { Observer } from "rxjs";
@@ -30,17 +31,10 @@ import type { ImportLogMessage } from "../../model/import.result.js";
 import type { Summary } from "../../model/summary.js";
 import { RequestDelegate } from "../../utils/http-request.utils.js";
 import { getDomParser } from "../../utils/misc.utils.js";
-import { Catalog, type CatalogSettings } from '../catalog.factory.js';
+import { Catalog } from '../catalog.factory.js';
 import { CswCatalogSummary } from './csw.catalog-summary.js';
 
 const log = log4js.getLogger('CswCatalog');
-
-export type CswCatalogSettings = CatalogSettings & {
-    settings: {
-        version: string,
-        outputSchema: string,
-    }
-}
 
 export abstract class CswCatalog extends Catalog<string> {
 

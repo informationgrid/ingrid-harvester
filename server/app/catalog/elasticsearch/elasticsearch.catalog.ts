@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import type { ElasticsearchCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import type { ImporterSettings } from '../../importer.settings.js';
@@ -30,20 +31,10 @@ import type { DatabaseUtils } from '../../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
-import { Catalog, type CatalogSettings } from '../catalog.factory.js';
+import { Catalog } from '../catalog.factory.js';
 import { ElasticsearchCatalogSummary } from './elasticsearch.catalog-summary.js';
 
 const log = log4js.getLogger(import.meta.filename);
-
-export type ElasticsearchCatalogSettings = CatalogSettings & {
-    settings: {
-        version: number,
-        index: string,
-        alias: string,
-        user?: string,
-        password?: string
-    }
-}
 
 export abstract class ElasticsearchCatalog extends Catalog<object> {
 

@@ -33,11 +33,11 @@ import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
+import { dereferenceRdfElements } from "../../utils/rdf.utils.js";
 import { Importer } from '../importer.js';
 import { DcatapdeMapper } from './dcatapde.mapper.js';
 import type { DcatapdeSettings } from './dcatapde.settings.js';
-import { defaultDCATSettings } from './dcatapde.settings.js';
-import {dereferenceRdfElements} from "../../utils/rdf.utils.js";
+import { defaultDCATAPDESettings } from './dcatapde.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
@@ -53,7 +53,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
 
     constructor(settings: DcatapdeSettings, requestDelegate?: RequestDelegate) {
         // merge default settings with configured ones
-        settings = MiscUtils.merge(defaultDCATSettings, settings);
+        settings = MiscUtils.merge(defaultDCATAPDESettings, settings);
         super(settings);
 
         this.domParser = MiscUtils.getDomParser();
