@@ -55,6 +55,7 @@ export class PassportCtrl {
                         if (err) {
                             reject(err);
                         } else {
+                            user.roles = ['admin'];
                             resolve(user);
                         }
                     });

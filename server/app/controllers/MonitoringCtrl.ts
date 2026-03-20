@@ -26,9 +26,11 @@ import { BodyParams, Controller, Get, UseAuth } from '@tsed/common';
 import { HistoryService } from "../services/statistic/HistoryService.js";
 import { IndexCheckService } from "../services/statistic/IndexCheckService.js";
 import { UrlCheckService } from "../services/statistic/UrlCheckService.js";
+import {KeycloakAuth} from "../decorators/KeycloakAuthOptions.js";
 
 @Controller('/api/monitoring')
 @UseAuth(AuthMiddleware)
+@KeycloakAuth({role: ["admin", "editor", "viewer"]})
 export class MonitoringCtrl {
 
     constructor(private urlCheckService: UrlCheckService,

@@ -27,6 +27,7 @@ import { ConfigGeneralComponent } from './config-general/config-general.componen
 import { ConfigImportExportComponent } from './config-import-export/config-import-export.component';
 import { ConfigMappingComponent } from './config-mapping/config-mapping.component';
 import { ConfigComponent } from './config.component';
+import {authGuard} from "../security/auth.guard";
 
 export const routing = RouterModule.forChild([
   {
@@ -34,37 +35,40 @@ export const routing = RouterModule.forChild([
     component: ConfigComponent,
     children: [
       {
-        path: "",
-        redirectTo: "general",
-        pathMatch: "full",
-      },
-      {
         path: "general",
+        canActivate: [authGuard],
         component: ConfigGeneralComponent,
         data: {
           title: "Konfiguration",
           tabIdentifier: "general",
+          roles: ['admin']
         },
       },
       {
         path: "catalogs",
+        canActivate: [authGuard],
         component: ConfigLegacyCatalogsComponent,
         data: {
           title: "Katalogverwaltung",
+          roles: ['admin']
         },
       },
       {
         path: "mapping",
+        canActivate: [authGuard],
         component: ConfigMappingComponent,
         data: {
           title: "Mapping (Datenformate)",
+          roles: ['admin', 'editor']
         },
       },
       {
         path: "import-export",
+        canActivate: [authGuard],
         component: ConfigImportExportComponent,
         data: {
           title: "Import/Export",
+          roles: ['admin']
         },
       },
     ],

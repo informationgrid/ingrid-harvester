@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="InGrid-Harvester" type="CompoundRunConfigurationType">
+    <toRun name="Client" type="js.build_tools.npm" />
+    <toRun name="start-ingrid" type="js.build_tools.npm" />
+    <method v="2" />
+  </configuration>
+</component>

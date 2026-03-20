@@ -22,36 +22,21 @@
  */
 
 import {Injectable} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {tap} from 'rxjs/operators';
-
-export class Configuration {
-  constructor(public contextPath: string, public url?: string, public version?: string, public passportEnabled?: boolean, public keycloakEnabled?: boolean) {
-  }
-}
+import {Observable, of} from 'rxjs';
+import {AuthStrategy} from "./AuthStrategy";
 
 @Injectable({
   providedIn: 'root'
 })
-export class ConfigService {
+export class KeycloakService implements AuthStrategy {
 
-  config: Configuration;
-  config$ = new BehaviorSubject({});
-
-  constructor(private http: HttpClient) {
+  login(_username?: string, _password?: string): Observable<any> {
+    window.location.href = 'rest/auth/keycloak/login';
+    return of(null);
   }
 
-  load(url: string): Observable<Configuration> {
-    console.log('=== ConfigService ===');
-
-    return this.http.get<Configuration>(url)
-      .pipe(
-        tap((json => {
-          this.config = json;
-          this.config$.next(json);
-        }))
-      );
-
+  logout(): Observable<any> {
+    window.location.href = 'rest/auth/keycloak/logout';
+    return of(null);
   }
 }

@@ -21,47 +21,96 @@
  * ==================================================
  */
 
-import {Input, Component, Output, EventEmitter, OnInit} from '@angular/core';
-import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
-import {AuthenticationService} from './authentication.service';
-import {Router} from '@angular/router';
-import {HttpErrorResponse} from '@angular/common/http';
+import { Component, OnInit } from "@angular/core";
+import {
+  FormControl,
+  FormGroup,
+  UntypedFormGroup,
+  Validators,
+} from "@angular/forms";
+import { AuthenticationService } from "./authentication.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { HttpErrorResponse } from "@angular/common/http";
+import { catchError, of } from "rxjs";
+import { ConfigService } from "../config.service";
+import { AuthMethod } from "./AuthStrategy";
 
 @Component({
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
-    standalone: false
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.scss"],
+  standalone: false,
 })
 export class LoginComponent implements OnInit {
-
-  form: UntypedFormGroup = new UntypedFormGroup({
-    username: new UntypedFormControl(''),
-    password: new UntypedFormControl(''),
+  form: FormGroup = new FormGroup({
+    username: new FormControl("", [Validators.required]),
+    password: new FormControl("", [Validators.required]),
   });
   showErrorMessage = false;
+  noRolesMessage = false;
+  passportEnabled = true;
+  keycloakEnabled = true;
 
-  constructor(private router: Router, private authService: AuthenticationService) {
-  }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthenticationService,
+    private configService: ConfigService,
+  ) {}
 
   ngOnInit(): void {
-    this.authService.currentUser.subscribe(user => {
-      if (user) {
-        this.router.navigate(['/']);
+    this.route.queryParams.subscribe((params) => {
+      if (params["reason"] === "no_roles") {
+        this.noRolesMessage = true;
       }
-    })
+    });
+
+    this.passportEnabled = this.configService.config.passportEnabled !== false;
+    this.keycloakEnabled = this.configService.config.keycloakEnabled !== false;
+
+    this.authService.currentUser.subscribe({
+      next: (user) => {
+        if (user) {
+          this.router.navigate(["/"]);
+        }
+      },
+    });
   }
 
   submit() {
     if (this.form.valid) {
-      this.authService.login(this.form.get('username').value, this.form.get('password').value).subscribe(response => {
-        console.log('Response', response);
-        this.router.navigate(['/']);
-      }, (error: HttpErrorResponse) => {
-        console.log('Error logging in:', error);
-        if (error.status === 404) {
-          this.showErrorMessage = true;
-        }
-      });
+      this.authService
+        .login(
+          this.form.get("username").value,
+          this.form.get("password").value,
+          AuthMethod.LOCAL,
+        )
+        .pipe(
+          catchError((error: HttpErrorResponse) => {
+            console.error("Error logging in:", error);
+            if (error.status === 404) {
+              this.showErrorMessage = true;
+            }
+            return of(null);
+          }),
+        )
+        .subscribe((response) => {
+          if (response) {
+            this.router.navigate(["/"]);
+          }
+        });
     }
+  }
+
+  loginWithKeycloak() {
+    this.authService
+      .login(null, null, AuthMethod.KEYCLOAK)
+      .pipe(
+        catchError((error) => {
+          console.error("Error during Keycloak login", error);
+          this.showErrorMessage = true;
+          return of(null);
+        }),
+      )
+      .subscribe();
   }
 }

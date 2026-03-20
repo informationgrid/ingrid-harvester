@@ -26,11 +26,13 @@ import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '
 import log4js from 'log4js';
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { ConfigService } from '../services/config/ConfigService.js';
+import {KeycloakAuth} from "../decorators/KeycloakAuthOptions.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
 @Controller('/api/catalogs')
 @UseAuth(AuthMiddleware)
+@KeycloakAuth({role: ["admin", "editor", "viewer"]})
 export class CatalogCtrl {
 
     @Get('/')
@@ -44,6 +46,7 @@ export class CatalogCtrl {
     }
 
     @Post('/')
+    @KeycloakAuth({role: ["admin"]})
     addOrEditCatalog(@BodyParams() settings: CatalogSettings): CatalogSettings {
         return ConfigService.addOrEditCatalog(settings);
     }
@@ -55,6 +58,7 @@ export class CatalogCtrl {
     // }
 
     @Delete('/:identifier')
+    @KeycloakAuth({role: ["admin"]})
     async deleteCatalog(@PathParams('identifier') id: number): Promise<void> {
         await ConfigService.removeCatalog(id);
     }

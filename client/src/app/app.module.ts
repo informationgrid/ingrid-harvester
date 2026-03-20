@@ -57,6 +57,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { AuthenticationService } from "./security/authentication.service";
+import { KeycloakService } from "./security/keycloak.service";
 import { SideMenuComponent } from "./side-menu/side-menu.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslocoRootModule } from "./transloco-root.module";
@@ -79,9 +80,22 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
 
 registerLocaleData(localeDe);
 
-export function ConfigLoader(configService: ConfigService) {
+export function ConfigLoader(
+  configService: ConfigService,
+  authService: AuthenticationService,
+) {
   return () => {
-    return configService.load("assets/" + environment.configFile);
+    //return configService.load('assets/' + environment.configFile)
+    // .subscribe();
+    return new Promise((resolve) => {
+      configService
+        .load("assets/" + environment.configFile)
+        .subscribe(async () => {
+          authService.checkAuthentication().subscribe(() => {
+            resolve(true);
+          });
+        });
+    });
   };
 }
 
@@ -120,13 +134,14 @@ const appRoutes: Routes = routes;
       useValue: "de",
     },
     provideAppInitializer(() => {
-      const initializerFn = ConfigLoader(inject(ConfigService));
-      return initializerFn();
+      return ConfigLoader(
+        inject(ConfigService),
+        inject(AuthenticationService),
+      )();
     }),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: UnauthorizedInterceptor,
-      deps: [Router, AuthenticationService],
       multi: true,
     },
     {
@@ -134,6 +149,7 @@ const appRoutes: Routes = routes;
       useValue: { appearance: "outline", floatLabel: "auto" },
     },
     { provide: MAT_CARD_CONFIG, useValue: { appearance: "raised" } },
+    KeycloakService,
     provideHttpClient(withInterceptorsFromDi()),
     provideFormlyCore({
       types: [

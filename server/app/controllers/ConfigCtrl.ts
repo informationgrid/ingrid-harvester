@@ -33,11 +33,13 @@ import { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import { ScheduleService } from '../services/ScheduleService.js';
+import {KeycloakAuth} from "../decorators/KeycloakAuthOptions.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
 @Controller("/api/config")
 @UseAuth(AuthMiddleware)
+@KeycloakAuth({role: ["admin", "editor", "viewer"]})
 export class ConfigCtrl {
 
     constructor(
@@ -78,6 +80,7 @@ export class ConfigCtrl {
     }
 
     @Post('/general')
+    @KeycloakAuth({role: ["admin"]})
     setGeneralConfig(@BodyParams() body: GeneralSettings): void {
         if(body.elasticsearch.url && body.elasticsearch.alias) {
             ConfigService.setGeneralConfig(body);
@@ -96,17 +99,20 @@ export class ConfigCtrl {
     }
 
     @Post('/catalogs')
+    @KeycloakAuth({role: ["admin"]})
     async addOrEditCatalog(@BodyParams() catalog: Catalog): Promise<void> {
         await ConfigService.addOrEditLegacyCatalog(catalog);
     }
 
     @Put('/catalogs/:identifier')
+    @KeycloakAuth({role: ["admin"]})
     async enableCatalog(@PathParams('identifier') catalogIdentifier: string,
             @QueryParams('enable') enable: boolean) {
         await ConfigService.enableLegacyCatalog(catalogIdentifier, enable);
     }
 
     @Delete('/catalogs/:identifier')
+    @KeycloakAuth({role: ["admin"]})
     async deleteCatalog(@PathParams('identifier') catalogIdentifier: string,
             @QueryParams('target') target: string) {
         await ConfigService.removeLegacyCatalog(catalogIdentifier, target);
@@ -123,17 +129,20 @@ export class ConfigCtrl {
     }
 
     @Post('/mapping/distribution')
+    @KeycloakAuth({role: ["admin"]})
     addMappingDistribution(@BodyParams() item: MappingItem): void {
         ConfigService.addMappingDistribution(item);
     }
 
     @Post('/mapping/filecontent')
+    @KeycloakAuth({role: ["admin"]})
     importMappingFile(@BodyParams() file: any): void {
         if(file.format && file.ckan_dcat)
             ConfigService.importMappingFileContent(file);
     }
 
     @Delete('/mapping/distribution')
+    @KeycloakAuth({role: ["admin"]})
     deleteMappingDistribution(
         @QueryParams('source') source: string,
         @QueryParams('target') target: string): void {

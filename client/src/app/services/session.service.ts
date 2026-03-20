@@ -21,9 +21,10 @@
  * ==================================================
  */
 
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { ActivatedRouteSnapshot } from "@angular/router";
+import { AuthenticationService } from "../security/authentication.service";
 
 
 // the values must match with the actual route!
@@ -39,17 +40,25 @@ export interface Tab {
   providedIn: "root",
 })
 export class SessionService {
+  private authService = inject(AuthenticationService);
   constructor(
 
   ) {}
 
-
-
   getTabsFromRoute(activeRoute: ActivatedRouteSnapshot): Tab[] {
     console.log("sessions routes: " + activeRoute)
+    if (!activeRoute?.routeConfig?.children) {
+      return [];
+    }
     return activeRoute.routeConfig.children
       .filter((item) => item.path)
-    //   .filter((item) => this.configService.hasPermission(item.data?.permission))
+      .filter((item) => {
+        const requiredRoles = item.data?.roles as Array<string>;
+        if (!requiredRoles || requiredRoles.length === 0) {
+          return true;
+        }
+        return requiredRoles.some(role => this.authService.hasRole(role));
+      })
       .map((item) => ({
         label: item.data.title,
         path: item.path,
@@ -57,6 +66,9 @@ export class SessionService {
   }
 
   getTabPaths(activeRoute: ActivatedRouteSnapshot) {
+    if (!activeRoute?.routeConfig?.children) {
+      return [];
+    }
     return activeRoute.routeConfig.children
       .filter((item) => item.path)
       .map((item) => item.path);

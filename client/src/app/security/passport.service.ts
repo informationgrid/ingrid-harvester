@@ -21,37 +21,28 @@
  * ==================================================
  */
 
-import {Injectable} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import { inject, Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
+import { AuthMethod, AuthStrategy } from "./AuthStrategy";
 
-export class Configuration {
-  constructor(public contextPath: string, public url?: string, public version?: string, public passportEnabled?: boolean, public keycloakEnabled?: boolean) {
-  }
-}
+@Injectable({ providedIn: "root" })
+export class PassportService implements AuthStrategy {
+  private http = inject(HttpClient);
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ConfigService {
-
-  config: Configuration;
-  config$ = new BehaviorSubject({});
-
-  constructor(private http: HttpClient) {
-  }
-
-  load(url: string): Observable<Configuration> {
-    console.log('=== ConfigService ===');
-
-    return this.http.get<Configuration>(url)
+  login(username: string, password: string): Observable<any> {
+    return this.http
+      .post<any>(`rest/passport/login`, { username, password })
       .pipe(
-        tap((json => {
-          this.config = json;
-          this.config$.next(json);
-        }))
+        map((user) => {
+          user.authMethod = AuthMethod.LOCAL;
+          return user;
+        }),
       );
+  }
 
+  logout(): Observable<any> {
+    return this.http.get("rest/passport/logout", { responseType: "text" });
   }
 }

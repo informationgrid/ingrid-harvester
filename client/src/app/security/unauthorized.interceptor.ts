@@ -21,34 +21,51 @@
  * ==================================================
  */
 
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import {
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+  HttpResponse
+} from '@angular/common/http';
+import {Observable, throwError} from 'rxjs';
+import {catchError, tap} from 'rxjs/operators';
 import {AuthenticationService} from './authentication.service';
 import {Router} from '@angular/router';
+import {inject, Injectable, Injector} from "@angular/core";
 
+@Injectable()
 export class UnauthorizedInterceptor implements HttpInterceptor {
 
-  constructor(private router: Router, public auth: AuthenticationService) {
+  private auth: AuthenticationService;
+  private router = inject(Router);
+
+  constructor(
+    private injector: Injector,
+  ) {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (!this.auth) {
+      this.auth = this.injector.get(AuthenticationService);
+    }
+    return this.handleRequest(request, next);
+  }
 
+  private handleRequest(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
-      tap((event: HttpEvent<any>) => {
-        if (event instanceof HttpResponse) {
-          // do stuff with response if you want
-        }
-      }, (err: any) => {
+      catchError((err: any) => {
         if (err instanceof HttpErrorResponse) {
           if (err.status === 401) {
-
-            // redirect to the login route
-            this.auth.logout().subscribe(() => this.router.navigate(['login']));
+            // Only clear local session and redirect to login, but don't log out from Keycloak.
+            // This is because the token could not be refreshed (refresh token expired)
+            // or the session is just gone.
+            this.auth.logout(false).subscribe(() => this.router.navigate(['login']));
           }
         }
+        throw err;
       })
     );
   }
-
 }

@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0",
+    "start-me": "ng serve --host 0.0.0.0 --disable-host-check --port 4400",
     "build": "ng build",
     "prod": "ng build --configuration production",
     "update": "ng update @angular/cli @angular/core --allow-dirty",

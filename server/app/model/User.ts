@@ -27,4 +27,5 @@ export interface IUser {
     lastName: string;
     password: string;
     username: string;
+    roles: string[];
 }

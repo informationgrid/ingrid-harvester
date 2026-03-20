@@ -33,11 +33,13 @@ import { LogService } from '../services/storage/LogService.js';
 import { ScheduleService } from '../services/ScheduleService.js';
 import { SummaryService } from '../services/config/SummaryService.js';
 import { UrlCheckService } from '../services/statistic/UrlCheckService.js';
+import {KeycloakAuth} from "../decorators/KeycloakAuthOptions.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
 @Controller('/api')
 @UseAuth(AuthMiddleware)
+@KeycloakAuth({role: ["admin", "editor", "viewer"]})
 export class ApiCtrl {
     private importAllProcessIsRunning = false;
 
@@ -50,11 +52,13 @@ export class ApiCtrl {
     }
 
     @Post('/import/:id')
+    @KeycloakAuth({role: ["admin", "editor"]})
     importFromHarvester(@PathParams('id') id: number, @QueryParams('isIncremental') isIncremental: boolean) {
         this.importSocketService.runImport(+id, isIncremental);
     }
 
     @Post('/importAll')
+    @KeycloakAuth({role: ["admin", "editor"]})
     async importAllFromHarvester() {
         if (this.importAllProcessIsRunning) {
             log.info('Import process for all harvesters is already running - not starting again');
@@ -84,16 +88,19 @@ export class ApiCtrl {
     }
 
     @Post('/schedule/:id')
+    @KeycloakAuth({role: ["admin", "editor"]})
     schedule(@PathParams('id') id: number, @BodyParams('cron') cron: { full: CronData, incr: CronData }): Date[] {
         return this.scheduleService.set(+id, cron);
     }
 
     @Post('/url_check')
+    @KeycloakAuth({role: ["admin", "editor"]})
     async checkURLs() {
         this.urlCheckService.start();
     }
 
     @Post('/index_check')
+    @KeycloakAuth({role: ["admin", "editor"]})
     async checkIndices() {
         this.indexCheckService.start();
     }
