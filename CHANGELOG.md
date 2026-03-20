@@ -1,4 +1,11 @@
 
+## 8.2.6 (20.03.2026)
+
+### Features
+
+* ES Indexmapping für Ortssuche anpassen, Felder befüllen (#8425)
+
+    
 ## 8.2.1 (30.01.2026)
 
 ### Features
