@@ -76,7 +76,7 @@ export class ConfigCtrl {
 
     @Get('/general')
     getGeneralConfig(): GeneralSettings {
-        return ConfigService.getGeneralSettings();
+        return ConfigService.getFilteredGeneralSettings();
     }
 
     @Post('/general')

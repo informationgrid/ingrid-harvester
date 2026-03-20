@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import type { CatalogSettings } from '@shared/catalog.js';
+import type { CatalogSettings, ElasticsearchCatalogSettings } from '@shared/catalog.js';
 import type { GeneralSettings } from '@shared/general-config.settings.js';
 import type { Harvester } from '@shared/harvester.js';
 import type { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
@@ -293,9 +293,7 @@ export class ConfigService {
     }
 
     static getGeneralSettings(): GeneralSettings {
-
         const configExists = fs.existsSync(this.GENERAL_CONFIG_FILE);
-
         if (configExists) {
             let contents = fs.readFileSync(this.GENERAL_CONFIG_FILE);
             const settingsFromFile = JSON.parse(contents.toString());
@@ -307,41 +305,69 @@ export class ConfigService {
             log.warn("No general config file found (config-general.json). Using default config");
             return this.defaultSettings;
         }
+    }
 
+    static getFilteredGeneralSettings(): GeneralSettings {
+        return MiscUtils.filterPaths(this.getGeneralSettings(), [
+            "database.password",
+            "elasticsearch.password",
+            "mail.mailServer.auth.pass"
+        ]);
     }
 
     static setGeneralConfig(config: GeneralSettings) {
-
+        const existing = this.getGeneralSettings();
+        MiscUtils.restorePaths(config, existing, [
+            "database.password",
+            "elasticsearch.password",
+            "mail.mailServer.auth.pass"
+        ]);
         fs.writeFileSync(this.GENERAL_CONFIG_FILE, JSON.stringify(config, null, 2));
     }
 
-    static getCatalogSettings(): CatalogSettings[] {
+    static getCatalogSettings(): CatalogSettings[];
+
+    static getCatalogSettings(id: number): CatalogSettings;
+
+    static getCatalogSettings(id?: number): CatalogSettings | CatalogSettings[] {
         const catalogConfigFile = this.getCatalogConfigFile();
         const configExists = fs.existsSync(catalogConfigFile);
         if (configExists) {
-            let contents = fs.readFileSync(catalogConfigFile);
-            return JSON.parse(contents.toString());
+            const catalogSettings = JSON.parse(fs.readFileSync(catalogConfigFile).toString());
+            const catalog = catalogSettings.find(settings => settings.id == id);
+            if (!catalog) {
+                throw new Error(`Catalog with id ${id} not found`);
+            }
+            return catalog;
         }
         else {
             log.warn("No catalog config file found (config-catalogs.json).");
             return [];
         }
-     }
+    }
+
+    static getFilteredCatalogSettings(): CatalogSettings[];
+
+    static getFilteredCatalogSettings(id: number): CatalogSettings;
+
+    static getFilteredCatalogSettings(id?: number): CatalogSettings | CatalogSettings[] {
+        const catalogSettings = id == null ? this.getCatalogSettings() : [this.getCatalogSettings(id)];
+        const filteredCatalogsSettings = catalogSettings.map(catalog => {
+            if (catalog['settings']?.['password']) {
+                return MiscUtils.filterPaths(catalog as ElasticsearchCatalogSettings, [
+                    "settings.password"
+                ]);
+            }
+            return catalog;
+        });
+        if (filteredCatalogsSettings.length == 1) {
+            return filteredCatalogsSettings[0];
+        }
+        return filteredCatalogsSettings;
+    }
 
     static setCatalogSettings(config: CatalogSettings[]) {
         fs.writeFileSync(this.getCatalogConfigFile(), JSON.stringify(config, null, 2));
-    }
-
-    static getCatalogs() {
-        return ConfigService.getCatalogSettings();
-    }
-
-    static getCatalog(id: number) {
-        const catalog = ConfigService.getCatalogSettings().find(settings => settings.id == id);
-        if (!catalog) {
-            throw new Error(`Catalog with id ${id} not found`);
-        }
-        return catalog;
     }
 
     static addOrEditCatalog(settings: CatalogSettings): CatalogSettings {
@@ -354,8 +380,12 @@ export class ConfigService {
         // if id is given, update the pertaining catalog settings
         if (settings.id) {
             const catalogIndex = existingSettings.findIndex(catalog => catalog.id == settings.id);
-            if (!catalogIndex) {
+            if (catalogIndex == -1) {
                 throw new Error(`Catalog with id ${settings.id} not found`);
+            }
+            const existing = existingSettings[catalogIndex];
+            if (existing.type == 'elasticsearch' && settings.type == 'elasticsearch') {
+                MiscUtils.restorePaths(settings as ElasticsearchCatalogSettings, existing as ElasticsearchCatalogSettings, ["settings.password"]);
             }
             existingSettings[catalogIndex] = settings;
         }

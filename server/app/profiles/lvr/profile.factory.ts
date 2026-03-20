@@ -96,8 +96,8 @@ export class LvrFactory extends ProfileFactory<LvrSettings> {
     }
     
     async getCatalog(catalogId: number, summary: Summary): Promise<NewCatalog<any>> {
-        const catalogSettings = ConfigService.getCatalogSettings().find(config => config.id === catalogId);
-        switch (catalogSettings.type) {
+        const catalogSettings = ConfigService.getCatalogSettings(catalogId);
+        switch (catalogSettings?.type) {
             case 'elasticsearch':
                 const { LvrElasticsearchCatalog } = await import('./catalog/elasticsearch.catalog.js');
                 return new LvrElasticsearchCatalog(catalogSettings as ElasticsearchCatalogSettings, summary);

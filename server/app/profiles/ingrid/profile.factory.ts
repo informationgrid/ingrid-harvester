@@ -176,8 +176,8 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
     }
 
     async getCatalog(catalogId: number, summary: Summary): Promise<NewCatalog<any>> {
-        const catalogSettings = ConfigService.getCatalogSettings().find(config => config.id === catalogId);
-        switch (catalogSettings.type) {
+        const catalogSettings = ConfigService.getCatalogSettings(catalogId);
+        switch (catalogSettings?.type) {
             case 'elasticsearch': 
                 const { IngridElasticsearchCatalog } = await import('./catalog/elasticsearch.catalog.js');
                 return new IngridElasticsearchCatalog(catalogSettings as ElasticsearchCatalogSettings, summary);

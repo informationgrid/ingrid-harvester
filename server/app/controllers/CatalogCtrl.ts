@@ -37,12 +37,12 @@ export class CatalogCtrl {
 
     @Get('/')
     getCatalogs(): CatalogSettings[] {
-        return ConfigService.getCatalogs();
+        return ConfigService.getFilteredCatalogSettings();
     }
 
     @Get('/:identifier')
     getCatalog(@PathParams('identifier') id: number): CatalogSettings {
-        return ConfigService.getCatalog(id);
+        return ConfigService.getFilteredCatalogSettings(id);
     }
 
     @Post('/')

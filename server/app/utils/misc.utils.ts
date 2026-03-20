@@ -21,12 +21,12 @@
  * ==================================================
  */
 
-import log4js from 'log4js';
-import { cloneDeep, merge as lodashMerge, trim } from 'lodash-es';
+import { DOMParser } from '@xmldom/xmldom';
 import { imageSize } from 'image-size';
+import { cloneDeep, get, merge as lodashMerge, set, trim } from 'lodash-es';
+import log4js from 'log4js';
 import type { Dimensions } from '../model/dimensions.js';
 import type { Distribution } from '../model/distribution.js';
-import { DOMParser } from '@xmldom/xmldom';
 import dayjs from './dayjs.js';
 
 const log = log4js.getLogger(import.meta.filename);
@@ -34,6 +34,11 @@ const log = log4js.getLogger(import.meta.filename);
 const CUSTOM_DATE_TIME_FORMATS = ["YYYY-MM-DDZ"];
 const MAX_MSG_LENGTH = 4096;
 const TRUNC_STR = '... (truncated)';
+
+type Paths<T> = T extends object ? { [K in keyof T]:
+    K extends string ? `${K}` | `${K}.${Paths<T[K]>}` : never
+}[keyof T] : never;
+
 
 /**
  * Remove all `undefined` properties from an object.
@@ -58,11 +63,43 @@ export function cleanObject(obj: object) {
     // return pickBy(obj, v => v !== undefined);
 }
 
+/**
+ * Overwrite given paths with empty strings in a copy of a given object.
+ *
+ * @param obj the object to clone and overwrite paths in
+ * @param paths the paths to overwrite with an empty string
+ * @return a clone of the given object with given paths overwritten
+ */
+export function filterPaths<T extends object>(obj: T, paths: Paths<T>[]): T {
+    const clone = structuredClone(obj);
+    paths.forEach(path => set(clone, path, ''));
+    return clone;
+}
+
 export function structuredClone(obj: object) {
     // TODO from nodejs 17 on, we can use the inbuilt function
     // return structuredClone(obj);
     // TODO until then, use an lodash equivalent
     return cloneDeep(obj);
+}
+
+/**
+ * Restore given paths from a source object in a target object if the target object has empty/null values at those paths.
+ * 
+ * @param target the object to restore paths in
+ * @param source the object to restore paths from
+ * @param paths the paths to restore
+ */
+export function restorePaths<T extends object>(target: T, source: T, paths: Paths<T>[]): void {
+    paths.forEach(path => {
+        const value = get(target, path);
+        if (value === null || value === undefined || value === '') {
+            const sourceValue = get(source, path);
+            if (sourceValue !== undefined && sourceValue !== null && sourceValue !== '') {
+                set(target, path, sourceValue);
+            }
+        }
+    });
 }
 
 /**
