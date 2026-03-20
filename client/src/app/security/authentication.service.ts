@@ -97,8 +97,10 @@ export class AuthenticationService {
   }
 
   logout(fullKeycloakLogout: boolean = true): Observable<any> {
+    const user = this.currentUser.getValue();
     if (
-      this.currentUser.getValue().authMethod === AuthMethod.KEYCLOAK &&
+      user &&
+      user.authMethod === AuthMethod.KEYCLOAK &&
       !fullKeycloakLogout
     ) {
       this.currentUser.next(null);

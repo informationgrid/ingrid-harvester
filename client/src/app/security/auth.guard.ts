@@ -21,37 +21,57 @@
  * ==================================================
  */
 
-import {inject} from '@angular/core';
-import {CanActivateFn, Router} from '@angular/router';
-import {AuthenticationService} from './authentication.service';
-import {map} from 'rxjs/operators';
+import { inject } from "@angular/core";
+import { CanActivateFn, Router } from "@angular/router";
+import { AuthenticationService } from "./authentication.service";
+import { map } from "rxjs/operators";
 
 export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthenticationService);
   const router = inject(Router);
 
   return authService.isAuthenticated().pipe(
-    map(isAuthenticated => {
+    map((isAuthenticated) => {
       if (!isAuthenticated) {
-        router.navigate(['/login']);
+        router.navigate(["/login"]);
         return false;
       }
 
-      const requiredRoles = route.data['roles'] as Array<string>;
+      const requiredRoles = route.data["roles"] as Array<string>;
       if (!requiredRoles || requiredRoles.length === 0) {
         return true;
       }
 
-      const hasRole = requiredRoles.some(role => authService.hasRole(role));
+      const hasRole = requiredRoles.some((role) => authService.hasRole(role));
       if (!hasRole) {
         // If user is authenticated but doesn't have the required role,
         // we might want to redirect to a 'forbidden' page or dashboard.
         // For now, let's redirect to dashboard.
-        router.navigate(['/dashboard']);
+
+        // If we are already on dashboard, we might be in a redirect loop if the user has NO roles.
+        // Check if user has ANY allowed roles for any major route.
+        const userRoles = authService.getRoles();
+        const hasAnyMajorRole = ["admin", "editor", "viewer"].some((role) =>
+          userRoles.includes(role),
+        );
+
+        if (!hasAnyMajorRole) {
+          // User has no valid roles at all, logout and go to login
+          authService
+            .logout(false)
+            .subscribe(() =>
+              router.navigate(["/login"], {
+                queryParams: { reason: "no_roles" },
+              }),
+            );
+          return false;
+        }
+
+        router.navigate(["/dashboard"]);
         return false;
       }
 
       return true;
-    })
+    }),
   );
 };

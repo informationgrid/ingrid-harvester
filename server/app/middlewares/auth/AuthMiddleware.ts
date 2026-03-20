@@ -128,8 +128,21 @@ export class AuthMiddleware implements MiddlewareMethods {
     }
     const protectMiddleware = keycloak.protect(protect);
     return new Promise((resolve, reject) => {
+      const response = ctx.getResponse();
+      const originalEnd = response.end;
+      let finished = false;
       // @ts-ignore
-      protectMiddleware(request, ctx.getResponse(), (err: any) => {
+      response.end = function(...args: any[]) {
+        finished = true;
+        resolve(undefined);
+        return originalEnd.apply(this, args);
+      };
+
+      // @ts-ignore
+      protectMiddleware(request, response, (err: any) => {
+        if (finished) return;
+        // @ts-ignore
+        response.end = originalEnd;
         if (err) {
           reject(err);
         } else {
