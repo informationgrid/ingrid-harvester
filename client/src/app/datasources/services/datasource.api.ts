@@ -35,32 +35,19 @@ import { CronData } from "../../../../../server/app/importer.settings";
 export class DatasourceApi {
   constructor(private http: HttpClient) {}
 
-  private prepareDatasourceForBackend(harvester) {
-    if (harvester.type === "CKAN") {
-      const ckanHarvester = harvester as CkanSettings;
-      const license = ckanHarvester.defaultLicense;
-      if (
-        license &&
-        license.id.trim().length === 0 &&
-        license.title.trim().length === 0 &&
-        license.url.trim().length === 0
-      ) {
-        ckanHarvester.defaultLicense = null;
-      }
-    }
-  }
-
   getDatasources(): Observable<Harvester[]> {
     return this.http.get<Harvester[]>("rest/api/harvester");
   }
 
-  import(id: number, isIncremental?: boolean): Observable<void> {
-    return id === null
-      ? this.http.post<void>("rest/api/importAll", null)
-      : this.http.post<void>(
-          `rest/api/import/${id}?isIncremental=${isIncremental}`,
-          null,
-        );
+  import(id: number, isIncremental: boolean): Observable<void> {
+    return this.http.post<void>(
+      `rest/api/import/${id}?isIncremental=${isIncremental}`,
+      null,
+    );
+  }
+
+  importAll(): Observable<void> {
+    return this.http.post<void>("rest/api/importAll", null);
   }
 
   getLastLogs(): Observable<ImportLogMessage[]> {
@@ -68,7 +55,6 @@ export class DatasourceApi {
   }
 
   update(datasource: Harvester): Observable<void> {
-    this.prepareDatasourceForBackend(datasource);
     return this.http.post<void>(
       "rest/api/harvester/" + (datasource.id || -1),
       datasource,

@@ -24,7 +24,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ConfigService } from "../config.service";
 import { forkJoin } from "rxjs";
-import { DatasourceApi } from "../../datasources/services/datasource.api.service";
+import { DatasourceApi } from "../../datasources/services/datasource.api";
 
 @Component({
   selector: "app-config-import-export",

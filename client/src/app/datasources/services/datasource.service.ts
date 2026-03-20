@@ -29,7 +29,7 @@ import { CronData } from "../../../../../server/app/importer.settings";
 import { SocketService } from "./socket.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { TranslocoService } from "@ngneat/transloco";
-import { DatasourceApi } from "./datasource.api.service";
+import { DatasourceApi } from "./datasource.api";
 import { getLatestDate } from "../../utils/dateUtils";
 
 @Injectable({
@@ -106,11 +106,22 @@ export class DatasourceService {
     });
   }
 
-  // When no id is given, all datasources are imported.
-  import(id?: number, isIncremental?: boolean): Observable<void> {
+  import(id: number, isIncremental: boolean = false): Observable<void> {
     // Reset the import log.
-    if (id) this.updateImportLogs({ id, complete: false });
+    this.updateImportLogs({ id, complete: false });
+
     return this.api.import(id, isIncremental);
+  }
+
+  importAll(): Observable<void> {
+    // Reset all import logs.
+    const importLogs: Record<number, ImportLogMessage> = {};
+    for (const id of Object.keys(this.importLogs())) {
+      importLogs[id] = { complete: false };
+    }
+    this._importLogs.set(importLogs);
+
+    return this.api.importAll();
   }
 
   addOrUpdate(datasource: Harvester) {

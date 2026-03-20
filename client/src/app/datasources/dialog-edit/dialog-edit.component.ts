@@ -141,6 +141,18 @@ export class DialogEditComponent {
       );
     }
 
+    // Remove the field when its values are empty.
+    if (values.type == "CKAN" && values.defaultLicense) {
+      const license = values.defaultLicense;
+      if (
+        license.id.trim().length === 0 &&
+        license.title.trim().length === 0 &&
+        license.url.trim().length === 0
+      ) {
+        values.defaultLicense = null;
+      }
+    }
+
     // Reverse string to JSON object.
     if (values.contactMetadata) {
       values.contactMetadata = JSON.parse(values.contactMetadata);

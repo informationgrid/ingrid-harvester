@@ -162,9 +162,6 @@ export abstract class CkanType {
                     props: {
                       label: "URL",
                     },
-                    validators: {
-                      validation: ["url"],
-                    },
                   },
                 ],
               },

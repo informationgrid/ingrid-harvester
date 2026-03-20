@@ -82,7 +82,7 @@ export class DatasourceOverviewComponent {
   }
 
   onImportAll() {
-    this.datasourceService.import().subscribe();
+    this.datasourceService.importAll().subscribe();
     this.snackBar.open(
       this.transloco.translate("harvester.allImportStarted"),
       null,
