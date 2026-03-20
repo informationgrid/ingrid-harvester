@@ -21,29 +21,29 @@
  * ==================================================
  */
 
-import {inject, Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, of} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
-import {KeycloakService} from './keycloak.service';
-import {PassportService} from './passport.service';
-import {AuthMethod, AuthStrategy} from "./AuthStrategy";
-import {HttpClient} from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
+import { BehaviorSubject, Observable, of } from "rxjs";
+import { catchError, map, tap } from "rxjs/operators";
+import { KeycloakService } from "./keycloak.service";
+import { PassportService } from "./passport.service";
+import { AuthMethod, AuthStrategy } from "./AuthStrategy";
+import { HttpClient } from "@angular/common/http";
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: "root" })
 export class AuthenticationService {
   private http = inject(HttpClient);
   public currentUser: BehaviorSubject<any>;
 
   constructor(
     private keycloakService: KeycloakService,
-    private passportService: PassportService
+    private passportService: PassportService,
   ) {
     this.currentUser = new BehaviorSubject<any>(null);
   }
 
   public checkAuthentication(): Observable<any> {
-    return this.http.get<any>(`/rest/auth/check`).pipe(
-      tap(user => {
+    return this.http.get<any>(`rest/auth/check`).pipe(
+      tap((user) => {
         if (user) {
           this.currentUser.next(user);
         }
@@ -51,17 +51,19 @@ export class AuthenticationService {
       catchError(() => {
         this.currentUser.next(null);
         return of(null);
-      })
+      }),
     );
   }
 
   private getStrategy(overrideStrategy?: AuthMethod): AuthStrategy {
     const strategy = overrideStrategy || this.currentUser.getValue().authMethod;
-    return strategy === AuthMethod.KEYCLOAK ? this.keycloakService : this.passportService;
+    return strategy === AuthMethod.KEYCLOAK
+      ? this.keycloakService
+      : this.passportService;
   }
 
   isAuthenticated(): Observable<boolean> {
-    return this.currentUser.pipe(map(user => !!user));
+    return this.currentUser.pipe(map((user) => !!user));
   }
 
   getRoles(): string[] {
@@ -75,29 +77,39 @@ export class AuthenticationService {
 
   getUsername(): string {
     const user = this.currentUser.getValue();
-    return user ? user.username : '';
+    return user ? user.username : "";
   }
 
-  login(username: string, password: string, strategy?: AuthMethod): Observable<any> {
-    return this.getStrategy(strategy).login(username, password).pipe(
-      tap(user => {
-        if (user) {
-          this.currentUser.next(user);
-        }
-      })
-    );
+  login(
+    username: string,
+    password: string,
+    strategy?: AuthMethod,
+  ): Observable<any> {
+    return this.getStrategy(strategy)
+      .login(username, password)
+      .pipe(
+        tap((user) => {
+          if (user) {
+            this.currentUser.next(user);
+          }
+        }),
+      );
   }
 
   logout(fullKeycloakLogout: boolean = true): Observable<any> {
-    if (this.currentUser.getValue().authMethod === AuthMethod.KEYCLOAK && !fullKeycloakLogout) {
+    if (
+      this.currentUser.getValue().authMethod === AuthMethod.KEYCLOAK &&
+      !fullKeycloakLogout
+    ) {
       this.currentUser.next(null);
       return of(null);
     }
-    return this.getStrategy().logout().pipe(
-      tap(() => {
-        this.currentUser.next(null);
-      })
-    );
+    return this.getStrategy()
+      .logout()
+      .pipe(
+        tap(() => {
+          this.currentUser.next(null);
+        }),
+      );
   }
-
 }

@@ -21,26 +21,28 @@
  * ==================================================
  */
 
-import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {AuthMethod, AuthStrategy} from "./AuthStrategy";
+import { inject, Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
+import { AuthMethod, AuthStrategy } from "./AuthStrategy";
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: "root" })
 export class PassportService implements AuthStrategy {
-
   private http = inject(HttpClient);
 
   login(username: string, password: string): Observable<any> {
-    return this.http.post<any>(`/rest/passport/login`, {username, password})
-      .pipe(map(user => {
-        user.authMethod = AuthMethod.LOCAL;
-        return user;
-      }));
+    return this.http
+      .post<any>(`rest/passport/login`, { username, password })
+      .pipe(
+        map((user) => {
+          user.authMethod = AuthMethod.LOCAL;
+          return user;
+        }),
+      );
   }
 
   logout(): Observable<any> {
-    return this.http.get('/rest/passport/logout', {responseType: 'text'});
+    return this.http.get("/rest/passport/logout", { responseType: "text" });
   }
 }
