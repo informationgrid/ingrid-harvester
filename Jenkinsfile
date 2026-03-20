@@ -145,6 +145,20 @@ pipeline {
             }
         }
     }
+
+    post {
+        changed {
+            // send Email with Jenkins' default configuration
+            script {
+                emailext (
+                    body: '${DEFAULT_CONTENT}',
+                    subject: '${DEFAULT_SUBJECT}',
+                    to: '${DEFAULT_RECIPIENTS}',
+                    recipientProviders: [culprits()]
+                )
+            }
+        }
+    }
 }
 
 
