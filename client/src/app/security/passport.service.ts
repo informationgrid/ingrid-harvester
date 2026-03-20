@@ -43,6 +43,6 @@ export class PassportService implements AuthStrategy {
   }
 
   logout(): Observable<any> {
-    return this.http.get("/rest/passport/logout", { responseType: "text" });
+    return this.http.get("rest/passport/logout", { responseType: "text" });
   }
 }
