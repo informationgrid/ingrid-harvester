@@ -2,7 +2,7 @@ import { FormlyFieldConfig } from "@ngx-formly/core";
 import { inject } from "@angular/core";
 import { TranslocoPipe } from "@ngneat/transloco";
 
-export default abstract class PiveauFields {
+export default abstract class PiveauType {
   static fields(): FormlyFieldConfig[] {
     const transloco = inject(TranslocoPipe);
 

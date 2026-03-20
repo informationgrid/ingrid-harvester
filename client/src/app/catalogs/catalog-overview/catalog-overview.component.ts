@@ -21,15 +21,15 @@
  * ==================================================
  */
 
-import { Component, computed, OnInit, Signal, signal } from "@angular/core";
-import { CatalogsService } from "../services/catalogs.service";
+import { Component, computed, Signal } from "@angular/core";
+import { CatalogService } from "../services/catalog.service";
 import { MatDialog } from "@angular/material/dialog";
 import { FormDialogComponent } from "../../shared/form-dialog/form-dialog.component";
-import { TranslocoPipe } from "@ngneat/transloco";
+import { TranslocoPipe, TranslocoService } from "@ngneat/transloco";
 import SharedFields from "../form-fields/shared.fields";
-import CswFields from "../form-fields/csw.fields";
-import ElasticsearchFields from "../form-fields/elasticsearch.fields";
-import PiveauFields from "../form-fields/piveau.fields";
+import CswType from "../form-fields/csw.type";
+import ElasticsearchType from "../form-fields/elasticsearch.type";
+import PiveauType from "../form-fields/piveau.type";
 import { ConfirmDialogComponent } from "../../shared/confirm-dialog/confirm-dialog.component";
 import { Catalog } from "@shared/catalog";
 
@@ -40,45 +40,34 @@ import { Catalog } from "@shared/catalog";
   providers: [TranslocoPipe],
   standalone: false,
 })
-export class CatalogOverviewComponent implements OnInit {
-  catalogs = signal<Record<number, Catalog>>(undefined);
+export class CatalogOverviewComponent {
   groupedCatalogs: Signal<Record<string, Catalog[]>> = computed(() => {
-    if (!this.catalogs()) return {};
-    return Object.values(this.catalogs()).reduce((acc, catalog) => {
-      if (!acc[catalog.type]) {
-        acc[catalog.type] = [];
-      }
-      acc[catalog.type].push(catalog);
-      return acc;
-    }, {});
+    if (!this.catalogService.catalogs()) return {};
+    return Object.values(this.catalogService.catalogs()).reduce(
+      (acc, catalog) => {
+        if (!acc[catalog.type]) {
+          acc[catalog.type] = [];
+        }
+        acc[catalog.type].push(catalog);
+        return acc;
+      },
+      {},
+    );
   });
 
   // Fields for adding and editing a catalog.
   catalogFields = [
     ...SharedFields.general(),
-    ...CswFields.fields(),
-    ...ElasticsearchFields.fields(),
-    ...PiveauFields.fields(),
+    ...CswType.fields(),
+    ...ElasticsearchType.fields(),
+    ...PiveauType.fields(),
   ];
 
   constructor(
-    private catalogsService: CatalogsService,
     private dialog: MatDialog,
-    private transloco: TranslocoPipe,
+    private transloco: TranslocoService,
+    private catalogService: CatalogService,
   ) {}
-
-  ngOnInit(): void {
-    this.fetchCatalogs();
-  }
-
-  private fetchCatalogs() {
-    this.catalogsService.getCatalogs().subscribe((catalogs) => {
-      const _catalogs: Record<number, any> = {};
-      catalogs.forEach((catalog) => (_catalogs[catalog.id] = catalog));
-      console.log(_catalogs);
-      this.catalogs.set(_catalogs);
-    });
-  }
 
   onEdit(
     initialValues?: Catalog,
@@ -93,12 +82,12 @@ export class CatalogOverviewComponent implements OnInit {
         data: {
           title:
             options?.title ??
-            this.transloco.transform(
+            this.transloco.translate(
               initialValues ? "catalogs.editCatalog" : "catalogs.addCatalog",
             ),
           submitText:
             options?.submitText ??
-            this.transloco.transform(
+            this.transloco.translate(
               initialValues ? "common.update" : "common.create",
             ),
           icon: options?.icon ?? (initialValues ? "Edit" : "Add"),
@@ -111,26 +100,10 @@ export class CatalogOverviewComponent implements OnInit {
       .afterClosed()
       .subscribe((result) => {
         if (!result) return;
-
-        // Distinguish between new or existing catalog.
         if (result.id) {
-          this.catalogsService.updateCatalog(result).subscribe({
-            next: (res) => {
-              this.updateInternalCatalog(res);
-            },
-            error: (err) => {
-              console.error("Error updating catalog:", err);
-            },
-          });
+          this.catalogService.updateCatalog(result);
         } else {
-          this.catalogsService.createCatalog(result).subscribe({
-            next: (res) => {
-              this.updateInternalCatalog(res);
-            },
-            error: (err) => {
-              console.error("Error updating catalog:", err);
-            },
-          });
+          this.catalogService.createCatalog(result);
         }
       });
   }
@@ -142,8 +115,8 @@ export class CatalogOverviewComponent implements OnInit {
       name: initialValues.name + " (Duplikat)",
     };
     this.onEdit(_initialValues, {
-      title: this.transloco.transform("catalogs.addCatalog"),
-      submitText: this.transloco.transform("common.duplicate"),
+      title: this.transloco.translate("catalogs.addCatalog"),
+      submitText: this.transloco.translate("common.duplicate"),
       icon: "Copy",
     });
   }
@@ -151,32 +124,12 @@ export class CatalogOverviewComponent implements OnInit {
   onDelete(catalog: Catalog) {
     this.dialog
       .open(ConfirmDialogComponent, {
-        data: this.transloco.transform("catalogs.deleteConfirmation"),
+        data: this.transloco.translate("catalogs.deleteConfirmation"),
       })
       .afterClosed()
       .subscribe((result) => {
         if (!result) return;
-
-        this.catalogsService.deleteCatalog(catalog.id).subscribe({
-          next: (res) => {
-            this.catalogs.update((current) => {
-              const updated = { ...current };
-              delete updated[catalog.id];
-              return updated;
-            });
-          },
-          error: (err) => {
-            console.error("Error deleting catalog:", err);
-          },
-        });
+        this.catalogService.deleteCatalog(catalog.id);
       });
-  }
-
-  // Update the catalog in the catalogs signal.
-  private updateInternalCatalog(catalog) {
-    this.catalogs.update((current) => ({
-      ...current,
-      [catalog.id]: catalog,
-    }));
   }
 }

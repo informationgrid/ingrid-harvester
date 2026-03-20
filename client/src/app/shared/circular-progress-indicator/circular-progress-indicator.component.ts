@@ -21,15 +21,19 @@
  * ==================================================
  */
 
-import { TestBed } from '@angular/core/testing';
+import { Component, input } from "@angular/core";
+import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
-import { SocketService } from './socket.service';
+@Component({
+  selector: "ingrid-circular-progress-indicator",
+  templateUrl: "./circular-progress-indicator.component.html",
+  styleUrls: ["./circular-progress-indicator.component.scss"],
+  imports: [MatProgressSpinner],
+})
+export class CircularProgressIndicatorComponent {
+  progress = input<number>(undefined);
+  size = input<number>(16);
+  strokeWidth = input<number>(2.5);
 
-describe('SocketService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
-
-  it('should be created', () => {
-    const service: SocketService = TestBed.inject(SocketService);
-    expect(service).toBeTruthy();
-  });
-});
+  constructor() {}
+}

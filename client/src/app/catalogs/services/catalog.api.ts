@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { Catalog } from "@shared/catalog";
+import { HttpClient } from "@angular/common/http";
 
 @Injectable({
   providedIn: "root",
 })
-export class CatalogsService {
+export class CatalogApi {
   constructor(private http: HttpClient) {}
 
   getCatalogs(): Observable<Catalog[]> {

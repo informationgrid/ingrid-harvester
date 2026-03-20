@@ -32,9 +32,10 @@ import { MatIconButton } from "@angular/material/button";
   imports: [MatIcon, MatIconButton],
 })
 export class DetailItemComponent {
-  icon = input<string>();
+  key = input<string>();
   title = input.required<string>();
   value = input<string | number>();
+  icon = input<string>();
 
   hasNavigation = input<boolean>(false);
   onNavigate = output<void>();

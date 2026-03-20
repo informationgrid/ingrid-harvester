@@ -58,6 +58,9 @@ import { DialogHeaderComponent } from "../shared/dialog-header/dialog-header.com
 import { DatasourceEntryComponent } from "./datasource-entry/datasource-entry.component";
 import { OverviewTemplateComponent } from "../shared/overview-template/overview-template.component";
 import { FormlyForm } from "@ngx-formly/core";
+import {
+  CircularProgressIndicatorComponent
+} from "../shared/circular-progress-indicator/circular-progress-indicator.component";
 
 const routes: Routes = [
   {
@@ -109,6 +112,7 @@ const routes: Routes = [
     DatasourceEntryComponent,
     OverviewTemplateComponent,
     FormlyForm,
+    CircularProgressIndicatorComponent,
   ],
   exports: [DatasourceOverviewComponent],
 })

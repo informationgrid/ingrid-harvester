@@ -47,6 +47,10 @@
   word-break: break-word;
 }
 
+.sensitive {
+  -webkit-text-security: disc;
+}
+
 mat-icon {
   width: 16px;
   height: 16px;

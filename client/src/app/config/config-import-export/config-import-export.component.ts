@@ -21,76 +21,84 @@
  * ==================================================
  */
 
-import {Component, OnInit} from '@angular/core';
-import {ConfigService} from '../config.service';
-import {DatasourceService} from '../../datasources/services/datasource.service';
-import {UntypedFormBuilder, FormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {forkJoin, of} from 'rxjs';
-import {GeneralSettings} from '@shared/general-config.settings';
-import {ConfigGeneralComponent} from "../config-general/config-general.component";
-import {ConfigModule} from "../config.module";
+import { Component, OnInit } from "@angular/core";
+import { ConfigService } from "../config.service";
+import { forkJoin } from "rxjs";
+import { DatasourceApi } from "../../datasources/services/datasource.api.service";
 
 @Component({
-    selector: 'app-config-import-export',
-    templateUrl: './config-import-export.component.html',
-    styleUrls: ['./config-import-export.component.scss'],
-    standalone: false
+  selector: "app-config-import-export",
+  templateUrl: "./config-import-export.component.html",
+  styleUrls: ["./config-import-export.component.scss"],
+  standalone: false,
 })
 export class ConfigImportExportComponent implements OnInit {
+  constructor(
+    private configService: ConfigService,
+    private datasourceApi: DatasourceApi,
+  ) {}
 
-  configForm: UntypedFormGroup;
-
-  constructor(private formBuilder: UntypedFormBuilder, private configService: ConfigService, private harvesterService: DatasourceService) {
-  }
-
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   exportConfigs() {
     forkJoin([
-      this.harvesterService.getDatasources(),
+      this.datasourceApi.getDatasources(),
       this.configService.getMappingFileContent(),
-      this.configService.fetch()
-    ]).subscribe(result => {
-      ConfigService.downLoadFile('config.json', JSON.stringify(result[0], null, 2));
-      ConfigService.downLoadFile('mappings.json', JSON.stringify(result[1], null, 2));
-      ConfigService.downLoadFile('config-general.json', JSON.stringify(result[2], null, 2));
+      this.configService.fetch(),
+    ]).subscribe((result) => {
+      ConfigService.downLoadFile(
+        "config.json",
+        JSON.stringify(result[0], null, 2),
+      );
+      ConfigService.downLoadFile(
+        "mappings.json",
+        JSON.stringify(result[1], null, 2),
+      );
+      ConfigService.downLoadFile(
+        "config-general.json",
+        JSON.stringify(result[2], null, 2),
+      );
     });
   }
 
   exportGeneralConfig() {
-    forkJoin([
-      this.configService.fetch()
-    ]).subscribe(result => {
-      ConfigService.downLoadFile('config-general.json', JSON.stringify(result[0], null, 2));
+    forkJoin([this.configService.fetch()]).subscribe((result) => {
+      ConfigService.downLoadFile(
+        "config-general.json",
+        JSON.stringify(result[0], null, 2),
+      );
     });
   }
 
   exportMappingConfig() {
-    forkJoin([
-      this.configService.getMappingFileContent()
-    ]).subscribe(result => {
-      ConfigService.downLoadFile('mappings.json', JSON.stringify(result[0], null, 2));
-    });
+    forkJoin([this.configService.getMappingFileContent()]).subscribe(
+      (result) => {
+        ConfigService.downLoadFile(
+          "mappings.json",
+          JSON.stringify(result[0], null, 2),
+        );
+      },
+    );
   }
 
   exportHarvesterConfig() {
-    forkJoin([
-      this.harvesterService.getDatasources()
-    ]).subscribe(result => {
-      ConfigService.downLoadFile('config.json', JSON.stringify(result[0], null, 2));
+    forkJoin([this.datasourceApi.getDatasources()]).subscribe((result) => {
+      ConfigService.downLoadFile(
+        "config.json",
+        JSON.stringify(result[0], null, 2),
+      );
     });
   }
 
-  importMappings(files: FileList){
+  importMappings(files: FileList) {
     this.configService.uploadMappings(files[0]).subscribe();
   }
 
-  importHarvester(files: FileList){
-    this.harvesterService.uploadDatasourceConfig(files[0]).subscribe();
+  importHarvester(files: FileList) {
+    this.datasourceApi.uploadDatasourceConfig(files[0]).subscribe();
   }
 
-  importGeneralConfig(files: FileList){
+  importGeneralConfig(files: FileList) {
     this.configService.uploadGeneralConfig(files[0]).subscribe();
   }
 }

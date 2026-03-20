@@ -21,78 +21,178 @@
  * ==================================================
  */
 
-import { Injectable } from "@angular/core";
+import { inject, Injectable, signal } from "@angular/core";
 import { Observable } from "rxjs";
 import { Harvester } from "@shared/harvester";
-import { HttpClient } from "@angular/common/http";
 import { ImportLogMessage } from "../../../../../server/app/model/import.result";
-import { CkanSettings } from "../../../../../server/app/importer/ckan/ckan.settings";
 import { CronData } from "../../../../../server/app/importer.settings";
+import { SocketService } from "./socket.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { TranslocoService } from "@ngneat/transloco";
+import { DatasourceApi } from "./datasource.api.service";
+import { getLatestDate } from "../../utils/dateUtils";
 
 @Injectable({
   providedIn: "root",
 })
 export class DatasourceService {
-  constructor(private http: HttpClient) {}
+  snackBar = inject(MatSnackBar);
+  transloco = inject(TranslocoService);
 
-  private prepareDatasourceForBackend(harvester) {
-    if (harvester.type === "CKAN") {
-      const ckanHarvester = harvester as CkanSettings;
-      const license = ckanHarvester.defaultLicense;
-      if (
-        license &&
-        license.id.trim().length === 0 &&
-        license.title.trim().length === 0 &&
-        license.url.trim().length === 0
-      ) {
-        ckanHarvester.defaultLicense = null;
+  private _datasources = signal<Record<number, Harvester>>(undefined);
+  datasources = this._datasources.asReadonly();
+
+  private _importLogs = signal<Record<number, ImportLogMessage>>(undefined);
+  importLogs = this._importLogs.asReadonly();
+
+  constructor(
+    private api: DatasourceApi,
+    private socketService: SocketService,
+  ) {
+    this.fetchDatasources();
+    this.fetchImportLogs();
+    this.listenToImportLogChangesFromServer();
+    this.listenToConnectionChangesFromServer();
+  }
+
+  private fetchDatasources() {
+    this.api.getDatasources().subscribe({
+      next: (items) => {
+        if (!items) return;
+        const tempDatasources: Record<number, Harvester> = {};
+        for (const item of items) tempDatasources[item.id] = item;
+        this._datasources.set(tempDatasources);
+        console.log(this.datasources());
+      },
+      error: (error) => console.error("Error fetching datasources", error),
+    });
+  }
+
+  private fetchImportLogs() {
+    this.api.getLastLogs().subscribe({
+      next: (logs) => {
+        const tmpImportLogs: Record<number, ImportLogMessage> = {};
+        for (const log of logs) tmpImportLogs[log.id] = log;
+        this._importLogs.set(tmpImportLogs);
+      },
+      error: (error) => console.error("Error fetching import logs", error),
+    });
+  }
+
+  private listenToImportLogChangesFromServer() {
+    this.socketService.log$.subscribe({
+      next: (data) => this.updateImportLogs(data),
+      error: (error) => console.error("Error syncing import logs", error),
+    });
+  }
+
+  private listenToConnectionChangesFromServer() {
+    this.socketService.connectionLost$.subscribe((isLost) => {
+      this.snackBar.open(
+        this.transloco.translate(
+          isLost ? "harvester.lostConnection" : "harvester.recoverConnection",
+        ),
+        null,
+        { duration: 2 * 1000 },
+      );
+
+      if (!isLost) {
+        this.fetchImportLogs();
+
+        if (!this.datasources()) {
+          this.fetchDatasources();
+        }
       }
-    }
+    });
   }
 
-  getDatasources(): Observable<Harvester[]> {
-    return this.http.get<Harvester[]>("rest/api/harvester");
+  // When no id is given, all datasources are imported.
+  import(id?: number, isIncremental?: boolean): Observable<void> {
+    // Reset the import log.
+    if (id) this.updateImportLogs({ id, complete: false });
+    return this.api.import(id, isIncremental);
   }
 
-  runImport(id: number, isIncremental?: boolean): Observable<void> {
-    return id === null
-      ? this.http.post<void>("rest/api/importAll", null)
-      : this.http.post<void>(
-          `rest/api/import/${id}?isIncremental=${isIncremental}`,
-          null,
-        );
+  addOrUpdate(datasource: Harvester) {
+    this.api.update(datasource).subscribe({
+      next: () => this.fetchDatasources(),
+      error: (err) => alert(err.message),
+    });
   }
 
-  getLastLogs(): Observable<ImportLogMessage[]> {
-    return this.http.get<ImportLogMessage[]>("rest/api/lastLogs");
+  edit(datasource: Harvester) {
+    this.api.update(datasource).subscribe({
+      next: () => {
+        this._datasources.update((current) => ({
+          ...current,
+          [datasource.id]: {
+            ...datasource,
+          },
+        }));
+      },
+      error: (err) => alert(err.message),
+    });
   }
 
-  update(datasource: Harvester): Observable<void> {
-    this.prepareDatasourceForBackend(datasource);
-    return this.http.post<void>(
-      "rest/api/harvester/" + (datasource.id || -1),
-      datasource,
-    );
+  deleteById(id: number) {
+    return this.api.delete(id).subscribe({
+      next: () => {
+        this._datasources.update((current) => {
+          const updated = { ...current };
+          delete updated[id];
+          return updated;
+        });
+        this._importLogs.update((current) => {
+          const updated = { ...current };
+          delete updated[id];
+          return updated;
+        });
+      },
+      error: (err) => alert(err.message),
+    });
   }
 
   // Returns two dates in an array [full, incr].
   // It can be [null, null], if nothing is scheduled.
-  schedule(
-    id: number,
+  scheduleByCron(
+    datasource: Harvester,
     cron: { full: CronData; incr: CronData },
-  ): Observable<Date[]> {
-    return this.http.post<Date[]>("rest/api/schedule/" + id, { cron: cron });
-  }
+  ) {
+    this.api.schedule(datasource.id, cron).subscribe({
+      next: (nextExecutions) => {
+        if (!nextExecutions) return;
 
-  delete(id: number) {
-    return this.http.delete("rest/api/harvester/" + id);
-  }
+        // Update cron in datasource.
+        this._datasources.update((current) => ({
+          ...current,
+          [datasource.id]: {
+            ...current[datasource.id],
+            cron: cron,
+          },
+        }));
 
-  uploadDatasourceConfig(file: File): Observable<void> {
-    return this.http.post<void>("rest/api/harvester/filecontent", file);
+        // Get the lastest nextExecution from the import log.
+        const nextExecution = getLatestDate(nextExecutions.filter(Boolean));
+        this._importLogs.update((current) => ({
+          ...current,
+          [datasource.id]: {
+            ...current[datasource.id],
+            nextExecution: nextExecution,
+          },
+        }));
+      },
+      error: (err) => alert(err.message),
+    });
   }
 
   getHistory(id: number): Observable<any> {
-    return this.http.get<any>("rest/api/harvester/history/" + id);
+    return this.api.getHistory(id);
+  }
+
+  private updateImportLogs(log: ImportLogMessage) {
+    this._importLogs.update((current) => ({
+      ...current,
+      [log.id]: log,
+    }));
   }
 }

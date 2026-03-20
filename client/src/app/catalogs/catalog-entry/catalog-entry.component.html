@@ -67,6 +67,7 @@
       <div class="pt-4 grid gap-12 grid-cols-3 grid-cols-md-2 grid-cols-sm-1">
         @for (setting of catalog().settings | keyvalue; track setting.key) {
           <ingrid-detail-item
+            [key]="setting.key"
             [title]="t('catalogs.formLabel.' + setting.key)"
             [value]="setting.value"
             icon="info"

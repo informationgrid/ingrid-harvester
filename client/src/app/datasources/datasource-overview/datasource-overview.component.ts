@@ -21,153 +21,70 @@
  * ==================================================
  */
 
-import { Component, computed, OnDestroy, OnInit, signal } from "@angular/core";
+import { Component, computed, Signal } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
+import { UntilDestroy } from "@ngneat/until-destroy";
 import { Harvester } from "@shared/harvester";
-import { ImportLogMessage } from "../../../../../server/app/model/import.result";
 import { ConfirmDialogComponent } from "../../shared/confirm-dialog/confirm-dialog.component";
 import { DialogEditComponent } from "../dialog-edit/dialog-edit.component";
 import { DialogHistoryComponent } from "../dialog-history/dialog-history.component";
 import { DialogLogComponent } from "../dialog-log/dialog-log.component";
 import { DialogSchedulerComponent } from "../dialog-scheduler/dialog-scheduler.component";
 import { DatasourceService } from "../services/datasource.service";
-import { SocketService } from "../services/socket.service";
-import { TranslocoPipe } from "@ngneat/transloco";
-import { getLatestDate } from "../../utils/dateUtils";
+import { TranslocoService } from "@ngneat/transloco";
 
 @UntilDestroy()
 @Component({
   selector: "harvester-datasource-overview",
   templateUrl: "./datasource-overview.component.html",
   styleUrls: ["./datasource-overview.component.scss"],
-  providers: [TranslocoPipe],
   standalone: false,
 })
-export class DatasourceOverviewComponent implements OnInit, OnDestroy {
-  datasources = signal<Record<number, Harvester>>(undefined);
-  importLogs = signal<Record<number, ImportLogMessage>>(undefined);
-  groupedDatasources = computed(() => {
-    if (!this.datasources()) return {};
-    return Object.values(this.datasources()).reduce<
-      Record<string, Harvester[]>
-    >((acc, catalog) => {
-      if (!acc[catalog.type]) {
-        acc[catalog.type] = [];
-      }
-      acc[catalog.type].push(catalog);
-      return acc;
-    }, {});
+export class DatasourceOverviewComponent {
+  importLogs = computed(() => this.datasourceService.importLogs());
+  groupedDatasources: Signal<Record<string, Harvester[]>> = computed(() => {
+    if (!this.datasourceService.datasources()) return {};
+    return Object.values(this.datasourceService.datasources()).reduce(
+      (acc, datasource) => {
+        if (!acc[datasource.type]) {
+          acc[datasource.type] = [];
+        }
+        acc[datasource.type].push(datasource);
+        return acc;
+      },
+      {},
+    );
   });
 
-  datasourcesLoaded = computed(() => this.datasources() !== undefined);
+  isLoaded = computed(() => {
+    return this.datasourceService.datasources() !== undefined;
+  });
   hasDatasources = computed(() => {
-    if (!this.datasourcesLoaded()) return false;
-    return Object.keys(this.datasources()).length > 0;
+    if (!this.isLoaded()) return false;
+    return Object.keys(this.datasourceService.datasources()).length > 0;
   });
 
   constructor(
-    public dialog: MatDialog,
+    private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private datasourceService: DatasourceService,
-    private socketService: SocketService,
-    private transloco: TranslocoPipe,
+    private transloco: TranslocoService,
   ) {}
 
-  ngOnInit() {
-    this.fetchDatasources();
-    this.fetchImportLogs();
-    this.listenToImportLogChangesFromServer();
-    this.listenToConnectionChangesFromServer();
-  }
-
-  ngOnDestroy() {}
-
-  private fetchDatasources() {
-    this.datasourceService.getDatasources().subscribe({
-      next: (items) => {
-        if (!items) return;
-        const datasources: Record<number, Harvester> = {};
-        for (const item of items) datasources[item.id] = item;
-        this.datasources.set(datasources);
-      },
-      error: (error) => {
-        console.error("Error fetching datasources", error);
-      },
-    });
-  }
-
-  private fetchImportLogs() {
-    this.datasourceService.getLastLogs().subscribe({
-      next: (logs) => {
-        const importLogs: Record<number, ImportLogMessage> = {};
-        for (const log of logs) importLogs[log.id] = log;
-        this.importLogs.set(importLogs);
-      },
-      error: (error) => {
-        console.error("Error fetching import logs", error);
-      },
-    });
-  }
-
-  private listenToImportLogChangesFromServer() {
-    this.socketService.log$.pipe(untilDestroyed(this)).subscribe({
-      next: (data) => {
-        this.importLogs.update((current) => ({
-          ...current,
-          [data.id]: data,
-        }));
-      },
-      error: (error) => {
-        console.error("Error syncing import logs", error);
-      },
-    });
-  }
-
-  private listenToConnectionChangesFromServer() {
-    this.socketService.connectionLost$
-      .pipe(untilDestroyed(this))
-      .subscribe((isLost) => {
-        if (isLost) {
-          this.snackBar.open(
-            this.transloco.transform("harvester.lostConnection"),
-            null,
-            { duration: 2 * 1000 },
-          );
-        } else {
-          this.snackBar.open(
-            this.transloco.transform("harvester.recoverConnection"),
-            null,
-            { duration: 2 * 1000 },
-          );
-          this.fetchImportLogs();
-          if (!this.datasourcesLoaded()) {
-            this.fetchDatasources();
-          }
-        }
-      });
-  }
-
   onImport(id: number, isIncremental: boolean = false) {
-    this.datasourceService.runImport(id, isIncremental).subscribe();
+    this.datasourceService.import(id, isIncremental).subscribe();
     this.snackBar.open(
-      this.transloco.transform("harvester.importStarted"),
+      this.transloco.translate("harvester.importStarted"),
       null,
       { duration: 3 * 1000 },
     );
-
-    // Reset the import log.
-    this.importLogs.update((current) => ({
-      ...current,
-      [id]: { complete: false },
-    }));
   }
 
   onImportAll() {
-    this.datasourceService.runImport(null).subscribe();
+    this.datasourceService.import().subscribe();
     this.snackBar.open(
-      this.transloco.transform("harvester.allImportStarted"),
+      this.transloco.translate("harvester.allImportStarted"),
       null,
       { duration: 3 * 1000 },
     );
@@ -186,32 +103,14 @@ export class DatasourceOverviewComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe((result) => {
         if (!result) return;
-        this.datasourceService.update(result).subscribe({
-          next: () => this.fetchDatasources(),
-          error: (err) => alert(err.message),
-        });
+        this.datasourceService.addOrUpdate(result);
       });
   }
 
-  onDelete(datasource: Harvester) {
-    this.dialog
-      .open(ConfirmDialogComponent, {
-        data: this.transloco.transform("harvester.deleteConfirmation"),
-      })
-      .afterClosed()
-      .subscribe((result) => {
-        if (!result) return;
-        this.datasourceService.delete(datasource.id).subscribe({
-          next: () => this.fetchDatasources(),
-          error: (err) => alert(err.message),
-        });
-      });
-  }
-
-  onEdit(harvester: Harvester) {
+  onEdit(datasource: Harvester) {
     this.dialog
       .open(DialogEditComponent, {
-        data: JSON.parse(JSON.stringify(harvester)),
+        data: JSON.parse(JSON.stringify(datasource)),
         width: "950px",
         disableClose: true,
         autoFocus: false,
@@ -219,41 +118,7 @@ export class DatasourceOverviewComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe((result: Harvester) => {
         if (!result) return;
-
-        // this is a really ugly hack, someone fix this in wfs-harvester.component.ts instead
-        if ("contactMetadata" in result) {
-          try {
-            result.contactMetadata =
-              (result.contactMetadata as unknown) != ""
-                ? JSON.parse(result.contactMetadata as unknown as string)
-                : null;
-          } catch (e) {
-            // swallow errors
-          }
-        }
-        if ("maintainer" in result) {
-          try {
-            result.maintainer =
-              (result.maintainer as unknown) != ""
-                ? JSON.parse(result.maintainer as unknown as string)
-                : null;
-          } catch (e) {
-            // swallow errors
-          }
-        }
-
-        this.datasourceService.update(result).subscribe({
-          next: () => {
-            this.datasources.update((current) => ({
-              ...current,
-              [harvester.id]: {
-                ...harvester,
-                ...result,
-              },
-            }));
-          },
-          error: (err) => alert(err.message),
-        });
+        this.datasourceService.edit(result);
       });
   }
 
@@ -272,10 +137,19 @@ export class DatasourceOverviewComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe((result: Harvester) => {
         if (!result) return;
-        this.datasourceService.update(result).subscribe({
-          next: () => this.fetchDatasources(),
-          error: (err) => alert(err.message),
-        });
+        this.datasourceService.addOrUpdate(result);
+      });
+  }
+
+  onDelete(datasource: Harvester) {
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        data: this.transloco.translate("harvester.deleteConfirmation"),
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (!result) return;
+        this.datasourceService.deleteById(datasource.id);
       });
   }
 
@@ -288,49 +162,22 @@ export class DatasourceOverviewComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe((result) => {
         if (!result) return;
-        this.datasourceService.schedule(datasource.id, result.value).subscribe({
-          next: (nextExecutions) => {
-            if (!nextExecutions) return;
-            console.log(nextExecutions);
-
-            // Update cron in datasource.
-            this.datasources.update((current) => ({
-              ...current,
-              [datasource.id]: {
-                ...current[datasource.id],
-                cron: result.value,
-              },
-            }));
-
-            // Get the lastest nextExecution from the import log.
-            const nextExecution = getLatestDate(nextExecutions.filter(Boolean));
-            this.importLogs.update((current) => ({
-              ...current,
-              [datasource.id]: {
-                ...current[datasource.id],
-                nextExecution: nextExecution,
-              },
-            }));
-          },
-          error: (error) => this.showError(error),
-        });
+        this.datasourceService.scheduleByCron(datasource, result.value);
       });
   }
 
-  async showHistory(harvester: Harvester) {
+  onShowHistory(harvester: Harvester) {
     this.datasourceService.getHistory(harvester.id).subscribe({
       next: (data) => {
         if (!data || data.history.length === 0) {
-          return alert(this.transloco.transform("harvester.noHistory"));
+          return alert(this.transloco.translate("harvester.noHistory"));
         }
         this.dialog.open(DialogHistoryComponent, {
           data: data,
           width: "950px",
         });
       },
-      error: (error) => {
-        console.error("Error fetching history", error);
-      },
+      error: (err) => alert(err.message),
     });
   }
 
@@ -344,17 +191,9 @@ export class DatasourceOverviewComponent implements OnInit, OnDestroy {
         },
       });
     } else {
-      this.snackBar.open(this.transloco.transform("harvester.noLogs"), null, {
+      this.snackBar.open(this.transloco.translate("harvester.noLogs"), null, {
         duration: 2 * 1000,
       });
     }
-  }
-
-  private showError(error: Error) {
-    console.error("Error occurred", error);
-    this.snackBar.open(error.message, null, {
-      panelClass: "error",
-      duration: 10000,
-    });
   }
 }

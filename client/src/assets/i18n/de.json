@@ -10,7 +10,8 @@
     "update": "Aktualisieren",
     "duplicate": "Duplizieren",
     "delete": "Löschen",
-    "more": "Mehr"
+    "more": "Mehr",
+    "loading": "Wird geladen..."
   },
   "pageTitle": {
     "default": "InGrid Harvester",

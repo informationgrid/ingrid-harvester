@@ -21,15 +21,14 @@
  * ==================================================
  */
 
-import { TestBed } from '@angular/core/testing';
+mat-progress-spinner {
+  z-index: 1;
+  --mat-progress-spinner-active-indicator-color: rgba(25, 110, 162, 1);
 
-import { DatasourceService } from './datasource.service';
-
-describe('HarvesterService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
-
-  it('should be created', () => {
-    const service: DatasourceService = TestBed.inject(DatasourceService);
-    expect(service).toBeTruthy();
-  });
-});
+  &.track {
+    z-index: 0;
+    inset: 0;
+    position: absolute;
+    --mat-progress-spinner-active-indicator-color: rgba(25, 110, 162, 0.2);
+  }
+}

@@ -2,7 +2,7 @@ import { FormlyFieldConfig } from "@ngx-formly/core";
 import { inject } from "@angular/core";
 import { TranslocoPipe } from "@ngneat/transloco";
 
-export default abstract class ElasticsearchFields {
+export default abstract class ElasticsearchType {
   static fields(): FormlyFieldConfig[] {
     const transloco = inject(TranslocoPipe);
 

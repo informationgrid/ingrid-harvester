@@ -45,8 +45,6 @@ export class ConfigGeneralComponent implements OnInit {
   constructor(
     private formBuilder: UntypedFormBuilder,
     private configService: ConfigService,
-    private harvesterService: DatasourceService,
-    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {

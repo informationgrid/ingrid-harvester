@@ -22,7 +22,7 @@
  */
 
 import { Component, computed, input, output } from "@angular/core";
-import { TranslocoDirective, TranslocoPipe } from "@ngneat/transloco";
+import { TranslocoDirective, TranslocoService } from "@ngneat/transloco";
 import { Harvester } from "@shared/harvester";
 import { ImportLogMessage } from "../../../../../../server/app/model/import.result";
 import { DatePipe } from "@angular/common";
@@ -33,7 +33,7 @@ import { DetailItemComponent } from "../../../shared/detail-item/detail-item.com
   templateUrl: "./datasource-detail.component.html",
   styleUrls: ["./datasource-detail.component.scss"],
   imports: [TranslocoDirective, DetailItemComponent],
-  providers: [DatePipe, TranslocoPipe],
+  providers: [DatePipe],
 })
 export class DatasourceDetailComponent {
   datasource = input.required<Harvester>();
@@ -57,7 +57,7 @@ export class DatasourceDetailComponent {
   });
   nextExecution = computed(() => {
     if (this.datasource().disable) {
-      return this.translocoPipe.transform("harvester.status.disable.title");
+      return this.transloco.translate("harvester.status.disable.title");
     }
 
     const cron = this.datasource().cron;
@@ -90,7 +90,7 @@ export class DatasourceDetailComponent {
   });
 
   constructor(
-    public datePipe: DatePipe,
-    public translocoPipe: TranslocoPipe,
+    private datePipe: DatePipe,
+    private transloco: TranslocoService,
   ) {}
 }

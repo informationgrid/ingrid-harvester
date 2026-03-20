@@ -2,7 +2,7 @@ import { FormlyFieldConfig } from "@ngx-formly/core";
 import { inject } from "@angular/core";
 import { TranslocoPipe } from "@ngneat/transloco";
 
-export default abstract class CswFields {
+export default abstract class CswType {
   static fields(): FormlyFieldConfig[] {
     const transloco = inject(TranslocoPipe);
 

@@ -23,14 +23,14 @@
 
 import { Component, computed, input } from "@angular/core";
 import { ImportLogMessage } from "../../../../../../server/app/model/import.result";
-import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { TranslocoDirective } from "@ngneat/transloco";
+import { CircularProgressIndicatorComponent } from "../../../shared/circular-progress-indicator/circular-progress-indicator.component";
 
 @Component({
   selector: "harvester-progress-indicator",
   templateUrl: "./progress-indicator.component.html",
   styleUrls: ["./progress-indicator.component.scss"],
-  imports: [MatProgressSpinner, TranslocoDirective],
+  imports: [TranslocoDirective, CircularProgressIndicatorComponent],
 })
 export class ProgressIndicatorComponent {
   importLog = input<ImportLogMessage>();
