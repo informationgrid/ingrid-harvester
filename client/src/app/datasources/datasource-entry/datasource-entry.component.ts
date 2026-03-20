@@ -56,6 +56,7 @@ export class DatasourceEntryComponent {
   @ViewChild("actionMenuBtn") menuBtn!: MatMenuTrigger;
 
   datasource = input.required<Harvester>();
+  canEdit = input<boolean>(true);
   importLog = input<ImportLogMessage>();
 
   onImport = output<void>();

@@ -28,33 +28,37 @@
     contextHelpId="about_harvester"
   >
     <ng-container header-actions *transloco="let t; read: 'harvester'">
-      <button
-        matButton="filled"
-        color="primary"
-        (click)="onAdd()"
-        aria-label="{{ t('add') }}"
-        id="btnAddHarvester"
-      >
-        <mat-icon svgIcon="Add" />
-        {{ t("add") }}
-      </button>
+      @if (canEdit()) {
+        <button
+          matButton="filled"
+          color="primary"
+          (click)="onAdd()"
+          aria-label="{{ t('add') }}"
+          id="btnAddHarvester"
+        >
+          <mat-icon svgIcon="Add" />
+          {{ t("add") }}
+        </button>
+      }
 
       @if (hasDatasources()) {
-        <button
-          matIconButton
-          color="primary"
-          matTooltip="{{ t('more') }}"
-          aria-label="{{ t('more') }}"
-          [matMenuTriggerFor]="optionMenu"
-        >
-          <mat-icon svgIcon="Options" />
-        </button>
-        <mat-menu data-test="action-menu" #optionMenu>
-          <button mat-menu-item (click)="onImportAll()" data-test="import-all">
-            <mat-icon svgIcon="Harvester" />
-            {{ t("importAll") }}
+        @if (canEdit()) {
+          <button
+            matIconButton
+            color="primary"
+            matTooltip="{{ t('more') }}"
+            aria-label="{{ t('more') }}"
+            [matMenuTriggerFor]="optionMenu"
+          >
+            <mat-icon svgIcon="Options" />
           </button>
-        </mat-menu>
+          <mat-menu data-test="action-menu" #optionMenu>
+            <button mat-menu-item (click)="onImportAll()" data-test="import-all">
+              <mat-icon svgIcon="Harvester" />
+              {{ t("importAll") }}
+            </button>
+          </mat-menu>
+        }
       }
     </ng-container>
 
@@ -69,6 +73,7 @@
           @for (datasource of group.value; track datasource.id) {
             <harvester-datasource-entry
               [datasource]="datasource"
+              [canEdit]="canEdit()"
               [importLog]="
                 importLogs() ? importLogs()[datasource.id] : undefined
               "

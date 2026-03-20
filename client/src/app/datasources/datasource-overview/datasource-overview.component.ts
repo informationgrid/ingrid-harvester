@@ -34,6 +34,8 @@ import { DialogSchedulerComponent } from "../dialog-scheduler/dialog-scheduler.c
 import { DatasourceService } from "../services/datasource.service";
 import { TranslocoService } from "@ngneat/transloco";
 
+import { AuthenticationService } from "../../security/authentication.service";
+
 @UntilDestroy()
 @Component({
   selector: "harvester-datasource-overview",
@@ -65,11 +67,16 @@ export class DatasourceOverviewComponent {
     return Object.keys(this.datasourceService.datasources()).length > 0;
   });
 
+  isAdmin = computed(() => this.authService.hasRole("admin"));
+  isEditor = computed(() => this.authService.hasRole("editor"));
+  canEdit = computed(() => this.isAdmin() || this.isEditor());
+
   constructor(
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private datasourceService: DatasourceService,
     private transloco: TranslocoService,
+    private authService: AuthenticationService,
   ) {}
 
   onImport(id: number, isIncremental: boolean = false) {

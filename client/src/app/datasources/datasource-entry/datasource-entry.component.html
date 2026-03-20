@@ -51,44 +51,46 @@
         <mat-icon svgIcon="Options" />
       </button>
       <mat-menu data-test="action-menu" #actionMenu>
-        <button
-          mat-menu-item
-          [disabled]="importLog() !== undefined && !importLog().complete"
-          (click)="onImport.emit()"
-          data-test="import"
-        >
-          <mat-icon svgIcon="Harvester" />
-          {{ t("import") }}
-        </button>
-        <button
-          mat-menu-item
-          [disabled]="importLog() !== undefined && !importLog().complete"
-          (click)="onIncrementImport.emit()"
-          data-test="importIncrement"
-        >
-          <mat-icon svgIcon="Harvester" />
-          {{ t("importIncrement") }}
-        </button>
-        <button mat-menu-item (click)="onEdit.emit()" data-test="edit">
-          <mat-icon svgIcon="cursor-edit" />
-          {{ t("edit") }}
-        </button>
-        <button mat-menu-item (click)="onDelete.emit()" data-test="delete">
-          <mat-icon color="warn" svgIcon="delete" />
-          {{ t("delete") }}
-        </button>
-        <button
-          mat-menu-item
-          (click)="onDuplicate.emit()"
-          data-test="duplicate"
-        >
-          <mat-icon svgIcon="Copy" />
-          {{ t("duplicate") }}
-        </button>
-        <button mat-menu-item (click)="onSchedule.emit()" data-test="schedule">
-          <mat-icon svgIcon="schedule" />
-          {{ t("schedule") }}
-        </button>
+        @if (canEdit()) {
+          <button
+            mat-menu-item
+            [disabled]="importLog() !== undefined && !importLog().complete"
+            (click)="onImport.emit()"
+            data-test="import"
+          >
+            <mat-icon svgIcon="Harvester" />
+            {{ t("import") }}
+          </button>
+          <button
+            mat-menu-item
+            [disabled]="importLog() !== undefined && !importLog().complete"
+            (click)="onIncrementImport.emit()"
+            data-test="importIncrement"
+          >
+            <mat-icon svgIcon="Harvester" />
+            {{ t("importIncrement") }}
+          </button>
+          <button mat-menu-item (click)="onEdit.emit()" data-test="edit">
+            <mat-icon svgIcon="cursor-edit" />
+            {{ t("edit") }}
+          </button>
+          <button mat-menu-item (click)="onDelete.emit()" data-test="delete">
+            <mat-icon color="warn" svgIcon="delete" />
+            {{ t("delete") }}
+          </button>
+          <button
+            mat-menu-item
+            (click)="onDuplicate.emit()"
+            data-test="duplicate"
+          >
+            <mat-icon svgIcon="Copy" />
+            {{ t("duplicate") }}
+          </button>
+          <button mat-menu-item (click)="onSchedule.emit()" data-test="schedule">
+            <mat-icon svgIcon="schedule" />
+            {{ t("schedule") }}
+          </button>
+        }
         <button mat-menu-item (click)="onHistory.emit()" data-test="history">
           <mat-icon svgIcon="Timeline" />
           {{ t("history") }}
