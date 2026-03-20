@@ -39,8 +39,6 @@ export abstract class SharedFields {
                       },
                       { label: "DCAT", value: "DCAT" },
                       { label: "DCATAPPLU", value: "DCATAPPLU" },
-                      { label: "EXCEL", value: "EXCEL" },
-                      { label: "EXCEL (SPARSE)", value: "EXCEL_SPARSE" },
                       { label: "JSON", value: "JSON" },
                       { label: "GENESIS", value: "GENESIS" },
                       { label: "KLD", value: "KLD" },
