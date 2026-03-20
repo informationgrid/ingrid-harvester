@@ -26,7 +26,7 @@ import {DefaultImporterSettings} from '../../importer.settings.js';
 
 export type DCATProviderField = 'contactPoint' | 'creator' | 'originator' | 'maintainer' | 'publisher';
 
-export const defaultDCATSettings: DcatapdeSettings = {
+export const defaultDCATAPDESettings: DcatapdeSettings = {
     ...DefaultImporterSettings,
     filterTags: [],
     filterThemes: []

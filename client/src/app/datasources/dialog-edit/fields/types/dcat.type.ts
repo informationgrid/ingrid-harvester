@@ -6,13 +6,13 @@ export abstract class DcatType {
     return [
       {
         expressions: {
-          hide: "model.type != 'DCAT'",
+          hide: "model.type != 'DCATAPDE'",
         },
         fieldGroup: [
           {
             wrappers: ["section"],
             props: {
-              label: "DCAT Einstellungen",
+              label: "DCAT-AP.de Einstellungen",
             },
             fieldGroup: [
               {
@@ -50,7 +50,7 @@ export abstract class DcatType {
                     defaultValue: "creator",
                     className: "ingrid-col-10 ingrid-col-md-auto",
                     props: {
-                      label: "DCAT-Feld",
+                      label: "DCAT-AP.de-Feld",
                       options: [
                         { label: "contactPoint", value: "contactPoint" },
                         { label: "creator", value: "creator" },
