@@ -21,9 +21,9 @@
  * ==================================================
  */
 
+import type { ElasticsearchCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
-import { Catalog as NewCatalog } from '../../catalog/catalog.factory.js';
-import type { ElasticsearchCatalogSettings } from '../../catalog/elasticsearch/elasticsearch.catalog.js';
+import type { Catalog as NewCatalog } from '../../catalog/catalog.factory.js';
 import type { CswMapper } from '../../importer/csw/csw.mapper.js';
 import type { CswSettings } from '../../importer/csw/csw.settings.js';
 import type { DcatappluMapper } from '../../importer/dcatapplu/dcatapplu.mapper.js';

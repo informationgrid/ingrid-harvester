@@ -21,11 +21,9 @@
  * ==================================================
  */
 
+import type { CswCatalogSettings, ElasticsearchCatalogSettings, PiveauCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
-import { Catalog as NewCatalog } from '../../catalog/catalog.factory.js';
-import type { CswCatalogSettings } from '../../catalog/csw/csw.catalog.js';
-import type { ElasticsearchCatalogSettings } from '../../catalog/elasticsearch/elasticsearch.catalog.js';
-import type { PiveauCatalogSettings } from "../../catalog/piveau/piveau.catalog.js";
+import type { Catalog as NewCatalog } from '../../catalog/catalog.factory.js';
 import type { CkanMapper } from '../../importer/ckan/ckan.mapper.js';
 import type { CkanSettings } from '../../importer/ckan/ckan.settings.js';
 import type { CswMapper } from '../../importer/csw/csw.mapper.js';

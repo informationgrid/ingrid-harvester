@@ -21,26 +21,17 @@
  * ==================================================
  */
 
+import type { PiveauCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
 import type { Observer } from "rxjs";
 import type { ImporterSettings } from "../../importer.settings.js";
 import type { ImportLogMessage } from "../../model/import.result.js";
 import { type Summary } from "../../model/summary.js";
 import { RequestDelegate } from "../../utils/http-request.utils.js";
-import { Catalog, type CatalogSettings } from '../catalog.factory.js';
+import { Catalog } from '../catalog.factory.js';
 import { PiveauCatalogSummary } from './piveau.catalog-summary.js';
 
 const log = log4js.getLogger('PiveauCatalog');
-
-export type PiveauCatalogSettings = CatalogSettings & {
-    settings: {
-        version: string,
-        outputSchema: string,
-        catalog: string,
-        title?: string,
-        description?: string
-    }
-}
 
 export class PiveauCatalog extends Catalog<string> {
 

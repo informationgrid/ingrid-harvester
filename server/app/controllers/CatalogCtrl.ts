@@ -21,9 +21,9 @@
  * ==================================================
  */
 
+import type { CatalogSettings } from '@shared/catalog.js';
 import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '@tsed/common';
 import log4js from 'log4js';
-import type { CatalogSettings } from '../catalog/catalog.factory.js';
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 

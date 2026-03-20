@@ -21,12 +21,12 @@
  * ==================================================
  */
 
+import type { CatalogSettings } from '@shared/catalog.js';
 import type { GeneralSettings } from '@shared/general-config.settings.js';
 import type { Harvester } from '@shared/harvester.js';
 import type { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
 import * as fs from 'fs';
 import log4js from 'log4js';
-import type { CatalogSettings } from '../../catalog/catalog.factory.js';
 import { defaultCKANSettings } from '../../importer/ckan/ckan.settings.js';
 import { defaultCSWSettings } from '../../importer/csw/csw.settings.js';
 import { defaultDCATAPDESettings } from '../../importer/dcatapde/dcatapde.settings.js';
