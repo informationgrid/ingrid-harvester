@@ -21,52 +21,58 @@
  * ==================================================
  */
 
-import {BrowserModule} from "@angular/platform-browser";
-import {RouterModule, Routes} from "@angular/router";
-import {inject, LOCALE_ID, NgModule, provideAppInitializer,} from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import { Router, RouterModule, Routes } from "@angular/router";
+import {
+  inject,
+  LOCALE_ID,
+  NgModule,
+  provideAppInitializer,
+} from "@angular/core";
 
-import {AppComponent} from "./app.component";
-import {MatIconModule} from "@angular/material/icon";
-import {MatListModule} from "@angular/material/list";
-import {MatSidenavModule} from "@angular/material/sidenav";
-import {MatToolbarModule} from "@angular/material/toolbar";
-import {registerLocaleData} from "@angular/common";
+import { AppComponent } from "./app.component";
+import { MatIconModule } from "@angular/material/icon";
+import { MatListModule } from "@angular/material/list";
+import { MatSidenavModule } from "@angular/material/sidenav";
+import { MatToolbarModule } from "@angular/material/toolbar";
+import { registerLocaleData } from "@angular/common";
 import localeDe from "@angular/common/locales/de";
-import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi,} from "@angular/common/http";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {ConfigService} from "./config.service";
-import {environment} from "../environments/environment";
-import {UnauthorizedInterceptor} from "./security/unauthorized.interceptor";
-import {LoginComponent} from "./security/login.component";
-import {ReactiveFormsModule} from "@angular/forms";
-import {MAT_CARD_CONFIG, MatCardModule} from "@angular/material/card";
-import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule,} from "@angular/material/form-field";
-import {MatInputModule} from "@angular/material/input";
-import {MatButtonModule} from "@angular/material/button";
-import {MatSnackBarModule} from "@angular/material/snack-bar";
-import {AuthenticationService} from "./security/authentication.service";
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from "@angular/common/http";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { ConfigService } from "./config.service";
+import { environment } from "../environments/environment";
+import { UnauthorizedInterceptor } from "./security/unauthorized.interceptor";
+import { LoginComponent } from "./security/login.component";
+import { ReactiveFormsModule } from "@angular/forms";
+import { MAT_CARD_CONFIG, MatCardModule } from "@angular/material/card";
+import {
+  MAT_FORM_FIELD_DEFAULT_OPTIONS,
+  MatFormFieldModule,
+} from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatButtonModule } from "@angular/material/button";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { AuthenticationService } from "./security/authentication.service";
 import {KeycloakService} from './security/keycloak.service';
-import {SideMenuComponent} from "./side-menu/side-menu.component";
-import {MatTooltipModule} from "@angular/material/tooltip";
-import {TranslocoRootModule} from "./transloco-root.module";
-import {MainHeaderComponent} from "./main-header/main-header.component";
-import {routes} from "./app.router";
-import {provideFormlyCore} from "@ngx-formly/core";
-import {withFormlyMaterial} from "@ngx-formly/material";
-import {FormlySectionWrapperComponent} from "./formly/wrappers/formly-section-wrapper/formly-section-wrapper.component";
-import {
-  FormlyInlineHelpWrapperComponent
-} from "./formly/wrappers/formly-inline-help-wrapper/formly-inline-help-wrapper.component";
-import {FormlyChipTypeComponent} from "./formly/types/formly-chip-type/formly-chip-type.component";
-import {
-  FormlyAutocompleteTypeComponent
-} from "./formly/types/formly-autocomplete-type/formly-autocomplete-type.component";
-import {FormlyRepeatFormTypeComponent} from "./formly/types/formly-repeat-form-type/formly-repeat-form-type.component";
-import {
-  FormlySubSectionWrapperComponent
-} from "./formly/wrappers/formly-sub-section-wrapper/formly-sub-section-wrapper.component";
-import {UniqueKeyValidator, UrlValidator} from "./formly/validators";
-import {MAT_DIALOG_DEFAULT_OPTIONS} from "@angular/material/dialog";
+import { SideMenuComponent } from "./side-menu/side-menu.component";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { TranslocoRootModule } from "./transloco-root.module";
+import { MainHeaderComponent } from "./main-header/main-header.component";
+import { routes } from "./app.router";
+import { FormlyModule, provideFormlyCore } from "@ngx-formly/core";
+import { FormlyMaterialModule, withFormlyMaterial } from "@ngx-formly/material";
+import { FormlySectionWrapperComponent } from "./formly/wrappers/formly-section-wrapper/formly-section-wrapper.component";
+import { FormlyInlineHelpWrapperComponent } from "./formly/wrappers/formly-inline-help-wrapper/formly-inline-help-wrapper.component";
+import { FormlyChipTypeComponent } from "./formly/types/formly-chip-type/formly-chip-type.component";
+import { FormlyAutocompleteTypeComponent } from "./formly/types/formly-autocomplete-type/formly-autocomplete-type.component";
+import { FormlyRepeatFormTypeComponent } from "./formly/types/formly-repeat-form-type/formly-repeat-form-type.component";
+import { FormlySubSectionWrapperComponent } from "./formly/wrappers/formly-sub-section-wrapper/formly-sub-section-wrapper.component";
+import { JsonValidator, UniqueKeyValidator, UrlValidator } from "./formly/validators";
+import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
 
 registerLocaleData(localeDe);
 
@@ -113,11 +119,14 @@ const appRoutes: Routes = routes;
     MatInputModule,
     MatButtonModule,
     MatTooltipModule,
-    TranslocoRootModule,],
+    TranslocoRootModule,
+    FormlyModule.forRoot(),
+    FormlyMaterialModule,
+  ],
   providers: [
     {
       provide: LOCALE_ID,
-      useValue: 'de'
+      useValue: "de",
     },
     provideAppInitializer(() => {
       return ConfigLoader(inject(ConfigService), inject(AuthenticationService))();
@@ -133,23 +142,25 @@ const appRoutes: Routes = routes;
     provideHttpClient(withInterceptorsFromDi()),
     provideFormlyCore({
       types: [
-        {name: "chip", component: FormlyChipTypeComponent},
-        {name: "autocomplete", component: FormlyAutocompleteTypeComponent},
-        {name: "repeat-form", component: FormlyRepeatFormTypeComponent},
+        { name: "chip", component: FormlyChipTypeComponent },
+        { name: "autocomplete", component: FormlyAutocompleteTypeComponent },
+        { name: "repeat-form", component: FormlyRepeatFormTypeComponent },
       ],
       wrappers: [
-        {name: "section", component: FormlySectionWrapperComponent},
-        {name: "sub-section", component: FormlySubSectionWrapperComponent},
-        {name: "inline-help", component: FormlyInlineHelpWrapperComponent},
+        { name: "section", component: FormlySectionWrapperComponent },
+        { name: "sub-section", component: FormlySubSectionWrapperComponent },
+        { name: "inline-help", component: FormlyInlineHelpWrapperComponent },
       ],
       validators: [
-        {name: "url", validation: UrlValidator},
-        {name: "uniqueKey", validation: UniqueKeyValidator},
+        { name: "url", validation: UrlValidator },
+        { name: "uniqueKey", validation: UniqueKeyValidator },
+        { name: "json", validation: JsonValidator },
       ],
       validationMessages: [
-        {name: "required", message: "Dieses Feld muss ausgefüllt sein."},
-        {name: "url", message: "Die URL ist ungültig."},
-        {name: "uniqueKey", message: "Die Schlüssel müssen eindeutig sein."},
+        { name: "required", message: "Dieses Feld muss ausgefüllt sein." },
+        { name: "url", message: "Die URL ist ungültig." },
+        { name: "uniqueKey", message: "Die Schlüssel müssen eindeutig sein." },
+        { name: "json", message: "Kein gültiges JSON-Objekt." },
       ],
       ...withFormlyMaterial(),
     }),
@@ -167,5 +178,4 @@ const appRoutes: Routes = routes;
     },
   ],
 })
-export class AppModule {
-}
+export class AppModule {}

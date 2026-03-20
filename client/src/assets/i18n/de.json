@@ -1,82 +1,156 @@
 {
+  "delete": "Löschen",
+  "edit": "Editieren",
+  "common": {
+    "add": "Hinzufügen",
+    "confirm": "Bestätigen",
+    "cancel": "Abbrechen",
+    "create": "Erstellen",
+    "edit": "Bearbeiten",
+    "update": "Aktualisieren",
+    "duplicate": "Duplizieren",
     "delete": "Löschen",
-    "edit": "Editieren",
-    "pageTitle": {
-      "default": "InGrid Harvester",
-      "dashboard": "Übersicht",
-      "config": {
-        "general": "Allgemeine Einstellungen",
-        "mapping": "Mapping (Datenformate)",
-        "import-export": "Import/Export"
-      },
-      "harvester": "Harvester",
-      "indices": "Indizes",
-      "log": "Log",
-      "login": "Login"
-    },
-    "menu": {
-      "application": "INGRID",
-      "default": "InGrid Harvester",
-      "dashboard": "Übersicht",
-      "config": "Konfiguration",
-      "harvester": "Harvester",
-      "indices": "Indizes",
-      "log": "Log",
-      "login": "Login",
-      "logout": "Abmelden"
-    },
-    "dashboard": {
-      "welcome": "Guten Tag! Willkommen zurück.",
-      "application": "INGRID",
-      "newDocument": "Neuer Datensatz",
-      "importDocument": "Datensatz importieren",
-      "mostRecent": "Zuletzt bearbeitet im Katalog",
-      "mostRecentPublished": "Zuletzt veröffentlicht im Katalog",
-      "oldestExpired": "Älteste abgelaufene Metadaten",
-      "form": "Daten",
-      "formSingular": "Datensatz"
-    },
-    "harvester": {
-      "importAll": "Alle importieren",
-      "add": "Neu hinzufügen",
-      "showDetail": "Detail anzeigen",
-      "import": "Import starten",
-      "importIncrement": "Import starten (inkrementell)",
-      "edit": "Bearbeiten",
-      "copy": "Duplizieren",
-      "delete": "Entfernen",
-      "schedule": "Planen",
-      "history": "Historie",
-      "log": "Error-Log",
-      "more": "Mehr"
-    },
+    "more": "Mehr",
+    "loading": "Wird geladen..."
+  },
+  "pageTitle": {
+    "default": "InGrid Harvester",
+    "dashboard": "Übersicht",
     "config": {
-      "catalogs": "Kataloge",
-      "config": "Konfiguration",
-      "mapping": "Mapping",
-      "harvester": "Harvester",
-      "import": "import",
-      "export": "export"
+      "general": "Allgemeine Einstellungen",
+      "mapping": "Mapping (Datenformate)",
+      "import-export": "Import/Export"
     },
-    "indices": {
-      "more": "Mehr",
-      "previousHit": "Vorheriger Treffer",
-      "nextHit": "Nächster Treffer"
-    },
-    "form": {
-      "validationMessages": {
-        "required": "Dieses Feld muss ausgefüllt sein",
-        "createOneEntry": "Bitte erstellen Sie mindestens einen Eintrag",
-        "email": "Dieses Feld muss eine gültige E-Mail Adresse sein",
-        "emailInRepeat": "Dieses Feld muss eine gültige E-Mail Adresse sein",
-        "lowercase": "Dieses Feld darf keine Großbuchstaben enthalten",
-        "url": "Verwenden Sie bitte eine gültige URL",
-        "matDatepickerMin": "Das Datum liegt weiter zurück als erlaubt",
-        "matDatepickerMax": "Das Datum ist größer als erlaubt",
-        "min": "Der Wert darf nicht kleiner sein als {{value}}",
-        "max": "Der Wert darf nicht größer sein als {{value}}",
-        "commitWithEnter": "Der Inhalt muss noch mit der Eingabetaste bestätigt werden",
-        "JSON_SCHEMA": "Es trat ein Fehler bei der JSON-Schema Validierung auf"
+    "harvester": "Harvester",
+    "indices": "Indizes",
+    "log": "Log",
+    "login": "Login"
+  },
+  "menu": {
+    "application": "INGRID",
+    "default": "InGrid Harvester",
+    "dashboard": "Übersicht",
+    "config": "Konfiguration",
+    "harvester": "Harvester",
+    "datasources": "Datenquellen",
+    "catalogs": "Kataloge",
+    "indices": "Indizes",
+    "log": "Log",
+    "login": "Login",
+    "logout": "Abmelden"
+  },
+  "dashboard": {
+    "welcome": "Guten Tag! Willkommen zurück.",
+    "application": "INGRID",
+    "newDocument": "Neuer Datensatz",
+    "importDocument": "Datensatz importieren",
+    "mostRecent": "Zuletzt bearbeitet im Katalog",
+    "mostRecentPublished": "Zuletzt veröffentlicht im Katalog",
+    "oldestExpired": "Älteste abgelaufene Metadaten",
+    "form": "Daten",
+    "formSingular": "Datensatz"
+  },
+  "harvester": {
+    "importAll": "Alle importieren",
+    "add": "Hinzufügen",
+    "addDatasource": "Neue Datenquelle anlegen",
+    "editDatasource": "Datenquelle bearbeiten",
+    "showDetail": "Detail anzeigen",
+    "import": "Import starten",
+    "importIncrement": "Import starten (inkrementell)",
+    "importStarted": "Import gestartet.",
+    "allImportStarted": "Import aller Datenquellen gestartet.",
+    "importing": "Import läuft...",
+    "lostConnection": "Verbindung zum Backend verloren.",
+    "recoverConnection": "Verbindung zum Backend hergestellt.",
+    "documents": "Dokumente",
+    "errors": "Fehler",
+    "warnings": "Warnungen",
+    "lastImport": "Letzte Ausführung",
+    "durationImport": "Dauer der Ausführung",
+    "nextImport": "Nächste Ausführung",
+    "edit": "Bearbeiten",
+    "duplicate": "Duplizieren",
+    "delete": "Entfernen",
+    "deleteConfirmation": "Wollen Sie diese Datenquelle wirklich löschen?",
+    "schedule": "Planen",
+    "history": "Historie",
+    "noHistory": "Keine Historie vorhanden.",
+    "log": "Error-Log",
+    "noLogs": "Keine Log-Dateien vorhanden.",
+    "more": "Mehr",
+    "status": {
+      "success": {
+        "icon": "Success",
+        "title": "In Ordnung",
+        "tooltip": "Keine Fehler beim letzten Import"
+      },
+      "disable": {
+        "icon": "warning",
+        "title": "Deaktiviert",
+        "tooltip": "Datenquelle deaktiviert"
+      },
+      "cron": {
+        "icon": "schedule",
+        "title": "Scheduled",
+        "tooltip": "Auto-Import geplant",
+        "tooltipWithDate": "Auto-Import um {{date}} geplant"
+      },
+      "importing": {
+        "icon": "Harvester",
+        "title": "Wird importiert",
+        "tooltip": "Datensätze werden gerade importiert"
+      },
+      "error": {
+        "icon": "error",
+        "title": "Fehler",
+        "tooltip": "{{num}} Fehler beim letzten Import"
       }
     }
+  },
+  "catalogs": {
+    "addCatalog": "Neunen Katalog hinzufügen",
+    "editCatalog": "Katalog bearbeiten",
+    "deleteConfirmation": "Wollen Sie diesen Katalog wirklich löschen?",
+    "formLabel": {
+      "outputSchema": "Output-Schema",
+      "version": "Version",
+      "alias": "Alias",
+      "index": "Index",
+      "catalog": "Katalog",
+      "description": "Beschreibung",
+      "title": "Titel",
+      "user": "Benutzername",
+      "password": "Passwort"
+    }
+  },
+  "config": {
+    "catalogs": "Kataloge",
+    "config": "Konfiguration",
+    "mapping": "Mapping",
+    "harvester": "Harvester",
+    "import": "import",
+    "export": "export"
+  },
+  "indices": {
+    "more": "Mehr",
+    "previousHit": "Vorheriger Treffer",
+    "nextHit": "Nächster Treffer"
+  },
+  "form": {
+    "validationMessages": {
+      "required": "Dieses Feld muss ausgefüllt sein",
+      "createOneEntry": "Bitte erstellen Sie mindestens einen Eintrag",
+      "email": "Dieses Feld muss eine gültige E-Mail Adresse sein",
+      "emailInRepeat": "Dieses Feld muss eine gültige E-Mail Adresse sein",
+      "lowercase": "Dieses Feld darf keine Großbuchstaben enthalten",
+      "url": "Verwenden Sie bitte eine gültige URL",
+      "matDatepickerMin": "Das Datum liegt weiter zurück als erlaubt",
+      "matDatepickerMax": "Das Datum ist größer als erlaubt",
+      "min": "Der Wert darf nicht kleiner sein als {{value}}",
+      "max": "Der Wert darf nicht größer sein als {{value}}",
+      "commitWithEnter": "Der Inhalt muss noch mit der Eingabetaste bestätigt werden",
+      "JSON_SCHEMA": "Es trat ein Fehler bei der JSON-Schema Validierung auf"
+    }
   }
+}

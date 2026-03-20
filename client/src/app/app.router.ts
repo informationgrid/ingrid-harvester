@@ -21,71 +21,103 @@
  * ==================================================
  */
 
-import { ActivatedRouteSnapshot, DetachedRouteHandle, Route, RouteReuseStrategy, RouterModule, Routes } from "@angular/router";
-import {LoginComponent} from './security/login.component';
+import {
+  ActivatedRouteSnapshot,
+  DetachedRouteHandle,
+  Route,
+  RouteReuseStrategy,
+  RouterModule,
+  Routes
+} from "@angular/router";
+import { LoginComponent } from "./security/login.component";
 import {authGuard} from './security/auth.guard';
 
-  export const routes: Routes = [
+export const routes: Routes = [
     {
-        path: 'dashboard',
-        canActivate: [authGuard],
-        loadChildren: () => import('./monitoring/monitoring.module').then(mod => mod.MonitoringModule),
-        data: {
-            icon: "Uebersicht",
-            partOfMenu: true,
-            roles: ['admin', 'editor', 'viewer']
-        },
+      path: "dashboard",
+      canActivate: [authGuard],
+      loadChildren: () =>
+        import("./monitoring/monitoring.module").then(
+          (mod) => mod.MonitoringModule,
+        ),
+      data: {
+        icon: "Uebersicht",
+        partOfMenu: true,
+        roles: ['admin', 'editor', 'viewer']
+      },
     },
     {
-        path: 'harvester',
-        canActivate: [authGuard],
-        loadChildren: () => import('./harvester/harvester.module').then(mod => mod.HarvesterModule),
-        data: {
-            icon: "Harvester",
-            partOfMenu: true,
-            roles: ['admin', 'editor', "viewer"]
-        },
+      path: "datasources",
+      canActivate: [authGuard],
+      loadChildren: () =>
+        import("./datasources/datasources.module").then(
+          (mod) => mod.DatasourcesModule,
+        ),
+      data: {
+        icon: "Harvester",
+        partOfMenu: true,
+        roles: ['admin', 'editor', 'viewer']
+      },
     },
     {
-        path: 'config',
-        canActivate: [authGuard],
-        loadChildren: () => import('./config/config.module').then(mod => mod.ConfigModule),
-        data: {
-            icon: "Configuration",
-            partOfMenu: true,
-            roles: ['admin', 'editor']
-        },
+      path: "catalogs",
+      canActivate: [authGuard],
+      loadChildren: () =>
+        import("./catalogs/catalogs.module").then(
+          (mod) => mod.CatalogsModule,
+        ),
+      data: {
+        icon: "catalogs",
+        partOfMenu: true,
+        roles: ['admin', 'editor']
+      },
     },
     {
-        path: 'indices',
-        canActivate: [authGuard],
-        loadChildren: () => import('./indices/indices.module').then(mod => mod.IndicesModule),
-        data: {
-            icon: "Indices",
-            partOfMenu: true,
-            roles: ['admin']
-        },
+      path: "config",
+      canActivate: [authGuard],
+      loadChildren: () =>
+        import("./config/config.module").then((mod) => mod.ConfigModule),
+      data: {
+        icon: "Configuration",
+        partOfMenu: true,
+        roles: ['admin', 'editor']
+      },
     },
     {
-        path: 'log',
-        canActivate: [authGuard],
-        loadChildren: () => import('./log/log.module').then(mod => mod.LogModule),
-        data: {
-            icon: "Logging",
-            partOfMenu: true,
-            roles: ['admin', 'editor']
-        },
+      path: "indices",
+      canActivate: [authGuard],
+      loadChildren: () =>
+        import("./indices/indices.module").then((mod) => mod.IndicesModule),
+      data: {
+        icon: "Indices",
+        partOfMenu: true,
+        roles: ['admin']
+      },
     },
     {
-        path: 'login', component: LoginComponent,
-        data: {
-          icon: "Logging",
-          partOfMenu: false
-        },
+      path: "log",
+      canActivate: [authGuard],
+      loadChildren: () =>
+        import("./log/log.module").then((mod) => mod.LogModule),
+      data: {
+        icon: "logging",
+        partOfMenu: true,
+        roles: ['admin', 'editor']
+      },
     },
     {
-        path: '', redirectTo: '/dashboard', pathMatch: 'full'
-    }
+      path: "login",
+      component: LoginComponent,
+      data: {
+        icon: "logging",
+        partOfMenu: false,
+      },
+    },
+    {
+      path: "",
+      redirectTo: "/dashboard",
+      pathMatch: "full",
+    },
   ];
 
   // export const appRoutingProviders: any[] = [];

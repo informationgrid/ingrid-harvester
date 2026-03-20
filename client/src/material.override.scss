@@ -311,6 +311,11 @@ button[matbutton="filled"]:hover {
   background-color: color.adjust(variables.$ige-secondary, $lightness: 8%);
 }
 
+.mat-mdc-menu-item {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
 // Accessibility requirement.
 input,
 textarea {
@@ -322,3 +327,4 @@ textarea {
 .mat-mdc-standard-chip.mdc-evolution-chip--disabled {
   opacity: 0.7 !important;
 }
+

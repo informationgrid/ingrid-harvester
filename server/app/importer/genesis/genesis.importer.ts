@@ -22,6 +22,7 @@
  */
 
 import log4js from 'log4js';
+import pLimit from 'p-limit';
 import type { RecordEntity } from '../../model/entity.js';
 import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
@@ -90,26 +91,30 @@ export class GenesisImporter extends Importer<GenesisSettings> {
 
         // Phase 1: collect all tables across all selections to establish total count
         const allTables: GenesisListEntry[] = [];
-        for (const selection of tableSelections) {
-            log.debug(`Fetching tables for selection "${selection}"`);
-            try {
-                await this.sleep(this.getSettings().typeConfig.requestDelayMs);
-                const tables = await this.fetchAllPages('/catalogue/tables', { selection, area: 'all', searchcriterion: 'Code', sortcriterion: 'Code', language: 'de' });
-                log.info(`Selection "${selection}": ${tables.length} tables`);
-                allTables.push(...tables);
-            } catch (e) {
-                log.warn(`Failed to fetch tables for selection "${selection}": ${e.message}`);
-                this.getSummary().appErrors.push(`Failed to fetch tables for "${selection}": ${e.message}`);
-            }
-        }
+        this.observer.next(ImportResult.message(`Fetching tables`));
+        const selectionLimit = pLimit(this.getSettings().maxConcurrent);
+        await Promise.allSettled(
+            tableSelections.map(selection => selectionLimit(async () => {
+                log.debug(`Fetching tables for selection "${selection}"`);
+                try {
+                    const tables = await this.fetchAllPages('/catalogue/tables', { selection, area: 'all', searchcriterion: 'Code', sortcriterion: 'Code', language: 'de' });
+                    log.info(`Selection "${selection}": ${tables.length} tables`);
+                    allTables.push(...tables);
+                    this.observer.next(ImportResult.message(`Selection "${selection}": ${tables.length} tables found`));
+                } catch (e) {
+                    log.warn(`Failed to fetch tables for selection "${selection}": ${e.message}`);
+                    this.getSummary().appErrors.push(`Failed to fetch tables for "${selection}": ${e.message}`);
+                }
+            }))
+        );
         this.totalRecords = allTables.length;
         log.info(`Total tables to harvest: ${this.totalRecords}`);
 
         // Phase 2: process metadata for each collected table
-        for (const table of allTables) {
-            await this.sleep(this.getSettings().typeConfig.requestDelayMs);
-            await this.processObject(table, 'table', harvestTime);
-        }
+        const limit = pLimit(this.getSettings().maxConcurrent);
+        await Promise.allSettled(
+            allTables.map(table => limit(() => this.processObject(table, harvestTime)))
+        );
 
         await this.database.sendBulkData();
         return this.numIndexDocs;
@@ -157,7 +162,6 @@ export class GenesisImporter extends Importer<GenesisSettings> {
      */
     private async processObject(
         entry: GenesisListEntry,
-        type: 'table' | 'cube',
         harvestTime: Date,
     ): Promise<void> {
         this.getSummary().numDocs++;
@@ -168,18 +172,18 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         }
 
         // Step C: Fetch metadata
-        const endpoint = type === 'table' ? '/metadata/table' : '/metadata/cube';
+        const endpoint = '/metadata/table';
         let apiResponse: any;
         try {
             apiResponse = await this.doApiRequest(endpoint, { name: entry.Code, language: 'de' });
         } catch (e) {
-            log.error(`Failed to fetch metadata for ${type} ${entry.Code}: ${e.message}`);
-            this.getSummary().appErrors.push(`Failed to fetch metadata for ${type} ${entry.Code}: ${e.message}`);
+            log.error(`Failed to fetch metadata for ${endpoint} ${entry.Code}: ${e.message}`);
+            this.getSummary().appErrors.push(`Failed to fetch metadata for ${endpoint} ${entry.Code}: ${e.message}`);
             return;
         }
 
         if (!apiResponse?.Object) {
-            log.warn(`No metadata object returned for ${type} ${entry.Code}`);
+            log.warn(`No metadata object returned for ${endpoint} ${entry.Code}`);
             return;
         }
 
@@ -188,8 +192,10 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
         let doc: IndexDocument;
+        let dcatapdeDoc: string;
         try {
             doc = await documentFactory.createIndexDocument();
+            dcatapdeDoc = documentFactory.createDcatapdeDocument();
         } catch (e) {
             log.error(`Error creating index document for ${entry.Code}`, e);
             this.getSummary().appErrors.push(`Error creating document for ${entry.Code}: ${e.message}`);
@@ -198,10 +204,11 @@ export class GenesisImporter extends Importer<GenesisSettings> {
 
         if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
             const entity: RecordEntity = {
-                identifier: entry.Code,
+                identifier: mapper.getCode(),
                 source: this.getSettings().sourceURL,
                 collection_id: this.collectionId,
                 dataset: doc,
+                dataset_dcatapde: dcatapdeDoc,
                 original_document: mapper.getHarvestedData(),
             };
 
@@ -274,7 +281,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
     protected buildAuthHeaders(): Record<string, string> {
         const { apiToken, username, password } = this.getSettings().typeConfig;
         if (apiToken) {
-            return { username: 'Gast', password: apiToken };
+            return { username: apiToken };
         }
         return {
             username: username ?? 'Gast',

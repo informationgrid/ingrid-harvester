@@ -71,9 +71,7 @@ export class ApiCtrl {
             // run higher priority harvesters first (sort descending)
             activeConfigs.sort((harvesterA, harvesterB) => harvesterB.priority - harvesterA.priority);
 
-            for (var i = 0; i < activeConfigs.length; i++) {
-                await this.importSocketService.runImport(activeConfigs[i].id);
-            }
+            await Promise.all(activeConfigs.map(config => this.importSocketService.runImport(config.id)));
 
             this.importAllProcessIsRunning = false;
         }

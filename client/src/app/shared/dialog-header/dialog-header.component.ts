@@ -27,7 +27,7 @@ import { MatIcon } from "@angular/material/icon";
 import { MatIconButton } from "@angular/material/button";
 
 @Component({
-  selector: "app-dialog-header",
+  selector: "ingrid-dialog-header",
   templateUrl: "./dialog-header.component.html",
   imports: [MatDialogTitle, MatIcon, MatIconButton, MatDialogClose],
   standalone: true,

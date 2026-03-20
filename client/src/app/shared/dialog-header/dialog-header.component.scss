@@ -21,6 +21,8 @@
  * ==================================================
  */
 
+@use "../../../variables" as vars;
+
 .header {
   width: 100%;
   display: flex;
@@ -28,6 +30,7 @@
   gap: 12px;
   padding: 12px 18px;
   align-items: center;
+  background-color: vars.$ige-secondary;
 
   &:before {
     display: none;

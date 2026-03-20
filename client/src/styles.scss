@@ -309,6 +309,10 @@
   row-gap: 16px;
 }
 
+.row-gap-24 {
+  row-gap: 24px;
+}
+
 // -----------> fxLayoutAlign
 // <div fxLayoutAlign="justify-between center"> → <div class="space-between items-center">
 // Justify content.
@@ -544,6 +548,11 @@
   width: 100%;
 }
 
+.size-full {
+  width: 100%;
+  height: 100%;
+}
+
 .overflow-y-auto {
   overflow-y: auto;
 }
@@ -653,6 +662,11 @@ mat-card-header {
   margin-bottom: 16px;
 }
 
+.\!-mx-4 {
+  margin-left: -16px !important;
+  margin-right: -16px !important;
+}
+
 .my-8 {
   margin-top: 32px;
   margin-bottom: 32px;
@@ -664,6 +678,10 @@ mat-card-header {
 
 .ml-auto {
   margin-left: auto;
+}
+
+.pt-4 {
+  padding-top: 16px;
 }
 
 .padding {
@@ -1261,12 +1279,16 @@ ige-one-column-wrapper formly-group {
   align-content: flex-end;
 }
 
-.self-end {
-  align-self: flex-end;
+.self-start {
+  align-self: flex-start;
 }
 
-.align-self-center {
+.self-center {
   align-self: center;
+}
+
+.self-end {
+  align-self: flex-end;
 }
 
 .self-stretch {
@@ -1993,6 +2015,13 @@ table.big-font {
   }
 }
 
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
 .line-clamp-2 {
   overflow: hidden;
   display: -webkit-box;
@@ -2099,6 +2128,14 @@ mat-form-field .context-help-button {
   font-size: 14px;
 }
 
+.text-md {
+  font-size: 16px;
+}
+
+.text-lg {
+  font-size: 18px;
+}
+
 .text-xl {
   font-size: 20px;
 }
@@ -2121,6 +2158,18 @@ mat-form-field .context-help-button {
 
 .\!font-monospace {
   font-family: monospace !important;
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.isolate {
+  isolation: isolate;
 }
 
 .sticky-action-bar {
@@ -2147,6 +2196,19 @@ mat-form-field .context-help-button {
 
   .mdc-text-field {
     padding: 0 4px;
+  }
+}
+
+
+@media (max-width: 1000px) {
+  .grid-cols-md-2 {
+    grid-template-columns: repeat(2, 1fr)
+  }
+}
+
+@media (max-width: 700px) {
+  .grid-cols-sm-1 {
+    grid-template-columns: repeat(1, 1fr)
   }
 }
 

@@ -43,68 +43,9 @@ import type { XPathElementSelect } from '../../utils/xpath.utils.js';
 import { Mapper } from '../mapper.js';
 import type { DcatapdeSettings } from './dcatapde.settings.js';
 import type {ToDcatapdeMapper} from "../to.dcatapde.mapper.js";
+import { DCAT_LANGUAGE_URL } from './dcatapde.utils.js';
 
 export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasticMapper<IndexDocument>, ToDcatapdeMapper {
-
-    static DCAT_CATEGORY_URL = 'http://publications.europa.eu/resource/authority/data-theme/';
-    static DCAT_LANGUAGE_URL = 'http://publications.europa.eu/resource/authority/language/';
-    static DCAT_AVAILABILTY_URL = 'http://publications.europa.eu/resource/authority/planned-availability/';
-
-    static DCAT_THEMES = ['AGRI', 'ECON', 'EDUC','ENER','ENVI','GOVE','HEAL','INTR','JUST','REGI','SOCI','TECH','TRAN'];
-
-    // TODO: refactor into a mapping file
-    static dcatThemeUriFromKeyword(keyword: string): string {
-        // Check falsy values first
-        if (!keyword) return null;
-
-        let code: string = null;
-        keyword = keyword.trim();
-
-        switch (keyword) {
-            case 'Landwirtschaft, Fischerei, Forstwirtschaft und Nahrungsmittel':
-                code = 'AGRI';
-                break;
-            case 'Wirtschaft und Finanzen':
-                code = 'ECON';
-                break;
-            case 'Bildung, Kultur und Sport':
-                code = 'EDUC';
-                break;
-            case 'Energie':
-                code = 'ENER';
-                break;
-            case 'Umwelt':
-                code = 'ENVI';
-                break;
-            case 'Regierung und öffentlicher Sektor':
-                code = 'GOVE';
-                break;
-            case 'Gesundheit':
-                code = 'HEAL';
-                break;
-            case 'Internationale Themen':
-                code = 'INTR';
-                break;
-            case 'Justiz, Rechtssystem und öffentliche Sicherheit':
-                code = 'JUST';
-                break;
-            case 'Regionen und Städte':
-                code = 'REGI';
-                break;
-            case 'Bevölkerung und Gesellschaft':
-                code = 'SOCI';
-                break;
-            case 'Wissenschaft und Technologie':
-                code = 'TECH';
-                break;
-            case 'Verkehr':
-                code = 'TRAN';
-                break;
-            default:
-                return null;
-        }
-        return code;// ? GenericMapper.DCAT_CATEGORY_URL + code : null;
-    }
 
     static select = <XPathElementSelect>xpath.useNamespaces({
         'foaf': namespaces.FOAF,
@@ -261,8 +202,8 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
                 if (languageNodes) {
                     for (let j = 0; j < languageNodes.length; j++) {
                         let language = languageNodes[j].getAttribute('rdf:resource');
-                        if(language && language.startsWith(DcatapdeMapper.DCAT_LANGUAGE_URL)) {
-                            language = language.substring(DcatapdeMapper.DCAT_LANGUAGE_URL.length);
+                        if(language && language.startsWith(DCAT_LANGUAGE_URL)) {
+                            language = language.substring(DCAT_LANGUAGE_URL.length);
                         }
                         if(language && language.trim().length > 0) {
                             languages.push(language.trim())

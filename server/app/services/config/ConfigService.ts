@@ -288,6 +288,10 @@ export class ConfigService {
 
     }
 
+    static getThreadpoolSize(): number {
+        return parseInt(process.env.THREADPOOL_SIZE ?? '5', 10);
+    }
+
     static getGeneralSettings(): GeneralSettings {
 
         const configExists = fs.existsSync(this.GENERAL_CONFIG_FILE);

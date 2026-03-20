@@ -48,6 +48,27 @@ export type GenesisTypeConfig = {
      * /catalogue/tables. One request is made per entry.
      */
     tableSelections: string[];
+    /**
+     * Publisher/contact metadata for DCAT-AP.de output.
+     * Maps to dct:publisher, dcat:contactPoint, vcard:fn, foaf:name, vcard:hasEmail.
+     */
+    publisher?: {
+        /** Organization name */
+        name: string;
+        /** Contact email URI, e.g. "mailto:info@destatis.de" */
+        email?: string;
+    };
+    /** EU Data Theme URI — maps to dcat:theme */
+    theme?: string;
+    /** License URI — maps to dct:license, e.g. "http://dcat-ap.de/def/licenses/dl-by-de/2.0" */
+    licenseUrl?: string;
+    /** Contributor registry URI — maps to dcatde:contributorID */
+    contributorId?: string;
+    /**
+     * URL template for CSV downloads. Use `{code}` as placeholder for the table code.
+     * e.g. "https://www-genesis.destatis.de/genesis-old/downloads/00/tables/{code}_00.csv"
+     */
+    downloadUrlTemplate?: string;
 };
 
 export type GenesisSettings = {

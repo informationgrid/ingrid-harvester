@@ -1,0 +1,98 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+@if (isLoaded()) {
+  <ingrid-overview-template
+    *transloco="let t"
+    [title]="t('menu.datasources')"
+    contextHelpId="about_harvester"
+  >
+    <ng-container header-actions *transloco="let t; read: 'harvester'">
+      <button
+        matButton="filled"
+        color="primary"
+        (click)="onAdd()"
+        aria-label="{{ t('add') }}"
+        id="btnAddHarvester"
+      >
+        <mat-icon svgIcon="Add" />
+        {{ t("add") }}
+      </button>
+
+      @if (hasDatasources()) {
+        <button
+          matIconButton
+          color="primary"
+          matTooltip="{{ t('more') }}"
+          aria-label="{{ t('more') }}"
+          [matMenuTriggerFor]="optionMenu"
+        >
+          <mat-icon svgIcon="Options" />
+        </button>
+        <mat-menu data-test="action-menu" #optionMenu>
+          <button mat-menu-item (click)="onImportAll()" data-test="import-all">
+            <mat-icon svgIcon="Harvester" />
+            {{ t("importAll") }}
+          </button>
+        </mat-menu>
+      }
+    </ng-container>
+
+    <ng-container content>
+      <mat-accordion>
+        @for (group of groupedDatasources() | keyvalue; track group.key) {
+          <h3>
+            <mat-icon svgIcon="Harvester" aria-hidden="true" />
+            <span>{{ group.key }}</span>
+          </h3>
+
+          @for (datasource of group.value; track datasource.id) {
+            <harvester-datasource-entry
+              [datasource]="datasource"
+              [importLog]="
+                importLogs() ? importLogs()[datasource.id] : undefined
+              "
+              (onImport)="onImport(datasource.id)"
+              (onIncrementImport)="onImport(datasource.id, true)"
+              (onEdit)="onEdit(datasource)"
+              (onDelete)="onDelete(datasource)"
+              (onDuplicate)="onDuplicate(datasource)"
+              (onSchedule)="onSchedule(datasource)"
+              (onHistory)="onShowHistory(datasource)"
+              (onOpenErrorLog)="onShowLogs(datasource.id)"
+              (onOpenWarningLog)="onShowLogs(datasource.id)"
+            />
+          }
+        }
+      </mat-accordion>
+    </ng-container>
+  </ingrid-overview-template>
+} @else {
+  <div
+    class="size-full flex-col items-center justify-center gap-24"
+    *transloco="let t"
+  >
+    <ingrid-circular-progress-indicator [size]="50" [strokeWidth]="5" />
+    <div>{{ t("common.loading") }}</div>
+  </div>
+}

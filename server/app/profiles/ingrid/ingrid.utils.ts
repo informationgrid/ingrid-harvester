@@ -38,6 +38,11 @@ export function generateWfsUuid(source_base: string, typename: string, obj_id: s
     return uuidv5(uniqueStr, UUID_NAMESPACE);
 }
 
-function ensureNoEndSlash(s: string): string {
+export function generateUuid(source_url: string, strings: string[]) {
+    let uniqueStr = [ensureNoEndSlash(source_url), ...strings].join('/');
+    return uuidv5(uniqueStr, UUID_NAMESPACE);
+}
+
+export function ensureNoEndSlash(s: string): string {
     return s.replace(/\/$/g, '');
 }
