@@ -54,7 +54,7 @@ export class DiplanungCswImporter extends CswImporter {
                 let updatedDistributions = await this.updateDistributions(doc.distributions, doc.plan_type as PluPlanType);
                 if (updatedDistributions?.length > 0) {
                     updateDoc.distributions = updatedDistributions;
-                    updateDoc.extras = MiscUtils.merge(MiscUtils.structuredClone(doc.extras), updateDoc.extras);
+                    updateDoc.extras = MiscUtils.merge(structuredClone(doc.extras), updateDoc.extras);
                     updateQuality(updateDoc, 'WMS layer names have been added to a distribution', null, true);
                     docIsUpdated = true;
                 }
@@ -62,7 +62,7 @@ export class DiplanungCswImporter extends CswImporter {
                 // // purposely simplistic heuristic: is centroid inside bbox for Germany?
                 // if (!GeoJsonUtils.within(doc.centroid, GeoJsonUtils.BBOX_GERMANY)) {
                 //     // copy and/or create relevant metadata structure
-                //     updateDoc.extras = MiscUtils.merge(MiscUtils.structuredClone(doc.extras), updateDoc.extras);
+                //     updateDoc.extras = MiscUtils.merge(structuredClone(doc.extras), updateDoc.extras);
                 //     // if not, try to swap lat and lon
                 //     let flippedBbox = GeoJsonUtils.flip<Geometry>(doc.bounding_box);
                 //     if (GeoJsonUtils.within(flippedBbox, GeoJsonUtils.BBOX_GERMANY)) {

@@ -185,14 +185,9 @@ export class CkanImporter extends Importer<CkanSettings> {
             this.updateRequestMethod(offset);
 
         }
-        await this.finalizeHarvestingHandling(promises);
         await this.database.sendBulkData();
 
         return total;
-    }
-
-    protected async finalizeHarvestingHandling(promises: any[]){
-        // For Profile specific Handling
     }
 
     private async requestDocuments() {
@@ -208,15 +203,6 @@ export class CkanImporter extends Importer<CkanSettings> {
         }
 
         return results;
-    }
-
-    private postIndexActions() {
-        // if (this.settings.dryRun) {
-        //     log.debug('Skipping finalisation of index for dry run.');
-        // }
-        // else {
-        //     return this.elastic.finishIndex();
-        // }
     }
 
     private sendFinishMessage(observer: Observer<ImportLogMessage>, message?: string) {
@@ -239,7 +225,7 @@ export class CkanImporter extends Importer<CkanSettings> {
         return filteredResult;
     }
 
-    markSkipped(skippedIDs: any[]) {
+    private markSkipped(skippedIDs: any[]) {
         skippedIDs.forEach(id => this.getSummary().skippedDocs.push(id));
     }
 

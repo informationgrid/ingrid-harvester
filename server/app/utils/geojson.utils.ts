@@ -37,25 +37,24 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import * as xpath from 'xpath';
-import * as MiscUtils from './misc.utils.js';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import booleanWithin from '@turf/boolean-within';
 import buffer from '@turf/buffer';
 import centroid from '@turf/centroid';
 import combine from '@turf/combine';
+import * as xpath from 'xpath';
 // import flatten from '@turf/flatten';
+import turfFlatten from "@turf/flatten";
 import turfFlip from '@turf/flip';
+import type { AllGeoJSON } from '@turf/helpers';
 import rewind from '@turf/rewind';
 import simplify from '@turf/simplify';
-import { firstElementChild } from './xpath.utils.js';
-import type { AllGeoJSON } from '@turf/helpers';
-import type { Feature, FeatureCollection, Geometry, GeometryCollection, MultiPoint, MultiLineString, MultiPolygon, Point } from 'geojson';
-import turfFlatten from "@turf/flatten";
 import deepEqual from "deep-equal";
+import type { Feature, FeatureCollection, Geometry, GeometryCollection, MultiLineString, MultiPoint, MultiPolygon, Point } from 'geojson';
 import proj4 from "proj4";
 import proj4jsMappings from '../../proj4.json' with { type: 'json' };
+import { firstElementChild } from './xpath.utils.js';
 
 
 // prepare proj4js
@@ -250,7 +249,7 @@ export function projectFeatureCollection(featureCollection: FeatureCollection, s
         return feature;
     };
 
-    let projectedFeatureCollection = MiscUtils.structuredClone(featureCollection);
+    let projectedFeatureCollection = structuredClone(featureCollection);
     projectedFeatureCollection.features = featureCollection.features.map(feature => projectFeature(feature));
     return projectedFeatureCollection;
 }

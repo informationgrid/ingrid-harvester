@@ -23,7 +23,7 @@
 
 import { DOMParser } from '@xmldom/xmldom';
 import { imageSize } from 'image-size';
-import { cloneDeep, get, merge as lodashMerge, set, trim } from 'lodash-es';
+import { get, merge as lodashMerge, set, trim } from 'lodash-es';
 import log4js from 'log4js';
 import type { Dimensions } from '../model/dimensions.js';
 import type { Distribution } from '../model/distribution.js';
@@ -74,13 +74,6 @@ export function filterPaths<T extends object>(obj: T, paths: Paths<T>[]): T {
     const clone = structuredClone(obj);
     paths.forEach(path => set(clone, path, ''));
     return clone;
-}
-
-export function structuredClone(obj: object) {
-    // TODO from nodejs 17 on, we can use the inbuilt function
-    // return structuredClone(obj);
-    // TODO until then, use an lodash equivalent
-    return cloneDeep(obj);
 }
 
 /**

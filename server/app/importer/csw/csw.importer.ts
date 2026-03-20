@@ -317,7 +317,7 @@ export class CswImporter extends Importer<CswSettings> {
             switch (serviceType) {
                 case 'WFS':
                     for (let identifier of service.operates_on) {
-                        let distribution: Distribution = MiscUtils.structuredClone(service);
+                        let distribution: Distribution = structuredClone(service);
                         if (resolveOgcDistributions) {
                             if (!this.wfsFeatureTypeMap.has(service.accessURL)) {
                                 this.wfsFeatureTypeMap.set(service.accessURL, await ServiceUtils.getWfsFeatureTypeMap(service.accessURL));
@@ -376,7 +376,7 @@ export class CswImporter extends Importer<CswSettings> {
                     break;
                 case 'WMS':
                     for (let identifier of service.operates_on) {
-                        let distribution: Distribution = MiscUtils.structuredClone(service);
+                        let distribution: Distribution = structuredClone(service);
                         if (resolveOgcDistributions) {
                             if (!this.wmsLayerNameMap.has(service.accessURL)) {
                                 this.wmsLayerNameMap.set(service.accessURL, await ServiceUtils.getWmsLayerNameMap(service.accessURL));
