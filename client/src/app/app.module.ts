@@ -57,7 +57,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { AuthenticationService } from "./security/authentication.service";
-import {KeycloakService} from './security/keycloak.service';
+import { KeycloakService } from "./security/keycloak.service";
 import { SideMenuComponent } from "./side-menu/side-menu.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslocoRootModule } from "./transloco-root.module";
@@ -71,26 +71,31 @@ import { FormlyChipTypeComponent } from "./formly/types/formly-chip-type/formly-
 import { FormlyAutocompleteTypeComponent } from "./formly/types/formly-autocomplete-type/formly-autocomplete-type.component";
 import { FormlyRepeatFormTypeComponent } from "./formly/types/formly-repeat-form-type/formly-repeat-form-type.component";
 import { FormlySubSectionWrapperComponent } from "./formly/wrappers/formly-sub-section-wrapper/formly-sub-section-wrapper.component";
-import { JsonValidator, UniqueKeyValidator, UrlValidator } from "./formly/validators";
+import {
+  JsonValidator,
+  UniqueKeyValidator,
+  UrlValidator,
+} from "./formly/validators";
 import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
 
 registerLocaleData(localeDe);
 
 export function ConfigLoader(
   configService: ConfigService,
-  authService: AuthenticationService
+  authService: AuthenticationService,
 ) {
   return () => {
     //return configService.load('assets/' + environment.configFile)
     // .subscribe();
-    return new Promise(resolve => {
-      configService.load('assets/' + environment.configFile)
+    return new Promise((resolve) => {
+      configService
+        .load("assets/" + environment.configFile)
         .subscribe(async () => {
           authService.checkAuthentication().subscribe(() => {
             resolve(true);
           });
         });
-    })
+    });
   };
 }
 
@@ -129,15 +134,21 @@ const appRoutes: Routes = routes;
       useValue: "de",
     },
     provideAppInitializer(() => {
-      return ConfigLoader(inject(ConfigService), inject(AuthenticationService))();
+      return ConfigLoader(
+        inject(ConfigService),
+        inject(AuthenticationService),
+      )();
     }),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: UnauthorizedInterceptor,
-      multi: true
+      multi: true,
     },
-    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline', floatLabel: 'auto'}},
-    {provide: MAT_CARD_CONFIG, useValue: {appearance: 'raised'}},
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { appearance: "outline", floatLabel: "auto" },
+    },
+    { provide: MAT_CARD_CONFIG, useValue: { appearance: "raised" } },
     KeycloakService,
     provideHttpClient(withInterceptorsFromDi()),
     provideFormlyCore({

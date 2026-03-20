@@ -27,117 +27,110 @@ import {
   Route,
   RouteReuseStrategy,
   RouterModule,
-  Routes
+  Routes,
 } from "@angular/router";
 import { LoginComponent } from "./security/login.component";
-import {authGuard} from './security/auth.guard';
+import { authGuard } from "./security/auth.guard";
 
 export const routes: Routes = [
-    {
-      path: "dashboard",
-      canActivate: [authGuard],
-      loadChildren: () =>
-        import("./monitoring/monitoring.module").then(
-          (mod) => mod.MonitoringModule,
-        ),
-      data: {
-        icon: "Uebersicht",
-        partOfMenu: true,
-        roles: ['admin', 'editor', 'viewer']
-      },
+  {
+    path: "dashboard",
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import("./monitoring/monitoring.module").then(
+        (mod) => mod.MonitoringModule,
+      ),
+    data: {
+      icon: "Uebersicht",
+      partOfMenu: true,
+      roles: ["admin", "editor", "viewer"],
     },
-    {
-      path: "datasources",
-      canActivate: [authGuard],
-      loadChildren: () =>
-        import("./datasources/datasources.module").then(
-          (mod) => mod.DatasourcesModule,
-        ),
-      data: {
-        icon: "Harvester",
-        partOfMenu: true,
-        roles: ['admin', 'editor', 'viewer']
-      },
+  },
+  {
+    path: "datasources",
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import("./datasources/datasources.module").then(
+        (mod) => mod.DatasourcesModule,
+      ),
+    data: {
+      icon: "Harvester",
+      partOfMenu: true,
+      roles: ["admin", "editor", "viewer"],
     },
-    {
-      path: "catalogs",
-      canActivate: [authGuard],
-      loadChildren: () =>
-        import("./catalogs/catalogs.module").then(
-          (mod) => mod.CatalogsModule,
-        ),
-      data: {
-        icon: "catalogs",
-        partOfMenu: true,
-        roles: ['admin', 'editor']
-      },
+  },
+  {
+    path: "catalogs",
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import("./catalogs/catalogs.module").then((mod) => mod.CatalogsModule),
+    data: {
+      icon: "catalogs",
+      partOfMenu: true,
+      roles: ["admin", "editor"],
     },
-    {
-      path: "config",
-      canActivate: [authGuard],
-      loadChildren: () =>
-        import("./config/config.module").then((mod) => mod.ConfigModule),
-      data: {
-        icon: "Configuration",
-        partOfMenu: true,
-        roles: ['admin', 'editor']
-      },
+  },
+  {
+    path: "config",
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import("./config/config.module").then((mod) => mod.ConfigModule),
+    data: {
+      icon: "Configuration",
+      partOfMenu: true,
+      roles: ["admin", "editor"],
     },
-    {
-      path: "indices",
-      canActivate: [authGuard],
-      loadChildren: () =>
-        import("./indices/indices.module").then((mod) => mod.IndicesModule),
-      data: {
-        icon: "Indices",
-        partOfMenu: true,
-        roles: ['admin']
-      },
+  },
+  {
+    path: "indices",
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import("./indices/indices.module").then((mod) => mod.IndicesModule),
+    data: {
+      icon: "Indices",
+      partOfMenu: true,
+      roles: ["admin"],
     },
-    {
-      path: "log",
-      canActivate: [authGuard],
-      loadChildren: () =>
-        import("./log/log.module").then((mod) => mod.LogModule),
-      data: {
-        icon: "logging",
-        partOfMenu: true,
-        roles: ['admin', 'editor']
-      },
+  },
+  {
+    path: "log",
+    canActivate: [authGuard],
+    loadChildren: () => import("./log/log.module").then((mod) => mod.LogModule),
+    data: {
+      icon: "logging",
+      partOfMenu: true,
+      roles: ["admin", "editor"],
     },
-    {
-      path: "login",
-      component: LoginComponent,
-      data: {
-        icon: "logging",
-        partOfMenu: false,
-      },
+  },
+  {
+    path: "login",
+    component: LoginComponent,
+    data: {
+      icon: "logging",
+      partOfMenu: false,
     },
-    {
-      path: "",
-      redirectTo: "/dashboard",
-      pathMatch: "full",
-    },
-  ];
+  },
+  {
+    path: "",
+    redirectTo: "/dashboard",
+    pathMatch: "full",
+  },
+];
 
-  // export const appRoutingProviders: any[] = [];
+// export const appRoutingProviders: any[] = [];
 
-  export const routing = RouterModule.forRoot(routes, {
-    // preloadingStrategy: PreloadAllModules,
-    // relativeLinkResolution: "legacy",
-    enableTracing: false,
-  });
+export const routing = RouterModule.forRoot(routes, {
+  // preloadingStrategy: PreloadAllModules,
+  // relativeLinkResolution: "legacy",
+  enableTracing: false,
+});
 
+export class CustomReuseStrategy implements RouteReuseStrategy {
+  routesToCache: string[] = [];
 
+  private handlers: Map<Route, DetachedRouteHandle> = new Map();
 
-
-  export class CustomReuseStrategy implements RouteReuseStrategy {
-    routesToCache: string[] = [
-    ];
-
-    private handlers: Map<Route, DetachedRouteHandle> = new Map();
-
-    constructor() {
+  constructor() {
     //   configService.$userInfo
     //     .pipe(filter((user) => user !== null))
     //     .subscribe((user) => {
@@ -146,37 +139,37 @@ export const routes: Routes = [
     //         (route) => "/" + catalogId + route,
     //       );
     //     });
-    }
-
-    public shouldDetach(_route: ActivatedRouteSnapshot): boolean {
-      return this.routesToCache.some(
-        // @ts-ignore
-        (definiton) => _route._routerState.url.indexOf(definiton) === 0,
-      );
-    }
-
-    public store(
-      route: ActivatedRouteSnapshot,
-      handle: DetachedRouteHandle,
-    ): void {
-      if (!route.routeConfig) return;
-      this.handlers.set(route.routeConfig, handle);
-    }
-
-    public shouldAttach(route: ActivatedRouteSnapshot): boolean {
-      return !!route.routeConfig && !!this.handlers.get(route.routeConfig);
-    }
-
-    public retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle | null {
-      if (!route.routeConfig || !this.handlers.has(route.routeConfig))
-        return null;
-      return this.handlers.get(route.routeConfig)!;
-    }
-
-    public shouldReuseRoute(
-      future: ActivatedRouteSnapshot,
-      curr: ActivatedRouteSnapshot,
-    ): boolean {
-      return future.routeConfig === curr.routeConfig;
-    }
   }
+
+  public shouldDetach(_route: ActivatedRouteSnapshot): boolean {
+    return this.routesToCache.some(
+      // @ts-ignore
+      (definiton) => _route._routerState.url.indexOf(definiton) === 0,
+    );
+  }
+
+  public store(
+    route: ActivatedRouteSnapshot,
+    handle: DetachedRouteHandle,
+  ): void {
+    if (!route.routeConfig) return;
+    this.handlers.set(route.routeConfig, handle);
+  }
+
+  public shouldAttach(route: ActivatedRouteSnapshot): boolean {
+    return !!route.routeConfig && !!this.handlers.get(route.routeConfig);
+  }
+
+  public retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle | null {
+    if (!route.routeConfig || !this.handlers.has(route.routeConfig))
+      return null;
+    return this.handlers.get(route.routeConfig)!;
+  }
+
+  public shouldReuseRoute(
+    future: ActivatedRouteSnapshot,
+    curr: ActivatedRouteSnapshot,
+  ): boolean {
+    return future.routeConfig === curr.routeConfig;
+  }
+}
