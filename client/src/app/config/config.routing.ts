@@ -35,11 +35,6 @@ export const routing = RouterModule.forChild([
     component: ConfigComponent,
     children: [
       {
-        path: "",
-        pathMatch: "full",
-        component: ConfigComponent,
-      },
-      {
         path: "general",
         canActivate: [authGuard],
         component: ConfigGeneralComponent,

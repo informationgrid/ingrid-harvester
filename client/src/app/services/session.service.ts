@@ -47,6 +47,9 @@ export class SessionService {
 
   getTabsFromRoute(activeRoute: ActivatedRouteSnapshot): Tab[] {
     console.log("sessions routes: " + activeRoute)
+    if (!activeRoute?.routeConfig?.children) {
+      return [];
+    }
     return activeRoute.routeConfig.children
       .filter((item) => item.path)
       .filter((item) => {
@@ -63,6 +66,9 @@ export class SessionService {
   }
 
   getTabPaths(activeRoute: ActivatedRouteSnapshot) {
+    if (!activeRoute?.routeConfig?.children) {
+      return [];
+    }
     return activeRoute.routeConfig.children
       .filter((item) => item.path)
       .map((item) => item.path);
