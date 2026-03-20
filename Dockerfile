@@ -9,7 +9,7 @@ LABEL stage=build
 # install build dependencies
 WORKDIR /opt/ingrid/harvester/server
 COPY ./server/package*.json ./
-RUN npm ci
+RUN npm ci --omit=optional
 
 # copy src files
 WORKDIR /opt/ingrid/harvester
