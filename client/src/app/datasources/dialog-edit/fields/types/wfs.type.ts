@@ -1,4 +1,5 @@
 import { FormlyFieldConfig } from "@ngx-formly/core";
+import { JsonKeysValidator } from "../../../../formly/validators";
 
 export abstract class WfsType {
   static fields(): FormlyFieldConfig[] {
@@ -71,110 +72,151 @@ export abstract class WfsType {
                   },
                 ],
               },
-            ],
-          },
-          {
-            expressions: {
-              hide: (field) => {
-                return field.options?.formState?.profile != "diplanung";
-              },
-            },
-            wrappers: ["section"],
-            props: {
-              label: "Weitere WFS Einstellungen",
-            },
-            fieldGroup: [
               {
                 fieldGroupClassName: "ingrid-row",
                 fieldGroup: [
                   {
-                    key: "pluPlanState",
+                    key: "wfsProfile",
                     type: "select",
                     className: "ingrid-col-10 ingrid-col-md-3",
+                    defaultValue: "default",
                     props: {
-                      label: "Planstatus",
+                      label: "WFS Profil",
                       required: true,
                       options: [
-                        { label: "unbekannt", value: "unknown" },
-                        { label: "eingestellt", value: "discontinued" },
-                        {
-                          label: "ganz aufgehoben",
-                          value: "completelyReversed",
-                        },
-                        { label: "festgestellt", value: "fixed" },
-                        { label: "in Aufstellung", value: "inPreparation" },
-                        { label: "simuliert", value: "planned" },
+                        { label: "default", value: "default" },
+                        { label: "pegelonline", value: "pegelonline" },
+                        { label: "zdm", value: "zdm" },
                       ],
                     },
                   },
                   {
-                    key: "contactCswUrl",
+                    key: "featureTitleAttribute",
                     type: "input",
                     className: "ingrid-col-10 ingrid-col-md-auto",
                     props: {
-                      label: "CSW-URL zu Kontakt-Metadaten",
+                      label: "Titel-Attribut (inkl. Namespace-Prefix)",
                     },
                   },
                 ],
               },
               {
-                fieldGroupClassName: "ingrid-row",
+                expressions: {
+                  hide: (field) => {
+                    return field.options?.formState?.profile != "diplanung";
+                  },
+                },
                 fieldGroup: [
                   {
-                    key: "contactMetadata",
-                    type: "textarea",
-                    className: "ingrid-col-10 ingrid-col-md-auto",
-                    props: {
-                      label:
-                        "Kontakt-Metadaten Fallback (JSON-Objekt `Contact`)",
-                      rows: 6,
-                    },
+                    fieldGroupClassName: "ingrid-row",
+                    fieldGroup: [
+                      {
+                        key: "pluPlanState",
+                        type: "select",
+                        className: "ingrid-col-10 ingrid-col-md-3",
+                        props: {
+                          label: "Planstatus",
+                          required: true,
+                          options: [
+                            { label: "unbekannt", value: "unknown" },
+                            { label: "eingestellt", value: "discontinued" },
+                            {
+                              label: "ganz aufgehoben",
+                              value: "completelyReversed",
+                            },
+                            { label: "festgestellt", value: "fixed" },
+                            { label: "in Aufstellung", value: "inPreparation" },
+                            { label: "simuliert", value: "planned" },
+                          ],
+                        },
+                      },
+                      {
+                        key: "contactCswUrl",
+                        type: "input",
+                        className: "ingrid-col-10 ingrid-col-md-auto",
+                        props: {
+                          label: "CSW-URL zu Kontakt-Metadaten",
+                        },
+                      },
+                    ],
                   },
                   {
-                    key: "maintainer",
-                    type: "textarea",
-                    className: "ingrid-col-10 ingrid-col-md-auto",
-                    props: {
-                      label: "Maintainer Fallback (JSON-Objekt `Agent`)",
-                      rows: 6,
-                    },
+                    fieldGroup: [
+                      {
+                        key: "contactMetadata",
+                        type: "textarea",
+                        props: {
+                          label:
+                            "Kontakt-Metadaten Fallback (JSON-Objekt `Contact`)",
+                          rows: 6,
+                        },
+                        validators: {
+                          validation: ["json"],
+                          jsonKeys: {
+                            expression: (control) =>
+                              JsonKeysValidator(control, { keys: ["fn"] }),
+                            message: "Das Attribut 'fn' ist erforderlich.",
+                          },
+                        },
+                      },
+                      {
+                        key: "maintainer",
+                        type: "textarea",
+                        props: {
+                          label: "Maintainer Fallback (JSON-Objekt `Agent`)",
+                          rows: 6,
+                        },
+                        validators: {
+                          validation: ["json"],
+                          jsonKeys: {
+                            expression: (control) =>
+                              JsonKeysValidator(control, {
+                                keys: ["name", "organization"],
+                                atLeastOne: true,
+                              }),
+                            message:
+                              "Bitte geben Sie mindestens ein 'name' oder 'organization' an.",
+                          },
+                        },
+                      },
+                    ],
                   },
                 ],
               },
-            ],
-          },
-          {
-            expressions: {
-              hide: (field) => {
-                return field.options?.formState?.profile != "zdm";
-              },
-            },
-            wrappers: ["section"],
-            props: {
-              label: "Weitere WFS Einstellungen",
-            },
-            fieldGroup: [
               {
-                fieldGroupClassName: "ingrid-row",
+                expressions: {
+                  hide: (field) => {
+                    const profile = field.options?.formState?.profile;
+                    return profile != "ingrid" && profile != "zdm";
+                  },
+                },
                 fieldGroup: [
                   {
-                    key: "featureLimit",
-                    type: "input",
-                    className: "ingrid-col-10 ingrid-col-md-auto",
-                    props: {
-                      label: "Feature-Limit",
-                    },
-                  },
-                  {
-                    key: "maxConcurrent",
-                    type: "input",
-                    className: "ingrid-col-10 ingrid-col-md-auto",
-                    props: {
-                      label: "Anzahl paralleler Abfragen",
-                      type: "number",
-                      required: true,
-                      min: 1,
-                    },
+                    fieldGroupClassName: "ingrid-row",
+                    fieldGroup: [
+                      {
+                        key: "featureLimit",
+                        type: "input",
+                        className: "ingrid-col-10 ingrid-col-md-auto",
+                        props: {
+                          label: "Feature-Limit",
+                          type: "number",
+                          required: true,
+                          min: 1,
+                        },
+                      },
+                      {
+                        key: "maxConcurrent",
+                        type: "input",
+                        className: "ingrid-col-10 ingrid-col-md-auto",
+                        props: {
+                          label: "Anzahl paralleler Abfragen",
+                          type: "number",
+                          required: true,
+                          min: 1,
+                        },
+                      },
+                    ],
                   },
                 ],
               },

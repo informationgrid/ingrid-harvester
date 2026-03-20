@@ -116,6 +116,14 @@ export class DialogEditComponent {
       );
     }
 
+    // Convert JSON object to string for the input field.
+    if (values.contactMetadata) {
+      values.contactMetadata = JSON.stringify(values.contactMetadata, null, 2);
+    }
+    if (values.maintainer) {
+      values.maintainer = JSON.stringify(values.maintainer, null, 2);
+    }
+
     return values;
   }
 
@@ -131,6 +139,14 @@ export class DialogEditComponent {
         },
         {} as Record<string, string>,
       );
+    }
+
+    // Reverse string to JSON object.
+    if (values.contactMetadata) {
+      values.contactMetadata = JSON.parse(values.contactMetadata);
+    }
+    if (values.maintainer) {
+      values.maintainer = JSON.parse(values.maintainer);
     }
 
     return values;

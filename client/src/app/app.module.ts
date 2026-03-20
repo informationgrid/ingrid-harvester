@@ -59,7 +59,6 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { AuthenticationService } from "./security/authentication.service";
 import { SideMenuComponent } from "./side-menu/side-menu.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { TranslocoService } from "@ngneat/transloco";
 import { TranslocoRootModule } from "./transloco-root.module";
 import { MainHeaderComponent } from "./main-header/main-header.component";
 import { routes } from "./app.router";
@@ -71,18 +70,18 @@ import { FormlyChipTypeComponent } from "./formly/types/formly-chip-type/formly-
 import { FormlyAutocompleteTypeComponent } from "./formly/types/formly-autocomplete-type/formly-autocomplete-type.component";
 import { FormlyRepeatFormTypeComponent } from "./formly/types/formly-repeat-form-type/formly-repeat-form-type.component";
 import { FormlySubSectionWrapperComponent } from "./formly/wrappers/formly-sub-section-wrapper/formly-sub-section-wrapper.component";
-import { UniqueKeyValidator, UrlValidator } from "./formly/validators";
+import {
+  JsonValidator,
+  UniqueKeyValidator,
+  UrlValidator,
+} from "./formly/validators";
 import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
 
 registerLocaleData(localeDe);
 
-export function ConfigLoader(
-  configService: ConfigService,
-  translocoService: TranslocoService,
-) {
+export function ConfigLoader(configService: ConfigService) {
   return () => {
     return configService.load("assets/" + environment.configFile);
-    // .subscribe();
   };
 }
 
@@ -121,10 +120,7 @@ const appRoutes: Routes = routes;
       useValue: "de",
     },
     provideAppInitializer(() => {
-      const initializerFn = ConfigLoader(
-        inject(ConfigService),
-        inject(TranslocoService),
-      );
+      const initializerFn = ConfigLoader(inject(ConfigService));
       return initializerFn();
     }),
     {
@@ -153,15 +149,17 @@ const appRoutes: Routes = routes;
       validators: [
         { name: "url", validation: UrlValidator },
         { name: "uniqueKey", validation: UniqueKeyValidator },
+        { name: "json", validation: JsonValidator },
       ],
       validationMessages: [
         { name: "required", message: "Dieses Feld muss ausgefüllt sein." },
         { name: "url", message: "Die URL ist ungültig." },
         { name: "uniqueKey", message: "Die Schlüssel müssen eindeutig sein." },
+        { name: "json", message: "Kein gültiges JSON-Objekt." },
       ],
       ...withFormlyMaterial(),
     }),
-        {
+    {
       provide: MAT_DIALOG_DEFAULT_OPTIONS,
       useValue: {
         hasBackdrop: true,
