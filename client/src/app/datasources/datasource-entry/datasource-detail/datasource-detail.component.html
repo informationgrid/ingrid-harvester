@@ -29,18 +29,21 @@
     icon="available"
     [title]="t('lastImport')"
     [value]="lastExecution()"
+    data-test="last-execution"
   />
 
   <ingrid-detail-item
     icon="timer"
     [title]="t('durationImport')"
     [value]="executionDuration()"
+    data-test="duration"
   />
 
   <ingrid-detail-item
     icon="upcoming"
     [title]="t('nextImport')"
     [value]="nextExecution()"
+    data-test="next-execution"
   />
 
   <ingrid-detail-item
