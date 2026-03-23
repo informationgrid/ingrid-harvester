@@ -356,10 +356,11 @@ export class ConfigService {
     static getFilteredCatalogSettings(id?: number): CatalogSettings | CatalogSettings[] {
         const catalogSettings = id == null ? this.getCatalogSettings() : [this.getCatalogSettings(id)];
         const filteredCatalogsSettings = catalogSettings.map(catalog => {
+            // Remove sensitive information from catalog settings.
             if (catalog['settings']?.['password']) {
-                return MiscUtils.filterPaths(catalog as ElasticsearchCatalogSettings, [
-                    "settings.password"
-                ]);
+                const filtered = { ...catalog } as ElasticsearchCatalogSettings;
+                delete filtered.settings.password;
+                return filtered;
             }
             return catalog;
         });
