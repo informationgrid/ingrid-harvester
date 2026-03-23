@@ -64,8 +64,8 @@
     "image-size": "^2.0.2",
     "js-sha512": "^0.8.0",
     "JSONStream": "^1.3.5",
-    "lodash-es": "^4.17.21",
     "keycloak-connect": "^26.1.1",
+    "lodash-es": "^4.17.21",
     "log4js": "^6.9.1",
     "marked": "^15.0.8",
     "memorystore": "^1.6.7",
@@ -129,5 +129,9 @@
       "./config-general.json",
       "./def_licenses.rdf"
     ]
+  },
+  "optionalDependencies": {
+    "@oxc-resolver/binding-linux-x64-gnu": "^11.19.1",
+    "@swc/core-linux-x64-gnu": "^1.15.21"
   }
 }
