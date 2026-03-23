@@ -30,7 +30,7 @@ import {
   MatDialogContent,
   MatDialogRef,
 } from "@angular/material/dialog";
-import { FormlyFieldConfig, FormlyForm, FormlyModule } from "@ngx-formly/core";
+import { FormlyFieldConfig, FormlyForm } from "@ngx-formly/core";
 import { DialogHeaderComponent } from "../dialog-header/dialog-header.component";
 import { MatButton } from "@angular/material/button";
 import { TranslocoDirective } from "@ngneat/transloco";
@@ -50,26 +50,19 @@ import { TranslocoDirective } from "@ngneat/transloco";
   ],
 })
 export class FormDialogComponent implements OnDestroy {
-  title: string;
-  icon: string;
-  submitText: string;
-
   form = new UntypedFormGroup({});
-  fields: FormlyFieldConfig[];
-  model: any;
+  formFields: FormlyFieldConfig[];
+  formModel: any;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: any,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<FormDialogComponent>,
   ) {
-    this.title = this.data?.title ?? "Dialog";
-    this.icon = this.data?.icon ?? "Add";
-    this.submitText = this.data?.submitText;
-    this.fields = this.data?.fields ?? [];
+    this.formFields = this.data?.fields ?? [];
 
     // Mirror the initial values to the model
     // to prevent modifying the original object.
-    this.model = this.data?.initialValues
+    this.formModel = this.data?.initialValues
       ? JSON.parse(JSON.stringify(this.data.initialValues))
       : {};
   }
@@ -83,6 +76,6 @@ export class FormDialogComponent implements OnDestroy {
       this.form.markAllAsTouched();
       return;
     }
-    this.dialogRef.close(this.model);
+    this.dialogRef.close(this.formModel);
   }
 }

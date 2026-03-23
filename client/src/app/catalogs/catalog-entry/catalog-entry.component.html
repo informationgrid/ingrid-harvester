@@ -42,22 +42,31 @@
         <mat-icon svgIcon="Options" />
       </button>
       <mat-menu data-test="action-menu" #actionMenu>
-        <button mat-menu-item (click)="onEdit.emit()" data-test="edit">
-          <mat-icon svgIcon="cursor-edit" />
-          {{ t("common.edit") }}
-        </button>
-        <button
-          mat-menu-item
-          (click)="onDuplicate.emit()"
-          data-test="duplicate"
-        >
-          <mat-icon svgIcon="Copy" />
-          {{ t("common.duplicate") }}
-        </button>
-        <button mat-menu-item (click)="onDelete.emit()" data-test="delete">
-          <mat-icon color="warn" svgIcon="delete" />
-          {{ t("common.delete") }}
-        </button>
+        @if (canEdit()) {
+          <button mat-menu-item (click)="onEdit.emit()" data-test="edit">
+            <mat-icon svgIcon="cursor-edit" />
+            {{ t("common.edit") }}
+          </button>
+
+          <button
+            mat-menu-item
+            (click)="onDuplicate.emit()"
+            data-test="duplicate"
+          >
+            <mat-icon svgIcon="Copy" />
+            {{ t("common.duplicate") }}
+          </button>
+
+          <button mat-menu-item (click)="onDelete.emit()" data-test="delete">
+            <mat-icon color="warn" svgIcon="delete" />
+            {{ t("common.delete") }}
+          </button>
+        } @else {
+          <button mat-menu-item (click)="onView.emit()" data-test="view">
+            <mat-icon svgIcon="visibility_fill" />
+            {{ t("common.view") }}
+          </button>
+        }
       </mat-menu>
     </div>
   </ng-container>

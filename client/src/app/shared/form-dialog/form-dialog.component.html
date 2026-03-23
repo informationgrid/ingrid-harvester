@@ -21,11 +21,19 @@
     ==================================================
 -->
 
-<ingrid-dialog-header [title]="title" [svgIcon]="icon"></ingrid-dialog-header>
+<ingrid-dialog-header
+  [title]="data.title"
+  [svgIcon]="data.icon ?? 'Add'"
+></ingrid-dialog-header>
 
 <mat-dialog-content>
-  @if (fields) {
-    <formly-form [form]="form" [fields]="fields" [model]="model"></formly-form>
+  @if (formFields) {
+    <formly-form
+      [form]="form"
+      [fields]="formFields"
+      [model]="formModel"
+      [attr.inert]="data.readonly"
+    ></formly-form>
   }
 </mat-dialog-content>
 
@@ -36,12 +44,14 @@
 
   <div class="flex-1"></div>
 
-  <button
-    matButton="filled"
-    color="primary"
-    (click)="submit()"
-    data-test="dlg-update"
-  >
-    {{ submitText ?? t("confirm") }}
-  </button>
+  @if (data.submitText) {
+    <button
+      matButton="filled"
+      color="primary"
+      (click)="submit()"
+      data-test="dlg-update"
+    >
+      {{ data.submitText }}
+    </button>
+  }
 </mat-dialog-actions>

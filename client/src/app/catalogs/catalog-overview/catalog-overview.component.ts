@@ -32,6 +32,7 @@ import ElasticsearchType from "../form-fields/elasticsearch.type";
 import PiveauType from "../form-fields/piveau.type";
 import { ConfirmDialogComponent } from "../../shared/confirm-dialog/confirm-dialog.component";
 import { Catalog } from "@shared/catalog";
+import { AuthenticationService } from "../../security/authentication.service";
 
 @Component({
   selector: "harvester-catalog-overview",
@@ -55,6 +56,10 @@ export class CatalogOverviewComponent {
     );
   });
 
+  isAdmin = computed(() => this.authService.hasRole("admin"));
+  isEditor = computed(() => this.authService.hasRole("editor"));
+  canEdit = computed(() => this.isAdmin() || this.isEditor());
+
   // Fields for adding and editing a catalog.
   catalogFields = [
     ...SharedFields.general(),
@@ -67,7 +72,20 @@ export class CatalogOverviewComponent {
     private dialog: MatDialog,
     private transloco: TranslocoService,
     private catalogService: CatalogService,
+    private authService: AuthenticationService,
   ) {}
+
+  onView(initialValues?: Catalog) {
+    this.dialog.open(FormDialogComponent, {
+      data: {
+        title: this.transloco.translate("catalogs.viewCatalog"),
+        icon: "visibility_fill",
+        fields: this.catalogFields,
+        initialValues: initialValues,
+        readonly: true,
+      },
+    });
+  }
 
   onEdit(
     initialValues?: Catalog,

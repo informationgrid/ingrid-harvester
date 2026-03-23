@@ -77,7 +77,6 @@
     "completeImport": "Komplettes Harvesting",
     "incrementalImport": "Inkrementelles Harvesting",
     "deleteConfirmation": "Wollen Sie diese Datenquelle wirklich löschen?",
-
     "noHistory": "Keine Historie vorhanden.",
     "log": "Error-Log",
     "noLogs": "Keine Log-Dateien vorhanden.",
@@ -114,6 +113,7 @@
   "catalogs": {
     "addCatalog": "Neunen Katalog hinzufügen",
     "editCatalog": "Katalog bearbeiten",
+    "viewCatalog": "Katalog ansehen",
     "deleteConfirmation": "Wollen Sie diesen Katalog wirklich löschen?",
     "formLabel": {
       "outputSchema": "Output-Schema",

@@ -53,7 +53,9 @@ export class CatalogEntryComponent {
   @ViewChild("actionMenuBtn") menuBtn!: MatMenuTrigger;
 
   catalog = input.required<Catalog>();
+  canEdit = input(false);
 
+  onView = output<void>();
   onEdit = output<void>();
   onDuplicate = output<void>();
   onDelete = output<void>();

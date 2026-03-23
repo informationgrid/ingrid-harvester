@@ -67,7 +67,7 @@ export const routes: Routes = [
     data: {
       icon: "catalogs",
       partOfMenu: true,
-      roles: ["admin", "editor"],
+      roles: ["admin", "editor", "viewer"],
     },
   },
   {
