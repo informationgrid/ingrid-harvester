@@ -66,6 +66,7 @@ export default abstract class ElasticsearchType {
                 type: "input",
                 props: {
                   label: transloco.transform("catalogs.formLabel.password"),
+                  description: transloco.transform("catalogs.formHint.password")
                 },
               },
             ],

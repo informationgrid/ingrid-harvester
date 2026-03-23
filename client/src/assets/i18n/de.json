@@ -122,6 +122,9 @@
       "title": "Titel",
       "user": "Benutzername",
       "password": "Passwort"
+    },
+    "formHint": {
+      "password": "Es wird nur eingestellt, wenn eingegeben."
     }
   },
   "config": {

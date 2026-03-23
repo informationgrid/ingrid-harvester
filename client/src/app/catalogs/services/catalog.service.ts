@@ -23,14 +23,16 @@ export class CatalogService {
   }
 
   createCatalog(catalog: Catalog) {
-    this.api.createCatalog(catalog).subscribe({
+    const modified = this.modifyCatalogForBackend(catalog);
+    this.api.createCatalog(modified).subscribe({
       next: (res) => this.updateCatalogs(res),
       error: (err) => console.error("Error creating catalog:", err),
     });
   }
 
   updateCatalog(catalog: Catalog) {
-    this.api.updateCatalog(catalog).subscribe({
+    const modified = this.modifyCatalogForBackend(catalog);
+    this.api.updateCatalog(modified).subscribe({
       next: (res) => this.updateCatalogs(res),
       error: (err) => console.error("Error updating catalog:", err),
     });
@@ -47,6 +49,21 @@ export class CatalogService {
       },
       error: (err) => console.error("Error deleting catalog:", err),
     });
+  }
+
+  // It returns a new catalog object.
+  private modifyCatalogForBackend(catalog: Catalog) {
+    const modified = { ...catalog };
+
+    // Only submit sensitive data if given.
+    if (
+      catalog.settings?.password != undefined &&
+      catalog.settings?.password?.trim() == ""
+    ) {
+      delete modified.settings.password;
+    }
+
+    return modified;
   }
 
   private updateCatalogs(catalog: Catalog) {
