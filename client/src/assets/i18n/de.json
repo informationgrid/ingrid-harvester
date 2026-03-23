@@ -1,6 +1,6 @@
 {
-  "delete": "Löschen",
-  "edit": "Editieren",
+  "project": "InGrid",
+  "application": "Harvester",
   "common": {
     "add": "Hinzufügen",
     "confirm": "Bestätigen",
@@ -15,33 +15,20 @@
     "history": "Historie",
     "more": "Mehr",
     "actionMenu": "Aktionsmenü",
-    "loading": "Wird geladen..."
+    "loading": "Wird geladen...",
+    "expand": "Vergrößern",
+    "collapse": "Verkleinern",
+    "logout": "Abmelden"
   },
   "pageTitle": {
     "default": "InGrid Harvester",
     "dashboard": "Übersicht",
-    "config": {
-      "general": "Allgemeine Einstellungen",
-      "mapping": "Mapping (Datenformate)",
-      "import-export": "Import/Export"
-    },
-    "harvester": "Harvester",
-    "indices": "Indizes",
-    "log": "Log",
-    "login": "Login"
-  },
-  "menu": {
-    "application": "INGRID",
-    "default": "InGrid Harvester",
-    "dashboard": "Übersicht",
     "config": "Konfiguration",
-    "harvester": "Harvester",
     "datasources": "Datenquellen",
     "catalogs": "Kataloge",
     "indices": "Indizes",
     "log": "Log",
-    "login": "Login",
-    "logout": "Abmelden"
+    "login": "Login"
   },
   "dashboard": {
     "welcome": "Guten Tag! Willkommen zurück.",
@@ -124,7 +111,8 @@
       "description": "Beschreibung",
       "title": "Titel",
       "user": "Benutzername",
-      "password": "Passwort"
+      "password": "Passwort",
+      "apiKey": "API-Schlüssel"
     },
     "formHint": {
       "password": "Es wird nur eingestellt, wenn eingegeben."

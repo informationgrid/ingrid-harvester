@@ -21,55 +21,52 @@
     ==================================================
 -->
 
-<!-- *transloco="let t; read: 'menu'" -->
 <mat-nav-list
-    [class.collapsed]="!menuIsExpanded"
-    *transloco="let t; read: 'menu'"
-    aria-label="Hauptmenü"
-    role="menu"
+  [class.collapsed]="!menuIsExpanded"
+  *transloco="let t"
+  aria-label="Hauptmenü"
+  role="menu"
 >
-@for (item of menuItems | async; track item) {
+  @for (item of menuItems | async; track item) {
     <a
-        mat-list-item
-        (click)="gotoPage(item.path)"
-        (keydown.enter)="gotoPage(item.path)"
-        [attr.data-cy]="item.path"
-        [matTooltip]="t(item.path)"
-        matTooltipPosition="right"
-        [matTooltipDisabled]="menuIsExpanded"
-        [attr.aria-label]="t(item.path)"
-        [activated]="currentRoute?.indexOf(item.path) === 0"
-        role="menuitem"
-        tabindex="0"
+      mat-list-item
+      tabindex="0"
+      role="menuitem"
+      [matTooltip]="t(item.title)"
+      matTooltipPosition="right"
+      [matTooltipDisabled]="menuIsExpanded"
+      [attr.aria-label]="t(item.title)"
+      [activated]="currentRoute?.indexOf(item.path) === 0"
+      (click)="goToPage(item.path)"
+      (keydown.enter)="goToPage(item.path)"
+      [attr.data-cy]="item.path"
     >
-        <mat-icon matListItemIcon [svgIcon]="item.data?.icon"></mat-icon>
-        <p matListItemTitle aria-hidden="true">{{ t(item.path) }}</p>
+      <mat-icon matListItemIcon [svgIcon]="item.data?.icon"></mat-icon>
+      <p matListItemTitle aria-hidden="true">{{ t(item.title) }}</p>
     </a>
-}
+  }
 
-<div class="flex-1"></div>
+  <div class="flex-1"></div>
 
-    <!-- @if (showDrawer | async) { -->
-        <a
-            mat-list-item
-            class="menu-toggle no-text-transform"
-            (click)="toggleSidebar()"
-            (keydown.enter)="toggleSidebar()"
-            matTooltipPosition="right"
-            data-cy="menu-scale"
-            [matTooltip]="menuIsExpanded ? 'Verkleinern' : 'Vergrößern'"
-            [matTooltipDisabled]="menuIsExpanded"
-            [attr.aria-label]="menuIsExpanded ? 'Verkleinern' : 'Vergrößern'"
-            role="menuitem"
-            tabindex="0"
-        >
-            @if (!menuIsExpanded) {
-                <mat-icon matListItemIcon svgIcon="Nav-auf"></mat-icon>
-            }
-            @if (menuIsExpanded) {
-                <mat-icon matListItemIcon svgIcon="Nav-zu"></mat-icon>
-            }
-            <p matListItemTitle aria-hidden="true">Verkleinern</p>
-        </a>
-    <!-- } -->
+  <a
+    mat-list-item
+    tabindex="0"
+    role="menuitem"
+    class="menu-toggle no-text-transform"
+    matTooltipPosition="right"
+    [matTooltip]="t(menuIsExpanded ? 'common.collapse' : 'common.expand')"
+    [matTooltipDisabled]="menuIsExpanded"
+    [attr.aria-label]="t(menuIsExpanded ? 'common.collapse' : 'common.expand')"
+    (click)="toggleSidebar()"
+    (keydown.enter)="toggleSidebar()"
+    data-cy="menu-scale"
+  >
+    @if (!menuIsExpanded) {
+      <mat-icon matListItemIcon svgIcon="Nav-auf"></mat-icon>
+    }
+    @if (menuIsExpanded) {
+      <mat-icon matListItemIcon svgIcon="Nav-zu"></mat-icon>
+    }
+    <p matListItemTitle aria-hidden="true">Verkleinern</p>
+  </a>
 </mat-nav-list>

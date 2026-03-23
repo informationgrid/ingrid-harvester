@@ -47,8 +47,6 @@ import { AuthenticationService } from "../security/authentication.service";
   standalone: false,
 })
 export class SideMenuComponent {
-  showDrawer: Observable<boolean>;
-
   menuItems: Observable<Route[]> = this.menuService.menu$.pipe(
     map((routes) =>
       routes.filter((route) => {
@@ -79,11 +77,6 @@ export class SideMenuComponent {
 
   ngOnInit() {
     this.router.events.subscribe((event) => this.handleCurrentRoute(event));
-
-    // // display the drawer if the user has at least one catalog assigned
-    // this.showDrawer = this.configService.$userInfo.pipe(
-    //   map((info) => info?.assignedCatalogs?.length > 0),
-    // );
   }
 
   private handleCurrentRoute(event: any) {
@@ -97,7 +90,7 @@ export class SideMenuComponent {
     this.menuIsExpanded = !this.menuIsExpanded;
   }
 
-  gotoPage(path: string) {
+  goToPage(path: string) {
     this.router.navigate(["/" + path]);
   }
 }

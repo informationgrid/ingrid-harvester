@@ -40,6 +40,7 @@ export const routes: Routes = [
       import("./monitoring/monitoring.module").then(
         (mod) => mod.MonitoringModule,
       ),
+    title: "pageTitle.dashboard",
     data: {
       icon: "Uebersicht",
       partOfMenu: true,
@@ -53,6 +54,7 @@ export const routes: Routes = [
       import("./datasources/datasources.module").then(
         (mod) => mod.DatasourcesModule,
       ),
+    title: "pageTitle.datasources",
     data: {
       icon: "Harvester",
       partOfMenu: true,
@@ -64,6 +66,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadChildren: () =>
       import("./catalogs/catalogs.module").then((mod) => mod.CatalogsModule),
+    title: "pageTitle.catalogs",
     data: {
       icon: "catalogs",
       partOfMenu: true,
@@ -75,6 +78,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadChildren: () =>
       import("./config/config.module").then((mod) => mod.ConfigModule),
+    title: "pageTitle.config",
     data: {
       icon: "Configuration",
       partOfMenu: true,
@@ -86,6 +90,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadChildren: () =>
       import("./indices/indices.module").then((mod) => mod.IndicesModule),
+    title: "pageTitle.indices",
     data: {
       icon: "Indices",
       partOfMenu: true,
@@ -96,6 +101,7 @@ export const routes: Routes = [
     path: "log",
     canActivate: [authGuard],
     loadChildren: () => import("./log/log.module").then((mod) => mod.LogModule),
+    title: "pageTitle.log",
     data: {
       icon: "logging",
       partOfMenu: true,
@@ -105,6 +111,7 @@ export const routes: Routes = [
   {
     path: "login",
     component: LoginComponent,
+    title: "pageTitle.login",
     data: {
       icon: "logging",
       partOfMenu: false,

@@ -22,7 +22,7 @@
  */
 
 import { BrowserModule } from "@angular/platform-browser";
-import { Router, RouterModule, Routes } from "@angular/router";
+import { RouterModule, Routes, TitleStrategy } from "@angular/router";
 import {
   inject,
   LOCALE_ID,
@@ -77,6 +77,7 @@ import {
   UrlValidator,
 } from "./formly/validators";
 import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
+import { PageTitleService } from "./services/page-title.service";
 
 registerLocaleData(localeDe);
 
@@ -186,6 +187,10 @@ const appRoutes: Routes = routes;
         autoFocus: "dialog",
         restoreFocus: true,
       },
+    },
+    {
+      provide: TitleStrategy,
+      useClass: PageTitleService,
     },
   ],
 })

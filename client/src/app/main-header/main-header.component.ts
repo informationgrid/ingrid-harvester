@@ -21,31 +21,37 @@
  * ==================================================
  */
 
-import { Component, EventEmitter, Output } from "@angular/core";
-import { NavigationEnd, Router } from "@angular/router";
+import { Component, output, signal } from "@angular/core";
+import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
+import { TranslocoService } from "@ngneat/transloco";
+import { filter, switchMap } from "rxjs";
 
 @Component({
-    selector: 'ige-main-header',
-    templateUrl: './main-header.component.html',
-    styleUrl: './main-header.component.scss',
-    standalone: false
+  selector: "ige-main-header",
+  templateUrl: "./main-header.component.html",
+  styleUrl: "./main-header.component.scss",
+  standalone: false,
 })
 export class MainHeaderComponent {
-  @Output() onLogout = new EventEmitter<void>();
-  @Output() onSideMenuToggle = new EventEmitter<void>();
+  onLogout = output<void>();
+  onSideMenuToggle = output<void>();
 
-  pageTitle: string;
+  pageTitle = signal<string>(undefined);
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
+    private transloco: TranslocoService,
   ) {}
 
   ngOnInit() {
-    this.router.events.subscribe((event: any) => {
-      if (event instanceof NavigationEnd) {
-        this.pageTitle = this.router.parseUrl(this.router.url).root.children
-          .primary?.segments[0]?.path;
-      }
-    });
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        switchMap(() => this.route.firstChild?.title),
+      )
+      .subscribe((title) => {
+        this.pageTitle.set(this.transloco.translate(title));
+      });
   }
 }
