@@ -6,7 +6,7 @@
     "startPosition": 1,
     "catalogId": "harvester-index",
     "catalogIds": [
-      "py-csw"
+      1
     ],
     "customCode": null,
     "defaultMcloudSubgroup": [],
@@ -61,7 +61,7 @@
     "startPosition": 1,
     "catalogId": "nokis",
     "catalogIds": [
-      "py-csw"
+      1
     ],
     "customCode": null,
     "defaultMcloudSubgroup": null,
