@@ -27,6 +27,7 @@ import type { Harvester } from '@shared/harvester.js';
 import type { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
 import * as fs from 'fs';
 import log4js from 'log4js';
+import { DefaultImporterSettings, type ImporterSettings } from "../../importer.settings.js";
 import { defaultCKANSettings } from '../../importer/ckan/ckan.settings.js';
 import { defaultCSWSettings } from '../../importer/csw/csw.settings.js';
 import { defaultDCATAPDESettings } from '../../importer/dcatapde/dcatapde.settings.js';
@@ -230,7 +231,7 @@ export class ConfigService {
             let configs: Harvester[] = JSON.parse(contents.toString());
             return configs
                 .map(config => {
-                    let defaultSettings = {};
+                    let defaultSettings: Partial<ImporterSettings> = DefaultImporterSettings;
                     switch (config.type) {
                         case 'CKAN': defaultSettings = defaultCKANSettings; break;
                         case 'CSW': defaultSettings = defaultCSWSettings; break;

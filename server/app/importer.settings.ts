@@ -43,7 +43,7 @@ export const DefaultImporterSettings: ImporterSettings = {
     rules: {
         containsDocumentsWithData: false
     },
-    isIncremental: false,
+    isIncrementalSupported: false,
     maxConcurrent: 1,
     skipUrlCheckOnHarvest: false,
     timeout: 60000,
@@ -77,7 +77,8 @@ export type ImporterSettings = {
     dryRun?: boolean,
     id?: number,
     // TODO ED:2022-10-04: the next entry needs to be transient, i.e. not saved into config file but (requested and) given with every run
-    isIncremental: boolean,
+    isIncremental?: boolean,
+    isIncrementalSupported: boolean,
     maxConcurrent: number,
     maxRecords?: number,
     proxy?: string,

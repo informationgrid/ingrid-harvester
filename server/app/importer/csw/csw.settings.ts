@@ -45,5 +45,6 @@ export const defaultCSWSettings: Partial<CswSettings> = {
     eitherKeywords: [],
     httpMethod: 'GET',
     resultType: 'results',
-    simplifyTolerance: 0
+    simplifyTolerance: 0,
+    isIncrementalSupported: true
 };
