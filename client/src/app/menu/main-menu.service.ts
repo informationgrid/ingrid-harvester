@@ -39,7 +39,10 @@ export class MainMenuService {
   get mainRoutes(): Route[] {
     return this._mainRoutes.filter(
       (item) =>
-        item.path !== "" && !item.data?.hideFromMenu && !item.data?.featureFlag,
+        item.path !== "" &&
+        item.path !== "**" &&
+        !item.data?.hideFromMenu &&
+        !item.data?.featureFlag,
     );
   }
 }

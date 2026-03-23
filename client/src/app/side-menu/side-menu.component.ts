@@ -50,7 +50,7 @@ export class SideMenuComponent {
   menuItems: Observable<Route[]> = this.menuService.menu$.pipe(
     map((routes) =>
       routes.filter((route) => {
-        if (route.data.partOfMenu !== true) {
+        if (!route.data || route.data.partOfMenu !== true) {
           return false;
         }
         const requiredRoles = route.data["roles"] as string[];
