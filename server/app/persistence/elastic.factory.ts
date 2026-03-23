@@ -30,12 +30,12 @@ import type { ElasticsearchUtils } from './elastic.utils.js';
 export class ElasticsearchFactory {
 
     public static getElasticUtils(config: ElasticsearchConfiguration, summary: Summary): ElasticsearchUtils {
-        switch (config.version) {
+        switch (String(config.version)) {
             case '8':
                 return new ElasticsearchUtils8(config, summary);
             case '9':
                 return new ElasticsearchUtils9(config, summary);
-            default: 
+            default:
                 throw new Error(`Only ES versions 8 and 9 are supported; [${config.version}] was specified`);
         }
     }
