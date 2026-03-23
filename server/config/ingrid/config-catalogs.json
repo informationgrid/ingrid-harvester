@@ -29,7 +29,7 @@
     "url": "http://localhost:8081",
     "settings": {
       "catalog": "ingrid-harvester",
-      "api-key": "yourRepoApiKey",
+      "apiKey": "yourRepoApiKey",
       "title": "InGrid-Harvester",
       "description": "InGrid-Harvester Katalog"
     }

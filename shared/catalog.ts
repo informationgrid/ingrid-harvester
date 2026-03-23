@@ -34,6 +34,7 @@ export type PiveauCatalogSettings = CatalogSettings & {
   settings: {
     version: string,
     outputSchema: string,
+    apiKey: string,
     catalog: string,
     title?: string,
     description?: string

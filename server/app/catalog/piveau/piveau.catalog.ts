@@ -127,7 +127,7 @@ export class PiveauCatalog extends Catalog<string> {
             uri: targetUrl,
             method: 'PUT',
             resolveWithFullResponse: true,
-            headers: {"Content-Type": "application/rdf+xml", "X-API-KEY": settings.settings["api-key"]},
+            headers: {"Content-Type": "application/rdf+xml", "X-API-KEY": settings.settings.apiKey},
             body: transactionXml,
         });
     }
@@ -158,7 +158,7 @@ export class PiveauCatalog extends Catalog<string> {
             uri: targetUrl,
             method: 'PUT',
             resolveWithFullResponse: true,
-            headers: {"Content-Type": "application/rdf+xml", "X-API-KEY": piveauSettings.settings["api-key"]},
+            headers: {"Content-Type": "application/rdf+xml", "X-API-KEY": piveauSettings.settings.apiKey},
             body,
         });
     }
@@ -174,7 +174,7 @@ export class PiveauCatalog extends Catalog<string> {
                 uri: targetUrl + "&offset=" + offset,
                 method: 'GET',
                 resolveWithFullResponse: true,
-                headers: {"X-API-KEY": piveauSettings.settings["api-key"]},
+                headers: {"X-API-KEY": piveauSettings.settings.apiKey},
                 json: true,
             });
             const data = await response.json();
@@ -193,7 +193,7 @@ export class PiveauCatalog extends Catalog<string> {
                 uri: targetUrl,
                 method: 'DELETE',
                 resolveWithFullResponse: true,
-                headers: {"X-API-KEY": piveauSettings.settings["api-key"]},
+                headers: {"X-API-KEY": piveauSettings.settings.apiKey},
             });
     }
 
