@@ -23,7 +23,7 @@
 
 import { DOMParser } from '@xmldom/xmldom';
 import { imageSize } from 'image-size';
-import { get, merge as lodashMerge, set, trim } from 'lodash-es';
+import { get, merge as lodashMerge, set, trim, unset } from 'lodash-es';
 import log4js from 'log4js';
 import type { Dimensions } from '../model/dimensions.js';
 import type { Distribution } from '../model/distribution.js';
@@ -64,15 +64,15 @@ export function cleanObject(obj: object) {
 }
 
 /**
- * Overwrite given paths with empty strings in a copy of a given object.
+ * Remove given paths in a copy of a given object.
  *
- * @param obj the object to clone and overwrite paths in
- * @param paths the paths to overwrite with an empty string
- * @return a clone of the given object with given paths overwritten
+ * @param obj the object to clone and remove paths from
+ * @param paths the paths to remove
+ * @return a clone of the given object with given paths removed
  */
-export function filterPaths<T extends object>(obj: T, paths: Paths<T>[]): T {
+export function removePaths<T extends object>(obj: T, paths: Paths<T>[]): T {
     const clone = structuredClone(obj);
-    paths.forEach(path => set(clone, path, ''));
+    paths.forEach(path => unset(clone, path));
     return clone;
 }
 

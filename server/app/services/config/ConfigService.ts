@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import type { CatalogSettings, ElasticsearchCatalogSettings } from '@shared/catalog.js';
+import type { CatalogSettings, ElasticsearchCatalogSettings, PiveauCatalogSettings } from '@shared/catalog.js';
 import type { GeneralSettings } from '@shared/general-config.settings.js';
 import type { Harvester } from '@shared/harvester.js';
 import type { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
@@ -256,23 +256,29 @@ export class ConfigService {
 
     /**
      * Update a harvester and write to file this.HARVESTER_CONFIG_FILE
+     * 
      * @param id
      * @param updatedHarvester
      */
     static update(id: number, updatedHarvester: Harvester): number {
         let newConfig = ConfigService.getHarvesters();
+        const filteredHarvester = MiscUtils.removePaths(updatedHarvester, [
+            "isIncrementalSupported"
+        ]);
 
         if (id === -1) {
             id = ++ConfigService.highestID;
-            updatedHarvester.id = id;
-            newConfig.push(updatedHarvester);
-        } else {
-            const itemIndex = newConfig.findIndex(harvester => harvester.id === updatedHarvester.id);
+            filteredHarvester.id = id;
+            newConfig.push(filteredHarvester);
+        }
+        else {
+            const itemIndex = newConfig.findIndex(harvester => harvester.id === filteredHarvester.id);
             if (itemIndex === -1) {
-                log.warn('ID was not found for harvester. Creating new harvester with given ID: ' + updatedHarvester.id);
-                newConfig.push(updatedHarvester);
-            } else {
-                newConfig.splice(itemIndex, 1, updatedHarvester);
+                log.warn('ID was not found for harvester. Creating new harvester with given ID: ' + filteredHarvester.id);
+                newConfig.push(filteredHarvester);
+            }
+            else {
+                newConfig.splice(itemIndex, 1, filteredHarvester);
             }
         }
 
@@ -281,9 +287,10 @@ export class ConfigService {
     }
 
     static updateAll(updatedHarvesters: Harvester[]) {
-
-        fs.writeFileSync(this.getHarvesterConfigFile(), JSON.stringify(updatedHarvesters, null, 2));
-
+        const filteredHarvesters = updatedHarvesters.map(harvesterConfig => MiscUtils.removePaths(harvesterConfig, [
+            "isIncrementalSupported"
+        ]));
+        fs.writeFileSync(this.getHarvesterConfigFile(), JSON.stringify(filteredHarvesters, null, 2));
     }
 
     static getThreadpoolSize(): number {
@@ -306,7 +313,7 @@ export class ConfigService {
     }
 
     static getFilteredGeneralSettings(): GeneralSettings {
-        return MiscUtils.filterPaths(this.getGeneralSettings(), [
+        return MiscUtils.removePaths(this.getGeneralSettings(), [
             "database.password",
             "elasticsearch.password",
             "mail.mailServer.auth.pass"
@@ -357,11 +364,11 @@ export class ConfigService {
             let filtered = { ...catalog } as any;
 
             // Remove sensitive information from catalog settings.
-            if (catalog['settings']?.['password']) {
-                delete filtered.settings.password;
-            }
-            if (catalog['settings']?.['apiKey']) {
-                delete filtered.settings.apiKey;
+            if (catalog['settings']?.['password'] || catalog['settings']?.['apiKey']) {
+                return MiscUtils.removePaths(catalog as ElasticsearchCatalogSettings | PiveauCatalogSettings, [
+                    "settings.password",
+                    "settings.apiKey"
+                ]);
             }
 
             return filtered;
@@ -391,7 +398,10 @@ export class ConfigService {
             }
             const existing = existingSettings[catalogIndex];
             if (existing.type == 'elasticsearch' && settings.type == 'elasticsearch') {
-                MiscUtils.restorePaths(settings as ElasticsearchCatalogSettings, existing as ElasticsearchCatalogSettings, ["settings.password"]);
+                MiscUtils.restorePaths(settings as ElasticsearchCatalogSettings, existing as ElasticsearchCatalogSettings, ['settings.password']);
+            }
+            else if (existing.type == 'piveau' && settings.type == 'piveau') {
+                MiscUtils.restorePaths(settings as PiveauCatalogSettings, existing as PiveauCatalogSettings, ['settings.apiKey']);
             }
             existingSettings[catalogIndex] = settings;
         }
