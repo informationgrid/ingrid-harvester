@@ -22,32 +22,39 @@
 -->
 
 <ingrid-dialog-header
-  *transloco="let t; read: 'harvester'"
-  [title]="harvester.id !== -1 ? t('editDatasource') : t('addDatasource')"
-  svgIcon="Add"
+  [title]="data.title"
+  [svgIcon]="data.icon ?? 'Edit'"
 ></ingrid-dialog-header>
 
-<mat-dialog-content>
-  @if (fields) {
-    <formly-form
-      [form]="form"
-      [fields]="fields"
-      [model]="model"
-      [options]="options"
-      (modelChange)="console.log($event)"
-    ></formly-form>
-  }
-</mat-dialog-content>
+@if (isLoaded()) {
+  <mat-dialog-content>
+    @if (fields) {
+      <formly-form
+        [form]="form"
+        [fields]="fields"
+        [model]="formModel"
+        [options]="formOptions"
+        [attr.inert]="data.readonly"
+        (modelChange)="console.log($event)"
+      ></formly-form>
+    }
+  </mat-dialog-content>
+}
 
 <mat-dialog-actions>
   <button matButton mat-dialog-close>Abbrechen</button>
+
   <div class="flex-1"></div>
-  <button
-    matButton="filled"
-    color="primary"
-    (click)="submit()"
-    data-test="dlg-update"
-  >
-    {{ harvester.id > -1 ? "Aktualisieren" : "Anlegen" }}
-  </button>
+
+  @if (data.actionBtnText) {
+    <button
+      matButton="filled"
+      color="primary"
+      [disabled]="!isLoaded()"
+      (click)="submit()"
+      data-test="dlg-update"
+    >
+      {{ data.actionBtnText }}
+    </button>
+  }
 </mat-dialog-actions>

@@ -98,7 +98,13 @@
             <mat-icon svgIcon="schedule" />
             {{ t("common.schedule") }}
           </button>
+        } @else {
+          <button mat-menu-item (click)="onView.emit()" data-test="view">
+            <mat-icon svgIcon="visibility_fill" />
+            {{ t("common.view") }}
+          </button>
         }
+
         <button mat-menu-item (click)="onHistory.emit()" data-test="history">
           <mat-icon svgIcon="Timeline" />
           {{ t("common.history") }}

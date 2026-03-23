@@ -6,6 +6,7 @@
     "confirm": "Bestätigen",
     "cancel": "Abbrechen",
     "create": "Erstellen",
+    "view": "Ansehen",
     "edit": "Bearbeiten",
     "update": "Aktualisieren",
     "duplicate": "Duplizieren",
@@ -56,6 +57,7 @@
   "harvester": {
     "importAll": "Alle importieren",
     "add": "Hinzufügen",
+    "viewDatasource": "Datenquelle ansehen",
     "addDatasource": "Neue Datenquelle anlegen",
     "editDatasource": "Datenquelle bearbeiten",
     "showDetail": "Detail anzeigen",

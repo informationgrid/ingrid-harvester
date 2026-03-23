@@ -33,7 +33,6 @@ import { DialogLogComponent } from "../dialog-log/dialog-log.component";
 import { DialogSchedulerComponent } from "../dialog-scheduler/dialog-scheduler.component";
 import { DatasourceService } from "../services/datasource.service";
 import { TranslocoService } from "@ngneat/transloco";
-
 import { AuthenticationService } from "../../security/authentication.service";
 
 @UntilDestroy()
@@ -101,8 +100,13 @@ export class DatasourceOverviewComponent {
     this.dialog
       .open(DialogEditComponent, {
         data: {
-          id: -1,
-          rules: {},
+          icon: "Add",
+          title: this.transloco.translate("harvester.addDatasource"),
+          actionBtnText: this.transloco.translate("common.add"),
+          datasource: {
+            id: -1,
+            rules: {},
+          },
         },
         width: "900px",
         disableClose: true,
@@ -114,10 +118,26 @@ export class DatasourceOverviewComponent {
       });
   }
 
+  onView(datasource: Harvester) {
+    this.dialog.open(DialogEditComponent, {
+      data: {
+        icon: "visibility_fill",
+        title: this.transloco.translate("harvester.viewDatasource"),
+        datasource,
+        readonly: true,
+      },
+      width: "900px",
+    });
+  }
+
   onEdit(datasource: Harvester) {
     this.dialog
       .open(DialogEditComponent, {
-        data: JSON.parse(JSON.stringify(datasource)),
+        data: {
+          title: this.transloco.translate("harvester.editDatasource"),
+          actionBtnText: this.transloco.translate("common.update"),
+          datasource,
+        },
         width: "950px",
         disableClose: true,
         autoFocus: false,
@@ -129,14 +149,19 @@ export class DatasourceOverviewComponent {
       });
   }
 
-  onDuplicate(harvester: Harvester) {
+  onDuplicate(datasource: Harvester) {
     this.dialog
       .open(DialogEditComponent, {
         data: {
-          ...JSON.parse(JSON.stringify(harvester)),
-          id: -1,
-          index: "",
-          description: harvester.description + " (Duplikat)",
+          icon: "Copy",
+          title: this.transloco.translate("harvester.addDatasource"),
+          actionBtnText: this.transloco.translate("common.add"),
+          datasource: {
+            ...datasource,
+            id: -1,
+            index: "",
+            description: datasource.description + " (Duplikat)",
+          },
         },
         width: "950px",
         disableClose: true,

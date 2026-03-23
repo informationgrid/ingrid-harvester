@@ -21,10 +21,9 @@
  * ==================================================
  */
 
-import { Component, Inject } from "@angular/core";
-import { UntypedFormGroup } from "@angular/forms";
+import { Component, Inject, signal } from "@angular/core";
+import { FormGroup, UntypedFormGroup } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { Harvester } from "@shared/harvester";
 import { ConfigService } from "../../config/config.service";
 import { FormlyFieldConfig, FormlyFormOptions } from "@ngx-formly/core";
 import { SharedFields } from "./fields/shared.fields";
@@ -47,48 +46,48 @@ import { GenesisType } from "./fields/types/genesis.type";
   standalone: false,
 })
 export class DialogEditComponent {
-  form = new UntypedFormGroup({});
-  fields: FormlyFieldConfig[];
-  model: any = {};
-  options: FormlyFormOptions = {};
+  isLoaded = signal<boolean>(false);
+
+  form: FormGroup;
+  formModel: any;
+  formOptions: FormlyFormOptions;
+
+  // All fields with conditional visibility.
+  // The order of the fields matters.
+  fields: FormlyFieldConfig[] = [
+    ...SharedFields.general(),
+    ...IngridProfile.fields(),
+    ...CkanType.fields(),
+    ...CswType.fields(),
+    ...DcatType.fields(),
+    ...DecatappluType.fields(),
+    ...JsonType.fields(),
+    ...KldType.fields(),
+    ...OaiType.fields(),
+    ...SparqlType.fields(),
+    ...WfsType.fields(),
+    ...GenesisType.fields(),
+    ...SharedFields.additional(),
+  ];
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public harvester: Harvester,
-    public dialogRef: MatDialogRef<DialogEditComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialogRef: MatDialogRef<DialogEditComponent>,
     private configService: ConfigService,
   ) {
-    this.initForm();
-  }
-
-  initForm() {
-    this.configService.getProfileName().subscribe((profile) => {
-      // Set initial values.
-      this.model = this.getInitialValues(this.harvester);
-
-      // Set options used by initializing fields.
-      this.options = {
-        formState: {
-          profile,
-          catalogs: this.configService.getCatalogs(),
-        },
-      };
-
-      // Build fields.
-      this.fields = [
-        ...SharedFields.general(),
-        ...IngridProfile.fields(),
-        ...CkanType.fields(),
-        ...CswType.fields(),
-        ...DcatType.fields(),
-        ...DecatappluType.fields(),
-        ...JsonType.fields(),
-        ...KldType.fields(),
-        ...OaiType.fields(),
-        ...SparqlType.fields(),
-        ...WfsType.fields(),
-        ...GenesisType.fields(),
-        ...SharedFields.additional(),
-      ];
+    // Init form.
+    this.form = new UntypedFormGroup({});
+    this.formModel = this.getInitialValues(data.datasource);
+    this.configService.getProfileName().subscribe({
+      next: (profile) => {
+        this.formOptions = {
+          formState: {
+            profile,
+            catalogs: this.configService.getCatalogs(),
+          },
+        };
+        this.isLoaded.set(true);
+      },
     });
   }
 
@@ -98,12 +97,12 @@ export class DialogEditComponent {
       return;
     }
 
-    const result = this.getSubmitValues(this.harvester, this.model);
+    const result = this.getSubmitValues(this.data.datasource, this.formModel);
     this.dialogRef.close(result);
   }
 
-  getInitialValues(harvester: any) {
-    const values = { ...harvester };
+  getInitialValues(datasource: any) {
+    const values = JSON.parse(JSON.stringify(datasource));
 
     // Modify values for the format of the input field.
     if (values.additionalSettings) {
@@ -123,7 +122,7 @@ export class DialogEditComponent {
     return values;
   }
 
-  getSubmitValues(oldValues, newValues) {
+  getSubmitValues(oldValues: any, newValues: any) {
     const values = { ...oldValues, ...newValues };
 
     // Reverse values to the server format.

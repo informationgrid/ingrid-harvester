@@ -61,6 +61,7 @@ export class DatasourceEntryComponent {
 
   onImport = output<void>();
   onIncrementImport = output<void>();
+  onView = output<void>();
   onEdit = output<void>();
   onDelete = output<void>();
   onDuplicate = output<void>();
