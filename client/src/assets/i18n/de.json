@@ -10,7 +10,10 @@
     "update": "Aktualisieren",
     "duplicate": "Duplizieren",
     "delete": "Löschen",
+    "schedule": "Planen",
+    "history": "Historie",
     "more": "Mehr",
+    "actionMenu": "Aktionsmenü",
     "loading": "Wird geladen..."
   },
   "pageTitle": {
@@ -71,12 +74,8 @@
     "nextImport": "Nächste Ausführung",
     "completeImport": "Komplettes Harvesting",
     "incrementalImport": "Inkrementelles Harvesting",
-    "edit": "Bearbeiten",
-    "duplicate": "Duplizieren",
-    "delete": "Entfernen",
     "deleteConfirmation": "Wollen Sie diese Datenquelle wirklich löschen?",
-    "schedule": "Planen",
-    "history": "Historie",
+
     "noHistory": "Keine Historie vorhanden.",
     "log": "Error-Log",
     "noLogs": "Keine Log-Dateien vorhanden.",

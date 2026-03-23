@@ -22,7 +22,7 @@
 -->
 
 <ingrid-list-item-expandable
-  *transloco="let t; read: 'harvester'"
+  *transloco="let t"
   [title]="datasource().description"
   [subtitle]="datasource().sourceURL"
 >
@@ -41,8 +41,8 @@
         #actionMenuBtn="matMenuTrigger"
         matIconButton
         color="primary"
-        matTooltip="{{ t('more') }}"
-        aria-label="{{ t('more') }}"
+        matTooltip="{{ t('common.actionMenu') }}"
+        aria-label="{{ t('common.actionMenu') }}"
         (click)="openActionMenu($event)"
         (keydown.enter)="openActionMenu($event)"
         [matMenuTriggerFor]="actionMenu"
@@ -59,24 +59,28 @@
             data-test="import"
           >
             <mat-icon svgIcon="Harvester" />
-            {{ t("import") }}
+            {{ t("harvester.import") }}
           </button>
-          <button
-            mat-menu-item
-            [disabled]="importLog() !== undefined && !importLog().complete"
-            (click)="onIncrementImport.emit()"
-            data-test="importIncrement"
-          >
-            <mat-icon svgIcon="Harvester" />
-            {{ t("importIncrement") }}
-          </button>
+
+          @if (datasource().isIncremental) {
+            <button
+              mat-menu-item
+              [disabled]="importLog() !== undefined && !importLog().complete"
+              (click)="onIncrementImport.emit()"
+              data-test="importIncrement"
+            >
+              <mat-icon svgIcon="Harvester" />
+              {{ t("harvester.importIncrement") }}
+            </button>
+          }
+
           <button mat-menu-item (click)="onEdit.emit()" data-test="edit">
             <mat-icon svgIcon="cursor-edit" />
-            {{ t("edit") }}
+            {{ t("common.edit") }}
           </button>
           <button mat-menu-item (click)="onDelete.emit()" data-test="delete">
             <mat-icon color="warn" svgIcon="delete" />
-            {{ t("delete") }}
+            {{ t("common.delete") }}
           </button>
           <button
             mat-menu-item
@@ -84,20 +88,24 @@
             data-test="duplicate"
           >
             <mat-icon svgIcon="Copy" />
-            {{ t("duplicate") }}
+            {{ t("common.duplicate") }}
           </button>
-          <button mat-menu-item (click)="onSchedule.emit()" data-test="schedule">
+          <button
+            mat-menu-item
+            (click)="onSchedule.emit()"
+            data-test="schedule"
+          >
             <mat-icon svgIcon="schedule" />
-            {{ t("schedule") }}
+            {{ t("common.schedule") }}
           </button>
         }
         <button mat-menu-item (click)="onHistory.emit()" data-test="history">
           <mat-icon svgIcon="Timeline" />
-          {{ t("history") }}
+          {{ t("common.history") }}
         </button>
         <button mat-menu-item (click)="onOpenErrorLog.emit()" data-test="log">
           <mat-icon svgIcon="logging" />
-          {{ t("log") }}
+          {{ t("harvester.log") }}
         </button>
       </mat-menu>
     </div>
