@@ -49,11 +49,16 @@
             matTooltip="{{ t('more') }}"
             aria-label="{{ t('more') }}"
             [matMenuTriggerFor]="optionMenu"
+            data-test="datasources-more"
           >
             <mat-icon svgIcon="Options" />
           </button>
           <mat-menu data-test="action-menu" #optionMenu>
-            <button mat-menu-item (click)="onImportAll()" data-test="import-all">
+            <button
+              mat-menu-item
+              (click)="onImportAll()"
+              data-test="import-all"
+            >
               <mat-icon svgIcon="Harvester" />
               {{ t("importAll") }}
             </button>
