@@ -10,7 +10,7 @@
   },
   "elasticsearch": {
     "url": "http://localhost:9200",
-    "version": "9",
+    "version": "8",
     "user": "elastic",
     "password": "elastic",
     "rejectUnauthorized": true,

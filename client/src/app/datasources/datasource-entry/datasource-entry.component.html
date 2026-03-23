@@ -62,7 +62,7 @@
             {{ t("harvester.import") }}
           </button>
 
-          @if (datasource().isIncremental) {
+          @if (datasource().isIncrementalSupported) {
             <button
               mat-menu-item
               [disabled]="importLog() !== undefined && !importLog().complete"

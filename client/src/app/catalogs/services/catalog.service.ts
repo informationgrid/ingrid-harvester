@@ -62,6 +62,12 @@ export class CatalogService {
     ) {
       delete modified.settings.password;
     }
+    if (
+      catalog.settings?.apiKey != undefined &&
+      catalog.settings?.apiKey?.trim() == ""
+    ) {
+      delete modified.settings.apiKey;
+    }
 
     return modified;
   }

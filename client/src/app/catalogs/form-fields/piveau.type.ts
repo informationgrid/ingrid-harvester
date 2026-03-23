@@ -74,6 +74,14 @@ export default abstract class PiveauType {
                   label: transloco.transform("catalogs.formLabel.description"),
                 },
               },
+              {
+                key: "apiKey",
+                type: "input",
+                props: {
+                  label: transloco.transform("catalogs.formLabel.apiKey"),
+                  description: transloco.transform("catalogs.formHint.password")
+                },
+              },
             ],
           },
         ],
