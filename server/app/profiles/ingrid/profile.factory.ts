@@ -75,7 +75,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
         const { database, elastic } = await super.init();
 
         // create index for each configured (and used!) catalog
-        const catalogIdentifiers = new Set(ConfigService.get().map(harvester => harvester.catalogIds).flat());
+        const catalogIdentifiers = new Set(ConfigService.getHarvesters().map(harvester => harvester.catalogIds).flat());
         const catalogMap: Record<string, ElasticsearchCatalogSettings> = ConfigService.getCatalogSettings()
             .filter(catalog => catalog.type == 'elasticsearch')
             .reduce((acc, obj) => (acc[obj.id] = (obj as ElasticsearchCatalogSettings), acc), {});

@@ -45,7 +45,7 @@ export class HarvesterCtrl {
 
     @Get('/')
     async getHarvesterConfig(): Promise<Harvester[]> {
-        return ConfigService.get();
+        return ConfigService.getHarvesters();
     }
 
     @Post('/filecontent')
@@ -94,7 +94,7 @@ export class HarvesterCtrl {
         this.scheduleService.stopJob(+id, 'incr');
 
         // update config without the selected harvester
-        const filtered = ConfigService.get()
+        const filtered = ConfigService.getHarvesters()
             .filter(harvester => harvester.id !== +id);
 
         ConfigService.updateAll(filtered);

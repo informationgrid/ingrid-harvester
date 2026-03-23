@@ -155,7 +155,7 @@ export class ConfigService {
     }
 
     static fixIDs() {
-        let harvesters = ConfigService.get();
+        let harvesters = ConfigService.getHarvesters();
         if (harvesters.some(h => !h.id)) {
             // get highest ID from all harvester
             ConfigService.highestID = harvesters
@@ -220,36 +220,33 @@ export class ConfigService {
      *
      * @returns a list of Harvester
      */
-    static get(): Harvester[] {
-
+    static getHarvesters(): Harvester[] {
         const harvesterConfigFile = this.getHarvesterConfigFile();
-
         const configExists = fs.existsSync(harvesterConfigFile);
 
-        if (configExists) {
-            let contents = fs.readFileSync(harvesterConfigFile);
-            let configs: Harvester[] = JSON.parse(contents.toString());
-            return configs
-                .map(config => {
-                    let defaultSettings: Partial<ImporterSettings> = DefaultImporterSettings;
-                    switch (config.type) {
-                        case 'CKAN': defaultSettings = defaultCKANSettings; break;
-                        case 'CSW': defaultSettings = defaultCSWSettings; break;
-                        case 'DCATAPDE': defaultSettings = defaultDCATAPDESettings; break;
-                        case 'KLD': defaultSettings = defaultKldSettings; break;
-                        case 'OAI': defaultSettings = defaultOAISettings; break;
-                        case 'GENESIS': defaultSettings = defaultGenesisSettings; break;
-                        //case 'SPARQL': defaultSettings = SparqlImporter.defaultSettings; break;
-                        //case 'WFS': defaultSettings = WfsImporter.defaultSettings; break;
-                    }
-                    return MiscUtils.merge(defaultSettings, config);
-                })
-                .filter(config => config); // remove all invalid configurations
-        } else {
+        if (!configExists) {
             log.warn("No config.json file found. Please configure using the admin GUI.");
             return [];
         }
 
+        const contents = fs.readFileSync(harvesterConfigFile);
+        const configs: Harvester[] = JSON.parse(contents.toString());
+        return configs
+            .map(config => {
+                let defaultSettings: Partial<ImporterSettings> = DefaultImporterSettings;
+                switch (config.type) {
+                    case 'CKAN': defaultSettings = defaultCKANSettings; break;
+                    case 'CSW': defaultSettings = defaultCSWSettings; break;
+                    case 'DCATAPDE': defaultSettings = defaultDCATAPDESettings; break;
+                    case 'KLD': defaultSettings = defaultKldSettings; break;
+                    case 'OAI': defaultSettings = defaultOAISettings; break;
+                    case 'GENESIS': defaultSettings = defaultGenesisSettings; break;
+                    //case 'SPARQL': defaultSettings = SparqlImporter.defaultSettings; break;
+                    //case 'WFS': defaultSettings = WfsImporter.defaultSettings; break;
+                }
+                return MiscUtils.merge(defaultSettings, config);
+            })
+            .filter(config => config); // remove all invalid configurations
     }
 
 
@@ -263,7 +260,7 @@ export class ConfigService {
      * @param updatedHarvester
      */
     static update(id: number, updatedHarvester: Harvester): number {
-        let newConfig = ConfigService.get();
+        let newConfig = ConfigService.getHarvesters();
 
         if (id === -1) {
             id = ++ConfigService.highestID;

@@ -67,7 +67,7 @@ export class ImportSocketService {
             try {
                 let lastExecution = new Date();
                 let configGeneral = ConfigService.getGeneralSettings();
-                let configData = ConfigService.get().filter(config => config.id === id)[0];
+                let configData = ConfigService.getHarvesters().filter(config => config.id === id)[0];
                 //configData.deduplicationAlias = configData.index + 'dedup';
 
                 let configHarvester = MiscUtils.merge(configData, configGeneral, { isIncremental });

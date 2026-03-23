@@ -58,7 +58,7 @@ export class HistoryService {
 
     async getHistory(id: number): Promise<any> {
         await this.ensureIndexExists();
-        const harvester = ConfigService.get().find(h => h.id === id);
+        const harvester = ConfigService.getHarvesters().find(h => h.id === id);
         let index = ProfileFactoryLoader.get().useIndexPerCatalog() ? harvester.catalogId : this.elasticUtils.indexName;
         let history = await this.elasticUtils.getHistory(this.elasticQueries.findHistory(index));
         return {

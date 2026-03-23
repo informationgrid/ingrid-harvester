@@ -67,9 +67,13 @@ export class ApiCtrl {
             log.info('Started import process for all harvesters');
             this.importAllProcessIsRunning = true;
 
-            let activeConfigs = ConfigService.get().filter(config => !config.disable);
+            let activeConfigs = ConfigService.getHarvesters().filter(config => !config.disable);
+
+            // TODO do we need priority if harvesters run concurrently?
+            // TODO if yes, what does it do?
+            // TODO if no, remove field form frontend and backend
             // run higher priority harvesters first (sort descending)
-            activeConfigs.sort((harvesterA, harvesterB) => harvesterB.priority - harvesterA.priority);
+            // activeConfigs.sort((harvesterA, harvesterB) => harvesterB.priority - harvesterA.priority);
 
             await Promise.all(activeConfigs.map(config => this.importSocketService.runImport(config.id)));
 

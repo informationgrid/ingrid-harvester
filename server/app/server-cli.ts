@@ -32,7 +32,7 @@ import { ProfileFactoryLoader} from './profiles/profile.factory.loader.js';
 import type { Summary } from './model/summary.js';
 import process from 'node:process'; 
 
-let config = ConfigService.get(),
+let config = ConfigService.getHarvesters(),
     configGeneral = ConfigService.getGeneralSettings(),
     log = log4js.getLogger(),
     logSummary = log4js.getLogger('summary');
