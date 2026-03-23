@@ -27,6 +27,7 @@ import { Harvester } from "@shared/harvester";
 import { ImportLogMessage } from "../../../../../../server/app/model/import.result";
 import { DatePipe } from "@angular/common";
 import { DetailItemComponent } from "../../../shared/detail-item/detail-item.component";
+import cronstrue from "cronstrue/i18n";
 
 @Component({
   selector: "harvester-datasource-detail",
@@ -67,7 +68,7 @@ export class DatasourceDetailComponent {
     return this.datePipe.transform(this.importLog().nextExecution, "short");
   });
 
-  // Import info.
+  // Last import info.
   docNum = computed(() => {
     if (!this.importLog()?.summary) return "-";
     return (
@@ -87,6 +88,22 @@ export class DatasourceDetailComponent {
   warningNum = computed(() => {
     if (!this.importLog()?.summary) return "-";
     return this.importLog().summary?.warnings.length;
+  });
+
+  // Planned import info.
+  completeImportDate = computed(() => {
+    const cron = this.datasource().cron;
+    if (!cron?.full?.active || !cron?.full?.pattern) return;
+    return cronstrue.toString(this.datasource().cron.full.pattern, {
+      locale: "de",
+    });
+  });
+  incrementalImportDate = computed(() => {
+    const cron = this.datasource().cron;
+    if (!cron?.incr?.active || !cron?.incr?.pattern) return;
+    return cronstrue.toString(this.datasource().cron.incr.pattern, {
+      locale: "de",
+    });
   });
 
   constructor(

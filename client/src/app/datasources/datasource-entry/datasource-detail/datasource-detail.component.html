@@ -57,7 +57,7 @@
     icon="error"
     [title]="t('errors')"
     [value]="errorNum()"
-    [hasNavigation]="errorNum() != '-'"
+    [hasNavigation]="errorNum() !== '-'"
     (onNavigate)="onOpenErrorLog.emit()"
     data-test="num-errors"
   />
@@ -66,8 +66,26 @@
     icon="warning"
     [title]="t('warnings')"
     [value]="warningNum()"
-    [hasNavigation]="warningNum() != '-'"
+    [hasNavigation]="warningNum() !== '-'"
     (onNavigate)="onOpenWarningLog.emit()"
     data-test="num-warnings"
   />
+
+  @if (completeImportDate()) {
+    <ingrid-detail-item
+      icon="Harvester"
+      [title]="t('completeImport')"
+      [value]="completeImportDate()"
+      data-test="complete-import"
+    />
+  }
+
+  @if (incrementalImportDate()) {
+    <ingrid-detail-item
+      icon="Harvester"
+      [title]="t('incrementalImport')"
+      [value]="incrementalImportDate()"
+      data-test="incremental-import"
+    />
+  }
 </div>

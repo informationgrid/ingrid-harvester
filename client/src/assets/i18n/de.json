@@ -69,6 +69,8 @@
     "lastImport": "Letzte Ausführung",
     "durationImport": "Dauer der Ausführung",
     "nextImport": "Nächste Ausführung",
+    "completeImport": "Komplettes Harvesting",
+    "incrementalImport": "Inkrementelles Harvesting",
     "edit": "Bearbeiten",
     "duplicate": "Duplizieren",
     "delete": "Entfernen",
@@ -82,8 +84,8 @@
     "status": {
       "success": {
         "icon": "Success",
-        "title": "In Ordnung",
-        "tooltip": "Keine Fehler beim letzten Import"
+        "title": "Erfolgreich",
+        "tooltip": "Der letzte Import war erfolgreich ohne Fehler"
       },
       "disable": {
         "icon": "warning",
@@ -92,7 +94,7 @@
       },
       "cron": {
         "icon": "schedule",
-        "title": "Scheduled",
+        "title": "Geplant",
         "tooltip": "Auto-Import geplant",
         "tooltipWithDate": "Auto-Import um {{date}} geplant"
       },
