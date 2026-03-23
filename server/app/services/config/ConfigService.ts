@@ -334,11 +334,14 @@ export class ConfigService {
         const configExists = fs.existsSync(catalogConfigFile);
         if (configExists) {
             const catalogSettings = JSON.parse(fs.readFileSync(catalogConfigFile).toString());
-            const catalog = catalogSettings.find(settings => settings.id == id);
-            if (!catalog) {
-                throw new Error(`Catalog with id ${id} not found`);
+
+            if (id) {
+              const catalog = catalogSettings.find(settings => settings.id == id);
+              if (!catalog) throw new Error(`Catalog with id ${id} not found`);
+              return catalog;
+            } else {
+              return catalogSettings;
             }
-            return catalog;
         }
         else {
             log.warn("No catalog config file found (config-catalogs.json).");
