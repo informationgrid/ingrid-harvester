@@ -21,14 +21,16 @@
     ==================================================
 -->
 
-<mat-card *transloco="let t; read: 'menu'" class="login-container">
+<mat-card *transloco="let t" class="login-container">
   <div class="flex flex-row gap-20 login-header">
     <div class="login-logo">
       <img src="assets/icons/logo.svg" alt="logo" />
     </div>
     <div class="flex-space login-title">
-      {{ t("application") }}
-      <div class="login-subtitle">HARVESTER</div>
+      {{ t("project") }}
+      <div class="login-subtitle">
+        {{ t("application") }}
+      </div>
     </div>
   </div>
 

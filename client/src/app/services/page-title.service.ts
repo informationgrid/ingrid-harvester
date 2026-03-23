@@ -15,11 +15,15 @@ export class PageTitleService extends TitleStrategy {
   override updateTitle(routerState: RouterStateSnapshot): void {
     const routeTitle = this.buildTitle(routerState);
 
-    let pageTitle = this.transloco.translate("pageTitle.default");
-    if (routeTitle) {
-      pageTitle += " | " + this.transloco.translate(routeTitle);
-    }
-
-    this.title.setTitle(pageTitle);
+    // Guarantee translations are loaded.
+    this.transloco
+      .selectTranslate("pageTitle.default")
+      .subscribe((defaultTitle) => {
+        let pageTitle = defaultTitle;
+        if (routeTitle) {
+          pageTitle += " | " + this.transloco.translate(routeTitle);
+        }
+        this.title.setTitle(pageTitle);
+      });
   }
 }
