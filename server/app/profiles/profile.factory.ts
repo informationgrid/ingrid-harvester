@@ -58,10 +58,6 @@ CatalogFactory {
         let database = DatabaseFactory.getDatabaseUtils(dbConfig, null);
         let elastic = ElasticsearchFactory.getElasticUtils(esConfig, null);
 
-        // try to initialize the ES index if it does not exist
-        await elastic.prepareIndex(this.getIndexMappings(), this.getIndexSettings(), true);
-        await elastic.addAlias(esConfig.prefix + esConfig.index, esConfig.alias);
-
         // try to initialize the DB tables if they do not exist
         await database.init();
 
