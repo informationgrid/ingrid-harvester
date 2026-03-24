@@ -7,8 +7,11 @@ server:
   pretty_print: true
 
 logging:
-  level: DEBUG        # <-- was "loglevel", must be "level"
+  level: DEBUG
   logfile: /tmp/pycsw.log
+
+profiles:
+  - apiso
 
 manager:
   transactions: true
@@ -32,14 +35,9 @@ metadata:
   contact:
     name: Admin
     email: admin@example.com
+  inspire:
+    enabled: false
 
 repository:
-  database: postgresql://pycsw:pycsw_secret@db/pycsw
+  database: postgresql://pycsw:pycsw_secret@pycsw-db/pycsw
   table: records
-  # List of schemas to accept/store
-  schemas:
-    - identifier: http://www.isotc211.org/2005/gmd
-      type: iso
-      namespace: gmd
-      mapping: iso19139
-      default: false

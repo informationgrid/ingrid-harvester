@@ -78,12 +78,14 @@ services:
 
   pycsw-db:
     image: postgis/postgis:15-3.3
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_DB: pycsw
       POSTGRES_USER: pycsw
       POSTGRES_PASSWORD: pycsw_secret
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pycsw:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U pycsw"]
       interval: 10s
@@ -95,12 +97,12 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./docker-dev/pycsw.cfg:/etc/pycsw/pycsw.cfg
+      - ./docker-dev/pycsw.yml:/etc/pycsw/pycsw.yml
     depends_on:
-      db:
+      pycsw-db:
         condition: service_healthy
     environment:
-      - PYCSW_CONFIG=/etc/pycsw/pycsw.cfg
+      - PYCSW_CONFIG=/etc/pycsw/pycsw.yml
 
   harvester:
     build:
@@ -140,6 +142,7 @@ services:
 volumes:
   esdata:
   postgresdata:
+  pycsw:
 
 networks:
   harvester-network:
