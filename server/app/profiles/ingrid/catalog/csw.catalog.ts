@@ -31,10 +31,6 @@ const log = log4js.getLogger('IngridCswCatalog');
 
 export class IngridCswCatalog extends CswCatalog {
 
-    async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
-        log.info(`Preparing CSW-T import for source: ${transactionHandle}`);
-    }
-
     async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         await super.import(transactionHandle, settings, observer);
     }

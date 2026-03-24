@@ -107,8 +107,7 @@ export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSett
      * e.g. remove stale records from the target catalog and is called after every harvest.
      */
     async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
-        // TODO semantics are wrong, fix it
-        await this.deleteStaleRecords(importerSettings.catalogId);
+        // can be overwritten by child classes if necessary
     }
 
     abstract processBucket(bucket: Bucket<C>): Promise<O[]>;

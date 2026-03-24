@@ -95,6 +95,11 @@ export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings,
         }
     }
 
+    async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+        // TODO semantics are wrong, fix it
+        await this.deleteStaleRecords(importerSettings.catalogId);
+    }
+
     getDatasetColumn(): string {
         return 'dataset_dcatapde';
     }
