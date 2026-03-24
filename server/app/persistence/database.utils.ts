@@ -23,6 +23,7 @@
 
 import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
 import type { Observer } from "rxjs";
+import type { CatalogColumnType } from '../catalog/catalog.factory.js';
 import type { Catalog as DcatCatalog } from '../model/dcatApPlu.model.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
 import type { ImportLogMessage } from "../model/import.result.js";
@@ -80,7 +81,7 @@ export abstract class DatabaseUtils {
 
     abstract pushToElasticsearch(elastic: ElasticsearchUtils, source: string, observer: Observer<ImportLogMessage>, aggregator?: PostgresAggregator<IndexDocument>): Promise<void>;
 
-    abstract streamBuckets(source: string, observer: Observer<ImportLogMessage>): AsyncGenerator<Bucket<any>>;
+    abstract streamBuckets<T extends CatalogColumnType>(source: string, datasetColumn: string, observer: Observer<ImportLogMessage>): AsyncGenerator<Bucket<T>>;
 
     abstract getStoredData(ids: string[]): Promise<any[]>;
 

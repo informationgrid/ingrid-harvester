@@ -33,21 +33,25 @@ import { DatabaseFactory } from '../persistence/database.factory.js';
 import type { DatabaseUtils } from '../persistence/database.utils.js';
 import type { Bucket } from '../persistence/postgres.utils.js';
 import { ConfigService } from '../services/config/ConfigService.js';
+import type { CswDataset } from './csw/csw.catalog.js';
+import type { PiveauDataset } from './piveau/piveau.catalog.js';
 
 const log = log4js.getLogger('Catalog');
 
 export interface CatalogFactory {
 
     // TODO improve typing
-    getCatalog(catalogId: number, summary: Summary): Promise<Catalog<any, any>>;
+    getCatalog(catalogId: number, summary: Summary): Promise<Catalog<any, any, any>>;
 }
+
+export type CatalogColumnType = CswDataset | IndexDocument | PiveauDataset;
 
 /**
  * 
  * DbColumnType specifies the TypeScript type of the database column values that are fetched for this catalog,
  * e.g. string (text, serialized XML), object (JSON), etc.
  */
-export abstract class Catalog<S extends CatalogSettings, O extends CatalogOperation> {
+export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSettings, O extends CatalogOperation> {
 
     readonly settings: S;
     readonly summary: Summary;
@@ -89,7 +93,7 @@ export abstract class Catalog<S extends CatalogSettings, O extends CatalogOperat
      */
     async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         log.info(`Importing data for transaction: ${transactionHandle}`);
-        const bucketGenerator = this.database.streamBuckets(transactionHandle, observer);
+        const bucketGenerator = this.database.streamBuckets<C>(transactionHandle, this.getDatasetColumn(), observer);
         for await (const bucket of bucketGenerator) {
             const ops = await this.processBucket(bucket);
             await this.importIntoCatalog(ops);
@@ -107,11 +111,13 @@ export abstract class Catalog<S extends CatalogSettings, O extends CatalogOperat
         await this.deleteStaleRecords(importerSettings.catalogId);
     }
 
-    abstract processBucket(bucket: Bucket<IndexDocument>): Promise<O[]>;
+    abstract processBucket(bucket: Bucket<C>): Promise<O[]>;
 
     abstract importIntoCatalog(operations: O[]): Promise<void>;
 
     abstract flushImport(): Promise<void>;
+
+    abstract getDatasetColumn(): string;
 
     /**
      * Remove records in the target catalog that are no longer present in the current

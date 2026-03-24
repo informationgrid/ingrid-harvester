@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import type { ElasticsearchCatalogSettings } from '@shared/catalog.js';
+import type { CatalogSettings, ElasticsearchCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
-import type { Catalog, CatalogOperation } from '../../catalog/catalog.factory.js';
+import { Catalog, type CatalogColumnType, type CatalogOperation } from '../../catalog/catalog.factory.js';
 import type { CswMapper } from '../../importer/csw/csw.mapper.js';
 import type { CswSettings } from '../../importer/csw/csw.settings.js';
 import type { DcatappluMapper } from '../../importer/dcatapplu/dcatapplu.mapper.js';
@@ -110,8 +110,8 @@ export class DiplanungFactory extends ProfileFactory<DiplanungSettings> {
         }
         return importer;
     }
-    
-    async getCatalog(catalogId: number, summary: Summary): Promise<Catalog<any, CatalogOperation>> {
+
+    async getCatalog(catalogId: number, summary: Summary): Promise<Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>> {
         const catalogSettings = ConfigService.getCatalogSettings(catalogId);
         switch (catalogSettings?.type) {
             case 'elasticsearch':

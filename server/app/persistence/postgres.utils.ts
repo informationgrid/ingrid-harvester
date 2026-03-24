@@ -26,6 +26,7 @@ import log4js from 'log4js';
 import pg from 'pg';
 import Cursor from "pg-cursor";
 import type { Observer } from "rxjs";
+import type { CatalogColumnType } from '../catalog/catalog.factory.js';
 import type { Catalog as LegacyCatalog } from '../model/dcatApPlu.model.js';
 import type { Distribution } from '../model/distribution.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
@@ -343,7 +344,7 @@ export class PostgresUtils extends DatabaseUtils {
      * @param source
      * @param observer
      */
-    async *streamBuckets(source: string, observer: Observer<ImportLogMessage>): AsyncGenerator<Bucket<any>> {
+    async *streamBuckets<T extends CatalogColumnType>(source: string, datasetColumn: string, observer: Observer<ImportLogMessage>): AsyncGenerator<Bucket<T>> {
         const client: pg.PoolClient = await PostgresUtils.pool.connect();
         log.debug('Connection started');
         const startDate = Date.now();
@@ -356,7 +357,7 @@ export class PostgresUtils extends DatabaseUtils {
 
         const cursor = client.query(new Cursor(this.queries.getBuckets, [source]));
         let currentId: string | number;
-        let currentBucket: Bucket<any>;
+        let currentBucket: Bucket<T>;
         const maxRows = 100;
         let rows = await cursor.read(maxRows);
         let numDatasets = 0;
@@ -375,7 +376,7 @@ export class PostgresUtils extends DatabaseUtils {
                     }
                     currentBucket = {
                         anchor_id: row.anchor_id,
-                        duplicates: new Map<string | number, IndexDocument>(),
+                        duplicates: new Map<string | number, T>(),
                         operatingServices: new Map<string | number, Distribution>()
                     };
                 }

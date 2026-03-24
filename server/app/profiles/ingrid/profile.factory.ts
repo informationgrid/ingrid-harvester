@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import type { CswCatalogSettings, ElasticsearchCatalogSettings, PiveauCatalogSettings } from '@shared/catalog.js';
+import type { CatalogSettings, CswCatalogSettings, ElasticsearchCatalogSettings, PiveauCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
-import { Catalog, type CatalogOperation } from '../../catalog/catalog.factory.js';
+import { Catalog, type CatalogColumnType, type CatalogOperation } from '../../catalog/catalog.factory.js';
 import type { CkanMapper } from '../../importer/ckan/ckan.mapper.js';
 import type { CkanSettings } from '../../importer/ckan/ckan.settings.js';
 import type { CswMapper } from '../../importer/csw/csw.mapper.js';
@@ -175,7 +175,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
         }
     }
 
-    async getCatalog(catalogId: number, summary: Summary): Promise<Catalog<any, CatalogOperation>> {
+    async getCatalog(catalogId: number, summary: Summary): Promise<Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>> {
         const catalogSettings = ConfigService.getCatalogSettings(catalogId);
         switch (catalogSettings?.type) {
             case 'elasticsearch': 

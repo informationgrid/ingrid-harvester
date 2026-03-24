@@ -33,10 +33,16 @@ import { PiveauCatalogSummary } from './piveau.catalog-summary.js';
 
 const log = log4js.getLogger('PiveauCatalog');
 
-export class PiveauCatalog extends Catalog<PiveauCatalogSettings, CatalogOperation> {
+export type PiveauDataset = {
+    uuid: string,
+    dataset: string
+}
 
-    readonly id: string = 'piveau-catalog';
-    readonly type: string = 'piveau';
+export type PiveauCatalogOperation = CatalogOperation & {
+    // TODO
+}
+
+export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings, PiveauCatalogOperation> {
 
     protected readonly catalogSummary = new PiveauCatalogSummary();
 
@@ -87,6 +93,10 @@ export class PiveauCatalog extends Catalog<PiveauCatalogSettings, CatalogOperati
                 log.error(`Error posting record '${record.identifier}' to Piveau: ${e.message}`);
             }
         }
+    }
+
+    getDatasetColumn(): string {
+        return 'dataset_dcatapde';
     }
 
     async deleteStaleRecords(sourceId: string): Promise<void> {

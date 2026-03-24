@@ -36,10 +36,18 @@ import { CswCatalogSummary } from './csw.catalog-summary.js';
 
 const log = log4js.getLogger('CswCatalog');
 
-export abstract class CswCatalog extends Catalog<CswCatalogSettings, CatalogOperation> {
+export type CswDataset = {
+    uuid: string,
+    dataset: string
+}
 
-    readonly id: string = 'csw-catalog';
-    readonly type: string = 'csw';
+export type CswCatalogOperation = CatalogOperation & {
+    uuid: string,
+    serializedXml: string,
+    isUpdate: boolean
+}
+
+export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings, CswCatalogOperation> {
 
     protected readonly catalogSummary = new CswCatalogSummary();
 
@@ -96,6 +104,10 @@ export abstract class CswCatalog extends Catalog<CswCatalogSettings, CatalogOper
                 log.error(`Error posting record '${record.identifier}' to CSW-T: ${e.message}`);
             }
         }
+    }
+
+    getDatasetColumn(): string {
+        return 'dataset_csw';
     }
 
     async deleteStaleRecords(sourceId: string): Promise<void> {

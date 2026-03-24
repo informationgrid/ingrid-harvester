@@ -23,6 +23,7 @@
 
 import type { ElasticsearchCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
+import type { IndexDocument } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import type { ElasticsearchUtils, EsOperation } from '../../persistence/elastic.utils.js';
@@ -31,10 +32,7 @@ import { ElasticsearchCatalogSummary } from './elasticsearch.catalog-summary.js'
 
 const log = log4js.getLogger(import.meta.filename);
 
-export abstract class ElasticsearchCatalog extends Catalog<ElasticsearchCatalogSettings, EsOperation> {
-
-    readonly id: string = 'elastic-catalog';
-    readonly type: string = 'elasticsearch';
+export abstract class ElasticsearchCatalog extends Catalog<IndexDocument, ElasticsearchCatalogSettings, EsOperation> {
 
     protected readonly catalogSummary = new ElasticsearchCatalogSummary();
 
@@ -57,6 +55,10 @@ export abstract class ElasticsearchCatalog extends Catalog<ElasticsearchCatalogS
     async flushImport(): Promise<void> {
         // send and empty current queue
         await this.elastic.sendBulkOperations();
+    }
+
+    getDatasetColumn(): string {
+        return 'dataset';
     }
 
     getElastic(): ElasticsearchUtils {
