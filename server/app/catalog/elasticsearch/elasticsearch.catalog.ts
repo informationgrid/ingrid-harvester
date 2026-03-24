@@ -23,10 +23,14 @@
 
 import type { ElasticsearchCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
+import type { Observer } from 'rxjs';
+import type { ImporterSettings } from '../../importer.settings.js';
+import type { ImportLogMessage } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import type { ElasticsearchUtils, EsOperation } from '../../persistence/elastic.utils.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { Catalog } from '../catalog.factory.js';
 import { ElasticsearchCatalogSummary } from './elasticsearch.catalog-summary.js';
 
@@ -43,6 +47,17 @@ export abstract class ElasticsearchCatalog extends Catalog<IndexDocument, Elasti
         // TODO this is a crutch until we have dedicated connections
         catalogSettings.settings.url = catalogSettings.url;
         this.elastic = ElasticsearchFactory.getElasticUtils(catalogSettings.settings, summary);
+    }
+
+    async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+        // ensure that the configured index exists
+        const esSettings = this.settings.settings;
+        if (esSettings.index && !(await this.elastic.isIndexPresent(esSettings.index))) {
+            const mapping = ProfileFactoryLoader.get().getIndexMappings();
+            const settings = ProfileFactoryLoader.get().getIndexSettings();
+            await this.elastic.prepareIndexWithName(esSettings.index, mapping, settings);
+            await this.elastic.addAlias(esSettings.index, esSettings.alias);
+        }
     }
 
     async importIntoCatalog(operations: EsOperation[]) {
