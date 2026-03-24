@@ -23,7 +23,7 @@
 
 @if (statuses().length) {
   <div class="flex-row gap-8" *transloco="let t; read: 'harvester'">
-    @for (status of statuses(); track status) {
+    @for (status of statuses(); track $index) {
       @switch (status) {
         @case ("error") {
           <div

@@ -1,10 +1,12 @@
 import { FormlyFieldConfig } from "@ngx-formly/core";
-import { debounceTime } from "rxjs";
-import { map } from "rxjs/operators";
-import { IdentifierValidator } from "../../../formly/validators";
+import { Catalog } from "@shared/catalog";
+import { inject } from "@angular/core";
+import { TranslocoService } from "@ngneat/transloco";
 
 export abstract class SharedFields {
   static general(): FormlyFieldConfig[] {
+    const transloco = inject(TranslocoService);
+
     return [
       {
         wrappers: ["section"],
@@ -54,46 +56,6 @@ export abstract class SharedFields {
                 },
               },
               {
-                key: "catalogId",
-                type: "autocomplete",
-                className: "ingrid-col-10 ingrid-col-md-auto",
-                props: {
-                  label: "Katalog-Identifier",
-                  required: true,
-                  placeholder: "Eingeben oder auswählen",
-                  contextHelpId: "harvester_field_catalogId",
-                },
-                expressions: {
-                  "props.options": (field) => {
-                    return field.options.formState?.catalogs?.pipe(
-                      map((catalogs: any[]) =>
-                        catalogs.map((catalog) => ({
-                          label: catalog.title,
-                          value: catalog.identifier,
-                        })),
-                      ),
-                    );
-                  },
-                },
-                validators: {
-                  naming: {
-                    expression: (control) => IdentifierValidator(control),
-                    message: "Die Eingabe ist ungültig.",
-                  },
-                },
-                hooks: {
-                  // Synchronize with the iPlugId field if it exists.
-                  onInit: (field) => {
-                    field.formControl?.valueChanges
-                      .pipe(debounceTime(300))
-                      .subscribe((value) => {
-                        const iPlugId = field.form.get("iPlugId");
-                        if (iPlugId) iPlugId.setValue(field.formControl.value);
-                      });
-                  },
-                },
-              },
-              {
                 key: "priority",
                 type: "input",
                 wrappers: ["inline-help", "form-field"],
@@ -105,6 +67,27 @@ export abstract class SharedFields {
                 },
               },
             ],
+          },
+          {
+            key: "catalogIds",
+            type: "select",
+            wrappers: ["form-field"],
+            props: {
+              label: "Kataloge",
+              required: true,
+              multiple: true,
+              placeholder: transloco.translate("common.pleaseChoose"),
+            },
+            expressions: {
+              "props.options": (field) => {
+                return field.options.formState?.catalogs?.map(
+                  (catalog: Catalog) => ({
+                    label: catalog.name,
+                    value: catalog.id,
+                  }),
+                );
+              },
+            },
           },
           {
             key: "description",

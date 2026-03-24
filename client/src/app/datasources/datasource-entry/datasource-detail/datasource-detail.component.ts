@@ -28,6 +28,7 @@ import { ImportLogMessage } from "../../../../../../server/app/model/import.resu
 import { DatePipe } from "@angular/common";
 import { DetailItemComponent } from "../../../shared/detail-item/detail-item.component";
 import cronstrue from "cronstrue/i18n";
+import { CatalogService } from "../../../catalogs/services/catalog.service";
 
 @Component({
   selector: "harvester-datasource-detail",
@@ -90,6 +91,14 @@ export class DatasourceDetailComponent {
     return this.importLog().summary?.warnings.length;
   });
 
+  catalogs = computed(() => {
+    if (!this.catalogService.catalogs()) return;
+    const catalogs = Object.values(this.catalogService.catalogs())
+      .filter((catalog) => this.datasource().catalogIds.includes(catalog.id))
+      .map((catalog) => catalog.name);
+    return catalogs.length > 0 ? catalogs : undefined;
+  });
+
   // Planned import info.
   completeImportDate = computed(() => {
     const cron = this.datasource().cron;
@@ -109,5 +118,6 @@ export class DatasourceDetailComponent {
   constructor(
     private datePipe: DatePipe,
     private transloco: TranslocoService,
+    private catalogService: CatalogService,
   ) {}
 }

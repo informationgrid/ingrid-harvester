@@ -118,6 +118,10 @@ mat-checkbox .mdc-label {
   font-size: 16px;
 }
 
+mat-option mat-pseudo-checkbox {
+  border-color: black !important;
+}
+
 .mat-mdc-header-row {
   min-height: 40px;
 }

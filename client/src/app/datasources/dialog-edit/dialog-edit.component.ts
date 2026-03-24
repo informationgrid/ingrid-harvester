@@ -38,6 +38,7 @@ import { OaiType } from "./fields/types/oai.type";
 import { SparqlType } from "./fields/types/sparql.type";
 import { WfsType } from "./fields/types/wfs.type";
 import { GenesisType } from "./fields/types/genesis.type";
+import { CatalogService } from "../../catalogs/services/catalog.service";
 
 @Component({
   selector: "app-dialog-edit",
@@ -74,6 +75,7 @@ export class DialogEditComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<DialogEditComponent>,
     private configService: ConfigService,
+    private catalogService: CatalogService,
   ) {
     // Init form.
     this.form = new UntypedFormGroup({});
@@ -83,7 +85,9 @@ export class DialogEditComponent {
         this.formOptions = {
           formState: {
             profile,
-            catalogs: this.configService.getCatalogs(),
+            catalogs: this.catalogService.catalogs()
+              ? Object.values(this.catalogService.catalogs())
+              : [],
           },
         };
         this.isLoaded.set(true);

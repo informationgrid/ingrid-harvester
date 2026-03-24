@@ -28,7 +28,6 @@ export abstract class IngridProfile {
                 className: "ingrid-col-10 ingrid-col-md-auto",
                 props: {
                   label: "iPlugId",
-                  disabled: true,
                 },
               },
               {

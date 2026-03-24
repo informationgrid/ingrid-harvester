@@ -23,39 +23,39 @@
 
 <div
   class="pt-4 grid gap-12 grid-cols-3 grid-cols-md-2 grid-cols-sm-1"
-  *transloco="let t; read: 'harvester'"
+  *transloco="let t"
 >
   <ingrid-detail-item
     icon="available"
-    [title]="t('lastImport')"
+    [title]="t('harvester.lastImport')"
     [value]="lastExecution()"
     data-test="last-execution"
   />
 
   <ingrid-detail-item
     icon="timer"
-    [title]="t('durationImport')"
+    [title]="t('harvester.durationImport')"
     [value]="executionDuration()"
     data-test="duration"
   />
 
   <ingrid-detail-item
     icon="upcoming"
-    [title]="t('nextImport')"
+    [title]="t('harvester.nextImport')"
     [value]="nextExecution()"
     data-test="next-execution"
   />
 
   <ingrid-detail-item
     icon="document"
-    [title]="t('documents')"
+    [title]="t('harvester.documents')"
     [value]="docNum()"
     data-test="num-docs"
   />
 
   <ingrid-detail-item
     icon="error"
-    [title]="t('errors')"
+    [title]="t('harvester.errors')"
     [value]="errorNum()"
     [hasNavigation]="errorNum() !== '-'"
     (onNavigate)="onOpenErrorLog.emit()"
@@ -64,17 +64,25 @@
 
   <ingrid-detail-item
     icon="warning"
-    [title]="t('warnings')"
+    [title]="t('harvester.warnings')"
     [value]="warningNum()"
     [hasNavigation]="warningNum() !== '-'"
     (onNavigate)="onOpenWarningLog.emit()"
     data-test="num-warnings"
   />
 
+  <ingrid-detail-item
+    icon="catalogs"
+    [title]="t('pageTitle.catalogs')"
+    [value]="catalogs() ? undefined : '-'"
+    [values]="catalogs()"
+    data-test="incremental-import"
+  />
+
   @if (completeImportDate()) {
     <ingrid-detail-item
       icon="Harvester"
-      [title]="t('completeImport')"
+      [title]="t('harvester.completeImport')"
       [value]="completeImportDate()"
       data-test="complete-import"
     />
@@ -83,7 +91,7 @@
   @if (incrementalImportDate()) {
     <ingrid-detail-item
       icon="Harvester"
-      [title]="t('incrementalImport')"
+      [title]="t('harvester.incrementalImport')"
       [value]="incrementalImportDate()"
       data-test="incremental-import"
     />

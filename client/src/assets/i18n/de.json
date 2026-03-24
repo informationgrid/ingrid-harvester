@@ -18,7 +18,8 @@
     "loading": "Wird geladen...",
     "expand": "Vergrößern",
     "collapse": "Verkleinern",
-    "logout": "Abmelden"
+    "logout": "Abmelden",
+    "pleaseChoose": "Bitte auswählen"
   },
   "pageTitle": {
     "default": "InGrid Harvester",

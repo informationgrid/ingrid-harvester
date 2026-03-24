@@ -29,8 +29,16 @@
     </div>
 
     @if (value() !== undefined) {
-      <div class="value" [class.sensitive]="key() === 'password'">
+      <div class="flex-1 text-md break-word">
         {{ value() }}
+      </div>
+    }
+
+    @if (values()?.length) {
+      <div class="flex-row flex-wrap gap-4">
+        @for (value of values(); track $index) {
+          <div class="multi-value">{{ value }}</div>
+        }
       </div>
     }
 

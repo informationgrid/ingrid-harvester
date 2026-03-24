@@ -33,7 +33,7 @@
     [required]="props.required"
   />
   <mat-autocomplete #auto="matAutocomplete">
-    @for (option of filteredOptions | async; track option.id) {
+    @for (option of filteredOptions | async; track option.value) {
       <mat-option value="{{ option.value }}">
         {{ option.label }}
       </mat-option>
