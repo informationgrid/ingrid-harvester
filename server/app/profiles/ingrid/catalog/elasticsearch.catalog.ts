@@ -51,6 +51,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
      * @param observer 
      */
     async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+        await super.prepareImport(transactionHandle, settings, observer);
         this.deduplicationMetadata = new Map<string, DeduplicationMetadata>();
 
         const aliases = this.settings.settings.dedupAliases;

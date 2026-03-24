@@ -40,7 +40,6 @@ export type PiveauCatalogSettings = CatalogSettings & {
     catalog: string,
     title?: string,
     description?: string
-    apiKey: string
   }
 }
 
