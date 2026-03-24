@@ -154,8 +154,8 @@ export class CswImporter extends Importer<CswSettings> {
                 await this.database.commitTransaction();
                 // TODO support concurrency of different catalogs
                 for (const catalogId of this.getSettings().catalogIds) {
+                    const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, this.getSummary());
                     try {
-                        const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, this.getSummary());
                         // log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with transaction timestamp ${transactionTimestamp}`);
                         log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with source ${this.getSettings().sourceURL}`);
 
@@ -166,8 +166,8 @@ export class CswImporter extends Importer<CswSettings> {
                         await catalog.process(this.getSettings().sourceURL, this.getSettings(), observer);
                     }
                     catch (e) {
-                        log.error(`Error while importing into catalog ${catalogId}`, e);
-                        this.getSummary().appErrors.push(`Error while importing into catalog ${catalogId}: ${e.message}`);
+                        log.error(`Error while importing into catalog ${catalog.settings.name} (id=${catalogId}):`, e);
+                        this.getSummary().appErrors.push(`Error while importing into catalog ${catalog.settings.name} (id=${catalogId}): ${e.message}`);
                     }
                 }
                 await this.postHarvestingHandling();
@@ -481,6 +481,7 @@ export class CswImporter extends Importer<CswSettings> {
                     // TODO remove collection_id
                     collection_id: (await this.database.getLegacyCatalog(this.getSettings().catalogId)).id,
                     dataset: doc,
+                    dataset_csw: mapper.getHarvestedData(),
                     original_document: mapper.getHarvestedData()
                 };
                 promises.push(this.database.addEntityToBulk(entity));
