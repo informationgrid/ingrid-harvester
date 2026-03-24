@@ -155,6 +155,7 @@ export class WfsImporter extends Importer<WfsSettings> {
         log.info(`Found ${numFeatures} features at ${this.getSettings().sourceURL} for FeatureType "${featureTypeName}"`);
         let featureTypeDescriptionNode = await this.getTypeDescription(featureTypeName);
         this.generalInfo['typename'] = featureTypeName;
+        this.generalInfo['featureTypeDescription'] = featureTypeDescriptionNode;
 
         // if harvesting FeatureTypes, do it here (to include the feature names)
         if (this.getSettings().harvestTypes) {
@@ -214,7 +215,6 @@ export class WfsImporter extends Importer<WfsSettings> {
         this.generalInfo['select'] = select;
         this.generalInfo['numFeatures'] = numFeatures;
         this.generalInfo['title'] = select('./wfs:Title', featureTypeNode, true)?.textContent;
-        this.generalInfo['featureTypeDescription'] = featureTypeDescriptionNode;
         this.generalInfo['geometryType'] = this.extractGeometryType(select, featureTypeDescriptionNode);
         let mapper = this.getMapper(new Date(Date.now()), featureTypeNode);
         let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
