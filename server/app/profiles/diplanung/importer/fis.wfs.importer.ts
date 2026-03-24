@@ -21,13 +21,13 @@
  * ==================================================
  */
 
-import type { Harvester } from '@shared/harvester.js';
+import type { Datasource } from '@shared/datasource.js';
 import { WfsImporter } from '../../../importer/wfs/wfs.importer.js';
 import * as MiscUtils from '../../../utils/misc.utils.js';
 
 export class FisWfsImporter extends WfsImporter {
 
-    constructor(settings: Harvester) {
+    constructor(settings: Datasource) {
         super(MiscUtils.merge(settings, { memberElements: ['gml:featureMember'] }));
     }
 }

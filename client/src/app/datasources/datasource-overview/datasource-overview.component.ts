@@ -25,7 +25,7 @@ import { Component, computed, Signal } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { UntilDestroy } from "@ngneat/until-destroy";
-import { Harvester } from "@shared/harvester";
+import { Datasource } from "@shared/datasource";
 import { ConfirmDialogComponent } from "../../shared/confirm-dialog/confirm-dialog.component";
 import { DialogEditComponent } from "../dialog-edit/dialog-edit.component";
 import { DialogHistoryComponent } from "../dialog-history/dialog-history.component";
@@ -44,7 +44,7 @@ import { AuthenticationService } from "../../security/authentication.service";
 })
 export class DatasourceOverviewComponent {
   importLogs = computed(() => this.datasourceService.importLogs());
-  groupedDatasources: Signal<Record<string, Harvester[]>> = computed(() => {
+  groupedDatasources: Signal<Record<string, Datasource[]>> = computed(() => {
     if (!this.datasourceService.datasources()) return {};
     return Object.values(this.datasourceService.datasources()).reduce(
       (acc, datasource) => {
@@ -118,7 +118,7 @@ export class DatasourceOverviewComponent {
       });
   }
 
-  onView(datasource: Harvester) {
+  onView(datasource: Datasource) {
     this.dialog.open(DialogEditComponent, {
       data: {
         icon: "visibility_fill",
@@ -130,7 +130,7 @@ export class DatasourceOverviewComponent {
     });
   }
 
-  onEdit(datasource: Harvester) {
+  onEdit(datasource: Datasource) {
     this.dialog
       .open(DialogEditComponent, {
         data: {
@@ -143,13 +143,13 @@ export class DatasourceOverviewComponent {
         autoFocus: false,
       })
       .afterClosed()
-      .subscribe((result: Harvester) => {
+      .subscribe((result: Datasource) => {
         if (!result) return;
         this.datasourceService.edit(result);
       });
   }
 
-  onDuplicate(datasource: Harvester) {
+  onDuplicate(datasource: Datasource) {
     this.dialog
       .open(DialogEditComponent, {
         data: {
@@ -167,13 +167,13 @@ export class DatasourceOverviewComponent {
         disableClose: true,
       })
       .afterClosed()
-      .subscribe((result: Harvester) => {
+      .subscribe((result: Datasource) => {
         if (!result) return;
         this.datasourceService.addOrUpdate(result);
       });
   }
 
-  onDelete(datasource: Harvester) {
+  onDelete(datasource: Datasource) {
     this.dialog
       .open(ConfirmDialogComponent, {
         data: this.transloco.translate("harvester.deleteConfirmation"),
@@ -185,7 +185,7 @@ export class DatasourceOverviewComponent {
       });
   }
 
-  onSchedule(datasource: Harvester) {
+  onSchedule(datasource: Datasource) {
     this.dialog
       .open(DialogSchedulerComponent, {
         width: "500px",
@@ -198,7 +198,7 @@ export class DatasourceOverviewComponent {
       });
   }
 
-  onShowHistory(harvester: Harvester) {
+  onShowHistory(harvester: Datasource) {
     this.datasourceService.getHistory(harvester.id).subscribe({
       next: (data) => {
         if (!data || data.history.length === 0) {

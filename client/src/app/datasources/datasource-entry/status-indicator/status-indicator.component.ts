@@ -24,7 +24,7 @@
 import { Component, computed, input } from "@angular/core";
 import { ImportLogMessage } from "../../../../../../server/app/model/import.result";
 import { MatIcon } from "@angular/material/icon";
-import { Harvester } from "@shared/harvester";
+import { Datasource } from "@shared/datasource";
 import { MatTooltip } from "@angular/material/tooltip";
 import { TranslocoDirective } from "@ngneat/transloco";
 import { DatePipe } from "@angular/common";
@@ -38,7 +38,7 @@ type ImportStatus = "success" | "cron" | "disable" | "importing" | "error";
   imports: [MatIcon, MatTooltip, TranslocoDirective, DatePipe],
 })
 export class StatusIndicatorComponent {
-  datasource = input.required<Harvester>();
+  datasource = input.required<Datasource>();
   importLog = input<ImportLogMessage>();
 
   statuses = computed(() => this.getStatuses());

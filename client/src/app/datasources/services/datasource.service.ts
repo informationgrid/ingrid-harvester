@@ -23,7 +23,7 @@
 
 import { inject, Injectable, signal } from "@angular/core";
 import { Observable } from "rxjs";
-import { Harvester } from "@shared/harvester";
+import { Datasource } from "@shared/datasource";
 import { ImportLogMessage } from "../../../../../server/app/model/import.result";
 import { CronData } from "../../../../../server/app/importer.settings";
 import { SocketService } from "./socket.service";
@@ -39,7 +39,7 @@ export class DatasourceService {
   snackBar = inject(MatSnackBar);
   transloco = inject(TranslocoService);
 
-  private _datasources = signal<Record<number, Harvester>>(undefined);
+  private _datasources = signal<Record<number, Datasource>>(undefined);
   datasources = this._datasources.asReadonly();
 
   private _importLogs = signal<Record<number, ImportLogMessage>>(undefined);
@@ -59,7 +59,7 @@ export class DatasourceService {
     this.api.getDatasources().subscribe({
       next: (items) => {
         if (!items) return;
-        const tempDatasources: Record<number, Harvester> = {};
+        const tempDatasources: Record<number, Datasource> = {};
         for (const item of items) tempDatasources[item.id] = item;
         this._datasources.set(tempDatasources);
         console.log(this.datasources());
@@ -124,14 +124,14 @@ export class DatasourceService {
     return this.api.importAll();
   }
 
-  addOrUpdate(datasource: Harvester) {
+  addOrUpdate(datasource: Datasource) {
     this.api.update(datasource).subscribe({
       next: () => this.fetchDatasources(),
       error: (err) => alert(err.message),
     });
   }
 
-  edit(datasource: Harvester) {
+  edit(datasource: Datasource) {
     this.api.update(datasource).subscribe({
       next: () => {
         this._datasources.update((current) => ({
@@ -166,7 +166,7 @@ export class DatasourceService {
   // Returns two dates in an array [full, incr].
   // It can be [null, null], if nothing is scheduled.
   scheduleByCron(
-    datasource: Harvester,
+    datasource: Datasource,
     cron: { full: CronData; incr: CronData },
   ) {
     this.api.schedule(datasource.id, cron).subscribe({

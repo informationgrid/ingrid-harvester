@@ -22,7 +22,7 @@
  */
 
 import log4js from 'log4js';
-import type { Harvester } from '@shared/harvester.js';
+import type { Datasource } from '@shared/datasource.js';
 import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '@tsed/common';
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
@@ -44,20 +44,20 @@ export class HarvesterCtrl {
     }
 
     @Get('/')
-    async getHarvesterConfig(): Promise<Harvester[]> {
+    async getHarvesterConfig(): Promise<Datasource[]> {
         return ConfigService.getHarvesters();
     }
 
     @Post('/filecontent')
     @KeycloakAuth({role: ["admin", "editor"]})
-    importHarvesterConfigs(@BodyParams() config: Harvester[]) {
+    importHarvesterConfigs(@BodyParams() config: Datasource[]) {
         if(config && config.length > 0 && config[0].type)
             ConfigService.importHarvester(config);
     }
 
     @Post('/:id')
     @KeycloakAuth({role: ["admin", "editor"]})
-    updateHarvesterConfig(@PathParams('id') id: number, @BodyParams() config: Harvester) {
+    updateHarvesterConfig(@PathParams('id') id: number, @BodyParams() config: Datasource) {
         const updatedID = ConfigService.update(+id, config);
 
         let profile = ProfileFactoryLoader.get();

@@ -23,7 +23,7 @@
 
 import { Component, computed, input, output } from "@angular/core";
 import { TranslocoDirective, TranslocoService } from "@ngneat/transloco";
-import { Harvester } from "@shared/harvester";
+import { Datasource } from "@shared/datasource";
 import { ImportLogMessage } from "../../../../../../server/app/model/import.result";
 import { DatePipe } from "@angular/common";
 import { DetailItemComponent } from "../../../shared/detail-item/detail-item.component";
@@ -38,7 +38,7 @@ import { CatalogService } from "../../../catalogs/services/catalog.service";
   providers: [DatePipe],
 })
 export class DatasourceDetailComponent {
-  datasource = input.required<Harvester>();
+  datasource = input.required<Datasource>();
   importLog = input<ImportLogMessage>();
 
   onOpenErrorLog = output<void>();

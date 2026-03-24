@@ -22,7 +22,7 @@
  */
 
 import { Component, input, output, ViewChild } from "@angular/core";
-import { Harvester } from "@shared/harvester";
+import { Datasource } from "@shared/datasource";
 import { ImportLogMessage } from "../../../../../server/app/model/import.result";
 import { TranslocoDirective } from "@ngneat/transloco";
 import { StatusIndicatorComponent } from "./status-indicator/status-indicator.component";
@@ -55,7 +55,7 @@ import { ListItemExpandableComponent } from "../../shared/list-item-expandable/l
 export class DatasourceEntryComponent {
   @ViewChild("actionMenuBtn") menuBtn!: MatMenuTrigger;
 
-  datasource = input.required<Harvester>();
+  datasource = input.required<Datasource>();
   canEdit = input<boolean>(true);
   importLog = input<ImportLogMessage>();
 

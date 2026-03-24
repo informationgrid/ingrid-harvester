@@ -23,7 +23,7 @@
 
 import type { CatalogSettings, ElasticsearchCatalogSettings, PiveauCatalogSettings } from '@shared/catalog.js';
 import type { GeneralSettings } from '@shared/general-config.settings.js';
-import type { Harvester } from '@shared/harvester.js';
+import type { Datasource } from '@shared/datasource.js';
 import type { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
 import * as fs from 'fs';
 import log4js from 'log4js';
@@ -220,7 +220,7 @@ export class ConfigService {
      *
      * @returns a list of Harvester
      */
-    static getHarvesters(): Harvester[] {
+    static getHarvesters(): Datasource[] {
         const harvesterConfigFile = this.getHarvesterConfigFile();
         const configExists = fs.existsSync(harvesterConfigFile);
 
@@ -230,7 +230,7 @@ export class ConfigService {
         }
 
         const contents = fs.readFileSync(harvesterConfigFile);
-        const configs: Harvester[] = JSON.parse(contents.toString());
+        const configs: Datasource[] = JSON.parse(contents.toString());
         return configs
             .map(config => {
                 let defaultSettings: Partial<ImporterSettings> = DefaultImporterSettings;
@@ -260,7 +260,7 @@ export class ConfigService {
      * @param id
      * @param updatedHarvester
      */
-    static update(id: number, updatedHarvester: Harvester): number {
+    static update(id: number, updatedHarvester: Datasource): number {
         let newConfig = ConfigService.getHarvesters();
         const filteredHarvester = MiscUtils.removePaths(updatedHarvester, [
             "isIncrementalSupported"
@@ -286,7 +286,7 @@ export class ConfigService {
         return id;
     }
 
-    static updateAll(updatedHarvesters: Harvester[]) {
+    static updateAll(updatedHarvesters: Datasource[]) {
         const filteredHarvesters = updatedHarvesters.map(harvesterConfig => MiscUtils.removePaths(harvesterConfig, [
             "isIncrementalSupported"
         ]));

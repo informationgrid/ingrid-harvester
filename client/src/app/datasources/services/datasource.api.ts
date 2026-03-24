@@ -23,10 +23,9 @@
 
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { Harvester } from "@shared/harvester";
+import { Datasource } from "@shared/datasource";
 import { HttpClient } from "@angular/common/http";
 import { ImportLogMessage } from "../../../../../server/app/model/import.result";
-import { CkanSettings } from "../../../../../server/app/importer/ckan/ckan.settings";
 import { CronData } from "../../../../../server/app/importer.settings";
 
 @Injectable({
@@ -35,8 +34,8 @@ import { CronData } from "../../../../../server/app/importer.settings";
 export class DatasourceApi {
   constructor(private http: HttpClient) {}
 
-  getDatasources(): Observable<Harvester[]> {
-    return this.http.get<Harvester[]>("rest/api/harvester");
+  getDatasources(): Observable<Datasource[]> {
+    return this.http.get<Datasource[]>("rest/api/harvester");
   }
 
   import(id: number, isIncremental: boolean): Observable<void> {
@@ -54,7 +53,7 @@ export class DatasourceApi {
     return this.http.get<ImportLogMessage[]>("rest/api/lastLogs");
   }
 
-  update(datasource: Harvester): Observable<void> {
+  update(datasource: Datasource): Observable<void> {
     return this.http.post<void>(
       "rest/api/harvester/" + (datasource.id || -1),
       datasource,

@@ -30,4 +30,4 @@ import type { OaiSettings } from '../server/app/importer/oai/oai.settings';
 import type { SparqlSettings } from '../server/app/importer/sparql/sparql.settings';
 import type { WfsSettings } from '../server/app/importer/wfs/wfs.settings';
 
-export type Harvester = CkanSettings | CswSettings | DcatapdeSettings | JsonSettings | KldSettings | OaiSettings | SparqlSettings | WfsSettings;
+export type Datasource = CkanSettings | CswSettings | DcatapdeSettings | JsonSettings | KldSettings | OaiSettings | SparqlSettings | WfsSettings;
