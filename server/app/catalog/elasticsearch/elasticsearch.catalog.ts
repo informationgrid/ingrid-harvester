@@ -46,6 +46,8 @@ export abstract class ElasticsearchCatalog extends Catalog<object> {
 
     constructor(catalogSettings: ElasticsearchCatalogSettings, summary: Summary) {
         super(catalogSettings, summary);
+        // TODO this is a crutch until we have dedicated connections
+        catalogSettings.settings.url = catalogSettings.url;
         this.elastic = ElasticsearchFactory.getElasticUtils(catalogSettings.settings, summary);
     }
 
