@@ -37,6 +37,7 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
     declare protected client: Client;
 
     constructor(config: ElasticsearchConfiguration, summary: Summary) {
+        config.prefix ??= '';
         super(config, summary);
 
         // timeout is set to 0 as per recommendation (NodeJS ES 8.x uses UndiciConnection)
