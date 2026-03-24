@@ -35,7 +35,6 @@ import type { OaiSettings } from '../../importer/oai/oai.settings.js';
 import type { DocumentFactory } from '../../model/index.document.factory.js';
 import type { Summary } from '../../model/summary.js';
 import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
-import type { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
 import { ProfileFactory } from '../profile.factory.js';
 import { LvrClickRheinMapper } from './mapper/lvr.clickrhein.mapper.js';
@@ -44,7 +43,6 @@ import { LvrOaiLidoMapper } from './mapper/lvr.oai.lido.mapper.js';
 import { LvrOaiModsMapper } from './mapper/lvr.oai.mods.mapper.js';
 import type { LvrIndexDocument } from './model/index.document.js';
 import { ElasticQueries } from './persistence/elastic.queries.js';
-import { PostgresAggregator } from './persistence/postgres.aggregator.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -109,10 +107,6 @@ export class LvrFactory extends ProfileFactory<LvrSettings> {
 
     getProfileName(): string {
         return 'lvr';
-    }
-
-    getPostgresAggregator(settings: ElasticsearchCatalogSettings): AbstractPostgresAggregator<LvrIndexDocument> {
-        return new PostgresAggregator(settings);
     }
 
     useIndexPerCatalog(): boolean {

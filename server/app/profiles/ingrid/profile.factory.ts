@@ -45,7 +45,6 @@ import type { DatabaseUtils } from '../../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
 import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
-import type { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
 import { ProfileFactory } from '../profile.factory.js';
 import { ingridCkanMapper } from './mapper/ingrid.ckan.mapper.js';
@@ -61,7 +60,6 @@ import type { IngridMetadata } from './model/ingrid.metadata.js';
 import { ElasticQueries } from './persistence/elastic.queries.js';
 import mappings from './persistence/ingrid-meta-mapping.json' with { type: 'json' };
 import settings from './persistence/ingrid-meta-settings.json' with { type: 'json' };
-import { PostgresAggregator } from './persistence/postgres.aggregator.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -195,10 +193,6 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
 
     getProfileName(): string {
         return 'ingrid';
-    }
-
-    getPostgresAggregator(settings: ElasticsearchCatalogSettings): AbstractPostgresAggregator<IngridIndexDocument> {
-        return new PostgresAggregator(settings);
     }
 
     useIndexPerCatalog(): boolean {

@@ -39,7 +39,6 @@ import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import type { ElasticQueries } from '../persistence/elastic.queries.js';
 import type { IndexSettings } from '../persistence/elastic.setting.js';
 import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
-import type { PostgresAggregator } from '../persistence/postgres.aggregator.js';
 import { PostgresQueries } from '../persistence/postgres.queries.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import * as MiscUtils from '../utils/misc.utils.js';
@@ -104,8 +103,6 @@ CatalogFactory {
     abstract getDocumentFactory(mapper: Mapper<ImporterSettings>): DocumentFactory<IndexDocument>;
 
     abstract getCatalog(catalogId: number, summary: Summary): Promise<Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>>;
-
-    abstract getPostgresAggregator(settings: CatalogSettings): PostgresAggregator<IndexDocument>;
 
     abstract getProfileName(): string;
 

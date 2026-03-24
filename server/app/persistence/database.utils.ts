@@ -27,10 +27,7 @@ import type { CatalogColumnType } from '../catalog/catalog.factory.js';
 import type { Catalog as DcatCatalog } from '../model/dcatApPlu.model.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
 import type { ImportLogMessage } from "../model/import.result.js";
-import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
-import type { ElasticsearchUtils } from './elastic.utils.js';
-import type { PostgresAggregator } from './postgres.aggregator.js';
 import type { Bucket } from './postgres.utils.js';
 
 export interface BulkResponse {
@@ -78,8 +75,6 @@ export abstract class DatabaseUtils {
     abstract nonFetchedPercentage(source: string, last_modified: Date): Promise<number>;
 
     abstract deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void>;
-
-    abstract pushToElasticsearch(elastic: ElasticsearchUtils, source: string, observer: Observer<ImportLogMessage>, aggregator?: PostgresAggregator<IndexDocument>): Promise<void>;
 
     abstract streamBuckets<T extends CatalogColumnType>(source: string, datasetColumn: string, observer: Observer<ImportLogMessage>): AsyncGenerator<Bucket<T>>;
 

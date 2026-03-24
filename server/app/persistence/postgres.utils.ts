@@ -37,8 +37,6 @@ import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import type { BulkResponse } from './database.utils.js';
 import { DatabaseUtils } from './database.utils.js';
-import type { ElasticsearchUtils } from './elastic.utils.js';
-import type { PostgresAggregator } from './postgres.aggregator.js';
 import type { PostgresQueries } from './postgres.queries.js';
 
 const log = log4js.getLogger(import.meta.filename);
@@ -243,98 +241,6 @@ export class PostgresUtils extends DatabaseUtils {
 
     async deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void> {
         await this.transactionClient.query(this.queries.deleteNonFetchedRecords, [source, last_modified]);
-    }
-
-    /**
-     * Push datasets from database to elasticsearch, slower but with all bells and whistles.
-     *
-     * @param elastic
-     * @param source
-     * @param observer
-     */
-    async pushToElasticsearch(elastic: ElasticsearchUtils, source: string, observer: Observer<ImportLogMessage>, pgAggregator?: PostgresAggregator<IndexDocument>): Promise<void> {
-        // TODO refactor with regards to new catalog concept
-        // pgAggregator ??= ProfileFactoryLoader.get().getPostgresAggregator({} as CatalogSettings);
-        if (!pgAggregator) {
-            throw new Error('Not implemented: pushToElastic3ReturnOfTheJedi without PostgresAggregator');
-        }
-        const client: pg.PoolClient = await PostgresUtils.pool.connect();
-        log.debug('Connection started');
-        let start = Date.now();
-        // TODO we also need to store SOURCE_TYPE in postgres and subsequently fetch it here (B.source_type)
-        // @myself: next time, when you want me to do something in the future, specify WHY that should be done...
-
-        let catalogs = (await this.listLegacyCatalogs()).reduce((map, catalog: LegacyCatalog) => (map[catalog.id] = catalog, map), {});
-
-      // right before creating the cursor
-      const { rows: [{ count: totalRows }] } = await client.query(
-        `SELECT COUNT(*)::int AS count FROM (${this.queries.getBuckets}) AS t`,
-        [source]
-      );
-
-        const cursor = client.query(new Cursor(this.queries.getBuckets, [source]));
-        let currentId: string | number;
-        let currentBucket: Bucket<any>;
-        const maxRows = 100;
-        let rows = await cursor.read(maxRows);
-        let numDatasets = 0;
-        let numBuckets = 0;
-        while (rows.length > 0) {
-            log.info(`PQ->ES: Processing rows ${numDatasets} - ${numDatasets + rows.length}`);
-            observer.next(ImportResult.running(numDatasets, totalRows, 'Datensätze werden publiziert'));
-            for (let row of rows) {
-                numDatasets += 1;
-                if (row.anchor_id != currentId) {
-                    numBuckets += 1;
-                    // process current bucket, then create new
-                    currentId = row.anchor_id;
-                    if (currentBucket) {
-                        let operationChunks = await pgAggregator.processBucket(currentBucket);
-                        if (operationChunks) {
-                            await elastic.addOperationChunksToBulk(operationChunks);
-                        }
-                    }
-                    currentBucket = {
-                        anchor_id: row.anchor_id,
-                        duplicates: new Map<string | number, IndexDocument>(),
-                        operatingServices: new Map<string | number, Distribution>()
-                    };
-                }
-                // add service/additional distribution to current bucket
-                if (row.service_type != null) {
-                    currentBucket.operatingServices.set(row.id, row.dataset);
-                }
-                // add index document to current bucket
-                else {
-                    // ensure `extras` structure exists in dataset
-                    row.dataset.extras ??= {};
-                    row.dataset.extras.metadata ??= {};
-                    row.dataset.extras.metadata.source ??= {};
-                    // set metadata information
-                    row.dataset.extras.metadata.issued = row.issued;
-                    row.dataset.extras.metadata.modified = row.modified;
-                    row.dataset.extras.metadata.deleted = row.deleted;
-                    row.dataset.extras.metadata.source.source_type = this.getSourceType(row.dataset, row.source);
-                    row.dataset.catalog = catalogs[row.catalog_id];
-                    currentBucket.duplicates.set(row.id, row.dataset);
-                }
-            }
-            rows = await cursor.read(maxRows);
-        }
-        // process last bucket
-        if (currentBucket) {
-            let operationChunks = await pgAggregator.processBucket(currentBucket);
-            if (operationChunks) {
-                await elastic.addOperationChunksToBulk(operationChunks);
-            }
-        }
-        // send remainder of bulk data
-        await elastic.sendBulkOperations();
-        log.debug('Connection released');
-        cursor.close();
-        client.release();
-        let stop = Date.now();
-        log.info(`Processed ${numDatasets} datasets and ${numBuckets} buckets`);
     }
 
     /**

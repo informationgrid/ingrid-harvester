@@ -34,7 +34,6 @@ import type { WfsSettings } from '../../importer/wfs/wfs.settings.js';
 import type { DocumentFactory } from '../../model/index.document.factory.js';
 import type { Summary } from '../../model/summary.js';
 import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
-import type { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
 import { ProfileFactory } from '../profile.factory.js';
 import { DiplanungCswMapper } from './mapper/diplanung.csw.mapper.js';
@@ -45,7 +44,6 @@ import { XplanSynWfsMapper } from './mapper/wfs/xplan.syn.wfs.mapper.js';
 import { XplanWfsMapper } from './mapper/wfs/xplan.wfs.mapper.js';
 import type { DiplanungIndexDocument } from './model/index.document.js';
 import { ElasticQueries } from './persistence/elastic.queries.js';
-import { PostgresAggregator } from './persistence/postgres.aggregator.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -125,10 +123,6 @@ export class DiplanungFactory extends ProfileFactory<DiplanungSettings> {
 
     getProfileName(): string {
         return 'diplanung';
-    }
-
-    getPostgresAggregator(): AbstractPostgresAggregator<DiplanungIndexDocument> {
-        return new PostgresAggregator();
     }
 
     useIndexPerCatalog(): boolean {
