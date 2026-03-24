@@ -81,7 +81,7 @@ export class DatasourceOverviewComponent {
   onImport(id: number, isIncremental: boolean = false) {
     this.datasourceService.import(id, isIncremental).subscribe();
     this.snackBar.open(
-      this.transloco.translate("harvester.importStarted"),
+      this.transloco.translate("datasources.importStarted"),
       null,
       { duration: 3 * 1000 },
     );
@@ -90,7 +90,7 @@ export class DatasourceOverviewComponent {
   onImportAll() {
     this.datasourceService.importAll().subscribe();
     this.snackBar.open(
-      this.transloco.translate("harvester.allImportStarted"),
+      this.transloco.translate("datasources.allImportStarted"),
       null,
       { duration: 3 * 1000 },
     );
@@ -101,7 +101,7 @@ export class DatasourceOverviewComponent {
       .open(DialogEditComponent, {
         data: {
           icon: "Add",
-          title: this.transloco.translate("harvester.addDatasource"),
+          title: this.transloco.translate("datasources.addDatasource"),
           actionBtnText: this.transloco.translate("common.add"),
           datasource: {
             id: -1,
@@ -122,7 +122,7 @@ export class DatasourceOverviewComponent {
     this.dialog.open(DialogEditComponent, {
       data: {
         icon: "visibility_fill",
-        title: this.transloco.translate("harvester.viewDatasource"),
+        title: this.transloco.translate("datasources.viewDatasource"),
         datasource,
         readonly: true,
       },
@@ -134,7 +134,7 @@ export class DatasourceOverviewComponent {
     this.dialog
       .open(DialogEditComponent, {
         data: {
-          title: this.transloco.translate("harvester.editDatasource"),
+          title: this.transloco.translate("datasources.editDatasource"),
           actionBtnText: this.transloco.translate("common.update"),
           datasource,
         },
@@ -154,7 +154,7 @@ export class DatasourceOverviewComponent {
       .open(DialogEditComponent, {
         data: {
           icon: "Copy",
-          title: this.transloco.translate("harvester.addDatasource"),
+          title: this.transloco.translate("datasources.addDatasource"),
           actionBtnText: this.transloco.translate("common.add"),
           datasource: {
             ...datasource,
@@ -176,7 +176,7 @@ export class DatasourceOverviewComponent {
   onDelete(datasource: Datasource) {
     this.dialog
       .open(ConfirmDialogComponent, {
-        data: this.transloco.translate("harvester.deleteConfirmation"),
+        data: this.transloco.translate("datasources.deleteConfirmation"),
       })
       .afterClosed()
       .subscribe((result) => {
@@ -202,7 +202,7 @@ export class DatasourceOverviewComponent {
     this.datasourceService.getHistory(harvester.id).subscribe({
       next: (data) => {
         if (!data || data.history.length === 0) {
-          return alert(this.transloco.translate("harvester.noHistory"));
+          return alert(this.transloco.translate("datasources.noHistory"));
         }
         this.dialog.open(DialogHistoryComponent, {
           data: data,
@@ -223,7 +223,7 @@ export class DatasourceOverviewComponent {
         },
       });
     } else {
-      this.snackBar.open(this.transloco.translate("harvester.noLogs"), null, {
+      this.snackBar.open(this.transloco.translate("datasources.noLogs"), null, {
         duration: 2 * 1000,
       });
     }

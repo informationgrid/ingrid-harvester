@@ -27,35 +27,35 @@
 >
   <ingrid-detail-item
     icon="available"
-    [title]="t('harvester.lastImport')"
+    [title]="t('datasources.lastImport')"
     [value]="lastExecution()"
     data-test="last-execution"
   />
 
   <ingrid-detail-item
     icon="timer"
-    [title]="t('harvester.durationImport')"
+    [title]="t('datasources.durationImport')"
     [value]="executionDuration()"
     data-test="duration"
   />
 
   <ingrid-detail-item
     icon="upcoming"
-    [title]="t('harvester.nextImport')"
+    [title]="t('datasources.nextImport')"
     [value]="nextExecution()"
     data-test="next-execution"
   />
 
   <ingrid-detail-item
     icon="document"
-    [title]="t('harvester.documents')"
+    [title]="t('common.documents')"
     [value]="docNum()"
     data-test="num-docs"
   />
 
   <ingrid-detail-item
     icon="error"
-    [title]="t('harvester.errors')"
+    [title]="t('common.errors')"
     [value]="errorNum()"
     [hasNavigation]="errorNum() !== '-'"
     (onNavigate)="onOpenErrorLog.emit()"
@@ -64,7 +64,7 @@
 
   <ingrid-detail-item
     icon="warning"
-    [title]="t('harvester.warnings')"
+    [title]="t('common.warnings')"
     [value]="warningNum()"
     [hasNavigation]="warningNum() !== '-'"
     (onNavigate)="onOpenWarningLog.emit()"
@@ -82,7 +82,7 @@
   @if (completeImportDate()) {
     <ingrid-detail-item
       icon="Harvester"
-      [title]="t('harvester.completeImport')"
+      [title]="t('datasources.completeImport')"
       [value]="completeImportDate()"
       data-test="complete-import"
     />
@@ -91,7 +91,7 @@
   @if (incrementalImportDate()) {
     <ingrid-detail-item
       icon="Harvester"
-      [title]="t('harvester.incrementalImport')"
+      [title]="t('datasources.incrementalImport')"
       [value]="incrementalImportDate()"
       data-test="incremental-import"
     />

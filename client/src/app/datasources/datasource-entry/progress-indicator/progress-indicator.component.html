@@ -22,7 +22,7 @@
 -->
 
 @if (importLog() !== undefined && !importLog().complete) {
-  <div class="flex-row gap-8" *transloco="let t; read: 'harvester'">
+  <div class="flex-row gap-8" *transloco="let t; read: 'datasources'">
     <ingrid-circular-progress-indicator [progress]="importProgress()" />
 
     <div class="flex-row flex-wrap gap-4 font-normal">

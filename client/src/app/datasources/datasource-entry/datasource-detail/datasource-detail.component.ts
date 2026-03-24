@@ -59,7 +59,7 @@ export class DatasourceDetailComponent {
   });
   nextExecution = computed(() => {
     if (this.datasource().disable) {
-      return this.transloco.translate("harvester.status.disable.title");
+      return this.transloco.translate("datasources.status.disable.title");
     }
 
     const cron = this.datasource().cron;

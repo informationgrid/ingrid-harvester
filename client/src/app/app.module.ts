@@ -63,7 +63,11 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslocoRootModule } from "./transloco-root.module";
 import { MainHeaderComponent } from "./main-header/main-header.component";
 import { routes } from "./app.router";
-import { FormlyModule, provideFormlyCore } from "@ngx-formly/core";
+import {
+  FORMLY_CONFIG,
+  FormlyModule,
+  provideFormlyCore,
+} from "@ngx-formly/core";
 import { FormlyMaterialModule, withFormlyMaterial } from "@ngx-formly/material";
 import { FormlySectionWrapperComponent } from "./formly/wrappers/formly-section-wrapper/formly-section-wrapper.component";
 import { FormlyInlineHelpWrapperComponent } from "./formly/wrappers/formly-inline-help-wrapper/formly-inline-help-wrapper.component";
@@ -78,6 +82,8 @@ import {
 } from "./formly/validators";
 import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
 import { PageTitleService } from "./services/page-title.service";
+import { registerTranslateExtension } from "./formly/translations";
+import { TranslocoService } from "@ngneat/transloco";
 
 registerLocaleData(localeDe);
 
@@ -168,14 +174,14 @@ const appRoutes: Routes = routes;
         { name: "uniqueKey", validation: UniqueKeyValidator },
         { name: "json", validation: JsonValidator },
       ],
-      validationMessages: [
-        { name: "required", message: "Dieses Feld muss ausgefüllt sein." },
-        { name: "url", message: "Die URL ist ungültig." },
-        { name: "uniqueKey", message: "Die Schlüssel müssen eindeutig sein." },
-        { name: "json", message: "Kein gültiges JSON-Objekt." },
-      ],
       ...withFormlyMaterial(),
     }),
+    {
+      provide: FORMLY_CONFIG,
+      multi: true,
+      useFactory: registerTranslateExtension,
+      deps: [TranslocoService],
+    },
     {
       provide: MAT_DIALOG_DEFAULT_OPTIONS,
       useValue: {

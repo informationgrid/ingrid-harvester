@@ -90,7 +90,7 @@ export class DatasourceService {
     this.socketService.connectionLost$.subscribe((isLost) => {
       this.snackBar.open(
         this.transloco.translate(
-          isLost ? "harvester.lostConnection" : "harvester.recoverConnection",
+          isLost ? "warnings.lostConnection" : "warnings.recoverConnection",
         ),
         null,
         { duration: 2 * 1000 },

@@ -27,17 +27,17 @@
     [title]="t('pageTitle.datasources')"
     contextHelpId="about_harvester"
   >
-    <ng-container header-actions *transloco="let t; read: 'harvester'">
+    <ng-container header-actions>
       @if (canEdit()) {
         <button
           matButton="filled"
           color="primary"
           (click)="onAdd()"
-          aria-label="{{ t('add') }}"
+          aria-label="{{ t('common.add') }}"
           id="btnAddHarvester"
         >
           <mat-icon svgIcon="Add" />
-          {{ t("add") }}
+          {{ t("common.add") }}
         </button>
       }
 
@@ -46,8 +46,8 @@
           <button
             matIconButton
             color="primary"
-            matTooltip="{{ t('more') }}"
-            aria-label="{{ t('more') }}"
+            matTooltip="{{ t('common.more') }}"
+            aria-label="{{ t('common.more') }}"
             [matMenuTriggerFor]="optionMenu"
             data-test="datasources-more"
           >
@@ -60,7 +60,7 @@
               data-test="import-all"
             >
               <mat-icon svgIcon="Harvester" />
-              {{ t("importAll") }}
+              {{ t("datasources.importAll") }}
             </button>
           </mat-menu>
         }

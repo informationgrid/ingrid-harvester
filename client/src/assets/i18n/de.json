@@ -19,7 +19,10 @@
     "expand": "Vergrößern",
     "collapse": "Verkleinern",
     "logout": "Abmelden",
-    "pleaseChoose": "Bitte auswählen"
+    "pleaseChoose": "Bitte auswählen",
+    "documents": "Dokumente",
+    "errors": "Fehler",
+    "warnings": "Warnungen"
   },
   "pageTitle": {
     "default": "InGrid Harvester",
@@ -42,23 +45,16 @@
     "form": "Daten",
     "formSingular": "Datensatz"
   },
-  "harvester": {
+  "datasources": {
     "importAll": "Alle importieren",
-    "add": "Hinzufügen",
     "viewDatasource": "Datenquelle ansehen",
     "addDatasource": "Neue Datenquelle anlegen",
     "editDatasource": "Datenquelle bearbeiten",
-    "showDetail": "Detail anzeigen",
     "import": "Import starten",
     "importIncrement": "Import starten (inkrementell)",
     "importStarted": "Import gestartet.",
     "allImportStarted": "Import aller Datenquellen gestartet.",
     "importing": "Import läuft...",
-    "lostConnection": "Verbindung zum Backend verloren.",
-    "recoverConnection": "Verbindung zum Backend hergestellt.",
-    "documents": "Dokumente",
-    "errors": "Fehler",
-    "warnings": "Warnungen",
     "lastImport": "Letzte Ausführung",
     "durationImport": "Dauer der Ausführung",
     "nextImport": "Nächste Ausführung",
@@ -68,7 +64,6 @@
     "noHistory": "Keine Historie vorhanden.",
     "log": "Error-Log",
     "noLogs": "Keine Log-Dateien vorhanden.",
-    "more": "Mehr",
     "status": {
       "success": {
         "icon": "Success",
@@ -132,20 +127,17 @@
     "previousHit": "Vorheriger Treffer",
     "nextHit": "Nächster Treffer"
   },
+  "warnings": {
+    "lostConnection": "Verbindung zum Backend verloren.",
+    "recoverConnection": "Verbindung zum Backend hergestellt."
+  },
   "form": {
     "validationMessages": {
-      "required": "Dieses Feld muss ausgefüllt sein",
-      "createOneEntry": "Bitte erstellen Sie mindestens einen Eintrag",
-      "email": "Dieses Feld muss eine gültige E-Mail Adresse sein",
-      "emailInRepeat": "Dieses Feld muss eine gültige E-Mail Adresse sein",
-      "lowercase": "Dieses Feld darf keine Großbuchstaben enthalten",
-      "url": "Verwenden Sie bitte eine gültige URL",
-      "matDatepickerMin": "Das Datum liegt weiter zurück als erlaubt",
-      "matDatepickerMax": "Das Datum ist größer als erlaubt",
-      "min": "Der Wert darf nicht kleiner sein als {{value}}",
-      "max": "Der Wert darf nicht größer sein als {{value}}",
-      "commitWithEnter": "Der Inhalt muss noch mit der Eingabetaste bestätigt werden",
-      "JSON_SCHEMA": "Es trat ein Fehler bei der JSON-Schema Validierung auf"
+      "required": "Dieses Feld muss ausgefüllt sein.",
+      "email": "Dieses Feld muss eine gültige E-Mail Adresse sein.",
+      "url": "Verwenden Sie bitte eine gültige URL.",
+      "uniqueKey": "Die Schlüssel müssen eindeutig sein.",
+      "json": "Kein gültiges JSON-Objekt."
     }
   }
 }
