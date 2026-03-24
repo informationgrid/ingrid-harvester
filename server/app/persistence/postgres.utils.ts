@@ -420,6 +420,7 @@ export class PostgresUtils extends DatabaseUtils {
      * @param source
      * @returns
      */
+    // TODO move - diplanung specific
     private getSourceType(dataset: IndexDocument, source: string) {
         source = source.toLowerCase()
         if (source.includes('cockpitpro')) {
@@ -475,7 +476,7 @@ export class PostgresUtils extends DatabaseUtils {
                 result = await this.transactionClient.query(this.queries.bulkUpsertCoupling, [JSON.stringify(entities, ProfileFactoryLoader.get().dateReplacer)]);
             }
             else {
-                throw new Error('Unrecognised Entity type');
+                throw new Error('Unrecognized Entity type');
             }
             log.debug('Bulk finished of data #items: ' + entities.length);
         }

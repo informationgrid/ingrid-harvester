@@ -91,7 +91,7 @@ export class ZdmIdfGenerator extends IdfGenerator {
 
         // // show features, if loaded
         if (this.baseMapper.getNumberOfFeatures() < this.baseMapper.getSettings().featureLimit) {
-            // NOTE: the below section is filled in server/app/profiles/zdm/persistence/postgres.aggregator.ts
+            // NOTE: the below section is filled in the ingrid elasticsearch catalog
             this.addOutput(idfBody, "h2", "Features:");
         }
 

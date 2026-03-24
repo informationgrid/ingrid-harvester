@@ -29,10 +29,9 @@ import type { ImporterSettings } from "../../importer.settings.js";
 import { namespaces } from "../../importer/namespaces.js";
 import type { ImportLogMessage } from "../../model/import.result.js";
 import type { Summary } from "../../model/summary.js";
-import type { CatalogOperation } from '../../persistence/elastic.utils.js';
 import { RequestDelegate } from "../../utils/http-request.utils.js";
 import { getDomParser } from "../../utils/misc.utils.js";
-import { Catalog } from '../catalog.factory.js';
+import { Catalog, type CatalogOperation } from '../catalog.factory.js';
 import { CswCatalogSummary } from './csw.catalog-summary.js';
 
 const log = log4js.getLogger('CswCatalog');

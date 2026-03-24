@@ -74,10 +74,6 @@ export abstract class DatabaseUtils {
 
     abstract rollbackTransaction(): Promise<void>;
 
-    // abstract pushToElastic(elastic: ElasticsearchUtils, source: string): Promise<void>;
-
-    // abstract pushToElastic2ElectricBoogaloo(elastic: ElasticsearchUtils, source: string): Promise<void>;
-
     abstract nonFetchedPercentage(source: string, last_modified: Date): Promise<number>;
 
     abstract deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void>;

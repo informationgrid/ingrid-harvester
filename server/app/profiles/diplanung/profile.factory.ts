@@ -23,7 +23,7 @@
 
 import type { ElasticsearchCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
-import type { Catalog } from '../../catalog/catalog.factory.js';
+import type { Catalog, CatalogOperation } from '../../catalog/catalog.factory.js';
 import type { CswMapper } from '../../importer/csw/csw.mapper.js';
 import type { CswSettings } from '../../importer/csw/csw.settings.js';
 import type { DcatappluMapper } from '../../importer/dcatapplu/dcatapplu.mapper.js';
@@ -34,7 +34,6 @@ import type { WfsSettings } from '../../importer/wfs/wfs.settings.js';
 import type { DocumentFactory } from '../../model/index.document.factory.js';
 import type { Summary } from '../../model/summary.js';
 import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
-import type { CatalogOperation } from '../../persistence/elastic.utils.js';
 import type { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
 import { ProfileFactory } from '../profile.factory.js';

@@ -23,7 +23,7 @@
 
 import type { CswCatalogSettings, ElasticsearchCatalogSettings, PiveauCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
-import { Catalog } from '../../catalog/catalog.factory.js';
+import { Catalog, type CatalogOperation } from '../../catalog/catalog.factory.js';
 import type { CkanMapper } from '../../importer/ckan/ckan.mapper.js';
 import type { CkanSettings } from '../../importer/ckan/ckan.settings.js';
 import type { CswMapper } from '../../importer/csw/csw.mapper.js';
@@ -44,7 +44,7 @@ import { DatabaseFactory } from '../../persistence/database.factory.js';
 import type { DatabaseUtils } from '../../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
-import type { CatalogOperation, ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import type { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
 import { ProfileFactory } from '../profile.factory.js';

@@ -31,7 +31,6 @@ import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
 import type { DatabaseUtils } from '../persistence/database.utils.js';
-import type { CatalogOperation } from '../persistence/elastic.utils.js';
 import type { Bucket } from '../persistence/postgres.utils.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 
@@ -128,3 +127,7 @@ export abstract class Catalog<S extends CatalogSettings, O extends CatalogOperat
      */
     abstract deleteAllRecordsForCatalog(sourceId: string): Promise<void>;
 };
+
+export interface CatalogOperation {
+    // TODO
+}

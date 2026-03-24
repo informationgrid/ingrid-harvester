@@ -133,7 +133,6 @@ export abstract class Importer<S extends ImporterSettings> {
                         this.getSummary().appErrors.push(`Error while importing into catalog ${catalogId}: ${e.message}`);
                     }
                 }
-                // await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.settings.sourceURL);
                 await this.postHarvestingHandling();
                 observer.next(ImportResult.complete(this.summary));
             }

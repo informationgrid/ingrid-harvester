@@ -27,9 +27,8 @@ import type { Observer } from "rxjs";
 import type { ImporterSettings } from "../../importer.settings.js";
 import type { ImportLogMessage } from "../../model/import.result.js";
 import { type Summary } from "../../model/summary.js";
-import type { CatalogOperation } from '../../persistence/elastic.utils.js';
 import { RequestDelegate } from "../../utils/http-request.utils.js";
-import { Catalog } from '../catalog.factory.js';
+import { Catalog, type CatalogOperation } from '../catalog.factory.js';
 import { PiveauCatalogSummary } from './piveau.catalog-summary.js';
 
 const log = log4js.getLogger('PiveauCatalog');
@@ -190,9 +189,5 @@ export class PiveauCatalog extends Catalog<PiveauCatalogSettings, CatalogOperati
                 resolveWithFullResponse: true,
                 headers: {"X-API-KEY": this.settings.settings.apiKey},
             });
-    }
-
-    addTraceability(record: string, transactionTimestamp: string, sourceId: string): string {
-        return "";
     }
 }

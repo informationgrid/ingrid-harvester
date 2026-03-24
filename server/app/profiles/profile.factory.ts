@@ -24,7 +24,7 @@
 import type { CatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
 import { createRequire } from 'module';
-import type { Catalog, CatalogFactory } from '../catalog/catalog.factory.js';
+import type { Catalog, CatalogFactory, CatalogOperation } from '../catalog/catalog.factory.js';
 import type { ImporterSettings } from '../importer.settings.js';
 import type { ImporterFactory } from '../importer/importer.factory.js';
 import type { Importer } from '../importer/importer.js';
@@ -38,7 +38,7 @@ import type { DatabaseUtils } from '../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import type { ElasticQueries } from '../persistence/elastic.queries.js';
 import type { IndexSettings } from '../persistence/elastic.setting.js';
-import type { CatalogOperation, ElasticsearchUtils } from '../persistence/elastic.utils.js';
+import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import type { PostgresAggregator } from '../persistence/postgres.aggregator.js';
 import { PostgresQueries } from '../persistence/postgres.queries.js';
 import { ConfigService } from '../services/config/ConfigService.js';

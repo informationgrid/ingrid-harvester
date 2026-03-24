@@ -126,17 +126,10 @@ export class ElasticsearchUtils9 extends ElasticsearchUtils {
         }
     }
 
-    async finishIndex(closeIndex: boolean = true) {
+    async finishIndex() {
         try {
             await this.client.cluster.health({ wait_for_status: 'yellow' });
             await this.sendBulkOperations();
-            if (closeIndex) {
-                // await this.deleteOldIndices(this.config.index, this.indexName);
-                // if (this.config.addAlias) {
-                //     await this.addAlias(this.indexName, this.config.alias);
-                // }
-                await this.client.close();
-            }
             log.info('Successfully added data into index: ' + this.indexName);
         }
         catch(err) {

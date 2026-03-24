@@ -29,13 +29,20 @@ export interface Entity {
 }
 
 export interface RecordEntity extends Entity {
+    /* automatically created database id */
     identifier: string,
+    /* source of the dataset, usually an URL (for CSW, WFS, ...), sometimes a system name (cockpit, beteiligung) */
     source: string,
-    collection_id: number,
+    collection_id: number,  // TODO remove, handle using catalog_ids
+    /* IDs of the catalogs for which this dataset was harvested */
     catalog_ids?: number[],
-    dataset: IndexDocument, // TODO rename to dataset_elastic, make optional
+    /* elasticsearch document */
+    dataset: IndexDocument, // TODO rename to dataset_elastic, make optional - 
+    /* CSW XML document */
     dataset_csw?: any,
+    /* DCAT-AP.DE XML document */
     dataset_dcatapde?: any,
+    /* originally harvested document */
     original_document: string
 }
 

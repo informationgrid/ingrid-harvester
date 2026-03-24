@@ -25,6 +25,7 @@ import type { ElasticsearchConfiguration } from '@shared/general-config.settings
 import type { Index } from '@shared/index.model.js';
 import type { Client as Client8 } from 'elasticsearch8';
 import type { Client as Client9 } from 'elasticsearch9';
+import type { CatalogOperation } from '../catalog/catalog.factory.js';
 import type { Summary } from '../model/summary.js';
 import { INGRID_META_INDEX } from '../profiles/ingrid/profile.factory.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
@@ -34,10 +35,6 @@ import type { IndexSettings } from './elastic.setting.js';
 export interface BulkResponse {
     queued: boolean;
     response?: any;
-}
-
-export interface CatalogOperation {
-    // TODO
 }
 
 /**
@@ -91,7 +88,7 @@ export abstract class ElasticsearchUtils {
      */
     abstract prepareIndexWithName(index: string, mappings, settings: IndexSettings, openIfPresent?: boolean);
 
-    abstract finishIndex(closeIndex?: boolean);
+    abstract finishIndex();
 
     /**
      * Add the specified alias to an index.

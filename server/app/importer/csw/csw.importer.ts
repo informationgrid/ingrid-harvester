@@ -170,7 +170,6 @@ export class CswImporter extends Importer<CswSettings> {
                         this.getSummary().appErrors.push(`Error while importing into catalog ${catalogId}: ${e.message}`);
                     }
                 }
-                // await this.database.pushToElastic3ReturnOfTheJedi(this.elastic, this.getSettings().sourceURL);
                 await this.postHarvestingHandling();
                 observer.next(ImportResult.complete(this.getSummary()));
             }
