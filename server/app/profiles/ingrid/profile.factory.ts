@@ -71,26 +71,12 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
 
     async init(): Promise<{ database: DatabaseUtils, elastic: ElasticsearchUtils }> {
         const { database, elastic } = await super.init();
-
-        // create index for each configured (and used!) catalog
-        const catalogIdentifiers = new Set(ConfigService.getHarvesters().map(harvester => harvester.catalogIds).flat());
-        const catalogMap: Record<string, ElasticsearchCatalogSettings> = ConfigService.getCatalogSettings()
-            .filter(catalog => catalog.type == 'elasticsearch')
-            .reduce((acc, obj) => (acc[obj.id] = (obj as ElasticsearchCatalogSettings), acc), {});
-        for (let identifier of catalogIdentifiers) {
-            const { settings } = catalogMap[identifier];
-            if (settings.index && !await elastic.isIndexPresent(settings.index)) {
-                await elastic.prepareIndexWithName(settings.index, this.getIndexMappings(), this.getIndexSettings());
-                await elastic.addAlias(settings.index, settings.alias);
-            }
-        }
-
         // create ingrid_meta index
         let isIngridMeta = await elastic.isIndexPresent(INGRID_META_INDEX);
         if (!isIngridMeta) {
             await elastic.prepareIndexWithName(INGRID_META_INDEX, mappings, settings as any);
         }
-        return null;
+        return { database, elastic };
     }
 
     async createCatalogIfNotExist(catalog: string | LegacyCatalog, database?: DatabaseUtils, elastic?: ElasticsearchUtils): Promise<LegacyCatalog> {
