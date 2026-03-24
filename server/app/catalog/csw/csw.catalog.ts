@@ -29,6 +29,7 @@ import type { ImporterSettings } from "../../importer.settings.js";
 import { namespaces } from "../../importer/namespaces.js";
 import type { ImportLogMessage } from "../../model/import.result.js";
 import type { Summary } from "../../model/summary.js";
+import type { CatalogOperation } from '../../persistence/elastic.utils.js';
 import { RequestDelegate } from "../../utils/http-request.utils.js";
 import { getDomParser } from "../../utils/misc.utils.js";
 import { Catalog } from '../catalog.factory.js';
@@ -36,7 +37,7 @@ import { CswCatalogSummary } from './csw.catalog-summary.js';
 
 const log = log4js.getLogger('CswCatalog');
 
-export abstract class CswCatalog extends Catalog<string> {
+export abstract class CswCatalog extends Catalog<string, CatalogOperation> {
 
     readonly id: string = 'csw-catalog';
     readonly type: string = 'csw';
@@ -325,13 +326,5 @@ export abstract class CswCatalog extends Catalog<string> {
         const deleted = parseInt(summary.getElementsByTagNameNS(namespaces.CSW, 'totalDeleted')[0]?.textContent || '0', 10);
 
         return { success: true, inserted, updated, deleted };
-    }
-
-    transform(rows: string[]): string[] {
-        throw new Error('Method not implemented.');
-    }
-
-    deduplicate(datasets: string[]): string[] {
-        throw new Error('Method not implemented.');
     }
 }

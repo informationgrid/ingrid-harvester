@@ -36,10 +36,14 @@ export interface BulkResponse {
     response?: any;
 }
 
+export interface CatalogOperation {
+    // TODO
+}
+
 /**
  * Contains an operation to send to Elasticsearch via bulk request.
  */
-export interface EsOperation {
+export interface EsOperation extends CatalogOperation {
     operation: 'index' | 'create' | 'update' | 'delete',
     _id: any,
     _index?: string,

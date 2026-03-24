@@ -30,6 +30,7 @@ import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
 import type { ElasticsearchUtils } from './elastic.utils.js';
 import type { PostgresAggregator } from './postgres.aggregator.js';
+import type { Bucket } from './postgres.utils.js';
 
 export interface BulkResponse {
     queued: boolean;
@@ -82,6 +83,8 @@ export abstract class DatabaseUtils {
     abstract deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void>;
 
     abstract pushToElasticsearch(elastic: ElasticsearchUtils, source: string, observer: Observer<ImportLogMessage>, aggregator?: PostgresAggregator<IndexDocument>): Promise<void>;
+
+    abstract streamBuckets(source: string, observer: Observer<ImportLogMessage>): AsyncGenerator<Bucket<any>>;
 
     abstract getStoredData(ids: string[]): Promise<any[]>;
 

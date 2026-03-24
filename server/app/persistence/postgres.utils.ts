@@ -334,7 +334,84 @@ export class PostgresUtils extends DatabaseUtils {
         client.release();
         let stop = Date.now();
         log.info(`Processed ${numDatasets} datasets and ${numBuckets} buckets`);
-        log.info('Time for PG -> ES push: ' + Math.floor((stop - start)/1000) + 's');
+    }
+
+    /**
+     * Stream datasets from the database to a given catalog,
+     * while observing catalog-specific transformation and deduplication rules.
+     *
+     * @param source
+     * @param observer
+     */
+    async *streamBuckets(source: string, observer: Observer<ImportLogMessage>): AsyncGenerator<Bucket<any>> {
+        const client: pg.PoolClient = await PostgresUtils.pool.connect();
+        log.debug('Connection started');
+        const startDate = Date.now();
+
+        // get total rows before creating the cursor
+        const { rows: [{ count: totalRows }] } = await client.query(
+            `SELECT COUNT(*)::int AS count FROM (${this.queries.getBuckets}) AS t`,
+            [source]
+        );
+
+        const cursor = client.query(new Cursor(this.queries.getBuckets, [source]));
+        let currentId: string | number;
+        let currentBucket: Bucket<any>;
+        const maxRows = 100;
+        let rows = await cursor.read(maxRows);
+        let numDatasets = 0;
+        let numBuckets = 0;
+        while (rows.length > 0) {
+            log.info(`PQ->ES: Processing rows ${numDatasets} - ${numDatasets + rows.length}`);
+            observer.next(ImportResult.running(numDatasets, totalRows, 'Datensätze werden publiziert'));
+            for (let row of rows) {
+                numDatasets += 1;
+                if (row.anchor_id != currentId) {
+                    numBuckets += 1;
+                    // send current bucket, then create new
+                    currentId = row.anchor_id;
+                    if (currentBucket) {
+                        yield currentBucket;
+                    }
+                    currentBucket = {
+                        anchor_id: row.anchor_id,
+                        duplicates: new Map<string | number, IndexDocument>(),
+                        operatingServices: new Map<string | number, Distribution>()
+                    };
+                }
+                // add service/additional distribution to current bucket
+                if (row.service_type != null) {
+                    currentBucket.operatingServices.set(row.id, row.dataset);
+                }
+                // add index document to current bucket
+                else {
+                    // ensure `extras` structure exists in dataset
+                    row.dataset.extras ??= {};
+                    row.dataset.extras.metadata ??= {};
+                    row.dataset.extras.metadata.source ??= {};
+                    // set metadata information
+                    row.dataset.extras.metadata.issued = row.issued;
+                    row.dataset.extras.metadata.modified = row.modified;
+                    row.dataset.extras.metadata.deleted = row.deleted;
+                    // // TODO move - diplanung specific
+                    // row.dataset.extras.metadata.source.source_type = this.getSourceType(row.dataset, row.source);
+                    // // TODO move - diplanung specific
+                    // row.dataset.catalog = catalogs[row.catalog_id];
+                    currentBucket.duplicates.set(row.id, row.dataset);
+                }
+            }
+            rows = await cursor.read(maxRows);
+        }
+        // send last bucket
+        if (currentBucket) {
+            yield currentBucket;
+        }
+        log.debug('Connection released');
+        cursor.close();
+        client.release();
+        const stopDate = Date.now();
+        log.info(`Processed ${numDatasets} datasets and ${numBuckets} buckets`);
+        log.info(`Time for PG -> ES push: ${Math.floor((stopDate - startDate)/1000)}s`);
     }
 
     /**

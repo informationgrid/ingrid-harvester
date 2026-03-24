@@ -75,21 +75,16 @@ export abstract class Catalog<DbColumnType> {
      * 
      * @param transactionHandle 
      */
-    abstract import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void>;
-    //  {
-    //     // fetch rows from DB using transactionHandle
-    //     // * fetch datasets in buckets for deduplication purposes ("internal deduplication")
-    //     // * either all DATASOURCEs, specified DATASOURCEs (reflexive, transitive), or no DATASOURCEs
-    //     // this is a mock; should NOT work with a list, but use a scroll API or similar
-    //     const buckets: Bucket<RecordEntity> = this.getDatasets(transactionHandle);
-    //     for (let bucket of buckets) {
-    //         // "external deduplication" - deduplicate bucket against configured external sources 
-    //         // TODO where to configure? how to set up?
-    //         bucket = externalDeduplication(bucket);
-    //         // write the bucket representation (e.g. the dataset from the bucket with the highest priority) to the target catalog
-    //         importIntoCatalog(bucket);
-    //     }
-    // }
+    async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+        log.info(`Importing data for transaction: ${transactionHandle}`);
+        const bucketGenerator = this.database.streamBuckets(transactionHandle, observer);
+        for await (const bucket of bucketGenerator) {
+            const ops = await this.processBucket(bucket);
+            await this.importIntoCatalog(ops);
+        }
+        // finish importing
+        await this.flushImport();
+    }
 
     /**
      * Remove stale records from the target catalog and is called after every harvest.
@@ -97,6 +92,12 @@ export abstract class Catalog<DbColumnType> {
     async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         await this.deleteStaleRecords(importerSettings.catalogId);
     }
+
+    abstract processBucket(bucket: Bucket<IndexDocument>): Promise<C[]>;
+
+    abstract importIntoCatalog(operations: C[]): Promise<void>;
+
+    abstract flushImport(): Promise<void>;
 
     /**
      * Remove records in the target catalog that are no longer present in the current
@@ -111,24 +112,4 @@ export abstract class Catalog<DbColumnType> {
      * Called when a data source is deleted by a user.
      */
     abstract deleteAllRecordsForCatalog(sourceId: string): Promise<void>;
-
-    abstract transform(rows: DbColumnType[]): DbColumnType[];
-
-    abstract deduplicate(datasets: DbColumnType[]): DbColumnType[];
 };
-
-enum ImportType {
-    CSW_ISO,
-    DCAT,
-    DCAT_AP,
-    DCAT_AP_DE,
-    TRIPLE,
-    // ...
-};
-
-enum ExportType {
-    CSW_ISO,
-    DCAT_AP_DE,
-    TRIPLE,
-    // ...
-}

@@ -23,22 +23,19 @@
 
 import type { ElasticsearchCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
-import type { Observer } from 'rxjs';
-import type { ImporterSettings } from '../../importer.settings.js';
-import type { ImportLogMessage } from '../../model/import.result.js';
 import type { Summary } from '../../model/summary.js';
-import type { DatabaseUtils } from '../../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
-import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import type { ElasticsearchUtils, EsOperation } from '../../persistence/elastic.utils.js';
 import { Catalog } from '../catalog.factory.js';
 import { ElasticsearchCatalogSummary } from './elasticsearch.catalog-summary.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
-export abstract class ElasticsearchCatalog extends Catalog<object> {
+export abstract class ElasticsearchCatalog extends Catalog<object, EsOperation> {
 
     readonly id: string = 'elastic-catalog';
     readonly type: string = 'elasticsearch';
+    protected settings: ElasticsearchCatalogSettings;
 
     protected readonly catalogSummary = new ElasticsearchCatalogSummary();
 
@@ -51,37 +48,16 @@ export abstract class ElasticsearchCatalog extends Catalog<object> {
         this.elastic = ElasticsearchFactory.getElasticUtils(catalogSettings.settings, summary);
     }
 
-    async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
-        // import data into Elasticsearch catalog
-        log.info(`Importing data for transaction: ${transactionHandle}`);
-        
-        // TODO split this into
-        // 1) bucket fetching (put into abstract Catalog)
-        // 2) transformation, coupling, deduplication (abstract method/s, handle in profile-specific catalogs)
-        // 3) push to target (here, ES)
-        await this.database.pushToElasticsearch(this.elastic, transactionHandle, observer);
+    async importIntoCatalog(operations: EsOperation[]) {
+        // will implicitly send bulk ops when queue is full
+        if (operations) {
+            await this.elastic.addOperationChunksToBulk(operations);
+        }
     }
 
-    async postImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
-        // post-import operations, e.g. refreshing indices, updating aliases, etc.
-        log.info(`Post-import operations for catalog: ${this.id}`);
-    }
-
-    async serialize(input: object): Promise<object> {
-        // serialize input object for DB storage
-        return input
-    }
-
-    transform(rows: object[]): object[] {
-        throw new Error('Method not implemented.');
-    }
-
-    deduplicate(datasets: object[]): object[] {
-        throw new Error('Method not implemented.');
-    }
-
-    getDatabase(): DatabaseUtils {
-        return this.database;
+    async flushImport(): Promise<void> {
+        // send and empty current queue
+        await this.elastic.sendBulkOperations();
     }
 
     getElastic(): ElasticsearchUtils {
