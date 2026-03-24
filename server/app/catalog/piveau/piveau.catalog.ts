@@ -27,13 +27,14 @@ import type { Observer } from "rxjs";
 import type { ImporterSettings } from "../../importer.settings.js";
 import type { ImportLogMessage } from "../../model/import.result.js";
 import { type Summary } from "../../model/summary.js";
+import type { CatalogOperation } from '../../persistence/elastic.utils.js';
 import { RequestDelegate } from "../../utils/http-request.utils.js";
 import { Catalog } from '../catalog.factory.js';
 import { PiveauCatalogSummary } from './piveau.catalog-summary.js';
 
 const log = log4js.getLogger('PiveauCatalog');
 
-export class PiveauCatalog extends Catalog<string> {
+export class PiveauCatalog extends Catalog<PiveauCatalogSettings, CatalogOperation> {
 
     readonly id: string = 'piveau-catalog';
     readonly type: string = 'piveau';
@@ -53,8 +54,6 @@ export class PiveauCatalog extends Catalog<string> {
             return;
         }
 
-        const piveauSettings = this.settings as PiveauCatalogSettings;
-
         log.info(`Posting ${records.length} records to Piveau endpoint: `);
 
         // Fetch existing identifiers from target to decide Insert vs Update
@@ -69,9 +68,9 @@ export class PiveauCatalog extends Catalog<string> {
             }
 
             try {
-                const targetUrl = this.buildTargetUrl(piveauSettings, record.identifier);
+                const targetUrl = this.buildTargetUrl(this.settings, record.identifier);
 
-                const response = await this.postTransaction(targetUrl, piveauSettings, record.dataset_dcatapde);
+                const response = await this.postTransaction(targetUrl, this.settings, record.dataset_dcatapde);
 
                 if (response.status == 201) {
                     this.catalogSummary.numInserted++;
@@ -141,16 +140,15 @@ export class PiveauCatalog extends Catalog<string> {
     }
 
     async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
-        const piveauSettings = this.settings as PiveauCatalogSettings;
-        const targetUrl = piveauSettings.url + "/catalogues/" + piveauSettings.settings.catalog;
+        const targetUrl = this.settings.url + "/catalogues/" + this.settings.settings.catalog;
         const body = '<?xml version="1.0"?>\n' +
             '<rdf:RDF\n' +
             '    xmlns:dct="http://purl.org/dc/terms/"\n' +
             '    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\n' +
             '    xmlns:dcat="http://www.w3.org/ns/dcat#">\n' +
             '    <dcat:Catalog>\n' +
-            `        <dct:title>${piveauSettings.settings.title}</dct:title>` +
-            `        <dct:description>${piveauSettings.settings.description}</dct:description>\n` +
+            `        <dct:title>${this.settings.settings.title}</dct:title>` +
+            `        <dct:description>${this.settings.settings.description}</dct:description>\n` +
             '        <dct:type>dcat-ap</dct:type>\n' +
             '    </dcat:Catalog>\n' +
             '</rdf:RDF>'
@@ -158,14 +156,13 @@ export class PiveauCatalog extends Catalog<string> {
             uri: targetUrl,
             method: 'PUT',
             resolveWithFullResponse: true,
-            headers: {"Content-Type": "application/rdf+xml", "X-API-KEY": piveauSettings.settings.apiKey},
+            headers: {"Content-Type": "application/rdf+xml", "X-API-KEY": this.settings.settings.apiKey},
             body,
         });
     }
 
     async getIdentifierByPiveauCatalog(): Promise<string[]> {
-        const piveauSettings = this.settings as PiveauCatalogSettings;
-        const targetUrl = piveauSettings.url + "/catalogues/" + piveauSettings.settings.catalog + "/datasets?valueType=originalIds&limit=100";
+        const targetUrl = this.settings.url + "/catalogues/" + this.settings.settings.catalog + "/datasets?valueType=originalIds&limit=100";
         let result = [];
         let offset = 0;
         let count = 0;
@@ -174,7 +171,7 @@ export class PiveauCatalog extends Catalog<string> {
                 uri: targetUrl + "&offset=" + offset,
                 method: 'GET',
                 resolveWithFullResponse: true,
-                headers: {"X-API-KEY": piveauSettings.settings.apiKey},
+                headers: {"X-API-KEY": this.settings.settings.apiKey},
                 json: true,
             });
             const data = await response.json();
@@ -185,15 +182,13 @@ export class PiveauCatalog extends Catalog<string> {
         return result;
     }
 
-
     async deleteDataset(originalId: string): Promise<void> {
-        const piveauSettings = this.settings as PiveauCatalogSettings;
-        const targetUrl = piveauSettings.url + "/catalogues/" + piveauSettings.settings.catalog + "/datasets/origin?originalId=" + originalId;
+        const targetUrl = this.settings.url + "/catalogues/" + this.settings.settings.catalog + "/datasets/origin?originalId=" + originalId;
         await RequestDelegate.doRequest({
                 uri: targetUrl,
                 method: 'DELETE',
                 resolveWithFullResponse: true,
-                headers: {"X-API-KEY": piveauSettings.settings.apiKey},
+                headers: {"X-API-KEY": this.settings.settings.apiKey},
             });
     }
 

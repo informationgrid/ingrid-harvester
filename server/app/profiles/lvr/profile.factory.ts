@@ -23,7 +23,7 @@
 
 import type { ElasticsearchCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
-import type { Catalog as NewCatalog } from '../../catalog/catalog.factory.js';
+import type { Catalog } from '../../catalog/catalog.factory.js';
 import type { Importer } from '../../importer/importer.js';
 import type { JsonMapper } from '../../importer/json/json.mapper.js';
 import type { JsonSettings } from '../../importer/json/json.settings.js';
@@ -35,6 +35,7 @@ import type { OaiSettings } from '../../importer/oai/oai.settings.js';
 import type { DocumentFactory } from '../../model/index.document.factory.js';
 import type { Summary } from '../../model/summary.js';
 import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
+import type { EsOperation } from '../../persistence/elastic.utils.js';
 import type { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
 import { ProfileFactory } from '../profile.factory.js';
@@ -95,7 +96,7 @@ export class LvrFactory extends ProfileFactory<LvrSettings> {
         return importer;
     }
     
-    async getCatalog(catalogId: number, summary: Summary): Promise<NewCatalog<any>> {
+    async getCatalog(catalogId: number, summary: Summary): Promise<Catalog<any, EsOperation>> {
         const catalogSettings = ConfigService.getCatalogSettings(catalogId);
         switch (catalogSettings?.type) {
             case 'elasticsearch':

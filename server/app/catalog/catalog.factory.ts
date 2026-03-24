@@ -27,9 +27,12 @@ import type { Observer } from 'rxjs';
 import type { ImporterSettings } from '../importer.settings.js';
 import type { CatalogSummary } from '../model/catalog-summary.js';
 import type { ImportLogMessage } from '../model/import.result.js';
+import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
 import type { DatabaseUtils } from '../persistence/database.utils.js';
+import type { CatalogOperation } from '../persistence/elastic.utils.js';
+import type { Bucket } from '../persistence/postgres.utils.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 
 const log = log4js.getLogger('Catalog');
@@ -37,7 +40,7 @@ const log = log4js.getLogger('Catalog');
 export interface CatalogFactory {
 
     // TODO improve typing
-    getCatalog(catalogId: number, summary: Summary): Promise<Catalog<any>>;
+    getCatalog(catalogId: number, summary: Summary): Promise<Catalog<any, any>>;
 }
 
 /**
@@ -45,15 +48,15 @@ export interface CatalogFactory {
  * DbColumnType specifies the TypeScript type of the database column values that are fetched for this catalog,
  * e.g. string (text, serialized XML), object (JSON), etc.
  */
-export abstract class Catalog<DbColumnType> {
+export abstract class Catalog<S extends CatalogSettings, O extends CatalogOperation> {
 
-    readonly settings: CatalogSettings;
+    readonly settings: S;
     readonly summary: Summary;
     protected readonly database: DatabaseUtils;
     protected transactionTimestamp: string;
     protected abstract readonly catalogSummary: CatalogSummary;
 
-    constructor(settings: CatalogSettings, summary: Summary) {
+    constructor(settings: S, summary: Summary) {
         this.settings = settings;
         this.summary = summary;
         this.database = DatabaseFactory.getDatabaseUtils(ConfigService.getGeneralSettings().database, summary);
@@ -68,7 +71,17 @@ export abstract class Catalog<DbColumnType> {
         this.catalogSummary.print(log);
     }
 
-    abstract prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void>;
+    /**
+     * Prepare the import into the catalog resource.
+     * For example: for elasticsearch catalogs, fetch and store all document metadata from given aliases
+     * 
+     * @param transactionHandle 
+     * @param settings 
+     * @param observer 
+     */
+    async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+        // can be overwritten by child classes if necessary
+    }
 
     /**
      * Import the database rows matching the transactionHandle into this target catalog.
@@ -87,15 +100,17 @@ export abstract class Catalog<DbColumnType> {
     }
 
     /**
-     * Remove stale records from the target catalog and is called after every harvest.
+     * Handle post import steps for this catalog,
+     * e.g. remove stale records from the target catalog and is called after every harvest.
      */
     async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+        // TODO semantics are wrong, fix it
         await this.deleteStaleRecords(importerSettings.catalogId);
     }
 
-    abstract processBucket(bucket: Bucket<IndexDocument>): Promise<C[]>;
+    abstract processBucket(bucket: Bucket<IndexDocument>): Promise<O[]>;
 
-    abstract importIntoCatalog(operations: C[]): Promise<void>;
+    abstract importIntoCatalog(operations: O[]): Promise<void>;
 
     abstract flushImport(): Promise<void>;
 

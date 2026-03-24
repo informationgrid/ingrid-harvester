@@ -53,7 +53,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
     async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         this.deduplicationMetadata = new Map<string, DeduplicationMetadata>();
 
-        const aliases = (this.settings as ElasticsearchCatalogSettings).settings.dedupAliases;
+        const aliases = this.settings.settings.dedupAliases;
         const total = await this.elastic.count(aliases);
 
         const scrollSearch = this.elastic.scroll<{ uuid: string, dataSourceName: string, modified: Date }>(aliases, ['uuid', 'dataSourceName', 'modified']);

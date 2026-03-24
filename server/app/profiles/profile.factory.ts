@@ -24,12 +24,12 @@
 import type { CatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
 import { createRequire } from 'module';
-import type { CatalogFactory, Catalog as NewCatalog } from '../catalog/catalog.factory.js';
+import type { Catalog, CatalogFactory } from '../catalog/catalog.factory.js';
 import type { ImporterSettings } from '../importer.settings.js';
 import type { ImporterFactory } from '../importer/importer.factory.js';
 import type { Importer } from '../importer/importer.js';
 import type { Mapper } from '../importer/mapper.js';
-import type { Catalog } from '../model/dcatApPlu.model.js';
+import type { Catalog as LegacyCatalog } from '../model/dcatApPlu.model.js';
 import type { DocumentFactory } from '../model/index.document.factory.js';
 import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
@@ -38,7 +38,7 @@ import type { DatabaseUtils } from '../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import type { ElasticQueries } from '../persistence/elastic.queries.js';
 import type { IndexSettings } from '../persistence/elastic.setting.js';
-import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
+import type { CatalogOperation, ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import type { PostgresAggregator } from '../persistence/postgres.aggregator.js';
 import { PostgresQueries } from '../persistence/postgres.queries.js';
 import { ConfigService } from '../services/config/ConfigService.js';
@@ -64,7 +64,7 @@ CatalogFactory {
         return { database, elastic };
     };
 
-    async createCatalogIfNotExist(catalog: string | Catalog, database?: DatabaseUtils, elastic?: ElasticsearchUtils): Promise<Catalog> {
+    async createCatalogIfNotExist(catalog: string | LegacyCatalog, database?: DatabaseUtils, elastic?: ElasticsearchUtils): Promise<LegacyCatalog> {
         const { database: dbConfig, elasticsearch: esConfig } = ConfigService.getGeneralSettings();
         database ??= DatabaseFactory.getDatabaseUtils(dbConfig, null);
         elastic ??= ElasticsearchFactory.getElasticUtils(esConfig, null);
@@ -103,7 +103,7 @@ CatalogFactory {
 
     abstract getDocumentFactory(mapper: Mapper<ImporterSettings>): DocumentFactory<IndexDocument>;
 
-    abstract getCatalog(catalogId: number, summary: Summary): Promise<NewCatalog<any>>;
+    abstract getCatalog(catalogId: number, summary: Summary): Promise<Catalog<CatalogSettings, CatalogOperation>>;
 
     abstract getPostgresAggregator(settings: CatalogSettings): PostgresAggregator<IndexDocument>;
 

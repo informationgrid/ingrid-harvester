@@ -37,7 +37,7 @@ import { CswCatalogSummary } from './csw.catalog-summary.js';
 
 const log = log4js.getLogger('CswCatalog');
 
-export abstract class CswCatalog extends Catalog<string, CatalogOperation> {
+export abstract class CswCatalog extends Catalog<CswCatalogSettings, CatalogOperation> {
 
     readonly id: string = 'csw-catalog';
     readonly type: string = 'csw';
@@ -59,13 +59,12 @@ export abstract class CswCatalog extends Catalog<string, CatalogOperation> {
             return;
         }
 
-        const cswSettings = this.settings as CswCatalogSettings;
-        const targetUrl = this.buildTargetUrl(cswSettings);
+        const targetUrl = this.buildTargetUrl(this.settings);
 
         log.info(`Posting ${records.length} records to CSW-T endpoint: ${targetUrl}`);
 
         // Fetch existing identifiers from target to decide Insert vs Update
-        const existingIds = await this.fetchExistingIdentifiers(cswSettings);
+        const existingIds = await this.fetchExistingIdentifiers(this.settings);
         log.info(`Found ${existingIds.size} existing records in target CSW catalog`);
 
         for (const record of records) {
@@ -102,8 +101,7 @@ export abstract class CswCatalog extends Catalog<string, CatalogOperation> {
 
     async deleteStaleRecords(sourceId: string): Promise<void> {
         log.info(`Post-import stale cleanup for source '${sourceId}' in CSW catalog '${this.settings.id}'`);
-        const cswSettings = this.settings as CswCatalogSettings;
-        const targetUrl = this.buildTargetUrl(cswSettings);
+        const targetUrl = this.buildTargetUrl(this.settings);
 
         const deleteXml = this.buildFilteredDeleteTransaction(sourceId, this.transactionTimestamp);
         const response = await this.postTransaction(targetUrl, deleteXml);

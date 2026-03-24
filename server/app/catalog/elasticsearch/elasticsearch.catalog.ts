@@ -31,11 +31,10 @@ import { ElasticsearchCatalogSummary } from './elasticsearch.catalog-summary.js'
 
 const log = log4js.getLogger(import.meta.filename);
 
-export abstract class ElasticsearchCatalog extends Catalog<object, EsOperation> {
+export abstract class ElasticsearchCatalog extends Catalog<ElasticsearchCatalogSettings, EsOperation> {
 
     readonly id: string = 'elastic-catalog';
     readonly type: string = 'elasticsearch';
-    protected settings: ElasticsearchCatalogSettings;
 
     protected readonly catalogSummary = new ElasticsearchCatalogSummary();
 

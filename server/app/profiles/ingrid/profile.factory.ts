@@ -23,7 +23,7 @@
 
 import type { CswCatalogSettings, ElasticsearchCatalogSettings, PiveauCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
-import type { Catalog as NewCatalog } from '../../catalog/catalog.factory.js';
+import { Catalog } from '../../catalog/catalog.factory.js';
 import type { CkanMapper } from '../../importer/ckan/ckan.mapper.js';
 import type { CkanSettings } from '../../importer/ckan/ckan.settings.js';
 import type { CswMapper } from '../../importer/csw/csw.mapper.js';
@@ -36,7 +36,7 @@ import type { Importer } from '../../importer/importer.js';
 import type { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
 import type { WfsSettings } from '../../importer/wfs/wfs.settings.js';
 import { WfsProfile } from '../../importer/wfs/wfs.settings.js';
-import type { Catalog } from '../../model/dcatApPlu.model.js';
+import type { Catalog as LegacyCatalog } from '../../model/dcatApPlu.model.js';
 import type { DocumentFactory } from '../../model/index.document.factory.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
@@ -44,7 +44,7 @@ import { DatabaseFactory } from '../../persistence/database.factory.js';
 import type { DatabaseUtils } from '../../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
-import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import type { CatalogOperation, ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import type { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
 import { ProfileFactory } from '../profile.factory.js';
@@ -95,7 +95,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
         return null;
     }
 
-    async createCatalogIfNotExist(catalog: string | Catalog, database?: DatabaseUtils, elastic?: ElasticsearchUtils): Promise<Catalog> {
+    async createCatalogIfNotExist(catalog: string | LegacyCatalog, database?: DatabaseUtils, elastic?: ElasticsearchUtils): Promise<LegacyCatalog> {
         const { database: dbConfig, elasticsearch: esConfig } = ConfigService.getGeneralSettings();
         database ??= DatabaseFactory.getDatabaseUtils(dbConfig, null);
         elastic ??= ElasticsearchFactory.getElasticUtils(esConfig, null);
@@ -175,7 +175,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
         }
     }
 
-    async getCatalog(catalogId: number, summary: Summary): Promise<NewCatalog<any>> {
+    async getCatalog(catalogId: number, summary: Summary): Promise<Catalog<any, CatalogOperation>> {
         const catalogSettings = ConfigService.getCatalogSettings(catalogId);
         switch (catalogSettings?.type) {
             case 'elasticsearch': 
