@@ -46,6 +46,10 @@ export interface CatalogFactory {
 
 export type CatalogColumnType = CswDataset | IndexDocument | PiveauDataset;
 
+export interface CatalogOperation {
+    // TODO
+}
+
 /**
  * 
  * DbColumnType specifies the TypeScript type of the database column values that are fetched for this catalog,
@@ -103,8 +107,8 @@ export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSett
     }
 
     /**
-     * Handle post import steps for this catalog,
-     * e.g. remove stale records from the target catalog and is called after every harvest.
+     * Handle post import steps for this catalog, e.g. remove stale records.
+     * This is called after every harvesting.
      */
     async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // can be overwritten by child classes if necessary
@@ -131,8 +135,4 @@ export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSett
      * Called when a data source is deleted by a user.
      */
     abstract deleteAllRecordsForCatalog(sourceId: string): Promise<void>;
-};
-
-export interface CatalogOperation {
-    // TODO
 }

@@ -38,5 +38,4 @@ export class IngridCswCatalog extends CswCatalog {
     async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         await super.postImport(transactionHandle, importerSettings, observer);
     }
-
 }

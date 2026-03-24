@@ -27,6 +27,7 @@ import type { Observer } from "rxjs";
 import type { ImporterSettings } from "../../importer.settings.js";
 import type { ImportLogMessage } from "../../model/import.result.js";
 import { type Summary } from "../../model/summary.js";
+import type { Bucket } from '../../persistence/postgres.utils.js';
 import { RequestDelegate } from "../../utils/http-request.utils.js";
 import { Catalog, type CatalogOperation } from '../catalog.factory.js';
 import { PiveauCatalogSummary } from './piveau.catalog-summary.js';
@@ -39,7 +40,8 @@ export type PiveauDataset = {
 }
 
 export type PiveauCatalogOperation = CatalogOperation & {
-    // TODO
+    uuid: string,
+    serializedXml: string,
 }
 
 export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings, PiveauCatalogOperation> {
@@ -50,54 +52,72 @@ export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings,
         super(catalogSettings, summary);
     }
 
-    async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
-        log.info(`Importing data into Piveau catalog '${this.settings.id}' for source: ${transactionHandle}`);
-
-        const records = await this.database.getDcatapdeDatasetsBySource(transactionHandle);
-        if (!records || records.length === 0) {
-            log.warn(`No records found for source: ${transactionHandle}`);
-            return;
-        }
-
-        log.info(`Posting ${records.length} records to Piveau endpoint: `);
-
-        // Fetch existing identifiers from target to decide Insert vs Update
-        //const existingIds = await this.fetchExistingIdentifiers(piveauSettings);
-        //log.info(`Found ${existingIds.size} existing records in target Piveau catalog`);
-
-        for (const record of records) {
-            if (!record.dataset_dcatapde) {
-                log.warn(`Record '${record.identifier}' has no dataset_dcatapde, skipping`);
-                this.catalogSummary.numSkipped++;
-                continue;
-            }
-
-            try {
-                const targetUrl = this.buildTargetUrl(this.settings, record.identifier);
-
-                const response = await this.postTransaction(targetUrl, this.settings, record.dataset_dcatapde);
-
-                if (response.status == 201) {
-                    this.catalogSummary.numInserted++;
-                } else if (response.status == 204) {
-                    this.catalogSummary.numUpdated++;
-                } else if (response.status == 304) {
-                    this.catalogSummary.numNotModified++;
-                } else {
-                    this.catalogSummary.numErrors++;
-                    log.error(`Piveau failed for record '${record.identifier}': ${response.status} (${response.statusText})`);
-                    log.trace(response)
-                }
-            } catch (e) {
-                this.catalogSummary.numErrors++;
-                log.error(`Error posting record '${record.identifier}' to Piveau: ${e.message}`);
-            }
-        }
+    async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+        const targetUrl = this.settings.url + "/catalogues/" + this.settings.settings.catalog;
+        const body = '<?xml version="1.0"?>\n' +
+            '<rdf:RDF\n' +
+            '    xmlns:dct="http://purl.org/dc/terms/"\n' +
+            '    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\n' +
+            '    xmlns:dcat="http://www.w3.org/ns/dcat#">\n' +
+            '    <dcat:Catalog>\n' +
+            `        <dct:title>${this.settings.settings.title}</dct:title>` +
+            `        <dct:description>${this.settings.settings.description}</dct:description>\n` +
+            '        <dct:type>dcat-ap</dct:type>\n' +
+            '    </dcat:Catalog>\n' +
+            '</rdf:RDF>';
+        // TODO check response for error
+        await RequestDelegate.doRequest({
+            uri: targetUrl,
+            method: 'PUT',
+            resolveWithFullResponse: true,
+            headers: {"Content-Type": "application/rdf+xml", "X-API-KEY": this.settings.settings.apiKey},
+            body,
+        });
     }
 
     async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // TODO semantics are wrong, fix it
         await this.deleteStaleRecords(importerSettings.catalogId);
+    }
+
+    async processBucket(bucket: Bucket<PiveauDataset>): Promise<PiveauCatalogOperation[]> {
+        const { document } = this.prioritizeAndFilter(bucket);
+        return [{
+            uuid: document.uuid,
+            serializedXml: document.dataset
+        }];
+    }
+
+    async importIntoCatalog(operations: PiveauCatalogOperation[]): Promise<void> {
+        for (const op of operations) {
+            try {
+                const targetUrl = this.buildTargetUrl(this.settings, op.uuid);
+                const response = await this.postTransaction(targetUrl, this.settings, op.serializedXml);
+                switch (response.status) {
+                    case 201:
+                        this.catalogSummary.numInserted++;
+                        break;
+                    case 204:
+                        this.catalogSummary.numUpdated++;
+                        break;
+                    case 304:
+                        this.catalogSummary.numNotModified++;
+                        break;
+                    default:
+                        this.catalogSummary.numErrors++;
+                        log.error(`Piveau failed for record '${op.uuid}': ${response.status} (${response.statusText})`);
+                        log.trace(response)
+                }
+            }
+            catch (e) {
+                this.catalogSummary.numErrors++;
+                log.error(`Error posting record '${op.uuid}' to Piveau: ${e.message}`);
+            }
+        }
+    }
+
+    async flushImport(): Promise<void> {
+        log.info("Piveau import completed");
     }
 
     getDatasetColumn(): string {
@@ -153,28 +173,6 @@ export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings,
         throw new Error('Method not implemented.');
     }
 
-    async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
-        const targetUrl = this.settings.url + "/catalogues/" + this.settings.settings.catalog;
-        const body = '<?xml version="1.0"?>\n' +
-            '<rdf:RDF\n' +
-            '    xmlns:dct="http://purl.org/dc/terms/"\n' +
-            '    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\n' +
-            '    xmlns:dcat="http://www.w3.org/ns/dcat#">\n' +
-            '    <dcat:Catalog>\n' +
-            `        <dct:title>${this.settings.settings.title}</dct:title>` +
-            `        <dct:description>${this.settings.settings.description}</dct:description>\n` +
-            '        <dct:type>dcat-ap</dct:type>\n' +
-            '    </dcat:Catalog>\n' +
-            '</rdf:RDF>'
-        await RequestDelegate.doRequest({
-            uri: targetUrl,
-            method: 'PUT',
-            resolveWithFullResponse: true,
-            headers: {"Content-Type": "application/rdf+xml", "X-API-KEY": this.settings.settings.apiKey},
-            body,
-        });
-    }
-
     async getIdentifierByPiveauCatalog(): Promise<string[]> {
         const targetUrl = this.settings.url + "/catalogues/" + this.settings.settings.catalog + "/datasets?valueType=originalIds&limit=100";
         let result = [];
@@ -198,11 +196,31 @@ export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings,
 
     async deleteDataset(originalId: string): Promise<void> {
         const targetUrl = this.settings.url + "/catalogues/" + this.settings.settings.catalog + "/datasets/origin?originalId=" + originalId;
+        // TODO check response for error
         await RequestDelegate.doRequest({
-                uri: targetUrl,
-                method: 'DELETE',
-                resolveWithFullResponse: true,
-                headers: {"X-API-KEY": this.settings.settings.apiKey},
-            });
+            uri: targetUrl,
+            method: 'DELETE',
+            resolveWithFullResponse: true,
+            headers: {"X-API-KEY": this.settings.settings.apiKey},
+        });
+    }
+
+    private prioritizeAndFilter(bucket: Bucket<PiveauDataset>): {
+        document: PiveauDataset,
+        duplicates: Map<string | number, PiveauDataset>
+    } {
+        let mainDocument: PiveauDataset;
+        let duplicates: Map<string | number, PiveauDataset> = new Map<string | number, PiveauDataset>();
+
+        for (let [id, document] of bucket.duplicates) {
+            if (mainDocument == null) {
+                mainDocument = document;
+            }
+            else {
+                duplicates.set(id, document);
+            }
+        }
+
+        return { document: mainDocument, duplicates };
     }
 }
