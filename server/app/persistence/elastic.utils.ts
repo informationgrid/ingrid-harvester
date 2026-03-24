@@ -171,7 +171,11 @@ export abstract class ElasticsearchUtils {
 
     abstract deleteIndex(indicesToDelete: string | string[]): Promise<any>;
 
+    abstract count(index: string | string[]): Promise<number>;
+
     abstract search(index: string | string[], body?: object, usePrefix?: boolean): Promise<{ hits: any, aggregations?: any }>;
+
+    abstract scroll<T>(index: string | string[], fields: string[], query?: object): AsyncGenerator<T>;
 
     abstract get(index: string, id: string): Promise<any>;
 

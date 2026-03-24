@@ -42,7 +42,7 @@ export abstract class ElasticsearchCatalog extends Catalog<object> {
 
     protected readonly catalogSummary = new ElasticsearchCatalogSummary();
 
-    private readonly elastic: ElasticsearchUtils;
+    protected readonly elastic: ElasticsearchUtils;
 
     constructor(catalogSettings: ElasticsearchCatalogSettings, summary: Summary) {
         super(catalogSettings, summary);

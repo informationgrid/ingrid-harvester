@@ -21,19 +21,23 @@
  * ==================================================
  */
 
+import type { ElasticsearchCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import { ElasticsearchCatalog } from '../../../catalog/elasticsearch/elasticsearch.catalog.js';
 import type { ImporterSettings } from '../../../importer.settings.js';
-import type { ImportLogMessage } from '../../../model/import.result.js';
+import { ImportResult, type ImportLogMessage } from '../../../model/import.result.js';
 import { ProfileFactoryLoader } from '../../../profiles/profile.factory.loader.js';
 import { ConfigService } from '../../../services/config/ConfigService.js';
 import { camelize } from '../../../utils/misc.utils.js';
 import { INGRID_META_INDEX } from '../profile.factory.js';
+import type { DeduplicationMetadata } from './deduplicationMetadata.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
 export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
+
+    private deduplicationMetadata: Map<string, DeduplicationMetadata>;
 
     async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // import data into Elasticsearch catalog
@@ -59,8 +63,28 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         // );
     }
 
+    /**
+     * For InGrid, prepareImport is used to gather all metadata from configured aliases that is used for interstellar deduplication.
+     * 
+     * @param transactionHandle 
+     * @param settings 
+     * @param observer 
+     */
     async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
-        // no preparation needed
+        this.deduplicationMetadata = new Map<string, DeduplicationMetadata>();
+
+        const aliases = (this.settings as ElasticsearchCatalogSettings).settings.dedupAliases;
+        const total = await this.elastic.count(aliases);
+
+        const scrollSearch = this.elastic.scroll<{ uuid: string, dataSourceName: string, modified: Date }>(aliases, ['uuid', 'dataSourceName', 'modified']);
+        let processed = 0;
+        for await (const hit of scrollSearch) {
+            this.deduplicationMetadata.set(hit.uuid, {
+                application: hit.dataSourceName,
+                modified: hit.modified
+            });
+            observer.next(ImportResult.running(++processed, total, 'Existierende Datensätze sammeln'));
+        }
     }
 
     async postImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {

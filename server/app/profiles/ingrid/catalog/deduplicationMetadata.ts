@@ -21,42 +21,8 @@
  * ==================================================
  */
 
-import type { ElasticsearchConfiguration } from './general-config.settings';
-
-export type CatalogSettings = {
-  id: number,
-  type: string,
-  // ED 2026-03-10: "connections" abstraction will be implemented at a later date; directly use URL for now
-  // connectionId: string,
-  url: string,
-  name: string
-};
-
-export type PiveauCatalogSettings = CatalogSettings & {
-  settings: {
-    version: string,
-    outputSchema: string,
-    apiKey: string,
-    catalog: string,
-    title?: string,
-    description?: string
-  }
+export type DeduplicationMetadata = {
+    // uuid: string,
+    application: string,
+    modified: Date
 }
-
-export type ElasticsearchCatalogSettings = CatalogSettings & {
-  settings: ElasticsearchConfiguration & {
-    dedupAliases: string | string[]
-  }
-}
-
-export type CswCatalogSettings = CatalogSettings & {
-  settings: {
-    version: string,
-    outputSchema: string,
-  }
-}
-
-export type Catalog = CatalogSettings
-  & Partial<PiveauCatalogSettings>
-  & Partial<ElasticsearchCatalogSettings>
-  & Partial<CswCatalogSettings>;
