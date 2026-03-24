@@ -23,7 +23,7 @@
 
 import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
 import type { Observer } from "rxjs";
-import type { Catalog } from '../model/dcatApPlu.model.js';
+import type { Catalog as DcatCatalog } from '../model/dcatApPlu.model.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
 import type { ImportLogMessage } from "../model/import.result.js";
 import type { IndexDocument } from '../model/index.document.js';
@@ -105,17 +105,23 @@ export abstract class DatabaseUtils {
 
     abstract getServices(source: string): Promise<RecordEntity[]>;
 
-    abstract getCatalogSizes(useTransaction: boolean): Promise<any[]>;
+    // DEPRECATED
+    abstract getLegacyCatalogSizes(useTransaction: boolean): Promise<any[]>;
 
-    abstract listCatalogs(): Promise<Catalog[]>;
+    // DEPRECATED
+    abstract listLegacyCatalogs(): Promise<DcatCatalog[]>;
 
-    abstract createCatalog(catalog: Catalog): Promise<Catalog>;
+    // DEPRECATED
+    abstract createLegacyCatalog(catalog: DcatCatalog): Promise<DcatCatalog>;
 
-    abstract getCatalog(catalogIdentifier: string): Promise<Catalog>;
+    // DEPRECATED
+    abstract getLegacyCatalog(catalogIdentifier: string): Promise<DcatCatalog>;
 
-    abstract updateCatalog(catalog: Catalog): Promise<Catalog>;
+    // DEPRECATED
+    abstract updateLegacyCatalog(catalog: DcatCatalog): Promise<DcatCatalog>;
 
-    abstract deleteCatalog(catalogId: number): Promise<Catalog>;
+    // DEPRECATED
+    abstract deleteLegacyCatalog(catalogId: number): Promise<DcatCatalog>;
 
     abstract ping(): Promise<boolean>;
 

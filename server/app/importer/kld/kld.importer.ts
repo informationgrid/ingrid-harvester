@@ -311,7 +311,7 @@ export class KldImporter extends Importer<KldSettings> {
                 let entity: RecordEntity = {
                     identifier: id,
                     source: this.getSettings().sourceURL,
-                    collection_id: (await this.database.getCatalog(this.getSettings().catalogId)).id,
+                    collection_id: (await this.database.getLegacyCatalog(this.getSettings().catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };

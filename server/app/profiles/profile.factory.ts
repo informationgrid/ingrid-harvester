@@ -78,7 +78,7 @@ CatalogFactory {
             };
         }
         log.info(`Ensuring existence of DB entry for catalog "${catalog.identifier}"`);
-        return await database.createCatalog(catalog);
+        return await database.createLegacyCatalog(catalog);
     }
 
     dateReplacer = MiscUtils.dateReplacer;

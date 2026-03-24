@@ -26,7 +26,7 @@ import log4js from 'log4js';
 import pg from 'pg';
 import Cursor from "pg-cursor";
 import type { Observer } from "rxjs";
-import type { Catalog } from '../model/dcatApPlu.model.js';
+import type { Catalog as LegacyCatalog } from '../model/dcatApPlu.model.js';
 import type { Distribution } from '../model/distribution.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
 import { type ImportLogMessage, ImportResult } from "../model/import.result.js";
@@ -175,7 +175,7 @@ export class PostgresUtils extends DatabaseUtils {
         return result.rows;
     }
 
-    async getCatalogSizes(useTransaction: boolean = true): Promise<{ collection_id: number, count: number }[]> {
+    async getLegacyCatalogSizes(useTransaction: boolean = true): Promise<{ collection_id: number, count: number }[]> {
         let result: pg.QueryResult<any> = await this.client(useTransaction).query(this.queries.getCollectionSizes);
         if (result.rowCount == 0) {
             return null;
@@ -183,18 +183,18 @@ export class PostgresUtils extends DatabaseUtils {
         return result.rows.reduce((val, { collection_id, count }) => ({ [collection_id]: count, ...val }), {});
     }
 
-    async listCatalogs(): Promise<Catalog[]> {
+    async listLegacyCatalogs(): Promise<LegacyCatalog[]> {
         // TODO maybe move this to somewhere more sensible
         await this.init();
         let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.listCollections);
         if (result.rowCount == 0) {
             return [];
         }
-        let catalogs: Catalog[] = result.rows.map(row => ({ id: row.id, ...row.properties }));
+        let catalogs: LegacyCatalog[] = result.rows.map(row => ({ id: row.id, ...row.properties }));
         return catalogs.sort((c1, c2) => c1.title < c2.title ? -1 : c1.title > c2.title ? 1 : 0);
     }
 
-    async createCatalog(catalog: Catalog): Promise<Catalog> {
+    async createLegacyCatalog(catalog: LegacyCatalog): Promise<LegacyCatalog> {
         let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.createCollection, [catalog.identifier, catalog, null, await DcatApPluDocumentFactory.createCatalog(catalog), catalog]);
         if (result.rowCount != 1) {
             return null;
@@ -203,7 +203,7 @@ export class PostgresUtils extends DatabaseUtils {
         return catalog;
     }
 
-    async getCatalog(identifier: string): Promise<Catalog> {
+    async getLegacyCatalog(identifier: string): Promise<LegacyCatalog> {
         let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getCollection, [identifier]);
         if (result.rowCount == 0) {
             return null;
@@ -214,7 +214,7 @@ export class PostgresUtils extends DatabaseUtils {
         };
     }
 
-    async updateCatalog(catalog: Catalog): Promise<Catalog> {
+    async updateLegacyCatalog(catalog: LegacyCatalog): Promise<LegacyCatalog> {
         // don't persist ID within catalog json
         delete catalog['id'];
         let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.updateCollection,
@@ -226,7 +226,7 @@ export class PostgresUtils extends DatabaseUtils {
         return catalog;
     }
 
-    async deleteCatalog(catalogId: number): Promise<Catalog> {
+    async deleteLegacyCatalog(catalogId: number): Promise<LegacyCatalog> {
         let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.deleteCollection, [catalogId]);
         if (result.rowCount != 1) {
             return null;
@@ -263,7 +263,7 @@ export class PostgresUtils extends DatabaseUtils {
         // TODO we also need to store SOURCE_TYPE in postgres and subsequently fetch it here (B.source_type)
         // @myself: next time, when you want me to do something in the future, specify WHY that should be done...
 
-        let catalogs = (await this.listCatalogs()).reduce((map, catalog: Catalog) => (map[catalog.id] = catalog, map), {});
+        let catalogs = (await this.listLegacyCatalogs()).reduce((map, catalog: LegacyCatalog) => (map[catalog.id] = catalog, map), {});
 
       // right before creating the cursor
       const { rows: [{ count: totalRows }] } = await client.query(

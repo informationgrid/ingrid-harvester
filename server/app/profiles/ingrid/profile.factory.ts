@@ -109,7 +109,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
             };
         }
         log.info(`Ensuring existence of DB entry for catalog "${catalog.identifier}"`);
-        let catalogPromise = await database.createCatalog(catalog);
+        let catalogPromise = await database.createLegacyCatalog(catalog);
         log.info(`Ensuring existence of index for catalog "${catalog.identifier}"`);
         if (!await elastic.isIndexPresent(catalog.identifier)) {
             await elastic.prepareIndexWithName(catalog.identifier, this.getIndexMappings(), this.getIndexSettings());

@@ -192,7 +192,7 @@ export class CswImporter extends Importer<CswSettings> {
 
     protected async harvest(): Promise<number> {
         log.info(`Started requesting records`);
-        let catalog: Catalog = await this.database.getCatalog(this.getSettings().catalogId);
+        let catalog: Catalog = await this.database.getLegacyCatalog(this.getSettings().catalogId);
         if (catalog == null) {
             throw new Error(`Catalog with identifier '${this.getSettings().catalogId}' not found.`)
         }
@@ -480,7 +480,7 @@ export class CswImporter extends Importer<CswSettings> {
                     identifier: uuid,
                     source: this.getSettings().sourceURL,
                     // TODO remove collection_id
-                    collection_id: (await this.database.getCatalog(this.getSettings().catalogId)).id,
+                    collection_id: (await this.database.getLegacyCatalog(this.getSettings().catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };
