@@ -54,7 +54,7 @@
         @if (canEdit()) {
           <button
             mat-menu-item
-            [disabled]="importLog() !== undefined && !importLog().complete"
+            [disabled]="importLog() !== undefined && importLog().complete === false"
             (click)="onImport.emit()"
             data-test="import"
           >
@@ -65,7 +65,7 @@
           @if (datasource().isIncrementalSupported) {
             <button
               mat-menu-item
-              [disabled]="importLog() !== undefined && !importLog().complete"
+              [disabled]="importLog() !== undefined && importLog().complete === false"
               (click)="onIncrementImport.emit()"
               data-test="importIncrement"
             >

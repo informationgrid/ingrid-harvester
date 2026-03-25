@@ -58,12 +58,14 @@ export class StatusIndicatorComponent {
     let statuses: ImportStatus[] = [];
 
     if (this.importLog() !== undefined) {
-      if (!this.importLog().complete) {
+      if (this.importLog().complete == false) {
         statuses.push("importing");
-      } else if (this.errorNum() > 0) {
-        statuses.push("error");
-      } else {
-        statuses.push("success");
+      } else if (this.importLog().summary) {
+        if (this.errorNum() > 0) {
+          statuses.push("error");
+        } else {
+          statuses.push("success");
+        }
       }
     }
 

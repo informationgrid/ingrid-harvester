@@ -21,7 +21,7 @@
     ==================================================
 -->
 
-@if (importLog() !== undefined && !importLog().complete) {
+@if (importLog() !== undefined && importLog().complete === false) {
   <div class="flex-row gap-8" *transloco="let t; read: 'datasources'">
     <ingrid-circular-progress-indicator [progress]="importProgress()" />
 
