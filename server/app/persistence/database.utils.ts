@@ -23,13 +23,12 @@
 
 import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
 import type { Observer } from "rxjs";
-import type { Catalog } from '../model/dcatApPlu.model.js';
+import type { CatalogColumnType } from '../catalog/catalog.factory.js';
+import type { Catalog as DcatCatalog } from '../model/dcatApPlu.model.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
 import type { ImportLogMessage } from "../model/import.result.js";
-import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
-import type { ElasticsearchUtils } from './elastic.utils.js';
-import type { PostgresAggregator } from './postgres.aggregator.js';
+import type { Bucket } from './postgres.utils.js';
 
 export interface BulkResponse {
     queued: boolean;
@@ -73,15 +72,11 @@ export abstract class DatabaseUtils {
 
     abstract rollbackTransaction(): Promise<void>;
 
-    // abstract pushToElastic(elastic: ElasticsearchUtils, source: string): Promise<void>;
-
-    // abstract pushToElastic2ElectricBoogaloo(elastic: ElasticsearchUtils, source: string): Promise<void>;
-
     abstract nonFetchedPercentage(source: string, last_modified: Date): Promise<number>;
 
     abstract deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void>;
 
-    abstract pushToElasticsearch(elastic: ElasticsearchUtils, source: string, observer: Observer<ImportLogMessage>, aggregator?: PostgresAggregator<IndexDocument>): Promise<void>;
+    abstract streamBuckets<T extends CatalogColumnType>(source: string, datasetColumn: string, observer: Observer<ImportLogMessage>): AsyncGenerator<Bucket<T>>;
 
     abstract getStoredData(ids: string[]): Promise<any[]>;
 
@@ -105,17 +100,23 @@ export abstract class DatabaseUtils {
 
     abstract getServices(source: string): Promise<RecordEntity[]>;
 
-    abstract getCatalogSizes(useTransaction: boolean): Promise<any[]>;
+    // DEPRECATED
+    abstract getLegacyCatalogSizes(useTransaction: boolean): Promise<any[]>;
 
-    abstract listCatalogs(): Promise<Catalog[]>;
+    // DEPRECATED
+    abstract listLegacyCatalogs(): Promise<DcatCatalog[]>;
 
-    abstract createCatalog(catalog: Catalog): Promise<Catalog>;
+    // DEPRECATED
+    abstract createLegacyCatalog(catalog: DcatCatalog): Promise<DcatCatalog>;
 
-    abstract getCatalog(catalogIdentifier: string): Promise<Catalog>;
+    // DEPRECATED
+    abstract getLegacyCatalog(catalogIdentifier: string): Promise<DcatCatalog>;
 
-    abstract updateCatalog(catalog: Catalog): Promise<Catalog>;
+    // DEPRECATED
+    abstract updateLegacyCatalog(catalog: DcatCatalog): Promise<DcatCatalog>;
 
-    abstract deleteCatalog(catalogId: number): Promise<Catalog>;
+    // DEPRECATED
+    abstract deleteLegacyCatalog(catalogId: number): Promise<DcatCatalog>;
 
     abstract ping(): Promise<boolean>;
 

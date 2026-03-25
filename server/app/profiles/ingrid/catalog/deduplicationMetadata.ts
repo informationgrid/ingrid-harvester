@@ -21,10 +21,8 @@
  * ==================================================
  */
 
-import type { Bucket } from './postgres.utils.js';
-import type { EsOperation } from './elastic.utils.js';
-import type { IndexDocument } from '../model/index.document.js';
-
-export interface PostgresAggregator<I extends IndexDocument> {
-    processBucket(bucket: Bucket<I>): Promise<EsOperation[]>;
+export type DeduplicationMetadata = {
+    // uuid: string,
+    application: string,
+    modified: Date
 }

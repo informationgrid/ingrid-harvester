@@ -197,9 +197,9 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
 
                 let rdfAboutAttribute = DcatappluMapper.select('./@rdf:about', records[i], true)?.textContent;
                 let catalogId = datasetAboutsToCatalogAbouts[rdfAboutAttribute];
-                let catalog = catalogAboutsToCatalogs[catalogId] ?? this.database.getCatalog(this.generalConfig.elasticsearch.index);
+                let catalog = catalogAboutsToCatalogs[catalogId] ?? this.database.getLegacyCatalog(this.generalConfig.elasticsearch.index);
                 if (!catalog) {
-                    catalog = await this.database.createCatalog({
+                    catalog = await this.database.createLegacyCatalog({
                         description: 'Globaler Katalog',
                         identifier: this.generalConfig.elasticsearch.index,
                         publisher: {
@@ -225,7 +225,7 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
                     let entity: RecordEntity = {
                         identifier: uuid,
                         source: this.getSettings().sourceURL,
-                        collection_id: (await this.database.getCatalog(this.getSettings().catalogId)).id,
+                        collection_id: (await this.database.getLegacyCatalog(this.getSettings().catalogId)).id,
                         dataset: doc,
                         original_document: mapper.getHarvestedData()
                     };

@@ -27,17 +27,25 @@ import type { Observer } from 'rxjs';
 import type { ImporterSettings } from '../importer.settings.js';
 import type { CatalogSummary } from '../model/catalog-summary.js';
 import type { ImportLogMessage } from '../model/import.result.js';
+import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
 import type { DatabaseUtils } from '../persistence/database.utils.js';
+import type { Bucket } from '../persistence/postgres.utils.js';
 import { ConfigService } from '../services/config/ConfigService.js';
+import type { CswDataset } from './csw/csw.catalog.js';
+import type { PiveauDataset } from './piveau/piveau.catalog.js';
 
 const log = log4js.getLogger('Catalog');
 
 export interface CatalogFactory {
+    getCatalog(catalogId: number, summary: Summary): Promise<Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>>;
+}
 
-    // TODO improve typing
-    getCatalog(catalogId: number, summary: Summary): Promise<Catalog<any>>;
+export type CatalogColumnType = CswDataset | IndexDocument | PiveauDataset;
+
+export interface CatalogOperation {
+    // TODO
 }
 
 /**
@@ -45,15 +53,15 @@ export interface CatalogFactory {
  * DbColumnType specifies the TypeScript type of the database column values that are fetched for this catalog,
  * e.g. string (text, serialized XML), object (JSON), etc.
  */
-export abstract class Catalog<DbColumnType> {
+export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSettings, O extends CatalogOperation> {
 
-    readonly settings: CatalogSettings;
+    readonly settings: S;
     readonly summary: Summary;
     protected readonly database: DatabaseUtils;
     protected transactionTimestamp: string;
     protected abstract readonly catalogSummary: CatalogSummary;
 
-    constructor(settings: CatalogSettings, summary: Summary) {
+    constructor(settings: S, summary: Summary) {
         this.settings = settings;
         this.summary = summary;
         this.database = DatabaseFactory.getDatabaseUtils(ConfigService.getGeneralSettings().database, summary);
@@ -68,67 +76,64 @@ export abstract class Catalog<DbColumnType> {
         this.catalogSummary.print(log);
     }
 
-    abstract prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void>;
-
     /**
-     * Import the database rows matching the transactionHandle into this target catalog.
+     * Prepare the import into the catalog resource.
+     * For example: for elasticsearch catalogs, fetch and store all document metadata from given aliases
      * 
      * @param transactionHandle 
+     * @param settings 
+     * @param observer 
      */
-    abstract import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void>;
-    //  {
-    //     // fetch rows from DB using transactionHandle
-    //     // * fetch datasets in buckets for deduplication purposes ("internal deduplication")
-    //     // * either all DATASOURCEs, specified DATASOURCEs (reflexive, transitive), or no DATASOURCEs
-    //     // this is a mock; should NOT work with a list, but use a scroll API or similar
-    //     const buckets: Bucket<RecordEntity> = this.getDatasets(transactionHandle);
-    //     for (let bucket of buckets) {
-    //         // "external deduplication" - deduplicate bucket against configured external sources 
-    //         // TODO where to configure? how to set up?
-    //         bucket = externalDeduplication(bucket);
-    //         // write the bucket representation (e.g. the dataset from the bucket with the highest priority) to the target catalog
-    //         importIntoCatalog(bucket);
-    //     }
-    // }
-
-    /**
-     * Remove stale records from the target catalog and is called after every harvest.
-     */
-    async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
-        await this.deleteStaleRecords(importerSettings.catalogId);
+    async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+        // can be overwritten by child classes if necessary
     }
 
     /**
-     * Remove records in the target catalog that are no longer present in the current
-     * harvest. Records belonging to this source are identified by sourceId
-     * (ImporterSettings.catalogId), which was embedded via addTraceability.
+     * Import the database rows matching the transactionHandle into this target catalog.
+     * This is done by streaming "buckets" of related database rows,
+     * processing these buckets (finding the principal document, deduplication, transformation),
+     * and then importing bucket representative(s) into this target catalog.
+     * 
+     * @param transactionHandle 
      */
-    abstract deleteStaleRecords(sourceId: string): Promise<void>;
+    async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+        log.info(`Importing data for transaction: ${transactionHandle}`);
+        const bucketGenerator = this.database.streamBuckets<C>(transactionHandle, this.getDatasetColumn(), observer);
+        for await (const bucket of bucketGenerator) {
+            const ops = await this.processBucket(bucket);
+            await this.importIntoCatalog(ops);
+        }
+        // finish importing
+        await this.flushImport();
+    }
 
     /**
-     * Remove ALL records in the target catalog that originated from the given source
-     * (identified by sourceId = ImporterSettings.catalogId).
-     * Called when a data source is deleted by a user.
+     * Handle post import steps for this catalog, e.g. remove stale records.
+     * This is called after every harvesting.
      */
-    abstract deleteAllRecordsForCatalog(sourceId: string): Promise<void>;
+    async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+        // can be overwritten by child classes if necessary
+    }
 
-    abstract transform(rows: DbColumnType[]): DbColumnType[];
+    abstract processBucket(bucket: Bucket<C>): Promise<O[]>;
 
-    abstract deduplicate(datasets: DbColumnType[]): DbColumnType[];
-};
+    abstract importIntoCatalog(operations: O[]): Promise<void>;
 
-enum ImportType {
-    CSW_ISO,
-    DCAT,
-    DCAT_AP,
-    DCAT_AP_DE,
-    TRIPLE,
-    // ...
-};
+    abstract flushImport(): Promise<void>;
 
-enum ExportType {
-    CSW_ISO,
-    DCAT_AP_DE,
-    TRIPLE,
-    // ...
+    abstract getDatasetColumn(): string;
+
+    // /**
+    //  * Remove records in the target catalog that are no longer present in the current
+    //  * harvest. Records belonging to this source are identified by sourceId
+    //  * (ImporterSettings.catalogId), which was embedded via addTraceability.
+    //  */
+    // abstract deleteStaleRecords(sourceId: string): Promise<void>;
+
+    // /**
+    //  * Remove ALL records in the target catalog that originated from the given source
+    //  * (identified by sourceId = ImporterSettings.catalogId).
+    //  * Called when a data source is deleted by a user.
+    //  */
+    // abstract deleteAllRecordsForCatalog(sourceId: string): Promise<void>;
 }

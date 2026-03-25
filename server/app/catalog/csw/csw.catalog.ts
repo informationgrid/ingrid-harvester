@@ -29,80 +29,93 @@ import type { ImporterSettings } from "../../importer.settings.js";
 import { namespaces } from "../../importer/namespaces.js";
 import type { ImportLogMessage } from "../../model/import.result.js";
 import type { Summary } from "../../model/summary.js";
+import type { Bucket } from '../../persistence/postgres.utils.js';
 import { RequestDelegate } from "../../utils/http-request.utils.js";
 import { getDomParser } from "../../utils/misc.utils.js";
-import { Catalog } from '../catalog.factory.js';
+import { Catalog, type CatalogOperation } from '../catalog.factory.js';
 import { CswCatalogSummary } from './csw.catalog-summary.js';
 
 const log = log4js.getLogger('CswCatalog');
 
-export abstract class CswCatalog extends Catalog<string> {
+export type CswDataset = {
+    uuid: string,
+    dataset: string
+}
 
-    readonly id: string = 'csw-catalog';
-    readonly type: string = 'csw';
+export type CswCatalogOperation = CatalogOperation & {
+    uuid: string,
+    serializedXml: string,
+    isUpdate: boolean
+}
+
+export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings, CswCatalogOperation> {
 
     protected readonly catalogSummary = new CswCatalogSummary();
 
     private readonly domParser = getDomParser();
+    private existingIds: Set<string>;
+    private targetUrl: string;
 
     constructor(catalogSettings: CswCatalogSettings, summary: Summary) {
         super(catalogSettings, summary);
     }
 
-    async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
-        log.info(`Importing data into CSW catalog '${this.settings.id}' for source: ${transactionHandle}`);
-
-        const records = await this.database.getDatasetsWithOriginalDocument(transactionHandle);
-        if (!records || records.length === 0) {
-            log.warn(`No records found for source: ${transactionHandle}`);
-            return;
-        }
-
-        const cswSettings = this.settings as CswCatalogSettings;
-        const targetUrl = this.buildTargetUrl(cswSettings);
-
-        log.info(`Posting ${records.length} records to CSW-T endpoint: ${targetUrl}`);
-
+    async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // Fetch existing identifiers from target to decide Insert vs Update
-        const existingIds = await this.fetchExistingIdentifiers(cswSettings);
-        log.info(`Found ${existingIds.size} existing records in target CSW catalog`);
+        this.existingIds = await this.fetchExistingIdentifiers();
+        log.info(`Found ${this.existingIds.size} existing records in target CSW catalog`);
+        this.targetUrl = this.buildTargetUrl();
+    }
 
-        for (const record of records) {
-            if (!record.original_document) {
-                log.warn(`Record '${record.identifier}' has no original_document, skipping`);
-                this.catalogSummary.numSkipped++;
-                continue;
-            }
+    async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+        // TODO semantics are wrong, fix it
+        await this.deleteStaleRecords(importerSettings.catalogId);
+    }
 
-            try {
-                const enrichedXml = this.addTraceability(record.original_document, this.transactionTimestamp, settings.catalogId);
-                const isUpdate = existingIds.has(record.identifier);
+    async processBucket(bucket: Bucket<CswDataset>): Promise<CswCatalogOperation[]> {
+        const { document: record } = this.prioritizeAndFilter(bucket);
+        const enrichedXml = this.addTraceability(record.dataset, this.transactionTimestamp, this.settings.id.toString());
+        return [{
+            uuid: record.uuid,
+            serializedXml: enrichedXml,
+            isUpdate: this.existingIds.has(record.uuid)
+        }];
+    }
 
-                const transactionXml = isUpdate
-                    ? this.buildUpdateTransaction(enrichedXml, record.identifier)
-                    : this.buildInsertTransaction(enrichedXml);
+    async importIntoCatalog(operations: CswCatalogOperation[]): Promise<void> {
+        for (const op of operations) {
+            const transactionXml = op.isUpdate
+                ? this.buildUpdateTransaction(op.serializedXml, op.uuid)
+                : this.buildInsertTransaction(op.serializedXml);
+            const response = await this.postTransaction(this.targetUrl, transactionXml);
+            const result = this.parseTransactionResponse(response);
 
-                const response = await this.postTransaction(targetUrl, transactionXml);
-                const result = this.parseTransactionResponse(response);
-
-                if (result.success && (result.inserted > 0 || result.updated > 0)) {
-                    if (isUpdate) this.catalogSummary.numUpdated++;
-                    else this.catalogSummary.numInserted++;
-                } else {
-                    this.catalogSummary.numErrors++;
-                    log.error(`CSW-T ${isUpdate ? 'Update' : 'Insert'} failed for record '${record.identifier}': ${response}`);
+            if (result.success && (result.inserted > 0 || result.updated > 0)) {
+                if (op.isUpdate) {
+                    this.catalogSummary.numUpdated++;
                 }
-            } catch (e) {
+                else {
+                    this.catalogSummary.numInserted++;
+                }
+            }
+            else {
                 this.catalogSummary.numErrors++;
-                log.error(`Error posting record '${record.identifier}' to CSW-T: ${e.message}`);
+                log.error(`CSW-T ${op.isUpdate ? 'update' : 'insert'} failed for record '${op.uuid}': ${response}`);
             }
         }
     }
 
+    async flushImport(): Promise<void> {
+        log.info("CSW-T import completed");
+    }
+
+    getDatasetColumn(): string {
+        return 'dataset_csw';
+    }
+
     async deleteStaleRecords(sourceId: string): Promise<void> {
         log.info(`Post-import stale cleanup for source '${sourceId}' in CSW catalog '${this.settings.id}'`);
-        const cswSettings = this.settings as CswCatalogSettings;
-        const targetUrl = this.buildTargetUrl(cswSettings);
+        const targetUrl = this.buildTargetUrl();
 
         const deleteXml = this.buildFilteredDeleteTransaction(sourceId, this.transactionTimestamp);
         const response = await this.postTransaction(targetUrl, deleteXml);
@@ -110,7 +123,8 @@ export abstract class CswCatalog extends Catalog<string> {
 
         if (result.success) {
             this.catalogSummary.numDeleted = result.deleted;
-        } else {
+        }
+        else {
             this.catalogSummary.numErrors++;
             log.error(`Stale cleanup failed: ${response}`);
         }
@@ -125,10 +139,9 @@ export abstract class CswCatalog extends Catalog<string> {
     /**
      * Build the full CSW-T target URL with query parameters.
      */
-    private buildTargetUrl(cswSettings: CswCatalogSettings): string {
-        const baseUrl = cswSettings.url;
-        const separator = baseUrl.includes('?') ? '&' : '?';
-        return `${baseUrl}${separator}SERVICE=CSW&REQUEST=Transaction`;
+    private buildTargetUrl(): string {
+        const separator = this.settings.url.includes('?') ? '&' : '?';
+        return `${this.settings.url}${separator}SERVICE=CSW&REQUEST=Transaction`;
     }
 
     /**
@@ -179,9 +192,8 @@ export abstract class CswCatalog extends Catalog<string> {
      * Fetch all existing record identifiers from the target CSW catalog (unfiltered).
      * Used during import to decide Insert vs Update.
      */
-    private fetchExistingIdentifiers(cswSettings: CswCatalogSettings): Promise<Set<string>> {
-        const baseUrl = cswSettings.url;
-        return this.paginatedGetRecords(baseUrl, (start, max) => `<?xml version="1.0" encoding="UTF-8"?>
+    private fetchExistingIdentifiers(): Promise<Set<string>> {
+        return this.paginatedGetRecords(this.settings.url, (start, max) => `<?xml version="1.0" encoding="UTF-8"?>
 <csw:GetRecords xmlns:csw="${namespaces.CSW}"
                 xmlns:dc="${namespaces.DC}"
                 service="CSW"
@@ -223,11 +235,12 @@ export abstract class CswCatalog extends Catalog<string> {
 
         // Find the MD_DataIdentification or SV_ServiceIdentification element to insert keywords into
         const identificationInfo = doc.getElementsByTagNameNS(namespaces.GMD, 'MD_DataIdentification')[0]
-            || doc.getElementsByTagNameNS(namespaces.GMD, 'SV_ServiceIdentification')[0];
+            || doc.getElementsByTagNameNS(namespaces.SRV, 'SV_ServiceIdentification')[0];
 
         if (identificationInfo) {
             identificationInfo.appendChild(keywordsFragment.documentElement);
-        } else {
+        }
+        else {
             log.warn('No MD_DataIdentification or SV_ServiceIdentification found in document, keywords not added');
         }
 
@@ -326,12 +339,23 @@ export abstract class CswCatalog extends Catalog<string> {
 
         return { success: true, inserted, updated, deleted };
     }
+    
+    private prioritizeAndFilter(bucket: Bucket<CswDataset>): {
+        document: CswDataset,
+        duplicates: Map<string | number, CswDataset>
+    } {
+        let mainDocument: CswDataset;
+        let duplicates: Map<string | number, CswDataset> = new Map<string | number, CswDataset>();
 
-    transform(rows: string[]): string[] {
-        throw new Error('Method not implemented.');
-    }
+        for (let [id, document] of bucket.duplicates) {
+            if (mainDocument == null) {
+                mainDocument = document;
+            }
+            else {
+                duplicates.set(id, document);
+            }
+        }
 
-    deduplicate(datasets: string[]): string[] {
-        throw new Error('Method not implemented.');
+        return { document: mainDocument, duplicates };
     }
 }

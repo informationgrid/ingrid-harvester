@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import type { CswCatalogSettings, ElasticsearchCatalogSettings, PiveauCatalogSettings } from '@shared/catalog.js';
+import type { CatalogSettings, CswCatalogSettings, ElasticsearchCatalogSettings, PiveauCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
-import type { Catalog as NewCatalog } from '../../catalog/catalog.factory.js';
+import { Catalog, type CatalogColumnType, type CatalogOperation } from '../../catalog/catalog.factory.js';
 import type { CkanMapper } from '../../importer/ckan/ckan.mapper.js';
 import type { CkanSettings } from '../../importer/ckan/ckan.settings.js';
 import type { CswMapper } from '../../importer/csw/csw.mapper.js';
@@ -36,7 +36,7 @@ import type { Importer } from '../../importer/importer.js';
 import type { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
 import type { WfsSettings } from '../../importer/wfs/wfs.settings.js';
 import { WfsProfile } from '../../importer/wfs/wfs.settings.js';
-import type { Catalog } from '../../model/dcatApPlu.model.js';
+import type { Catalog as LegacyCatalog } from '../../model/dcatApPlu.model.js';
 import type { DocumentFactory } from '../../model/index.document.factory.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
@@ -45,7 +45,6 @@ import type { DatabaseUtils } from '../../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
 import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
-import type { PostgresAggregator as AbstractPostgresAggregator } from '../../persistence/postgres.aggregator.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
 import { ProfileFactory } from '../profile.factory.js';
 import { ingridCkanMapper } from './mapper/ingrid.ckan.mapper.js';
@@ -61,7 +60,6 @@ import type { IngridMetadata } from './model/ingrid.metadata.js';
 import { ElasticQueries } from './persistence/elastic.queries.js';
 import mappings from './persistence/ingrid-meta-mapping.json' with { type: 'json' };
 import settings from './persistence/ingrid-meta-settings.json' with { type: 'json' };
-import { PostgresAggregator } from './persistence/postgres.aggregator.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -73,29 +71,15 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
 
     async init(): Promise<{ database: DatabaseUtils, elastic: ElasticsearchUtils }> {
         const { database, elastic } = await super.init();
-
-        // create index for each configured (and used!) catalog
-        const catalogIdentifiers = new Set(ConfigService.getHarvesters().map(harvester => harvester.catalogIds).flat());
-        const catalogMap: Record<string, ElasticsearchCatalogSettings> = ConfigService.getCatalogSettings()
-            .filter(catalog => catalog.type == 'elasticsearch')
-            .reduce((acc, obj) => (acc[obj.id] = (obj as ElasticsearchCatalogSettings), acc), {});
-        for (let identifier of catalogIdentifiers) {
-            const { settings } = catalogMap[identifier];
-            if (settings.index && !await elastic.isIndexPresent(settings.index)) {
-                await elastic.prepareIndexWithName(settings.index, this.getIndexMappings(), this.getIndexSettings());
-                await elastic.addAlias(settings.index, settings.alias);
-            }
-        }
-
         // create ingrid_meta index
         let isIngridMeta = await elastic.isIndexPresent(INGRID_META_INDEX);
         if (!isIngridMeta) {
             await elastic.prepareIndexWithName(INGRID_META_INDEX, mappings, settings as any);
         }
-        return null;
+        return { database, elastic };
     }
 
-    async createCatalogIfNotExist(catalog: string | Catalog, database?: DatabaseUtils, elastic?: ElasticsearchUtils): Promise<Catalog> {
+    async createCatalogIfNotExist(catalog: string | LegacyCatalog, database?: DatabaseUtils, elastic?: ElasticsearchUtils): Promise<LegacyCatalog> {
         const { database: dbConfig, elasticsearch: esConfig } = ConfigService.getGeneralSettings();
         database ??= DatabaseFactory.getDatabaseUtils(dbConfig, null);
         elastic ??= ElasticsearchFactory.getElasticUtils(esConfig, null);
@@ -109,7 +93,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
             };
         }
         log.info(`Ensuring existence of DB entry for catalog "${catalog.identifier}"`);
-        let catalogPromise = await database.createCatalog(catalog);
+        let catalogPromise = await database.createLegacyCatalog(catalog);
         log.info(`Ensuring existence of index for catalog "${catalog.identifier}"`);
         if (!await elastic.isIndexPresent(catalog.identifier)) {
             await elastic.prepareIndexWithName(catalog.identifier, this.getIndexMappings(), this.getIndexSettings());
@@ -175,7 +159,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
         }
     }
 
-    async getCatalog(catalogId: number, summary: Summary): Promise<NewCatalog<any>> {
+    async getCatalog(catalogId: number, summary: Summary): Promise<Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>> {
         const catalogSettings = ConfigService.getCatalogSettings(catalogId);
         switch (catalogSettings?.type) {
             case 'elasticsearch': 
@@ -195,10 +179,6 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
 
     getProfileName(): string {
         return 'ingrid';
-    }
-
-    getPostgresAggregator(settings: ElasticsearchCatalogSettings): AbstractPostgresAggregator<IngridIndexDocument> {
-        return new PostgresAggregator(settings);
     }
 
     useIndexPerCatalog(): boolean {

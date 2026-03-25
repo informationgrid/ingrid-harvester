@@ -22,13 +22,11 @@
  */
 
 import { v5 as uuidv5 } from 'uuid';
-import { ConfigService } from '../../services/config/ConfigService.js';
-import type { IngridIndexDocument } from './model/index.document.js';
-import { INGRID_META_INDEX } from './profile.factory.js';
+import type { IndexDocument } from '../../model/index.document.js';
 
 const UUID_NAMESPACE = 'b5d8aadf-d03f-452a-8d91-3a6a7f3b1203';
 
-export function createEsId(document: IngridIndexDocument): string {
+export function createEsId(document: IndexDocument): string {
     return document.uuid;
     // return generateWfsUuid(document.extras.metadata.source.source_base, document., document.t01_object.obj_id);
 }

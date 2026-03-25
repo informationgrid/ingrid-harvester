@@ -79,7 +79,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
 
         // Pre-fetch the DB collection ID once
         try {
-            this.collectionId = (await this.database.getCatalog(this.getSettings().catalogId))?.id ?? null;
+            this.collectionId = (await this.database.getLegacyCatalog(this.getSettings().catalogId))?.id ?? null;
         } catch (e) {
             log.error('Failed to retrieve catalog from database', e);
             this.getSummary().appErrors.push('Failed to retrieve catalog: ' + e.message);

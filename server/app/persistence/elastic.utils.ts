@@ -25,6 +25,7 @@ import type { ElasticsearchConfiguration } from '@shared/general-config.settings
 import type { Index } from '@shared/index.model.js';
 import type { Client as Client8 } from 'elasticsearch8';
 import type { Client as Client9 } from 'elasticsearch9';
+import type { CatalogOperation } from '../catalog/catalog.factory.js';
 import type { Summary } from '../model/summary.js';
 import { INGRID_META_INDEX } from '../profiles/ingrid/profile.factory.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
@@ -39,7 +40,7 @@ export interface BulkResponse {
 /**
  * Contains an operation to send to Elasticsearch via bulk request.
  */
-export interface EsOperation {
+export interface EsOperation extends CatalogOperation {
     operation: 'index' | 'create' | 'update' | 'delete',
     _id: any,
     _index?: string,
@@ -87,7 +88,7 @@ export abstract class ElasticsearchUtils {
      */
     abstract prepareIndexWithName(index: string, mappings, settings: IndexSettings, openIfPresent?: boolean);
 
-    abstract finishIndex(closeIndex?: boolean);
+    abstract finishIndex();
 
     /**
      * Add the specified alias to an index.
@@ -171,7 +172,11 @@ export abstract class ElasticsearchUtils {
 
     abstract deleteIndex(indicesToDelete: string | string[]): Promise<any>;
 
+    abstract count(index: string | string[]): Promise<number>;
+
     abstract search(index: string | string[], body?: object, usePrefix?: boolean): Promise<{ hits: any, aggregations?: any }>;
+
+    abstract scroll<T>(index: string | string[], fields: string[], query?: object): AsyncGenerator<T>;
 
     abstract get(index: string, id: string): Promise<any>;
 

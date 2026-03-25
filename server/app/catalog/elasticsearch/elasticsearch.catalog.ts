@@ -26,23 +26,21 @@ import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import type { ImporterSettings } from '../../importer.settings.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
+import type { IndexDocument } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
-import type { DatabaseUtils } from '../../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
-import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import type { ElasticsearchUtils, EsOperation } from '../../persistence/elastic.utils.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { Catalog } from '../catalog.factory.js';
 import { ElasticsearchCatalogSummary } from './elasticsearch.catalog-summary.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
-export abstract class ElasticsearchCatalog extends Catalog<object> {
-
-    readonly id: string = 'elastic-catalog';
-    readonly type: string = 'elasticsearch';
+export abstract class ElasticsearchCatalog extends Catalog<IndexDocument, ElasticsearchCatalogSettings, EsOperation> {
 
     protected readonly catalogSummary = new ElasticsearchCatalogSummary();
 
-    private readonly elastic: ElasticsearchUtils;
+    protected readonly elastic: ElasticsearchUtils;
 
     constructor(catalogSettings: ElasticsearchCatalogSettings, summary: Summary) {
         super(catalogSettings, summary);
@@ -51,48 +49,34 @@ export abstract class ElasticsearchCatalog extends Catalog<object> {
         this.elastic = ElasticsearchFactory.getElasticUtils(catalogSettings.settings, summary);
     }
 
-    async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
-        // import data into Elasticsearch catalog
-        log.info(`Importing data for transaction: ${transactionHandle}`);
-        
-        // TODO split this into
-        // 1) bucket fetching (put into abstract Catalog)
-        // 2) transformation, coupling, deduplication (abstract method/s, handle in profile-specific catalogs)
-        // 3) push to target (here, ES)
-        await this.database.pushToElasticsearch(this.elastic, transactionHandle, observer);
+    async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+        // ensure that the configured index exists and has the configured alias
+        const esSettings = this.settings.settings;
+        if (esSettings.index && !(await this.elastic.isIndexPresent(esSettings.index))) {
+            const mapping = ProfileFactoryLoader.get().getIndexMappings();
+            const settings = ProfileFactoryLoader.get().getIndexSettings();
+            await this.elastic.prepareIndexWithName(esSettings.index, mapping, settings);
+            await this.elastic.addAlias(esSettings.index, esSettings.alias);
+        }
     }
 
-    async postImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
-        // post-import operations, e.g. refreshing indices, updating aliases, etc.
-        log.info(`Post-import operations for catalog: ${this.id}`);
+    async importIntoCatalog(operations: EsOperation[]) {
+        // will implicitly send bulk ops when queue is full
+        if (operations?.length) {
+            await this.elastic.addOperationChunksToBulk(operations);
+        }
     }
 
-    async serialize(input: object): Promise<object> {
-        // serialize input object for DB storage
-        return input
+    async flushImport(): Promise<void> {
+        // send and empty current queue
+        await this.elastic.sendBulkOperations();
     }
 
-    transform(rows: object[]): object[] {
-        throw new Error('Method not implemented.');
-    }
-
-    deduplicate(datasets: object[]): object[] {
-        throw new Error('Method not implemented.');
-    }
-
-    getDatabase(): DatabaseUtils {
-        return this.database;
+    getDatasetColumn(): string {
+        return 'dataset';
     }
 
     getElastic(): ElasticsearchUtils {
         return this.elastic;
-    }
-
-    deleteStaleRecords(sourceId: string): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
-
-    deleteAllRecordsForCatalog(sourceId: string): Promise<void> {
-        throw new Error('Method not implemented.');
     }
 }

@@ -4,6 +4,10 @@
         "enabled": true
     },
     "properties": {
+        "uuid": {
+            "type": "keyword",
+            "store": true
+        },
         "iPlugId": {
             "type": "keyword",
             "store": true

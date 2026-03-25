@@ -26,7 +26,8 @@ import log4js from 'log4js';
 import pg from 'pg';
 import Cursor from "pg-cursor";
 import type { Observer } from "rxjs";
-import type { Catalog } from '../model/dcatApPlu.model.js';
+import type { CatalogColumnType } from '../catalog/catalog.factory.js';
+import type { Catalog as LegacyCatalog } from '../model/dcatApPlu.model.js';
 import type { Distribution } from '../model/distribution.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
 import { type ImportLogMessage, ImportResult } from "../model/import.result.js";
@@ -36,8 +37,6 @@ import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import type { BulkResponse } from './database.utils.js';
 import { DatabaseUtils } from './database.utils.js';
-import type { ElasticsearchUtils } from './elastic.utils.js';
-import type { PostgresAggregator } from './postgres.aggregator.js';
 import type { PostgresQueries } from './postgres.queries.js';
 
 const log = log4js.getLogger(import.meta.filename);
@@ -175,7 +174,7 @@ export class PostgresUtils extends DatabaseUtils {
         return result.rows;
     }
 
-    async getCatalogSizes(useTransaction: boolean = true): Promise<{ collection_id: number, count: number }[]> {
+    async getLegacyCatalogSizes(useTransaction: boolean = true): Promise<{ collection_id: number, count: number }[]> {
         let result: pg.QueryResult<any> = await this.client(useTransaction).query(this.queries.getCollectionSizes);
         if (result.rowCount == 0) {
             return null;
@@ -183,18 +182,18 @@ export class PostgresUtils extends DatabaseUtils {
         return result.rows.reduce((val, { collection_id, count }) => ({ [collection_id]: count, ...val }), {});
     }
 
-    async listCatalogs(): Promise<Catalog[]> {
+    async listLegacyCatalogs(): Promise<LegacyCatalog[]> {
         // TODO maybe move this to somewhere more sensible
         await this.init();
         let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.listCollections);
         if (result.rowCount == 0) {
             return [];
         }
-        let catalogs: Catalog[] = result.rows.map(row => ({ id: row.id, ...row.properties }));
+        let catalogs: LegacyCatalog[] = result.rows.map(row => ({ id: row.id, ...row.properties }));
         return catalogs.sort((c1, c2) => c1.title < c2.title ? -1 : c1.title > c2.title ? 1 : 0);
     }
 
-    async createCatalog(catalog: Catalog): Promise<Catalog> {
+    async createLegacyCatalog(catalog: LegacyCatalog): Promise<LegacyCatalog> {
         let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.createCollection, [catalog.identifier, catalog, null, await DcatApPluDocumentFactory.createCatalog(catalog), catalog]);
         if (result.rowCount != 1) {
             return null;
@@ -203,7 +202,7 @@ export class PostgresUtils extends DatabaseUtils {
         return catalog;
     }
 
-    async getCatalog(identifier: string): Promise<Catalog> {
+    async getLegacyCatalog(identifier: string): Promise<LegacyCatalog> {
         let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getCollection, [identifier]);
         if (result.rowCount == 0) {
             return null;
@@ -214,7 +213,7 @@ export class PostgresUtils extends DatabaseUtils {
         };
     }
 
-    async updateCatalog(catalog: Catalog): Promise<Catalog> {
+    async updateLegacyCatalog(catalog: LegacyCatalog): Promise<LegacyCatalog> {
         // don't persist ID within catalog json
         delete catalog['id'];
         let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.updateCollection,
@@ -226,7 +225,7 @@ export class PostgresUtils extends DatabaseUtils {
         return catalog;
     }
 
-    async deleteCatalog(catalogId: number): Promise<Catalog> {
+    async deleteLegacyCatalog(catalogId: number): Promise<LegacyCatalog> {
         let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.deleteCollection, [catalogId]);
         if (result.rowCount != 1) {
             return null;
@@ -245,35 +244,28 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     /**
-     * Push datasets from database to elasticsearch, slower but with all bells and whistles.
+     * Stream datasets from the database to a given catalog,
+     * while observing catalog-specific transformation and deduplication rules.
      *
-     * @param elastic
      * @param source
      * @param observer
      */
-    async pushToElasticsearch(elastic: ElasticsearchUtils, source: string, observer: Observer<ImportLogMessage>, pgAggregator?: PostgresAggregator<IndexDocument>): Promise<void> {
-        // TODO refactor with regards to new catalog concept
-        // pgAggregator ??= ProfileFactoryLoader.get().getPostgresAggregator({} as CatalogSettings);
-        if (!pgAggregator) {
-            throw new Error('Not implemented: pushToElastic3ReturnOfTheJedi without PostgresAggregator');
-        }
+    async *streamBuckets<T extends CatalogColumnType>(source: string, datasetColumn: string, observer: Observer<ImportLogMessage>): AsyncGenerator<Bucket<T>> {
         const client: pg.PoolClient = await PostgresUtils.pool.connect();
         log.debug('Connection started');
-        let start = Date.now();
-        // TODO we also need to store SOURCE_TYPE in postgres and subsequently fetch it here (B.source_type)
-        // @myself: next time, when you want me to do something in the future, specify WHY that should be done...
+        const startDate = Date.now();
 
-        let catalogs = (await this.listCatalogs()).reduce((map, catalog: Catalog) => (map[catalog.id] = catalog, map), {});
+        const query = this.queries.getBuckets.replaceAll('{{DATASET_COLUMN}}', datasetColumn);
 
-      // right before creating the cursor
-      const { rows: [{ count: totalRows }] } = await client.query(
-        `SELECT COUNT(*)::int AS count FROM (${this.queries.getBuckets}) AS t`,
-        [source]
-      );
+        // get total rows before creating the cursor
+        const { rows: [{ count: totalRows }] } = await client.query(
+            `SELECT COUNT(*)::int AS count FROM (${query}) AS t`,
+            [source]
+        );
 
-        const cursor = client.query(new Cursor(this.queries.getBuckets, [source]));
+        const cursor = client.query(new Cursor(query, [source]));
         let currentId: string | number;
-        let currentBucket: Bucket<any>;
+        let currentBucket: Bucket<T>;
         const maxRows = 100;
         let rows = await cursor.read(maxRows);
         let numDatasets = 0;
@@ -285,56 +277,55 @@ export class PostgresUtils extends DatabaseUtils {
                 numDatasets += 1;
                 if (row.anchor_id != currentId) {
                     numBuckets += 1;
-                    // process current bucket, then create new
+                    // send current bucket, then create new
                     currentId = row.anchor_id;
                     if (currentBucket) {
-                        let operationChunks = await pgAggregator.processBucket(currentBucket);
-                        if (operationChunks) {
-                            await elastic.addOperationChunksToBulk(operationChunks);
-                        }
+                        yield currentBucket;
                     }
                     currentBucket = {
                         anchor_id: row.anchor_id,
-                        duplicates: new Map<string | number, IndexDocument>(),
+                        duplicates: new Map<string | number, T>(),
                         operatingServices: new Map<string | number, Distribution>()
                     };
                 }
-                // add service/additional distribution to current bucket
-                if (row.service_type != null) {
-                    currentBucket.operatingServices.set(row.id, row.dataset);
+                if (datasetColumn != 'dataset') {
+                    currentBucket.duplicates.set(row.id, { uuid: row.identifier, dataset: row.dataset } as any);
                 }
-                // add index document to current bucket
                 else {
-                    // ensure `extras` structure exists in dataset
-                    row.dataset.extras ??= {};
-                    row.dataset.extras.metadata ??= {};
-                    row.dataset.extras.metadata.source ??= {};
-                    // set metadata information
-                    row.dataset.extras.metadata.issued = row.issued;
-                    row.dataset.extras.metadata.modified = row.modified;
-                    row.dataset.extras.metadata.deleted = row.deleted;
-                    row.dataset.extras.metadata.source.source_type = this.getSourceType(row.dataset, row.source);
-                    row.dataset.catalog = catalogs[row.catalog_id];
-                    currentBucket.duplicates.set(row.id, row.dataset);
+                    // add service/additional distribution to current bucket
+                    if (row.service_type != null) {
+                        currentBucket.operatingServices.set(row.id, row.dataset);
+                    }
+                    // add index document to current bucket
+                    else {
+                        // ensure `extras` structure exists in dataset
+                        row.dataset.extras ??= {};
+                        row.dataset.extras.metadata ??= {};
+                        row.dataset.extras.metadata.source ??= {};
+                        // set metadata information
+                        row.dataset.extras.metadata.issued = row.issued;
+                        row.dataset.extras.metadata.modified = row.modified;
+                        row.dataset.extras.metadata.deleted = row.deleted;
+                        // // TODO move - diplanung specific
+                        // row.dataset.extras.metadata.source.source_type = this.getSourceType(row.dataset, row.source);
+                        // // TODO move - diplanung specific
+                        // row.dataset.catalog = catalogs[row.catalog_id];
+                        currentBucket.duplicates.set(row.id, row.dataset);
+                    }
                 }
             }
             rows = await cursor.read(maxRows);
         }
-        // process last bucket
+        // send last bucket
         if (currentBucket) {
-            let operationChunks = await pgAggregator.processBucket(currentBucket);
-            if (operationChunks) {
-                await elastic.addOperationChunksToBulk(operationChunks);
-            }
+            yield currentBucket;
         }
-        // send remainder of bulk data
-        await elastic.sendBulkOperations();
         log.debug('Connection released');
         cursor.close();
         client.release();
-        let stop = Date.now();
+        const stopDate = Date.now();
         log.info(`Processed ${numDatasets} datasets and ${numBuckets} buckets`);
-        log.info('Time for PG -> ES push: ' + Math.floor((stop - start)/1000) + 's');
+        log.info(`Time for PG -> ES push: ${Math.floor((stopDate - startDate)/1000)}s`);
     }
 
     /**
@@ -343,6 +334,7 @@ export class PostgresUtils extends DatabaseUtils {
      * @param source
      * @returns
      */
+    // TODO move - diplanung specific
     private getSourceType(dataset: IndexDocument, source: string) {
         source = source.toLowerCase()
         if (source.includes('cockpitpro')) {
@@ -398,7 +390,7 @@ export class PostgresUtils extends DatabaseUtils {
                 result = await this.transactionClient.query(this.queries.bulkUpsertCoupling, [JSON.stringify(entities, ProfileFactoryLoader.get().dateReplacer)]);
             }
             else {
-                throw new Error('Unrecognised Entity type');
+                throw new Error('Unrecognized Entity type');
             }
             log.debug('Bulk finished of data #items: ' + entities.length);
         }

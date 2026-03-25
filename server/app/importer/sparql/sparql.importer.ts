@@ -168,7 +168,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
                 let entity: RecordEntity = {
                     identifier: uuid,
                     source: this.getSettings().sourceURL,
-                    collection_id: (await this.database.getCatalog(this.getSettings().catalogId)).id,
+                    collection_id: (await this.database.getLegacyCatalog(this.getSettings().catalogId)).id,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };

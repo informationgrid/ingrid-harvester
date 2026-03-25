@@ -126,17 +126,10 @@ export class ElasticsearchUtils9 extends ElasticsearchUtils {
         }
     }
 
-    async finishIndex(closeIndex: boolean = true) {
+    async finishIndex() {
         try {
             await this.client.cluster.health({ wait_for_status: 'yellow' });
             await this.sendBulkOperations();
-            if (closeIndex) {
-                // await this.deleteOldIndices(this.config.index, this.indexName);
-                // if (this.config.addAlias) {
-                //     await this.addAlias(this.indexName, this.config.alias);
-                // }
-                await this.client.close();
-            }
             log.info('Successfully added data into index: ' + this.indexName);
         }
         catch(err) {
@@ -323,6 +316,11 @@ export class ElasticsearchUtils9 extends ElasticsearchUtils {
         }
     }
 
+    async count(index: string | string[]): Promise<number> {
+        const { count } =  await this.client.count({ index });
+        return count;
+    }
+
     async search(index: string | string[], body: object, usePrefix: boolean = true): Promise<{ hits: any }> {
         if (usePrefix) {
             index = this.addPrefixIfNotExists(index);
@@ -332,6 +330,27 @@ export class ElasticsearchUtils9 extends ElasticsearchUtils {
             ...body
         });
         return response;
+    }
+
+    async * scroll<T = unknown>(index: string | string[], fields: string[], query: object = { match_all: {} }): AsyncGenerator<T> {
+        const scrollSearch = this.client.helpers.scrollSearch<T>({
+            index,
+            size: 5000,
+            _source: false,
+            docvalue_fields: fields,
+            query
+        });
+        for await (const result of scrollSearch) {
+            const hits = result.body.hits.hits;
+            if (hits) {
+                for (const hit of hits) {
+                    const flatHit = Object.fromEntries(
+                        Object.entries(hit.fields || {}).map(([k, v]) => [k, Array.isArray(v) ? v[0] : v])
+                    );
+                    yield flatHit as T;
+                }
+            }
+        }
     }
 
     async get(index: string, id: string): Promise<any> {

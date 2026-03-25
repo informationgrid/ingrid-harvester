@@ -188,7 +188,7 @@ export class UrlCheckService {
 
             try {
                 await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
-                await this.elasticUtils.finishIndex(false);
+                await this.elasticUtils.finishIndex();
             }
             catch(err) {
                 let message = 'Error occurred creating UrlCheck index';
