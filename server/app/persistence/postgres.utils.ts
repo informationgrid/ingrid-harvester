@@ -255,13 +255,15 @@ export class PostgresUtils extends DatabaseUtils {
         log.debug('Connection started');
         const startDate = Date.now();
 
+        const query = this.queries.getBuckets.replaceAll('{{DATASET_COLUMN}}', datasetColumn);
+
         // get total rows before creating the cursor
         const { rows: [{ count: totalRows }] } = await client.query(
-            `SELECT COUNT(*)::int AS count FROM (${this.queries.getBuckets}) AS t`,
+            `SELECT COUNT(*)::int AS count FROM (${query}) AS t`,
             [source]
         );
 
-        const cursor = client.query(new Cursor(this.queries.getBuckets, [source]));
+        const cursor = client.query(new Cursor(query, [source]));
         let currentId: string | number;
         let currentBucket: Bucket<T>;
         const maxRows = 100;
@@ -286,25 +288,30 @@ export class PostgresUtils extends DatabaseUtils {
                         operatingServices: new Map<string | number, Distribution>()
                     };
                 }
-                // add service/additional distribution to current bucket
-                if (row.service_type != null) {
-                    currentBucket.operatingServices.set(row.id, row.dataset);
+                if (datasetColumn != 'dataset') {
+                    currentBucket.duplicates.set(row.id, { uuid: row.identifier, dataset: row.dataset } as any);
                 }
-                // add index document to current bucket
                 else {
-                    // ensure `extras` structure exists in dataset
-                    row.dataset.extras ??= {};
-                    row.dataset.extras.metadata ??= {};
-                    row.dataset.extras.metadata.source ??= {};
-                    // set metadata information
-                    row.dataset.extras.metadata.issued = row.issued;
-                    row.dataset.extras.metadata.modified = row.modified;
-                    row.dataset.extras.metadata.deleted = row.deleted;
-                    // // TODO move - diplanung specific
-                    // row.dataset.extras.metadata.source.source_type = this.getSourceType(row.dataset, row.source);
-                    // // TODO move - diplanung specific
-                    // row.dataset.catalog = catalogs[row.catalog_id];
-                    currentBucket.duplicates.set(row.id, row.dataset);
+                    // add service/additional distribution to current bucket
+                    if (row.service_type != null) {
+                        currentBucket.operatingServices.set(row.id, row.dataset);
+                    }
+                    // add index document to current bucket
+                    else {
+                        // ensure `extras` structure exists in dataset
+                        row.dataset.extras ??= {};
+                        row.dataset.extras.metadata ??= {};
+                        row.dataset.extras.metadata.source ??= {};
+                        // set metadata information
+                        row.dataset.extras.metadata.issued = row.issued;
+                        row.dataset.extras.metadata.modified = row.modified;
+                        row.dataset.extras.metadata.deleted = row.deleted;
+                        // // TODO move - diplanung specific
+                        // row.dataset.extras.metadata.source.source_type = this.getSourceType(row.dataset, row.source);
+                        // // TODO move - diplanung specific
+                        // row.dataset.catalog = catalogs[row.catalog_id];
+                        currentBucket.duplicates.set(row.id, row.dataset);
+                    }
                 }
             }
             rows = await cursor.read(maxRows);

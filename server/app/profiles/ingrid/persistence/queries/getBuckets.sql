@@ -11,8 +11,9 @@
     SELECT
         anchor.id AS anchor_id,
         secondary.id AS id,
+        secondary.identifier AS identifier,
         secondary.source AS source,
-        secondary.dataset AS dataset,
+        secondary.{{DATASET_COLUMN}} AS dataset,
         secondary.collection_id AS catalog_id,
         null AS service_type,
         secondary.created_on AS issued,
@@ -38,8 +39,9 @@ UNION
     SELECT
         ds.id AS anchor_id,
         coupling.id AS id,
+        null AS identifier,
         ds.source AS source,
-        service.dataset AS dataset,
+        service.{{DATASET_COLUMN}} AS dataset,
         ds.collection_id AS catalog_id,
         coupling.service_type AS service_type,
         ds.created_on AS issued,
@@ -59,8 +61,9 @@ UNION
     SELECT
         coupling.service_id::integer AS anchor_id,
         ds.id AS id,-- ????
+        ds.identifier AS identifier,
         ds.source AS source,
-        ds.dataset AS dataset,
+        ds.{{DATASET_COLUMN}} AS dataset,
         ds.collection_id AS catalog_id,
         'dataset' AS service_type,
         ds.created_on AS issued,
@@ -81,7 +84,7 @@ UNION
         ds.id AS anchor_id,
         service.id AS id,
         service.source AS source,
-        service.dataset AS dataset,
+        service.{{DATASET_COLUMN}} AS dataset,
         true AS is_service,
         service.created_on AS issued,
         service.last_modified AS modified
