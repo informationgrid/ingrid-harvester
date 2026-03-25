@@ -62,7 +62,7 @@ export abstract class ElasticsearchCatalog extends Catalog<IndexDocument, Elasti
 
     async importIntoCatalog(operations: EsOperation[]) {
         // will implicitly send bulk ops when queue is full
-        if (operations) {
+        if (operations?.length) {
             await this.elastic.addOperationChunksToBulk(operations);
         }
     }
