@@ -120,7 +120,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
                     "proxyServiceUrl": settings.iPlugId,
                     "useRemoteElasticsearch": true
                 },
-                "active": false
+                "active": true
             }
             await this.getElastic().index(INGRID_META_INDEX, entry, false);
         }
