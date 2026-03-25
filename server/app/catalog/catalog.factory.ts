@@ -39,9 +39,7 @@ import type { PiveauDataset } from './piveau/piveau.catalog.js';
 const log = log4js.getLogger('Catalog');
 
 export interface CatalogFactory {
-
-    // TODO improve typing
-    getCatalog(catalogId: number, summary: Summary): Promise<Catalog<any, any, any>>;
+    getCatalog(catalogId: number, summary: Summary): Promise<Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>>;
 }
 
 export type CatalogColumnType = CswDataset | IndexDocument | PiveauDataset;
@@ -92,6 +90,9 @@ export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSett
 
     /**
      * Import the database rows matching the transactionHandle into this target catalog.
+     * This is done by streaming "buckets" of related database rows,
+     * processing these buckets (finding the principal document, deduplication, transformation),
+     * and then importing bucket representative(s) into this target catalog.
      * 
      * @param transactionHandle 
      */
@@ -122,17 +123,17 @@ export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSett
 
     abstract getDatasetColumn(): string;
 
-    /**
-     * Remove records in the target catalog that are no longer present in the current
-     * harvest. Records belonging to this source are identified by sourceId
-     * (ImporterSettings.catalogId), which was embedded via addTraceability.
-     */
-    abstract deleteStaleRecords(sourceId: string): Promise<void>;
+    // /**
+    //  * Remove records in the target catalog that are no longer present in the current
+    //  * harvest. Records belonging to this source are identified by sourceId
+    //  * (ImporterSettings.catalogId), which was embedded via addTraceability.
+    //  */
+    // abstract deleteStaleRecords(sourceId: string): Promise<void>;
 
-    /**
-     * Remove ALL records in the target catalog that originated from the given source
-     * (identified by sourceId = ImporterSettings.catalogId).
-     * Called when a data source is deleted by a user.
-     */
-    abstract deleteAllRecordsForCatalog(sourceId: string): Promise<void>;
+    // /**
+    //  * Remove ALL records in the target catalog that originated from the given source
+    //  * (identified by sourceId = ImporterSettings.catalogId).
+    //  * Called when a data source is deleted by a user.
+    //  */
+    // abstract deleteAllRecordsForCatalog(sourceId: string): Promise<void>;
 }

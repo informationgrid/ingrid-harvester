@@ -91,8 +91,8 @@ export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings,
     async importIntoCatalog(operations: PiveauCatalogOperation[]): Promise<void> {
         for (const op of operations) {
             try {
-                const targetUrl = this.buildTargetUrl(this.settings, op.uuid);
-                const response = await this.postTransaction(targetUrl, this.settings, op.serializedXml);
+                const targetUrl = this.buildTargetUrl(op.uuid);
+                const response = await this.postTransaction(targetUrl, op.serializedXml);
                 switch (response.status) {
                     case 201:
                         this.catalogSummary.numInserted++;
@@ -105,7 +105,7 @@ export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings,
                         break;
                     default:
                         this.catalogSummary.numErrors++;
-                        log.error(`Piveau failed for record '${op.uuid}': ${response.status} (${response.statusText})`);
+                        log.error(`Piveau import failed for record '${op.uuid}': ${response.status} (${response.statusText})`);
                         log.trace(response)
                 }
             }
@@ -146,31 +146,23 @@ export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings,
     /**
      * Build the full Piveau target URL with query parameters.
      */
-    private buildTargetUrl(piveauSettings: PiveauCatalogSettings, identifier: string): string {
-        const baseUrl = piveauSettings.url;
-        const catalog = piveauSettings.settings.catalog;
+    private buildTargetUrl(identifier: string): string {
+        const baseUrl = this.settings.url;
+        const catalog = this.settings.settings.catalog;
         return `${baseUrl}/catalogues/${catalog}/datasets/origin?originalId=${identifier}`;
     }
 
     /**
      * POST a DCAT Dataset to the target endpoint.
      */
-    private async postTransaction(targetUrl: string, settings: PiveauCatalogSettings, transactionXml: string): Promise<any> {
+    private async postTransaction(targetUrl: string, transactionXml: string): Promise<any> {
         return RequestDelegate.doRequest({
             uri: targetUrl,
             method: 'PUT',
             resolveWithFullResponse: true,
-            headers: {"Content-Type": "application/rdf+xml", "X-API-KEY": settings.settings.apiKey},
+            headers: {"Content-Type": "application/rdf+xml", "X-API-KEY": this.settings.settings.apiKey},
             body: transactionXml,
         });
-    }
-
-    transform(rows: string[]): string[] {
-        throw new Error('Method not implemented.');
-    }
-
-    deduplicate(datasets: string[]): string[] {
-        throw new Error('Method not implemented.');
     }
 
     async getIdentifierByPiveauCatalog(): Promise<string[]> {

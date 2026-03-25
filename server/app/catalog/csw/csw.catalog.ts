@@ -62,9 +62,9 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
 
     async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // Fetch existing identifiers from target to decide Insert vs Update
-        this.existingIds = await this.fetchExistingIdentifiers(this.settings);
+        this.existingIds = await this.fetchExistingIdentifiers();
         log.info(`Found ${this.existingIds.size} existing records in target CSW catalog`);
-        this.targetUrl = this.buildTargetUrl(this.settings);
+        this.targetUrl = this.buildTargetUrl();
     }
 
     async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
@@ -100,7 +100,7 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
             }
             else {
                 this.catalogSummary.numErrors++;
-                log.error(`CSW-T ${op.isUpdate ? 'Update' : 'Insert'} failed for record '${op.uuid}': ${response}`);
+                log.error(`CSW-T ${op.isUpdate ? 'update' : 'insert'} failed for record '${op.uuid}': ${response}`);
             }
         }
     }
@@ -115,7 +115,7 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
 
     async deleteStaleRecords(sourceId: string): Promise<void> {
         log.info(`Post-import stale cleanup for source '${sourceId}' in CSW catalog '${this.settings.id}'`);
-        const targetUrl = this.buildTargetUrl(this.settings);
+        const targetUrl = this.buildTargetUrl();
 
         const deleteXml = this.buildFilteredDeleteTransaction(sourceId, this.transactionTimestamp);
         const response = await this.postTransaction(targetUrl, deleteXml);
@@ -139,10 +139,9 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
     /**
      * Build the full CSW-T target URL with query parameters.
      */
-    private buildTargetUrl(cswSettings: CswCatalogSettings): string {
-        const baseUrl = cswSettings.url;
-        const separator = baseUrl.includes('?') ? '&' : '?';
-        return `${baseUrl}${separator}SERVICE=CSW&REQUEST=Transaction`;
+    private buildTargetUrl(): string {
+        const separator = this.settings.url.includes('?') ? '&' : '?';
+        return `${this.settings.url}${separator}SERVICE=CSW&REQUEST=Transaction`;
     }
 
     /**
@@ -193,9 +192,8 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
      * Fetch all existing record identifiers from the target CSW catalog (unfiltered).
      * Used during import to decide Insert vs Update.
      */
-    private fetchExistingIdentifiers(cswSettings: CswCatalogSettings): Promise<Set<string>> {
-        const baseUrl = cswSettings.url;
-        return this.paginatedGetRecords(baseUrl, (start, max) => `<?xml version="1.0" encoding="UTF-8"?>
+    private fetchExistingIdentifiers(): Promise<Set<string>> {
+        return this.paginatedGetRecords(this.settings.url, (start, max) => `<?xml version="1.0" encoding="UTF-8"?>
 <csw:GetRecords xmlns:csw="${namespaces.CSW}"
                 xmlns:dc="${namespaces.DC}"
                 service="CSW"

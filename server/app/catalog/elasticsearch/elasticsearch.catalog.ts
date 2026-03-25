@@ -50,7 +50,7 @@ export abstract class ElasticsearchCatalog extends Catalog<IndexDocument, Elasti
     }
 
     async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
-        // ensure that the configured index exists
+        // ensure that the configured index exists and has the configured alias
         const esSettings = this.settings.settings;
         if (esSettings.index && !(await this.elastic.isIndexPresent(esSettings.index))) {
             const mapping = ProfileFactoryLoader.get().getIndexMappings();
@@ -78,13 +78,5 @@ export abstract class ElasticsearchCatalog extends Catalog<IndexDocument, Elasti
 
     getElastic(): ElasticsearchUtils {
         return this.elastic;
-    }
-
-    deleteStaleRecords(sourceId: string): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
-
-    deleteAllRecordsForCatalog(sourceId: string): Promise<void> {
-        throw new Error('Method not implemented.');
     }
 }
