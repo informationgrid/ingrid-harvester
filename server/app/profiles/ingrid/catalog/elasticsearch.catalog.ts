@@ -99,14 +99,14 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
             await this.getElastic().update(INGRID_META_INDEX, meta.hits?.hits[0]._id, entry, false);
         }
         else {
-            let { prefix, index } = ConfigService.getGeneralSettings().elasticsearch;
-            let indexId = (prefix ?? '') + settings.catalogId;
+            const esSettings = this.settings.settings;
+            let index = (esSettings.prefix ?? '') + esSettings.index;
             let entry = {
                 "plugId": settings.iPlugId,
-                "indexId": indexId,
+                "indexId": index,
                 "iPlugName": "Harvester",
                 "lastIndexed": new Date(Date.now()).toISOString(),
-                "linkedIndex": indexId,
+                "linkedIndex": index,
                 "plugdescription": {
                     "dataSourceName": settings.dataSourceName,
                     "provider": settings.provider?.split(",")?.map(p => p.trim()),
