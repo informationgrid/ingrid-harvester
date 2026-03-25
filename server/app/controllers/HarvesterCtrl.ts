@@ -21,15 +21,14 @@
  * ==================================================
  */
 
-import log4js from 'log4js';
 import type { Datasource } from '@shared/datasource.js';
 import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '@tsed/common';
+import log4js from 'log4js';
+import { KeycloakAuth } from "../decorators/KeycloakAuthOptions.js";
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import { ScheduleService } from '../services/ScheduleService.js';
 import { HistoryService } from '../services/statistic/HistoryService.js';
-import {KeycloakAuth} from "../decorators/KeycloakAuthOptions.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -59,13 +58,6 @@ export class HarvesterCtrl {
     @KeycloakAuth({role: ["admin", "editor"]})
     updateHarvesterConfig(@PathParams('id') id: number, @BodyParams() config: Datasource) {
         const updatedID = ConfigService.update(+id, config);
-
-        let profile = ProfileFactoryLoader.get();
-        // TODO legacy - remove ()
-        if (profile.useIndexPerCatalog()) {
-            profile.createCatalogIfNotExist(config.catalogId);
-        }
-
         let mode: 'full' | 'incr' = config.isIncremental ? 'incr' : 'full';
         if (config.disable) {
             this.scheduleService.stopJob(updatedID, mode);
