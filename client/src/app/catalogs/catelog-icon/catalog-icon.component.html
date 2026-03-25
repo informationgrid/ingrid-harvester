@@ -21,25 +21,4 @@
     ==================================================
 -->
 
-<div class="entry">
-  <div class="flex-1 flex-col gap-4">
-    <div class="label">
-      <mat-icon [svgIcon]="icon()" />
-      <div class="text-hint">{{ title() }}</div>
-    </div>
-
-    @if (value() !== undefined) {
-      <div class="flex-1 text-md break-word">
-        {{ value() }}
-      </div>
-    }
-
-    <ng-content select="[content]"></ng-content>
-  </div>
-
-  @if (hasNavigation()) {
-    <button class="self-center" matIconButton (click)="onNavigate.emit()">
-      <mat-icon svgIcon="external"></mat-icon>
-    </button>
-  }
-</div>
+<mat-icon [svgIcon]="icon()" aria-hidden="true" />

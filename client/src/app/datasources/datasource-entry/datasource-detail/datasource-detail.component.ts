@@ -29,12 +29,13 @@ import { DatePipe } from "@angular/common";
 import { DetailItemComponent } from "../../../shared/detail-item/detail-item.component";
 import cronstrue from "cronstrue/i18n";
 import { CatalogService } from "../../../catalogs/services/catalog.service";
+import { CatalogIconComponent } from "../../../catalogs/catelog-icon/catalog-icon.component";
 
 @Component({
   selector: "harvester-datasource-detail",
   templateUrl: "./datasource-detail.component.html",
   styleUrls: ["./datasource-detail.component.scss"],
-  imports: [TranslocoDirective, DetailItemComponent],
+  imports: [TranslocoDirective, DetailItemComponent, CatalogIconComponent],
   providers: [DatePipe],
 })
 export class DatasourceDetailComponent {
@@ -93,9 +94,9 @@ export class DatasourceDetailComponent {
 
   catalogs = computed(() => {
     if (!this.catalogService.catalogs()) return;
-    const catalogs = Object.values(this.catalogService.catalogs())
-      .filter((catalog) => this.datasource().catalogIds.includes(catalog.id))
-      .map((catalog) => catalog.name);
+    const catalogs = Object.values(this.catalogService.catalogs()).filter(
+      (catalog) => this.datasource().catalogIds.includes(catalog.id),
+    );
     return catalogs.length > 0 ? catalogs : undefined;
   });
 

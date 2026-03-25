@@ -21,17 +21,26 @@
  * ==================================================
  */
 
-.catalog {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background-color: white;
-  border: 1px solid #dddddd;
-  border-radius: 4px;
-  padding: 3px 9px 3px 7px;
+import { Component, computed, input } from "@angular/core";
+import { MatIcon } from "@angular/material/icon";
 
-  &::ng-deep mat-icon {
-    width: 16px;
-    height: 16px;
-  }
+@Component({
+  selector: "harvester-catalog-icon",
+  templateUrl: "./catalog-icon.component.html",
+  styleUrls: ["./catalog-icon.component.scss"],
+  imports: [MatIcon],
+})
+export class CatalogIconComponent {
+  type = input.required<string>();
+
+  icon = computed(() => {
+    switch (this.type()) {
+      case "elasticsearch":
+        return "elasticsearch";
+      case "piveau":
+        return "piveau";
+      default:
+        return "catalogs";
+    }
+  });
 }

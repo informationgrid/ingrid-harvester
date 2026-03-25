@@ -44,7 +44,7 @@
     <mat-accordion>
       @for (group of groupedCatalogs() | keyvalue; track group.key) {
         <h3>
-          <mat-icon svgIcon="catalogs" aria-hidden="true" />
+          <harvester-catalog-icon [type]="group.key" />
           <span>{{ group.key }}</span>
         </h3>
 
