@@ -235,11 +235,12 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
 
         // Find the MD_DataIdentification or SV_ServiceIdentification element to insert keywords into
         const identificationInfo = doc.getElementsByTagNameNS(namespaces.GMD, 'MD_DataIdentification')[0]
-            || doc.getElementsByTagNameNS(namespaces.GMD, 'SV_ServiceIdentification')[0];
+            || doc.getElementsByTagNameNS(namespaces.SRV, 'SV_ServiceIdentification')[0];
 
         if (identificationInfo) {
             identificationInfo.appendChild(keywordsFragment.documentElement);
-        } else {
+        }
+        else {
             log.warn('No MD_DataIdentification or SV_ServiceIdentification found in document, keywords not added');
         }
 
