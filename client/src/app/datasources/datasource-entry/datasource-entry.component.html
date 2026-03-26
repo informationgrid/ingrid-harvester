@@ -62,7 +62,7 @@
             {{ t("datasources.import") }}
           </button>
 
-          @if (datasource().isIncrementalSupported) {
+          @if (datasource().capabilities.isIncrementalSupported) {
             <button
               mat-menu-item
               [disabled]="importLog() !== undefined && importLog().complete === false"
