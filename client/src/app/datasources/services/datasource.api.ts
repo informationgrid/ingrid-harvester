@@ -80,4 +80,8 @@ export class DatasourceApi {
   getHistory(id: number): Observable<any> {
     return this.http.get<any>("rest/api/harvester/history/" + id);
   }
+
+  getRuns(id: number): Observable<any> {
+    return this.http.get<any>("rest/api/harvester/runs/" + id);
+  }
 }

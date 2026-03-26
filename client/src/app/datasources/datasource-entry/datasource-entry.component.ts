@@ -67,6 +67,7 @@ export class DatasourceEntryComponent {
   onDuplicate = output<void>();
   onSchedule = output<void>();
   onHistory = output<void>();
+  onRuns = output<void>();
   onOpenErrorLog = output<void>();
   onOpenWarningLog = output<void>();
 

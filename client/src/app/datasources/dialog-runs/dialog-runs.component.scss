@@ -1,0 +1,52 @@
+.run-timestamp {
+  min-width: 140px;
+}
+
+.run-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.run-errors {
+  color: var(--mat-sys-error, #b00020);
+  font-weight: 500;
+}
+
+.status-success { background-color: #e8f5e9 !important; color: #2e7d32 !important; }
+.status-error   { background-color: #ffebee !important; color: #b71c1c !important; }
+.status-partial { background-color: #fff8e1 !important; color: #f57f17 !important; }
+.status-cancelled { background-color: #f3e5f5 !important; color: #6a1b9a !important; }
+
+.phase-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0 12px;
+  font-size: 13px;
+
+  th, td {
+    text-align: left;
+    padding: 4px 12px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  th {
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+.error-list {
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.error-entry {
+  padding: 2px 0;
+  color: #b71c1c;
+}
+
+.error-type {
+  font-weight: 600;
+  margin-right: 4px;
+}

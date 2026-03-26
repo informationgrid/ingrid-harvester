@@ -200,6 +200,10 @@ export class DatasourceService {
     return this.api.getHistory(id);
   }
 
+  getRuns(id: number): Observable<any> {
+    return this.api.getRuns(id);
+  }
+
   private updateImportLogs(log: ImportLogMessage) {
     console.log('[ImportLog]', log);
     this._importLogs.update((current) => ({

@@ -29,6 +29,7 @@ import { Datasource } from "@shared/datasource";
 import { ConfirmDialogComponent } from "../../shared/confirm-dialog/confirm-dialog.component";
 import { DialogEditComponent } from "../dialog-edit/dialog-edit.component";
 import { DialogHistoryComponent } from "../dialog-history/dialog-history.component";
+import { DialogRunsComponent } from "../dialog-runs/dialog-runs.component";
 import { DialogLogComponent } from "../dialog-log/dialog-log.component";
 import { DialogSchedulerComponent } from "../dialog-scheduler/dialog-scheduler.component";
 import { DatasourceService } from "../services/datasource.service";
@@ -207,6 +208,18 @@ export class DatasourceOverviewComponent {
         this.dialog.open(DialogHistoryComponent, {
           data: data,
           width: "950px",
+        });
+      },
+      error: (err) => alert(err.message),
+    });
+  }
+
+  onShowRuns(harvester: Datasource) {
+    this.datasourceService.getRuns(harvester.id).subscribe({
+      next: (data) => {
+        this.dialog.open(DialogRunsComponent, {
+          data: data,
+          width: '900px',
         });
       },
       error: (err) => alert(err.message),

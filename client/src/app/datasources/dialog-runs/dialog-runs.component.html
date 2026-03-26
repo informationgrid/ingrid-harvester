@@ -1,0 +1,89 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<h2 mat-dialog-title>{{ data.harvester }} — Run History</h2>
+
+<mat-dialog-content>
+  @if (!data.runs?.length) {
+    <p>No runs recorded yet.</p>
+  } @else {
+    <mat-accordion>
+      @for (run of data.runs; track run.runId) {
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="run-timestamp">
+              {{ run.timestamp | date:'yyyy-MM-dd HH:mm' }}
+            </mat-panel-title>
+            <mat-panel-description class="run-summary">
+              <mat-chip-set>
+                <mat-chip [class]="'status-' + run.status">{{ run.status }}</mat-chip>
+              </mat-chip-set>
+              <span>{{ run.numDocs }} docs</span>
+              <span>{{ run.duration | number:'1.0-1' }}s</span>
+              @if (run.errors?.length) {
+                <span class="run-errors">{{ run.errors.length }} error(s)</span>
+              }
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <!-- Per-catalog breakdown -->
+          @if (catalogPhases(run).length) {
+            <table class="phase-table">
+              <thead>
+                <tr>
+                  <th>Catalog</th>
+                  <th>Docs</th>
+                  <th>Record errors</th>
+                  <th>Errors</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (phase of catalogPhases(run); track phase.name) {
+                  <tr>
+                    <td>{{ phase.name }}</td>
+                    <td>{{ phase.numDocs }}</td>
+                    <td>{{ phase.numErrors }}</td>
+                    <td>{{ phase.errors?.length ?? 0 }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+
+          <!-- Run-level errors -->
+          @if (run.errors?.length) {
+            <div class="error-list">
+              @for (e of run.errors; track $index) {
+                <div class="error-entry"><span class="error-type">[{{ e.type }}]</span> {{ e.error }}</div>
+              }
+            </div>
+          }
+        </mat-expansion-panel>
+      }
+    </mat-accordion>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>
