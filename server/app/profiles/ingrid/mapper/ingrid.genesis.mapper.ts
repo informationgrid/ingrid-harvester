@@ -57,6 +57,13 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
                     merged_from: [],
                 },
             },
+            // ED test: add metadata directly for portal-ng
+            // if it works, move from extras.metadata to metadata
+            metadata: {
+                issued: null,
+                modified: new Date(Date.now()),
+                created: new Date(Date.now())
+            },
             spatial: null,
             temporal: [this.baseMapper.getTemporal()].filter(Boolean),
             contacts: [],

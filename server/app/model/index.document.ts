@@ -28,6 +28,11 @@ export type IndexDocument = {
     uuid: string,
     extras: {
         metadata: HarvestingMetadata
+    },
+    metadata?: {
+        issued: Date,
+        created: Date,
+        modified: Date
     }
 };
 
