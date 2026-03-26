@@ -29,5 +29,6 @@ export type IngridMetadata = {
     datatype: string[],
     dataSourceName: string,
     boost?: number,
-    isfolder: boolean // mandatory for ingrid
+    // TODO change to boolean when IGE maps correctly
+    isfolder: string // mandatory for ingrid
 }
