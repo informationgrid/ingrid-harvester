@@ -130,13 +130,13 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
 
 
     getPoliticalGeocodingLevelURI() {
-        let politicalGeocodingLevelURI = DcatapdeMapper.select('./dcatde:politicalGeocodingLevelURI ', this.record, true)?.getAttribute('rdf:resource');
+        let politicalGeocodingLevelURI = DcatapdeMapper.select('./dcatde:politicalGeocodingLevelURI', this.record, true)?.getAttribute('rdf:resource');
         return politicalGeocodingLevelURI && politicalGeocodingLevelURI.trim() !== '' ? politicalGeocodingLevelURI : undefined;
     }
 
     getLegalBasis() {
-        let legalBasis = DcatapdeMapper.select('./dcatde:legalBasis ', this.record, true)?.textContent;
-        return legalBasis && legalBasis.trim() !== '' ? legalBasis : undefined;
+        let legalBasis = DcatapdeMapper.select('./dcatde:legalBasis', this.record, true)?.textContent;
+        return legalBasis?.trim() ? legalBasis : undefined;
     }
 
     getDistributions():Distribution[] {
