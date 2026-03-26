@@ -148,7 +148,7 @@ export class CswImporter extends Importer<CswSettings> {
                 await this.coupleDatasetsServices(this.getSettings().resolveOgcDistributions);
 
                 // did fatal errors occur (ie DB or APP errors)?
-                if (this.getSummary().databaseErrors.length > 0 || this.getSummary().appErrors.length > 0) {
+                if (this.getSummary().errors.some(e => e.type === 'app' || e.type === 'database')) {
                     throw new Error();
                 }
 
@@ -172,7 +172,7 @@ export class CswImporter extends Importer<CswSettings> {
                     }
                     catch (e) {
                         log.error(`Error while importing into catalog ${catalog.settings.name} (id=${catalogId}):`, e);
-                        this.getSummary().appErrors.push(`Error while importing into catalog ${catalog.settings.name} (id=${catalogId}): ${e.message}`);
+                        this.getSummary().errors.push({ type: 'app', error: `Error while importing into catalog ${catalog.settings.name} (id=${catalogId}): ${e.message}` });
                     }
                 }
                 await this.postHarvestingHandling();
@@ -180,10 +180,10 @@ export class CswImporter extends Importer<CswSettings> {
             }
             catch (err) {
                 if (err.message) {
-                    this.getSummary().appErrors.push(err.message);
+                    this.getSummary().errors.push({ type: 'app', error: err.message });
                 }
                 await this.database.rollbackTransaction();
-                let msg = this.getSummary().appErrors.length > 0 ? this.getSummary().appErrors[0] : this.getSummary().databaseErrors[0];
+                let msg = this.getSummary().errors.find(e => e.type === 'app' || e.type === 'database')?.error;
                 if (this.generalConfig.mail.enabled) {
                     MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
                 }
@@ -435,7 +435,7 @@ export class CswImporter extends Importer<CswSettings> {
         else {
             const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
             log.error(message);
-            this.getSummary().appErrors.push(message);
+            this.getSummary().errors.push({ type: 'app', error: message });
         }
     }
 
@@ -475,7 +475,7 @@ export class CswImporter extends Importer<CswSettings> {
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.getSummary().appErrors.push(e.toString());
+                this.getSummary().errors.push({ type: 'app', error: e.toString() });
                 mapper.skipped = true;
             }
 

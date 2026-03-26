@@ -87,7 +87,7 @@ export class CkanImporter extends Importer<CkanSettings> {
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.getSummary().appErrors.push(e.toString());
+                this.getSummary().errors.push({ type: 'app', error: e.toString() });
                 mapper.skipped = true;
             }
 
@@ -141,7 +141,7 @@ export class CkanImporter extends Importer<CkanSettings> {
 
     private async handleImportError(message, observer: Observer<ImportLogMessage>) {
         log.error('error:', message);
-        this.getSummary().appErrors.push(message);
+        this.getSummary().errors.push({ type: 'app', error: message });
         this.sendFinishMessage(observer, message);
     }
 

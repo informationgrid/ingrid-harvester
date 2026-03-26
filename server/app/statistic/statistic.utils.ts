@@ -57,9 +57,7 @@ export class StatisticUtils {
         let timestamp = new Date();
 
         let errors = new Map();
-        this.collectErrorsOrWarnings(errors, logMessage.summary.appErrors);
-        this.collectErrorsOrWarnings(errors, logMessage.summary.databaseErrors);
-        this.collectErrorsOrWarnings(errors, logMessage.summary.elasticErrors);
+        this.collectErrorsOrWarnings(errors, logMessage.summary.errors.map(e => e.error));
 
         let warnings = new Map();
         this.collectErrorsOrWarnings(warnings, logMessage.summary.warnings.map(entry => entry[1]?entry[0]+": "+entry[1]:entry[0]));
@@ -71,9 +69,9 @@ export class StatisticUtils {
                 numSkipped: logMessage.summary.skippedDocs.length,
                 numWarnings: logMessage.summary.warnings.length,
                 numRecordErrors: logMessage.summary.numErrors,
-                numAppErrors: logMessage.summary.appErrors.length,
-                numDBErrors: logMessage.summary.databaseErrors.length,
-                numESErrors: logMessage.summary.elasticErrors.length,
+                numAppErrors: logMessage.summary.errors.filter(e => e.type === 'app').length,
+                numDBErrors: logMessage.summary.errors.filter(e => e.type === 'database').length,
+                numESErrors: logMessage.summary.errors.filter(e => e.type === 'elastic').length,
                 duration: logMessage.duration,
                 warnings: Array.from(warnings.entries()).map(entry => ({ message: entry[0], count: entry[1] })),
                 errors: Array.from(errors.entries()).map(entry => ({ message: entry[0], count: entry[1] }))

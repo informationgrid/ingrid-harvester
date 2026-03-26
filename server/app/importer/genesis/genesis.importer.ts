@@ -82,7 +82,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
             this.collectionId = (await this.database.getLegacyCatalog(this.getSettings().catalogId))?.id ?? null;
         } catch (e) {
             log.error('Failed to retrieve catalog from database', e);
-            this.getSummary().appErrors.push('Failed to retrieve catalog: ' + e.message);
+            this.getSummary().errors.push({ type: 'app', error: 'Failed to retrieve catalog: ' + e.message });
             return 0;
         }
 
@@ -103,7 +103,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
                     this.observer.next(ImportResult.message(`Selection "${selection}": ${tables.length} tables found`));
                 } catch (e) {
                     log.warn(`Failed to fetch tables for selection "${selection}": ${e.message}`);
-                    this.getSummary().appErrors.push(`Failed to fetch tables for "${selection}": ${e.message}`);
+                    this.getSummary().errors.push({ type: 'app', error: `Failed to fetch tables for "${selection}": ${e.message}` });
                 }
             }))
         );
@@ -178,7 +178,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
             apiResponse = await this.doApiRequest(endpoint, { name: entry.Code, language: 'de' });
         } catch (e) {
             log.error(`Failed to fetch metadata for ${endpoint} ${entry.Code}: ${e.message}`);
-            this.getSummary().appErrors.push(`Failed to fetch metadata for ${endpoint} ${entry.Code}: ${e.message}`);
+            this.getSummary().errors.push({ type: 'app', error: `Failed to fetch metadata for ${endpoint} ${entry.Code}: ${e.message}` });
             return;
         }
 
@@ -198,7 +198,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
             dcatapdeDoc = documentFactory.createDcatapdeDocument();
         } catch (e) {
             log.error(`Error creating index document for ${entry.Code}`, e);
-            this.getSummary().appErrors.push(`Error creating document for ${entry.Code}: ${e.message}`);
+            this.getSummary().errors.push({ type: 'app', error: `Error creating document for ${entry.Code}: ${e.message}` });
             mapper.skipped = true;
         }
 
@@ -215,7 +215,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
             await this.database.addEntityToBulk(entity)
                 .catch(err => {
                     log.error(`Error saving entity ${entry.Code}`, err);
-                    this.getSummary().appErrors.push(`DB error for ${entry.Code}: ${err.message}`);
+                    this.getSummary().errors.push({ type: 'app', error: `DB error for ${entry.Code}: ${err.message}` });
                 });
         } else {
             this.getSummary().skippedDocs.push(entry.Code);

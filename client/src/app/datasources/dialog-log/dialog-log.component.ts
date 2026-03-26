@@ -44,9 +44,9 @@ export class DialogLogComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
     const message: ImportLogMessage = data.content;
-    this.appErrors = message.summary.appErrors;
-    this.databaseErrors = message.summary.databaseErrors;
-    this.elasticsearchErrors = message.summary.elasticErrors;
+    this.appErrors = (message.summary.errors ?? []).filter(e => e.type === 'app').map(e => e.error);
+    this.databaseErrors = (message.summary.errors ?? []).filter(e => e.type === 'database').map(e => e.error);
+    this.elasticsearchErrors = (message.summary.errors ?? []).filter(e => e.type === 'elastic').map(e => e.error);
     this.appWarnings = message.summary.warnings;
   }
 

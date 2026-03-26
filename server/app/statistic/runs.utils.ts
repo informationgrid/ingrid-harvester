@@ -35,8 +35,6 @@ const log = log4js.getLogger(import.meta.filename);
 
 export type RunStatus = 'success' | 'error' | 'cancelled' | 'partial';
 
-type TypedError = { type: string, messages: string[] };
-
 export class RunsUtils {
 
     private elasticUtils: ElasticsearchUtils;
@@ -64,7 +62,7 @@ export class RunsUtils {
             numDocs: s.numDocs,
             numErrors: s.numErrors,
             numSkipped: s.skippedDocs?.length ?? 0,
-            errors: this.errorsFromSummary(s),
+            errors: s.errors ?? [],
         }));
 
         this.elasticUtils.addDocToBulk({
@@ -76,7 +74,7 @@ export class RunsUtils {
             duration: logMessage.duration,
             numDocs: globalSummary?.numDocs ?? 0,
             numErrors: globalSummary?.numErrors ?? 0,
-            errors: this.errorsFromSummary(globalSummary),
+            errors: globalSummary?.errors ?? [],
             phases,
         }, logMessage.runId, 1);
 
@@ -89,22 +87,10 @@ export class RunsUtils {
         }
     }
 
-    private errorsFromSummary(s: Summary | undefined): TypedError[] {
-        if (!s) return [];
-        return [
-            { type: 'app', messages: s.appErrors },
-            { type: 'database', messages: s.databaseErrors },
-            { type: 'elastic', messages: s.elasticErrors },
-        ].filter(e => e.messages.length > 0);
-    }
-
     private deriveStatus(logMessage: ImportLogMessage): RunStatus {
         if (logMessage.message === 'Import cancelled') return 'cancelled';
         if (!logMessage.summary) return 'success';
-        const hasErrors = logMessage.summary.appErrors.length > 0
-            || logMessage.summary.databaseErrors.length > 0
-            || logMessage.summary.elasticErrors.length > 0;
-        if (hasErrors) return 'error';
+        if (logMessage.summary.errors.length > 0) return 'error';
         if (logMessage.summary.numErrors > 0) return 'partial';
         return 'success';
     }

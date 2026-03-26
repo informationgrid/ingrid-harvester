@@ -60,7 +60,7 @@ export class ConfigCtrl {
     async checkEsConnection(@BodyParams() body: Partial<ElasticsearchConfiguration>): Promise<boolean> {
         try {
             // @ts-ignore
-            let esUtils: ElasticsearchUtils = ElasticsearchFactory.getElasticUtils(body, { elasticErrors: [] });
+            let esUtils: ElasticsearchUtils = ElasticsearchFactory.getElasticUtils(body, { errors: [] });
             return await esUtils.ping();
         } catch (error) {
             log.warn(error);

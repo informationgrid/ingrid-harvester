@@ -371,7 +371,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
                 'coordinates': JSON.parse(coords)
             };
         } catch(e) {
-            this.getSummary().appErrors.push("Can't parse WKT: "+e.message);
+            this.getSummary().errors.push({ type: 'app', error: "Can't parse WKT: "+e.message });
         }
     }
 

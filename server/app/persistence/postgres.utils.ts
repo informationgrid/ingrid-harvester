@@ -574,7 +574,7 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     private handleError(message: string, error: any) {
-        this.summary.databaseErrors?.push(message);
+        this.summary.errors.push({ type: 'database', error: message });
         log.error(message, error);
     }
 

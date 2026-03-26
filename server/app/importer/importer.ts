@@ -123,7 +123,7 @@ export abstract class Importer<S extends ImporterSettings> {
                     }
                 }
                 // did fatal errors occur (ie DB or APP errors)?
-                if (this.summary.databaseErrors.length > 0 || this.summary.appErrors.length > 0) {
+                if (this.summary.errors.some(e => e.type === 'app' || e.type === 'database')) {
                     throw new Error();
                 }
 
@@ -145,7 +145,7 @@ export abstract class Importer<S extends ImporterSettings> {
                     }
                     catch (e) {
                         log.error(`Error while importing into catalog ${catalog.settings.name} (id=${catalogId}):`, e);
-                        this.getSummary().appErrors.push(`Error while importing into catalog ${catalog.settings.name} (id=${catalogId}): ${e.message}`);
+                        this.getSummary().errors.push({ type: 'app', error: `Error while importing into catalog ${catalog.settings.name} (id=${catalogId}): ${e.message}` });
                     }
                 }
                 await this.postHarvestingHandling();
@@ -153,10 +153,10 @@ export abstract class Importer<S extends ImporterSettings> {
             }
             catch (err) {
                 if (err.message) {
-                    this.summary.appErrors.push(err.message);
+                    this.summary.errors.push({ type: 'app', error: err.message });
                 }
                 await this.database.rollbackTransaction();
-                let msg = this.summary.appErrors.length > 0 ? this.summary.appErrors[0] : this.summary.databaseErrors[0];
+                let msg = this.summary.errors.find(e => e.type === 'app' || e.type === 'database')?.error;
                 log.error(err);
                 observer.next(ImportResult.complete(this.summary, msg));
             }

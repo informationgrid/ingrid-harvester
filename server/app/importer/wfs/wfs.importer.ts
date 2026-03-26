@@ -191,7 +191,7 @@ export class WfsImporter extends Importer<WfsSettings> {
             catch (e) {
                 const message = `Error while fetching WFS Features for FeatureType ${featureTypeName}. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom?.toString())}.`;
                 log.error(message);
-                this.getSummary().appErrors.push(message);
+                this.getSummary().errors.push({ type: 'app', error: message });
             }
             requestDelegate.incrementStartRecordIndex();
             /*
@@ -297,7 +297,7 @@ export class WfsImporter extends Importer<WfsSettings> {
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.getSummary().appErrors.push(e.toString());
+                this.getSummary().errors.push({ type: 'app', error: e.toString() });
                 mapper.skipped = true;
             }
 

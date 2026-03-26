@@ -217,7 +217,7 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
                 }
                 catch (e) {
                     log.error('Error creating index document', e);
-                    this.getSummary().appErrors.push(e.toString());
+                    this.getSummary().errors.push({ type: 'app', error: e.toString() });
                     mapper.skipped = true;
                 }
 

@@ -111,7 +111,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                 } else {
                     const message = `Error while fetching DCAT Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
                     log.error(message);
-                    this.getSummary().appErrors.push(message);
+                    this.getSummary().errors.push({ type: 'app', error: message });
                     if(retries++ > 3){
                         isLastPage = true;
                         log.error('Stopped after 3 Retries')
@@ -177,7 +177,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.getSummary().appErrors.push(e.toString());
+                this.getSummary().errors.push({ type: 'app', error: e.toString() });
                 mapper.skipped = true;
             }
 

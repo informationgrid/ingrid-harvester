@@ -59,7 +59,7 @@ export class JsonImporter extends Importer<JsonSettings> {
 
     /**
      * Harvest method implementation
-     * NOTE Any error added to summary.appErrors will cause a database transaction rollback!
+     * NOTE Any error added to summary.errors with type 'app' or 'database' will cause a database transaction rollback!
      * @returns number
      */
     protected async harvest(): Promise<number> {
@@ -83,7 +83,7 @@ export class JsonImporter extends Importer<JsonSettings> {
         else {
             const message = `Error while fetching ClickRhein Records\nServer response: ${MiscUtils.truncateErrorMessage(response?.toString())}.`;
             log.error(message);
-            this.getSummary().appErrors.push(message);
+            this.getSummary().errors.push({ type: 'app', error: message });
         }
 
         log.info(`Finished requesting records`);

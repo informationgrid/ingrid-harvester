@@ -112,7 +112,7 @@ export class OaiImporter extends Importer<OaiSettings> {
                 }
                 const message = `Error while fetching OAI Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(e.message)}.`;
                 log.error(message);
-                this.getSummary().appErrors.push(message);
+                this.getSummary().errors.push({ type: 'app', error: message });
             }
         }
         this.database.sendBulkData();
@@ -152,7 +152,7 @@ export class OaiImporter extends Importer<OaiSettings> {
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.getSummary().appErrors.push(e.toString());
+                this.getSummary().errors.push({ type: 'app', error: e.toString() });
                 mapper.skipped = true;
             }
 

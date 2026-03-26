@@ -35,11 +35,7 @@ export class Summary {
 
     skippedDocs: string[] = [];
 
-    elasticErrors: string[] = [];
-
-    databaseErrors: string[] = [];
-
-    appErrors: string[] = [];
+    errors: { type: string, error: string }[] = [];
 
     isIncremental: boolean;
 
@@ -72,14 +68,14 @@ export class Summary {
         logger.info(`Warnings: ${this.warnings.length}`);
         this.logArray(logger, this.warnings);
 
-        logger.info(`App-Errors: ${this.appErrors.length}`);
-        this.logArray(logger, this.appErrors);
-
-        logger.info(`Database-Errors: ${this.databaseErrors.length}`);
-        this.logArray(logger, this.databaseErrors);
-
-        logger.info(`Elasticsearch-Errors: ${this.elasticErrors.length}`);
-        this.logArray(logger, this.elasticErrors);
+        const byType = this.errors.reduce((m, e) => {
+            m.set(e.type, [...(m.get(e.type) ?? []), e.error]);
+            return m;
+        }, new Map<string, string[]>());
+        for (const [type, msgs] of byType) {
+            logger.info(`${type}-Errors: ${msgs.length}`);
+            this.logArray(logger, msgs);
+        }
 
         this.additionalSummary();
     }
@@ -95,11 +91,13 @@ export class Summary {
         result += `Record-Errors: ${this.numErrors}\n`;
         result += `Warnings: ${this.warnings.length}\n`;
 
-        result += `App-Errors: ${this.appErrors.length}\n`;
-
-        result += `Database-Errors: ${this.databaseErrors.length}\n`;
-
-        result += `Elasticsearch-Errors: ${this.elasticErrors.length}\n`;
+        const byType = this.errors.reduce((m, e) => {
+            m.set(e.type, (m.get(e.type) ?? 0) + 1);
+            return m;
+        }, new Map<string, number>());
+        for (const [type, count] of byType) {
+            result += `${type}-Errors: ${count}\n`;
+        }
 
         return result;
     }

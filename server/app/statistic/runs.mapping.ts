@@ -52,7 +52,7 @@ export const runsMapping = {
                 'type': {
                     'type': 'keyword'
                 },
-                'messages': {
+                'error': {
                     'type': 'keyword'
                 }
             }

@@ -82,9 +82,7 @@ export class DatasourceDetailComponent {
     if (!this.importLog()?.summary) return "-";
     return (
       this.importLog().summary?.numErrors +
-      this.importLog().summary?.databaseErrors.length +
-      this.importLog().summary?.elasticErrors.length +
-      this.importLog().summary?.appErrors.length
+      (this.importLog().summary?.errors?.length ?? 0)
     );
   });
   warningNum = computed(() => {

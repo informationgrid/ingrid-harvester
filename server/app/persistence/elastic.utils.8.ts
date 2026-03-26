@@ -302,7 +302,7 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
     }
 
     private handleError(message: string, error: any) {
-        this.summary?.elasticErrors?.push(message);
+        this.summary?.errors.push({ type: 'elastic', error: message });
         log.error(message, error);
     }
 
