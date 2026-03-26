@@ -87,7 +87,7 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
             const response = await this.postTransaction(this.targetUrl, transactionXml);
             const result = this.parseTransactionResponse(response);
 
-            this.summary.numDocs = result.inserted + result.updated;
+            this.summary.numDocs += result.inserted + result.updated;
 
             if (result.success && (result.inserted > 0 || result.updated > 0)) {
                 if (op.isUpdate) {
@@ -98,8 +98,10 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
                 }
             }
             else {
-                this.summary.increment('numErrors');
-                log.error(`CSW-T ${op.isUpdate ? 'update' : 'insert'} failed for record '${op.uuid}': ${response}`);
+                this.summary.numErrors++;
+                const msg = `CSW-T ${op.isUpdate ? 'update' : 'insert'} failed for record '${op.uuid}': ${response}`;
+                this.summary.errors.push({ type: 'catalog', error: msg });
+                log.error(msg);
             }
         }
     }
@@ -124,8 +126,10 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
             this.summary.increment('numDeleted', result.deleted);
         }
         else {
-            this.summary.increment('numErrors');
-            log.error(`Stale cleanup failed: ${response}`);
+            this.summary.numErrors++;
+            const msg = `Stale cleanup failed: ${response}`;
+            this.summary.errors.push({ type: 'catalog', error: msg });
+            log.error(msg);
         }
     }
 
@@ -240,7 +244,9 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
             identificationInfo.appendChild(keywordsFragment.documentElement);
         }
         else {
-            log.warn('No MD_DataIdentification or SV_ServiceIdentification found in document, keywords not added');
+            const warning = 'No MD_DataIdentification or SV_ServiceIdentification found in document, keywords not added';
+            this.summary.warnings.push([warning]);
+            log.warn(warning);
         }
 
         const serializer = new XMLSerializer();
