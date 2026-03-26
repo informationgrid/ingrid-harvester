@@ -31,6 +31,7 @@ import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import { SummaryService } from '../services/config/SummaryService.js';
+import { RunsUtils } from '../statistic/runs.utils.js';
 import { StatisticUtils } from '../statistic/statistic.utils.js';
 import * as MiscUtils from '../utils/misc.utils.js';
 import { MailServer } from '../utils/nodemailer.utils.js';
@@ -100,6 +101,7 @@ export class ImportSocketService {
                                 let elastic = ElasticsearchFactory.getElasticUtils(configGeneral.elasticsearch, null);
                                 let index = profile.useIndexPerCatalog() ? configHarvester.catalogId : elastic.indexName;
                                 statisticUtils.saveSummary(response, index);
+                                new RunsUtils(configGeneral).saveRun(response, index, importer.getPhaseSummaries());
 
                                 // when less results send mail
                                 if (!isIncremental && configGeneral.mail.enabled && configGeneral.harvesting.mail.enabled) {

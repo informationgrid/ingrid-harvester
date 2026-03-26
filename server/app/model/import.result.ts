@@ -42,6 +42,10 @@ export interface ImportLogMessage {
     lastExecution?: Date;
 
     nextExecution?: Date;
+
+    runId?: string;
+
+    phase?: string;
 }
 
 export class ImportResult {

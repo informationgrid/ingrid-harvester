@@ -201,6 +201,7 @@ export class DatasourceService {
   }
 
   private updateImportLogs(log: ImportLogMessage) {
+    console.log('[ImportLog]', log);
     this._importLogs.update((current) => ({
       ...current,
       [log.id]: log,

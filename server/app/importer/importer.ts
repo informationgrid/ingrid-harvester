@@ -32,7 +32,6 @@ import { Summary } from '../model/summary.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
 import type { DatabaseUtils } from '../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
-import type { IndexConfiguration } from '../persistence/elastic.setting.js';
 import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from '../services/config/ConfigService.js';
@@ -54,6 +53,9 @@ export abstract class Importer<S extends ImporterSettings> {
 
     private readonly settings: S;
     private readonly summary: Summary;
+    readonly runId: string;
+    private phaseSummaries: Summary[] = [];
+    private currentPhase: string;
     protected filterUtils: FilterUtils;
     protected generalConfig: GeneralSettings;
     protected observer: Observer<ImportLogMessage>;
@@ -65,6 +67,7 @@ export abstract class Importer<S extends ImporterSettings> {
         this.filterUtils = new FilterUtils(settings);
         this.generalConfig = ConfigService.getGeneralSettings();
         this.summary = new Summary(settings);
+        this.runId = crypto.randomUUID();
         this.database = DatabaseFactory.getDatabaseUtils(this.generalConfig.database, this.summary);
         this.elastic = ElasticsearchFactory.getElasticUtils(this.generalConfig.elasticsearch, this.summary);
 
@@ -76,8 +79,18 @@ export abstract class Importer<S extends ImporterSettings> {
     }
 
     run: Observable<ImportLogMessage> = new Observable<ImportLogMessage>(observer => {
-        this.observer = observer;
-        this.exec(observer).then(() => this.elastic.close());
+        // Wrap the observer so every emission automatically carries runId and current phase.
+        const wrappedObserver: Observer<ImportLogMessage> = {
+            next: (msg: ImportLogMessage) => {
+                msg.runId = this.runId;
+                msg.phase = this.currentPhase;
+                observer.next(msg);
+            },
+            error: observer.error.bind(observer),
+            complete: observer.complete.bind(observer),
+        };
+        this.observer = wrappedObserver;
+        this.exec(wrappedObserver).then(() => this.elastic.close());
     });
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
@@ -91,6 +104,7 @@ export abstract class Importer<S extends ImporterSettings> {
             try {
                 let transactionTimestamp = await this.database.beginTransaction();
                 // get datasets
+                this.startPhase('harvest');
                 let numIndexDocs = await this.harvest();
                 if (!this.settings.isIncremental) {
                     // did the harvesting return results at all?
@@ -117,7 +131,8 @@ export abstract class Importer<S extends ImporterSettings> {
                 await this.database.commitTransaction();
                 // TODO support concurrency of different catalogs
                 for (const catalogId of this.settings.catalogIds) {
-                    const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, this.getSummary());
+                    const phaseSummary = this.startPhase(`catalog/${catalogId}`);
+                    const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, phaseSummary);
                     try {
                         // log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with transaction timestamp ${transactionTimestamp}`);
                         log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with source ${this.settings.sourceURL}`);
@@ -153,6 +168,19 @@ export abstract class Importer<S extends ImporterSettings> {
 
     protected async postHarvestingHandling() {
         // For Profile specific Handling
+    }
+
+    protected startPhase(name: string): Summary {
+        const s = new Summary(this.getSettings());
+        s.phase = name;
+        s.startTime = new Date();
+        this.phaseSummaries.push(s);
+        this.currentPhase = name;
+        return s;
+    }
+
+    getPhaseSummaries(): Summary[] {
+        return this.phaseSummaries;
     }
 
     getSettings(): S {

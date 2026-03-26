@@ -95,6 +95,7 @@ export class CswImporter extends Importer<CswSettings> {
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
         if (this.getSettings().dryRun) {
             log.debug('Dry run option enabled. Skipping index creation.');
+            this.startPhase('harvest');
             await this.harvest();
             log.debug('Skipping finalisation of index for dry run.');
             observer.next(ImportResult.complete(this.getSummary(), 'Dry run ... no indexing of data'));
@@ -116,6 +117,7 @@ export class CswImporter extends Importer<CswSettings> {
                     }
                 }
                 // get datasets
+                this.startPhase('harvest');
                 let numIndexDocs = await this.harvest();
                 if (!this.getSettings().isIncremental) {
                     // did the harvesting return results at all?
@@ -138,9 +140,11 @@ export class CswImporter extends Importer<CswSettings> {
                 //await this.coupleSelf(this.settings.resolveOgcDistributions);
                 // get services separately (time-intensive)
                 if (this.getSettings().harvestingMode == 'separate') {
+                    this.startPhase('harvestServices');
                     await this.harvestServices();
                 }
                 // data-service-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
+                this.startPhase('coupling');
                 await this.coupleDatasetsServices(this.getSettings().resolveOgcDistributions);
 
                 // did fatal errors occur (ie DB or APP errors)?
@@ -154,7 +158,8 @@ export class CswImporter extends Importer<CswSettings> {
                 await this.database.commitTransaction();
                 // TODO support concurrency of different catalogs
                 for (const catalogId of this.getSettings().catalogIds) {
-                    const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, this.getSummary());
+                    const phaseSummary = this.startPhase(`catalog/${catalogId}`);
+                    const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, phaseSummary);
                     try {
                         // log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with transaction timestamp ${transactionTimestamp}`);
                         log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with source ${this.getSettings().sourceURL}`);

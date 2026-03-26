@@ -43,6 +43,10 @@ export class Summary {
 
     isIncremental: boolean;
 
+    phase?: string;
+
+    startTime?: Date;
+
     [x: string]: any;
 
     private readonly headerTitle: string;
