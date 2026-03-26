@@ -23,17 +23,14 @@
 
 import type { DateRange } from './dateRange.js';
 import type { Geometry, Point } from 'geojson';
+import type { Metadata } from './ingrid.index.document.js';
 
 export type IndexDocument = {
     uuid: string,
     extras: {
         metadata: HarvestingMetadata
     },
-    metadata?: {
-        issued: Date,
-        created: Date,
-        modified: Date
-    }
+    metadata?: Metadata
 };
 
 export type HarvestingMetadata = {
