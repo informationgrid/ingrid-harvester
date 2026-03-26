@@ -90,6 +90,8 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
             const response = await this.postTransaction(this.targetUrl, transactionXml);
             const result = this.parseTransactionResponse(response);
 
+            this.summary.numDocs = result.inserted + result.updated;
+
             if (result.success && (result.inserted > 0 || result.updated > 0)) {
                 if (op.isUpdate) {
                     this.catalogSummary.numUpdated++;
@@ -330,16 +332,16 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         if (!response.includes('TransactionResponse')) return fail;
 
         const doc = this.domParser.parseFromString(response, 'application/xml');
-        const summary = doc.getElementsByTagNameNS(namespaces.CSW, 'TransactionSummary')[0];
-        if (!summary) return { success: true, inserted: 0, updated: 0, deleted: 0 };
+        const cswTransactionSummary = doc.getElementsByTagNameNS(namespaces.CSW, 'TransactionSummary')[0];
+        if (!cswTransactionSummary) return { success: false, inserted: 0, updated: 0, deleted: 0 };
 
-        const inserted = parseInt(summary.getElementsByTagNameNS(namespaces.CSW, 'totalInserted')[0]?.textContent || '0', 10);
-        const updated = parseInt(summary.getElementsByTagNameNS(namespaces.CSW, 'totalUpdated')[0]?.textContent || '0', 10);
-        const deleted = parseInt(summary.getElementsByTagNameNS(namespaces.CSW, 'totalDeleted')[0]?.textContent || '0', 10);
+        const inserted = parseInt(cswTransactionSummary.getElementsByTagNameNS(namespaces.CSW, 'totalInserted')[0]?.textContent || '0', 10);
+        const updated = parseInt(cswTransactionSummary.getElementsByTagNameNS(namespaces.CSW, 'totalUpdated')[0]?.textContent || '0', 10);
+        const deleted = parseInt(cswTransactionSummary.getElementsByTagNameNS(namespaces.CSW, 'totalDeleted')[0]?.textContent || '0', 10);
 
         return { success: true, inserted, updated, deleted };
     }
-    
+
     private prioritizeAndFilter(bucket: Bucket<CswDataset>): {
         document: CswDataset,
         duplicates: Map<string | number, CswDataset>
