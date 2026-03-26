@@ -63,7 +63,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             keywords: this.baseMapper.getKeywords().map(term => ({ term, type: 'free' })),
             distributions: this.baseMapper.getDistributions(),
             dcat: { landingPage: null },
-            legalBasis: null,
+            legal_basis: null,
             political_geocoding_level_uri: null,
             rdf: null,
             sort_hash: this.getSortHash(),

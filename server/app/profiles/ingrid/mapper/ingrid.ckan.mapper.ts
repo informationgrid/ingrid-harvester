@@ -66,7 +66,7 @@ export class ingridCkanMapper extends ingridMapper<CkanMapper> {
             },
             contacts: this.getContacts(),
             keywords: this.getKeywords(),
-            legalBasis: null,//this.getLegalBasis(),
+            legal_basis: null,//this.getLegalBasis(),
             distributions: [],//this.getDistributions(),
             political_geocoding_level_uri: null,//this.getPoliticalGeocodingLevelURI(),
             spatial: this.getSpatial(),

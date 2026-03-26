@@ -73,7 +73,7 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implement
             },
             contacts: this.getContacts(),
             keywords: this.getKeywords(),
-            legalBasis: this.baseMapper.getLegalBasis(),
+            legal_basis: this.baseMapper.getLegalBasis(),
             distributions: await this.getDistributions(),
             political_geocoding_level_uri: this.baseMapper.getPoliticalGeocodingLevelURI(),
             spatial: this.getSpatial(),
