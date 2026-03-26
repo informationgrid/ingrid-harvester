@@ -42,7 +42,7 @@ const log = log4js.getLogger(import.meta.filename)
 
 /**
  * Base class for all importers.
- * 
+ *
  * An importer is responsible for the overall harvesting process.
  * This includes
  * - fetching data from third-party sources
@@ -79,18 +79,8 @@ export abstract class Importer<S extends ImporterSettings> {
     }
 
     run: Observable<ImportLogMessage> = new Observable<ImportLogMessage>(observer => {
-        // Wrap the observer so every emission automatically carries runId and current phase.
-        const wrappedObserver: Observer<ImportLogMessage> = {
-            next: (msg: ImportLogMessage) => {
-                msg.runId = this.runId;
-                msg.phase = this.currentPhase;
-                observer.next(msg);
-            },
-            error: observer.error.bind(observer),
-            complete: observer.complete.bind(observer),
-        };
-        this.observer = wrappedObserver;
-        this.exec(wrappedObserver).then(() => this.elastic.close());
+        this.observer = observer;
+        this.exec(observer).then(() => this.elastic.close());
     });
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
