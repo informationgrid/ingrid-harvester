@@ -33,7 +33,6 @@ import type { Bucket } from '../../persistence/postgres.utils.js';
 import { RequestDelegate } from "../../utils/http-request.utils.js";
 import { getDomParser } from "../../utils/misc.utils.js";
 import { Catalog, type CatalogOperation } from '../catalog.factory.js';
-import { CswCatalogSummary } from './csw.catalog-summary.js';
 
 const log = log4js.getLogger('CswCatalog');
 
@@ -49,8 +48,6 @@ export type CswCatalogOperation = CatalogOperation & {
 }
 
 export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings, CswCatalogOperation> {
-
-    protected readonly catalogSummary = new CswCatalogSummary();
 
     private readonly domParser = getDomParser();
     private existingIds: Set<string>;
@@ -94,14 +91,14 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
 
             if (result.success && (result.inserted > 0 || result.updated > 0)) {
                 if (op.isUpdate) {
-                    this.catalogSummary.numUpdated++;
+                    this.summary.increment('numUpdated');
                 }
                 else {
-                    this.catalogSummary.numInserted++;
+                    this.summary.increment('numInserted');
                 }
             }
             else {
-                this.catalogSummary.numErrors++;
+                this.summary.increment('numErrors');
                 log.error(`CSW-T ${op.isUpdate ? 'update' : 'insert'} failed for record '${op.uuid}': ${response}`);
             }
         }
@@ -124,10 +121,10 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         const result = this.parseTransactionResponse(response);
 
         if (result.success) {
-            this.catalogSummary.numDeleted = result.deleted;
+            this.summary.increment('numDeleted', result.deleted);
         }
         else {
-            this.catalogSummary.numErrors++;
+            this.summary.increment('numErrors');
             log.error(`Stale cleanup failed: ${response}`);
         }
     }

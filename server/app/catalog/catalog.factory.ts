@@ -25,7 +25,6 @@ import type { CatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import type { ImporterSettings } from '../importer.settings.js';
-import type { CatalogSummary } from '../model/catalog-summary.js';
 import type { ImportLogMessage } from '../model/import.result.js';
 import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
@@ -59,7 +58,6 @@ export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSett
     readonly summary: Summary;
     protected readonly database: DatabaseUtils;
     protected transactionTimestamp: string;
-    protected abstract readonly catalogSummary: CatalogSummary;
 
     constructor(settings: S, summary: Summary) {
         this.settings = settings;
@@ -73,7 +71,7 @@ export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSett
         await this.prepareImport(transactionHandle, importerSettings, observer);
         await this.import(transactionHandle, importerSettings, observer);
         await this.postImport(transactionHandle, importerSettings, observer);
-        this.catalogSummary.print(log);
+        this.summary.print(log);
     }
 
     /**

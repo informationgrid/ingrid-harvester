@@ -37,6 +37,8 @@ export class Summary {
 
     errors: { type: string, error: string }[] = [];
 
+    counters: Record<string, number> = {};
+
     isIncremental: boolean;
 
     phase?: string;
@@ -44,6 +46,10 @@ export class Summary {
     startTime?: Date;
 
     [x: string]: any;
+
+    increment(key: string, by = 1): void {
+        this.counters[key] = (this.counters[key] ?? 0) + by;
+    }
 
     private readonly headerTitle: string;
 
@@ -77,6 +83,10 @@ export class Summary {
             this.logArray(logger, msgs);
         }
 
+        for (const [key, value] of Object.entries(this.counters)) {
+            logger.info(`${key}: ${value}`);
+        }
+
         this.additionalSummary();
     }
 
@@ -97,6 +107,10 @@ export class Summary {
         }, new Map<string, number>());
         for (const [type, count] of byType) {
             result += `${type}-Errors: ${count}\n`;
+        }
+
+        for (const [key, value] of Object.entries(this.counters)) {
+            result += `${key}: ${value}\n`;
         }
 
         return result;

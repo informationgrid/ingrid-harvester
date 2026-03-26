@@ -30,7 +30,6 @@ import { type Summary } from "../../model/summary.js";
 import type { Bucket } from '../../persistence/postgres.utils.js';
 import { RequestDelegate } from "../../utils/http-request.utils.js";
 import { Catalog, type CatalogOperation } from '../catalog.factory.js';
-import { PiveauCatalogSummary } from './piveau.catalog-summary.js';
 
 const log = log4js.getLogger('PiveauCatalog');
 
@@ -45,8 +44,6 @@ export type PiveauCatalogOperation = CatalogOperation & {
 }
 
 export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings, PiveauCatalogOperation> {
-
-    protected readonly catalogSummary = new PiveauCatalogSummary();
 
     constructor(catalogSettings: PiveauCatalogSettings, summary: Summary) {
         super(catalogSettings, summary);
@@ -95,22 +92,22 @@ export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings,
                 const response = await this.postTransaction(targetUrl, op.serializedXml);
                 switch (response.status) {
                     case 201:
-                        this.catalogSummary.numInserted++;
+                        this.summary.increment('numInserted');
                         break;
                     case 204:
-                        this.catalogSummary.numUpdated++;
+                        this.summary.increment('numUpdated');
                         break;
                     case 304:
-                        this.catalogSummary.numNotModified++;
+                        this.summary.increment('numNotModified');
                         break;
                     default:
-                        this.catalogSummary.numErrors++;
+                        this.summary.increment('numErrors');
                         log.error(`Piveau import failed for record '${op.uuid}': ${response.status} (${response.statusText})`);
                         log.trace(response)
                 }
             }
             catch (e) {
-                this.catalogSummary.numErrors++;
+                this.summary.increment('numErrors');
                 log.error(`Error posting record '${op.uuid}' to Piveau: ${e.message}`);
             }
         }

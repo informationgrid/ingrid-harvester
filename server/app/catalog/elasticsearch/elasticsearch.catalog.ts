@@ -32,13 +32,10 @@ import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import type { ElasticsearchUtils, EsOperation } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { Catalog } from '../catalog.factory.js';
-import { ElasticsearchCatalogSummary } from './elasticsearch.catalog-summary.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
 export abstract class ElasticsearchCatalog extends Catalog<IndexDocument, ElasticsearchCatalogSettings, EsOperation> {
-
-    protected readonly catalogSummary = new ElasticsearchCatalogSummary();
 
     protected readonly elastic: ElasticsearchUtils;
 
