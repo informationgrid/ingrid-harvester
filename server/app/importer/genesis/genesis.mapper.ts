@@ -135,14 +135,13 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
         return this.getSettings().typeConfig.contributorId;
     }
 
-    getDistributions(): Distribution[] {
+    getDistributions(): any[] {
         const code = this.getCode();
         const template = this.getSettings().typeConfig.downloadUrlTemplate;
         if (!code || !template) return [];
         const downloadURL = template.replace('{code}', code);
         return [{
-            accessURL: downloadURL,
-            downloadURL,
+            access_url: downloadURL,
             format: ['text/csv'],
             description: this.getTitle(),
         }];

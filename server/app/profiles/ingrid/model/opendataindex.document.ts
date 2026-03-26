@@ -45,6 +45,9 @@ export type IngridOpendataIndexDocument = IndexDocument & IngridMetadata & {
     distributions: any[],
     political_geocoding_level_uri: string,
     spatial: any,
-    temporal: any,
+    temporal: {
+        "accrual_periodicity": string,
+        "accrual_periodicity_key": string,
+    },
     sort_hash: string
 }

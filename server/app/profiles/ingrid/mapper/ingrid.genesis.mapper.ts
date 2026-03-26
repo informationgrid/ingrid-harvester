@@ -65,7 +65,11 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
                 created: new Date(Date.now())
             },
             spatial: null,
-            temporal: [this.baseMapper.getTemporal()].filter(Boolean),
+            // temporal: [this.baseMapper.getTemporal()].filter(Boolean),
+            temporal: {
+                "accrual_periodicity": "",
+                "accrual_periodicity_key": ""
+            },
             contacts: [],
             keywords: this.baseMapper.getKeywords().map(term => ({ term, type: 'free' })),
             distributions: this.baseMapper.getDistributions(),

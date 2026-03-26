@@ -29,4 +29,5 @@ export type IngridMetadata = {
     datatype: string[],
     dataSourceName: string,
     boost?: number,
+    isfolder: boolean // mandatory for ingrid
 }

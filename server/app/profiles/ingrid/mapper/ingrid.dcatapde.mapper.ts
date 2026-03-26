@@ -77,7 +77,11 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implement
             distributions: await this.getDistributions(),
             political_geocoding_level_uri: this.baseMapper.getPoliticalGeocodingLevelURI(),
             spatial: this.getSpatial(),
-            temporal: this.getTemporal(),
+            // temporal: this.getTemporal(),
+            temporal: {
+                "accrual_periodicity": "",
+                "accrual_periodicity_key": ""
+            }
         };
         result.content = this.getContent(result);
         // add "rdf" at the end, so it does not get included in the "content" array
