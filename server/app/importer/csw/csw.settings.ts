@@ -47,6 +47,7 @@ export const defaultCSWSettings: Partial<CswSettings> = {
     resultType: 'results',
     simplifyTolerance: 0,
     capabilities: {
-        isIncrementalSupported: true
+        isIncrementalSupported: true,
+        supportedCatalogTypes: ['csw', 'elasticsearch']
     }
 };

@@ -29,7 +29,11 @@ export type DCATProviderField = 'contactPoint' | 'creator' | 'originator' | 'mai
 export const defaultDCATAPDESettings: DcatapdeSettings = {
     ...DefaultImporterSettings,
     filterTags: [],
-    filterThemes: []
+    filterThemes: [],
+    capabilities: {
+        isIncrementalSupported: false,
+        supportedCatalogTypes: ['elasticsearch', 'piveau']
+    }
 };
 
 export type DcatapdeSettings = {
