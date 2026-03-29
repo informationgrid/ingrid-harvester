@@ -69,12 +69,12 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
 
     async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // TODO semantics are wrong, fix it
-        await this.deleteStaleRecords(importerSettings.catalogId);
+        await this.deleteStaleRecords(importerSettings.id);
     }
 
     async processBucket(bucket: Bucket<CswDataset>): Promise<CswCatalogOperation[]> {
         const { document: record } = this.prioritizeAndFilter(bucket);
-        const enrichedXml = this.addTraceability(record.dataset, this.transactionTimestamp, this.settings.id.toString());
+        const enrichedXml = this.addTraceability(record.dataset, this.transactionTimestamp, this.settings.id);
         return [{
             uuid: record.uuid,
             serializedXml: enrichedXml,
@@ -113,11 +113,11 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         return 'dataset_csw';
     }
 
-    async deleteStaleRecords(sourceId: string): Promise<void> {
-        log.info(`Post-import stale cleanup for source '${sourceId}' in CSW catalog '${this.settings.id}'`);
+    async deleteStaleRecords(datasourceId: number): Promise<void> {
+        log.info(`Post-import stale cleanup for source '${datasourceId}' in CSW catalog '${this.settings.id}'`);
         const targetUrl = this.buildTargetUrl();
 
-        const deleteXml = this.buildFilteredDeleteTransaction(sourceId, this.transactionTimestamp);
+        const deleteXml = this.buildFilteredDeleteTransaction(datasourceId, this.transactionTimestamp);
         const response = await this.postTransaction(targetUrl, deleteXml);
         const result = this.parseTransactionResponse(response);
 
@@ -211,9 +211,9 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
     /**
      * Add transaction timestamp and source ID as ISO 19139 descriptiveKeywords
      * to the MD_Metadata XML. Implements the abstract addTraceability from Catalog.
-     * sourceId is ImporterSettings.catalogId — identifies which harvest source produced the record.
+     * sourceId is ImporterSettings.id — identifies which harvest source produced the record.
      */
-    addTraceability(record: string, transactionTimestamp: string, sourceId: string): string {
+    addTraceability(record: string, transactionTimestamp: string, datasourceId: number): string {
         const originalXml = record;
         const doc = this.domParser.parseFromString(originalXml, 'application/xml');
 
@@ -223,7 +223,7 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
             <gco:CharacterString>transaction:${transactionTimestamp}</gco:CharacterString>
         </gmd:keyword>
         <gmd:keyword>
-            <gco:CharacterString>source:${sourceId}</gco:CharacterString>
+            <gco:CharacterString>source:${datasourceId}</gco:CharacterString>
         </gmd:keyword>
         <gmd:type>
             <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="other">other</gmd:MD_KeywordTypeCode>
@@ -264,7 +264,7 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
      * Build a CSW-T Delete transaction that removes all records belonging to sourceId
      * that were NOT touched in the current harvest (i.e. don't carry excludeTimestamp).
      */
-    private buildFilteredDeleteTransaction(sourceId: string, excludeTimestamp: string): string {
+    private buildFilteredDeleteTransaction(datasourceId: number, excludeTimestamp: string): string {
         return `<?xml version="1.0" encoding="UTF-8"?>
 <csw:Transaction xmlns:csw="${namespaces.CSW}"
                  xmlns:ogc="${namespaces.OGC}"
@@ -276,7 +276,7 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
                 <ogc:And>
                     <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
                         <ogc:PropertyName>csw:AnyText</ogc:PropertyName>
-                        <ogc:Literal>%source:${sourceId}%</ogc:Literal>
+                        <ogc:Literal>%source:${datasourceId}%</ogc:Literal>
                     </ogc:PropertyIsLike>
                     <ogc:Not>
                         <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
