@@ -22,11 +22,24 @@
  */
 
 import * as fs from 'fs';
+import * as path from 'path';
 import {Service} from '@tsed/di';
 
 @Service()
 export class LogService {
     get(): string {
         return fs.readFileSync('logs/app.log', "utf8");
+    }
+
+    getHarvesterLog(harvesterId: number, jobId: string): string {
+        if (!/^\d+$/.test(String(harvesterId)) || !/^[a-f0-9-]+$/i.test(jobId)) {
+            throw new Error('Invalid harvesterId or jobId');
+        }
+        const logPath = path.resolve('logs/harvester', String(harvesterId), `${jobId}.log`);
+        const baseDir = path.resolve('logs/harvester');
+        if (!logPath.startsWith(baseDir + path.sep)) {
+            throw new Error('Invalid log path');
+        }
+        return fs.readFileSync(logPath, 'utf8');
     }
 }
