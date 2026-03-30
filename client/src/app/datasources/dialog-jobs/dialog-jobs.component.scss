@@ -50,3 +50,24 @@
   font-weight: 600;
   margin-right: 4px;
 }
+
+.log-action {
+  margin-top: 12px;
+}
+
+.job-log {
+  margin-top: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+  font-family: monospace;
+  font-size: 12px;
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 8px;
+
+  .debug { color: #888; }
+  .info  { color: #333; }
+  .warn  { color: #f57f17; }
+  .error { color: #b71c1c; }
+}

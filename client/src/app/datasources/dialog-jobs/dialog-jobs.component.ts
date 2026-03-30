@@ -23,6 +23,7 @@
 
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DatasourceApi } from '../services/datasource.api';
 
 @Component({
   selector: 'app-dialog-jobs',
@@ -31,9 +32,43 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   standalone: false,
 })
 export class DialogJobsComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { harvester: string; jobs: any[] }) {}
+  logCache = new Map<string, string>();
+  logLoading = new Map<string, boolean>();
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: { harvester: string; jobs: any[] },
+    private api: DatasourceApi,
+  ) {}
 
   catalogStages(job: any): any[] {
     return (job.stages ?? []).filter((p: any) => p.name?.startsWith('catalog/'));
+  }
+
+  loadLog(job: any): void {
+    if (this.logCache.has(job.jobId) || this.logLoading.get(job.jobId)) {
+      return;
+    }
+    this.logLoading.set(job.jobId, true);
+    this.api.getHarvesterLog(job.harvesterId, job.jobId).subscribe({
+      next: (text) => {
+        this.logCache.set(job.jobId, text);
+        this.logLoading.set(job.jobId, false);
+      },
+      error: () => {
+        this.logCache.set(job.jobId, '(Log file not available)');
+        this.logLoading.set(job.jobId, false);
+      },
+    });
+  }
+
+  logLines(jobId: string): string[] {
+    return this.logCache.get(jobId)?.split('\n') ?? [];
+  }
+
+  determineClass(line: string): string {
+    if (line.includes('[DEBUG]')) return 'debug';
+    if (line.includes('[WARN]'))  return 'warn';
+    if (line.includes('[ERROR]')) return 'error';
+    return 'info';
   }
 }

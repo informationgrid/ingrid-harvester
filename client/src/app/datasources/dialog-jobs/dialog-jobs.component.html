@@ -78,6 +78,20 @@
               }
             </div>
           }
+
+          <!-- Job log -->
+          <div class="log-action">
+            <button mat-stroked-button (click)="loadLog(job)" [disabled]="logLoading.get(job.jobId)">
+              {{ logLoading.get(job.jobId) ? 'Loading…' : 'View Log' }}
+            </button>
+          </div>
+          @if (logLines(job.jobId).length) {
+            <div class="job-log">
+              @for (line of logLines(job.jobId); track $index) {
+                <div [class]="determineClass(line)">{{ line }}</div>
+              }
+            </div>
+          }
         </mat-expansion-panel>
       }
     </mat-accordion>
