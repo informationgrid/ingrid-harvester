@@ -29,7 +29,6 @@ import type { ImporterSettings } from '../importer.settings.js';
 import type { ImporterFactory } from '../importer/importer.factory.js';
 import type { Importer } from '../importer/importer.js';
 import type { Mapper } from '../importer/mapper.js';
-import type { Catalog as LegacyCatalog } from '../model/dcatApPlu.model.js';
 import type { DocumentFactory } from '../model/index.document.factory.js';
 import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
@@ -61,23 +60,6 @@ CatalogFactory {
         await database.init();
 
         return { database, elastic };
-    };
-
-    async createCatalogIfNotExist(catalog: string | LegacyCatalog, database?: DatabaseUtils, elastic?: ElasticsearchUtils): Promise<LegacyCatalog> {
-        const { database: dbConfig, elasticsearch: esConfig } = ConfigService.getGeneralSettings();
-        database ??= DatabaseFactory.getDatabaseUtils(dbConfig, null);
-        elastic ??= ElasticsearchFactory.getElasticUtils(esConfig, null);
-
-        if (typeof(catalog) == 'string') {
-            catalog = {
-                description: `${catalog} (automatically created)`,
-                identifier: catalog,
-                publisher: undefined,
-                title: `${catalog} (automatically created)`
-            };
-        }
-        log.info(`Ensuring existence of DB entry for catalog "${catalog.identifier}"`);
-        return await database.createLegacyCatalog(catalog);
     }
 
     dateReplacer = MiscUtils.dateReplacer;

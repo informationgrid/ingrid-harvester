@@ -33,9 +33,9 @@ export interface RecordEntity extends Entity {
     identifier: string,
     /* source of the dataset, usually an URL (for CSW, WFS, ...), sometimes a system name (cockpit, beteiligung) */
     source: string,
-    collection_id: number,  // TODO remove, handle using catalog_ids
+    collection_id?: number,  // TODO keep for diplanung, null value by default
     /* IDs of the catalogs for which this dataset was harvested */
-    catalog_ids?: number[],
+    catalog_ids: number[],
     /* elasticsearch document */
     dataset: IndexDocument, // TODO rename to dataset_elastic, make optional - 
     /* CSW XML document */

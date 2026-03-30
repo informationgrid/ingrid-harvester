@@ -43,7 +43,7 @@ export class DiplanungCswImporter extends CswImporter {
 
     private tempUrlCache = new Map<string, string[]>();
 
-    protected async updateRecords(documents: DiplanungIndexDocument[], collectionId: number) {
+    protected async updateRecords(documents: DiplanungIndexDocument[]) {
         let promises: (() => Promise<RecordEntity>)[] = [];
         for (let doc of documents) {
             promises.push(() => new Promise(async (resolve, reject) => {
@@ -85,7 +85,8 @@ export class DiplanungCswImporter extends CswImporter {
                     let entity: RecordEntity = {
                         identifier: doc.identifier,
                         source: doc.extras.metadata.source.source_base,
-                        collection_id: collectionId,
+                        collection_id: null, // TODO set default catalog for diplanung from ENV VAR
+                        catalog_ids: this.getSettings().catalogIds,
                         dataset: mergedDocument,
                         original_document: undefined
                     };

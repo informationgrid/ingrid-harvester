@@ -197,17 +197,18 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
 
                 let rdfAboutAttribute = DcatappluMapper.select('./@rdf:about', records[i], true)?.textContent;
                 let catalogId = datasetAboutsToCatalogAbouts[rdfAboutAttribute];
-                let catalog = catalogAboutsToCatalogs[catalogId] ?? this.database.getLegacyCatalog(this.generalConfig.elasticsearch.index);
-                if (!catalog) {
-                    catalog = await this.database.createLegacyCatalog({
-                        description: 'Globaler Katalog',
-                        identifier: this.generalConfig.elasticsearch.index,
-                        publisher: {
-                            name: ''
-                        },
-                        title: 'Globaler Katalog'
-                    });
-                }
+                let catalog = catalogAboutsToCatalogs[catalogId];
+                // let catalog = catalogAboutsToCatalogs[catalogId] ?? this.database.getLegacyCatalog(this.generalConfig.elasticsearch.index);
+                // if (!catalog) {
+                //     catalog = await this.database.createLegacyCatalog({
+                //         description: 'Globaler Katalog',
+                //         identifier: this.generalConfig.elasticsearch.index,
+                //         publisher: {
+                //             name: ''
+                //         },
+                //         title: 'Globaler Katalog'
+                //     });
+                // }
                 let mapper = new DcatappluMapper(this.getSettings(), records[i], catalog, rootNode, harvestTime, this.getSummary())
                 let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
@@ -225,7 +226,7 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
                     let entity: RecordEntity = {
                         identifier: uuid,
                         source: this.getSettings().sourceURL,
-                        collection_id: (await this.database.getLegacyCatalog(this.getSettings().catalogId)).id,
+                        catalog_ids: this.getSettings().catalogIds,
                         dataset: doc,
                         original_document: mapper.getHarvestedData()
                     };

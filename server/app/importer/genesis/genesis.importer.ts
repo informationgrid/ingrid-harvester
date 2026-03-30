@@ -31,9 +31,9 @@ import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { Importer } from '../importer.js';
+import { GenesisMapper } from "./genesis.mapper.js";
 import type { GenesisSettings } from './genesis.settings.js';
 import { defaultGenesisSettings } from './genesis.settings.js';
-import { GenesisMapper } from "./genesis.mapper.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -64,8 +64,6 @@ export class GenesisImporter extends Importer<GenesisSettings> {
 
     private totalRecords = 0;
     private numIndexDocs = 0;
-    /** Cached DB catalog ID to avoid repeated lookups */
-    private collectionId: number | null = null;
 
     constructor(settings: GenesisSettings) {
         settings = MiscUtils.merge(defaultGenesisSettings, settings);
@@ -76,15 +74,6 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         log.info(`Started requesting records`);
 
         this.numIndexDocs = 0;
-
-        // Pre-fetch the DB collection ID once
-        try {
-            this.collectionId = (await this.database.getLegacyCatalog(this.getSettings().catalogId))?.id ?? null;
-        } catch (e) {
-            log.error('Failed to retrieve catalog from database', e);
-            this.getSummary().appErrors.push('Failed to retrieve catalog: ' + e.message);
-            return 0;
-        }
 
         const harvestTime = new Date(Date.now());
         const tableSelections = this.getSettings().typeConfig.tableSelections;
@@ -206,7 +195,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
             const entity: RecordEntity = {
                 identifier: mapper.getCode(),
                 source: this.getSettings().sourceURL,
-                collection_id: this.collectionId,
+                catalog_ids: this.getSettings().catalogIds,
                 dataset: doc,
                 dataset_dcatapde: dcatapdeDoc,
                 original_document: mapper.getHarvestedData(),

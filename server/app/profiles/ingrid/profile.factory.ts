@@ -36,13 +36,10 @@ import type { Importer } from '../../importer/importer.js';
 import type { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
 import type { WfsSettings } from '../../importer/wfs/wfs.settings.js';
 import { WfsProfile } from '../../importer/wfs/wfs.settings.js';
-import type { Catalog as LegacyCatalog } from '../../model/dcatApPlu.model.js';
 import type { DocumentFactory } from '../../model/index.document.factory.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
-import { DatabaseFactory } from '../../persistence/database.factory.js';
 import type { DatabaseUtils } from '../../persistence/database.utils.js';
-import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
 import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
@@ -55,7 +52,6 @@ import type { ingridMapperType } from './mapper/ingrid.mapper.js';
 import { ingridWfsMapper } from './mapper/ingrid.wfs.mapper.js';
 import { PegelonlineWfsMapper } from './mapper/wfs/pegelonline.wfs.mapper.js';
 import { ZdmWfsMapper } from './mapper/wfs/zdm.wfs.mapper.js';
-import type { IngridIndexDocument } from './model/index.document.js';
 import type { IngridMetadata } from './model/ingrid.metadata.js';
 import { ElasticQueries } from './persistence/elastic.queries.js';
 import mappings from './persistence/ingrid-meta-mapping.json' with { type: 'json' };
@@ -77,29 +73,6 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
             await elastic.prepareIndexWithName(INGRID_META_INDEX, mappings, settings as any);
         }
         return { database, elastic };
-    }
-
-    async createCatalogIfNotExist(catalog: string | LegacyCatalog, database?: DatabaseUtils, elastic?: ElasticsearchUtils): Promise<LegacyCatalog> {
-        const { database: dbConfig, elasticsearch: esConfig } = ConfigService.getGeneralSettings();
-        database ??= DatabaseFactory.getDatabaseUtils(dbConfig, null);
-        elastic ??= ElasticsearchFactory.getElasticUtils(esConfig, null);
-
-        if (typeof(catalog) == 'string') {
-            catalog = {
-                description: `${catalog} (automatically created)`,
-                identifier: catalog,
-                publisher: undefined,
-                title: `${catalog} (automatically created)`
-            };
-        }
-        log.info(`Ensuring existence of DB entry for catalog "${catalog.identifier}"`);
-        let catalogPromise = await database.createLegacyCatalog(catalog);
-        log.info(`Ensuring existence of index for catalog "${catalog.identifier}"`);
-        if (!await elastic.isIndexPresent(catalog.identifier)) {
-            await elastic.prepareIndexWithName(catalog.identifier, this.getIndexMappings(), this.getIndexSettings());
-            await elastic.addAlias(catalog.identifier, esConfig.alias);
-        }
-        return catalogPromise;
     }
 
     getElasticQueries(): AbstractElasticQueries {

@@ -27,13 +27,11 @@ import pg from 'pg';
 import Cursor from "pg-cursor";
 import type { Observer } from "rxjs";
 import type { CatalogColumnType } from '../catalog/catalog.factory.js';
-import type { Catalog as LegacyCatalog } from '../model/dcatApPlu.model.js';
 import type { Distribution } from '../model/distribution.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
 import { type ImportLogMessage, ImportResult } from "../model/import.result.js";
 import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
-import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import type { BulkResponse } from './database.utils.js';
 import { DatabaseUtils } from './database.utils.js';
@@ -115,30 +113,28 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async getDatasets(source: string | number, useTransaction: boolean = true): Promise<RecordEntity[]> {
-        let query = typeof source == "number" ? this.queries.getDatasetsByCollection : this.queries.getDatasetsBySource;
-        let result: pg.QueryResult<any> = await this.client(useTransaction).query(query, [source]);
+        let result: pg.QueryResult<any> = await this.client(useTransaction).query(this.queries.getDatasetsBySource, [source]);
         if (result.rowCount == 0) {
             return null;
         }
         return result.rows;
     }
 
-    async getDatasetsWithOriginalDocument(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'original_document'>[]> {
-        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getDatasetsBySourceWithOriginal, [source]);
-        if (result.rowCount == 0) {
-            return [];
-        }
-        return result.rows;
-    }
+    // async getDatasetsWithOriginalDocument(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'original_document'>[]> {
+    //     let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getDatasetsBySourceWithOriginal, [source]);
+    //     if (result.rowCount == 0) {
+    //         return [];
+    //     }
+    //     return result.rows;
+    // }
 
-
-    async getDcatapdeDatasetsBySource(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'dataset_dcatapde'>[]> {
-        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getDcatapdeDatasetsBySource, [source]);
-        if (result.rowCount == 0) {
-            return [];
-        }
-        return result.rows;
-    }
+    // async getDcatapdeDatasetsBySource(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'dataset_dcatapde'>[]> {
+    //     let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getDcatapdeDatasetsBySource, [source]);
+    //     if (result.rowCount == 0) {
+    //         return [];
+    //     }
+    //     return result.rows;
+    // }
 
     async getIdentifiersByCatalog(catalog_id: number): Promise<string[]> {
         let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getIdentifiersByCatalog, [catalog_id]);
@@ -148,89 +144,12 @@ export class PostgresUtils extends DatabaseUtils {
         return result.rows.map(row => row.identifier);
     }
 
-    async deleteDatasets(catalogId: number): Promise<void> {
-        await PostgresUtils.pool.query(this.queries.deleteRecords, [catalogId]);
-    }
-
-    async moveDatasets(catalogId: number, targetCatalogId: number): Promise<void> {
-        // TODO this results in an error if there is already another dataset with the same identifier,collection_id,source
-        // TODO thus, a simple SQL UPDATE does not suffice
-        // when a solution is implemented:
-        // * the try/catch parentheses can be removed
-        // * the [disabled] attribute in the `mat-radio-button` in `delete-catalog.component.html` can be removed
-        try {
-            await PostgresUtils.pool.query(this.queries.moveRecords, [catalogId, targetCatalogId]);
-        }
-        catch (e) {
-            throw e;
-        }
-    }
-
     async getServices(source: string): Promise<RecordEntity[]> {
         let result: pg.QueryResult<any> = await this.transactionClient.query(this.queries.getServices, [source]);
         if (result.rowCount == 0) {
             return null;
         }
         return result.rows;
-    }
-
-    async getLegacyCatalogSizes(useTransaction: boolean = true): Promise<{ collection_id: number, count: number }[]> {
-        let result: pg.QueryResult<any> = await this.client(useTransaction).query(this.queries.getCollectionSizes);
-        if (result.rowCount == 0) {
-            return null;
-        }
-        return result.rows.reduce((val, { collection_id, count }) => ({ [collection_id]: count, ...val }), {});
-    }
-
-    async listLegacyCatalogs(): Promise<LegacyCatalog[]> {
-        // TODO maybe move this to somewhere more sensible
-        await this.init();
-        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.listCollections);
-        if (result.rowCount == 0) {
-            return [];
-        }
-        let catalogs: LegacyCatalog[] = result.rows.map(row => ({ id: row.id, ...row.properties }));
-        return catalogs.sort((c1, c2) => c1.title < c2.title ? -1 : c1.title > c2.title ? 1 : 0);
-    }
-
-    async createLegacyCatalog(catalog: LegacyCatalog): Promise<LegacyCatalog> {
-        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.createCollection, [catalog.identifier, catalog, null, await DcatApPluDocumentFactory.createCatalog(catalog), catalog]);
-        if (result.rowCount != 1) {
-            return null;
-        }
-        catalog.id = result.rows[0].id;
-        return catalog;
-    }
-
-    async getLegacyCatalog(identifier: string): Promise<LegacyCatalog> {
-        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getCollection, [identifier]);
-        if (result.rowCount == 0) {
-            return null;
-        }
-        return {
-            id: result.rows[0].id,
-            ...result.rows[0].properties
-        };
-    }
-
-    async updateLegacyCatalog(catalog: LegacyCatalog): Promise<LegacyCatalog> {
-        // don't persist ID within catalog json
-        delete catalog['id'];
-        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.updateCollection,
-            [catalog.identifier, catalog, null, await DcatApPluDocumentFactory.createCatalog(catalog), catalog]);
-        if (result.rowCount != 1) {
-            return null;
-        }
-        catalog.id = result.rows[0].id;
-        return catalog;
-    }
-
-    async deleteLegacyCatalog(catalogId: number): Promise<LegacyCatalog> {
-        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.deleteCollection, [catalogId]);
-        if (result.rowCount != 1) {
-            return null;
-        }
-        return null;
     }
 
     async nonFetchedPercentage(source: string, last_modified: Date): Promise<number> {
@@ -355,10 +274,6 @@ export class PostgresUtils extends DatabaseUtils {
         return dataset.extras?.metadata?.source?.source_type ?? source;
     }
 
-    write(entity: RecordEntity) {
-        throw new Error('Method not implemented.');
-    }
-
     /**
      * Execute a bulk upsert into the PSQL database
      *
@@ -372,22 +287,24 @@ export class PostgresUtils extends DatabaseUtils {
         }
         let result: pg.QueryResult<any>;
         try {
-            if ((entities[0] as RecordEntity).collection_id) {
+            if (entities.length == 0) {
+                result = { rowCount: 0 } as pg.QueryResult;
+            }
+            else if (PostgresUtils.isRecordEntities(entities)) {
                 // if we have the same entity twice in the same bulk, merge the entity before persisting
                 // this can occur due to the way updates are handled (e.g. in CSW we have to wait for WMS calls to finish)
                 // if we don't merge, we get the following error:
                 // "Ensure that no rows proposed for insertion within the same command have duplicate constrained values."
                 // TODO ideally, we change handling from `Entity` to `Entity.DbOperation`, to only send updates when needed
                 // TODO (instead of full upserts) and handle JSON updates within Postgres
-                entities = this.mergeRecordEntities(entities as RecordEntity[]);
+                const mergedEntities = this.mergeRecordEntities(entities);
                 // we remove catalogs from the entities at this point because we don't want them to persisted into the
                 // dataset in the catalog
-                entities = this.removeCatalogs(entities as RecordEntity[]);
-                result = await this.transactionClient.query(this.queries.bulkUpsert, [JSON.stringify(entities, ProfileFactoryLoader.get().dateReplacer)]);
+                result = await this.transactionClient.query(this.queries.bulkUpsert, [JSON.stringify(mergedEntities, ProfileFactoryLoader.get().dateReplacer)]);
             }
-            else if ((entities[0] as CouplingEntity).service_id) {
-                entities = this.mergeCouplingEntities(entities as CouplingEntity[]);
-                result = await this.transactionClient.query(this.queries.bulkUpsertCoupling, [JSON.stringify(entities, ProfileFactoryLoader.get().dateReplacer)]);
+            else if (PostgresUtils.isCouplingEntities(entities)) {
+                const mergedEntities = this.mergeCouplingEntities(entities);
+                result = await this.transactionClient.query(this.queries.bulkUpsertCoupling, [JSON.stringify(mergedEntities, ProfileFactoryLoader.get().dateReplacer)]);
             }
             else {
                 throw new Error('Unrecognized Entity type');
@@ -402,6 +319,14 @@ export class PostgresUtils extends DatabaseUtils {
             queued: false,
             response: result?.rowCount
         }));
+    }
+
+    private static isRecordEntities(entities: Entity[]): entities is RecordEntity[] {
+        return (entities[0] as RecordEntity).catalog_ids != null;
+    }
+
+    private static isCouplingEntities(entities: Entity[]): entities is CouplingEntity[] {
+        return (entities[0] as CouplingEntity).service_id != null;
     }
 
     private mergeRecordEntities(entities: RecordEntity[]): RecordEntity[] {
@@ -434,18 +359,8 @@ export class PostgresUtils extends DatabaseUtils {
         return Object.values(entityMap);
     }
 
-    private removeCatalogs(entities: RecordEntity[]): RecordEntity[] {
-        for (let entity of entities) {
-            if ('catalog' in entity.dataset) {
-                entity.dataset.catalog = { id: entity.collection_id };
-            }
-            // delete entity.dataset.catalog;
-        }
-        return entities;
-    }
-
     async addEntityToBulk(entity: Entity): Promise<BulkResponse> {
-        if ((entity as RecordEntity).collection_id) {
+        if ((entity as RecordEntity).catalog_ids) {
             this._bulkData.push(entity as RecordEntity);
             // send data to database if limit is reached
             if (this._bulkData.length >= DatabaseUtils.maxBulkSize) {

@@ -24,7 +24,6 @@
 import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
 import type { Observer } from "rxjs";
 import type { CatalogColumnType } from '../catalog/catalog.factory.js';
-import type { Catalog as DcatCatalog } from '../model/dcatApPlu.model.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
 import type { ImportLogMessage } from "../model/import.result.js";
 import type { Summary } from '../model/summary.js';
@@ -45,8 +44,6 @@ export abstract class DatabaseUtils {
     public _bulkCouples: CouplingEntity[];
 
     abstract init(): Promise<void>;
-
-    abstract write(entity: RecordEntity);
 
     abstract bulk(entities: RecordEntity[], commitTransaction: boolean): Promise<BulkResponse>;
 
@@ -83,44 +80,17 @@ export abstract class DatabaseUtils {
     abstract getDatasetIdentifiers(source: string): Promise<string[]>;
 
     /**
-     * Retrieve all datasets pertaining to either a specified source or a specified collection (id)
-     * @param source if a string, search as a source - if a number, search as a collection
+     * Retrieve all datasets for a specified source.
      */
-    abstract getDatasets(source: string | number, useTransaction?: boolean): Promise<RecordEntity[]>;
+    abstract getDatasets(source: string, useTransaction?: boolean): Promise<RecordEntity[]>;
 
-    abstract getDatasetsWithOriginalDocument(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'original_document'>[]>;
+    // abstract getDatasetsWithOriginalDocument(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'original_document'>[]>;
 
-    abstract getDcatapdeDatasetsBySource(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'dataset_dcatapde'>[]>;
+    // abstract getDcatapdeDatasetsBySource(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'dataset_dcatapde'>[]>;
 
     abstract getIdentifiersByCatalog(catalog_id: number): Promise<string[]>
 
-    abstract deleteDatasets(catalogId: number): Promise<void>;
-
-    abstract moveDatasets(catalogId: number, targetCatalogId: number): Promise<void>;
-
     abstract getServices(source: string): Promise<RecordEntity[]>;
 
-    // DEPRECATED
-    abstract getLegacyCatalogSizes(useTransaction: boolean): Promise<any[]>;
-
-    // DEPRECATED
-    abstract listLegacyCatalogs(): Promise<DcatCatalog[]>;
-
-    // DEPRECATED
-    abstract createLegacyCatalog(catalog: DcatCatalog): Promise<DcatCatalog>;
-
-    // DEPRECATED
-    abstract getLegacyCatalog(catalogIdentifier: string): Promise<DcatCatalog>;
-
-    // DEPRECATED
-    abstract updateLegacyCatalog(catalog: DcatCatalog): Promise<DcatCatalog>;
-
-    // DEPRECATED
-    abstract deleteLegacyCatalog(catalogId: number): Promise<DcatCatalog>;
-
     abstract ping(): Promise<boolean>;
-
-    static ping(configuration?: Partial<DatabaseConfiguration>): Promise<boolean> {
-        throw new Error('Method not implemented.');
-    }
 }

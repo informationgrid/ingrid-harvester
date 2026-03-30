@@ -21,19 +21,18 @@
  * ==================================================
  */
 
-import log4js from 'log4js';
 import type { DatabaseConfiguration, ElasticsearchConfiguration, GeneralSettings } from '@shared/general-config.settings.js';
 import type { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
-import { BodyParams, Controller, Delete, Get, PathParams, Post, Put, QueryParams, UseAuth } from '@tsed/common';
+import { BodyParams, Controller, Delete, Get, Post, QueryParams, UseAuth } from '@tsed/common';
+import log4js from 'log4js';
+import { KeycloakAuth } from "../decorators/KeycloakAuthOptions.js";
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
-import type { Catalog } from '../model/dcatApPlu.model.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import { ScheduleService } from '../services/ScheduleService.js';
-import {KeycloakAuth} from "../decorators/KeycloakAuthOptions.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -86,36 +85,6 @@ export class ConfigCtrl {
             ConfigService.setGeneralConfig(body);
             this.scheduleService.initialize();
         }
-    }
-
-    @Get('/catalogs')
-    async getCatalogs(): Promise<Catalog[]> {
-        return await ConfigService.getLegacyCatalogs();
-    }
-
-    @Get('/catalogsizes')
-    async getCatalogSizes(): Promise<any[]> {
-        return await ConfigService.getLegacyCatalogSizes();
-    }
-
-    @Post('/catalogs')
-    @KeycloakAuth({role: ["admin"]})
-    async addOrEditCatalog(@BodyParams() catalog: Catalog): Promise<void> {
-        await ConfigService.addOrEditLegacyCatalog(catalog);
-    }
-
-    @Put('/catalogs/:identifier')
-    @KeycloakAuth({role: ["admin"]})
-    async enableCatalog(@PathParams('identifier') catalogIdentifier: string,
-            @QueryParams('enable') enable: boolean) {
-        await ConfigService.enableLegacyCatalog(catalogIdentifier, enable);
-    }
-
-    @Delete('/catalogs/:identifier')
-    @KeycloakAuth({role: ["admin"]})
-    async deleteCatalog(@PathParams('identifier') catalogIdentifier: string,
-            @QueryParams('target') target: string) {
-        await ConfigService.removeLegacyCatalog(catalogIdentifier, target);
     }
 
     @Get('/mapping/distribution')
