@@ -33,6 +33,7 @@ import { ConfigService } from '../services/config/ConfigService.js';
 import { SummaryService } from '../services/config/SummaryService.js';
 import { JobsUtils } from '../statistic/jobs.utils.js';
 import { StatisticUtils } from '../statistic/statistic.utils.js';
+import { harvestLogContext } from '../utils/harvest-log-context.js';
 import * as MiscUtils from '../utils/misc.utils.js';
 import { MailServer } from '../utils/nodemailer.utils.js';
 
@@ -78,6 +79,7 @@ export class ImportSocketService {
                     let mode = isIncremental ? 'incr' : 'full';
                     this.log.info(`>> Running importer: [${configHarvester.type}] ${configHarvester.description}`);
 
+                    harvestLogContext.run({ harvesterId: id, jobId: importer.jobId }, () => {
                     importer.run.subscribe({
                         next: response => {
                             response.id = id;
@@ -135,6 +137,7 @@ export class ImportSocketService {
                         },
                         complete: () => resolve()
                     });
+                    }); // harvestLogContext.run
                 }).catch(e => {
                     this.log.error(`An error occured while harvesting (id=${id}): `, e);
                     resolve();
