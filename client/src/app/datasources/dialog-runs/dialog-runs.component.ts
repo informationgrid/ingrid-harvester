@@ -33,7 +33,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class DialogRunsComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: { harvester: string; runs: any[] }) {}
 
-  catalogPhases(run: any): any[] {
-    return (run.phases ?? []).filter((p: any) => p.name?.startsWith('catalog/'));
+  catalogStages(run: any): any[] {
+    return (run.stages ?? []).filter((p: any) => p.name?.startsWith('catalog/'));
   }
 }

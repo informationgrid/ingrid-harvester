@@ -89,7 +89,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         const harvestTime = new Date(Date.now());
         const tableSelections = this.getSettings().typeConfig.tableSelections;
 
-        // Phase 1: collect all tables across all selections to establish total count
+        // Stage 1: collect all tables across all selections to establish total count
         const allTables: GenesisListEntry[] = [];
         this.observer.next(ImportResult.message(`Fetching tables`));
         const selectionLimit = pLimit(this.getSettings().maxConcurrent);
@@ -110,7 +110,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         this.totalRecords = allTables.length;
         log.info(`Total tables to harvest: ${this.totalRecords}`);
 
-        // Phase 2: process metadata for each collected table
+        // Stage 2: process metadata for each collected table
         const limit = pLimit(this.getSettings().maxConcurrent);
         await Promise.allSettled(
             allTables.map(table => limit(() => this.processObject(table, harvestTime)))

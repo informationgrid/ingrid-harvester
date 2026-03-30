@@ -45,7 +45,7 @@ export interface ImportLogMessage {
 
     runId?: string;
 
-    phase?: string;
+    stage?: string;
 }
 
 export class ImportResult {

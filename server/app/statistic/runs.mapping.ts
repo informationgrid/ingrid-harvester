@@ -57,7 +57,7 @@ export const runsMapping = {
                 }
             }
         },
-        'phases': {
+        'stages': {
             'properties': {
                 'name': {
                     'type': 'keyword'

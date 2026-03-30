@@ -52,12 +52,12 @@ export class RunsUtils {
         this.indexSettings = ProfileFactoryLoader.get().getIndexSettings();
     }
 
-    async saveRun(logMessage: ImportLogMessage, baseIndex: string, phaseSummaries: Summary[] = []): Promise<void> {
+    async saveRun(logMessage: ImportLogMessage, baseIndex: string, stageSummaries: Summary[] = []): Promise<void> {
         const status = this.deriveStatus(logMessage);
         const globalSummary = logMessage.summary;
 
-        const phases = phaseSummaries.map(s => ({
-            name: s.phase,
+        const stages = stageSummaries.map(s => ({
+            name: s.stage,
             startTime: s.startTime,
             numDocs: s.numDocs,
             numErrors: s.numErrors,
@@ -75,7 +75,7 @@ export class RunsUtils {
             numDocs: globalSummary?.numDocs ?? 0,
             numErrors: globalSummary?.numErrors ?? 0,
             errors: globalSummary?.errors ?? [],
-            phases,
+            stages,
         }, logMessage.runId, 1);
 
         try {

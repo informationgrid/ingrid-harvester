@@ -41,7 +41,7 @@ export class Summary {
 
     isIncremental: boolean;
 
-    phase?: string;
+    stage?: string;
 
     startTime?: Date;
 

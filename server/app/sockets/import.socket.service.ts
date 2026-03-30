@@ -101,7 +101,7 @@ export class ImportSocketService {
                                 let elastic = ElasticsearchFactory.getElasticUtils(configGeneral.elasticsearch, null);
                                 let index = profile.useIndexPerCatalog() ? configHarvester.catalogId : elastic.indexName;
                                 statisticUtils.saveSummary(response, index);
-                                new RunsUtils(configGeneral).saveRun(response, index, importer.getPhaseSummaries());
+                                new RunsUtils(configGeneral).saveRun(response, index, importer.getStageSummaries());
 
                                 // when less results send mail
                                 if (!isIncremental && configGeneral.mail.enabled && configGeneral.harvesting.mail.enabled) {

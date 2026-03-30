@@ -47,8 +47,8 @@
           </mat-expansion-panel-header>
 
           <!-- Per-catalog breakdown -->
-          @if (catalogPhases(run).length) {
-            <table class="phase-table">
+          @if (catalogStages(run).length) {
+            <table class="stage-table">
               <thead>
                 <tr>
                   <th>Catalog</th>
@@ -58,12 +58,12 @@
                 </tr>
               </thead>
               <tbody>
-                @for (phase of catalogPhases(run); track phase.name) {
+                @for (stage of catalogStages(run); track stage.name) {
                   <tr>
-                    <td>{{ phase.name }}</td>
-                    <td>{{ phase.numDocs }}</td>
-                    <td>{{ phase.numErrors }}</td>
-                    <td>{{ phase.errors?.length ?? 0 }}</td>
+                    <td>{{ stage.name }}</td>
+                    <td>{{ stage.numDocs }}</td>
+                    <td>{{ stage.numErrors }}</td>
+                    <td>{{ stage.errors?.length ?? 0 }}</td>
                   </tr>
                 }
               </tbody>

@@ -54,8 +54,8 @@ export abstract class Importer<S extends ImporterSettings> {
     private readonly settings: S;
     private readonly summary: Summary;
     readonly runId: string;
-    private phaseSummaries: Summary[] = [];
-    private currentPhase: string;
+    private stageSummaries: Summary[] = [];
+    private currentStage: string;
     protected filterUtils: FilterUtils;
     protected generalConfig: GeneralSettings;
     protected observer: Observer<ImportLogMessage>;
@@ -94,7 +94,7 @@ export abstract class Importer<S extends ImporterSettings> {
             try {
                 let transactionTimestamp = await this.database.beginTransaction();
                 // get datasets
-                this.startPhase('harvest');
+                this.startStage('harvest');
                 let numIndexDocs = await this.harvest();
                 if (!this.settings.isIncremental) {
                     // did the harvesting return results at all?
@@ -121,8 +121,8 @@ export abstract class Importer<S extends ImporterSettings> {
                 await this.database.commitTransaction();
                 // TODO support concurrency of different catalogs
                 for (const catalogId of this.settings.catalogIds) {
-                    const phaseSummary = this.startPhase(`catalog/${catalogId}`);
-                    const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, phaseSummary);
+                    const stageSummary = this.startStage(`catalog/${catalogId}`);
+                    const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, stageSummary);
                     try {
                         // log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with transaction timestamp ${transactionTimestamp}`);
                         log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with source ${this.settings.sourceURL}`);
@@ -160,17 +160,17 @@ export abstract class Importer<S extends ImporterSettings> {
         // For Profile specific Handling
     }
 
-    protected startPhase(name: string): Summary {
+    protected startStage(name: string): Summary {
         const s = new Summary(this.getSettings());
-        s.phase = name;
+        s.stage = name;
         s.startTime = new Date();
-        this.phaseSummaries.push(s);
-        this.currentPhase = name;
+        this.stageSummaries.push(s);
+        this.currentStage = name;
         return s;
     }
 
-    getPhaseSummaries(): Summary[] {
-        return this.phaseSummaries;
+    getStageSummaries(): Summary[] {
+        return this.stageSummaries;
     }
 
     getSettings(): S {
