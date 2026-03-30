@@ -65,37 +65,6 @@ export class IndexService {
         this.elasticUtils = ElasticsearchFactory.getElasticUtils(this.config, summary);
     }
 
-    // async addToAlias(id: number) {
-    //     const index = await this.getIndexFromHarvesterID(id);
-
-    //     if (index) {
-    //         return this.elasticUtils.addAlias(index, this.alias);
-    //     }
-    // }
-
-    // async removeFromAlias(id: number) {
-    //     const index = await this.getIndexFromHarvesterID(id);
-    //     if (index) {
-    //         return this.elasticUtils.removeAlias(index, this.alias);
-    //     }
-    // }
-
-    // private async getIndexFromHarvesterID(id: number): Promise<string> {
-    //     const harvester = ConfigService.get().find(h => h.id === id);
-
-    //     let index = ProfileFactoryLoader.get().useIndexPerCatalog() ? harvester.catalogId : this.elasticUtils.indexName;
-    //     let indices = await this.elasticUtils.getIndicesFromBasename(index);
-
-    //     // if multiple indices, then there might be an indexing process
-    //     // we should be able to ignore adding an alias, since it should happen automatically after indexing
-    //     if (indices.length !== 1) {
-    //         log.warn('The index cannot be identified by its basename in a unique name ' + JSON.stringify(indices));
-    //         log.warn('Is there a harvest going on, where a temporary new index is created?');
-    //         return null;
-    //     }
-    //     return indices[0].name;
-    // }
-
     async getIndices(): Promise<Index[]> {
         let indices = await this.elasticUtils.getIndicesFromBasename('');
         let systemIndices = ['harvester_statistic', 'url_check_history', 'index_check_history', 'ingrid_meta']

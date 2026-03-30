@@ -87,6 +87,4 @@ CatalogFactory {
     abstract getCatalog(catalogId: number, summary: Summary): Promise<Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>>;
 
     abstract getProfileName(): string;
-
-    abstract useIndexPerCatalog(): boolean;
 }

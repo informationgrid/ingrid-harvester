@@ -108,8 +108,4 @@ export class LvrFactory extends ProfileFactory<LvrSettings> {
     getProfileName(): string {
         return 'lvr';
     }
-
-    useIndexPerCatalog(): boolean {
-        return false;
-    }
 }

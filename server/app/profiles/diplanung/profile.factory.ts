@@ -124,8 +124,4 @@ export class DiplanungFactory extends ProfileFactory<DiplanungSettings> {
     getProfileName(): string {
         return 'diplanung';
     }
-
-    useIndexPerCatalog(): boolean {
-        return false;
-    }
 }

@@ -153,8 +153,4 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
     getProfileName(): string {
         return 'ingrid';
     }
-
-    useIndexPerCatalog(): boolean {
-        return true;
-    }
 }

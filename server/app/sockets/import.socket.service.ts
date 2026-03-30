@@ -97,9 +97,9 @@ export class ImportSocketService {
                                 importer.getSummary().print(this.log);
                                 this.summaryService.update(response);
                                 let statisticUtils = new StatisticUtils(configGeneral);
-                                let elastic = ElasticsearchFactory.getElasticUtils(configGeneral.elasticsearch, null);
-                                let index = profile.useIndexPerCatalog() ? configHarvester.catalogId : elastic.indexName;
-                                statisticUtils.saveSummary(response, index);
+                                for (const catalogId of configHarvester.catalogIds) {
+                                    statisticUtils.saveSummary(response, catalogId);
+                                }
 
                                 // when less results send mail
                                 if (!isIncremental && configGeneral.mail.enabled && configGeneral.harvesting.mail.enabled) {

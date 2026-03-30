@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import type { ElasticsearchCatalogSettings } from '@shared/catalog.js';
 import { Service } from '@tsed/di';
 import { Summary } from '../../model/summary.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
@@ -59,11 +60,17 @@ export class HistoryService {
     async getHistory(id: number): Promise<any> {
         await this.ensureIndexExists();
         const harvester = ConfigService.getHarvesters().find(h => h.id === id);
-        let index = ProfileFactoryLoader.get().useIndexPerCatalog() ? harvester.catalogId : this.elasticUtils.indexName;
-        let history = await this.elasticUtils.getHistory(this.elasticQueries.findHistory(index));
+        const catalogs = harvester.catalogIds.map(catalogId => ConfigService.getCatalogSettings(catalogId));
+        const esCatalogs = catalogs.filter(settings => settings.type == 'elasticsearch') as ElasticsearchCatalogSettings[];
+        const histories = [];
+        for (const catalog of esCatalogs) {
+            let index = catalog.settings.index;
+            histories.push(await this.elasticUtils.getHistory(this.elasticQueries.findHistory(index)));
+        }
         return {
             harvester: harvester.description,
-            ...history
+            // TODO
+            ...histories
         }
     }
 
