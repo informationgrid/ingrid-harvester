@@ -33,6 +33,7 @@
         color="primary"
         aria-label="{{ t('common.add') }}"
         (click)="onEdit()"
+        data-test="add-catalog"
       >
         <mat-icon svgIcon="Add" />
         {{ t("common.add") }}
@@ -56,6 +57,7 @@
             (onEdit)="onEdit(catalog)"
             (onDuplicate)="onDuplicate(catalog)"
             (onDelete)="onDelete(catalog)"
+            [attr.data-test]="`catalog-${catalog.name}`"
           />
         }
       }
