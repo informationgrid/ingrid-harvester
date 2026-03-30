@@ -332,7 +332,8 @@ export class PostgresUtils extends DatabaseUtils {
     private mergeRecordEntities(entities: RecordEntity[]): RecordEntity[] {
         let entityMap: Map<string, RecordEntity> = new Map();
         entities.forEach(entity => {
-            let uid = entity.identifier + '/' + entity.collection_id;
+            // let uid = entity.identifier + '/' + entity.collection_id;
+            let uid = entity.identifier;
             if (!entityMap[uid]) {
                 entityMap[uid] = entity;
             }
