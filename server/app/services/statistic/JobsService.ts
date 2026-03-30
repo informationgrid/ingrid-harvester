@@ -24,32 +24,48 @@
 import { Service } from '@tsed/di';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import type { IndexSettings } from '../../persistence/elastic.setting.js';
+import { jobsMapping } from '../../statistic/jobs.mapping.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { ConfigService } from '../config/ConfigService.js';
 
 @Service()
-export class RunsService {
+export class JobsService {
 
     private elasticUtils: ElasticsearchUtils;
+    private indexSettings: IndexSettings;
 
     constructor() {
         const config = {
             ...ConfigService.getGeneralSettings().elasticsearch,
             includeTimestamp: false,
-            index: 'harvester_runs',
+            index: 'harvester_jobs',
         };
         // @ts-ignore
         this.elasticUtils = ElasticsearchFactory.getElasticUtils(config, { errors: [] });
+        this.indexSettings = ProfileFactoryLoader.get().getIndexSettings();
     }
 
-    async getRuns(harvesterId: number, limit = 10): Promise<{ harvester: string, runs: any[] }> {
+    async getJobs(harvesterId: number, limit = 10): Promise<{ harvester: string, jobs: any[] }> {
+        await this.ensureIndexExists();
         const harvester = ConfigService.getHarvesters().find(h => h.id === harvesterId);
+        const index = ProfileFactoryLoader.get().useIndexPerCatalog()
+            ? harvester.catalogId
+            : this.elasticUtils.indexName;
         const { history } = await this.elasticUtils.getHistory({
-            query: { term: { harvesterId } },
+            query: { term: { base_index: index } },
             sort: { timestamp: { order: 'desc' } },
         }, limit);
         return {
             harvester: harvester?.description ?? String(harvesterId),
-            runs: history,
+            jobs: history,
         };
+    }
+
+    async ensureIndexExists() {
+        const indexExists = await this.elasticUtils.isIndexPresent(this.elasticUtils.indexName);
+        if (!indexExists) {
+            await this.elasticUtils.prepareIndex(jobsMapping, this.indexSettings, true);
+        }
     }
 }

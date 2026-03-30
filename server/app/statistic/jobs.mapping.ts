@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-export const runsMapping = {
+export const jobsMapping = {
     properties: {
-        'runId': {
+        'jobId': {
             'type': 'keyword'
         },
         'harvesterId': {

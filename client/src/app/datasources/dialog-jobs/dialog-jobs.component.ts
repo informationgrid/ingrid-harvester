@@ -25,15 +25,15 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-dialog-runs',
-  templateUrl: './dialog-runs.component.html',
-  styleUrls: ['./dialog-runs.component.scss'],
+  selector: 'app-dialog-jobs',
+  templateUrl: './dialog-jobs.component.html',
+  styleUrls: ['./dialog-jobs.component.scss'],
   standalone: false,
 })
-export class DialogRunsComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { harvester: string; runs: any[] }) {}
+export class DialogJobsComponent {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { harvester: string; jobs: any[] }) {}
 
-  catalogStages(run: any): any[] {
-    return (run.stages ?? []).filter((p: any) => p.name?.startsWith('catalog/'));
+  catalogStages(job: any): any[] {
+    return (job.stages ?? []).filter((p: any) => p.name?.startsWith('catalog/'));
   }
 }

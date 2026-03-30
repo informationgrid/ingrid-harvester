@@ -43,7 +43,7 @@ export interface ImportLogMessage {
 
     nextExecution?: Date;
 
-    runId?: string;
+    jobId?: string;
 
     stage?: string;
 }

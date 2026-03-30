@@ -21,33 +21,33 @@
     ==================================================
 -->
 
-<h2 mat-dialog-title>{{ data.harvester }} — Run History</h2>
+<h2 mat-dialog-title>{{ data.harvester }} — Job History</h2>
 
 <mat-dialog-content>
-  @if (!data.runs?.length) {
-    <p>No runs recorded yet.</p>
+  @if (!data.jobs?.length) {
+    <p>No jobs recorded yet.</p>
   } @else {
     <mat-accordion>
-      @for (run of data.runs; track run.runId) {
+      @for (job of data.jobs; track job.jobId) {
         <mat-expansion-panel>
           <mat-expansion-panel-header>
-            <mat-panel-title class="run-timestamp">
-              {{ run.timestamp | date:'yyyy-MM-dd HH:mm' }}
+            <mat-panel-title class="job-timestamp">
+              {{ job.timestamp | date:'yyyy-MM-dd HH:mm' }}
             </mat-panel-title>
-            <mat-panel-description class="run-summary">
+            <mat-panel-description class="job-summary">
               <mat-chip-set>
-                <mat-chip [class]="'status-' + run.status">{{ run.status }}</mat-chip>
+                <mat-chip [class]="'status-' + job.status">{{ job.status }}</mat-chip>
               </mat-chip-set>
-              <span>{{ run.numDocs }} docs</span>
-              <span>{{ run.duration | number:'1.0-1' }}s</span>
-              @if (run.errors?.length) {
-                <span class="run-errors">{{ run.errors.length }} error(s)</span>
+              <span>{{ job.numDocs }} docs</span>
+              <span>{{ job.duration | number:'1.0-1' }}s</span>
+              @if (job.errors?.length) {
+                <span class="job-errors">{{ job.errors.length }} error(s)</span>
               }
             </mat-panel-description>
           </mat-expansion-panel-header>
 
           <!-- Per-catalog breakdown -->
-          @if (catalogStages(run).length) {
+          @if (catalogStages(job).length) {
             <table class="stage-table">
               <thead>
                 <tr>
@@ -58,7 +58,7 @@
                 </tr>
               </thead>
               <tbody>
-                @for (stage of catalogStages(run); track stage.name) {
+                @for (stage of catalogStages(job); track stage.name) {
                   <tr>
                     <td>{{ stage.name }}</td>
                     <td>{{ stage.numDocs }}</td>
@@ -70,10 +70,10 @@
             </table>
           }
 
-          <!-- Run-level errors -->
-          @if (run.errors?.length) {
+          <!-- Job-level errors -->
+          @if (job.errors?.length) {
             <div class="error-list">
-              @for (e of run.errors; track $index) {
+              @for (e of job.errors; track $index) {
                 <div class="error-entry"><span class="error-type">[{{ e.type }}]</span> {{ e.error }}</div>
               }
             </div>

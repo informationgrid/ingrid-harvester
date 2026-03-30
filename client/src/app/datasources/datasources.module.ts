@@ -45,7 +45,7 @@ import { CronjobFormFieldComponent } from "../shared/cronjob-form-field/cronjob-
 import { SharedModule } from "../shared/shared.module";
 import { DialogEditComponent } from "./dialog-edit/dialog-edit.component";
 import { DialogHistoryComponent } from "./dialog-history/dialog-history.component";
-import { DialogRunsComponent } from "./dialog-runs/dialog-runs.component";
+import { DialogJobsComponent } from "./dialog-jobs/dialog-jobs.component";
 import { DialogLogComponent } from "./dialog-log/dialog-log.component";
 import { DialogSchedulerComponent } from "./dialog-scheduler/dialog-scheduler.component";
 import { DatasourceOverviewComponent } from "./datasource-overview/datasource-overview.component";
@@ -77,7 +77,7 @@ const routes: Routes = [
     DialogLogComponent,
     DialogEditComponent,
     DialogHistoryComponent,
-    DialogRunsComponent,
+    DialogJobsComponent,
   ],
   imports: [
     CommonModule,

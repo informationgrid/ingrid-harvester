@@ -1,14 +1,14 @@
-.run-timestamp {
+.job-timestamp {
   min-width: 140px;
 }
 
-.run-summary {
+.job-summary {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
-.run-errors {
+.job-errors {
   color: var(--mat-sys-error, #b00020);
   font-weight: 500;
 }

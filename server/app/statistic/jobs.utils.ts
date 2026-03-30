@@ -29,13 +29,13 @@ import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import type { Summary } from '../model/summary.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
-import { runsMapping } from './runs.mapping.js';
+import { jobsMapping } from './jobs.mapping.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
-export type RunStatus = 'success' | 'error' | 'cancelled' | 'partial';
+export type JobStatus = 'success' | 'error' | 'cancelled' | 'partial';
 
-export class RunsUtils {
+export class JobsUtils {
 
     private elasticUtils: ElasticsearchUtils;
     private indexSettings: IndexSettings;
@@ -44,7 +44,7 @@ export class RunsUtils {
         const config = {
             ...generalSettings.elasticsearch,
             includeTimestamp: false,
-            index: 'harvester_runs'
+            index: 'harvester_jobs'
         };
         // @ts-ignore
         const summary: Summary = {};
@@ -52,7 +52,7 @@ export class RunsUtils {
         this.indexSettings = ProfileFactoryLoader.get().getIndexSettings();
     }
 
-    async saveRun(logMessage: ImportLogMessage, baseIndex: string, stageSummaries: Summary[] = []): Promise<void> {
+    async saveJob(logMessage: ImportLogMessage, baseIndex: string, stageSummaries: Summary[] = []): Promise<void> {
         const status = this.deriveStatus(logMessage);
         const globalSummary = logMessage.summary;
 
@@ -66,7 +66,7 @@ export class RunsUtils {
         }));
 
         this.elasticUtils.addDocToBulk({
-            runId: logMessage.runId,
+            jobId: logMessage.jobId,
             harvesterId: logMessage.id,
             base_index: baseIndex,
             timestamp: new Date(),
@@ -76,18 +76,18 @@ export class RunsUtils {
             numErrors: globalSummary?.numErrors ?? 0,
             errors: globalSummary?.errors ?? [],
             stages,
-        }, logMessage.runId, 1);
+        }, logMessage.jobId, 1);
 
         try {
-            await this.elasticUtils.prepareIndex(runsMapping, this.indexSettings, true);
+            await this.elasticUtils.prepareIndex(jobsMapping, this.indexSettings, true);
             await this.elasticUtils.finishIndex();
         }
         catch (err) {
-            log.error('Error occurred saving run to harvester_runs index', err);
+            log.error('Error occurred saving job to harvester_jobs index', err);
         }
     }
 
-    private deriveStatus(logMessage: ImportLogMessage): RunStatus {
+    private deriveStatus(logMessage: ImportLogMessage): JobStatus {
         if (logMessage.message === 'Import cancelled') return 'cancelled';
         if (!logMessage.summary) return 'success';
         if (logMessage.summary.errors.length > 0) return 'error';

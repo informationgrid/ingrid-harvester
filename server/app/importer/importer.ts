@@ -53,7 +53,7 @@ export abstract class Importer<S extends ImporterSettings> {
 
     private readonly settings: S;
     private readonly summary: Summary;
-    readonly runId: string;
+    readonly jobId: string;
     private stageSummaries: Summary[] = [];
     private currentStage: string;
     protected filterUtils: FilterUtils;
@@ -67,7 +67,7 @@ export abstract class Importer<S extends ImporterSettings> {
         this.filterUtils = new FilterUtils(settings);
         this.generalConfig = ConfigService.getGeneralSettings();
         this.summary = new Summary(settings);
-        this.runId = crypto.randomUUID();
+        this.jobId = crypto.randomUUID();
         this.database = DatabaseFactory.getDatabaseUtils(this.generalConfig.database, this.summary);
         this.elastic = ElasticsearchFactory.getElasticUtils(this.generalConfig.elasticsearch, this.summary);
 

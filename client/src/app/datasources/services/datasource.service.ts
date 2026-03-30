@@ -200,8 +200,8 @@ export class DatasourceService {
     return this.api.getHistory(id);
   }
 
-  getRuns(id: number): Observable<any> {
-    return this.api.getRuns(id);
+  getJobs(id: number): Observable<any> {
+    return this.api.getJobs(id);
   }
 
   private updateImportLogs(log: ImportLogMessage) {
