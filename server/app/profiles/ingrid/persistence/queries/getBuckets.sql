@@ -23,7 +23,7 @@
     LEFT JOIN public.record AS secondary
     ON (
             anchor.identifier = secondary.identifier
-            AND anchor.collection_id = secondary.collection_id
+--            AND anchor.collection_id = secondary.collection_id
         )
         AND (
             anchor.source != secondary.source

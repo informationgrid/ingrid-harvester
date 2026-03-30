@@ -185,7 +185,6 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                 let entity: RecordEntity = {
                     identifier: uuid,
                     source: this.getSettings().sourceURL,
-                    collection_id: (await this.database.getLegacyCatalog(this.getSettings().catalogId)).id,
                     catalog_ids: this.getSettings().catalogIds,
                     dataset: doc,
                     dataset_dcatapde: dcatapdeDoc,

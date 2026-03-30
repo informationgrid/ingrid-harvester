@@ -22,7 +22,6 @@
  */
 
 import { RouterModule } from '@angular/router';
-import { ConfigLegacyCatalogsComponent } from './config-legacy-catalogs/config-legacy-catalogs.component';
 import { ConfigGeneralComponent } from './config-general/config-general.component';
 import { ConfigImportExportComponent } from './config-import-export/config-import-export.component';
 import { ConfigMappingComponent } from './config-mapping/config-mapping.component';
@@ -41,15 +40,6 @@ export const routing = RouterModule.forChild([
         data: {
           title: "Konfiguration",
           tabIdentifier: "general",
-          roles: ['admin']
-        },
-      },
-      {
-        path: "catalogs",
-        canActivate: [authGuard],
-        component: ConfigLegacyCatalogsComponent,
-        data: {
-          title: "Katalogverwaltung",
           roles: ['admin']
         },
       },

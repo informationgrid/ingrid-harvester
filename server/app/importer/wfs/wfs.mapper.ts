@@ -92,7 +92,8 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
     }
 
     async getPublisher(): Promise<Person[] | Organization[]> {
-        return [this.fetched.catalog.publisher];
+        // return [this.fetched.catalog.publisher];
+        return null;
     }
 
     async getMaintainers(): Promise<Person[] | Organization[]> {
@@ -218,7 +219,9 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
     }
 
     getCatalog(): Catalog {
-        return this.fetched.catalog;
+        // TODO
+        // return this.baseMapper.fetched.catalog;
+        return null;
     }
 
     getHarvestedData(): string {

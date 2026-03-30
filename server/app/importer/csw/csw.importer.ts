@@ -26,7 +26,6 @@ import log4js from 'log4js';
 import pLimit from 'p-limit';
 import type { Observer } from 'rxjs';
 import { namespaces } from '../../importer/namespaces.js';
-import type { Catalog } from '../../model/dcatApPlu.model.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { CouplingEntity, RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
@@ -191,11 +190,6 @@ export class CswImporter extends Importer<CswSettings> {
 
     protected async harvest(): Promise<number> {
         log.info(`Started requesting records`);
-        let catalog: Catalog = await this.database.getLegacyCatalog(this.getSettings().catalogId);
-        if (catalog == null) {
-            throw new Error(`Catalog with identifier '${this.getSettings().catalogId}' not found.`)
-        }
-        this.generalInfo['catalog'] = catalog;
 
         if (this.getSettings().harvestingMode == 'separate') {
             let datasetFilter = '<ogc:PropertyIsEqualTo><ogc:PropertyName>Type</ogc:PropertyName><ogc:Literal>dataset</ogc:Literal></ogc:PropertyIsEqualTo>';
@@ -423,7 +417,7 @@ export class CswImporter extends Importer<CswSettings> {
             let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
             log.debug(`Received ${numReturned} records from ${this.getSettings().sourceURL}`);
             let importedDocuments = await this.extractRecords(response, processingStart);
-            await this.updateRecords(importedDocuments, this.generalInfo['catalog'].id);
+            await this.updateRecords(importedDocuments);
             let processingTime = Math.floor((Date.now() - processingStart) / 1000);
             log.info(`Finished processing batch from ${delegate.getStartRecordIndex().toString().padStart(6, ' ')}, ${processingTime.toString().padStart(3, ' ')}s`);
         }
@@ -478,8 +472,7 @@ export class CswImporter extends Importer<CswSettings> {
                 let entity: RecordEntity = {
                     identifier: uuid,
                     source: this.getSettings().sourceURL,
-                    // TODO remove collection_id
-                    collection_id: (await this.database.getLegacyCatalog(this.getSettings().catalogId)).id,
+                    catalog_ids: this.getSettings().catalogIds,
                     dataset: doc,
                     dataset_csw: mapper.getHarvestedData(),
                     original_document: mapper.getHarvestedData()
@@ -507,7 +500,7 @@ export class CswImporter extends Importer<CswSettings> {
      * Is called after a batch of records has been added to the bulk persisting queue.
      * They may not necessarily have been persisted yet.
      */
-    protected async updateRecords(documents: any[], collectionId: number) {
+    protected async updateRecords(documents: any[]) {
         // For Profile specific Handling
     }
 

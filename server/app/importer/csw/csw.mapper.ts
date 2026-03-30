@@ -75,7 +75,6 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
 
     private keywordsAlreadyFetched = false;
     fetched = {
-        catalog: null,
         contactPoint: null,
         keywords: {},
         themes: null

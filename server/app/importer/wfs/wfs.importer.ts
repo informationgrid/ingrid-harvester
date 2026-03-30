@@ -105,10 +105,6 @@ export class WfsImporter extends Importer<WfsSettings> {
 
         this.generalInfo = await this.prepareImport(this.generalInfo, capabilitiesResponseDom, select);
 
-        // retrieve catalog info from database
-        let catalog: Catalog = await this.database.getLegacyCatalog(this.getSettings().catalogId);
-        this.generalInfo['catalog'] = catalog;
-
         // get all FeatureTypes and filter by given
         let featureTypesNodes = select('/*[local-name()="WFS_Capabilities"]/*[local-name()="FeatureTypeList"]/*[local-name()="FeatureType"]', capabilitiesResponseDom);
         log.info(`Found ${featureTypesNodes.length} FeatureTypes at ${this.getSettings().sourceURL}`);
@@ -223,7 +219,7 @@ export class WfsImporter extends Importer<WfsSettings> {
             let entity: RecordEntity = {
                 identifier: doc.uuid,
                 source: this.getSettings().sourceURL,
-                collection_id: (await this.database.getLegacyCatalog(this.getSettings().catalogId)).id,
+                catalog_ids: this.getSettings().catalogIds,
                 dataset: doc,
                 original_document: mapper.getHarvestedData()
             };
@@ -305,7 +301,7 @@ export class WfsImporter extends Importer<WfsSettings> {
                 let entity: RecordEntity = {
                     identifier: doc.uuid,
                     source: this.getSettings().sourceURL,
-                    collection_id: (await this.database.getLegacyCatalog(this.getSettings().catalogId)).id,
+                    catalog_ids: this.getSettings().catalogIds,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };

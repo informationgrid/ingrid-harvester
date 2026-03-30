@@ -22,8 +22,8 @@
  */
 
 import type { CatalogSettings, ElasticsearchCatalogSettings, PiveauCatalogSettings } from '@shared/catalog.js';
-import type { GeneralSettings } from '@shared/general-config.settings.js';
 import type { Datasource } from '@shared/datasource.js';
+import type { GeneralSettings } from '@shared/general-config.settings.js';
 import type { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
 import * as fs from 'fs';
 import log4js from 'log4js';
@@ -34,10 +34,6 @@ import { defaultDCATAPDESettings } from '../../importer/dcatapde/dcatapde.settin
 import { defaultGenesisSettings } from "../../importer/genesis/genesis.settings.js";
 import { defaultKldSettings } from '../../importer/kld/kld.settings.js';
 import { defaultOAISettings } from '../../importer/oai/oai.settings.js';
-import type { Catalog } from '../../model/dcatApPlu.model.js';
-import { DatabaseFactory } from '../../persistence/database.factory.js';
-import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 
@@ -423,88 +419,6 @@ export class ConfigService {
         }
         // persist changes
         ConfigService.setCatalogSettings(existingSettings.filter(catalog => catalog.id != id));
-    }
-
-    private static getDbUtils() {
-        let generalConfig = ConfigService.getGeneralSettings();
-        return DatabaseFactory.getDatabaseUtils(generalConfig.database, null);
-    }
-
-    private static getEsUtils() {
-        let generalConfig = ConfigService.getGeneralSettings();
-        return ElasticsearchFactory.getElasticUtils(generalConfig.elasticsearch, null);
-    }
-
-    // TODO legacy - remove
-    static async getLegacyCatalogSizes(): Promise<any[]> {
-        return await ConfigService.getDbUtils().getLegacyCatalogSizes(false);
-    }
-
-    // TODO legacy - remove
-    static async getLegacyCatalogs(): Promise<Catalog[]> {
-        let catalogs = await ConfigService.getDbUtils().listLegacyCatalogs();
-        let esUtils = ConfigService.getEsUtils();
-        let alias = ConfigService.getGeneralSettings().elasticsearch.alias;
-        for (let catalog of catalogs) {
-            let aliases = await esUtils.listAliases(catalog.identifier);
-            catalog['isEnabled'] = aliases.includes(alias);
-        }
-        return catalogs;
-    }
-
-    // TODO legacy - remove
-    static async addOrEditLegacyCatalog(catalog: Catalog) {
-        if (catalog.id) {
-            return await ConfigService.getDbUtils().updateLegacyCatalog(catalog);
-        }
-        else {
-            let catalogPromise = await ConfigService.getDbUtils().createLegacyCatalog(catalog);
-
-            // for ingrid, create a new index when a new catalog is created
-            let profile = ProfileFactoryLoader.get();
-            if (profile.useIndexPerCatalog()) {
-                await this.getEsUtils().prepareIndexWithName(
-                    catalog.identifier, profile.getIndexMappings(), profile.getIndexSettings(), true);
-            }
-            return profile.createCatalogIfNotExist(catalog);
-        }
-    }
-
-    // TODO legacy - remove
-    static async enableLegacyCatalog(catalogIdentifier: string, enable: boolean) {
-        let alias = ConfigService.getGeneralSettings().elasticsearch.alias;
-        if (enable) {
-            await this.getEsUtils().addAlias(catalogIdentifier, alias);
-        }
-        else {
-            await this.getEsUtils().removeAlias(catalogIdentifier, alias);
-        }
-    }
-
-    // TODO legacy - remove
-    static async removeLegacyCatalog(catalogIdentifier: string, datasetTarget: string) {
-        let database = this.getDbUtils();
-        let { id: catalogId } = await database.getLegacyCatalog(catalogIdentifier);
-        // if no target is specified, delete datasets
-        if (!datasetTarget) {
-            await database.deleteDatasets(catalogId);
-        }
-        // otherwise, move them to target
-        else {
-            let targetCatalog = await database.getLegacyCatalog(datasetTarget);
-            if (!targetCatalog) {
-                throw new Error(`Target catalog ${datasetTarget} could not be found.`);
-            }
-            await database.moveDatasets(catalogId, targetCatalog.id) ;
-        }
-        // TODO then deduplicate all affected sources
-        // then delete catalog from DB
-        await database.deleteLegacyCatalog(catalogId);
-        // at last, delete index from ES if applicable
-        if (ProfileFactoryLoader.get().useIndexPerCatalog()) {
-            let elastic = this.getEsUtils();
-            await elastic.deleteIndex(catalogIdentifier);
-        }
     }
 
     static getMappingDistribution(): MappingDistribution[] {
