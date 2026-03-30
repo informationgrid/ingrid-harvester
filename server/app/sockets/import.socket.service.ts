@@ -83,6 +83,7 @@ export class ImportSocketService {
                     importer.run.subscribe({
                         next: response => {
                             response.id = id;
+                            response.jobId = importer.jobId;
                             response.lastExecution = lastExecution;
                             if (configHarvester.cron?.[mode]?.active) {
                                 response.nextExecution = new CronJob(configHarvester.cron[mode].pattern, () => {
