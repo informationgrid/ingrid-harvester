@@ -55,7 +55,6 @@ export abstract class Importer<S extends ImporterSettings> {
     private readonly summary: Summary;
     readonly jobId: string;
     private stageSummaries: Summary[] = [];
-    private currentStage: string;
     protected filterUtils: FilterUtils;
     protected generalConfig: GeneralSettings;
     protected observer: Observer<ImportLogMessage>;
@@ -165,7 +164,6 @@ export abstract class Importer<S extends ImporterSettings> {
         s.stage = name;
         s.startTime = new Date();
         this.stageSummaries.push(s);
-        this.currentStage = name;
         return s;
     }
 
