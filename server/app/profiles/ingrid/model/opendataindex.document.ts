@@ -41,10 +41,13 @@ export type IngridOpendataIndexDocument = IndexDocument & IngridMetadata & {
     },
     contacts: any[],
     keywords: any[],
-    legalBasis: string
+    legal_basis: string
     distributions: any[],
     political_geocoding_level_uri: string,
     spatial: any,
-    temporal: any,
+    temporal: {
+        "accrual_periodicity": string,
+        "accrual_periodicity_key": string,
+    },
     sort_hash: string
 }

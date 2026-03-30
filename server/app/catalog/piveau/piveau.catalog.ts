@@ -74,7 +74,7 @@ export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings,
 
     async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // TODO semantics are wrong, fix it
-        await this.deleteStaleRecords(importerSettings.catalogId);
+        await this.deleteStaleRecords(importerSettings.id);
     }
 
     async processBucket(bucket: Bucket<PiveauDataset>): Promise<PiveauCatalogOperation[]> {
@@ -121,8 +121,8 @@ export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings,
         return 'dataset_dcatapde';
     }
 
-    async deleteStaleRecords(sourceId: string): Promise<void> {
-        log.info(`Deleting stale records for source '${sourceId}' from Piveau catalog '${this.settings.id}'`);
+    async deleteStaleRecords(datasourceId: number): Promise<void> {
+        log.info(`Deleting stale records for source '${datasourceId}' from Piveau catalog '${this.settings.id}'`);
 
         const expectingIdentifier = await this.database.getIdentifiersByCatalog(this.settings.id);
         const existingIdentifier = await this.getIdentifierByPiveauCatalog();
@@ -134,10 +134,10 @@ export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings,
         }
     }
 
-    async deleteAllRecordsForCatalog(sourceId: string): Promise<void> {
-        log.info(`Deleting all records for source '${sourceId}' from Piveau catalog '${this.settings.id}'`);
+    async deleteAllRecordsForCatalog(datasourceId: number): Promise<void> {
+        log.info(`Deleting all records for source '${datasourceId}' from Piveau catalog '${this.settings.id}'`);
         // TODO: Issue a Piveau Delete with filter subject = source:${sourceId}
-        log.warn(`deleteAllRecordsForCatalog not yet implemented for source '${sourceId}'`);
+        log.warn(`deleteAllRecordsForCatalog not yet implemented for source '${datasourceId}'`);
     }
 
     /**

@@ -450,6 +450,7 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
             datatype: settings.datatype?.split(",")?.map(p => p.trim()) ?? ["default"],
             dataSourceName: settings.dataSourceName,
             boost: settings.boost,
+            isfolder: "false" // this *should* be boolean, but IGE does not map the field, so default is text
         };
     }
 }

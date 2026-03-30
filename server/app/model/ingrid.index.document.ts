@@ -61,9 +61,10 @@ export type Keyword = {
 }
 
 export type Metadata = {
-    issued: Date,
-    modified: Date,
-    source: {
+    issued?: Date,
+    created?: Date,
+    modified?: Date,
+    source?: {
 
     }
 };

@@ -57,13 +57,24 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
                     merged_from: [],
                 },
             },
+            // ED test: add metadata directly for portal-ng
+            // if it works, move from extras.metadata to metadata
+            metadata: {
+                issued: null,
+                modified: new Date(Date.now()),
+                created: new Date(Date.now())
+            },
             spatial: null,
-            temporal: [this.baseMapper.getTemporal()].filter(Boolean),
+            // temporal: [this.baseMapper.getTemporal()].filter(Boolean),
+            temporal: {
+                "accrual_periodicity": "",
+                "accrual_periodicity_key": ""
+            },
             contacts: [],
             keywords: this.baseMapper.getKeywords().map(term => ({ term, type: 'free' })),
             distributions: this.baseMapper.getDistributions(),
             dcat: { landingPage: null },
-            legalBasis: null,
+            legal_basis: null,
             political_geocoding_level_uri: null,
             rdf: null,
             sort_hash: this.getSortHash(),
