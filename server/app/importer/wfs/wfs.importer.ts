@@ -185,7 +185,7 @@ export class WfsImporter extends Importer<WfsSettings> {
                 await this.extractFeatures(responseDom, harvestTime);
             }
             catch (e) {
-                const message = `Error while fetching WFS Features for FeatureType ${featureTypeName}. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom?.toString())}.`;
+                const message = `Error while fetching WFS Features for FeatureType ${featureTypeName}:\n${e}\nWill continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom?.toString())}.`;
                 log.error(message);
                 this.getSummary().appErrors.push(message);
             }
