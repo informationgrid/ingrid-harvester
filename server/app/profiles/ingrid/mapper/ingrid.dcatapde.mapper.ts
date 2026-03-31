@@ -41,7 +41,6 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implement
 
     async createIndexDocument(): Promise<IngridOpendataIndexDocument> {
         let result: IngridOpendataIndexDocument = {
-            // ...await super.createEsDocument(),
             ...this.getIngridMetadata(this.baseMapper.getSettings()),
             id: this.getGeneratedId(),
             uuid: this.getGeneratedId(),
