@@ -93,7 +93,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
         super.init();
     }
 
-    async createEsDocument(): Promise<IndexDocument> {
+    async createIndexDocument(): Promise<IndexDocument> {
         return {
             uuid: this.getGeneratedId(),
             extras: {
@@ -143,6 +143,8 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
         let dists = [];
 
         const distributions = DcatapdeMapper.select('./dcat:distribution/dcat:Distribution', this.record);
+
+        console.log("Distributions: " + distributions.length)
 
             for (const distribution of distributions) {
 
@@ -680,7 +682,6 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
             throwError('An error occurred in custom code: ' + error.message);
         }
     }
-
 }
 
 // Private interface. Do not export

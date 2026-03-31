@@ -24,5 +24,5 @@
 import type { IndexDocument } from '../model/index.document.js';
 
 export interface ToElasticMapper<TargetFormat extends IndexDocument> {
-    createEsDocument(): Promise<TargetFormat>;
+    createIndexDocument(): Promise<TargetFormat>;
 }

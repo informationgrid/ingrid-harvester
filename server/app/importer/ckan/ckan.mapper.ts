@@ -85,7 +85,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         super.init();
     }
 
-    async createEsDocument(): Promise<IndexDocument> {
+    async createIndexDocument(): Promise<IndexDocument> {
         return {
             uuid: this.getGeneratedId(),
             extras: {

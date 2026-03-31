@@ -31,9 +31,9 @@ const log = log4js.getLogger(import.meta.filename);
 
 export class ingridCkanMapper extends ingridMapper<CkanMapper> {
 
-    async createEsDocument(): Promise<IngridOpendataIndexDocument> {
+    async createIndexDocument(): Promise<IngridOpendataIndexDocument> {
         let result: IngridOpendataIndexDocument = {
-            ...await super.createEsDocument(),
+            ...await super.createIndexDocument(),
             ...this.getIngridMetadata(this.baseMapper.getSettings()),
             id: this.getGeneratedId(),
             uuid: this.getGeneratedId(),
