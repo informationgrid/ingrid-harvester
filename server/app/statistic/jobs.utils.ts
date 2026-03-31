@@ -65,21 +65,19 @@ export class JobsUtils {
             errors: s.errors ?? [],
         }));
 
-        this.elasticUtils.addDocToBulk({
-            jobId: logMessage.jobId,
-            harvesterId: logMessage.id,
-            base_index: baseIndex,
-            timestamp: new Date(),
-            status,
-            duration: logMessage.duration,
-            numDocs: globalSummary?.numDocs ?? 0,
-            numErrors: globalSummary?.numErrors ?? 0,
-            errors: globalSummary?.errors ?? [],
-            stages,
-        }, logMessage.jobId, 1);
-
         try {
             await this.elasticUtils.prepareIndex(jobsMapping, this.indexSettings, true);
+            await this.elasticUtils.addDocToBulk({
+                jobId: logMessage.jobId,
+                harvesterId: logMessage.id,
+                timestamp: new Date(),
+                status,
+                duration: logMessage.duration,
+                numDocs: globalSummary?.numDocs ?? 0,
+                numErrors: globalSummary?.numErrors ?? 0,
+                errors: globalSummary?.errors ?? [],
+                stages,
+            }, logMessage.jobId, 1);
             await this.elasticUtils.finishIndex();
         }
         catch (err) {
