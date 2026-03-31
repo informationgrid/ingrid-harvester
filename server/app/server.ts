@@ -21,24 +21,24 @@
  * ==================================================
  */
 
-import { $log, Configuration, PlatformAcceptMimesMiddleware, PlatformApplication, PlatformLogMiddleware } from '@tsed/common';
+import { $log, Configuration, PlatformApplication, PlatformConfiguration } from '@tsed/common';
 import { Inject } from '@tsed/di';
+import { PlatformAcceptMimesMiddleware } from '@tsed/platform-accept-mimes';
+import bodyParser from 'body-parser';
+import compress from 'compression';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
 import log4js from 'log4js';
+import methodOverride from 'method-override';
 import * as path from 'path';
+import serverConfig from '../server-config.json' with { type: 'json' };
+import { LogMiddleware } from './middlewares/LogMiddleware.js';
 import { ProfileFactoryLoader } from './profiles/profile.factory.loader.js';
 import { ConfigService } from './services/config/ConfigService.js';
+import { KeycloakService } from './services/keycloak/KeycloakService.js';
 import { jsonLayout } from './utils/log4js.json.layout.js';
-import {KeycloakService} from "./services/keycloak/KeycloakService.js";
-import cookieParser from "cookie-parser";
-import bodyParser from "body-parser";
-import createMemoryStore from 'memorystore';
-import serverConfig from "../server-config.json" with { type: "json" };
-import methodOverride from "method-override";
-import compress from "compression";
-import session from "express-session";
 
 const rootDir = import.meta.dirname;
-const MemoryStore = createMemoryStore(session);
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -87,18 +87,18 @@ const baseURL = process.env.BASE_URL ?? '/';
         disableRoutesSummary: isProduction,
         // level: "warn"
     },
-    middlewares: [{ use: PlatformLogMiddleware, options: { logRequest: false } }]
+    middlewares: [
+        LogMiddleware,
+    ],
 })
 export class Server {
 
-    @Inject()
-    app: PlatformApplication;
-
-    @Inject()
-    protected keycloakService: KeycloakService;
-
     @Configuration()
-    settings: Configuration;
+    settings: PlatformConfiguration;
+
+    constructor(@Inject(PlatformApplication) public app: PlatformApplication,
+                @Inject(KeycloakService) protected keycloakService: KeycloakService) {
+    }
 
     public $beforeInit(): void | Promise<any> {
         // on startup make sure ENV variables - if set - replace existing configuration vars

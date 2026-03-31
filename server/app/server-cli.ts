@@ -22,15 +22,15 @@
  */
 
 import log4js from 'log4js';
+import process from 'node:process';
 import type { Observable } from 'rxjs';
-import { concat } from 'rxjs';
+import { concat, lastValueFrom } from 'rxjs';
+import type { ImportLogMessage } from './model/import.result.js';
+import type { Summary } from './model/summary.js';
+import { ProfileFactoryLoader } from './profiles/profile.factory.loader.js';
+import { ConfigService } from './services/config/ConfigService.js';
 import { jsonLayout } from './utils/log4js.json.layout.js';
 import { merge } from './utils/misc.utils.js';
-import { ConfigService } from './services/config/ConfigService.js';
-import type { ImportLogMessage } from './model/import.result.js';
-import { ProfileFactoryLoader} from './profiles/profile.factory.loader.js';
-import type { Summary } from './model/summary.js';
-import process from 'node:process'; 
 
 let config = ConfigService.getHarvesters(),
     configGeneral = ConfigService.getGeneralSettings(),
@@ -43,15 +43,6 @@ log4js.configure(`./log4js${isDev ? '-dev' : ''}.json`);
 
 const start = new Date();
 let runAsync = false;
-
-function getDateString() {
-    let dt = new Date(Date.now());
-    let year = dt.getFullYear();
-    let month = ('0' + dt.getMonth()).slice(-2);
-    let day = ('0' + dt.getDate()).slice(-2);
-
-    return `${year}${month}${day}`;
-}
 
 function showSummaries(summaries: Summary[]) {
     const duration = (+new Date() - +start) / 1000;
@@ -87,7 +78,7 @@ async function startProcess() {
         log.info("Starting import ...");
         try {
             if (runAsync) {
-                processes.push(importer.run.toPromise());
+                processes.push(lastValueFrom(importer.run));
             } else {
                 importers.push(importer.run);
                 //summaries.push(await importer.run.subscribe());

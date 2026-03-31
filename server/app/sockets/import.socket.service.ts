@@ -83,7 +83,7 @@ export class ImportSocketService {
                             response.lastExecution = lastExecution;
                             if (configHarvester.cron?.[mode]?.active) {
                                 response.nextExecution = new CronJob(configHarvester.cron[mode].pattern, () => {
-                                }).nextDate().toDate();
+                                }).nextDate().toJSDate();
                             }
                             response.duration = (new Date().getTime() - lastExecution.getTime()) / 1000;
                             this.nsp.emit('/log', response);
