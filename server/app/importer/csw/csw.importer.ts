@@ -93,9 +93,10 @@ export class CswImporter extends Importer<CswSettings> {
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
+        // TODO remove Importer.getSummary() - instead, always use a named summary
+        // const downloadSummary = this.startStage('harvest');
         if (this.getSettings().dryRun) {
             log.debug('Dry run option enabled. Skipping index creation.');
-            this.startStage('harvest');
             await this.harvest();
             log.debug('Skipping finalisation of index for dry run.');
             observer.next(ImportResult.complete(this.getSummary(), 'Dry run ... no indexing of data'));
@@ -117,7 +118,6 @@ export class CswImporter extends Importer<CswSettings> {
                     }
                 }
                 // get datasets
-                this.startStage('harvest');
                 let numIndexDocs = await this.harvest();
                 if (!this.getSettings().isIncremental) {
                     // did the harvesting return results at all?

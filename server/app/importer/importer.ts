@@ -81,6 +81,8 @@ export abstract class Importer<S extends ImporterSettings> {
     });
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
+        // TODO remove Importer.getSummary() - instead, always use a named summary
+        // const downloadSummary = this.startStage('harvest');
         if (this.settings.dryRun) {
             log.debug('Dry run option enabled. Skipping index creation.');
             await this.harvest();
@@ -91,7 +93,6 @@ export abstract class Importer<S extends ImporterSettings> {
             try {
                 let transactionTimestamp = await this.database.beginTransaction();
                 // get datasets
-                this.startStage('harvest');
                 let numIndexDocs = await this.harvest();
                 if (!this.settings.isIncremental) {
                     // did the harvesting return results at all?
