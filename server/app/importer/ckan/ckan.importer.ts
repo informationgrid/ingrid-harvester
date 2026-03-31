@@ -22,13 +22,12 @@
  */
 
 import log4js from 'log4js';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { Observer } from 'rxjs';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
-import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { Importer } from '../importer.js';
@@ -172,7 +171,7 @@ export class CkanImporter extends Importer<CkanSettings> {
                     await this.importDataset({
                         source: filteredResults[i],
                         harvestTime: now
-                    }).then(() => this.observer.next(ImportResult.running(++this.getSummary().numDocs, this.totalCount, this.getDownloadMessage())))
+                    }).then(() => this.observer.next(this.getSummary().msgRunning(++this.getSummary().numDocs, this.totalCount, this.getDownloadMessage())))
                 );
             }
 
@@ -206,7 +205,7 @@ export class CkanImporter extends Importer<CkanSettings> {
     }
 
     private sendFinishMessage(observer: Observer<ImportLogMessage>, message?: string) {
-        observer.next(ImportResult.complete(this.getSummary(), message));
+        observer.next(this.getSummary().msgComplete(message));
         observer.complete();
     }
 

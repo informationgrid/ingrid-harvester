@@ -26,7 +26,7 @@ import log4js from 'log4js';
 import type { Observer } from "rxjs";
 import type { ImporterSettings } from "../../importer.settings.js";
 import type { ImportLogMessage } from "../../model/import.result.js";
-import { type Summary } from "../../model/summary.js";
+import type { Summary } from "../../model/summary.js";
 import type { Bucket } from '../../persistence/postgres.utils.js';
 import { RequestDelegate } from "../../utils/http-request.utils.js";
 import { Catalog, type CatalogOperation } from '../catalog.factory.js';

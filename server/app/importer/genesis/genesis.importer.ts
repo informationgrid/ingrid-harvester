@@ -24,16 +24,15 @@
 import log4js from 'log4js';
 import pLimit from 'p-limit';
 import type { RecordEntity } from '../../model/entity.js';
-import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { Importer } from '../importer.js';
+import { GenesisMapper } from "./genesis.mapper.js";
 import type { GenesisSettings } from './genesis.settings.js';
 import { defaultGenesisSettings } from './genesis.settings.js';
-import { GenesisMapper } from "./genesis.mapper.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -91,7 +90,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
 
         // Stage 1: collect all tables across all selections to establish total count
         const allTables: GenesisListEntry[] = [];
-        this.observer.next(ImportResult.message(`Fetching tables`));
+        this.observer.next(this.getSummary().msgImport(`Fetching tables`));
         const selectionLimit = pLimit(this.getSettings().maxConcurrent);
         await Promise.allSettled(
             tableSelections.map(selection => selectionLimit(async () => {
@@ -100,7 +99,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
                     const tables = await this.fetchAllPages('/catalogue/tables', { selection, area: 'all', searchcriterion: 'Code', sortcriterion: 'Code', language: 'de' });
                     log.info(`Selection "${selection}": ${tables.length} tables`);
                     allTables.push(...tables);
-                    this.observer.next(ImportResult.message(`Selection "${selection}": ${tables.length} tables found`));
+                    this.observer.next(this.getSummary().msgImport(`Selection "${selection}": ${tables.length} tables found`));
                 } catch (e) {
                     log.warn(`Failed to fetch tables for selection "${selection}": ${e.message}`);
                     this.getSummary().errors.push({ type: 'app', error: `Failed to fetch tables for "${selection}": ${e.message}` });
@@ -221,7 +220,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
             this.getSummary().skippedDocs.push(entry.Code);
         }
 
-        this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+        this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
     }
 
     /**

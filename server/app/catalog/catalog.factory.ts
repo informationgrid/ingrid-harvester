@@ -96,7 +96,7 @@ export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSett
      */
     async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         log.info(`Importing data for transaction: ${transactionHandle}`);
-        const bucketGenerator = this.database.streamBuckets<C>(transactionHandle, this.getDatasetColumn(), observer);
+        const bucketGenerator = this.database.streamBuckets<C>(transactionHandle, this.getDatasetColumn(), observer, this.summary);
         for await (const bucket of bucketGenerator) {
             const ops = await this.processBucket(bucket);
             await this.importIntoCatalog(ops);

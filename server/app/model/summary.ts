@@ -22,6 +22,7 @@
  */
 
 import type { ImporterSettings } from '../importer.settings.js';
+import type { ImportLogMessage } from './import.result.js';
 
 export type TypedError = {
     type: string,
@@ -46,7 +47,7 @@ export class Summary {
 
     isIncremental: boolean;
 
-    stage?: string;
+    readonly stage: string;
 
     startTime?: Date;
 
@@ -58,7 +59,8 @@ export class Summary {
 
     private readonly headerTitle: string;
 
-    constructor(settings: Partial<ImporterSettings>) {
+    constructor(stage: string, settings: Partial<ImporterSettings>) {
+        this.stage = stage;
         this.headerTitle = `${settings.description} (${settings.type})`;
         if (settings.showCompleteSummaryInfo) {
             this.MAX_ITEMS_TO_SHOW = 1000000;
@@ -132,5 +134,34 @@ export class Summary {
     }
 
     additionalSummary() {
+    }
+
+    msgImport(message: string): ImportLogMessage {
+        return {
+            stage: this.stage,
+            complete: false,
+            message: message
+        }
+    }
+
+    msgRunning(current: number, total: number, message: string): ImportLogMessage {
+        return {
+            stage: this.stage,
+            complete: false,
+            progress: {
+                current: current,
+                total: total
+            },
+            message: message
+        };
+    }
+
+    msgComplete(message?: string): ImportLogMessage {
+        return {
+            stage: this.stage,
+            complete: true,
+            summary: this,
+            message: message ? message : undefined
+        };
     }
 }

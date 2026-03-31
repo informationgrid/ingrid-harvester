@@ -27,7 +27,6 @@ import type { Observer } from 'rxjs';
 import { namespaces } from '../../importer/namespaces.js';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
-import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
@@ -203,7 +202,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
             } else {
                 this.getSummary().skippedDocs.push(uuid);
             }
-            this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+            this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.all(promises)
             .catch(err => log.error('Error indexing DCAT record', err));

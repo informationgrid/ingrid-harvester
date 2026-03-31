@@ -30,7 +30,6 @@ import { join } from 'path';
 import type { Observer } from 'rxjs';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
-import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import type { BulkResponse } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
@@ -320,7 +319,7 @@ export class KldImporter extends Importer<KldSettings> {
             else {
                 this.getSummary().skippedDocs.push(id);
             }
-            this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+            this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.allSettled(promises).catch(e => log.error('Error persisting record', e));
     }

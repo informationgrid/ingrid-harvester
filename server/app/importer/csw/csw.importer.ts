@@ -30,7 +30,6 @@ import type { Catalog } from '../../model/dcatApPlu.model.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { CouplingEntity, RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
-import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import type { BulkResponse } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
@@ -99,7 +98,7 @@ export class CswImporter extends Importer<CswSettings> {
             log.debug('Dry run option enabled. Skipping index creation.');
             await this.harvest();
             log.debug('Skipping finalisation of index for dry run.');
-            observer.next(ImportResult.complete(this.getSummary(), 'Dry run ... no indexing of data'));
+            observer.next(this.getSummary().msgComplete('Dry run ... no indexing of data'));
         }
         else {
             try {
@@ -176,7 +175,7 @@ export class CswImporter extends Importer<CswSettings> {
                     }
                 }
                 await this.postHarvestingHandling();
-                observer.next(ImportResult.complete(this.getSummary()));
+                observer.next(this.getSummary().msgComplete());
             }
             catch (err) {
                 if (err.message) {
@@ -188,7 +187,7 @@ export class CswImporter extends Importer<CswSettings> {
                     MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
                 }
                 log.error(err);
-                observer.next(ImportResult.complete(this.getSummary(), msg));
+                observer.next(this.getSummary().msgComplete(msg));
             }
         }
         observer.complete();
@@ -493,7 +492,7 @@ export class CswImporter extends Importer<CswSettings> {
             } else {
                 this.getSummary().skippedDocs.push(uuid);
             }
-            this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+            this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.allSettled(promises).catch(err => log.error('Error persisting CSW record', err));
         // let settledPromises: void | PromiseSettledResult<BulkResponse>[] = await Promise.allSettled(promises).catch(err => log.error('Error persisting CSW record', err));

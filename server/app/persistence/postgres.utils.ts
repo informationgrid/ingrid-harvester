@@ -30,7 +30,7 @@ import type { CatalogColumnType } from '../catalog/catalog.factory.js';
 import type { Catalog as LegacyCatalog } from '../model/dcatApPlu.model.js';
 import type { Distribution } from '../model/distribution.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
-import { type ImportLogMessage, ImportResult } from "../model/import.result.js";
+import type { ImportLogMessage } from '../model/import.result.js';
 import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
 import { DcatApPluDocumentFactory } from '../profiles/diplanung/model/dcatapplu.document.factory.js';
@@ -250,7 +250,7 @@ export class PostgresUtils extends DatabaseUtils {
      * @param source
      * @param observer
      */
-    async *streamBuckets<T extends CatalogColumnType>(source: string, datasetColumn: string, observer: Observer<ImportLogMessage>): AsyncGenerator<Bucket<T>> {
+    async *streamBuckets<T extends CatalogColumnType>(source: string, datasetColumn: string, observer: Observer<ImportLogMessage>, summary: Summary): AsyncGenerator<Bucket<T>> {
         const client: pg.PoolClient = await PostgresUtils.pool.connect();
         log.debug('Connection started');
         const startDate = Date.now();
@@ -272,7 +272,7 @@ export class PostgresUtils extends DatabaseUtils {
         let numBuckets = 0;
         while (rows.length > 0) {
             log.info(`PQ->ES: Processing rows ${numDatasets} - ${numDatasets + rows.length}`);
-            observer.next(ImportResult.running(numDatasets, totalRows, 'Datensätze werden publiziert'));
+            observer.next(summary.msgRunning(numDatasets, totalRows, 'Datensätze werden verarbeitet'));
             for (let row of rows) {
                 numDatasets += 1;
                 if (row.anchor_id != currentId) {

@@ -29,7 +29,6 @@ import SimpleClient from 'sparql-http-client/SimpleClient.js';
 import { DefaultImporterSettings } from '../../importer.settings.js';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
-import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
@@ -184,7 +183,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
             } else {
                 this.getSummary().skippedDocs.push(uuid);
             }
-            this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+            this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.all(promises)
             .catch(err => log.error('Error indexing DCAT record', err));

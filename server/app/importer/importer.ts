@@ -27,7 +27,6 @@ import type { Observer } from 'rxjs';
 import { Observable } from 'rxjs';
 import type { ImporterSettings } from '../importer.settings.js';
 import type { ImportLogMessage } from '../model/import.result.js';
-import { ImportResult } from '../model/import.result.js';
 import { Summary } from '../model/summary.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
 import type { DatabaseUtils } from '../persistence/database.utils.js';
@@ -64,7 +63,8 @@ export abstract class Importer<S extends ImporterSettings> {
     protected constructor(settings: S) {
         this.filterUtils = new FilterUtils(settings);
         this.generalConfig = ConfigService.getGeneralSettings();
-        this.summary = new Summary(settings);
+        // TODO this needs to be refactored - see below in exec()
+        this.summary = new Summary('harvest', settings);
         this.database = DatabaseFactory.getDatabaseUtils(this.generalConfig.database, this.summary);
         this.elastic = ElasticsearchFactory.getElasticUtils(this.generalConfig.elasticsearch, this.summary);
 
@@ -87,7 +87,7 @@ export abstract class Importer<S extends ImporterSettings> {
             log.debug('Dry run option enabled. Skipping index creation.');
             await this.harvest();
             log.debug('Skipping finalisation of index for dry run.');
-            observer.next(ImportResult.complete(this.summary, 'Dry run ... no indexing of data'));
+            observer.next(this.summary.msgComplete('Dry run ... no indexing of data'));
         }
         else {
             try {
@@ -137,7 +137,7 @@ export abstract class Importer<S extends ImporterSettings> {
                     }
                 }
                 await this.postHarvestingHandling();
-                observer.next(ImportResult.complete(this.summary));
+                observer.next(this.summary.msgComplete());
             }
             catch (err) {
                 if (err.message) {
@@ -146,7 +146,7 @@ export abstract class Importer<S extends ImporterSettings> {
                 await this.database.rollbackTransaction();
                 let msg = this.summary.errors.find(e => e.type === 'app' || e.type === 'database')?.error;
                 log.error(err);
-                observer.next(ImportResult.complete(this.summary, msg));
+                observer.next(this.summary.msgComplete(msg));
             }
         }
         observer.complete();
@@ -159,8 +159,7 @@ export abstract class Importer<S extends ImporterSettings> {
     }
 
     protected startStage(name: string): Summary {
-        const s = new Summary(this.getSettings());
-        s.stage = name;
+        const s = new Summary(name, this.getSettings());
         s.startTime = new Date();
         this.stageSummaries.push(s);
         return s;
