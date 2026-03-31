@@ -81,4 +81,8 @@ export const defaultGenesisSettings: Partial<GenesisSettings> = {
         requestDelayMs: 500,
         tableSelections: [],
     },
+    capabilities: {
+        isIncrementalSupported: false,
+        supportedCatalogTypes: ['elasticsearch', 'piveau']
+    }
 };
