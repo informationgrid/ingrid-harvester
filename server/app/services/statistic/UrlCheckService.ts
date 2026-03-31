@@ -24,7 +24,7 @@
 import fetch from 'node-fetch';
 import type { RequestInit } from 'node-fetch';
 import log4js from 'log4js';
-import { elasticsearchMapping } from '../../statistic/url_check.mapping.js';
+import urlCheckMapping from '../../statistic/url_check.mapping.json' with { type: 'json' };
 import { Agent } from 'https';
 import { ConfigService } from '../config/ConfigService.js';
 import type { ElasticQueries } from '../../persistence/elastic.queries.js';
@@ -86,7 +86,7 @@ export class UrlCheckService {
     async ensureIndexExists() {
         let indexExists = await this.elasticUtils.isIndexPresent(this.elasticUtils.indexName);
         if (!indexExists) {
-            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
+            await this.elasticUtils.prepareIndex(urlCheckMapping, this.indexSettings, true);
         }
     }
 
@@ -187,7 +187,7 @@ export class UrlCheckService {
             }, timestamp.toISOString());
 
             try {
-                await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
+                await this.elasticUtils.prepareIndex(urlCheckMapping, this.indexSettings, true);
                 await this.elasticUtils.finishIndex();
             }
             catch(err) {

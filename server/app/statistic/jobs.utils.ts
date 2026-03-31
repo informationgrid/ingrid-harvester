@@ -21,15 +21,15 @@
  * ==================================================
  */
 
-import log4js from 'log4js';
 import type { GeneralSettings } from '@shared/general-config.settings.js';
+import log4js from 'log4js';
 import type { ImportLogMessage } from '../model/import.result.js';
-import type { IndexSettings } from '../persistence/elastic.setting.js';
-import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import type { Summary } from '../model/summary.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
+import type { IndexSettings } from '../persistence/elastic.setting.js';
+import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
-import { jobsMapping } from './jobs.mapping.js';
+import jobsMapping from './jobs.mapping.json' with { type: 'json' };
 
 const log = log4js.getLogger(import.meta.filename);
 

@@ -23,10 +23,10 @@
 
 import { Service } from '@tsed/di';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
-import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import type { IndexSettings } from '../../persistence/elastic.setting.js';
-import { jobsMapping } from '../../statistic/jobs.mapping.js';
+import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import jobsMapping from '../../statistic/jobs.mapping.json' with { type: 'json' };
 import { ConfigService } from '../config/ConfigService.js';
 
 @Service()

@@ -21,16 +21,16 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../utils/misc.utils.js';
-import log4js from 'log4js';
-import { elasticsearchMapping} from './statistic.mapping.js';
-import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
-import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import type { GeneralSettings } from '@shared/general-config.settings.js';
-import type { ImportLogMessage} from '../model/import.result.js';
+import log4js from 'log4js';
+import type { ImportLogMessage } from '../model/import.result.js';
+import type { Summary } from '../model/summary.js';
+import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import type { IndexSettings } from '../persistence/elastic.setting.js';
+import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
-import type { Summary} from '../model/summary.js';
+import * as MiscUtils from '../utils/misc.utils.js';
+import statisticMapping from './statistic.mapping.json' with { type: 'json' };
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -78,7 +78,7 @@ export class StatisticUtils {
         }, baseIndex, StatisticUtils.maxBulkSize);
 
         try {
-            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
+            await this.elasticUtils.prepareIndex(statisticMapping, this.indexSettings, true);
             await this.elasticUtils.finishIndex();
         }
         catch(err) {

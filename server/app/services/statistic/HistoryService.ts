@@ -28,7 +28,7 @@ import type { ElasticQueries } from '../../persistence/elastic.queries.js';
 import type { IndexSettings } from '../../persistence/elastic.setting.js';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
-import { elasticsearchMapping } from '../../statistic/statistic.mapping.js';
+import elasticsearchMapping from '../../statistic/statistic.mapping.json' with { type: 'json' };
 import { ConfigService } from '../config/ConfigService.js';
 
 @Service()
