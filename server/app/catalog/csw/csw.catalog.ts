@@ -38,7 +38,8 @@ const log = log4js.getLogger('CswCatalog');
 
 export type CswDataset = {
     uuid: string,
-    dataset: string
+    dataset: string,
+    modified?: Date
 }
 
 export type CswCatalogOperation = CatalogOperation & {
@@ -349,18 +350,20 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         document: CswDataset,
         duplicates: Map<string | number, CswDataset>
     } {
-        let mainDocument: CswDataset;
-        let duplicates: Map<string | number, CswDataset> = new Map<string | number, CswDataset>();
+        let main: { id: string | number, document: CswDataset } | null = null;
+        const duplicates = new Map<string | number, CswDataset>();
 
-        for (let [id, document] of bucket.duplicates) {
-            if (mainDocument == null) {
-                mainDocument = document;
-            }
-            else {
+        for (const [id, document] of bucket.duplicates) {
+            if (main === null) {
+                main = { id, document };
+            } else if (document.modified && (!main.document.modified || document.modified > main.document.modified)) {
+                duplicates.set(main.id, main.document);
+                main = { id, document };
+            } else {
                 duplicates.set(id, document);
             }
         }
 
-        return { document: mainDocument, duplicates };
+        return { document: main?.document, duplicates };
     }
 }
