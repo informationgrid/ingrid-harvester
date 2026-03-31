@@ -61,7 +61,7 @@ export class DcatLicensesUtils {
 
         if(licenseURL.startsWith("https://")) licenseURL = licenseURL.substring("https://".length);
         if(licenseURL.startsWith("http://")) licenseURL = licenseURL.substring("http://".length);
-        return DcatLicensesUtils.licenses[licenseURL];
+        return DcatLicensesUtils.licenses ? DcatLicensesUtils.licenses[licenseURL] : undefined;
 
     }
 

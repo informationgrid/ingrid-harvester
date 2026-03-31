@@ -29,18 +29,18 @@ import type { IndexDocument } from '../../../model/index.document.js';
 import type { IngridMetadata } from '../model/ingrid.metadata.js';
 import type { IngridOpendataIndexDocument } from "../model/opendataindex.document.js";
 import { ingridMapper } from './ingrid.mapper.js';
+import type {Distribution} from "../../../model/distribution.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
 export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implements ToElasticMapper<IngridOpendataIndexDocument> {
 
     async create(): Promise<IndexDocument & IngridMetadata> {
-        return await this.createEsDocument();
+        return await this.createIndexDocument();
     }
 
-    async createEsDocument(): Promise<IngridOpendataIndexDocument> {
+    async createIndexDocument(): Promise<IngridOpendataIndexDocument> {
         let result: IngridOpendataIndexDocument = {
-            // ...await super.createEsDocument(),
             ...this.getIngridMetadata(this.baseMapper.getSettings()),
             id: this.getGeneratedId(),
             uuid: this.getGeneratedId(),
@@ -76,7 +76,9 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implement
             legal_basis: this.baseMapper.getLegalBasis(),
             distributions: await this.getDistributions(),
             political_geocoding_level_uri: this.baseMapper.getPoliticalGeocodingLevelURI(),
-            spatial: this.getSpatial(),
+            spatial: {
+                geometries: [this.baseMapper.getSpatial()]
+            },
             // temporal: this.getTemporal(),
             temporal: {
                 "accrual_periodicity": "",
@@ -99,7 +101,8 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implement
             if (this.hasValue(keyword) && !result.some(r => r.term === keyword)) {
                 result.push({
                     term: keyword,
-                    type: "free",
+                    id: "",
+                    source: "FREE",
                 });
             }
         });
@@ -108,15 +111,11 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implement
 
     getContacts() {
         return [
-            ...this.baseMapper.getPublisher().map(contact => {return {role: "publisher", ...contact}}),
-            ...this.baseMapper.getCreator().map(contact => {return {role: "creator", ...contact}}),
-            ...this.baseMapper.getMaintainer().map(contact => {return {role: "maintainer", ...contact}}),
-            ...this.baseMapper.getOriginator().map(contact => {return {role: "originator", ...contact}}),
+            ...this.baseMapper.getPublisher().map(contact => {return {role: this.getRoleId("publisher"), ...contact}}),
+            ...this.baseMapper.getCreator().map(contact => {return {role: this.getRoleId("creator"), ...contact}}),
+            ...this.baseMapper.getMaintainer().map(contact => {return {role: this.getRoleId("maintainer"), ...contact}}),
+            ...this.baseMapper.getOriginator().map(contact => {return {role: this.getRoleId("originator"), ...contact}}),
             ];
-    }
-
-    getSpatial(): any {
-        return {geometries: [this.baseMapper.getSpatial()]};
     }
 
     getTemporal(): DateRange[] {
@@ -125,5 +124,19 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implement
 
     getIDF() {
         return null;
+    }
+
+    getRoleId(role: string){
+        switch (role) {
+            case "publisher": return 10;
+            case "creator": return 11;
+            case "maintainer": return  2;
+            case "originator": return 6;
+        }
+        return role;
+    }
+
+    async getDistributions(): Promise<Distribution[]> {
+        return await this.baseMapper.getDistributions();
     }
 }

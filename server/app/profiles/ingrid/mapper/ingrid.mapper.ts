@@ -50,10 +50,6 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
         this.baseMapper = baseMapper;
     }
 
-    async createEsDocument(): Promise<IndexDocument> {
-        return await this.createIndexDocument();
-    }
-
     // TODO make abstract
     createCswIsoDocument(): string {
         return null;

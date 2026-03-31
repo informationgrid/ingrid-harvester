@@ -116,8 +116,8 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
     getDocumentFactory(mapper: ingridMapperType): DocumentFactory<IndexDocument & IngridMetadata> {
         switch (mapper.constructor.name) {
             case 'CswMapper': return new ingridCswMapper(mapper as CswMapper);
-            case 'CKAN': return new ingridCkanMapper(mapper as CkanMapper);
-            case 'DCATAPDE': return new ingridDcatapdeMapper(mapper as DcatapdeMapper);
+            case 'CkanMapper': return new ingridCkanMapper(mapper as CkanMapper);
+            case 'DcatapdeMapper': return new ingridDcatapdeMapper(mapper as DcatapdeMapper);
             case 'WfsMapper': {
                 let wfsProfile = (mapper as WfsMapper).getSettings().wfsProfile;
                 switch (wfsProfile) {
@@ -135,7 +135,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
     async getCatalog(catalogId: number, summary: Summary): Promise<Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>> {
         const catalogSettings = ConfigService.getCatalogSettings(catalogId);
         switch (catalogSettings?.type) {
-            case 'elasticsearch': 
+            case 'elasticsearch':
                 const { IngridElasticsearchCatalog } = await import('./catalog/elasticsearch.catalog.js');
                 return new IngridElasticsearchCatalog(catalogSettings as ElasticsearchCatalogSettings, summary);
             case 'csw':

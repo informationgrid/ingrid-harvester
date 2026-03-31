@@ -68,7 +68,7 @@ export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMap
         super.init();
     }
 
-    async createEsDocument(): Promise<IndexDocument> {
+    async createIndexDocument(): Promise<IndexDocument> {
         return {
             uuid: this.getGeneratedId(),
             extras: {

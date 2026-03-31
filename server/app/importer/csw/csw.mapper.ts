@@ -93,7 +93,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
         super.init();
     }
 
-    async createEsDocument(): Promise<IndexDocument> {
+    async createIndexDocument(): Promise<IndexDocument> {
         return {
             uuid: this.getGeneratedId(),
             extras: {
@@ -1129,7 +1129,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
                     job: position,
                     descr: contactInstructions
                 };
-                // (#8604): only set identificationinfo_administrative_area_value for 
+                // (#8604): only set identificationinfo_administrative_area_value for
                 // * MD_Metadata/identificationInfo/MD_DataIdentification/pointOfContact/*/contactInfo/*/address/*/administrativeArea
                 // * MD_Metadata/identificationInfo/SV_ServiceIdentification/pointOfContact/*/contactInfo/*/address/*/administrativeArea
                 let grandparent = (contact?.parentNode?.parentNode as Element);
