@@ -23,6 +23,7 @@
 
 import { Emit, Input, Namespace, Nsp, Socket, SocketService, SocketSession } from '@tsed/socketio';
 import { CronJob } from 'cron';
+import * as crypto from "crypto";
 import log4js from 'log4js';
 import pLimit from 'p-limit';
 import * as SocketIO from 'socket.io';
@@ -78,67 +79,67 @@ export class ImportSocketService {
                 profile.getImporter(configHarvester).then(importer => {
                     let mode = isIncremental ? 'incr' : 'full';
                     this.log.info(`>> Running importer: [${configHarvester.type}] ${configHarvester.description}`);
+                    const jobId = crypto.randomUUID();
+                    harvestLogContext.run({ harvesterId: id, jobId }, () => {
+                        importer.run.subscribe({
+                            next: response => {
+                                response.id = id;
+                                response.jobId = jobId;
+                                response.lastExecution = lastExecution;
+                                if (configHarvester.cron?.[mode]?.active) {
+                                    response.nextExecution = new CronJob(configHarvester.cron[mode].pattern, () => {
+                                    }).nextDate().toDate();
+                                }
+                                response.duration = (new Date().getTime() - lastExecution.getTime()) / 1000;
+                                this.nsp.emit('/log', response);
 
-                    harvestLogContext.run({ harvesterId: id, jobId: importer.jobId }, () => {
-                    importer.run.subscribe({
-                        next: response => {
-                            response.id = id;
-                            response.jobId = importer.jobId;
-                            response.lastExecution = lastExecution;
-                            if (configHarvester.cron?.[mode]?.active) {
-                                response.nextExecution = new CronJob(configHarvester.cron[mode].pattern, () => {
-                                }).nextDate().toDate();
-                            }
-                            response.duration = (new Date().getTime() - lastExecution.getTime()) / 1000;
-                            this.nsp.emit('/log', response);
+                                // when complete then write information log to file
+                                if (response.complete) {
+                                    // save old summary to compare
+                                    let summaryLastRun: ImportLogMessage = this.summaryService.get(id);
 
-                            // when complete then write information log to file
-                            if (response.complete) {
-                                // save old summary to compare
-                                let summaryLastRun: ImportLogMessage = this.summaryService.get(id);
+                                    // TODO this must be done for each catalog - by the importer?
+                                    importer.getSummary().print(this.log);
+                                    this.summaryService.update(response);
+                                    let statisticUtils = new StatisticUtils(configGeneral);
+                                    let elastic = ElasticsearchFactory.getElasticUtils(configGeneral.elasticsearch, null);
+                                    let index = profile.useIndexPerCatalog() ? configHarvester.catalogId : elastic.indexName;
+                                    statisticUtils.saveSummary(response, index);
+                                    new JobsUtils(configGeneral).saveJob(response, index, importer.getStageSummaries());
 
-                                // TODO this must be done for each catalog - by the importer?
-                                importer.getSummary().print(this.log);
-                                this.summaryService.update(response);
-                                let statisticUtils = new StatisticUtils(configGeneral);
-                                let elastic = ElasticsearchFactory.getElasticUtils(configGeneral.elasticsearch, null);
-                                let index = profile.useIndexPerCatalog() ? configHarvester.catalogId : elastic.indexName;
-                                statisticUtils.saveSummary(response, index);
-                                new JobsUtils(configGeneral).saveJob(response, index, importer.getStageSummaries());
-
-                                // when less results send mail
-                                if (!isIncremental && configGeneral.mail.enabled && configGeneral.harvesting.mail.enabled) {
-                                    let importedLastRun = (summaryLastRun) ? summaryLastRun.summary.numDocs - summaryLastRun.summary.skippedDocs.length : 0;
-                                    let imported = importer.getSummary().numDocs - importer.getSummary().skippedDocs.length;
-                                    let diff = configGeneral.harvesting.mail.minDifference ?? 10;
-                                    if (importedLastRun * (100 - diff) / 100 >= imported) {
-                                        let subject: string;
-                                        if (imported === 0)
-                                            subject = `Importer [${configHarvester.type}] "${configData.description}" ohne Ergebnisse!`;
-                                        else
-                                            subject = `Importer [${configHarvester.type}] "${configData.description}" mit weniger Ergebnissen!`;
-                                        let text = `Current Run:\n`
-                                            + importer.getSummary().toString();
-                                        if (summaryLastRun) {
-                                            text += `\n\n`
-                                                + `Last Run (`+summaryLastRun.lastExecution+`):\n`
-                                                + summaryLastRun.summary.toString();
+                                    // when less results send mail
+                                    if (!isIncremental && configGeneral.mail.enabled && configGeneral.harvesting.mail.enabled) {
+                                        let importedLastRun = (summaryLastRun) ? summaryLastRun.summary.numDocs - summaryLastRun.summary.skippedDocs.length : 0;
+                                        let imported = importer.getSummary().numDocs - importer.getSummary().skippedDocs.length;
+                                        let diff = configGeneral.harvesting.mail.minDifference ?? 10;
+                                        if (importedLastRun * (100 - diff) / 100 >= imported) {
+                                            let subject: string;
+                                            if (imported === 0)
+                                                subject = `Importer [${configHarvester.type}] "${configData.description}" ohne Ergebnisse!`;
+                                            else
+                                                subject = `Importer [${configHarvester.type}] "${configData.description}" mit weniger Ergebnissen!`;
+                                            let text = `Current Run:\n`
+                                                + importer.getSummary().toString();
+                                            if (summaryLastRun) {
+                                                text += `\n\n`
+                                                    + `Last Run (`+summaryLastRun.lastExecution+`):\n`
+                                                    + summaryLastRun.summary.toString();
+                                            }
+                                            MailServer.getInstance().send(subject, text);
                                         }
-                                        MailServer.getInstance().send(subject, text);
                                     }
                                 }
-                            }
-                        },
-                        error: error => {
-                            this.log.error('There was an error: ', error);
-                            if (configGeneral.mail.enabled) {
-                                MailServer.getInstance().send(`Importer [${configHarvester.type}] ${configData.description} failed`, error.toString());
-                            }
-                            resolve();
-                        },
-                        complete: () => resolve()
+                            },
+                            error: error => {
+                                this.log.error('There was an error: ', error);
+                                if (configGeneral.mail.enabled) {
+                                    MailServer.getInstance().send(`Importer [${configHarvester.type}] ${configData.description} failed`, error.toString());
+                                }
+                                resolve();
+                            },
+                            complete: () => resolve()
+                        });
                     });
-                    }); // harvestLogContext.run
                 }).catch(e => {
                     this.log.error(`An error occured while harvesting (id=${id}): `, e);
                     resolve();
