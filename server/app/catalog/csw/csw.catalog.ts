@@ -225,9 +225,6 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         <gmd:keyword>
             <gco:CharacterString>source:${datasourceId}</gco:CharacterString>
         </gmd:keyword>
-        <gmd:type>
-            <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="other">other</gmd:MD_KeywordTypeCode>
-        </gmd:type>
     </gmd:MD_Keywords>
 </gmd:descriptiveKeywords>`;
 
@@ -339,7 +336,7 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
 
         return { success: true, inserted, updated, deleted };
     }
-    
+
     private prioritizeAndFilter(bucket: Bucket<CswDataset>): {
         document: CswDataset,
         duplicates: Map<string | number, CswDataset>
