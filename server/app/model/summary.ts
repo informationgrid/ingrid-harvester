@@ -21,7 +21,13 @@
  * ==================================================
  */
 
-import type {ImporterSettings} from '../importer.settings.js';
+import type { ImporterSettings } from '../importer.settings.js';
+import type { ImportLogMessage } from './import.result.js';
+
+export type TypedError = {
+    type: string,
+    error: string
+};
 
 export class Summary {
 
@@ -35,19 +41,26 @@ export class Summary {
 
     skippedDocs: string[] = [];
 
-    elasticErrors: string[] = [];
+    errors: TypedError[] = [];
 
-    databaseErrors: string[] = [];
-
-    appErrors: string[] = [];
+    counters: Record<string, number> = {};
 
     isIncremental: boolean;
 
+    readonly stage: string;
+
+    startTime?: Date;
+
     [x: string]: any;
+
+    increment(key: string, by: number = 1): void {
+        this.counters[key] = (this.counters[key] ?? 0) + by;
+    }
 
     private readonly headerTitle: string;
 
-    constructor(settings: Partial<ImporterSettings>) {
+    constructor(stage: string, settings: Partial<ImporterSettings>) {
+        this.stage = stage;
         this.headerTitle = `${settings.description} (${settings.type})`;
         if (settings.showCompleteSummaryInfo) {
             this.MAX_ITEMS_TO_SHOW = 1000000;
@@ -68,14 +81,18 @@ export class Summary {
         logger.info(`Warnings: ${this.warnings.length}`);
         this.logArray(logger, this.warnings);
 
-        logger.info(`App-Errors: ${this.appErrors.length}`);
-        this.logArray(logger, this.appErrors);
+        const byType = this.errors.reduce((m, e) => {
+            m.set(e.type, [...(m.get(e.type) ?? []), e.error]);
+            return m;
+        }, new Map<string, string[]>());
+        for (const [type, msgs] of byType) {
+            logger.info(`${type}-Errors: ${msgs.length}`);
+            this.logArray(logger, msgs);
+        }
 
-        logger.info(`Database-Errors: ${this.databaseErrors.length}`);
-        this.logArray(logger, this.databaseErrors);
-
-        logger.info(`Elasticsearch-Errors: ${this.elasticErrors.length}`);
-        this.logArray(logger, this.elasticErrors);
+        for (const [key, value] of Object.entries(this.counters)) {
+            logger.info(`${key}: ${value}`);
+        }
 
         this.additionalSummary();
     }
@@ -91,11 +108,17 @@ export class Summary {
         result += `Record-Errors: ${this.numErrors}\n`;
         result += `Warnings: ${this.warnings.length}\n`;
 
-        result += `App-Errors: ${this.appErrors.length}\n`;
+        const byType = this.errors.reduce((m, e) => {
+            m.set(e.type, (m.get(e.type) ?? 0) + 1);
+            return m;
+        }, new Map<string, number>());
+        for (const [type, count] of byType) {
+            result += `${type}-Errors: ${count}\n`;
+        }
 
-        result += `Database-Errors: ${this.databaseErrors.length}\n`;
-
-        result += `Elasticsearch-Errors: ${this.elasticErrors.length}\n`;
+        for (const [key, value] of Object.entries(this.counters)) {
+            result += `${key}: ${value}\n`;
+        }
 
         return result;
     }
@@ -111,5 +134,34 @@ export class Summary {
     }
 
     additionalSummary() {
+    }
+
+    msgImport(message: string): ImportLogMessage {
+        return {
+            stage: this.stage,
+            complete: false,
+            message: message
+        }
+    }
+
+    msgRunning(current: number, total: number, message: string): ImportLogMessage {
+        return {
+            stage: this.stage,
+            complete: false,
+            progress: {
+                current: current,
+                total: total
+            },
+            message: message
+        };
+    }
+
+    msgComplete(message?: string): ImportLogMessage {
+        return {
+            stage: this.stage,
+            complete: true,
+            summary: this,
+            message: message ? message : undefined
+        };
     }
 }

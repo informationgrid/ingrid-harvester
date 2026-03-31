@@ -21,21 +21,11 @@
  * ==================================================
  */
 
-import type { Logger } from 'log4js';
+import { AsyncLocalStorage } from 'node:async_hooks';
 
-export abstract class CatalogSummary {
-
-    protected abstract readonly catalogType: string;
-
-    numErrors: number = 0;
-    numSkipped: number = 0;
-
-    print(logger: Logger): void {
-        logger.info(`${this.catalogType} catalog import complete`);
-        logger.info(`  Errors:  ${this.numErrors}`);
-        logger.info(`  Skipped: ${this.numSkipped}`);
-        this.printDetails(logger);
-    }
-
-    protected abstract printDetails(logger: Logger): void;
+export interface HarvestLogContext {
+    harvesterId: number;
+    jobId: string;
 }
+
+export const harvestLogContext = new AsyncLocalStorage<HarvestLogContext>();

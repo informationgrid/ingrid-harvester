@@ -99,7 +99,16 @@ export class DiplanungCswImporter extends CswImporter {
         }
         // TODO 10 seems to hit a sweet spot. 20 is already too much with our default fetch timeout of 20sec
         const limit = pLimit(10);
-        let results = (await Promise.allSettled(promises.map(pf => limit(pf)))).filter(result => result.status === 'fulfilled');
+        const settled = await Promise.allSettled(promises.map(pf => limit(pf)));
+        // surface real errors (not the normal "not updating" path, which rejects with a plain string)
+        for (const result of settled) {
+            if (result.status === 'rejected' && typeof result.reason === 'object') {
+                const msg = result.reason?.message ?? String(result.reason);
+                this.getSummary().warnings.push([msg]);
+                log.warn(`Error updating record: ${msg}`);
+            }
+        }
+        let results = settled.filter(result => result.status === 'fulfilled');
         let entities = (results as PromiseFulfilledResult<any>[]).map(result => result.value);
         for (let entity of entities) {
             await this.database.addEntityToBulk(entity);

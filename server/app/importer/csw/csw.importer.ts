@@ -29,7 +29,6 @@ import { namespaces } from '../../importer/namespaces.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { CouplingEntity, RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
-import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import type { BulkResponse } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
@@ -92,11 +91,13 @@ export class CswImporter extends Importer<CswSettings> {
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
+        // TODO remove Importer.getSummary() - instead, always use a named summary
+        // const downloadSummary = this.startStage('harvest');
         if (this.getSettings().dryRun) {
             log.debug('Dry run option enabled. Skipping index creation.');
             await this.harvest();
             log.debug('Skipping finalisation of index for dry run.');
-            observer.next(ImportResult.complete(this.getSummary(), 'Dry run ... no indexing of data'));
+            observer.next(this.getSummary().msgComplete('Dry run ... no indexing of data'));
         }
         else {
             try {
@@ -137,13 +138,15 @@ export class CswImporter extends Importer<CswSettings> {
                 //await this.coupleSelf(this.settings.resolveOgcDistributions);
                 // get services separately (time-intensive)
                 if (this.getSettings().harvestingMode == 'separate') {
+                    this.startStage('harvestServices');
                     await this.harvestServices();
                 }
                 // data-service-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
+                this.startStage('coupling');
                 await this.coupleDatasetsServices(this.getSettings().resolveOgcDistributions);
 
                 // did fatal errors occur (ie DB or APP errors)?
-                if (this.getSummary().databaseErrors.length > 0 || this.getSummary().appErrors.length > 0) {
+                if (this.getSummary().errors.some(e => e.type === 'app' || e.type === 'database')) {
                     throw new Error();
                 }
 
@@ -153,7 +156,8 @@ export class CswImporter extends Importer<CswSettings> {
                 await this.database.commitTransaction();
                 // TODO support concurrency of different catalogs
                 for (const catalogId of this.getSettings().catalogIds) {
-                    const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, this.getSummary());
+                    const stageSummary = this.startStage(`catalog/${catalogId}`);
+                    const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, stageSummary);
                     try {
                         // log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with transaction timestamp ${transactionTimestamp}`);
                         log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with source ${this.getSettings().sourceURL}`);
@@ -166,23 +170,23 @@ export class CswImporter extends Importer<CswSettings> {
                     }
                     catch (e) {
                         log.error(`Error while importing into catalog ${catalog.settings.name} (id=${catalogId}):`, e);
-                        this.getSummary().appErrors.push(`Error while importing into catalog ${catalog.settings.name} (id=${catalogId}): ${e.message}`);
+                        this.getSummary().errors.push({ type: 'app', error: `Error while importing into catalog ${catalog.settings.name} (id=${catalogId}): ${e.message}` });
                     }
                 }
                 await this.postHarvestingHandling();
-                observer.next(ImportResult.complete(this.getSummary()));
+                observer.next(this.getSummary().msgComplete());
             }
             catch (err) {
                 if (err.message) {
-                    this.getSummary().appErrors.push(err.message);
+                    this.getSummary().errors.push({ type: 'app', error: err.message });
                 }
                 await this.database.rollbackTransaction();
-                let msg = this.getSummary().appErrors.length > 0 ? this.getSummary().appErrors[0] : this.getSummary().databaseErrors[0];
+                let msg = this.getSummary().errors.find(e => e.type === 'app' || e.type === 'database')?.error;
                 if (this.generalConfig.mail.enabled) {
                     MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
                 }
                 log.error(err);
-                observer.next(ImportResult.complete(this.getSummary(), msg));
+                observer.next(this.getSummary().msgComplete(msg));
             }
         }
         observer.complete();
@@ -424,7 +428,7 @@ export class CswImporter extends Importer<CswSettings> {
         else {
             const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
             log.error(message);
-            this.getSummary().appErrors.push(message);
+            this.getSummary().errors.push({ type: 'app', error: message });
         }
     }
 
@@ -464,7 +468,7 @@ export class CswImporter extends Importer<CswSettings> {
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.getSummary().appErrors.push(e.toString());
+                this.getSummary().errors.push({ type: 'app', error: e.toString() });
                 mapper.skipped = true;
             }
 
@@ -481,7 +485,7 @@ export class CswImporter extends Importer<CswSettings> {
             } else {
                 this.getSummary().skippedDocs.push(uuid);
             }
-            this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+            this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.allSettled(promises).catch(err => log.error('Error persisting CSW record', err));
         // let settledPromises: void | PromiseSettledResult<BulkResponse>[] = await Promise.allSettled(promises).catch(err => log.error('Error persisting CSW record', err));

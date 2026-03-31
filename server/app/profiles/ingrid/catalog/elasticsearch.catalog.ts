@@ -21,16 +21,14 @@
  * ==================================================
  */
 
-import type { ElasticsearchCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import { ElasticsearchCatalog } from '../../../catalog/elasticsearch/elasticsearch.catalog.js';
 import type { ImporterSettings } from '../../../importer.settings.js';
-import { ImportResult, type ImportLogMessage } from '../../../model/import.result.js';
+import type { ImportLogMessage } from '../../../model/import.result.js';
 import type { IndexDocument } from '../../../model/index.document.js';
 import type { EsOperation } from '../../../persistence/elastic.utils.js';
 import type { Bucket } from '../../../persistence/postgres.utils.js';
-import { ConfigService } from '../../../services/config/ConfigService.js';
 import { camelize, escapeXml } from '../../../utils/misc.utils.js';
 import { createEsId } from '../ingrid.utils.js';
 import type { IngridIndexDocument } from '../model/index.document.js';
@@ -64,7 +62,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
                 application: hit.dataSourceName,
                 modified: hit.modified
             });
-            observer.next(ImportResult.running(++processed, total, 'Existierende Datensätze sammeln'));
+            observer.next(this.summary.msgRunning(++processed, total, 'Existierende Datensätze sammeln'));
         }
     }
 

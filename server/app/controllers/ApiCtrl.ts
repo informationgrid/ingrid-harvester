@@ -91,6 +91,11 @@ export class ApiCtrl {
         return this.logService.get();
     }
 
+    @Get('/log/:harvesterId/:jobId')
+    getHarvesterLog(@PathParams('harvesterId') harvesterId: number, @PathParams('jobId') jobId: string): string {
+        return this.logService.getHarvesterLog(harvesterId, jobId);
+    }
+
     @Post('/schedule/:id')
     @KeycloakAuth({role: ["admin", "editor"]})
     schedule(@PathParams('id') id: number, @BodyParams('cron') cron: { full: CronData, incr: CronData }): Date[] {

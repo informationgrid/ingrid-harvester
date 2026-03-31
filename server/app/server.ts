@@ -28,11 +28,14 @@ import * as path from 'path';
 import { ProfileFactoryLoader } from './profiles/profile.factory.loader.js';
 import { ConfigService } from './services/config/ConfigService.js';
 import { jsonLayout } from './utils/log4js.json.layout.js';
+import { configure as harvestJobConfigure } from './utils/harvest-log-appender.js';
 import {KeycloakService} from "./services/keycloak/KeycloakService.js";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import createMemoryStore from 'memorystore';
 import serverConfig from "../server-config.json" with { type: "json" };
+import log4jsConfig from '../log4js.json' with { type: 'json' };
+import log4jsDevConfig from '../log4js-dev.json' with { type: 'json' };
 import methodOverride from "method-override";
 import compress from "compression";
 import session from "express-session";
@@ -44,8 +47,22 @@ const log = log4js.getLogger(import.meta.filename);
 
 const isProduction = process.env.NODE_ENV == 'production';
 log4js.addLayout("json", jsonLayout);
+const baseLog4jsConfig: any = isProduction ? log4jsConfig : log4jsDevConfig;
+log4js.configure({
+    ...baseLog4jsConfig,
+    appenders: {
+        ...baseLog4jsConfig.appenders,
+        harvestJob: { type: { configure: harvestJobConfigure } },
+    },
+    categories: {
+        ...baseLog4jsConfig.categories,
+        default: {
+            ...baseLog4jsConfig.categories.default,
+            appenders: [...baseLog4jsConfig.categories.default.appenders, 'harvestJob'],
+        },
+    },
+});
 if (isProduction) {
-    log4js.configure('./log4js.json');
     $log.appenders.set("stdout", {
         type: "stdout",
         levels: ["info", "debug"],
@@ -60,9 +77,6 @@ if (isProduction) {
             type: "json"
         }
     });
-}
-else {
-    log4js.configure('./log4js-dev.json');
 }
 
 const baseURL = process.env.BASE_URL ?? '/';

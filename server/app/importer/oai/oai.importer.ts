@@ -27,7 +27,6 @@ import type { Observer } from 'rxjs';
 import * as xpath from 'xpath';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
-import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
@@ -112,7 +111,7 @@ export class OaiImporter extends Importer<OaiSettings> {
                 }
                 const message = `Error while fetching OAI Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(e.message)}.`;
                 log.error(message);
-                this.getSummary().appErrors.push(message);
+                this.getSummary().errors.push({ type: 'app', error: message });
             }
         }
         this.database.sendBulkData();
@@ -152,7 +151,7 @@ export class OaiImporter extends Importer<OaiSettings> {
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.getSummary().appErrors.push(e.toString());
+                this.getSummary().errors.push({ type: 'app', error: e.toString() });
                 mapper.skipped = true;
             }
 
@@ -169,7 +168,7 @@ export class OaiImporter extends Importer<OaiSettings> {
             else {
                 this.getSummary().skippedDocs.push(uuid);
             }
-            this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+            this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.allSettled(promises).catch(err => log.error('Error indexing OAI record', err));
     }

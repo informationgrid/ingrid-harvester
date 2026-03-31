@@ -80,4 +80,13 @@ export class DatasourceApi {
   getHistory(id: number): Observable<any> {
     return this.http.get<any>("rest/api/harvester/history/" + id);
   }
+
+  getJobs(id: number): Observable<any> {
+    return this.http.get<any>("rest/api/harvester/jobs/" + id);
+  }
+
+  getHarvesterLog(harvesterId: number, jobId: string): Observable<string> {
+    console.log("harvester-id", harvesterId, "job:", jobId)
+    return this.http.get(`rest/api/log/${harvesterId}/${jobId}`, { responseType: 'text' });
+  }
 }

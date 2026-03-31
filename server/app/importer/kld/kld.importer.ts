@@ -30,7 +30,6 @@ import { join } from 'path';
 import type { Observer } from 'rxjs';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
-import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import type { BulkResponse } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
@@ -95,7 +94,7 @@ export class KldImporter extends Importer<KldSettings> {
 
     /**
      * Harvest method implementation
-     * NOTE Any error added to summary.appErrors will cause a database transaction rollback!
+     * NOTE Any error added to summary.errors with type 'app' or 'database' will cause a database transaction rollback!
      * @returns number
      */
     protected async harvest(): Promise<number> {
@@ -130,7 +129,7 @@ export class KldImporter extends Importer<KldSettings> {
           catch (e) {
               const message = `Received empty response when requesting total number of objects. Skipping import.`;
               log.error(message);
-              this.getSummary().appErrors.push(message);
+              this.getSummary().errors.push({ type: 'app', error: message });
               return 0;
           }
         }
@@ -193,7 +192,7 @@ export class KldImporter extends Importer<KldSettings> {
         if (numReceived < this.totalRecords) {
             const message = `Received less records than expected ${numReceived}/${this.totalRecords}. Skipping import.`;
             log.error(message);
-            this.getSummary().appErrors.push(message);
+            this.getSummary().errors.push({ type: 'app', error: message });
             return 0;
         }
 
@@ -245,7 +244,7 @@ export class KldImporter extends Importer<KldSettings> {
             // add an error if there is a problem when retrieving record ids to abort the import process later
             const message = `Error while fetching ids from ${requestUrl}: ${MiscUtils.truncateErrorMessage(e)}.`;
             log.error(`Error while fetching ids from ${requestUrl}`, e);
-            this.getSummary().appErrors.push(message);
+            this.getSummary().errors.push({ type: 'app', error: message });
         }
         return ids;
     }
@@ -320,7 +319,7 @@ export class KldImporter extends Importer<KldSettings> {
             else {
                 this.getSummary().skippedDocs.push(id);
             }
-            this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+            this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.allSettled(promises).catch(e => log.error('Error persisting record', e));
     }

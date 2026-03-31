@@ -29,7 +29,6 @@ import SimpleClient from 'sparql-http-client/SimpleClient.js';
 import { DefaultImporterSettings } from '../../importer.settings.js';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
-import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
@@ -94,7 +93,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
 
             result.body.on('error', err => {
                 hadError = true;
-                this.getSummary().appErrors.push(err.toString());
+                this.getSummary().errors.push({ type: 'app', error: err.toString() });
                 log.error(err);
             })
 
@@ -107,7 +106,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
                         this.extractRecords(json, harvestTime).then(() =>
                             resolve(this.numIndexDocs));
                     } catch (e) {
-                        this.getSummary().appErrors.push(e.toString());
+                        this.getSummary().errors.push({ type: 'app', error: e.toString() });
                         log.error(e);
                         reject(e);
                     }
@@ -116,7 +115,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
             result.body.on('end', () => {
                 if(hadError) {
                     let message = result.statusText + ' - '+response;
-                    this.getSummary().appErrors.push(message);
+                    this.getSummary().errors.push({ type: 'app', error: message });
                     log.error(message);
                     reject();
                 }
@@ -160,7 +159,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.getSummary().appErrors.push(e.toString());
+                this.getSummary().errors.push({ type: 'app', error: e.toString() });
                 mapper.skipped = true;
             }
 
@@ -184,7 +183,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
             } else {
                 this.getSummary().skippedDocs.push(uuid);
             }
-            this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+            this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.all(promises)
             .catch(err => log.error('Error indexing DCAT record', err));

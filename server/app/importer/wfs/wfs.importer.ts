@@ -32,7 +32,6 @@ import { namespaces } from '../../importer/namespaces.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
-import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import * as GeoJsonUtils from '../../utils/geojson.utils.js';
@@ -187,7 +186,7 @@ export class WfsImporter extends Importer<WfsSettings> {
             catch (e) {
                 const message = `Error while fetching WFS Features for FeatureType ${featureTypeName}:\n${e}\nWill continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom?.toString())}.`;
                 log.error(message);
-                this.getSummary().appErrors.push(message);
+                this.getSummary().errors.push({ type: 'app', error: message });
             }
             requestDelegate.incrementStartRecordIndex();
             /*
@@ -229,7 +228,7 @@ export class WfsImporter extends Importer<WfsSettings> {
             this.getSummary().skippedDocs.push(featureTypeName);
         }
         if (this.getSettings().harvestTypes) {
-            this.observer.next(ImportResult.running(++this.numIndexDocs, this.numItems, 'FeatureTypes werden heruntergeladen'));
+            this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.numItems, 'FeatureTypes werden heruntergeladen'));
         }
     }
 
@@ -293,7 +292,7 @@ export class WfsImporter extends Importer<WfsSettings> {
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.getSummary().appErrors.push(e.toString());
+                this.getSummary().errors.push({ type: 'app', error: e.toString() });
                 mapper.skipped = true;
             }
 
@@ -311,7 +310,7 @@ export class WfsImporter extends Importer<WfsSettings> {
             }
             // disable updating feature count if harvesting FeatureTypes
             if (!this.getSettings().harvestTypes) {
-                this.observer.next(ImportResult.running(++this.numIndexDocs, this.numItems, 'Features werden heruntergeladen'));
+                this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.numItems, 'Features werden heruntergeladen'));
             }
         }
         await Promise.all(promises).catch(err => log.error('Error indexing WFS record', err));

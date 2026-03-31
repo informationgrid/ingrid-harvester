@@ -21,20 +21,17 @@
  * ==================================================
  */
 
-import type { Logger } from 'log4js';
-import { CatalogSummary } from '../../model/catalog-summary.js';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import { harvestLogContext } from './harvest-log-context.js';
 
-export class CswCatalogSummary extends CatalogSummary {
-
-    protected readonly catalogType = 'CSW';
-
-    numInserted: number = 0;
-    numUpdated: number = 0;
-    numDeleted: number = 0;
-
-    protected printDetails(logger: Logger): void {
-        logger.info(`  Inserted: ${this.numInserted}`);
-        logger.info(`  Updated:  ${this.numUpdated}`);
-        logger.info(`  Deleted:  ${this.numDeleted}`);
-    }
+export function configure(config: any, layouts: any) {
+    const layout = layouts.basicLayout;
+    return (loggingEvent: any) => {
+        const ctx = harvestLogContext.getStore();
+        if (!ctx) return;
+        const dir = path.join('logs', 'harvester', String(ctx.harvesterId));
+        fs.mkdirSync(dir, { recursive: true });
+        fs.appendFileSync(path.join(dir, `${ctx.jobId}.log`), layout(loggingEvent) + '\n');
+    };
 }

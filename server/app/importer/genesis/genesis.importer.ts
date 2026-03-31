@@ -24,7 +24,6 @@
 import log4js from 'log4js';
 import pLimit from 'p-limit';
 import type { RecordEntity } from '../../model/entity.js';
-import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
@@ -78,9 +77,9 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         const harvestTime = new Date(Date.now());
         const tableSelections = this.getSettings().typeConfig.tableSelections;
 
-        // Phase 1: collect all tables across all selections to establish total count
+        // Stage 1: collect all tables across all selections to establish total count
         const allTables: GenesisListEntry[] = [];
-        this.observer.next(ImportResult.message(`Fetching tables`));
+        this.observer.next(this.getSummary().msgImport(`Fetching tables`));
         const selectionLimit = pLimit(this.getSettings().maxConcurrent);
         await Promise.allSettled(
             tableSelections.map(selection => selectionLimit(async () => {
@@ -89,17 +88,17 @@ export class GenesisImporter extends Importer<GenesisSettings> {
                     const tables = await this.fetchAllPages('/catalogue/tables', { selection, area: 'all', searchcriterion: 'Code', sortcriterion: 'Code', language: 'de' });
                     log.info(`Selection "${selection}": ${tables.length} tables`);
                     allTables.push(...tables);
-                    this.observer.next(ImportResult.message(`Selection "${selection}": ${tables.length} tables found`));
+                    this.observer.next(this.getSummary().msgImport(`Selection "${selection}": ${tables.length} tables found`));
                 } catch (e) {
                     log.warn(`Failed to fetch tables for selection "${selection}": ${e.message}`);
-                    this.getSummary().appErrors.push(`Failed to fetch tables for "${selection}": ${e.message}`);
+                    this.getSummary().errors.push({ type: 'app', error: `Failed to fetch tables for "${selection}": ${e.message}` });
                 }
             }))
         );
         this.totalRecords = allTables.length;
         log.info(`Total tables to harvest: ${this.totalRecords}`);
 
-        // Phase 2: process metadata for each collected table
+        // Stage 2: process metadata for each collected table
         const limit = pLimit(this.getSettings().maxConcurrent);
         await Promise.allSettled(
             allTables.map(table => limit(() => this.processObject(table, harvestTime)))
@@ -167,7 +166,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
             apiResponse = await this.doApiRequest(endpoint, { name: entry.Code, language: 'de' });
         } catch (e) {
             log.error(`Failed to fetch metadata for ${endpoint} ${entry.Code}: ${e.message}`);
-            this.getSummary().appErrors.push(`Failed to fetch metadata for ${endpoint} ${entry.Code}: ${e.message}`);
+            this.getSummary().errors.push({ type: 'app', error: `Failed to fetch metadata for ${endpoint} ${entry.Code}: ${e.message}` });
             return;
         }
 
@@ -187,7 +186,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
             dcatapdeDoc = documentFactory.createDcatapdeDocument();
         } catch (e) {
             log.error(`Error creating index document for ${entry.Code}`, e);
-            this.getSummary().appErrors.push(`Error creating document for ${entry.Code}: ${e.message}`);
+            this.getSummary().errors.push({ type: 'app', error: `Error creating document for ${entry.Code}: ${e.message}` });
             mapper.skipped = true;
         }
 
@@ -204,13 +203,13 @@ export class GenesisImporter extends Importer<GenesisSettings> {
             await this.database.addEntityToBulk(entity)
                 .catch(err => {
                     log.error(`Error saving entity ${entry.Code}`, err);
-                    this.getSummary().appErrors.push(`DB error for ${entry.Code}: ${err.message}`);
+                    this.getSummary().errors.push({ type: 'app', error: `DB error for ${entry.Code}: ${err.message}` });
                 });
         } else {
             this.getSummary().skippedDocs.push(entry.Code);
         }
 
-        this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+        this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
     }
 
     /**

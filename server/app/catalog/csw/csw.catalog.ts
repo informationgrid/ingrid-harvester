@@ -33,13 +33,13 @@ import type { Bucket } from '../../persistence/postgres.utils.js';
 import { RequestDelegate } from "../../utils/http-request.utils.js";
 import { getDomParser } from "../../utils/misc.utils.js";
 import { Catalog, type CatalogOperation } from '../catalog.factory.js';
-import { CswCatalogSummary } from './csw.catalog-summary.js';
 
 const log = log4js.getLogger('CswCatalog');
 
 export type CswDataset = {
     uuid: string,
-    dataset: string
+    dataset: string,
+    modified?: Date
 }
 
 export type CswCatalogOperation = CatalogOperation & {
@@ -49,8 +49,6 @@ export type CswCatalogOperation = CatalogOperation & {
 }
 
 export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings, CswCatalogOperation> {
-
-    protected readonly catalogSummary = new CswCatalogSummary();
 
     private readonly domParser = getDomParser();
     private existingIds: Set<string>;
@@ -90,17 +88,21 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
             const response = await this.postTransaction(this.targetUrl, transactionXml);
             const result = this.parseTransactionResponse(response);
 
+            this.summary.numDocs += result.inserted + result.updated;
+
             if (result.success && (result.inserted > 0 || result.updated > 0)) {
                 if (op.isUpdate) {
-                    this.catalogSummary.numUpdated++;
+                    this.summary.increment('numUpdated');
                 }
                 else {
-                    this.catalogSummary.numInserted++;
+                    this.summary.increment('numInserted');
                 }
             }
             else {
-                this.catalogSummary.numErrors++;
-                log.error(`CSW-T ${op.isUpdate ? 'update' : 'insert'} failed for record '${op.uuid}': ${response}`);
+                this.summary.numErrors++;
+                const msg = `CSW-T ${op.isUpdate ? 'update' : 'insert'} failed for record '${op.uuid}': ${response}`;
+                this.summary.errors.push({ type: 'catalog', error: msg });
+                log.error(msg);
             }
         }
     }
@@ -122,11 +124,13 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         const result = this.parseTransactionResponse(response);
 
         if (result.success) {
-            this.catalogSummary.numDeleted = result.deleted;
+            this.summary.increment('numDeleted', result.deleted);
         }
         else {
-            this.catalogSummary.numErrors++;
-            log.error(`Stale cleanup failed: ${response}`);
+            this.summary.numErrors++;
+            const msg = `Stale cleanup failed: ${response}`;
+            this.summary.errors.push({ type: 'catalog', error: msg });
+            log.error(msg);
         }
     }
 
@@ -238,7 +242,9 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
             identificationInfo.appendChild(keywordsFragment.documentElement);
         }
         else {
-            log.warn('No MD_DataIdentification or SV_ServiceIdentification found in document, keywords not added');
+            const warning = 'No MD_DataIdentification or SV_ServiceIdentification found in document, keywords not added';
+            this.summary.warnings.push([warning]);
+            log.warn(warning);
         }
 
         const serializer = new XMLSerializer();
@@ -327,12 +333,12 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         if (!response.includes('TransactionResponse')) return fail;
 
         const doc = this.domParser.parseFromString(response, 'application/xml');
-        const summary = doc.getElementsByTagNameNS(namespaces.CSW, 'TransactionSummary')[0];
-        if (!summary) return { success: true, inserted: 0, updated: 0, deleted: 0 };
+        const cswTransactionSummary = doc.getElementsByTagNameNS(namespaces.CSW, 'TransactionSummary')[0];
+        if (!cswTransactionSummary) return { success: false, inserted: 0, updated: 0, deleted: 0 };
 
-        const inserted = parseInt(summary.getElementsByTagNameNS(namespaces.CSW, 'totalInserted')[0]?.textContent || '0', 10);
-        const updated = parseInt(summary.getElementsByTagNameNS(namespaces.CSW, 'totalUpdated')[0]?.textContent || '0', 10);
-        const deleted = parseInt(summary.getElementsByTagNameNS(namespaces.CSW, 'totalDeleted')[0]?.textContent || '0', 10);
+        const inserted = parseInt(cswTransactionSummary.getElementsByTagNameNS(namespaces.CSW, 'totalInserted')[0]?.textContent || '0', 10);
+        const updated = parseInt(cswTransactionSummary.getElementsByTagNameNS(namespaces.CSW, 'totalUpdated')[0]?.textContent || '0', 10);
+        const deleted = parseInt(cswTransactionSummary.getElementsByTagNameNS(namespaces.CSW, 'totalDeleted')[0]?.textContent || '0', 10);
 
         return { success: true, inserted, updated, deleted };
     }
@@ -341,18 +347,20 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         document: CswDataset,
         duplicates: Map<string | number, CswDataset>
     } {
-        let mainDocument: CswDataset;
-        let duplicates: Map<string | number, CswDataset> = new Map<string | number, CswDataset>();
+        let main: { id: string | number, document: CswDataset } | null = null;
+        const duplicates = new Map<string | number, CswDataset>();
 
-        for (let [id, document] of bucket.duplicates) {
-            if (mainDocument == null) {
-                mainDocument = document;
-            }
-            else {
+        for (const [id, document] of bucket.duplicates) {
+            if (main === null) {
+                main = { id, document };
+            } else if (document.modified && (!main.document.modified || document.modified > main.document.modified)) {
+                duplicates.set(main.id, main.document);
+                main = { id, document };
+            } else {
                 duplicates.set(id, document);
             }
         }
 
-        return { document: mainDocument, duplicates };
+        return { document: main?.document, duplicates };
     }
 }

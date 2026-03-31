@@ -21,17 +21,17 @@
  * ==================================================
  */
 
-import log4js from 'log4js';
-import { elasticsearchMapping } from '../../statistic/index_check.mapping.js';
-import { ConfigService } from '../config/ConfigService.js';
-import type { ElasticQueries } from '../../persistence/elastic.queries.js';
-import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
-import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
-import type { IndexSettings } from '../../persistence/elastic.setting.js';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { Service } from '@tsed/di';
+import log4js from 'log4js';
 import { Summary } from '../../model/summary.js';
+import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
+import type { ElasticQueries } from '../../persistence/elastic.queries.js';
+import type { IndexSettings } from '../../persistence/elastic.setting.js';
+import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import indexCheckMapping from '../../statistic/index_check.mapping.json' with { type: 'json' };
 import dayjs from '../../utils/dayjs.js';
+import { ConfigService } from '../config/ConfigService.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -68,7 +68,7 @@ export class IndexCheckService {
     async ensureIndexExists() {
         let indexExists = await this.elasticUtils.isIndexPresent(this.elasticUtils.indexName);
         if (!indexExists) {
-            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
+            await this.elasticUtils.prepareIndex(indexCheckMapping, this.indexSettings, true);
         }
     }
 
@@ -85,7 +85,7 @@ export class IndexCheckService {
                 timestamp: timestamp,
                 attributions: result
             }, timestamp.toISOString());
-            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
+            await this.elasticUtils.prepareIndex(indexCheckMapping, this.indexSettings, true);
             await this.elasticUtils.finishIndex();
         }
         catch(err) {

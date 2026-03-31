@@ -29,6 +29,7 @@ import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import { ScheduleService } from '../services/ScheduleService.js';
 import { HistoryService } from '../services/statistic/HistoryService.js';
+import { JobsService } from '../services/statistic/JobsService.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -39,7 +40,8 @@ export class HarvesterCtrl {
 
     constructor(
         private scheduleService: ScheduleService,
-        private historyService: HistoryService) {
+        private historyService: HistoryService,
+        private jobsService: JobsService) {
     }
 
     @Get('/')
@@ -96,5 +98,10 @@ export class HarvesterCtrl {
     @Get('/history/:id')
     async getHarvesterHistory(@PathParams('id') id: number): Promise<any[]> {
         return await this.historyService.getHistory(id);
+    }
+
+    @Get('/jobs/:id')
+    async getHarvesterJobs(@PathParams('id') id: number): Promise<any> {
+        return await this.jobsService.getJobs(id);
     }
 }

@@ -25,7 +25,6 @@ import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
-import { ImportResult } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import type { BulkResponse } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
@@ -59,7 +58,7 @@ export class JsonImporter extends Importer<JsonSettings> {
 
     /**
      * Harvest method implementation
-     * NOTE Any error added to summary.appErrors will cause a database transaction rollback!
+     * NOTE Any error added to summary.errors with type 'app' or 'database' will cause a database transaction rollback!
      * @returns number
      */
     protected async harvest(): Promise<number> {
@@ -83,7 +82,7 @@ export class JsonImporter extends Importer<JsonSettings> {
         else {
             const message = `Error while fetching ClickRhein Records\nServer response: ${MiscUtils.truncateErrorMessage(response?.toString())}.`;
             log.error(message);
-            this.getSummary().appErrors.push(message);
+            this.getSummary().errors.push({ type: 'app', error: message });
         }
 
         log.info(`Finished requesting records`);
@@ -136,7 +135,7 @@ export class JsonImporter extends Importer<JsonSettings> {
                 else {
                     this.getSummary().skippedDocs.push(id);
                 }
-                this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+                this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
             }
         }
         await Promise.allSettled(promises).catch(e => log.error('Error persisting record', e));

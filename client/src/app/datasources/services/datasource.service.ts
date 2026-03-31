@@ -108,7 +108,7 @@ export class DatasourceService {
 
   import(id: number, isIncremental: boolean = false): Observable<void> {
     // Reset the import log.
-    this.updateImportLogs({ id, complete: false });
+    this.updateImportLogs({ id, complete: false, stage: '' });
 
     return this.api.import(id, isIncremental);
   }
@@ -198,6 +198,10 @@ export class DatasourceService {
 
   getHistory(id: number): Observable<any> {
     return this.api.getHistory(id);
+  }
+
+  getJobs(id: number): Observable<any> {
+    return this.api.getJobs(id);
   }
 
   private updateImportLogs(log: ImportLogMessage) {

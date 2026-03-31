@@ -667,7 +667,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         let logDateError = () => {
             let message = `Date has incorrect format: ${date}`;
             this.getSummary().numErrors++;
-            this.getSummary().appErrors.push(message);
+            this.getSummary().errors.push({ type: 'app', error: message });
             this.log.warn(message);
         };
 
@@ -712,7 +712,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
 
             let message = `Byte size has incorrect format: ${size}`;
             this.getSummary().numErrors++; //.push(message);
-            this.getSummary().appErrors.push(message);
+            this.getSummary().errors.push({ type: 'app', error: message });
             this.log.warn(message);
             return undefined;
         }

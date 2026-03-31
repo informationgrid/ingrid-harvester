@@ -1,0 +1,103 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<h2 mat-dialog-title>{{ data.harvester }} — Job History</h2>
+
+<mat-dialog-content>
+  @if (!data.jobs?.length) {
+    <p>No jobs recorded yet.</p>
+  } @else {
+    <mat-accordion>
+      @for (job of data.jobs; track job.jobId) {
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="job-timestamp">
+              {{ job.timestamp | date:'yyyy-MM-dd HH:mm' }}
+            </mat-panel-title>
+            <mat-panel-description class="job-summary">
+              <mat-chip-set>
+                <mat-chip [class]="'status-' + job.status">{{ job.status }}</mat-chip>
+              </mat-chip-set>
+              <span>{{ job.numDocs }} docs</span>
+              <span>{{ job.duration | number:'1.0-1' }}s</span>
+              @if (job.errors?.length) {
+                <span class="job-errors">{{ job.errors.length }} error(s)</span>
+              }
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <!-- Per-catalog breakdown -->
+          @if (catalogStages(job).length) {
+            <table class="stage-table">
+              <thead>
+                <tr>
+                  <th>Catalog</th>
+                  <th>Docs</th>
+                  <th>Record errors</th>
+                  <th>Errors</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (stage of catalogStages(job); track stage.name) {
+                  <tr>
+                    <td>{{ stage.name }}</td>
+                    <td>{{ stage.numDocs }}</td>
+                    <td>{{ stage.numErrors }}</td>
+                    <td>{{ stage.errors?.length ?? 0 }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+
+          <!-- Job-level errors -->
+          @if (job.errors?.length) {
+            <div class="error-list">
+              @for (e of job.errors; track $index) {
+                <div class="error-entry"><span class="error-type">[{{ e.type }}]</span> {{ e.error }}</div>
+              }
+            </div>
+          }
+
+          <!-- Job log -->
+          <div class="log-action">
+            <button mat-stroked-button (click)="loadLog(job)" [disabled]="logLoading.get(job.jobId)">
+              {{ logLoading.get(job.jobId) ? 'Loading…' : 'View Log' }}
+            </button>
+          </div>
+          @if (logLines(job.jobId).length) {
+            <div class="job-log">
+              @for (line of logLines(job.jobId); track $index) {
+                <div [class]="determineClass(line)">{{ line }}</div>
+              }
+            </div>
+          }
+        </mat-expansion-panel>
+      }
+    </mat-accordion>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>
