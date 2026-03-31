@@ -41,7 +41,7 @@ export class SocketService {
     if (configService.config) {
       this.socket = io.connect(configService.config.url + "/import", {
         transports: ["websocket", "polling"],
-        path: configService.config.contextPath + "/socket.io",
+        path: configService.config.contextPath + "socket.io",
       });
 
       this.socket.on("/log", (data) => this.log$.next(data));
@@ -62,6 +62,8 @@ export class SocketService {
             configService.config.url +
             "/import",
         );
+        // switch to polling if websocket fails
+        this.socket.io.opts.transports = ["polling", "websocket"];
         this.connectionLost$.next(true);
       });
     }
