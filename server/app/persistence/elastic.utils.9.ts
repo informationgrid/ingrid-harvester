@@ -34,7 +34,7 @@ const log = log4js.getLogger(import.meta.filename);
 
 export class ElasticsearchUtils9 extends ElasticsearchUtils {
 
-    protected client: Client;
+    declare protected client: Client;
 
     constructor(config: ElasticsearchConfiguration, summary: Summary) {
         config.prefix ??= '';

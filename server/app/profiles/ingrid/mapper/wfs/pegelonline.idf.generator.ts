@@ -27,7 +27,7 @@ import type { PegelonlineWfsMapper } from './pegelonline.wfs.mapper.js';
 
 export class PegelonlineIdfGenerator extends IdfGenerator {
 
-    protected mapper: PegelonlineWfsMapper;
+    declare protected mapper: PegelonlineWfsMapper;
     // private baseMapper: WfsMapper;
 
     constructor(profileMapper: PegelonlineWfsMapper) {

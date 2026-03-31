@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es2021",
+    "target": "es2023",
     "lib": [
-      "es2021",
+      "es2023",
       "dom",
       "dom.iterable"
     ],
