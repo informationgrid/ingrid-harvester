@@ -128,5 +128,8 @@
   "optionalDependencies": {
     "@oxc-resolver/binding-linux-x64-gnu": "^11.19.1",
     "@swc/core-linux-x64-gnu": "^1.15.21"
+  },
+  "overrides": {
+    "picomatch": "^4.0.4"
   }
 }
