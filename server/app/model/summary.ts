@@ -21,7 +21,12 @@
  * ==================================================
  */
 
-import type {ImporterSettings} from '../importer.settings.js';
+import type { ImporterSettings } from '../importer.settings.js';
+
+export type TypedError = {
+    type: string,
+    error: string
+};
 
 export class Summary {
 
@@ -35,7 +40,7 @@ export class Summary {
 
     skippedDocs: string[] = [];
 
-    errors: { type: string, error: string }[] = [];
+    errors: TypedError[] = [];
 
     counters: Record<string, number> = {};
 
@@ -47,7 +52,7 @@ export class Summary {
 
     [x: string]: any;
 
-    increment(key: string, by = 1): void {
+    increment(key: string, by: number = 1): void {
         this.counters[key] = (this.counters[key] ?? 0) + by;
     }
 
