@@ -78,9 +78,9 @@ You can use the same setup as outlined in the section `Test setup` below, but wi
 ### Running in a terminal
 
 Prerequisites:
-* node.js v16
+* node.js v24
 * Postgresql >= v14
-* Elasticsearch >= 6
+* Elasticsearch >= 8
 
 You may wish to run the server and the client outside of the docker container, for debugging and faster deployment/development purposes. Currently you have to change some files to achieve this, outlined below:
 
@@ -149,10 +149,7 @@ Run Elasticsearch:
 > docker-compose up -d
 
 For the server:
-> npm run start-dev
-
-For the server (node 16+):
-> npm run start-dev-16
+> npm run start-ingrid
 
 For the client:
 > npm run start
