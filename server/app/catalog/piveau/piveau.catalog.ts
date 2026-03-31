@@ -52,7 +52,7 @@ export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings,
         super(catalogSettings, summary);
     }
 
-    async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+    async prepareImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         const targetUrl = this.settings.url + "/catalogues/" + this.settings.settings.catalog;
         const body = '<?xml version="1.0"?>\n' +
             '<rdf:RDF\n' +
@@ -80,7 +80,7 @@ export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings,
         await this.deleteStaleRecords(importerSettings.id);
     }
 
-    async processBucket(bucket: Bucket<PiveauDataset>): Promise<PiveauCatalogOperation[]> {
+    async processBucket(bucket: Bucket<PiveauDataset>, importerSettings: ImporterSettings): Promise<PiveauCatalogOperation[]> {
         const { document } = this.prioritizeAndFilter(bucket);
         return [{
             uuid: document.uuid,

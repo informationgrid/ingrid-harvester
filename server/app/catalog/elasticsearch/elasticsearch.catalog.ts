@@ -49,7 +49,7 @@ export abstract class ElasticsearchCatalog extends Catalog<IndexDocument, Elasti
         this.elastic = ElasticsearchFactory.getElasticUtils(catalogSettings.settings, summary);
     }
 
-    async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+    async prepareImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // ensure that the configured index exists and has the configured alias
         const esSettings = this.settings.settings;
         if (esSettings.index && !(await this.elastic.isIndexPresent(esSettings.index))) {

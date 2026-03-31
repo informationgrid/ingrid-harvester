@@ -126,7 +126,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         }
     }
 
-    async processBucket(bucket: Bucket<IndexDocument>): Promise<EsOperation[]> {
+    async processBucket(bucket: Bucket<IndexDocument>, importerSettings: ImporterSettings): Promise<EsOperation[]> {
         let box: EsOperation[] = [];
         // find primary document
         let { document, duplicates } = this.prioritizeAndFilter(bucket);

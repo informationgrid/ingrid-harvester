@@ -84,7 +84,7 @@ export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSett
      * @param settings 
      * @param observer 
      */
-    async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+    async prepareImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // can be overwritten by child classes if necessary
     }
 
@@ -96,11 +96,11 @@ export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSett
      * 
      * @param transactionHandle 
      */
-    async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+    async import(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         log.info(`Importing data for transaction: ${transactionHandle}`);
         const bucketGenerator = this.database.streamBuckets<C>(transactionHandle, this.getDatasetColumn(), observer);
         for await (const bucket of bucketGenerator) {
-            const ops = await this.processBucket(bucket);
+            const ops = await this.processBucket(bucket, importerSettings);
             await this.importIntoCatalog(ops);
         }
         // finish importing
@@ -115,7 +115,7 @@ export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSett
         // can be overwritten by child classes if necessary
     }
 
-    abstract processBucket(bucket: Bucket<C>): Promise<O[]>;
+    abstract processBucket(bucket: Bucket<C>, importerSettings: ImporterSettings): Promise<O[]>;
 
     abstract importIntoCatalog(operations: O[]): Promise<void>;
 

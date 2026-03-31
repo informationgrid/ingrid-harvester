@@ -22,6 +22,7 @@
  */
 
 import { ElasticsearchCatalog } from '../../../catalog/elasticsearch/elasticsearch.catalog.js';
+import type { ImporterSettings } from '../../../importer.settings.js';
 import type { EsOperation } from '../../../persistence/elastic.utils.js';
 import type { Bucket } from '../../../persistence/postgres.utils.js';
 import { createEsId } from '../lvr.utils.js';
@@ -30,7 +31,7 @@ import type { LvrIndexDocument } from '../model/index.document.js';
 
 export class LvrElasticsearchCatalog extends ElasticsearchCatalog {
 
-    async processBucket(bucket: Bucket<LvrIndexDocument>): Promise<EsOperation[]> {
+    async processBucket(bucket: Bucket<LvrIndexDocument>, importerSettings: ImporterSettings): Promise<EsOperation[]> {
         let box: EsOperation[] = [];
 
         // find primary document

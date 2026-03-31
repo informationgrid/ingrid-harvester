@@ -60,7 +60,7 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         super(catalogSettings, summary);
     }
 
-    async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+    async prepareImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         // Fetch existing identifiers from target to decide Insert vs Update
         this.existingIds = await this.fetchExistingIdentifiers();
         log.info(`Found ${this.existingIds.size} existing records in target CSW catalog`);
@@ -72,9 +72,9 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         await this.deleteStaleRecords(importerSettings.id);
     }
 
-    async processBucket(bucket: Bucket<CswDataset>): Promise<CswCatalogOperation[]> {
+    async processBucket(bucket: Bucket<CswDataset>, importerSettings: ImporterSettings): Promise<CswCatalogOperation[]> {
         const { document: record } = this.prioritizeAndFilter(bucket);
-        const enrichedXml = this.addTraceability(record.dataset, this.transactionTimestamp, this.settings.id);
+        const enrichedXml = this.addTraceability(record.dataset, this.transactionTimestamp, importerSettings.id);
         return [{
             uuid: record.uuid,
             serializedXml: enrichedXml,

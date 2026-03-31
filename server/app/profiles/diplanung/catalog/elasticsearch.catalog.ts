@@ -22,6 +22,7 @@
  */
 
 import { ElasticsearchCatalog } from '../../../catalog/elasticsearch/elasticsearch.catalog.js';
+import type { ImporterSettings } from '../../../importer.settings.js';
 import type { Distribution } from '../../../model/distribution.js';
 import type { EsOperation } from '../../../persistence/elastic.utils.js';
 import type { Bucket } from '../../../persistence/postgres.utils.js';
@@ -48,7 +49,7 @@ const HACK_ON = true;
 
 export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog {
 
-    public async processBucket(bucket: Bucket<DiplanungIndexDocument>): Promise<EsOperation[]> {
+    public async processBucket(bucket: Bucket<DiplanungIndexDocument>, importerSettings: ImporterSettings): Promise<EsOperation[]> {
         let box: EsOperation[] = [];
         // find primary document
         let { document, duplicates } = this.prioritizeAndFilter(bucket);
