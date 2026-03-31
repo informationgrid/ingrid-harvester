@@ -46,5 +46,7 @@ export const defaultCSWSettings: Partial<CswSettings> = {
     httpMethod: 'GET',
     resultType: 'results',
     simplifyTolerance: 0,
-    isIncrementalSupported: true
+    capabilities: {
+        isIncrementalSupported: true
+    }
 };
