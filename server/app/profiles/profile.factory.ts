@@ -64,14 +64,14 @@ CatalogFactory {
 
     dateReplacer = MiscUtils.dateReplacer;
 
-    getIndexMappings(): any {
+    getIndexMappings(mappingName?: string): any {
         const require = createRequire(import.meta.url);
-        return require(`./${this.getProfileName()}/persistence/elastic.mappings.json`);
+        return require(`./${this.getProfileName()}/persistence/${mappingName ?? 'default-mapping'}.json`);
     }
 
-    getIndexSettings(): IndexSettings {
+    getIndexSettings(settingsName?: string): IndexSettings {
         const require = createRequire(import.meta.url);
-        return require(`./${this.getProfileName()}/persistence/elastic.settings.json`);
+        return require(`./${this.getProfileName()}/persistence/${settingsName ?? 'default-settings'}.json`);
     }
 
     getPostgresQueries(): PostgresQueries {

@@ -95,7 +95,7 @@
     }
   },
   "catalogs": {
-    "addCatalog": "Neunen Katalog hinzufügen",
+    "addCatalog": "Neuen Katalog hinzufügen",
     "editCatalog": "Katalog bearbeiten",
     "viewCatalog": "Katalog ansehen",
     "deleteConfirmation": "Wollen Sie diesen Katalog wirklich löschen?",
@@ -104,6 +104,7 @@
       "version": "Version",
       "alias": "Alias",
       "index": "Index",
+      "mapping": "Index-Mapping Schema",
       "catalog": "Katalog",
       "description": "Beschreibung",
       "title": "Titel",

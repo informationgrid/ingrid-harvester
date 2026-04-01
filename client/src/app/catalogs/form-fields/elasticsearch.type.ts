@@ -24,24 +24,6 @@ export default abstract class ElasticsearchType {
                 fieldGroupClassName: "ingrid-row",
                 fieldGroup: [
                   {
-                    key: "alias",
-                    type: "input",
-                    className: "ingrid-col-10 ingrid-col-md-auto",
-                    props: {
-                      label: transloco.transform("catalogs.formLabel.alias"),
-                      required: true,
-                    },
-                  },
-                  {
-                    key: "index",
-                    type: "input",
-                    className: "ingrid-col-10 ingrid-col-md-auto",
-                    props: {
-                      label: transloco.transform("catalogs.formLabel.index"),
-                      required: true,
-                    },
-                  },
-                  {
                     key: "version",
                     type: "select",
                     className: "ingrid-col-10 ingrid-col-md-auto",
@@ -54,7 +36,39 @@ export default abstract class ElasticsearchType {
                       ],
                     },
                   },
+                  {
+                    key: "index",
+                    type: "input",
+                    className: "ingrid-col-10 ingrid-col-md-auto",
+                    props: {
+                      label: transloco.transform("catalogs.formLabel.index"),
+                      required: true,
+                    },
+                  },
+                  {
+                    key: "mappingFile",
+                    type: "select",
+                    className: "ingrid-col-10 ingrid-col-md-auto",
+                    defaultValue: "default-mapping",
+                    props: {
+                      label: transloco.transform("catalogs.formLabel.mapping"),
+                      required: true,
+                      options: [
+                        // TODO these options should come from the backend. they will differ for each profile
+                        { label: "Default", value: "default-mapping" },
+                        { label: "Opendata", value: "opendata-mapping" },
+                      ],
+                    },
+                  },
                 ],
+              },
+              {
+                key: "alias",
+                type: "input",
+                props: {
+                  label: transloco.transform("catalogs.formLabel.alias"),
+                  required: true,
+                },
               },
               {
                 key: "user",

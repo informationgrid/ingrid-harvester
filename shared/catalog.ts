@@ -45,7 +45,9 @@ export type PiveauCatalogSettings = CatalogSettings & {
 
 export type ElasticsearchCatalogSettings = CatalogSettings & {
   settings: ElasticsearchConfiguration & {
-    dedupAliases: string | string[]
+    dedupAliases: string | string[],
+    mappingFile: string,
+    // settingsFile: string
   }
 }
 
