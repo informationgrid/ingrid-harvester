@@ -259,7 +259,7 @@ export class ConfigService {
     static update(id: number, updatedHarvester: Datasource): number {
         let newConfig = ConfigService.getHarvesters();
         const filteredHarvester = MiscUtils.removePaths(updatedHarvester, [
-            "isIncrementalSupported"
+            "capabilities"
         ]);
 
         if (id === -1) {
@@ -284,7 +284,7 @@ export class ConfigService {
 
     static updateAll(updatedHarvesters: Datasource[]) {
         const filteredHarvesters = updatedHarvesters.map(harvesterConfig => MiscUtils.removePaths(harvesterConfig, [
-            "isIncrementalSupported"
+            "capabilities"
         ]));
         fs.writeFileSync(this.getHarvesterConfigFile(), JSON.stringify(filteredHarvesters, null, 2));
     }

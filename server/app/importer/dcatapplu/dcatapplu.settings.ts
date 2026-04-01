@@ -25,7 +25,11 @@ import type { ImporterSettings} from '../../importer.settings.js';
 import {DefaultImporterSettings} from '../../importer.settings.js';
 
 export const defaultDCATAPPLUSettings: DcatappluSettings = {
-    ...DefaultImporterSettings
+    ...DefaultImporterSettings,
+    capabilities: {
+        isIncrementalSupported: false,
+        supportedCatalogTypes: ['elasticsearch', 'piveau']
+    }
 };
 
 export type DcatappluSettings = ImporterSettings;

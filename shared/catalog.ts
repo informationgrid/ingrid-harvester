@@ -60,3 +60,5 @@ export type Catalog = CatalogSettings
   & Partial<PiveauCatalogSettings>
   & Partial<ElasticsearchCatalogSettings>
   & Partial<CswCatalogSettings>;
+
+export type CatalogType = 'elasticsearch' | 'csw' | 'piveau';

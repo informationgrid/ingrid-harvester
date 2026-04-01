@@ -21,6 +21,8 @@
  * ==================================================
  */
 
+import type { CatalogType } from '@shared/catalog.js';
+
 export interface CronData {
     pattern: string;
     active: boolean;
@@ -43,7 +45,10 @@ export const DefaultImporterSettings: ImporterSettings = {
     rules: {
         containsDocumentsWithData: false
     },
-    isIncrementalSupported: false,
+    capabilities: {
+        isIncrementalSupported: false,
+        supportedCatalogTypes: ['elasticsearch']
+    },
     maxConcurrent: 1,
     skipUrlCheckOnHarvest: false,
     timeout: 60000,
@@ -78,7 +83,10 @@ export type ImporterSettings = {
     id?: number,
     // TODO ED:2022-10-04: the next entry needs to be transient, i.e. not saved into config file but (requested and) given with every run
     isIncremental?: boolean,
-    isIncrementalSupported: boolean,
+    capabilities: {
+        isIncrementalSupported: boolean,
+        supportedCatalogTypes: CatalogType[]
+    },
     maxConcurrent: number,
     maxRecords?: number,
     proxy?: string,
