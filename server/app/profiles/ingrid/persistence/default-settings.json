@@ -52,15 +52,6 @@
                     "filter": [
                         "lowercase"
                     ]
-                },
-                "german_simple": {
-                    "type": "custom",
-                    "tokenizer": "standard",
-                    "filter": [
-                        "lowercase",
-                        "german_normalization",
-                        "german_stemmer"
-                    ]
                 }
             }
         }
