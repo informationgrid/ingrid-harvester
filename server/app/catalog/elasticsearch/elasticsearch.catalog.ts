@@ -52,7 +52,7 @@ export abstract class ElasticsearchCatalog extends Catalog<IndexDocument, Elasti
         if (esSettings.index && !(await this.elastic.isIndexPresent(esSettings.index))) {
             let mapping = ProfileFactoryLoader.get().getIndexMappings(esSettings.mappingFile);
             if(importerSettings.type === "DCATAPDE") {
-                mapping = ProfileFactoryLoader.get().getIndexMappings("ingrid-opendata-mapping.json");
+                mapping = ProfileFactoryLoader.get().getIndexMappings("ingrid-opendata-mapping");
             }
             // const settings = ProfileFactoryLoader.get().getIndexSettings(esSettings.settings);
             const settings = ProfileFactoryLoader.get().getIndexSettings();
