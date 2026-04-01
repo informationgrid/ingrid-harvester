@@ -35,6 +35,7 @@ export class ingridCkanMapper extends ingridMapper<CkanMapper> {
         let result: IngridOpendataIndexDocument = {
             ...await super.createIndexDocument(),
             ...this.getIngridMetadata(this.baseMapper.getSettings()),
+            metadata: this.getMetaMetadata(),
             id: this.getGeneratedId(),
             uuid: this.getGeneratedId(),
             modified: this.getModifiedDate(),

@@ -33,10 +33,6 @@ import { ingridMapper } from './ingrid.mapper.js';
 
 export class ingridWfsMapper extends ingridMapper<WfsMapper> {
 
-    constructor(baseMapper: WfsMapper) {
-        super(baseMapper);
-    }
-
     getTitle(): string {
         const featureTitleAttribute = this.baseMapper.getSettings().featureTitleAttribute;
         if (featureTitleAttribute && !this.baseMapper.isFeatureType()) {

@@ -35,6 +35,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
     async createIndexDocument(): Promise<IngridOpendataIndexDocument> {
         let result: IngridOpendataIndexDocument = {
             ...this.getIngridMetadata(this.baseMapper.getSettings()),
+            metadata: this.getMetaMetadata(),
             id: this.baseMapper.getCode(),
             uuid: this.getGeneratedId(),
             title: this.getTitle(),
@@ -56,13 +57,6 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
                     source: this.baseMapper.getMetadataSource(),
                     merged_from: [],
                 },
-            },
-            // ED test: add metadata directly for portal-ng
-            // if it works, move from extras.metadata to metadata
-            metadata: {
-                issued: null,
-                modified: new Date(Date.now()),
-                created: new Date(Date.now())
             },
             spatial: null,
             // temporal: [this.baseMapper.getTemporal()].filter(Boolean),

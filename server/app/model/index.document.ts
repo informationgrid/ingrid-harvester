@@ -27,6 +27,7 @@ import type { Metadata } from './ingrid.index.document.js';
 
 export type IndexDocument = {
     uuid: string,
+    // TODO cleanup: we should not need extras.metadata
     extras: {
         metadata: HarvestingMetadata
     },

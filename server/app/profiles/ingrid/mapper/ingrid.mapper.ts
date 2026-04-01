@@ -28,15 +28,16 @@ import type { ImporterSettings } from '../../../importer.settings.js';
 import type { CkanMapper } from "../../../importer/ckan/ckan.mapper.js";
 import type { CswMapper } from "../../../importer/csw/csw.mapper.js";
 import type { DcatapdeMapper } from '../../../importer/dcatapde/dcatapde.mapper.js';
+import type { GenesisMapper } from "../../../importer/genesis/genesis.mapper.js";
 import type { ToElasticMapper } from '../../../importer/to.elastic.mapper.js';
 import type { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
 import type { Distribution } from "../../../model/distribution.js";
 import type { DocumentFactory } from "../../../model/index.document.factory.js";
 import type { IndexDocument } from '../../../model/index.document.js';
+import type { Metadata } from '../../../model/ingrid.index.document.js';
 import type { IngridIndexDocument } from "../model/index.document.js";
 import type { IngridMetadata } from '../model/ingrid.metadata.js';
 import { Codelist } from "../utils/codelist.js";
-import type {GenesisMapper} from "../../../importer/genesis/genesis.mapper.js";
 
 export type ingridMapperType = CswMapper | CkanMapper | DcatapdeMapper | WfsMapper | GenesisMapper;
 
@@ -66,6 +67,7 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
             // put custom entries first, so they can potentially get overwritten with more specific getters below
             ...this.getCustomEntries(),
             ...this.getIngridMetadata(this.baseMapper.getSettings()),
+            metadata: this.getMetaMetadata(),
             uuid: this.getGeneratedId(),
             collection: {
                 name: this.getDataSourceName(),
@@ -447,6 +449,13 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
             dataSourceName: settings.dataSourceName,
             boost: settings.boost,
             isfolder: "false" // this *should* be boolean, but IGE does not map the field, so default is text
+        };
+    }
+
+    protected getMetaMetadata(): Metadata {
+        return {
+            created: null, // TODO
+            modified: this.getModifiedDate()
         };
     }
 }

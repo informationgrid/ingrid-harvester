@@ -35,13 +35,10 @@ const log = log4js.getLogger(import.meta.filename);
 
 export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implements ToElasticMapper<IngridOpendataIndexDocument> {
 
-    async create(): Promise<IndexDocument & IngridMetadata> {
-        return await this.createIndexDocument();
-    }
-
     async createIndexDocument(): Promise<IngridOpendataIndexDocument> {
         let result: IngridOpendataIndexDocument = {
             ...this.getIngridMetadata(this.baseMapper.getSettings()),
+            metadata: this.getMetaMetadata(),
             id: this.getGeneratedId(),
             uuid: this.getGeneratedId(),
             modified: this.getModifiedDate(),
