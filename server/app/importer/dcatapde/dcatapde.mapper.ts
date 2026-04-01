@@ -188,6 +188,9 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
                         license["attribution_by_text"] = licenseAttributionByText;
                     }
                 }
+                if (license && !Array.isArray(license)) {
+                    license = [license];
+                }
 
                 let url = DcatapdeMapper.select('./dcat:accessURL', distribution, true);
                 let title = DcatapdeMapper.select('./dct:title', distribution, true);
@@ -221,7 +224,8 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
                         issued: issued ? new Date(issued.textContent) : undefined,
                         modified: modified ? new Date(modified.textContent) : undefined,
                         byteSize: size ? Number(size.textContent) : undefined,
-                        license,
+                        license: license?.map(oneLicense => oneLicense.id),
+                        license_name: license?.map(oneLicense => oneLicense.title),
                         availability,
                         languages: languages ? languages : undefined,
                     }

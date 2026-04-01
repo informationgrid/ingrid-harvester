@@ -56,6 +56,7 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implement
                     merged_from: []
                 }
             },
+            // distributions: await this.getDistributions(),
             sort_hash: this.getSortHash(),
             content: null, // assigned after
             rdf: null, // assigned after,
@@ -93,22 +94,12 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implement
     getKeywords() {
         let result = [];
         let keywords = this.baseMapper.getKeywords();
-        let themes = this.baseMapper.getThemes();
         keywords?.forEach(keyword => {
             if (this.hasValue(keyword) && !result.some(r => r.term === keyword)) {
                 result.push({
                     term: keyword,
                     id: "",
                     source: "FREE",
-                });
-            }
-        });
-        themes?.forEach(theme => {
-            if (this.hasValue(theme) && !result.some(r => r.term === theme && r.source === "THEMES")) {
-                result.push({
-                    term: theme,
-                    id: "",
-                    source: "THEMES",
                 });
             }
         });

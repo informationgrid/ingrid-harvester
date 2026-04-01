@@ -50,10 +50,7 @@ export abstract class ElasticsearchCatalog extends Catalog<IndexDocument, Elasti
         // ensure that the configured index exists and has the configured alias
         const esSettings = this.settings.settings;
         if (esSettings.index && !(await this.elastic.isIndexPresent(esSettings.index))) {
-            let mapping = ProfileFactoryLoader.get().getIndexMappings(esSettings.mappingFile);
-            if(importerSettings.type === "DCATAPDE") {
-                mapping = ProfileFactoryLoader.get().getIndexMappings("ingrid-opendata-mapping");
-            }
+            const mapping = ProfileFactoryLoader.get().getIndexMappings(esSettings.mappingFile);
             // const settings = ProfileFactoryLoader.get().getIndexSettings(esSettings.settings);
             const settings = ProfileFactoryLoader.get().getIndexSettings();
             await this.elastic.prepareIndexWithName(esSettings.index, mapping, settings);
