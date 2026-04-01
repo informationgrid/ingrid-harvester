@@ -28,6 +28,7 @@ export abstract class IngridProfile {
                 className: "ingrid-col-10 ingrid-col-md-auto",
                 props: {
                   label: "iPlugId",
+                  required: true,
                 },
               },
               {
@@ -37,6 +38,7 @@ export abstract class IngridProfile {
                 className: "ingrid-col-10 ingrid-col-md-auto",
                 props: {
                   label: "Partner",
+                  required: true,
                 },
               },
               {
@@ -46,6 +48,7 @@ export abstract class IngridProfile {
                 className: "ingrid-col-10 ingrid-col-md-auto",
                 props: {
                   label: "Provider",
+                  required: true,
                 },
               },
             ],
@@ -60,6 +63,7 @@ export abstract class IngridProfile {
                 className: "ingrid-col-10 ingrid-col-md-auto",
                 props: {
                   label: "Datasource Name",
+                  required: true,
                 },
               },
               {
@@ -69,6 +73,7 @@ export abstract class IngridProfile {
                 className: "ingrid-col-10 ingrid-col-md-auto",
                 props: {
                   label: "Datatype",
+                  required: true,
                 },
               },
             ],

@@ -16,6 +16,17 @@ export abstract class SharedFields {
         },
         fieldGroup: [
           {
+            key: "description",
+            type: "input",
+            wrappers: ["inline-help", "form-field"],
+            props: {
+              label: "Name",
+              type: "text",
+              required: true,
+              contextHelpId: "harvester_field_description",
+            },
+          },
+          {
             fieldGroupClassName: "ingrid-row",
             fieldGroup: [
               {
@@ -27,32 +38,21 @@ export abstract class SharedFields {
                   label: "Typ",
                   required: true,
                   contextHelpId: "harvester_field_type",
+                  options: [
+                    { label: "CKAN", value: "CKAN" },
+                    { label: "CSW", value: "CSW" },
+                    { label: "DCAT-AP.de", value: "DCATAPDE" },
+                    { label: "DCAT-AP.PLU", value: "DCATAPPLU" },
+                    { label: "GENESIS", value: "GENESIS" },
+                    { label: "JSON", value: "JSON" },
+                    { label: "KLD", value: "KLD" },
+                    { label: "OAI", value: "OAI" },
+                    { label: "SPARQL", value: "SPARQL" },
+                    { label: "WFS", value: "WFS" },
+                  ],
                 },
                 expressions: {
                   "props.disabled": "model?.id != -1",
-                  "props.options": (field) => {
-                    return [
-                      { label: "CKAN", value: "CKAN" },
-                      { label: "CSW", value: "CSW" },
-                      {
-                        label: "CSW (CODEDE)",
-                        value: "CODEDE-CSW",
-                        disabled: field.model?.id == -1,
-                      },
-                      { label: "DCAT-AP.de", value: "DCATAPDE" },
-                      { label: "DCAT-AP.PLU", value: "DCATAPPLU" },
-                      { label: "JSON", value: "JSON" },
-                      { label: "GENESIS", value: "GENESIS" },
-                      { label: "KLD", value: "KLD" },
-                      { label: "OAI", value: "OAI" },
-                      { label: "SPARQL", value: "SPARQL" },
-                      { label: "WFS", value: "WFS" },
-                      { label: "WFS (FIS)", value: "WFS.FIS" },
-                      { label: "WFS (MS)", value: "WFS.MS" },
-                      { label: "WFS (XPLAN)", value: "WFS.XPLAN" },
-                      { label: "WFS (Syn XPLAN)", value: "WFS.XPLAN.SYN" },
-                    ];
-                  },
                 },
               },
               {
@@ -88,43 +88,6 @@ export abstract class SharedFields {
                 );
               },
             },
-          },
-          {
-            key: "description",
-            type: "input",
-            wrappers: ["inline-help", "form-field"],
-            props: {
-              label: "Beschreibung",
-              type: "text",
-              required: true,
-              contextHelpId: "harvester_field_description",
-            },
-          },
-          {
-            fieldGroupClassName: "ingrid-row",
-            fieldGroup: [
-              {
-                key: "maxRecords",
-                type: "input",
-                className: "ingrid-col-10 ingrid-col-md-auto",
-                props: {
-                  label: "Max. Datensätze pro Anfrage",
-                  type: "number",
-                  min: 1,
-                  max: 10000,
-                },
-              },
-              {
-                key: "startPosition",
-                type: "input",
-                className: "ingrid-col-10 ingrid-col-md-auto",
-                props: {
-                  label: "Start Datensatz",
-                  type: "number",
-                  min: 0,
-                },
-              },
-            ],
           },
         ],
       },

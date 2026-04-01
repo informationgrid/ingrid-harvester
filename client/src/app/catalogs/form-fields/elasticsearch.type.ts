@@ -43,13 +43,15 @@ export default abstract class ElasticsearchType {
                   },
                   {
                     key: "version",
-                    type: "input",
+                    type: "select",
                     className: "ingrid-col-10 ingrid-col-md-auto",
                     props: {
                       label: transloco.transform("catalogs.formLabel.version"),
                       required: true,
-                      type: "number",
-                      min: 1,
+                      options: [
+                        { label: "8", value: "8" },
+                        { label: "9", value: "9" },
+                      ],
                     },
                   },
                 ],

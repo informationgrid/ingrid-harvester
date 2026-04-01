@@ -6,7 +6,7 @@ export abstract class WfsType {
     return [
       {
         expressions: {
-          hide: "!model.type?.startsWith('WFS')",
+          hide: "model.type != 'WFS'",
         },
         fieldGroup: [
           {
@@ -78,13 +78,13 @@ export abstract class WfsType {
                   {
                     key: "wfsProfile",
                     type: "select",
-                    className: "ingrid-col-10 ingrid-col-md-3",
+                    className: "ingrid-col-10 ingrid-col-md-auto",
                     defaultValue: "default",
                     props: {
                       label: "WFS Profil",
                       required: true,
                       options: [
-                        { label: "default", value: "default" },
+                        { label: "Standard", value: "default" },
                         { label: "pegelonline", value: "pegelonline" },
                         { label: "zdm", value: "zdm" },
                       ],
@@ -96,6 +96,10 @@ export abstract class WfsType {
                     className: "ingrid-col-10 ingrid-col-md-auto",
                     props: {
                       label: "Titel-Attribut (inkl. Namespace-Prefix)",
+                      required: true,
+                    },
+                    expressions: {
+                      hide: "model.wfsProfile != 'default'",
                     },
                   },
                 ],
@@ -198,6 +202,7 @@ export abstract class WfsType {
                         key: "featureLimit",
                         type: "input",
                         className: "ingrid-col-10 ingrid-col-md-auto",
+                        defaultValue: 50,
                         props: {
                           label: "Feature-Limit",
                           type: "number",
@@ -209,6 +214,7 @@ export abstract class WfsType {
                         key: "maxConcurrent",
                         type: "input",
                         className: "ingrid-col-10 ingrid-col-md-auto",
+                        defaultValue: 4,
                         props: {
                           label: "Anzahl paralleler Abfragen",
                           type: "number",

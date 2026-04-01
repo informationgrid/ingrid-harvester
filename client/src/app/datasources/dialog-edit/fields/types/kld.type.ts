@@ -14,12 +14,10 @@ export abstract class KldType {
             props: {
               label: "KLD Einstellungen",
             },
-            fieldGroupClassName: "ingrid-row",
             fieldGroup: [
               {
                 key: "sourceURL",
                 type: "input",
-                className: "ingrid-col-10 ingrid-col-md-auto",
                 props: {
                   label: "Provider URL",
                   required: true,
@@ -31,9 +29,12 @@ export abstract class KldType {
               {
                 key: "maxConcurrentTimespan",
                 type: "input",
-                className: "ingrid-col-10 ingrid-col-md-4",
+                defaultValue: 200,
                 props: {
                   label: "Wartezeit zwischen KLD-Anfrage-Paketen (ms)",
+                  type: "number",
+                  required: true,
+                  min: 1,
                 },
               },
             ],

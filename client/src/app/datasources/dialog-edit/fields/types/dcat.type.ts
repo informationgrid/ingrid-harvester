@@ -26,42 +26,6 @@ export abstract class DcatType {
                   validation: ["url"],
                 },
               },
-              {
-                wrappers: ["sub-section"],
-                props: {
-                  label: "Bereitgestellt durch",
-                },
-                fieldGroupClassName: "ingrid-row",
-                fieldGroup: [
-                  {
-                    key: "providerPrefix",
-                    type: "input",
-                    className: "ingrid-col-10 ingrid-col-md-auto",
-                    props: {
-                      label: "Präfix",
-                      attributes: {
-                        autocomplete: "off",
-                      },
-                    },
-                  },
-                  {
-                    key: "dcatProviderField",
-                    type: "select",
-                    defaultValue: "creator",
-                    className: "ingrid-col-10 ingrid-col-md-auto",
-                    props: {
-                      label: "DCAT-AP.de-Feld",
-                      options: [
-                        { label: "contactPoint", value: "contactPoint" },
-                        { label: "creator", value: "creator" },
-                        { label: "originator", value: "originator" },
-                        { label: "maintainer", value: "maintainer" },
-                        { label: "publisher", value: "publisher" },
-                      ],
-                    },
-                  },
-                ],
-              },
             ],
           },
           {
