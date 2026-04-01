@@ -224,8 +224,8 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
                         issued: issued ? new Date(issued.textContent) : undefined,
                         modified: modified ? new Date(modified.textContent) : undefined,
                         byteSize: size ? Number(size.textContent) : undefined,
-                        license: license?.map(oneLicense => oneLicense.id),
-                        license_name: license?.map(oneLicense => oneLicense.title),
+                        license: license?.map(oneLicense => oneLicense.id)[0],
+                        license_name: license?.map(oneLicense => oneLicense.title)[0],
                         availability,
                         languages: languages ? languages : undefined,
                     }
