@@ -84,7 +84,7 @@ export class DcatLicensesUtils {
                     if (id && dcatURL && title && url) {
                         let license = {
                             id: id.textContent,
-                            title: title.textContent,
+                            name: title.textContent,
                             url: url.getAttribute('rdf:resource')
                         };
 
