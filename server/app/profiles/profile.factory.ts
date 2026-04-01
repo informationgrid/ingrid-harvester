@@ -62,7 +62,9 @@ CatalogFactory {
         return { database, elastic };
     }
 
-    dateReplacer = MiscUtils.dateReplacer;
+    dateReplacer(this: any, key: string, value: any): any {
+        return value;
+    };
 
     getIndexMappings(mappingName?: string): any {
         const require = createRequire(import.meta.url);

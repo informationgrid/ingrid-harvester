@@ -36,6 +36,7 @@ import type { DocumentFactory } from '../../model/index.document.factory.js';
 import type { Summary } from '../../model/summary.js';
 import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
 import { ProfileFactory } from '../profile.factory.js';
 import { LvrClickRheinMapper } from './mapper/lvr.clickrhein.mapper.js';
 import { LvrKldMapper } from './mapper/lvr.kld.mapper.js';
@@ -49,6 +50,8 @@ const log = log4js.getLogger(import.meta.filename);
 export type LvrSettings = JsonSettings | KldSettings | OaiSettings;
 
 export class LvrFactory extends ProfileFactory<LvrSettings> {
+
+    dateReplacer = MiscUtils.dateReplacer;
 
     getElasticQueries(): AbstractElasticQueries {
         return ElasticQueries.getInstance();
