@@ -14,7 +14,7 @@
     "start-zdm": "cross-env IMPORTER_PROFILE=zdm nodemon",
     "build-with-tests": "tsc --outDir build",
     "build": "tsc --outDir build -p ./tsconfig.build.json",
-    "postbuild": "copyfiles './*.json' 'keycloak.json' 'app/**/*.json' 'app/**/*.sql' 'app/**/*.xml' 'app/**/*.md' build/server",
+    "postbuild": "copyfiles './*.json' './*.rdf' 'keycloak.json' 'app/**/*.json' 'app/**/*.sql' 'app/**/*.xml' 'app/**/*.md' 'app/**/*.rdf' build/server",
     "install-production": "NODE_ENV=production npm ci --omit=optional --omit=dev",
     "test": "cross-env IMPORTER_PROFILE=mcloud mocha test/**/*.spec.ts",
     "test-jenkins": "cross-env IMPORTER_PROFILE=mcloud mocha test/mcloud/*.spec.ts --colors --reporter mocha-jenkins-reporter --reporter-options junit_report_path=report.xml",
@@ -122,7 +122,7 @@
   "pkg": {
     "scripts": "build/**/*.js",
     "assets": [
-      "./log4j.json",
+      "./log4js.json",
       "./config.json",
       "./config-general.json",
       "./def_licenses.rdf"
