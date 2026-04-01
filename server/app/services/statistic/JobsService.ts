@@ -50,7 +50,7 @@ export class JobsService {
         await this.ensureIndexExists();
         const harvester = ConfigService.getHarvesters().find(h => h.id === harvesterId);
         const { history } = await this.elasticUtils.getHistory({
-            query: { term: { base_index: this.elasticUtils.indexName } },
+            query: { term: { harvesterId } },
             sort: { timestamp: { order: 'desc' } },
         }, limit);
         return {
