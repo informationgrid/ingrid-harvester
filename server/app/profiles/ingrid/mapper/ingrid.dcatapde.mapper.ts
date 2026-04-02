@@ -30,6 +30,7 @@ import type { IngridMetadata } from '../model/ingrid.metadata.js';
 import type { IngridOpendataIndexDocument } from "../model/opendataindex.document.js";
 import { ingridMapper } from './ingrid.mapper.js';
 import type {Distribution} from "../../../model/distribution.js";
+import {Codelist} from "../utils/codelist.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -104,12 +105,16 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implement
             }
         });
         themes?.forEach(theme => {
-            if (this.hasValue(theme) && !result.some(r => r.term === theme && r.source === "THEMES")) {
-                result.push({
-                    term: theme,
-                    id: "",
-                    source: "THEMES",
-                });
+            if (this.hasValue(theme)) {
+                theme = theme.substring(theme.lastIndexOf("/") + 1)
+                const themeEntry = Codelist.getInstance().getByData("6400", theme)
+                if(!result.some(r => r.id === themeEntry.id && r.source === "THEMES")) {
+                    result.push({
+                        term: themeEntry.value,
+                        id: themeEntry.id,
+                        source: "THEMES",
+                    });
+                }
             }
         });
         return result;

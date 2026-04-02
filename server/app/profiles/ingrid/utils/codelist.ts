@@ -61,22 +61,28 @@ export class Codelist {
         this.readList("codelist_528.xml");
         this.readList("codelist_2000.xml");
         this.readList("codelist_6010.xml");
+        this.readList("codelist_6400.xml", "id", "de");
     }
 
-    private readList(file: string, indexKey: string = 'iso', valueKey: string = 'id') {
-        let list = {};
+    private readList(file: string, indexKey: string = 'id', valueKey: string = 'iso') {
+        let list = [];
         let raw = this.readFile(file);
         let xml = this.domParser.parseFromString(raw, 'application/xml');
         let codelistId = Codelist.select("/de.ingrid.codelists.model.CodeList/id", xml, true)?.textContent;
         let entries = Codelist.select("/de.ingrid.codelists.model.CodeList/entries/de.ingrid.codelists.model.CodeListEntry", xml)
         for (let entry of entries) {
             let entryId = Codelist.select("./id", entry, true).textContent;
+            let entryData = Codelist.select("./data", entry, true)?.textContent;
             let localisations = Codelist.select("./localisations/entry", entry).reduce((map, entry) => {
                 let string =  Codelist.select("./string", entry);
                 map[string[0].textContent] = string[1].textContent;
                 return map;
             }, {});
-            list[localisations[indexKey]] = valueKey === 'id' ? entryId : localisations[valueKey];
+            list.push({
+                id: indexKey === 'id' ? entryId : localisations[indexKey],
+                value: localisations[valueKey],
+                data: entryData
+            });
         }
         this.lists[codelistId] = list;
     }
@@ -87,8 +93,28 @@ export class Codelist {
 
     getId(codelistId, isoValue){
         if(Object.keys(this.lists).includes(codelistId)) {
-            if(Object.keys(this.lists[codelistId]).includes(isoValue)) {
-                return this.lists[codelistId][isoValue]
+            const entry = this.lists[codelistId].find(entry => entry.value === isoValue);
+            if(entry) {
+                return entry.id;
+            }
+        }
+        return undefined;
+    }
+
+    getById(codelistId, id){
+        if(Object.keys(this.lists).includes(codelistId)) {
+            const entry = this.lists[codelistId].find(entry => entry.id === id);
+            if(entry) {
+                return entry;
+            }
+        }
+        return undefined;
+    }
+    getByData(codelistId, data){
+        if(data && Object.keys(this.lists).includes(codelistId)) {
+            const entry = this.lists[codelistId].find(entry => entry.data === data);
+            if(entry) {
+                return entry;
             }
         }
         return undefined;
