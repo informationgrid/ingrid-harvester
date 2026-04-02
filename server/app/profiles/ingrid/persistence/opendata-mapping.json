@@ -504,6 +504,22 @@
           "store": true
         }
       }
+    },
+    "keywords": {
+      "properties": {
+        "id": {
+          "type": "keyword",
+          "store": true
+        },
+        "source": {
+          "type": "keyword",
+          "store": true
+        },
+        "term": {
+          "type": "keyword",
+          "store": true
+        }
+      }
     }
   }
 }
