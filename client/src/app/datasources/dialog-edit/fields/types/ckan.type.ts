@@ -66,6 +66,35 @@ export abstract class CkanType {
                     fieldGroupClassName: "ingrid-row",
                     fieldGroup: [
                       {
+                        key: "maxRecords",
+                        type: "input",
+                        className: "ingrid-col-10 ingrid-col-md-auto",
+                        defaultValue: 200,
+                        props: {
+                          label: "Max. Datensätze pro Anfrage",
+                          type: "number",
+                          min: 1,
+                          max: 10000,
+                          required: true,
+                        },
+                      },
+                      {
+                        key: "startPosition",
+                        type: "input",
+                        className: "ingrid-col-10 ingrid-col-md-auto",
+                        defaultValue: 1,
+                        props: {
+                          label: "Start Datensatz",
+                          type: "number",
+                          min: 0,
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    fieldGroupClassName: "ingrid-row",
+                    fieldGroup: [
+                      {
                         key: "markdownAsDescription",
                         type: "checkbox",
                         className:
