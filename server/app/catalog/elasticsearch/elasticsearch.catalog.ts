@@ -61,13 +61,18 @@ export abstract class ElasticsearchCatalog extends Catalog<IndexDocument, Elasti
     async importIntoCatalog(operations: EsOperation[]) {
         // will implicitly send bulk ops when queue is full
         if (operations?.length) {
+            this.summary.numDocs += operations.filter(op => ['index', 'create', 'update'].includes(op.operation)).length;
             await this.elastic.addOperationChunksToBulk(operations);
+        } else {
+            this.summary.skippedDocs.push('no operations produced');
         }
     }
 
     async flushImport(): Promise<void> {
         // send and empty current queue
+        const errorsBefore = this.summary.errors.length;
         await this.elastic.sendBulkOperations();
+        this.summary.numErrors += this.summary.errors.length - errorsBefore;
     }
 
     getDatasetColumn(): string {
