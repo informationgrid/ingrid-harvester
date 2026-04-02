@@ -21,54 +21,113 @@
  * ==================================================
  */
 
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DatasourceApi } from '../services/datasource.api';
+import { Component, Inject, signal, ViewChild } from "@angular/core";
+import { MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { DatasourceApi } from "../services/datasource.api";
+
+type JobLog = {
+  isVisible: boolean;
+  isLoading: boolean;
+  lines?: LogLine[];
+};
+
+type LogLine = {
+  type: string;
+  message: string;
+};
 
 @Component({
-  selector: 'app-dialog-jobs',
-  templateUrl: './dialog-jobs.component.html',
-  styleUrls: ['./dialog-jobs.component.scss'],
+  selector: "app-dialog-jobs",
+  templateUrl: "./dialog-jobs.component.html",
+  styleUrls: ["./dialog-jobs.component.scss"],
   standalone: false,
 })
 export class DialogJobsComponent {
-  logCache = new Map<string, string>();
-  logLoading = new Map<string, boolean>();
+  logsByJobId = signal<Record<string, JobLog>>({});
+
+  // Auto scroll to bottom, one a logs container is opened.
+  @ViewChild("logsContainer")
+  set container(container: any) {
+    const el = container?.elementRef?.nativeElement;
+    if (el) setTimeout(() => (el.scrollTop = el.scrollHeight));
+  }
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { harvester: string; jobs: any[] },
     private api: DatasourceApi,
   ) {}
 
-  catalogStages(job: any): any[] {
-    return (job.stages ?? []).filter((p: any) => p.name?.startsWith('catalog/'));
+  onPanelOpen(job: any) {
+    const log = this.cloneLog(this.logsByJobId()[job.jobId], {
+      isVisible: true,
+    });
+    if (!log.isLoading && !this.logsByJobId()[job.jobId]?.lines) {
+      log.isLoading = true;
+      this.loadLog(job.jobId, job.harvesterId);
+    }
+    this.updateLog(job.jobId, log);
   }
 
-  loadLog(job: any): void {
-    if (this.logCache.has(job.jobId) || this.logLoading.get(job.jobId)) {
-      return;
-    }
-    this.logLoading.set(job.jobId, true);
-    this.api.getHarvesterLog(job.harvesterId, job.jobId).subscribe({
+  onPanelClose(job: any) {
+    const log: JobLog = this.cloneLog(this.logsByJobId()[job.jobId], {
+      isVisible: false,
+    });
+    this.updateLog(job.jobId, log);
+  }
+
+  private loadLog(jobId: string, datasourceId: number): void {
+    this.api.getHarvesterLog(datasourceId, jobId).subscribe({
       next: (text) => {
-        this.logCache.set(job.jobId, text);
-        this.logLoading.set(job.jobId, false);
+        const log = this.cloneLog(this.logsByJobId()[jobId], {
+          isLoading: false,
+          lines: this.getLogLines(text?.split("\n")),
+        });
+        this.updateLog(jobId, log);
       },
       error: () => {
-        this.logCache.set(job.jobId, '(Log file not available)');
-        this.logLoading.set(job.jobId, false);
+        const log = this.cloneLog(this.logsByJobId()[jobId], {
+          isLoading: false,
+          lines: this.getLogLines(["Log file not available"]),
+        });
+        this.updateLog(jobId, log);
       },
     });
   }
 
-  logLines(jobId: string): string[] {
-    return this.logCache.get(jobId)?.split('\n') ?? [];
+  private getLogLines(lines?: string[]): LogLine[] {
+    if (!lines) return [];
+    return lines.map((line) => {
+      let type = "info";
+      if (line.includes("[DEBUG]")) {
+        type = "debug";
+      } else if (line.includes("[WARN]")) {
+        type = "warn";
+      } else if (line.includes("[ERROR]")) {
+        type = "error";
+      }
+      return { type: type, message: line };
+    });
   }
 
-  determineClass(line: string): string {
-    if (line.includes('[DEBUG]')) return 'debug';
-    if (line.includes('[WARN]'))  return 'warn';
-    if (line.includes('[ERROR]')) return 'error';
-    return 'info';
+  private cloneLog(
+    log: JobLog,
+    changes: {
+      isVisible?: boolean;
+      isLoading?: boolean;
+      lines?: LogLine[];
+    },
+  ): JobLog {
+    return {
+      isVisible: changes?.isVisible ?? log?.isVisible ?? false,
+      isLoading: changes?.isLoading ?? log?.isLoading ?? false,
+      lines: changes?.lines ?? log?.lines,
+    };
+  }
+
+  private updateLog(jobId: string, log: JobLog) {
+    this.logsByJobId.update((logs) => ({
+      ...logs,
+      [jobId]: log,
+    }));
   }
 }

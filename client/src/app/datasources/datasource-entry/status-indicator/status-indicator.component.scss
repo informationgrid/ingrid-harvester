@@ -21,52 +21,6 @@
  * ==================================================
  */
 
-@use "../../../../variables" as vars;
-
 :host > div {
   margin-top: 12px;
-}
-
-.status {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 4px;
-  font-size: 12px;
-  border-radius: 4px;
-
-  mat-icon {
-    width: 16px;
-    height: 16px;
-  }
-}
-
-.status.success {
-  color: #568d44;
-  background-color: #eefeeb;
-  border: 1px solid #deebd8;
-}
-
-.status.disable {
-  color: #fd933b;
-  background-color: #fffaed;
-  border: 1px solid #f5e3d0;
-}
-
-.status.cron {
-  color: vars.$ige-hint-color;
-  background-color: #fafafa;
-  border: 1px solid #dddddd;
-}
-
-.status.importing {
-  color: vars.$ige-primary;
-  background-color: vars.$ige-mark-color;
-  border: 1px solid rgba(25, 110, 162, 0.5);
-}
-
-.status.error {
-  color: #f34247;
-  background-color: #fdf0ed;
-  border: 1px solid #efd6da;
 }

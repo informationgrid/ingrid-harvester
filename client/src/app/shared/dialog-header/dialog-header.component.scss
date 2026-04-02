@@ -23,6 +23,11 @@
 
 @use "../../../variables" as vars;
 
+// Remove unwanted padding from angular material.
+:host {
+  margin-bottom: -1px;
+}
+
 .header {
   width: 100%;
   display: flex;

@@ -199,8 +199,8 @@ export class DatasourceOverviewComponent {
       });
   }
 
-  onShowHistory(harvester: Datasource) {
-    this.datasourceService.getHistory(harvester.id).subscribe({
+  onShowHistory(datasource: Datasource) {
+    this.datasourceService.getHistory(datasource.id).subscribe({
       next: (data) => {
         if (!data || data.history.length === 0) {
           return alert(this.transloco.translate("datasources.noHistory"));
@@ -214,8 +214,8 @@ export class DatasourceOverviewComponent {
     });
   }
 
-  onShowJobs(harvester: Datasource) {
-    this.datasourceService.getJobs(harvester.id).subscribe({
+  onShowJobs(datasource: Datasource) {
+    this.datasourceService.getJobs(datasource.id).subscribe({
       next: (data) => {
         this.dialog.open(DialogJobsComponent, {
           data: data,

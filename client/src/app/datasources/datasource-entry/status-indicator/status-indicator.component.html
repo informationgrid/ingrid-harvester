@@ -26,43 +26,35 @@
     @for (status of statuses(); track $index) {
       @switch (status) {
         @case ("error") {
-          <div
-            class="status {{ status }}"
-            [matTooltip]="t('status.error.tooltip', { num: errorNum() })"
-            matTooltipPosition="right"
-          >
-            <mat-icon [svgIcon]="t('status.error.icon')"></mat-icon>
-            <span class="font-normal">{{ t("status.error.title") }}</span>
-          </div>
+          <ingrid-status-label
+            status="error"
+            [label]="t('status.error.title')"
+            [tooltip]="t('status.error.tooltip', { num: errorNum() })"
+            [svgIcon]="t('status.error.icon')"
+          />
         }
         @case ("cron") {
-          <div
-            class="status {{ status }}"
-            [matTooltip]="
+          <ingrid-status-label
+            status="cron"
+            [label]="t('status.cron.title')"
+            [tooltip]="
               importLog()?.nextExecution
                 ? t('status.cron.tooltipWithDate', {
                     date: importLog().nextExecution | date: 'short',
                   })
                 : t('status.cron.tooltip')
             "
-            matTooltipPosition="right"
-          >
-            <mat-icon [svgIcon]="t('status.cron.icon')"></mat-icon>
-            <span class="font-normal">{{ t("status.cron.title") }}</span>
-          </div>
+            [svgIcon]="t('status.cron.icon')"
+          />
         }
+
         @default {
-          <div
-            class="status {{ status }}"
-            [matTooltip]="t('status.' + status + '.tooltip')"
-            matTooltipPosition="right"
-            data-test="icon-schedule"
-          >
-            <mat-icon [svgIcon]="t('status.' + status + '.icon')"></mat-icon>
-            <span class="font-normal">{{
-              t("status." + status + ".title")
-            }}</span>
-          </div>
+          <ingrid-status-label
+            [status]="status"
+            [label]="t('status.' + status + '.title')"
+            [tooltip]="t('status.' + status + '.tooltip')"
+            [svgIcon]="t('status.' + status + '.icon')"
+          />
         }
       }
     }

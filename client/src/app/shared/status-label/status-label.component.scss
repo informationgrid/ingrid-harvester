@@ -21,20 +21,54 @@
  * ==================================================
  */
 
-import { Component, input } from "@angular/core";
-import { MatDialogClose, MatDialogTitle } from "@angular/material/dialog";
-import { MatIcon } from "@angular/material/icon";
-import { MatIconButton } from "@angular/material/button";
+@use "../../../_variables" as vars;
 
-@Component({
-  selector: "ingrid-dialog-header",
-  imports: [MatDialogTitle, MatIcon, MatIconButton, MatDialogClose],
-  templateUrl: "./dialog-header.component.html",
-  styleUrls: ["./dialog-header.component.scss"],
-})
-export class DialogHeaderComponent {
-  title = input<string>();
-  svgIcon = input<string>();
+.status-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px 4px 4px;
+  font-size: 12px;
+  border-radius: 4px;
+  line-height: 1;
 
-  constructor() {}
+  &.single {
+    padding: 4px;
+  }
+
+  mat-icon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+
+.status-label.success {
+  color: #568d44;
+  background-color: #eefeeb;
+  border: 1px solid #deebd8;
+}
+
+.status-label.disable {
+  color: #fd933b;
+  background-color: #fffaed;
+  border: 1px solid #f5e3d0;
+}
+
+.status-label.cron {
+  color: vars.$ige-hint-color;
+  background-color: #fafafa;
+  border: 1px solid #dddddd;
+}
+
+.status-label.importing {
+  color: vars.$ige-primary;
+  background-color: vars.$ige-mark-color;
+  border: 1px solid rgba(25, 110, 162, 0.5);
+}
+
+.status-label.error {
+  color: #f34247;
+  background-color: #fdf0ed;
+  border: 1px solid #efd6da;
 }

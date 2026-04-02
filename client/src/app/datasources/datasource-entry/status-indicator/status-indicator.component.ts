@@ -23,19 +23,19 @@
 
 import { Component, computed, input } from "@angular/core";
 import { ImportLogMessage } from "../../../../../../server/app/model/import.result";
-import { MatIcon } from "@angular/material/icon";
 import { Datasource } from "@shared/datasource";
-import { MatTooltip } from "@angular/material/tooltip";
 import { TranslocoDirective } from "@ngneat/transloco";
 import { DatePipe } from "@angular/common";
-
-type ImportStatus = "success" | "cron" | "disable" | "importing" | "error";
+import {
+  Status,
+  StatusLabelComponent,
+} from "../../../shared/status-label/status-label.component";
 
 @Component({
   selector: "harvester-status-indicator",
   templateUrl: "./status-indicator.component.html",
   styleUrls: ["./status-indicator.component.scss"],
-  imports: [MatIcon, MatTooltip, TranslocoDirective, DatePipe],
+  imports: [TranslocoDirective, DatePipe, StatusLabelComponent],
 })
 export class StatusIndicatorComponent {
   datasource = input.required<Datasource>();
@@ -53,7 +53,7 @@ export class StatusIndicatorComponent {
   constructor() {}
 
   getStatuses() {
-    let statuses: ImportStatus[] = [];
+    let statuses: Status[] = [];
 
     if (this.importLog() !== undefined) {
       if (this.importLog().complete == false) {

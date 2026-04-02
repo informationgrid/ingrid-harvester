@@ -54,7 +54,9 @@
         @if (canEdit()) {
           <button
             mat-menu-item
-            [disabled]="importLog() !== undefined && importLog().complete === false"
+            [disabled]="
+              importLog() !== undefined && importLog().complete === false
+            "
             (click)="onImport.emit()"
             data-test="import"
           >
@@ -65,7 +67,9 @@
           @if (datasource().capabilities.isIncrementalSupported) {
             <button
               mat-menu-item
-              [disabled]="importLog() !== undefined && importLog().complete === false"
+              [disabled]="
+                importLog() !== undefined && importLog().complete === false
+              "
               (click)="onIncrementImport.emit()"
               data-test="importIncrement"
             >
@@ -78,10 +82,12 @@
             <mat-icon svgIcon="cursor-edit" />
             {{ t("common.edit") }}
           </button>
+
           <button mat-menu-item (click)="onDelete.emit()" data-test="delete">
             <mat-icon color="warn" svgIcon="delete" />
             {{ t("common.delete") }}
           </button>
+
           <button
             mat-menu-item
             (click)="onDuplicate.emit()"
@@ -90,6 +96,7 @@
             <mat-icon svgIcon="Copy" />
             {{ t("common.duplicate") }}
           </button>
+
           <button
             mat-menu-item
             (click)="onSchedule.emit()"
@@ -105,14 +112,11 @@
           </button>
         }
 
-        <button mat-menu-item (click)="onHistory.emit()" data-test="history">
-          <mat-icon svgIcon="Timeline" />
-          {{ t("common.history") }}
-        </button>
         <button mat-menu-item (click)="onJobs.emit()" data-test="jobs">
           <mat-icon svgIcon="Timeline" />
           {{ t("common.jobs") }}
         </button>
+
         <button mat-menu-item (click)="onOpenErrorLog.emit()" data-test="log">
           <mat-icon svgIcon="logging" />
           {{ t("datasources.log") }}

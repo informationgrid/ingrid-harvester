@@ -22,18 +22,21 @@
  */
 
 import { Component, input } from "@angular/core";
-import { MatDialogClose, MatDialogTitle } from "@angular/material/dialog";
 import { MatIcon } from "@angular/material/icon";
-import { MatIconButton } from "@angular/material/button";
+import { MatTooltip } from "@angular/material/tooltip";
+
+export type Status = "success" | "disable" | "cron" | "importing" | "error";
 
 @Component({
-  selector: "ingrid-dialog-header",
-  imports: [MatDialogTitle, MatIcon, MatIconButton, MatDialogClose],
-  templateUrl: "./dialog-header.component.html",
-  styleUrls: ["./dialog-header.component.scss"],
+  selector: "ingrid-status-label",
+  templateUrl: "./status-label.component.html",
+  styleUrls: ["./status-label.component.scss"],
+  imports: [MatIcon, MatTooltip],
 })
-export class DialogHeaderComponent {
-  title = input<string>();
+export class StatusLabelComponent {
+  status = input.required<Status>();
+  label = input<string>();
+  tooltip = input<string>();
   svgIcon = input<string>();
 
   constructor() {}

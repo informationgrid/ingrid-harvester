@@ -21,75 +21,93 @@
     ==================================================
 -->
 
-<h2 mat-dialog-title>{{ data.harvester }} — Job History</h2>
+<ingrid-dialog-header
+  *transloco="let t"
+  [title]="t('common.jobs')"
+  svgIcon="Timeline"
+></ingrid-dialog-header>
 
-<mat-dialog-content>
+<mat-dialog-content *transloco="let t">
   @if (!data.jobs?.length) {
-    <p>No jobs recorded yet.</p>
+    <div class="no-jobs">
+      <mat-icon svgIcon="logging"></mat-icon>
+      <span>{{ t("datasources.noLogs") }}</span>
+    </div>
   } @else {
-    <mat-accordion>
+    <mat-accordion displayMode="flat">
       @for (job of data.jobs; track job.jobId) {
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title class="job-timestamp">
-              {{ job.timestamp | date:'yyyy-MM-dd HH:mm' }}
-            </mat-panel-title>
-            <mat-panel-description class="job-summary">
-              <mat-chip-set>
-                <mat-chip [class]="'status-' + job.status">{{ job.status }}</mat-chip>
-              </mat-chip-set>
-              <span>{{ job.numDocs }} docs</span>
-              <span>{{ job.duration | number:'1.0-1' }}s</span>
-              @if (job.errors?.length) {
-                <span class="job-errors">{{ job.errors.length }} error(s)</span>
+        <mat-expansion-panel
+          (opened)="onPanelOpen(job)"
+          (closed)="onPanelClose(job)"
+        >
+          <mat-expansion-panel-header
+            expandedHeight="auto"
+            collapsedHeight="auto"
+          >
+            <div class="w-full flex-row flex-wrap items-center gap font-normal">
+              @if (job.numErrors === 0) {
+                <ingrid-status-label
+                  status="success"
+                  [tooltip]="t('datasources.status.success.title')"
+                  [svgIcon]="t('datasources.status.success.icon')"
+                />
+              } @else {
+                <ingrid-status-label
+                  status="error"
+                  [tooltip]="t('datasources.status.error.title')"
+                  [svgIcon]="t('datasources.status.error.icon')"
+                />
               }
-            </mat-panel-description>
+
+              <div>
+                {{ job.timestamp | date: "short" }}
+              </div>
+
+              <div class="flex-1"></div>
+
+              <div class="flex-row flex-wrap gap">
+                <div class="entry">
+                  {{ t("common.documents") }}: {{ job.numDocs }}
+                </div>
+
+                <div class="entry">
+                  {{ t("common.errors") }}: {{ job.numErrors }}
+                </div>
+
+                <div class="entry">
+                  {{ t("common.duration") }}:
+                  {{ job.duration * 1000 | date: "HH:mm:ss" : "UTC" }}
+                </div>
+              </div>
+            </div>
           </mat-expansion-panel-header>
 
           <!-- Per-catalog breakdown -->
-          @if (catalogStages(job).length) {
-            <table class="stage-table">
-              <thead>
-                <tr>
-                  <th>Catalog</th>
-                  <th>Docs</th>
-                  <th>Record errors</th>
-                  <th>Errors</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (stage of catalogStages(job); track stage.name) {
-                  <tr>
-                    <td>{{ stage.name }}</td>
-                    <td>{{ stage.numDocs }}</td>
-                    <td>{{ stage.numErrors }}</td>
-                    <td>{{ stage.errors?.length ?? 0 }}</td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          }
+          <mat-divider></mat-divider>
 
-          <!-- Job-level errors -->
-          @if (job.errors?.length) {
-            <div class="error-list">
-              @for (e of job.errors; track $index) {
-                <div class="error-entry"><span class="error-type">[{{ e.type }}]</span> {{ e.error }}</div>
-              }
-            </div>
-          }
-
-          <!-- Job log -->
-          <div class="log-action">
-            <button mat-stroked-button (click)="loadLog(job)" [disabled]="logLoading.get(job.jobId)">
-              {{ logLoading.get(job.jobId) ? 'Loading…' : 'View Log' }}
-            </button>
-          </div>
-          @if (logLines(job.jobId).length) {
-            <div class="job-log">
-              @for (line of logLines(job.jobId); track $index) {
-                <div [class]="determineClass(line)">{{ line }}</div>
-              }
+          @if (
+            logsByJobId()[job.jobId]?.isVisible &&
+            logsByJobId()[job.jobId]?.lines
+          ) {
+            <cdk-virtual-scroll-viewport
+              #logsContainer
+              class="logs-container"
+              itemSize="20"
+            >
+              <div
+                class="log"
+                *cdkVirtualFor="let line of logsByJobId()[job.jobId].lines"
+                [class]="line.type"
+              >
+                {{ line.message }}
+              </div>
+            </cdk-virtual-scroll-viewport>
+          } @else if (logsByJobId()[job.jobId]?.isLoading) {
+            <div
+              class="w-full h-full flex-row items-center justify-center gap-8"
+            >
+              <ingrid-circular-progress-indicator [size]="18" />
+              <span class="text-md">{{ t("common.loading") }}</span>
             </div>
           }
         </mat-expansion-panel>
@@ -98,6 +116,8 @@
   }
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Close</button>
+<mat-dialog-actions *transloco="let t" align="end">
+  <button mat-button mat-dialog-close>
+    {{ t("common.close") }}
+  </button>
 </mat-dialog-actions>

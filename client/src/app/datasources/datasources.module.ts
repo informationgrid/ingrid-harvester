@@ -62,6 +62,8 @@ import { FormlyForm } from "@ngx-formly/core";
 import {
   CircularProgressIndicatorComponent
 } from "../shared/circular-progress-indicator/circular-progress-indicator.component";
+import { StatusLabelComponent } from "../shared/status-label/status-label.component";
+import { DetailItemComponent } from "../shared/detail-item/detail-item.component";
 
 const routes: Routes = [
   {
@@ -115,6 +117,8 @@ const routes: Routes = [
     OverviewTemplateComponent,
     FormlyForm,
     CircularProgressIndicatorComponent,
+    StatusLabelComponent,
+    DetailItemComponent,
   ],
   exports: [DatasourceOverviewComponent],
 })

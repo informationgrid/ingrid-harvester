@@ -23,7 +23,9 @@
     "pleaseChoose": "Bitte auswählen",
     "documents": "Dokumente",
     "errors": "Fehler",
-    "warnings": "Warnungen"
+    "warnings": "Warnungen",
+    "close": "Schließen",
+    "duration": "Dauer"
   },
   "pageTitle": {
     "default": "InGrid Harvester",
