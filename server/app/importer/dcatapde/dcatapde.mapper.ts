@@ -222,7 +222,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
 
                 if(url) {
                     let dist = {
-                        format: UrlUtils.mapFormat([format], this.getSummary().warnings),
+                        format: UrlUtils.mapFormat([format], this.getSummary().warnings).filter(x => x != "Unbekannt"),
                         access_url: url.getAttribute('rdf:resource')?url.getAttribute('rdf:resource'):url.textContent,
                         title: title ? title.textContent : undefined,
                         description: description ? description.textContent : undefined,
