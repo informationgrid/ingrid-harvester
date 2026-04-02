@@ -140,7 +140,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
     }
 
     getDistributions():Distribution[] {
-        let dists = [];
+        let dists:Distribution[] = [];
 
         const distributions = DcatapdeMapper.select('./dcat:distribution/dcat:Distribution', this.record);
 

@@ -136,7 +136,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
                         id: res.id,
                         title: res.name,
                         description: res.description,
-                        accessURL: this.cleanupURL(accessURL),
+                        access_url: this.cleanupURL(accessURL),
                         format: UrlUtils.mapFormat([res.format], this.getSummary().warnings),
                         issued: this.handleDate(res.created),
                         modified: this.handleDate(res.last_modified),
