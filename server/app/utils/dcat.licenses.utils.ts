@@ -65,6 +65,7 @@ export class DcatLicensesUtils {
 
     }
 
+    // TODO refactor to create License objects that the Portal actually understands
     static import() {
         try {
             const data = fs.readFileSync('def_licenses.rdf');
