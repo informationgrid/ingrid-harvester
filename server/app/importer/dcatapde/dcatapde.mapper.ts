@@ -180,22 +180,17 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
 
                 let license = undefined;
                 let licenseResource = DcatapdeMapper.select('dct:license', distribution, true);
-                if(licenseResource) {
+                if (licenseResource) {
                     license = DcatLicensesUtils.get(licenseResource.getAttribute('rdf:resource'));
-
+                    license = {
+                        name: license.title,
+                        url: license.url
+                    };
                     let licenseAttributionByText = DcatapdeMapper.select('dcatde:licenseAttributionByText', distribution, true)?.textContent;
-                    if(licenseAttributionByText) {
+                    if (licenseAttributionByText) {
                         license["attribution_by_text"] = licenseAttributionByText;
                     }
                 }
-                if (license && !Array.isArray(license)) {
-                    license = [license];
-                }
-                license = license?.map((l: License) => ({
-                    url: l.url,
-                    name: l.title,
-                    attribution_by_text: l["attribution_by_text"]
-                }));
 
                 let url = DcatapdeMapper.select('./dcat:accessURL', distribution, true);
                 let title = DcatapdeMapper.select('./dct:title', distribution, true);
