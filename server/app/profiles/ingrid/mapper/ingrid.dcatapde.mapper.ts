@@ -83,7 +83,7 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implement
         };
         result.content = this.getContent(result);
         // add "rdf" at the end, so it does not get included in the "content" array
-        result.rdf = this.getHarvestedData();
+        result.rdf = "<?xml version='1.0' encoding='UTF-8'?><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">" + this.getHarvestedData() + "</rdf:RDF>";
 
         this.executeCustomCode(result);
 
