@@ -67,12 +67,16 @@ export class JobsUtils {
 
         try {
             await this.elasticUtils.prepareIndex(jobsMapping, this.indexSettings, true);
+            const finishTime = new Date();
+            const duration = globalSummary?.startTime
+                ? (finishTime.getTime() - globalSummary.startTime.getTime()) / 1000
+                : logMessage.duration;
             await this.elasticUtils.addDocToBulk({
                 jobId: logMessage.jobId,
                 harvesterId: logMessage.id,
                 startTime: globalSummary?.startTime,
-                finishTime: new Date(),
-                duration: logMessage.duration,
+                finishTime,
+                duration,
                 status,
                 numDocs: globalSummary?.numDocs ?? 0,
                 numErrors: allStages.reduce((sum, s) => sum + (s?.numErrors ?? 0), 0),
