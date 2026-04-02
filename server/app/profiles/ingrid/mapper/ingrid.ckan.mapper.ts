@@ -26,6 +26,8 @@ import { CkanMapper } from "../../../importer/ckan/ckan.mapper.js";
 import type { DateRange } from "../../../model/dateRange.js";
 import type { IngridOpendataIndexDocument } from "../model/opendataindex.document.js";
 import { ingridMapper } from './ingrid.mapper.js';
+import {Codelist} from "../utils/codelist.js";
+import type {Distribution} from "../../../model/distribution.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -33,7 +35,6 @@ export class ingridCkanMapper extends ingridMapper<CkanMapper> {
 
     async createIndexDocument(): Promise<IngridOpendataIndexDocument> {
         let result: IngridOpendataIndexDocument = {
-            ...await super.createIndexDocument(),
             ...this.getIngridMetadata(this.baseMapper.getSettings()),
             metadata: this.getMetaMetadata(),
             id: this.getGeneratedId(),
@@ -53,7 +54,6 @@ export class ingridCkanMapper extends ingridMapper<CkanMapper> {
                     merged_from: []
                 }
             },
-            // distributions: await this.getDistributions(),
             sort_hash: this.getSortHash(),
             content: null, // assigned after
             rdf: null, // assigned after,
@@ -61,14 +61,14 @@ export class ingridCkanMapper extends ingridMapper<CkanMapper> {
                 obj_id: this.getGeneratedId()
             },
             title: this.getTitle(),
-            description: this.getDescription(),
+            description: this.baseMapper.getDescription(),
             dcat: {
                 landingPage: null,//this.getLandingPage()
             },
             contacts: this.getContacts(),
             keywords: this.getKeywords(),
             legal_basis: null,//this.getLegalBasis(),
-            distributions: [],//this.getDistributions(),
+            distributions: await this.getDistributions(),
             political_geocoding_level_uri: null,//this.getPoliticalGeocodingLevelURI(),
             spatial: this.getSpatial(),
             // temporal: this.getTemporal(),
@@ -89,12 +89,27 @@ export class ingridCkanMapper extends ingridMapper<CkanMapper> {
     getKeywords() {
         let result = [];
         let keywords = this.baseMapper.getKeywords();
+        let themes = this.baseMapper.getThemes();
         keywords?.forEach(keyword => {
             if (this.hasValue(keyword) && !result.some(r => r.term === keyword)) {
                 result.push({
                     term: keyword,
-                    type: "free",
+                    id: "",
+                    source: "FREE",
                 });
+            }
+        });
+        themes?.forEach(theme => {
+            if (this.hasValue(theme)) {
+                theme = theme.substring(theme.lastIndexOf("/") + 1)
+                const themeEntry = Codelist.getInstance().getByData("6400", theme)
+                if(!result.some(r => r.id === themeEntry.id && r.source === "THEMES")) {
+                    result.push({
+                        term: themeEntry.value,
+                        id: themeEntry.id,
+                        source: "THEMES",
+                    });
+                }
             }
         });
         return result;
@@ -115,5 +130,9 @@ export class ingridCkanMapper extends ingridMapper<CkanMapper> {
 
     getTemporal(): DateRange[] {
         return this.baseMapper.getTemporal();
+    }
+
+    async getDistributions(): Promise<Distribution[]> {
+        return await this.baseMapper.getDistributions();
     }
 }

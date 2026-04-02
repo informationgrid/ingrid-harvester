@@ -295,7 +295,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         }
 
         if (mappedThemes.length === 0) {
-            mappedThemes = this.getSettings().defaultDCATCategory;
+            mappedThemes = this.getSettings().defaultDCATCategory || [];
         }
         return mappedThemes
             .map(category => DCAT_CATEGORY_URL + category);
