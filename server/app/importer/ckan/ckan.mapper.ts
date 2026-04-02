@@ -136,7 +136,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
                         id: res.id,
                         title: res.name,
                         description: res.description,
-                        accessURL: this.cleanupURL(accessURL),
+                        access_url: this.cleanupURL(accessURL),
                         format: UrlUtils.mapFormat([res.format], this.getSummary().warnings),
                         issued: this.handleDate(res.created),
                         modified: this.handleDate(res.last_modified),
@@ -295,7 +295,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         }
 
         if (mappedThemes.length === 0) {
-            mappedThemes = this.getSettings().defaultDCATCategory;
+            mappedThemes = this.getSettings().defaultDCATCategory || [];
         }
         return mappedThemes
             .map(category => DCAT_CATEGORY_URL + category);
