@@ -86,18 +86,6 @@ export const routes: Routes = [
     },
   },
   {
-    path: "indices",
-    canActivate: [authGuard],
-    loadChildren: () =>
-      import("./indices/indices.module").then((mod) => mod.IndicesModule),
-    title: "pageTitle.indices",
-    data: {
-      icon: "Indices",
-      partOfMenu: true,
-      roles: ["admin"],
-    },
-  },
-  {
     path: "log",
     canActivate: [authGuard],
     loadChildren: () => import("./log/log.module").then((mod) => mod.LogModule),
