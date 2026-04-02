@@ -77,6 +77,7 @@ export abstract class Importer<S extends ImporterSettings> {
 
     run: Observable<ImportLogMessage> = new Observable<ImportLogMessage>(observer => {
         this.observer = observer;
+        this.summary.startTime = new Date();
         this.exec(observer).then(() => this.elastic.close());
     });
 

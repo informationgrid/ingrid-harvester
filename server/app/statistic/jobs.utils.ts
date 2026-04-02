@@ -53,10 +53,10 @@ export class JobsUtils {
     }
 
     async saveJob(logMessage: ImportLogMessage, baseIndex: string, stageSummaries: Summary[] = []): Promise<void> {
-        const status = this.deriveStatus(logMessage);
         const globalSummary = logMessage.summary;
-
-        const stages = stageSummaries.map(s => ({
+        const allStages = [logMessage.summary, ...stageSummaries];
+        const status = this.deriveStatus(logMessage, allStages);
+        const stages = allStages.map(s => ({
             name: s.stage,
             startTime: s.startTime,
             numDocs: s.numDocs,
@@ -70,12 +70,12 @@ export class JobsUtils {
             await this.elasticUtils.addDocToBulk({
                 jobId: logMessage.jobId,
                 harvesterId: logMessage.id,
-                timestamp: new Date(),
-                status,
+                startTime: globalSummary?.startTime,
+                finishTime: new Date(),
                 duration: logMessage.duration,
+                status,
                 numDocs: globalSummary?.numDocs ?? 0,
-                numErrors: globalSummary?.numErrors ?? 0,
-                errors: globalSummary?.errors ?? [],
+                numErrors: allStages.reduce((sum, s) => sum + (s?.numErrors ?? 0), 0),
                 stages,
             }, logMessage.jobId, 1);
             await this.elasticUtils.finishIndex();
@@ -85,11 +85,11 @@ export class JobsUtils {
         }
     }
 
-    private deriveStatus(logMessage: ImportLogMessage): JobStatus {
+    private deriveStatus(logMessage: ImportLogMessage, allStages: Summary[]): JobStatus {
         if (logMessage.message === 'Import cancelled') return 'cancelled';
         if (!logMessage.summary) return 'success';
-        if (logMessage.summary.errors.length > 0) return 'error';
-        if (logMessage.summary.numErrors > 0) return 'partial';
+        if (allStages.some(s => s?.errors?.length > 0)) return 'error';
+        if (allStages.some(s => s?.skippedDocs?.length > 0)) return 'partial';
         return 'success';
     }
 }
