@@ -50,8 +50,6 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
     private numIndexDocs = 0;
 
     constructor(settings: DcatappluSettings, requestDelegate?: RequestDelegate) {
-        // merge default settings with configured ones
-        settings = MiscUtils.merge(defaultDCATAPPLUSettings, settings);
         super(settings);
 
         this.domParser = MiscUtils.getDomParser();
@@ -59,9 +57,13 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;
         } else {
-            let requestConfig = DcatappluImporter.createRequestConfig(settings);
-            this.requestDelegate = new RequestDelegate(requestConfig, DcatappluImporter.createPaging(settings));
+            let requestConfig = DcatappluImporter.createRequestConfig(this.getSettings());
+            this.requestDelegate = new RequestDelegate(requestConfig, DcatappluImporter.createPaging(this.getSettings()));
         }
+    }
+
+    protected getDefaultSettings(): DcatappluSettings {
+        return defaultDCATAPPLUSettings;
     }
 
     // only here for documentation - use the "default" exec function

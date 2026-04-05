@@ -63,10 +63,12 @@ export class CswImporter extends Importer<CswSettings> {
     private generalInfo: object = {};
 
     constructor(settings: CswSettings) {
-        // merge default settings with configured ones
-        settings = MiscUtils.merge(defaultCSWSettings, settings);
         super(settings);
         this.domParser = MiscUtils.getDomParser();
+    }
+
+    protected getDefaultSettings(): CswSettings {
+        return defaultCSWSettings;
     }
 
     private appendFilter(newFilter: string): string {

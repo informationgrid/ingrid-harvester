@@ -30,7 +30,7 @@ export type KldSettings = {
   maxConcurrentTimespan: number,
 } & ImporterSettings;
 
-export const defaultKldSettings: Partial<KldSettings> = {
+export const defaultKldSettings: KldSettings = {
     ...DefaultImporterSettings,
     maxConcurrentTimespan: 100,
-  };
+};

@@ -48,20 +48,26 @@ export type WfsSettings = {
     featureTitleAttribute?: string,
 } & ImporterSettings;
 
-export const defaultWfsSettings: Partial<WfsSettings> = {
-    ...DefaultImporterSettings,
-    eitherKeywords: [],
-    httpMethod: 'GET',
-    resultType: 'results',
-    memberElements: ["gml:featureMember/*", "wfs:member/*", "gml:featureMembers/*"],
-};
-
 export enum WfsProfile {
     // TODO diplanung profiles
     default = "default",
     pegelonline = "pegelonline",
     zdm = "zdm"
 }
+
+export const defaultWfsSettings: WfsSettings = {
+    ...DefaultImporterSettings,
+    version: '2.0.0',
+    memberElements: ["gml:featureMember/*", "wfs:member/*", "gml:featureMembers/*"],
+    catalogId: '',
+    count: 0,
+    featureLimit: 0,
+    harvestTypes: false,
+    eitherKeywords: [],
+    httpMethod: 'GET',
+    resultType: 'results',
+    wfsProfile: WfsProfile.default,
+};
 
 export const memberElements = {
     [WfsProfile.default]: ["gml:featureMember/*", "wfs:member/*", "gml:featureMembers/*"],

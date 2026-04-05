@@ -53,9 +53,7 @@ export class OaiImporter extends Importer<OaiSettings> {
 
     private OaiMapper;
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
-        // merge default settings with configured ones
-        settings = MiscUtils.merge(defaultOAISettings, settings);
+    constructor(settings: OaiSettings, requestDelegate?: RequestDelegate) {
         super(settings);
 
         this.domParser = MiscUtils.getDomParser();
@@ -64,10 +62,14 @@ export class OaiImporter extends Importer<OaiSettings> {
             this.requestDelegate = requestDelegate;
         }
         else {
-            let requestConfig = OaiImporter.createRequestConfig(settings);
+            let requestConfig = OaiImporter.createRequestConfig(this.getSettings());
             this.requestDelegate = new RequestDelegate(requestConfig);
         }
         this.xpaths = oaiXPaths[this.getSettings().metadataPrefix?.toLowerCase()];
+    }
+
+    protected getDefaultSettings(): OaiSettings {
+        return defaultOAISettings;
     }
 
     // only here for documentation - use the "default" exec function

@@ -37,7 +37,7 @@ export type CswSettings = {
     simplifyTolerance: number
 } & ImporterSettings;
 
-export const defaultCSWSettings: Partial<CswSettings> = {
+export const defaultCSWSettings: CswSettings = {
     ...DefaultImporterSettings,
     maxServices: 30,
     resolveOgcDistributions: false,

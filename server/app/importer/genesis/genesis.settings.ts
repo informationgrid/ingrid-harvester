@@ -75,7 +75,7 @@ export type GenesisSettings = {
     typeConfig: GenesisTypeConfig;
 } & ImporterSettings;
 
-export const defaultGenesisSettings: Partial<GenesisSettings> = {
+export const defaultGenesisSettings: GenesisSettings = {
     ...DefaultImporterSettings,
     typeConfig: {
         requestDelayMs: 500,

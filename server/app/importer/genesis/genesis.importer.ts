@@ -65,8 +65,11 @@ export class GenesisImporter extends Importer<GenesisSettings> {
     private numIndexDocs = 0;
 
     constructor(settings: GenesisSettings) {
-        settings = MiscUtils.merge(defaultGenesisSettings, settings);
         super(settings);
+    }
+
+    protected getDefaultSettings(): GenesisSettings {
+        return defaultGenesisSettings;
     }
 
     protected async harvest(): Promise<number> {

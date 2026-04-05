@@ -62,11 +62,12 @@ export class WfsImporter extends Importer<WfsSettings> {
     protected supportsPaging: boolean = false;
 
     constructor(settings: WfsSettings) {
-        // merge default settings with configured ones
-        settings = MiscUtils.merge(defaultWfsSettings, settings);
         super(settings);
-
         this.domParser = MiscUtils.getDomParser();
+    }
+
+    protected getDefaultSettings(): WfsSettings {
+        return defaultWfsSettings;
     }
 
     // only here for documentation - use the "default" exec function

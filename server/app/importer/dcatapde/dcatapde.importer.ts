@@ -51,8 +51,6 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
     private numIndexDocs = 0;
 
     constructor(settings: DcatapdeSettings, requestDelegate?: RequestDelegate) {
-        // merge default settings with configured ones
-        settings = MiscUtils.merge(defaultDCATAPDESettings, settings);
         super(settings);
 
         this.domParser = MiscUtils.getDomParser();
@@ -60,9 +58,13 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;
         } else {
-            this.requestConfig = DcatapdeImporter.createRequestConfig(settings);
+            this.requestConfig = DcatapdeImporter.createRequestConfig(this.getSettings());
             this.requestDelegate = new RequestDelegate(this.requestConfig);
         }
+    }
+
+    protected getDefaultSettings(): DcatapdeSettings {
+        return defaultDCATAPDESettings;
     }
 
     // only here for documentation - use the "default" exec function

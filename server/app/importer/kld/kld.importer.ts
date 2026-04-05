@@ -65,8 +65,6 @@ export class KldImporter extends Importer<KldSettings> {
     private readonly requestRetryDelay = 3000;
 
     constructor(settings: KldSettings) {
-        // merge default settings with configured ones
-        settings = MiscUtils.merge(defaultKldSettings, settings);
         // if we are looking for incremental updates, set the last execution date
         // TODO how to set incremental?
         let lastSummary: ImportLogMessage;
@@ -85,6 +83,10 @@ export class KldImporter extends Importer<KldSettings> {
         if (lastSummary) {
             this.minimumUpdateDate = new Date(lastSummary.lastExecution);
         }
+    }
+
+    protected getDefaultSettings(): KldSettings {
+        return defaultKldSettings;
     }
 
     // only here for documentation - use the "default" exec function

@@ -33,7 +33,7 @@ import { RequestDelegate } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { Importer } from '../importer.js';
 import { JsonMapper } from './json.mapper.js';
-import type { JsonSettings } from './json.settings.js';
+import { defaultJsonSettings, type JsonSettings } from './json.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
@@ -45,6 +45,10 @@ export class JsonImporter extends Importer<JsonSettings> {
 
     constructor(settings: JsonSettings) {
         super(settings);
+    }
+
+    protected getDefaultSettings(): JsonSettings {
+        return defaultJsonSettings;
     }
 
     // only here for documentation - use the "default" exec function

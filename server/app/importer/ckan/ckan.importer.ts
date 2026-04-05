@@ -47,21 +47,23 @@ export class CkanImporter extends Importer<CkanSettings> {
     private totalCount: number = -1;
 
     constructor(settings: CkanSettings) {
-        // merge default settings with configured ones
-        settings = MiscUtils.merge(defaultCKANSettings, settings);
         // Trim trailing slash
         let url = settings.sourceURL;
-        if (url.charAt(url.length - 1) === '/') {
+        if (url?.charAt(url.length - 1) === '/') {
             settings.sourceURL = url.substring(0, url.length - 1);
         }
 
         super(settings);
 
-        let requestConfig = CkanMapper.createRequestConfig(settings);
-        let requestConfigCount = CkanMapper.createRequestConfigCount(settings);
+        let requestConfig = CkanMapper.createRequestConfig(this.getSettings());
+        let requestConfigCount = CkanMapper.createRequestConfigCount(this.getSettings());
 
-        this.requestDelegate = new RequestDelegate(requestConfig, CkanMapper.createPaging(settings));
-        this.requestDelegateCount = new RequestDelegate(requestConfigCount, CkanMapper.createPaging(settings));
+        this.requestDelegate = new RequestDelegate(requestConfig, CkanMapper.createPaging(this.getSettings()));
+        this.requestDelegateCount = new RequestDelegate(requestConfigCount, CkanMapper.createPaging(this.getSettings()));
+    }
+
+    protected getDefaultSettings(): CkanSettings {
+        return defaultCKANSettings;
     }
 
     /**

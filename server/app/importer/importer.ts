@@ -35,6 +35,7 @@ import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import { FilterUtils } from '../utils/filter.utils.js';
+import * as MiscUtils from '../utils/misc.utils.js';
 import { MailServer } from '../utils/nodemailer.utils.js';
 
 const log = log4js.getLogger(import.meta.filename)
@@ -61,18 +62,18 @@ export abstract class Importer<S extends ImporterSettings> {
     readonly elastic: ElasticsearchUtils;
 
     protected constructor(settings: S) {
-        this.filterUtils = new FilterUtils(settings);
+        this.settings = MiscUtils.merge(this.getDefaultSettings(), settings);
+        this.filterUtils = new FilterUtils(this.settings);
         this.generalConfig = ConfigService.getGeneralSettings();
         // TODO this needs to be refactored - see below in exec()
-        this.summary = new Summary('harvest', settings);
+        this.summary = new Summary('harvest', this.settings);
         this.database = DatabaseFactory.getDatabaseUtils(this.generalConfig.database, this.summary);
         this.elastic = ElasticsearchFactory.getElasticUtils(this.generalConfig.elasticsearch, this.summary);
 
         // override harvester-specific setting if the general config param is set
         if (this.generalConfig.allowAllUnauthorizedSSL) {
-            settings.rejectUnauthorizedSSL = false;
+            this.settings.rejectUnauthorizedSSL = false;
         }
-        this.settings = settings;
     }
 
     run: Observable<ImportLogMessage> = new Observable<ImportLogMessage>(observer => {
@@ -154,6 +155,8 @@ export abstract class Importer<S extends ImporterSettings> {
     }
 
     protected abstract harvest(): Promise<number>;
+
+    protected abstract getDefaultSettings(): S;
 
     protected async postHarvestingHandling() {
         // For Profile specific Handling

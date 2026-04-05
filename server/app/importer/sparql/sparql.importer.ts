@@ -56,9 +56,11 @@ export class SparqlImporter extends Importer<SparqlSettings> {
     };
 
     constructor(settings: SparqlSettings) {
-        // merge default settings with configured ones
-        settings = MiscUtils.merge(SparqlImporter.defaultSettings, settings);
         super(settings);
+    }
+
+    protected getDefaultSettings(): SparqlSettings {
+        return SparqlImporter.defaultSettings;
     }
 
     // only here for documentation - use the "default" exec function
