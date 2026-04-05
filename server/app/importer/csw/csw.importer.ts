@@ -105,7 +105,7 @@ export class CswImporter extends Importer<CswSettings> {
             try {
                 let transactionTimestamp = await this.database.beginTransaction();
                 // configure for incremental harvesting
-                if (this.settings.isIncremental) {
+                if (this.isIncremental) {
                     // only change the record filter (i.e. do an incremental harvest) if a previous run exists
                     let lastHarvestingDate = new SummaryService().get(this.settings.id)?.lastExecution;
                     if (lastHarvestingDate) {
@@ -114,12 +114,12 @@ export class CswImporter extends Importer<CswSettings> {
                     }
                     else {
                         log.warn(`Changing type of harvesting to "full" because no previous harvesting was found for harvester with id ${this.settings.id}`);
-                        this.settings.isIncremental = false;
+                        this.isIncremental = false;
                     }
                 }
                 // get datasets
                 let numIndexDocs = await this.harvest();
-                if (!this.settings.isIncremental) {
+                if (!this.isIncremental) {
                     // did the harvesting return results at all?
                     if (numIndexDocs == 0) {
                         throw new Error(`No results during ${this.settings.type} import`);
@@ -152,7 +152,7 @@ export class CswImporter extends Importer<CswSettings> {
                     throw new Error();
                 }
 
-                if (!this.settings.isIncremental) {
+                if (!this.isIncremental) {
                     await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
                 }
                 await this.database.commitTransaction();

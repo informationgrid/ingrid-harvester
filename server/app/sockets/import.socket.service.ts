@@ -73,7 +73,7 @@ export class ImportSocketService {
                 let configData = ConfigService.getHarvesters().filter(config => config.id === id)[0];
                 //configData.deduplicationAlias = configData.index + 'dedup';
 
-                let configHarvester = MiscUtils.merge(configData, configGeneral, { isIncremental });
+                let configHarvester = MiscUtils.merge(configData, configGeneral);
 
                 let profile = ProfileFactoryLoader.get();
                 profile.getImporter(configHarvester).then(importer => {
@@ -81,7 +81,7 @@ export class ImportSocketService {
                     this.log.info(`>> Running importer: [${configHarvester.type}] ${configHarvester.description}`);
                     const jobId = crypto.randomUUID();
                     harvestLogContext.run({ harvesterId: id, jobId }, () => {
-                        importer.run.subscribe({
+                        importer.run(isIncremental).subscribe({
                             next: response => {
                                 response.id = id;
                                 response.jobId = jobId;

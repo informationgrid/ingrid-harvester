@@ -53,6 +53,7 @@ export abstract class Importer<S extends ImporterSettings> {
 
     protected filterUtils: FilterUtils;
     protected generalConfig: GeneralSettings;
+    protected isIncremental: boolean = false;
     protected observer: Observer<ImportLogMessage>;
 
     readonly database: DatabaseUtils;
@@ -75,11 +76,15 @@ export abstract class Importer<S extends ImporterSettings> {
         }
     }
 
-    run: Observable<ImportLogMessage> = new Observable<ImportLogMessage>(observer => {
-        this.observer = observer;
-        this.summary.startTime = new Date();
-        this.exec(observer).then(() => this.elastic.close());
-    });
+    run(isIncremental: boolean = false): Observable<ImportLogMessage> {
+        this.isIncremental = isIncremental;
+        this.summary.isIncremental = isIncremental;
+        return new Observable<ImportLogMessage>(observer => {
+            this.observer = observer;
+            this.summary.startTime = new Date();
+            this.exec(observer).then(() => this.elastic.close());
+        });
+    }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
         // TODO remove Importer.summary - instead, always use a named summary
@@ -95,7 +100,7 @@ export abstract class Importer<S extends ImporterSettings> {
                 let transactionTimestamp = await this.database.beginTransaction();
                 // get datasets
                 let numIndexDocs = await this.harvest();
-                if (!this.settings.isIncremental) {
+                if (!this.isIncremental) {
                     // did the harvesting return results at all?
                     if (numIndexDocs == 0) {
                         throw new Error(`No results during ${this.settings.type} import`);
@@ -164,6 +169,7 @@ export abstract class Importer<S extends ImporterSettings> {
     protected startStage(name: string): Summary {
         const s = new Summary(name, this.settings);
         s.startTime = new Date();
+        s.isIncremental = this.isIncremental;
         this.stageSummaries.push(s);
         return s;
     }

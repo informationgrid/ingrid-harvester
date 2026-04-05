@@ -15,7 +15,6 @@
     "rules": {
       "containsDocumentsWithData": null
     },
-    "isIncremental": false,
     "maxConcurrent": 6,
     "skipUrlCheckOnHarvest": false,
     "timeout": 60000,
@@ -621,7 +620,6 @@
     "rules": {
       "containsDocumentsWithData": null
     },
-    "isIncremental": false,
     "maxConcurrent": 1,
     "skipUrlCheckOnHarvest": false,
     "timeout": 60000,
@@ -647,7 +645,6 @@
     },
     "maxConcurrent": 1,
     "maxConcurrentTimespan": 250,
-    "isIncremental": true,
     "timeout": 60000,
     "sourceURL": "https://www.kuladig.de/api/public/",
     "id": 23,

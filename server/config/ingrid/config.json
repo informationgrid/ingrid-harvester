@@ -18,7 +18,6 @@
     "rules": {
       "containsDocumentsWithData": null
     },
-    "isIncremental": false,
     "maxConcurrent": 6,
     "skipUrlCheckOnHarvest": false,
     "timeout": 60000,
@@ -73,7 +72,6 @@
     "rules": {
       "containsDocumentsWithData": null
     },
-    "isIncremental": false,
     "maxConcurrent": 4,
     "skipUrlCheckOnHarvest": false,
     "timeout": 60000,
@@ -142,7 +140,6 @@
 
     "maxConcurrent": 1,
     "timeout": 60000,
-    "isIncremental": false,
     "rejectUnauthorizedSSL": true,
 
     "blacklistedIds": [],
@@ -198,7 +195,6 @@
 
     "maxConcurrent": 1,
     "timeout": 60000,
-    "isIncremental": false,
     "rejectUnauthorizedSSL": true,
 
     "blacklistedIds": [],

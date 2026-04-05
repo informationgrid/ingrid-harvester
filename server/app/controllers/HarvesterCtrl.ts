@@ -60,18 +60,13 @@ export class HarvesterCtrl {
     @KeycloakAuth({role: ["admin", "editor"]})
     updateHarvesterConfig(@PathParams('id') id: number, @BodyParams() config: Datasource) {
         const updatedID = ConfigService.update(+id, config);
-        let mode: 'full' | 'incr' = config.isIncremental ? 'incr' : 'full';
-        if (config.disable) {
-            this.scheduleService.stopJob(updatedID, mode);
-            // this.indexService.removeFromAlias(updatedID)
-            //     .catch(e => log.error('Error removing alias', e));
-        } else {
-            if (config.cron?.[mode]?.active) {
+        for (const mode of <('full' | 'incr')[]>['full', 'incr']) {
+            if (config.disable || !config.cron?.[mode]?.active) {
+                this.scheduleService.stopJob(updatedID, mode);
+            }
+            else {
                 this.scheduleService.startJob(updatedID, mode);
             }
-
-            // this.indexService.addToAlias(updatedID)
-            //     .catch(e => log.error('Error adding alias', e));
         }
     }
 

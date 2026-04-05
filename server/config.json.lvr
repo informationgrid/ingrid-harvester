@@ -16,7 +16,6 @@
     "rules": {
       "containsDocumentsWithData": null
     },
-    "isIncremental": false,
     "maxConcurrent": 1,
     "skipUrlCheckOnHarvest": false,
     "timeout": 60000,
@@ -59,7 +58,6 @@
     "rules": {
       "containsDocumentsWithData": null
     },
-    "isIncremental": false,
     "maxConcurrent": 1,
     "skipUrlCheckOnHarvest": false,
     "timeout": 60000,
@@ -102,7 +100,6 @@
     "rules": {
       "containsDocumentsWithData": null
     },
-    "isIncremental": false,
     "maxConcurrent": 1,
     "skipUrlCheckOnHarvest": false,
     "timeout": 60000,
@@ -145,7 +142,6 @@
     "rules": {
       "containsDocumentsWithData": false
     },
-    "isIncremental": false,
     "maxConcurrent": 1,
     "skipUrlCheckOnHarvest": false,
     "timeout": 60000,

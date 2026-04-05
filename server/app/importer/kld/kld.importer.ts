@@ -65,24 +65,8 @@ export class KldImporter extends Importer<KldSettings> {
     private readonly requestRetryDelay = 3000;
 
     constructor(settings: KldSettings) {
-        // if we are looking for incremental updates, set the last execution date
-        // TODO how to set incremental?
-        let lastSummary: ImportLogMessage;
-        if (settings.isIncremental) {
-            let sumser: SummaryService = new SummaryService();
-            lastSummary = sumser.get(settings.id);
-            // only do an incremental harvest if there exists a previous run
-            if (!lastSummary) {
-                log.warn(`Changing type of harvest to "full" because no previous harvest was found for harvester with id ${settings.id}`);
-                settings.isIncremental = false;
-            }
-        }
         super(settings);
-
         this.domParser = MiscUtils.getDomParser();
-        if (lastSummary) {
-            this.minimumUpdateDate = new Date(lastSummary.lastExecution);
-        }
     }
 
     protected getDefaultSettings(): KldSettings {
@@ -91,6 +75,17 @@ export class KldImporter extends Importer<KldSettings> {
 
     // only here for documentation - use the "default" exec function
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
+        // if we are looking for incremental updates, set the last execution date
+        if (this.isIncremental) {
+            let lastSummary: ImportLogMessage = new SummaryService().get(this.settings.id);
+            // only do an incremental harvest if there exists a previous run
+            if (lastSummary) {
+                this.minimumUpdateDate = new Date(lastSummary.lastExecution);
+            } else {
+                log.warn(`Changing type of harvest to "full" because no previous harvest was found for harvester with id ${this.settings.id}`);
+                this.isIncremental = false;
+            }
+        }
         await super.exec(observer);
     }
 
@@ -206,7 +201,7 @@ export class KldImporter extends Importer<KldSettings> {
         for (let i = 0; i < numReceived; i++) {
             const objectId = ids[i];
             const lastUpdateDate = new Date(idMap[objectId]);
-            if (!this.settings.isIncremental || lastUpdateDate < this.minimumUpdateDate) {
+            if (!this.isIncremental || lastUpdateDate < this.minimumUpdateDate) {
                 const requestDelegate = new RequestDelegate(KldImporter.createRequestConfig(this.settings, `Objekt/${ids[i]}`));
                 const request = throttle(() => {
                     return this.extractObjectDetails(requestDelegate, i, numReceived)
