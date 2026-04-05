@@ -57,8 +57,8 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;
         } else {
-            let requestConfig = DcatappluImporter.createRequestConfig(this.getSettings());
-            this.requestDelegate = new RequestDelegate(requestConfig, DcatappluImporter.createPaging(this.getSettings()));
+            let requestConfig = DcatappluImporter.createRequestConfig(this.settings);
+            this.requestDelegate = new RequestDelegate(requestConfig, DcatappluImporter.createPaging(this.settings));
         }
     }
 
@@ -178,14 +178,14 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
             });
 
             for (let i = 0; i < records.length; i++) {
-                this.getSummary().numDocs++;
+                this.summary.numDocs++;
 
                 let uuid = DcatappluMapper.select('./dct:identifier', records[i], true).textContent;
                 if (!uuid) {
                     uuid = DcatappluMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
                 }
                 if (!this.filterUtils.isIdAllowed(uuid)) {
-                    this.getSummary().skippedDocs.push(uuid);
+                    this.summary.skippedDocs.push(uuid);
                     continue;
                 }
 
@@ -210,7 +210,7 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
                 //         title: 'Globaler Katalog'
                 //     });
                 // }
-                let mapper = new DcatappluMapper(this.getSettings(), records[i], catalog, rootNode, harvestTime, this.getSummary())
+                let mapper = new DcatappluMapper(this.settings, records[i], catalog, rootNode, harvestTime, this.summary)
                 let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
                 let doc: IndexDocument;
@@ -219,24 +219,24 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
                 }
                 catch (e) {
                     log.error('Error creating index document', e);
-                    this.getSummary().errors.push({ type: 'app', error: e.toString() });
+                    this.summary.errors.push({ type: 'app', error: e.toString() });
                     mapper.skipped = true;
                 }
 
-                if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
+                if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                     let entity: RecordEntity = {
                         identifier: uuid,
-                        source: this.getSettings().sourceURL,
-                        catalog_ids: this.getSettings().catalogIds,
+                        source: this.settings.sourceURL,
+                        catalog_ids: this.settings.catalogIds,
                         dataset: doc,
                         original_document: mapper.getHarvestedData()
                     };
                     promises.push(this.database.addEntityToBulk(entity));
                 }
                 else {
-                    this.getSummary().skippedDocs.push(uuid);
+                    this.summary.skippedDocs.push(uuid);
                 }
-                this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+                this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
             }
         }
         await Promise.all(promises).catch(err => log.error('Error indexing DCAT record', err));

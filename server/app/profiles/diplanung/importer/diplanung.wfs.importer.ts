@@ -48,9 +48,9 @@ export class DiplanungWfsImporter extends WfsImporter {
         // general metadata contacts
         // role -> contact
         let contacts: Map<string, Contact> = new Map();
-        if (this.getSettings().contactCswUrl) {
+        if (this.settings.contactCswUrl) {
             let response = await RequestDelegate.doRequest({ 
-                uri: this.getSettings().contactCswUrl,
+                uri: this.settings.contactCswUrl,
                 accept: 'text/xml',
                 ...getProxyConfig()
             });
@@ -91,8 +91,8 @@ export class DiplanungWfsImporter extends WfsImporter {
         let pointOfContact: Contact = contacts.get('pointOfContact');
         // fallbacks
         if (!pointOfContact?.fn?.trim()) {
-            if (this.getSettings().contactMetadata) {
-                pointOfContact = this.getSettings().contactMetadata;
+            if (this.settings.contactMetadata) {
+                pointOfContact = this.settings.contactMetadata;
             }
             else {
                 pointOfContact = {
@@ -115,8 +115,8 @@ export class DiplanungWfsImporter extends WfsImporter {
             else if (pointOfContact.fn?.trim()) {
                 maintainer = { name: pointOfContact.fn };
             }
-            else if (this.getSettings().maintainer?.['name'] || this.getSettings().maintainer?.['organization']) {
-                maintainer = this.getSettings().maintainer;
+            else if (this.settings.maintainer?.['name'] || this.settings.maintainer?.['organization']) {
+                maintainer = this.settings.maintainer;
             }
             else {
                 maintainer = {

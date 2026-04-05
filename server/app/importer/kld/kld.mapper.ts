@@ -74,9 +74,9 @@ export class KldMapper extends Mapper<KldSettings> implements ToElasticMapper<In
     getDescription(): string {
         const abstract = this.record.Beschreibung;
         if (!abstract) {
-            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.id}\', title: \'${this.getTitle()}\', source: \'${this.getSettings().sourceURL}\'`;
+            let msg = `Dataset doesn't have an abstract. It will not be displayed in the portal. Id: \'${this.id}\', title: \'${this.getTitle()}\', source: \'${this.settings.sourceURL}\'`;
             this.log.warn(msg);
-            this.getSummary().warnings.push(['No description', msg]);
+            this.summary.warnings.push(['No description', msg]);
             this.valid = false;
         }
         return abstract;
@@ -99,7 +99,7 @@ export class KldMapper extends Mapper<KldSettings> implements ToElasticMapper<In
         if (start && end && start > end) {
             const message = `Inconsistent dates found in object ${this.record.Id}: \
                 Start (${new Date(start).toJSON()}) is greater than end (${new Date(end).toJSON()}).`;
-            this.getSummary().warnings.push(['Inconsistent dates', message]);
+            this.summary.warnings.push(['Inconsistent dates', message]);
         }
         const range = { gte: start, lte: end };
         return [range];
@@ -132,13 +132,13 @@ export class KldMapper extends Mapper<KldSettings> implements ToElasticMapper<In
     }
 
     getMetadataSource() {
-        let link = `${this.getSettings().sourceURL}Objekt/${this.id}`;
+        let link = `${this.settings.sourceURL}Objekt/${this.id}`;
         return {
-            source_base: this.getSettings().sourceURL,
+            source_base: this.settings.sourceURL,
             raw_data_source: link,
             source_type: 'kld',
-            portal_link: this.getSettings().defaultAttributionLink,
-            attribution: this.getSettings().defaultAttribution
+            portal_link: this.settings.defaultAttributionLink,
+            attribution: this.settings.defaultAttribution
         };
     }
 

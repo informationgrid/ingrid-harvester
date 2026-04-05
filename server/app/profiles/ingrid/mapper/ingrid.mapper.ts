@@ -66,7 +66,7 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
         let result: IngridIndexDocument = {
             // put custom entries first, so they can potentially get overwritten with more specific getters below
             ...this.getCustomEntries(),
-            ...this.getIngridMetadata(this.baseMapper.getSettings()),
+            ...this.getIngridMetadata(this.baseMapper.settings),
             metadata: this.getMetaMetadata(),
             uuid: this.getGeneratedId(),
             collection: {
@@ -188,28 +188,28 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
     }
 
     getIPlugId(){
-        return this.baseMapper.getSettings().iPlugId;
+        return this.baseMapper.settings.iPlugId;
     }
 
     getPartner(): string[] {
-        return this.baseMapper.getSettings().partner?.split(",")?.map(p => p.trim());
+        return this.baseMapper.settings.partner?.split(",")?.map(p => p.trim());
     }
 
     getProvider(): string[] {
-        return this.baseMapper.getSettings().provider?.split(",")?.map(p => p.trim());
+        return this.baseMapper.settings.provider?.split(",")?.map(p => p.trim());
     }
 
     getOrganisation() {
-        let organisation = this.transformToIgcDomainId(this.baseMapper.getSettings().provider, "111");
+        let organisation = this.transformToIgcDomainId(this.baseMapper.settings.provider, "111");
         return organisation;
     }
 
     getDataType(): string[] {
-        return this.baseMapper.getSettings().datatype?.split(",")?.map(p => p.trim()) ?? ["default"];
+        return this.baseMapper.settings.datatype?.split(",")?.map(p => p.trim()) ?? ["default"];
     }
 
     getDataSourceName() {
-        return this.baseMapper.getSettings().dataSourceName;
+        return this.baseMapper.settings.dataSourceName;
     }
 
     getT0() {

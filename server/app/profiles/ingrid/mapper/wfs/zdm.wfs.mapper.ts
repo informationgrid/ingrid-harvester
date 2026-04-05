@@ -75,7 +75,7 @@ export class ZdmWfsMapper extends ingridWfsMapper {
 
     getMapIFrame(height: number): string {
         let mapLink = '';
-        let serviceURL = encodeURIComponent(`${this.getMetadataSource().source_base}?SERVICE=WFS&VERSION=${this.baseMapper.getSettings().version}&`);
+        let serviceURL = encodeURIComponent(`${this.getMetadataSource().source_base}?SERVICE=WFS&VERSION=${this.baseMapper.settings.version}&`);
         mapLink += '/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=';
         mapLink += 'WFS%7C%7C' + encodeURIComponent(this.getTitle().replaceAll(',','') + ' (WFS)') + '%7C%7C' + serviceURL + '%7C%7C' + this.baseMapper.getTypename();
         mapLink += '%2C';

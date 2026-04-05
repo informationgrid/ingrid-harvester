@@ -124,7 +124,7 @@ export class LvrClickRheinMapper extends LvrMapper<JsonMapper> {
     }
 
     async getMedia(): Promise<Media[]> {
-        let { sourceURL, additionalSettings } = this.baseMapper.getSettings();
+        let { sourceURL, additionalSettings } = this.baseMapper.settings;
         let baseURL = sourceURL.substring(0, sourceURL.indexOf('/', 8));
         const queryParam = (mediaType) => {
             switch (mediaType) {
@@ -168,7 +168,7 @@ export class LvrClickRheinMapper extends LvrMapper<JsonMapper> {
         };
         return {
             id: 'ClickRhein',
-            display_url: await UrlUtils.urlWithProtocolFor(requestConfig, this.baseMapper.getSettings().skipUrlCheckOnHarvest, true)
+            display_url: await UrlUtils.urlWithProtocolFor(requestConfig, this.baseMapper.settings.skipUrlCheckOnHarvest, true)
         };
     }
 

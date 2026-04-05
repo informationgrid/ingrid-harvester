@@ -119,7 +119,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
             case 'CkanMapper': return new ingridCkanMapper(mapper as CkanMapper);
             case 'DcatapdeMapper': return new ingridDcatapdeMapper(mapper as DcatapdeMapper);
             case 'WfsMapper': {
-                let wfsProfile = (mapper as WfsMapper).getSettings().wfsProfile;
+                let wfsProfile = (mapper as WfsMapper).settings.wfsProfile;
                 switch (wfsProfile) {
                     case WfsProfile.pegelonline: return new PegelonlineWfsMapper(mapper as WfsMapper);
                     case WfsProfile.zdm: return new ZdmWfsMapper(mapper as WfsMapper);

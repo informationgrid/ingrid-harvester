@@ -110,7 +110,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
 
     getDescription() {
         if (this.source.notes) {
-            return this.getSettings().markdownAsDescription ? marked(this.source.notes, { async: false }) : this.source.notes;
+            return this.settings.markdownAsDescription ? marked(this.source.notes, { async: false }) : this.source.notes;
         } else {
             return undefined;
         }
@@ -129,7 +129,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
                 let res = resources[i];
 
                 let requestConfig = this.getUrlCheckRequestConfig(res.url);
-                let accessURL = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
+                let accessURL = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
 
                 if (accessURL) {
                     let dist = {
@@ -137,7 +137,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
                         title: res.name,
                         description: res.description,
                         access_url: this.cleanupURL(accessURL),
-                        format: UrlUtils.mapFormat([res.format], this.getSummary().warnings),
+                        format: UrlUtils.mapFormat([res.format], this.summary.warnings),
                         issued: this.handleDate(res.created),
                         modified: this.handleDate(res.last_modified),
                         byteSize: this.handleByteSize(res.size)
@@ -181,15 +181,15 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
     getMetadataSource(): MetadataSource {
         // Metadata
         // The harvest source
-        let rawSource = this.getSettings().sourceURL + '/api/3/action/package_show?id=' + this.source.name;
-        let portalSource = this.getSettings().sourceURL + '/dataset/' + this.source.name;
+        let rawSource = this.settings.sourceURL + '/api/3/action/package_show?id=' + this.source.name;
+        let portalSource = this.settings.sourceURL + '/dataset/' + this.source.name;
 
         return {
-            source_base: this.getSettings().sourceURL,
+            source_base: this.settings.sourceURL,
             raw_data_source: rawSource,
             source_type: 'ckan',
             portal_link: portalSource,
-            attribution: this.getSettings().defaultAttribution
+            attribution: this.settings.defaultAttribution
         };
     }
 
@@ -215,7 +215,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         let maintainer: Person;
         if (this.source.maintainer) {
             maintainer = {
-                name: this.getSettings().providerPrefix + this.source.maintainer.trim(),
+                name: this.settings.providerPrefix + this.source.maintainer.trim(),
                 mbox: this.source.maintainer_email
             };
         }
@@ -227,7 +227,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         let author: Person;
         if (this.source.author) {
             author = {
-                name: this.getSettings().providerPrefix + this.source.author.trim(),
+                name: this.settings.providerPrefix + this.source.author.trim(),
                 mbox: this.source.author_email
             };
         }
@@ -295,7 +295,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         }
 
         if (mappedThemes.length === 0) {
-            mappedThemes = this.getSettings().defaultDCATCategory || [];
+            mappedThemes = this.settings.defaultDCATCategory || [];
         }
         return mappedThemes
             .map(category => DCAT_CATEGORY_URL + category);
@@ -342,7 +342,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         if(raw){
             result = DcatPeriodicityUtils.getPeriodicity(raw);
             if(!result){
-                    this.getSummary().warnings.push(["Unbekannte Periodizität", raw]);
+                    this.summary.warnings.push(["Unbekannte Periodizität", raw]);
             }
         }
 
@@ -487,17 +487,17 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
     async getLicense(): Promise<License> {
         const hasNoLicense = !this.source.license_id && !this.source.license_title && !this.source.license_url;
 
-        if (this.getSettings().defaultLicense && hasNoLicense) {
-            this.getSummary().missingLicense++;
+        if (this.settings.defaultLicense && hasNoLicense) {
+            this.summary.missingLicense++;
             this.log.warn(`Missing license for ${this.getGeneratedId()} using default one.`);
 
-            return this.getSettings().defaultLicense;
+            return this.settings.defaultLicense;
         } else if (hasNoLicense) {
             let msg = `No license detected for dataset: ${this.getGeneratedId()} -> ${this.getTitle()}`;
-            this.getSummary().missingLicense++;
+            this.summary.missingLicense++;
 
             this.log.warn(msg);
-            this.getSummary().warnings.push(['Missing license', msg]);
+            this.summary.warnings.push(['Missing license', msg]);
         } else {
             let license = await DcatLicensesUtils.get(this.source.license_url);
             if(license) return license;
@@ -520,8 +520,8 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
             uri: uri
         };
 
-        if (this.getSettings().proxy) {
-            config.proxy = this.getSettings().proxy;
+        if (this.settings.proxy) {
+            config.proxy = this.settings.proxy;
         }
 
         return config;
@@ -666,8 +666,8 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
 
         let logDateError = () => {
             let message = `Date has incorrect format: ${date}`;
-            this.getSummary().numErrors++;
-            this.getSummary().errors.push({ type: 'app', error: message });
+            this.summary.numErrors++;
+            this.summary.errors.push({ type: 'app', error: message });
             this.log.warn(message);
         };
 
@@ -676,9 +676,9 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         } else if (date === null) {
             return null;
         } else {
-            if (this.getSettings().dateSourceFormats && this.getSettings().dateSourceFormats.length > 0) {
+            if (this.settings.dateSourceFormats && this.settings.dateSourceFormats.length > 0) {
                 // let dateObj = this.moment(date, this.settings.dateSourceFormats);
-                let dateObj = dayjs(date, this.getSettings().dateSourceFormats);
+                let dateObj = dayjs(date, this.settings.dateSourceFormats);
 
                 if (dateObj.isValid()) {
                     return dateObj.toDate();
@@ -711,8 +711,8 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
             }
 
             let message = `Byte size has incorrect format: ${size}`;
-            this.getSummary().numErrors++; //.push(message);
-            this.getSummary().errors.push({ type: 'app', error: message });
+            this.summary.numErrors++; //.push(message);
+            this.summary.errors.push({ type: 'app', error: message });
             this.log.warn(message);
             return undefined;
         }
@@ -722,8 +722,8 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
 
     executeCustomCode(doc: any) {
         try {
-            if (this.getSettings().customCode) {
-                eval(this.getSettings().customCode);
+            if (this.settings.customCode) {
+                eval(this.settings.customCode);
             }
         } catch (error) {
             throwError('An error occurred in custom code: ' + error.message);

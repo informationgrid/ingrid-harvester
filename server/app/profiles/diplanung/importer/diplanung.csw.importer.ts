@@ -86,7 +86,7 @@ export class DiplanungCswImporter extends CswImporter {
                         identifier: doc.identifier,
                         source: doc.extras.metadata.source.source_base,
                         collection_id: null, // TODO set default catalog for diplanung from ENV VAR
-                        catalog_ids: this.getSettings().catalogIds,
+                        catalog_ids: this.settings.catalogIds,
                         dataset: mergedDocument,
                         original_document: undefined
                     };
@@ -104,7 +104,7 @@ export class DiplanungCswImporter extends CswImporter {
         for (const result of settled) {
             if (result.status === 'rejected' && typeof result.reason === 'object') {
                 const msg = result.reason?.message ?? String(result.reason);
-                this.getSummary().warnings.push([msg]);
+                this.summary.warnings.push([msg]);
                 log.warn(`Error updating record: ${msg}`);
             }
         }

@@ -237,7 +237,7 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
         };
         return {
             id: getSourceId(),
-            display_url: await UrlUtils.urlWithProtocolFor(requestConfig, this.baseMapper.getSettings().skipUrlCheckOnHarvest, true)
+            display_url: await UrlUtils.urlWithProtocolFor(requestConfig, this.baseMapper.settings.skipUrlCheckOnHarvest, true)
         };
     }
 

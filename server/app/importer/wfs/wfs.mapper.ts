@@ -141,13 +141,13 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
 
     // TODO:check
     getMetadataSource(): MetadataSource {
-        let wfsLink = `${this.getSettings().sourceURL}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.getSettings().version}&outputFormat=application/xml&featureId=${this.gmlId}`;
+        let wfsLink = `${this.settings.sourceURL}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.settings.version}&outputFormat=application/xml&featureId=${this.gmlId}`;
         return {
-            source_base: this.getSettings().sourceURL,
+            source_base: this.settings.sourceURL,
             raw_data_source: wfsLink,
             source_type: 'wfs',
-            portal_link: this.getSettings().defaultAttributionLink,
-            attribution: this.getSettings().defaultAttribution
+            portal_link: this.settings.defaultAttributionLink,
+            attribution: this.settings.defaultAttribution
         };
     }
 
@@ -248,8 +248,8 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
             uri: uri
         };
 
-        if (this.getSettings().proxy) {
-            config.proxy = this.getSettings().proxy;
+        if (this.settings.proxy) {
+            config.proxy = this.settings.proxy;
         }
 
         return config;
@@ -265,8 +265,8 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
 
     executeCustomCode(doc: any) {
         try {
-            if (this.getSettings().customCode) {
-                eval(this.getSettings().customCode);
+            if (this.settings.customCode) {
+                eval(this.settings.customCode);
             }
         } catch (error) {
             throwError('An error occurred in custom code: ' + error.message);

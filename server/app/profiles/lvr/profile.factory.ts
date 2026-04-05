@@ -62,7 +62,7 @@ export class LvrFactory extends ProfileFactory<LvrSettings> {
             case 'JsonMapper': return new LvrClickRheinMapper(<JsonMapper>mapper);
             case 'KldMapper': return new LvrKldMapper(<KldMapper>mapper);
             case 'OaiMapper':
-                switch ((mapper.getSettings() as OaiSettings).metadataPrefix?.toLowerCase()) {
+                switch ((mapper.settings as OaiSettings).metadataPrefix?.toLowerCase()) {
                     case 'lido': return new LvrOaiLidoMapper(<OaiLidoMapper>mapper);
                     case 'mods': return new LvrOaiModsMapper(<OaiModsMapper>mapper);
                     default: throw new Error('Profile LVR only supports `mods` and `lido` prefixes for OAI-PMH harvester');

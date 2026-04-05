@@ -70,7 +70,7 @@ export class DiplanungFactory extends ProfileFactory<DiplanungSettings> {
             case 'CswMapper': return new DiplanungCswMapper(<CswMapper>mapper);
             case 'DcatappluMapper': return new DiplanungDcatappluMapper(<DcatappluMapper>mapper);
             case 'WfsMapper': {
-                switch (mapper.getSettings().type) {
+                switch (mapper.settings.type) {
                     case 'WFS.FIS': return new FisWfsMapper(<WfsMapper>mapper);
                     case 'WFS.MS': return new MsWfsMapper(<WfsMapper>mapper);
                     case 'WFS.XPLAN.SYN': return new XplanSynWfsMapper(<WfsMapper>mapper);

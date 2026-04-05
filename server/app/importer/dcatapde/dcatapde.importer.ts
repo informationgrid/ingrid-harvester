@@ -58,7 +58,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
         if (requestDelegate) {
             this.requestDelegate = requestDelegate;
         } else {
-            this.requestConfig = DcatapdeImporter.createRequestConfig(this.getSettings());
+            this.requestConfig = DcatapdeImporter.createRequestConfig(this.settings);
             this.requestDelegate = new RequestDelegate(this.requestConfig);
         }
     }
@@ -101,7 +101,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                     this.requestDelegate = new RequestDelegate(this.requestConfig);
                 }
 
-                log.debug(`Received ${numReturned} records from ${this.getSettings().sourceURL} - Page: ${thisPageUrl}`);
+                log.debug(`Received ${numReturned} records from ${this.settings.sourceURL} - Page: ${thisPageUrl}`);
                 await this.extractRecords(response, harvestTime)
             }
             else {
@@ -112,7 +112,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                 } else {
                     const message = `Error while fetching DCAT Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
                     log.error(message);
-                    this.getSummary().errors.push({ type: 'app', error: message });
+                    this.summary.errors.push({ type: 'app', error: message });
                     if(retries++ > 3){
                         isLastPage = true;
                         log.error('Stopped after 3 Retries')
@@ -149,14 +149,14 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
          */
 
         for (let i = 0; i < records.length; i++) {
-            this.getSummary().numDocs++;
+            this.summary.numDocs++;
 
             let uuid = DcatapdeMapper.select('./dct:identifier', records[i], true).textContent;
             if(!uuid) {
                 uuid = DcatapdeMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
             }
             if (!this.filterUtils.isIdAllowed(uuid)) {
-                this.getSummary().skippedDocs.push(uuid);
+                this.summary.skippedDocs.push(uuid);
                 continue;
             }
 
@@ -167,7 +167,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = new DcatapdeMapper(this.getSettings(), records[i], harvestTime, this.getSummary());
+            let mapper = new DcatapdeMapper(this.settings, records[i], harvestTime, this.summary);
             let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
@@ -178,15 +178,15 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.getSummary().errors.push({ type: 'app', error: e.toString() });
+                this.summary.errors.push({ type: 'app', error: e.toString() });
                 mapper.skipped = true;
             }
 
-            if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
+            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: uuid,
-                    source: this.getSettings().sourceURL,
-                    catalog_ids: this.getSettings().catalogIds,
+                    source: this.settings.sourceURL,
+                    catalog_ids: this.settings.catalogIds,
                     dataset: doc,
                     dataset_dcatapde: dcatapdeDoc,
                     original_document: mapper.getHarvestedData()
@@ -201,9 +201,9 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                         })
                 );
             } else {
-                this.getSummary().skippedDocs.push(uuid);
+                this.summary.skippedDocs.push(uuid);
             }
-            this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+            this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.all(promises)
             .catch(err => log.error('Error indexing DCAT record', err));

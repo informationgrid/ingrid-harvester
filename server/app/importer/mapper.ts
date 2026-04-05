@@ -34,8 +34,6 @@ import type { Summary } from '../model/summary.js';
  */
 export abstract class Mapper<S extends ImporterSettings> {
 
-    private readonly settings: S;
-    private readonly summary: Summary;
     protected errors: string[] = [];
     protected valid = true;
     protected changed = false;
@@ -44,36 +42,21 @@ export abstract class Mapper<S extends ImporterSettings> {
     abstract log: Logger;
     private blacklistedFormats: string[] = [];
 
-    constructor(settings: S, summary: Summary) {
-        this.settings = settings;
-        this.summary = summary;
+    constructor(readonly settings: S, readonly summary: Summary) {
     }
 
     init() {
-        let hasDataDownloadRule = this.getSettings() && this.getSettings().rules
-            && this.getSettings().rules.containsDocumentsWithData
-            && this.getSettings().rules.containsDocumentsWithDataBlacklist;
+        let hasDataDownloadRule = this.settings && this.settings.rules
+            && this.settings.rules.containsDocumentsWithData
+            && this.settings.rules.containsDocumentsWithDataBlacklist;
 
         if (hasDataDownloadRule) {
-            this.blacklistedFormats = this.getSettings().rules.containsDocumentsWithDataBlacklist
+            this.blacklistedFormats = this.settings.rules.containsDocumentsWithDataBlacklist
                 .split(',')
                 .map(item => item.trim());
         }
     }
 
-    /**
-     * Settings for the current harvesting Job (proxied from the Importer).
-     */
-    public getSettings(): S {
-        return this.settings;
-    }
-
-    /**
-     * Summary of the current harvesting Job (managed by the Importer).
-     */
-    public getSummary(): Summary{
-        return this.summary;
-    }
 
     /**
      * Metadata for the managed harvested record

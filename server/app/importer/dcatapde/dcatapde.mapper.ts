@@ -112,9 +112,9 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
             description = DcatapdeMapper.select('./dct:abstract', this.record, true);
         }
         if (!description) {
-            let msg = `Dataset doesn't have an description. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.getSettings().sourceURL}\'`;
+            let msg = `Dataset doesn't have an description. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.sourceURL}\'`;
             this.log.warn(msg);
-            this.getSummary().warnings.push(['No description', msg]);
+            this.summary.warnings.push(['No description', msg]);
             this.valid = false;
         } else {
             return description.textContent;
@@ -217,7 +217,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
 
                 if(url) {
                     let dist = {
-                        format: UrlUtils.mapFormat([format], this.getSummary().warnings).filter(x => x != "Unbekannt"),
+                        format: UrlUtils.mapFormat([format], this.summary.warnings).filter(x => x != "Unbekannt"),
                         access_url: url.getAttribute('rdf:resource')?url.getAttribute('rdf:resource'):url.textContent,
                         title: title ? title.textContent : undefined,
                         description: description ? description.textContent : undefined,
@@ -260,7 +260,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
         }
 
         if (publishers.length === 0) {
-            this.getSummary().missingPublishers++;
+            this.summary.missingPublishers++;
         }
 
         this.fetched.publishers = publishers;
@@ -320,7 +320,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
             }
         }
 
-        if(this.getSettings().filterTags && this.getSettings().filterTags.length > 0 && !keywords.some(keyword => this.getSettings().filterTags.includes(keyword))){
+        if(this.settings.filterTags && this.settings.filterTags.length > 0 && !keywords.some(keyword => this.settings.filterTags.includes(keyword))){
             this.skipped = true;
         }
 
@@ -331,11 +331,11 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
         let dcatLink; //=  DcatMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.getAttribute('rdf:about');
         return {
-            source_base: this.getSettings().sourceURL,
+            source_base: this.settings.sourceURL,
             raw_data_source: dcatLink,
             source_type: 'dcat',
             portal_link: portalLink,
-            attribution: this.getSettings().defaultAttribution
+            attribution: this.settings.defaultAttribution
         };
     }
 
@@ -374,7 +374,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
                 'coordinates': JSON.parse(coords)
             };
         } catch(e) {
-            this.getSummary().errors.push({ type: 'app', error: "Can't parse WKT: "+e.message });
+            this.summary.errors.push({ type: 'app', error: "Can't parse WKT: "+e.message });
         }
     }
 
@@ -431,7 +431,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
             .map(node => node.getAttribute('rdf:resource'))
             .filter(theme => theme); // Filter out falsy values
 
-        if(this.getSettings().filterThemes && this.getSettings().filterThemes.length > 0 && !themes.some(theme => this.getSettings().filterThemes.includes(theme.substr(theme.lastIndexOf('/')+1)))){
+        if(this.settings.filterThemes && this.settings.filterThemes.length > 0 && !themes.some(theme => this.settings.filterThemes.includes(theme.substr(theme.lastIndexOf('/')+1)))){
             this.skipped = true;
         }
 
@@ -457,7 +457,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
             if(periodicity){
                 let period = DcatPeriodicityUtils.getPeriodicity(periodicity)
                 if(!period){
-                    this.getSummary().warnings.push(["Unbekannte Periodizität", periodicity]);
+                    this.summary.warnings.push(["Unbekannte Periodizität", periodicity]);
                 }
                 return period;
             }
@@ -480,7 +480,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
                     license = {
                         id: json.id,
                         title: json.name,
-                        url: await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest)
+                        url: await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest)
                     };
 
                 } catch(ignored) {}
@@ -501,10 +501,10 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
 
         if (!license) {
             let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
-            this.getSummary().missingLicense++;
+            this.summary.missingLicense++;
 
             this.log.warn(msg);
-            this.getSummary().warnings.push(['Missing license', msg]);
+            this.summary.warnings.push(['Missing license', msg]);
             return {
                 id: 'unknown',
                 title: 'Unbekannt',
@@ -516,7 +516,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
     }
 
     getErrorSuffix(uuid, title) {
-        return `Id: '${uuid}', title: '${title}', source: '${this.getSettings().sourceURL}'.`;
+        return `Id: '${uuid}', title: '${title}', source: '${this.settings.sourceURL}'.`;
     }
 
     getHarvestedData(): string {
@@ -663,8 +663,8 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
             uri: uri
         };
 
-        if (this.getSettings().proxy) {
-            config.proxy = this.getSettings().proxy;
+        if (this.settings.proxy) {
+            config.proxy = this.settings.proxy;
         }
 
         return config;
@@ -676,8 +676,8 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
 
     executeCustomCode(doc: any) {
         try {
-            if (this.getSettings().customCode) {
-                eval(this.getSettings().customCode);doc
+            if (this.settings.customCode) {
+                eval(this.settings.customCode);doc
             }
         } catch (error) {
             throwError('An error occurred in custom code: ' + error.message);

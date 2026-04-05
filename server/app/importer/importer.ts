@@ -51,17 +51,16 @@ const log = log4js.getLogger(import.meta.filename)
  */
 export abstract class Importer<S extends ImporterSettings> {
 
-    private readonly settings: S;
-    private readonly summary: Summary;
-    private stageSummaries: Summary[] = [];
     protected filterUtils: FilterUtils;
     protected generalConfig: GeneralSettings;
     protected observer: Observer<ImportLogMessage>;
 
     readonly database: DatabaseUtils;
     readonly elastic: ElasticsearchUtils;
+    readonly summary: Summary;
+    readonly stageSummaries: Summary[] = [];
 
-    protected constructor(settings: S) {
+    protected constructor(readonly settings: S) {
         this.settings = MiscUtils.merge(this.getDefaultSettings(), settings);
         this.filterUtils = new FilterUtils(this.settings);
         this.generalConfig = ConfigService.getGeneralSettings();
@@ -83,7 +82,7 @@ export abstract class Importer<S extends ImporterSettings> {
     });
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
-        // TODO remove Importer.getSummary() - instead, always use a named summary
+        // TODO remove Importer.summary - instead, always use a named summary
         // const downloadSummary = this.startStage('harvest');
         if (this.settings.dryRun) {
             log.debug('Dry run option enabled. Skipping index creation.');
@@ -163,22 +162,10 @@ export abstract class Importer<S extends ImporterSettings> {
     }
 
     protected startStage(name: string): Summary {
-        const s = new Summary(name, this.getSettings());
+        const s = new Summary(name, this.settings);
         s.startTime = new Date();
         this.stageSummaries.push(s);
         return s;
-    }
-
-    getStageSummaries(): Summary[] {
-        return this.stageSummaries;
-    }
-
-    getSettings(): S {
-        return this.settings;
-    }
-
-    getSummary(): Summary {
-        return this.summary;
     }
 
     getDownloadMessage(): string {

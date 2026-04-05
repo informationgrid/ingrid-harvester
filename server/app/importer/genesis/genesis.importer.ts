@@ -78,12 +78,12 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         this.numIndexDocs = 0;
 
         const harvestTime = new Date(Date.now());
-        const tableSelections = this.getSettings().typeConfig.tableSelections;
+        const tableSelections = this.settings.typeConfig.tableSelections;
 
         // Stage 1: collect all tables across all selections to establish total count
         const allTables: GenesisListEntry[] = [];
-        this.observer.next(this.getSummary().msgImport(`Fetching tables`));
-        const selectionLimit = pLimit(this.getSettings().maxConcurrent);
+        this.observer.next(this.summary.msgImport(`Fetching tables`));
+        const selectionLimit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(
             tableSelections.map(selection => selectionLimit(async () => {
                 log.debug(`Fetching tables for selection "${selection}"`);
@@ -91,10 +91,10 @@ export class GenesisImporter extends Importer<GenesisSettings> {
                     const tables = await this.fetchAllPages('/catalogue/tables', { selection, area: 'all', searchcriterion: 'Code', sortcriterion: 'Code', language: 'de' });
                     log.info(`Selection "${selection}": ${tables.length} tables`);
                     allTables.push(...tables);
-                    this.observer.next(this.getSummary().msgImport(`Selection "${selection}": ${tables.length} tables found`));
+                    this.observer.next(this.summary.msgImport(`Selection "${selection}": ${tables.length} tables found`));
                 } catch (e) {
                     log.warn(`Failed to fetch tables for selection "${selection}": ${e.message}`);
-                    this.getSummary().errors.push({ type: 'app', error: `Failed to fetch tables for "${selection}": ${e.message}` });
+                    this.summary.errors.push({ type: 'app', error: `Failed to fetch tables for "${selection}": ${e.message}` });
                 }
             }))
         );
@@ -102,7 +102,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         log.info(`Total tables to harvest: ${this.totalRecords}`);
 
         // Stage 2: process metadata for each collected table
-        const limit = pLimit(this.getSettings().maxConcurrent);
+        const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(
             allTables.map(table => limit(() => this.processObject(table, harvestTime)))
         );
@@ -141,7 +141,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
             }
 
             start += pageLength;
-            await this.sleep(this.getSettings().typeConfig.requestDelayMs);
+            await this.sleep(this.settings.typeConfig.requestDelayMs);
         }
 
         return allItems;
@@ -155,10 +155,10 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         entry: GenesisListEntry,
         harvestTime: Date,
     ): Promise<void> {
-        this.getSummary().numDocs++;
+        this.summary.numDocs++;
 
         if (!this.filterUtils.isIdAllowed(entry.Code)) {
-            this.getSummary().skippedDocs.push(entry.Code);
+            this.summary.skippedDocs.push(entry.Code);
             return;
         }
 
@@ -169,7 +169,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
             apiResponse = await this.doApiRequest(endpoint, { name: entry.Code, language: 'de' });
         } catch (e) {
             log.error(`Failed to fetch metadata for ${endpoint} ${entry.Code}: ${e.message}`);
-            this.getSummary().errors.push({ type: 'app', error: `Failed to fetch metadata for ${endpoint} ${entry.Code}: ${e.message}` });
+            this.summary.errors.push({ type: 'app', error: `Failed to fetch metadata for ${endpoint} ${entry.Code}: ${e.message}` });
             return;
         }
 
@@ -179,7 +179,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         }
 
         // Create document via profile-specific mapper
-        let mapper = new GenesisMapper(this.getSettings(), apiResponse, harvestTime, this.getSummary());
+        let mapper = new GenesisMapper(this.settings, apiResponse, harvestTime, this.summary);
         let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
         let doc: IndexDocument;
@@ -189,15 +189,15 @@ export class GenesisImporter extends Importer<GenesisSettings> {
             dcatapdeDoc = documentFactory.createDcatapdeDocument();
         } catch (e) {
             log.error(`Error creating index document for ${entry.Code}`, e);
-            this.getSummary().errors.push({ type: 'app', error: `Error creating document for ${entry.Code}: ${e.message}` });
+            this.summary.errors.push({ type: 'app', error: `Error creating document for ${entry.Code}: ${e.message}` });
             mapper.skipped = true;
         }
 
-        if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
+        if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
             const entity: RecordEntity = {
                 identifier: mapper.getCode(),
-                source: this.getSettings().sourceURL,
-                catalog_ids: this.getSettings().catalogIds,
+                source: this.settings.sourceURL,
+                catalog_ids: this.settings.catalogIds,
                 dataset: doc,
                 dataset_dcatapde: dcatapdeDoc,
                 original_document: mapper.getHarvestedData(),
@@ -206,13 +206,13 @@ export class GenesisImporter extends Importer<GenesisSettings> {
             await this.database.addEntityToBulk(entity)
                 .catch(err => {
                     log.error(`Error saving entity ${entry.Code}`, err);
-                    this.getSummary().errors.push({ type: 'app', error: `DB error for ${entry.Code}: ${err.message}` });
+                    this.summary.errors.push({ type: 'app', error: `DB error for ${entry.Code}: ${err.message}` });
                 });
         } else {
-            this.getSummary().skippedDocs.push(entry.Code);
+            this.summary.skippedDocs.push(entry.Code);
         }
 
-        this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+        this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
     }
 
     /**
@@ -229,16 +229,16 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         const body = new URLSearchParams(params).toString();
         const config: RequestOptions = {
             method: 'POST',
-            uri: this.getSettings().sourceURL + path,
+            uri: this.settings.sourceURL + path,
             json: true,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 ...this.buildAuthHeaders(),
             },
             body,
-            proxy: this.getSettings().proxy ?? null,
-            rejectUnauthorized: this.getSettings().rejectUnauthorizedSSL,
-            timeout: this.getSettings().timeout,
+            proxy: this.settings.proxy ?? null,
+            rejectUnauthorized: this.settings.rejectUnauthorizedSSL,
+            timeout: this.settings.timeout,
         };
 
         log.debug(`POST ${config.uri} [${body}]`);
@@ -270,7 +270,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
      * Otherwise username and password from settings are used.
      */
     protected buildAuthHeaders(): Record<string, string> {
-        const { apiToken, username, password } = this.getSettings().typeConfig;
+        const { apiToken, username, password } = this.settings.typeConfig;
         if (apiToken) {
             return { username: apiToken };
         }

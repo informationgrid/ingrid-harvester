@@ -166,9 +166,9 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
                 let title = CswMapper.select('gmd:name/gco:CharacterString', onlineResource, true)?.textContent;
                 let protocol = CswMapper.select('gmd:protocol/gco:CharacterString', onlineResource, true)?.textContent;
                 if (url) {
-                    if (!this.getSettings().skipUrlCheckOnHarvest) {
+                    if (!this.settings.skipUrlCheckOnHarvest) {
                         let requestConfig = this.getUrlCheckRequestConfig(url);
-                        url = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
+                        url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
                     }
                     const formatArray = protocol ? [protocol] : formats;
                     let dist: Distribution = {
@@ -236,7 +236,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
                 let currentTitle = operationName ? title + " - " + operationName : title;
 
                 let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                let url = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
+                let url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
                 if (url && !urlsFound.includes(url)) {
                     serviceLinks.push({
                         accessURL: url,
@@ -274,7 +274,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
                 let url = null;
                 if (urlNode) {
                     let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
                 }
 
                 let infos: any = {};
@@ -293,7 +293,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
 
         if (publishers.length === 0) {
             // if (otherContacts.length === 0) {
-            this.getSummary().missingPublishers++;
+            this.summary.missingPublishers++;
             return undefined;
             // }
             // else {
@@ -327,7 +327,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
                 let url = null;
                 if (urlNode) {
                     let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
                 }
 
                 let infos: any = {};
@@ -467,7 +467,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
      * have this keyword defined, then it will be skipped from the index.
      */
     getKeywords(): string[] {
-        let mandatoryKws = this.getSettings().eitherKeywords || [];
+        let mandatoryKws = this.settings.eitherKeywords || [];
         let keywords = this.fetched.keywords[mandatoryKws.join()];
         if (keywords) {
             return keywords;
@@ -489,13 +489,13 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
         }, false);
         if (!valid) {
             // Don't index metadata-sets without any of the mandatory keywords
-            this.log.info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.getSettings().sourceURL}'.`);
+            this.log.info(`None of the mandatory keywords ${JSON.stringify(mandatoryKws)} found. Item will be ignored. ID: '${this.uuid}', Title: '${this.getTitle()}', Source: '${this.settings.sourceURL}'.`);
             this.skipped = true;
         }
 
         // Update the statistics
         if (!this.keywordsAlreadyFetched && valid) {
-            this.getSummary().opendata++;
+            this.summary.opendata++;
         }
 
         this.keywordsAlreadyFetched = true;
@@ -506,13 +506,13 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
 
     getMetadataSource(): MetadataSource {
         let gmdEncoded = encodeURIComponent(namespaces.GMD);
-        let cswLink = `${this.getSettings().sourceURL}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=${gmdEncoded}&Id=${this.uuid}`;
+        let cswLink = `${this.settings.sourceURL}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=${gmdEncoded}&Id=${this.uuid}`;
         return {
-            source_base: this.getSettings().sourceURL,
+            source_base: this.settings.sourceURL,
             raw_data_source: cswLink,
             source_type: 'csw',
-            portal_link: this.getSettings().defaultAttributionLink,
-            attribution: this.getSettings().defaultAttribution
+            portal_link: this.settings.defaultAttributionLink,
+            attribution: this.settings.defaultAttribution
         };
     }
 
@@ -684,7 +684,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
             }
         } catch (e) {
             // this.log.error(`Cannot extract time range.`, e);
-            this.getSummary().warnings.push([`Could not extract time range for ${this.uuid}.`]);
+            this.summary.warnings.push([`Could not extract time range for ${this.uuid}.`]);
         }
     }
 
@@ -716,7 +716,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
 
         if (!themes || themes.length === 0) {
             // Fall back to default value
-            themes = this.getSettings().defaultDCATCategory
+            themes = this.settings.defaultDCATCategory
                 .map(category => DCAT_CATEGORY_URL + category);
         }
 
@@ -852,7 +852,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
         if (freq.length > 0) {
             let periodicity = DcatPeriodicityUtils.getPeriodicity(freq[0].getAttribute('codeListValue'))
             if(!periodicity){
-                this.getSummary().warnings.push(["Unbekannte Periodizität", freq[0].getAttribute('codeListValue')]);
+                this.summary.warnings.push(["Unbekannte Periodizität", freq[0].getAttribute('codeListValue')]);
             }
             return periodicity;
         }
@@ -880,7 +880,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
                             license = {
                                 id: json.id,
                                 title: json.name,
-                                url: await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest)
+                                url: await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest)
                             };
                         }
                     } catch (ignored) {
@@ -891,10 +891,10 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
 
         if (!license) {
             let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
-            this.getSummary().missingLicense++;
+            this.summary.missingLicense++;
 
             this.log.warn(msg);
-            this.getSummary().warnings.push(['Missing license', msg]);
+            this.summary.warnings.push(['Missing license', msg]);
             return {
                 id: 'unknown',
                 title: 'Unbekannt',
@@ -906,7 +906,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
     }
 
     getErrorSuffix(uuid, title) {
-        return `Id: '${uuid}', title: '${title}', source: '${this.getSettings().sourceURL}'.`;
+        return `Id: '${uuid}', title: '${title}', source: '${this.settings.sourceURL}'.`;
     }
 
     getHarvestedData(): string {
@@ -1066,7 +1066,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
                 let url = null;
                 if (urlNode) {
                     let requestConfig = this.getUrlCheckRequestConfig(urlNode.textContent);
-                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.getSettings().skipUrlCheckOnHarvest);
+                    url = await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest);
                 }
 
                 let infos: Contact & { role?: string } = {
@@ -1153,8 +1153,8 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
             uri: uri
         };
 
-        if (this.getSettings().proxy) {
-            config.proxy = this.getSettings().proxy;
+        if (this.settings.proxy) {
+            config.proxy = this.settings.proxy;
         }
 
         return config;
@@ -1217,8 +1217,8 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
 
     executeCustomCode(doc: any) {
         try {
-            if (this.getSettings().customCode) {
-                eval(this.getSettings().customCode);
+            if (this.settings.customCode) {
+                eval(this.settings.customCode);
             }
         } catch (error) {
             throwError('An error occurred in custom code: ' + error.message);

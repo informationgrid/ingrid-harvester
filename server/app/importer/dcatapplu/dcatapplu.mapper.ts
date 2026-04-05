@@ -331,7 +331,7 @@ export class DcatappluMapper extends Mapper<DcatappluSettings> implements ToElas
         let node = DcatappluMapper.select('./dct:publisher', this.record);
         let publishers: any[] = this.getAgent(node);
         if (publishers.length === 0) {
-            this.getSummary().missingPublishers++;
+            this.summary.missingPublishers++;
             return undefined;
         } else {
             this.fetched.publishers = publishers;
@@ -377,11 +377,11 @@ export class DcatappluMapper extends Mapper<DcatappluSettings> implements ToElas
         let dcatLink; //=  DcatappluMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.getAttribute('rdf:about');
         return {
-            source_base: this.getSettings().sourceURL,
+            source_base: this.settings.sourceURL,
             raw_data_source: dcatLink,
             source_type: 'dcatapplu',
             portal_link: portalLink,
-            attribution: this.getSettings().defaultAttribution
+            attribution: this.settings.defaultAttribution
         };
     }
 
@@ -396,8 +396,8 @@ export class DcatappluMapper extends Mapper<DcatappluSettings> implements ToElas
 
     executeCustomCode(doc: any) {
         try {
-            if (this.getSettings().customCode) {
-                eval(this.getSettings().customCode); doc
+            if (this.settings.customCode) {
+                eval(this.settings.customCode); doc
             }
         } catch (error) {
             throwError('An error occurred in custom code: ' + error.message);

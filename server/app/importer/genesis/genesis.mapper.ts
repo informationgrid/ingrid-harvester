@@ -65,9 +65,9 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
 
     getMetadataSource(): MetadataSource {
         return {
-            source_base: this.getSettings().sourceURL,
+            source_base: this.settings.sourceURL,
             source_type: 'GENESIS',
-            raw_data_source: this.getSettings().sourceURL,
+            raw_data_source: this.settings.sourceURL,
         };
     }
 
@@ -88,7 +88,7 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
     }
 
     getGeneratedId(): string {
-        return generateUuid(this.getSettings().sourceURL, [this.getCode()])
+        return generateUuid(this.settings.sourceURL, [this.getCode()])
     }
 
     getTemporal(): DateRange | undefined {
@@ -120,24 +120,24 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
     }
 
     getPublisher(): { name: string; email?: string } | undefined {
-        return this.getSettings().typeConfig.publisher;
+        return this.settings.typeConfig.publisher;
     }
 
     getTheme(): string | undefined {
-        return this.getSettings().typeConfig.theme;
+        return this.settings.typeConfig.theme;
     }
 
     getLicenseUrl(): string | undefined {
-        return this.getSettings().typeConfig.licenseUrl;
+        return this.settings.typeConfig.licenseUrl;
     }
 
     getContributorId(): string | undefined {
-        return this.getSettings().typeConfig.contributorId;
+        return this.settings.typeConfig.contributorId;
     }
 
     getDistributions(): any[] {
         const code = this.getCode();
-        const template = this.getSettings().typeConfig.downloadUrlTemplate;
+        const template = this.settings.typeConfig.downloadUrlTemplate;
         if (!code || !template) return [];
         const downloadURL = template.replace('{code}', code);
         return [{

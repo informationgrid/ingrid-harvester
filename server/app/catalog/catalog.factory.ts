@@ -54,14 +54,10 @@ export interface CatalogOperation {
  */
 export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSettings, O extends CatalogOperation> {
 
-    readonly settings: S;
-    readonly summary: Summary;
     protected readonly database: DatabaseUtils;
     protected transactionTimestamp: string;
 
-    constructor(settings: S, summary: Summary) {
-        this.settings = settings;
-        this.summary = summary;
+    constructor(readonly settings: S, readonly summary: Summary) {
         this.database = DatabaseFactory.getDatabaseUtils(ConfigService.getGeneralSettings().database, summary);
     }
 

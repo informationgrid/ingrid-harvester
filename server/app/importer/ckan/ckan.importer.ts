@@ -55,11 +55,11 @@ export class CkanImporter extends Importer<CkanSettings> {
 
         super(settings);
 
-        let requestConfig = CkanMapper.createRequestConfig(this.getSettings());
-        let requestConfigCount = CkanMapper.createRequestConfigCount(this.getSettings());
+        let requestConfig = CkanMapper.createRequestConfig(this.settings);
+        let requestConfigCount = CkanMapper.createRequestConfigCount(this.settings);
 
-        this.requestDelegate = new RequestDelegate(requestConfig, CkanMapper.createPaging(this.getSettings()));
-        this.requestDelegateCount = new RequestDelegate(requestConfigCount, CkanMapper.createPaging(this.getSettings()));
+        this.requestDelegate = new RequestDelegate(requestConfig, CkanMapper.createPaging(this.settings));
+        this.requestDelegateCount = new RequestDelegate(requestConfigCount, CkanMapper.createPaging(this.settings));
     }
 
     protected getDefaultSettings(): CkanSettings {
@@ -74,8 +74,8 @@ export class CkanImporter extends Importer<CkanSettings> {
      */
     async importDataset(data: CkanMapperData): Promise<void> {
         try {
-            log.debug('Processing CKAN dataset: ' + data.source.name + ' from data-source: ' + this.getSettings().sourceURL);
-            let mapper = new CkanMapper(this.getSettings(), data.source, data.harvestTime, this.getSummary());
+            log.debug('Processing CKAN dataset: ' + data.source.name + ' from data-source: ' + this.settings.sourceURL);
+            let mapper = new CkanMapper(this.settings, data.source, data.harvestTime, this.summary);
             let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
@@ -88,12 +88,12 @@ export class CkanImporter extends Importer<CkanSettings> {
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.getSummary().errors.push({ type: 'app', error: e.toString() });
+                this.summary.errors.push({ type: 'app', error: e.toString() });
                 mapper.skipped = true;
             }
 
             if (mapper.shouldBeSkipped()) {
-                this.getSummary().skippedDocs.push(data.source.id);
+                this.summary.skippedDocs.push(data.source.id);
                 return;
             }
 
@@ -109,11 +109,11 @@ export class CkanImporter extends Importer<CkanSettings> {
     }
 
     private async indexDocument(doc, dcatapdeDoc, harvestedData, sourceID) {
-        if (!this.getSettings().dryRun) {
+        if (!this.settings.dryRun) {
             let entity: RecordEntity = {
                 identifier: sourceID,
-                source: this.getSettings().sourceURL,
-                catalog_ids: this.getSettings().catalogIds,
+                source: this.settings.sourceURL,
+                catalog_ids: this.settings.catalogIds,
                 dataset: doc,
                 dataset_dcatapde: dcatapdeDoc,
                 original_document: harvestedData
@@ -141,13 +141,13 @@ export class CkanImporter extends Importer<CkanSettings> {
 
     private async handleImportError(message, observer: Observer<ImportLogMessage>) {
         log.error('error:', message);
-        this.getSummary().errors.push({ type: 'app', error: message });
+        this.summary.errors.push({ type: 'app', error: message });
         this.sendFinishMessage(observer, message);
     }
 
     protected async harvest(): Promise<number> {
         let total = 0;
-        let offset = this.getSettings().startPosition;
+        let offset = this.settings.startPosition;
         let promises = [];
 
         while (true) {
@@ -159,29 +159,29 @@ export class CkanImporter extends Importer<CkanSettings> {
                 break;
             }
 
-            log.info(`Received ${results.length} records from ${this.getSettings().sourceURL}`);
+            log.info(`Received ${results.length} records from ${this.settings.sourceURL}`);
             total += results.length;
 
             let filteredResults = this.filterDatasets(results);
 
             // add skipped documents to count
-            this.getSummary().numDocs += results.length - filteredResults.length;
+            this.summary.numDocs += results.length - filteredResults.length;
 
             for (let i = 0; i < filteredResults.length; i++) {
                 promises.push(
                     await this.importDataset({
                         source: filteredResults[i],
                         harvestTime: now
-                    }).then(() => this.observer.next(this.getSummary().msgRunning(++this.getSummary().numDocs, this.totalCount, this.getDownloadMessage())))
+                    }).then(() => this.observer.next(this.summary.msgRunning(++this.summary.numDocs, this.totalCount, this.getDownloadMessage())))
                 );
             }
 
-            const isLastPage = results.length < this.getSettings().maxRecords;
+            const isLastPage = results.length < this.settings.maxRecords;
             if (isLastPage) {
                 break;
             }
 
-            offset += this.getSettings().maxRecords;
+            offset += this.settings.maxRecords;
             this.updateRequestMethod(offset);
 
         }
@@ -192,7 +192,7 @@ export class CkanImporter extends Importer<CkanSettings> {
 
     private async requestDocuments() {
         let json = await this.requestDelegate.doRequest();
-        let results = this.getSettings().requestType === 'ListWithResources' ? json.result : json.result.results;
+        let results = this.settings.requestType === 'ListWithResources' ? json.result : json.result.results;
 
         if (json.result.count) {
             this.totalCount = json.result.count;
@@ -206,14 +206,14 @@ export class CkanImporter extends Importer<CkanSettings> {
     }
 
     private sendFinishMessage(observer: Observer<ImportLogMessage>, message?: string) {
-        observer.next(this.getSummary().msgComplete(message));
+        observer.next(this.summary.msgComplete(message));
         observer.complete();
     }
 
     private filterDatasets(results) {
         const filteredResult: any[] = results
-            .filter(dataset => this.filterUtils.hasValidTagsOrGroups(dataset, 'tags', this.getSettings().filterTags))
-            .filter(dataset => this.filterUtils.hasValidTagsOrGroups(dataset, 'groups', this.getSettings().filterGroups))
+            .filter(dataset => this.filterUtils.hasValidTagsOrGroups(dataset, 'tags', this.settings.filterTags))
+            .filter(dataset => this.filterUtils.hasValidTagsOrGroups(dataset, 'groups', this.settings.filterGroups))
             .filter(dataset => this.filterUtils.isIdAllowed(dataset.id));
 
         const skippedIDs = results
@@ -226,15 +226,15 @@ export class CkanImporter extends Importer<CkanSettings> {
     }
 
     private markSkipped(skippedIDs: any[]) {
-        skippedIDs.forEach(id => this.getSummary().skippedDocs.push(id));
+        skippedIDs.forEach(id => this.summary.skippedDocs.push(id));
     }
 
     private updateRequestMethod(offset: number) {
-        if (this.getSettings().requestType === 'ListWithResources') {
+        if (this.settings.requestType === 'ListWithResources') {
             this.requestDelegate.updateConfig({
                 qs: {
                     offset: offset,
-                    limit: this.getSettings().maxRecords
+                    limit: this.settings.maxRecords
                 }
             });
         } else {
@@ -242,22 +242,22 @@ export class CkanImporter extends Importer<CkanSettings> {
                 qs: {
                     sort: 'id asc',
                     start: offset,
-                    rows: this.getSettings().maxRecords
+                    rows: this.settings.maxRecords
                 }
             };
-            if (this.getSettings().filterGroups.length > 0 || this.getSettings().filterTags.length > 0 || this.getSettings().additionalSearchFilter) {
+            if (this.settings.filterGroups.length > 0 || this.settings.filterTags.length > 0 || this.settings.additionalSearchFilter) {
                 let fq = '';
-                if (this.getSettings().filterGroups.length > 0) {
-                    fq += '+groups:(' + this.getSettings().filterGroups.join(' OR ') + ')';
+                if (this.settings.filterGroups.length > 0) {
+                    fq += '+groups:(' + this.settings.filterGroups.join(' OR ') + ')';
                 }
-                if (this.getSettings().filterTags.length > 0) {
-                    fq += '+tags:(' + this.getSettings().filterTags.join(' OR ') + ')';
+                if (this.settings.filterTags.length > 0) {
+                    fq += '+tags:(' + this.settings.filterTags.join(' OR ') + ')';
                 }
-                if (this.getSettings().additionalSearchFilter) {
-                    fq += '+' + this.getSettings().additionalSearchFilter;
+                if (this.settings.additionalSearchFilter) {
+                    fq += '+' + this.settings.additionalSearchFilter;
                 }
-                if (this.getSettings().whitelistedIds.length > 0) {
-                    fq = '((' + fq + ') OR id:(' + this.getSettings().whitelistedIds.join(' OR ') + '))';
+                if (this.settings.whitelistedIds.length > 0) {
+                    fq = '((' + fq + ') OR id:(' + this.settings.whitelistedIds.join(' OR ') + '))';
                 }
                 partialConfig['fq'] = fq;
             }
