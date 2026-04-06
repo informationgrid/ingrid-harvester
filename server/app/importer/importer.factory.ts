@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import type { ImporterSettings } from '../importer.settings.js';
+import type { ImporterSettings } from './importer.settings.js';
 import type { Importer } from './importer.js';
 
 export interface ImporterFactory<T extends ImporterSettings> {

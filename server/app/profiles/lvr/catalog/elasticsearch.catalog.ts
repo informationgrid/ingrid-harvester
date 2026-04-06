@@ -22,7 +22,7 @@
  */
 
 import { ElasticsearchCatalog } from '../../../catalog/elasticsearch/elasticsearch.catalog.js';
-import type { ImporterSettings } from '../../../importer.settings.js';
+import type { ImporterSettings } from '../../../importer/importer.settings.js';
 import type { EsOperation } from '../../../persistence/elastic.utils.js';
 import type { Bucket } from '../../../persistence/postgres.utils.js';
 import { createEsId } from '../lvr.utils.js';

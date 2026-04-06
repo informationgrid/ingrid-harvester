@@ -27,7 +27,7 @@ import type { GeneralSettings } from '@shared/general-config.settings.js';
 import type { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
 import * as fs from 'fs';
 import log4js from 'log4js';
-import { defaultImporterSettings, type ImporterSettings } from '../../importer.settings.js';
+import { defaultImporterSettings, type ImporterSettings } from '../../importer/importer.settings.js';
 import { ckanDefaults } from '../../importer/ckan/ckan.settings.js';
 import { cswDefaults } from '../../importer/csw/csw.settings.js';
 import { dcatapdeDefaults } from '../../importer/dcatapde/dcatapde.settings.js';

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { defaultImporterSettings, type ImporterCapabilities, type ImporterSettings } from '../../importer.settings.js';
+import { defaultImporterSettings, type ImporterCapabilities, type ImporterSettings } from '../importer.settings.js';
 
 export type JsonSettings = {
     idProperty: string,

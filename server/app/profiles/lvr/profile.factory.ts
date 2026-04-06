@@ -24,7 +24,7 @@
 import type { CatalogSettings, ElasticsearchCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
 import { Catalog, type CatalogColumnType, type CatalogOperation } from '../../catalog/catalog.factory.js';
-import type { ImporterType } from '../../importer.settings.js';
+import type { ImporterType } from '../../importer/importer.settings.js';
 import type { Importer } from '../../importer/importer.js';
 import type { JsonMapper } from '../../importer/json/json.mapper.js';
 import type { JsonSettings } from '../../importer/json/json.settings.js';

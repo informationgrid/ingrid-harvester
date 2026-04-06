@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import type { ImporterSettings } from '../importer.settings.js';
+import type { ImporterSettings } from '../importer/importer.settings.js';
 import type { ImportLogMessage } from './import.result.js';
 
 export type TypedError = {

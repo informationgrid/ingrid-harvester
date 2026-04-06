@@ -24,7 +24,7 @@
 import * as crypto from "crypto";
 import type { Geometry } from "geojson";
 import log4js from 'log4js';
-import type { ImporterSettings } from '../../../importer.settings.js';
+import type { ImporterSettings } from '../../../importer/importer.settings.js';
 import type { CkanMapper } from "../../../importer/ckan/ckan.mapper.js";
 import type { CswMapper } from "../../../importer/csw/csw.mapper.js";
 import type { DcatapdeMapper } from '../../../importer/dcatapde/dcatapde.mapper.js';

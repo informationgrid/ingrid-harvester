@@ -25,7 +25,7 @@ import type { CatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
 import { createRequire } from 'module';
 import type { Catalog, CatalogColumnType, CatalogFactory, CatalogOperation } from '../catalog/catalog.factory.js';
-import type { ImporterSettings, ImporterType, ImporterTypeInfo } from '../importer.settings.js';
+import type { ImporterSettings, ImporterType, ImporterTypeInfo } from '../importer/importer.settings.js';
 import { ckanCapabilities, ckanDefaults } from '../importer/ckan/ckan.settings.js';
 import { cswCapabilities, cswDefaults } from '../importer/csw/csw.settings.js';
 import { dcatapdeCapabilities, dcatapdeDefaults } from '../importer/dcatapde/dcatapde.settings.js';

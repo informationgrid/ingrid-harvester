@@ -21,8 +21,8 @@
  * ==================================================
  */
 
-import type { ImporterCapabilities, ImporterSettings } from '../../importer.settings.js';
-import { defaultImporterSettings } from '../../importer.settings.js';
+import type { ImporterCapabilities, ImporterSettings } from '../importer.settings.js';
+import { defaultImporterSettings } from '../importer.settings.js';
 
 export type KldSettings = {
   // time in milliseconds to wait for the next set of concurrent API requests defined in the maxConcurrent setting

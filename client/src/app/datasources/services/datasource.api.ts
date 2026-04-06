@@ -26,7 +26,7 @@ import { Observable } from "rxjs";
 import { Datasource } from "@shared/datasource";
 import { HttpClient } from "@angular/common/http";
 import { ImportLogMessage } from "../../../../../server/app/model/import.result";
-import { CronData } from "../../../../../server/app/importer.settings";
+import { CronData } from "../../../../../server/app/importer/importer.settings";
 
 @Injectable({
   providedIn: "root",

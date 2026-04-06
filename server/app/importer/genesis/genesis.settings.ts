@@ -21,8 +21,8 @@
  * ==================================================
  */
 
-import type { ImporterCapabilities, ImporterSettings } from '../../importer.settings.js';
-import { defaultImporterSettings } from '../../importer.settings.js';
+import type { ImporterCapabilities, ImporterSettings } from '../importer.settings.js';
+import { defaultImporterSettings } from '../importer.settings.js';
 
 /**
  * GENESIS-specific configuration, isolated under `typeConfig` to keep

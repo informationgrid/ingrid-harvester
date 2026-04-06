@@ -22,7 +22,7 @@
  */
 
 import log4js from 'log4js';
-import type { ImporterSettings } from '../importer.settings.js';
+import type { ImporterSettings } from '../importer/importer.settings.js';
 // import { DiplanungFactory } from './diplanung/profile.factory.js';
 // import { ingridFactory } from './ingrid/profile.factory.js';
 // import { LvrFactory } from './lvr/profile.factory.js';

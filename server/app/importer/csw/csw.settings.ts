@@ -21,8 +21,8 @@
  * ==================================================
  */
 
-import type { ImporterCapabilities, ImporterSettings } from '../../importer.settings.js';
-import { defaultImporterSettings } from '../../importer.settings.js';
+import type { ImporterCapabilities, ImporterSettings } from '../importer.settings.js';
+import { defaultImporterSettings } from '../importer.settings.js';
 import type { PluPlanState } from '../../model/dcatApPlu.model.js';
 
 export type CswSettings = {

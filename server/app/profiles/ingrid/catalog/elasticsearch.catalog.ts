@@ -24,7 +24,7 @@
 import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import { ElasticsearchCatalog } from '../../../catalog/elasticsearch/elasticsearch.catalog.js';
-import type { ImporterSettings } from '../../../importer.settings.js';
+import type { ImporterSettings } from '../../../importer/importer.settings.js';
 import type { ImportLogMessage } from '../../../model/import.result.js';
 import type { IndexDocument } from '../../../model/index.document.js';
 import type { EsOperation } from '../../../persistence/elastic.utils.js';

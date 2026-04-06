@@ -23,7 +23,7 @@
 
 import { isValidCron } from 'cron-validator';
 import { Component, Inject, OnInit, Optional } from '@angular/core';
-import { CronData } from '../../../../../server/app/importer.settings';
+import { CronData } from '../../../../../server/app/importer/importer.settings';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
@@ -40,7 +40,7 @@ export class DialogSchedulerComponent implements OnInit {
   harvesterType: string;
 
   constructor(
-    private formBuilder: UntypedFormBuilder, 
+    private formBuilder: UntypedFormBuilder,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: { harvesterType: string, cron: { full: CronData, incr: CronData } }
   ) {
     if (!data.cron) {
@@ -71,7 +71,7 @@ export class DialogSchedulerComponent implements OnInit {
   }
 
   ngOnInit(): void {}
-  
+
   validationCheck(expression: string){
     return !isValidCron(expression)
   }

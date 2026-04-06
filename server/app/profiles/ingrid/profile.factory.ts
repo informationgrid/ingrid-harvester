@@ -32,7 +32,7 @@ import type { DcatapdeMapper } from '../../importer/dcatapde/dcatapde.mapper.js'
 import type { DcatapdeSettings } from "../../importer/dcatapde/dcatapde.settings.js";
 import type { GenesisMapper } from "../../importer/genesis/genesis.mapper.js";
 import type { GenesisSettings } from "../../importer/genesis/genesis.settings.js";
-import type { ImporterType } from '../../importer.settings.js';
+import type { ImporterType } from '../../importer/importer.settings.js';
 import type { Importer } from '../../importer/importer.js';
 import type { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
 import type { WfsSettings } from '../../importer/wfs/wfs.settings.js';

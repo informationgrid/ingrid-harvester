@@ -25,7 +25,7 @@ import type { GeneralSettings } from '@shared/general-config.settings.js';
 import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import { Observable } from 'rxjs';
-import type { ImporterSettings } from '../importer.settings.js';
+import type { ImporterSettings } from './importer.settings.js';
 import type { ImportLogMessage } from '../model/import.result.js';
 import { Summary } from '../model/summary.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';

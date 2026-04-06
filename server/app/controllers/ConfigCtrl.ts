@@ -26,7 +26,7 @@ import type { MappingDistribution, MappingItem } from '@shared/mapping.model.js'
 import { BodyParams, Controller, Delete, Get, Post, QueryParams, UseAuth } from '@tsed/common';
 import log4js from 'log4js';
 import { KeycloakAuth } from "../decorators/KeycloakAuthOptions.js";
-import type { ImporterTypeInfo } from '../importer.settings.js';
+import type { ImporterTypeInfo } from '../importer/importer.settings.js';
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
