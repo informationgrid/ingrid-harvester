@@ -64,7 +64,8 @@
             {{ t("datasources.import") }}
           </button>
 
-          @if (datasource().capabilities.isIncrementalSupported) {
+          <!-- TODO get information from `/importer_types` instead -->
+<!--          @if (datasource().capabilities.isIncrementalSupported) {-->
             <button
               mat-menu-item
               [disabled]="
@@ -76,7 +77,7 @@
               <mat-icon svgIcon="Harvester" />
               {{ t("datasources.importIncrement") }}
             </button>
-          }
+<!--          }-->
 
           <button mat-menu-item (click)="onEdit.emit()" data-test="edit">
             <mat-icon svgIcon="cursor-edit" />
