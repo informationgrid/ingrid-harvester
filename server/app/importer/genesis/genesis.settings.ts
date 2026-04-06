@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import type { ImporterSettings } from '../../importer.settings.js';
+import type { ImporterCapabilities, ImporterSettings } from '../../importer.settings.js';
 import { DefaultImporterSettings } from '../../importer.settings.js';
 
 /**
@@ -80,9 +80,10 @@ export const defaultGenesisSettings: GenesisSettings = {
     typeConfig: {
         requestDelayMs: 500,
         tableSelections: [],
-    },
-    capabilities: {
-        isIncrementalSupported: false,
-        supportedCatalogTypes: ['elasticsearch', 'piveau']
     }
+};
+
+export const genesisCapabilities: ImporterCapabilities = {
+    isIncrementalSupported: false,
+    supportedCatalogTypes: ['elasticsearch', 'piveau']
 };

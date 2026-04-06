@@ -21,8 +21,8 @@
  * ==================================================
  */
 
-import type { ImporterSettings} from '../../importer.settings.js';
-import {DefaultImporterSettings} from '../../importer.settings.js';
+import type { ImporterCapabilities, ImporterSettings } from '../../importer.settings.js';
+import { DefaultImporterSettings } from '../../importer.settings.js';
 
 export const defaultOAISettings: OaiSettings = {
     ...DefaultImporterSettings,
@@ -38,3 +38,8 @@ export type OaiSettings = {
     until?: Date,
     eitherKeywords: string[]
 } & ImporterSettings;
+
+export const oaiCapabilities: ImporterCapabilities = {
+    isIncrementalSupported: false,
+    supportedCatalogTypes: ['elasticsearch']
+};

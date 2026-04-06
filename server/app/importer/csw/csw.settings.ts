@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import type { ImporterSettings } from '../../importer.settings.js';
-import { DefaultImporterSettings } from '../../importer.settings.js';
+import type { ImporterCapabilities, ImporterSettings } from '../../importer.settings.js';
 import type { PluPlanState } from '../../model/dcatApPlu.model.js';
+import { DefaultImporterSettings } from '../../importer.settings.js';
 
 export type CswSettings = {
     resultType?: 'hits' | 'results',
@@ -45,9 +45,10 @@ export const defaultCSWSettings: CswSettings = {
     eitherKeywords: [],
     httpMethod: 'GET',
     resultType: 'results',
-    simplifyTolerance: 0,
-    capabilities: {
-        isIncrementalSupported: true,
-        supportedCatalogTypes: ['csw', 'elasticsearch']
-    }
+    simplifyTolerance: 0
+};
+
+export const cswCapabilities: ImporterCapabilities = {
+    isIncrementalSupported: true,
+    supportedCatalogTypes: ['csw', 'elasticsearch']
 };

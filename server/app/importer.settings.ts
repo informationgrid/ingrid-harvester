@@ -26,7 +26,12 @@ import type { CatalogType } from '@shared/catalog.js';
 export interface CronData {
     pattern: string;
     active: boolean;
-}
+};
+
+export type ImporterCapabilities = {
+    isIncrementalSupported: boolean;
+    supportedCatalogTypes: CatalogType[];
+};
 
 export const DefaultImporterSettings: ImporterSettings = {
     priority: null,
@@ -44,10 +49,6 @@ export const DefaultImporterSettings: ImporterSettings = {
     rejectUnauthorizedSSL: true,
     rules: {
         containsDocumentsWithData: false
-    },
-    capabilities: {
-        isIncrementalSupported: false,
-        supportedCatalogTypes: ['elasticsearch']
     },
     maxConcurrent: 1,
     skipUrlCheckOnHarvest: false,
@@ -81,10 +82,6 @@ export type ImporterSettings = {
     disable?: boolean,
     dryRun?: boolean,
     id?: number,
-    capabilities: {
-        isIncrementalSupported: boolean,
-        supportedCatalogTypes: CatalogType[]
-    },
     maxConcurrent: number,
     maxRecords?: number,
     proxy?: string,

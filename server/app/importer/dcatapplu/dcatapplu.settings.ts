@@ -20,16 +20,16 @@
  * limitations under the Licence.
  * ==================================================
  */
-
-import type { ImporterSettings} from '../../importer.settings.js';
-import {DefaultImporterSettings} from '../../importer.settings.js';
+import type { ImporterCapabilities, ImporterSettings } from '../../importer.settings.js';
+import { DefaultImporterSettings } from '../../importer.settings.js';
 
 export const defaultDCATAPPLUSettings: DcatappluSettings = {
-    ...DefaultImporterSettings,
-    capabilities: {
-        isIncrementalSupported: false,
-        supportedCatalogTypes: ['elasticsearch', 'piveau']
-    }
+    ...DefaultImporterSettings
 };
 
 export type DcatappluSettings = ImporterSettings;
+
+export const dcatappluCapabilities: ImporterCapabilities = {
+    isIncrementalSupported: false,
+    supportedCatalogTypes: ['elasticsearch', 'piveau']
+};

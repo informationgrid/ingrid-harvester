@@ -257,24 +257,20 @@ export class ConfigService {
      * @param updatedHarvester
      */
     static update(id: number, updatedHarvester: Datasource): number {
-        let newConfig = ConfigService.getHarvesters();
-        const filteredHarvester = MiscUtils.removePaths(updatedHarvester, [
-            "capabilities"
-        ]);
-
+        const newConfig = ConfigService.getHarvesters();
         if (id === -1) {
             id = ++ConfigService.highestID;
-            filteredHarvester.id = id;
-            newConfig.push(filteredHarvester);
+            updatedHarvester.id = id;
+            newConfig.push(updatedHarvester);
         }
         else {
-            const itemIndex = newConfig.findIndex(harvester => harvester.id === filteredHarvester.id);
+            const itemIndex = newConfig.findIndex(harvester => harvester.id === updatedHarvester.id);
             if (itemIndex === -1) {
-                log.warn('ID was not found for harvester. Creating new harvester with given ID: ' + filteredHarvester.id);
-                newConfig.push(filteredHarvester);
+                log.warn('ID was not found for harvester. Creating new harvester with given ID: ' + updatedHarvester.id);
+                newConfig.push(updatedHarvester);
             }
             else {
-                newConfig.splice(itemIndex, 1, filteredHarvester);
+                newConfig.splice(itemIndex, 1, updatedHarvester);
             }
         }
 
@@ -283,10 +279,7 @@ export class ConfigService {
     }
 
     static updateAll(updatedHarvesters: Datasource[]) {
-        const filteredHarvesters = updatedHarvesters.map(harvesterConfig => MiscUtils.removePaths(harvesterConfig, [
-            "capabilities"
-        ]));
-        fs.writeFileSync(this.getHarvesterConfigFile(), JSON.stringify(filteredHarvesters, null, 2));
+        fs.writeFileSync(this.getHarvesterConfigFile(), JSON.stringify(updatedHarvesters, null, 2));
     }
 
     static getThreadpoolSize(): number {

@@ -21,19 +21,15 @@
  * ==================================================
  */
 
-import type { ImporterSettings} from '../../importer.settings.js';
-import {DefaultImporterSettings} from '../../importer.settings.js';
+import type { ImporterCapabilities, ImporterSettings } from '../../importer.settings.js';
+import { DefaultImporterSettings } from '../../importer.settings.js';
 
 export type DCATProviderField = 'contactPoint' | 'creator' | 'originator' | 'maintainer' | 'publisher';
 
 export const defaultDCATAPDESettings: DcatapdeSettings = {
     ...DefaultImporterSettings,
     filterTags: [],
-    filterThemes: [],
-    capabilities: {
-        isIncrementalSupported: false,
-        supportedCatalogTypes: ['elasticsearch', 'piveau']
-    }
+    filterThemes: []
 };
 
 export type DcatapdeSettings = {
@@ -42,3 +38,8 @@ export type DcatapdeSettings = {
     providerPrefix?: string,
     dcatProviderField?: DCATProviderField,
 } & ImporterSettings;
+
+export const dcatapdeCapabilities: ImporterCapabilities = {
+    isIncrementalSupported: false,
+    supportedCatalogTypes: ['elasticsearch', 'piveau']
+};

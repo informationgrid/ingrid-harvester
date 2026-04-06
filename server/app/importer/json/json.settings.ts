@@ -30,6 +30,11 @@ export type JsonSettings = {
 
 export const defaultJsonSettings: JsonSettings = {
     ...DefaultImporterSettings,
-    idProperty: 'id',
+    idProperty: '',
     additionalSettings: {}
+};
+
+export const jsonCapabilities = {
+    isIncrementalSupported: false,
+    supportedCatalogTypes: ['elasticsearch']
 };

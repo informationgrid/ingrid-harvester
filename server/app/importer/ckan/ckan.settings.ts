@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import type { ImporterSettings} from '../../importer.settings.js';
-import {DefaultImporterSettings} from '../../importer.settings.js';
-import type {License} from '@shared/license.model.js';
+import type { License } from '@shared/license.model.js';
+import type { ImporterCapabilities, ImporterSettings } from '../../importer.settings.js';
+import { DefaultImporterSettings } from '../../importer.settings.js';
 
 export type ProviderField = 'maintainer' | 'organization' | 'author';
 
@@ -52,3 +52,8 @@ export type CkanSettings = {
     groupChilds?: boolean,
     defaultLicense?: License;
 } & ImporterSettings;
+
+export const ckanCapabilities: ImporterCapabilities = {
+    isIncrementalSupported: false,
+    supportedCatalogTypes: ['elasticsearch']
+}

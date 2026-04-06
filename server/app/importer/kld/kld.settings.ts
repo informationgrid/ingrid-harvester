@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import type { ImporterSettings } from '../../importer.settings.js';
+import type { ImporterCapabilities, ImporterSettings } from '../../importer.settings.js';
 import { DefaultImporterSettings } from '../../importer.settings.js';
 
 export type KldSettings = {
@@ -33,4 +33,9 @@ export type KldSettings = {
 export const defaultKldSettings: KldSettings = {
     ...DefaultImporterSettings,
     maxConcurrentTimespan: 100,
+};
+
+export const kldCapabilities: ImporterCapabilities = {
+    isIncrementalSupported: false,
+    supportedCatalogTypes: ['elasticsearch']
 };

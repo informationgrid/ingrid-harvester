@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import type { Contact, Organization, Person } from '../../model/agent.js';
-import type { ImporterSettings } from '../../importer.settings.js';
+import type { ImporterCapabilities, ImporterSettings } from '../../importer.settings.js';
 import { DefaultImporterSettings } from '../../importer.settings.js';
+import type { Contact, Organization, Person } from '../../model/agent.js';
 import type { PluPlanState } from '../../model/dcatApPlu.model.js';
 
 export type WfsSettings = {
@@ -74,3 +74,8 @@ export const memberElements = {
     [WfsProfile.pegelonline]: ["gml:featureMembers/gk:waterlevels"],
     [WfsProfile.zdm]: ["gml:featureMember"]
 }
+
+export const wfsCapabilities: ImporterCapabilities = {
+    isIncrementalSupported: false,
+    supportedCatalogTypes: ['elasticsearch']
+};
