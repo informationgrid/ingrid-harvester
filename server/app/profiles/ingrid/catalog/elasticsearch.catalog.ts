@@ -27,19 +27,21 @@ import { ElasticsearchCatalog } from '../../../catalog/elasticsearch/elasticsear
 import type { ImporterSettings } from '../../../importer/importer.settings.js';
 import type { ImportLogMessage } from '../../../model/import.result.js';
 import type { IndexDocument } from '../../../model/index.document.js';
+import { ElasticsearchFactory } from '../../../persistence/elastic.factory.js';
 import type { EsOperation } from '../../../persistence/elastic.utils.js';
 import type { Bucket } from '../../../persistence/postgres.utils.js';
+import { ConfigService } from '../../../services/config/ConfigService.js';
 import { camelize, escapeXml } from '../../../utils/misc.utils.js';
 import { createEsId } from '../ingrid.utils.js';
 import type { IngridIndexDocument } from '../model/index.document.js';
-import { INGRID_META_INDEX } from '../profile.factory.js';
-import type { DeduplicationMetadata } from './deduplicationMetadata.js';
+import { APPLICATION_NAME, INGRID_META_INDEX } from '../profile.factory.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
 export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
 
-    private deduplicationMetadata: Map<string, DeduplicationMetadata>;
+    // private deduplicationMetadata: Map<string, DeduplicationMetadata>;
+    private externalUuids: Set<string>;
 
     /**
      * Gather all metadata from configured aliases that are used for interstellar deduplication.
@@ -50,19 +52,28 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
      */
     async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         await super.prepareImport(transactionHandle, settings, observer);
-        this.deduplicationMetadata = new Map<string, DeduplicationMetadata>();
+        // this.deduplicationMetadata = new Map<string, DeduplicationMetadata>();
+        this.externalUuids = new Set<string>();
 
-        const aliases = this.settings.settings.dedupAliases;
-        const total = await this.elastic.count(aliases);
+        const indices = await this.getExternalIndices();
+        const total = await this.elastic.count(indices);
 
-        const scrollSearch = this.elastic.scroll<{ uuid: string, dataSourceName: string, modified: Date }>(aliases, ['uuid', 'dataSourceName', 'modified']);
+        // const scrollSearch = this.elastic.scroll<{ uuid: string, iPlugName: string, modified: Date }>(indices, ['uuid']);//, 'iPlugName', 'modified']);
+        // TODO if necessary, implement slicing for scroll search
+        const scrollSearch = this.elastic.scroll<{ uuid: string }>(indices, ['uuid']);//, 'iPlugName', 'modified']);
         let processed = 0;
         for await (const hit of scrollSearch) {
-            this.deduplicationMetadata.set(hit.uuid, {
-                application: hit.dataSourceName,
-                modified: hit.modified
-            });
-            observer.next(this.summary.msgRunning(++processed, total, 'Existierende Datensätze sammeln'));
+            // this.deduplicationMetadata.set(hit.uuid, {
+            //     application: hit.iPlugName,
+            //     modified: hit.modified
+            // });
+            this.externalUuids.add(hit.uuid);
+            processed++;
+            if (processed % 500 === 0 || processed === total) {
+                const msg = 'Existierende Datensätze sammeln';
+                log.info(`$msg: $processed/$total`);
+                observer.next(this.summary.msgRunning(processed, total, msg));
+            }
         }
     }
 
@@ -102,7 +113,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
             let entry = {
                 "plugId": settings.iPlugId,
                 "indexId": index,
-                "iPlugName": "Harvester",
+                "iPlugName": APPLICATION_NAME,
                 "lastIndexed": new Date().toISOString(),
                 "linkedIndex": index,
                 "plugdescription": {
@@ -163,6 +174,20 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
             }
         }
 
+        // external deduplication
+        // const externalDocument = this.deduplicationMetadata.get(document.uuid);
+        // if (externalDocument) {
+        //     // do not add document to index if it exists from another source, or from the same source but newer
+        //     // in this case, directly return the box without adding the _index operation
+        //     if (externalDocument.application != 'harvester' || externalDocument.modified >= document.extras.metadata.modified) {
+        //         return box;
+        //     }
+        // }
+        if (this.externalUuids.has(document.uuid)) {
+            box.push({ operation: 'delete', _index: this.settings.settings.index, _id: createEsId(document) });
+            return box;
+        }
+
         // handle WFS
         if ('capabilities_url' in document) {
             this.createIdfForWfs(document as IngridIndexDocument, duplicates as Map<string | number, IngridIndexDocument>);
@@ -170,6 +195,26 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
 
         box.push({ operation: 'index', _index: this.settings.settings.index, _id: createEsId(document), document });
         return box;
+    }
+
+    private async getExternalIndices(): Promise<string[]> {
+        const esUtils = ElasticsearchFactory.getElasticUtils(ConfigService.getGeneralSettings().elasticsearch, this.summary);
+        const { hits } = await esUtils.search(INGRID_META_INDEX, {
+            "_source": ["linkedIndex"],
+            "query": {
+                "bool": {
+                    "filter": [
+                        { "term": { "active": true } },
+                        { "term": { "plugdescription.dataType.keyword": "metadata" } }
+                    ],
+                    "must_not": [
+                        { "term": { "iPlugName.keyword": APPLICATION_NAME } }
+                    ]
+                }
+            }
+        }, false);
+        const indices = hits.hits.map(hit => hit._source.linkedIndex);
+        return indices;
     }
     
     private prioritizeAndFilter(bucket: Bucket<IndexDocument>): {
@@ -192,8 +237,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
     }
 
     /**
-     * Deduplicate datasets across the whole database. For a given dataset and a given duplicate, merge specified
-     * properties of the duplicate into the dataset.
+     * Deduplicate a dataset against a potential duplicate.
      *
      * @param document
      * @param duplicate

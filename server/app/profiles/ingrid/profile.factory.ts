@@ -61,6 +61,7 @@ import settings from './persistence/ingrid-meta-settings.json' with { type: 'jso
 const log = log4js.getLogger(import.meta.filename);
 
 export const INGRID_META_INDEX = 'ingrid_meta';
+export const APPLICATION_NAME = 'Harvester';
 
 export type ingridSettings = CswSettings | WfsSettings | DcatapdeSettings | GenesisSettings;
 
