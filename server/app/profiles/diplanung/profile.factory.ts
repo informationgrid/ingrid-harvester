@@ -28,6 +28,7 @@ import type { CswMapper } from '../../importer/csw/csw.mapper.js';
 import type { CswSettings } from '../../importer/csw/csw.settings.js';
 import type { DcatappluMapper } from '../../importer/dcatapplu/dcatapplu.mapper.js';
 import type { DcatappluSettings } from '../../importer/dcatapplu/dcatapplu.settings.js';
+import type { ImporterType } from '../../importer/importer.settings.js';
 import type { Importer } from '../../importer/importer.js';
 import type { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
 import type { WfsSettings } from '../../importer/wfs/wfs.settings.js';
@@ -61,6 +62,10 @@ export class DiplanungFactory extends ProfileFactory<DiplanungSettings> {
         return value;
     };
 
+    protected getSupportedTypeNames(): ImporterType[] {
+        return ["CSW", "DCATAPPLU", "WFS.FIS", "WFS.MS", "WFS.XPLAN", "WFS.XPLAN.SYN"];
+    }
+
     getElasticQueries(): AbstractElasticQueries {
         return ElasticQueries.getInstance();
     }
@@ -70,7 +75,7 @@ export class DiplanungFactory extends ProfileFactory<DiplanungSettings> {
             case 'CswMapper': return new DiplanungCswMapper(<CswMapper>mapper);
             case 'DcatappluMapper': return new DiplanungDcatappluMapper(<DcatappluMapper>mapper);
             case 'WfsMapper': {
-                switch (mapper.getSettings().type) {
+                switch (mapper.settings.type) {
                     case 'WFS.FIS': return new FisWfsMapper(<WfsMapper>mapper);
                     case 'WFS.MS': return new MsWfsMapper(<WfsMapper>mapper);
                     case 'WFS.XPLAN.SYN': return new XplanSynWfsMapper(<WfsMapper>mapper);

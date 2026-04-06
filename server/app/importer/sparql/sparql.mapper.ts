@@ -106,7 +106,7 @@ export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMap
         let publishers = [];
 
         if (publishers.length === 0) {
-            this.getSummary().missingPublishers++;
+            this.summary.missingPublishers++;
             return undefined;
         } else {
             return publishers;
@@ -138,7 +138,7 @@ export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMap
                 if (k === 'aviation' || k === 'luft--und-raumfahrt') subgroups.push('aviation');
             });
         }
-        if (subgroups.length === 0) subgroups.push(...this.getSettings().defaultMcloudSubgroup);
+        // if (subgroups.length === 0) subgroups.push(...this.settings.defaultMcloudSubgroup);
         return subgroups;
     }
 
@@ -169,7 +169,7 @@ export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMap
             keywords = this.record.keywords.value.split(',').map(s => s.trim()).filter(s => s.length > 0)
         }
 
-        if(this.getSettings().filterTags && this.getSettings().filterTags.length > 0 && !keywords.some(keyword => this.getSettings().filterTags.includes(keyword))){
+        if(this.settings.filterTags && this.settings.filterTags.length > 0 && !keywords.some(keyword => this.settings.filterTags.includes(keyword))){
             this.skipped = true;
         }
 
@@ -180,11 +180,11 @@ export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMap
         let dcatLink; //=  DcatMapper.select('.//dct:creator', this.record);
         let portalLink = this.record.source_link.value;
         return {
-            source_base: this.getSettings().sourceURL,
+            source_base: this.settings.sourceURL,
             raw_data_source: dcatLink,
             source_type: 'sparql',
             portal_link: portalLink,
-            attribution: this.getSettings().defaultAttribution
+            attribution: this.settings.defaultAttribution
         };
     }
 
@@ -235,10 +235,10 @@ export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMap
 
         if (!license) {
             let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
-            this.getSummary().missingLicense++;
+            this.summary.missingLicense++;
 
             this.log.warn(msg);
-            this.getSummary().warnings.push(['Missing license', msg]);
+            this.summary.warnings.push(['Missing license', msg]);
             return {
                 id: 'unknown',
                 title: 'Unbekannt',
@@ -250,7 +250,7 @@ export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMap
     }
 
     getErrorSuffix(uuid, title) {
-        return `Id: '${uuid}', title: '${title}', source: '${this.getSettings().sourceURL}'.`;
+        return `Id: '${uuid}', title: '${title}', source: '${this.settings.sourceURL}'.`;
     }
 
     getHarvestedData(): string {
@@ -304,8 +304,8 @@ export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMap
             uri: uri
         };
 
-        if (this.getSettings().proxy) {
-            config.proxy = this.getSettings().proxy;
+        if (this.settings.proxy) {
+            config.proxy = this.settings.proxy;
         }
 
         return config;
@@ -317,8 +317,8 @@ export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMap
 
     executeCustomCode(doc: any) {
         try {
-            if (this.getSettings().customCode) {
-                eval(this.getSettings().customCode);doc
+            if (this.settings.customCode) {
+                eval(this.settings.customCode);doc
             }
         } catch (error) {
             throwError('An error occurred in custom code: ' + error.message);

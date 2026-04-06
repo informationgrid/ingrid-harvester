@@ -44,15 +44,6 @@ log4js.configure(`./log4js${isDev ? '-dev' : ''}.json`);
 const start = new Date();
 let runAsync = false;
 
-function getDateString() {
-    let dt = new Date(Date.now());
-    let year = dt.getFullYear();
-    let month = ('0' + dt.getMonth()).slice(-2);
-    let day = ('0' + dt.getDate()).slice(-2);
-
-    return `${year}${month}${day}`;
-}
-
 function showSummaries(summaries: Summary[]) {
     const duration = (+new Date() - +start) / 1000;
     logSummary.info('#######################################');
@@ -87,10 +78,10 @@ async function startProcess() {
         log.info("Starting import ...");
         try {
             if (runAsync) {
-                processes.push(importer.run.toPromise());
-            } else {
-                importers.push(importer.run);
-                //summaries.push(await importer.run.subscribe());
+                processes.push(importer.run(isIncremental).toPromise());
+            }
+            else {
+                importers.push(importer.run(isIncremental));
             }
         } catch (e) {
             log.error(`Importer ${configHarvester.type} failed: `, e);
@@ -116,5 +107,6 @@ async function startProcess() {
 
 let myArgs = process.argv.slice(2);
 runAsync = false; //myArgs.includes('--async');
+const isIncremental = myArgs.includes('-i') || myArgs.includes('--incremental');
 
 startProcess();

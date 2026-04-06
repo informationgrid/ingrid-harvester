@@ -34,7 +34,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
 
     async createIndexDocument(): Promise<IngridOpendataIndexDocument> {
         let result: IngridOpendataIndexDocument = {
-            ...this.getIngridMetadata(this.baseMapper.getSettings()),
+            ...this.getIngridMetadata(this.baseMapper.settings),
             metadata: this.getMetaMetadata(),
             id: this.baseMapper.getCode(),
             uuid: this.getGeneratedId(),
@@ -42,7 +42,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             description: this.baseMapper.getDescription(),
             modified: this.getModifiedDate(),
             collection: {
-                name: this.baseMapper.getSettings().dataSourceName,
+                name: this.baseMapper.settings.dataSourceName,
             },
             t01_object: {
                 obj_id: this.getGeneratedId(),
@@ -95,7 +95,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         dataset.appendChild(doc.createElement('dct:title')).textContent = this.baseMapper.getTitle();
         dataset.appendChild(doc.createElement('dct:description')).textContent = this.baseMapper.getDescription();
 
-        const tableUri = ensureNoEndSlash(this.baseMapper.getSettings().sourceURL) + '/table/' + this.baseMapper.getCode();
+        const tableUri = ensureNoEndSlash(this.baseMapper.settings.sourceURL) + '/table/' + this.baseMapper.getCode();
         const identifierEl = doc.createElement('dct:identifier');
         identifierEl.setAttribute('rdf:resource', tableUri);
         dataset.appendChild(identifierEl);

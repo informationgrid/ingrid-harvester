@@ -41,8 +41,7 @@ import { Importer } from '../importer.js';
 import type { ObjectListRequestParams, ObjectListResponse, ObjectResponse } from './kld.api.js';
 import { PAGE_SIZE } from './kld.api.js';
 import { KldMapper } from './kld.mapper.js';
-import type { KldSettings } from './kld.settings.js';
-import { defaultKldSettings } from './kld.settings.js';
+import { kldDefaults, type KldSettings } from './kld.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
@@ -65,30 +64,27 @@ export class KldImporter extends Importer<KldSettings> {
     private readonly requestRetryDelay = 3000;
 
     constructor(settings: KldSettings) {
-        // merge default settings with configured ones
-        settings = MiscUtils.merge(defaultKldSettings, settings);
-        // if we are looking for incremental updates, set the last execution date
-        // TODO how to set incremental?
-        let lastSummary: ImportLogMessage;
-        if (settings.isIncremental) {
-            let sumser: SummaryService = new SummaryService();
-            lastSummary = sumser.get(settings.id);
-            // only do an incremental harvest if there exists a previous run
-            if (!lastSummary) {
-                log.warn(`Changing type of harvest to "full" because no previous harvest was found for harvester with id ${settings.id}`);
-                settings.isIncremental = false;
-            }
-        }
         super(settings);
-
         this.domParser = MiscUtils.getDomParser();
-        if (lastSummary) {
-            this.minimumUpdateDate = new Date(lastSummary.lastExecution);
-        }
+    }
+
+    protected getDefaultSettings(): KldSettings {
+        return kldDefaults;
     }
 
     // only here for documentation - use the "default" exec function
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
+        // if we are looking for incremental updates, set the last execution date
+        if (this.isIncremental) {
+            let lastSummary: ImportLogMessage = new SummaryService().get(this.settings.id);
+            // only do an incremental harvest if there exists a previous run
+            if (lastSummary) {
+                this.minimumUpdateDate = new Date(lastSummary.lastExecution);
+            } else {
+                log.warn(`Changing type of harvest to "full" because no previous harvest was found for harvester with id ${this.settings.id}`);
+                this.isIncremental = false;
+            }
+        }
         await super.exec(observer);
     }
 
@@ -115,12 +111,12 @@ export class KldImporter extends Importer<KldSettings> {
         }
 
         // collect number of totalRecords up front, so we can harvest concurrently
-        if (this.getSettings().maxRecords && !isNaN(this.getSettings().maxRecords)) {
-          this.totalRecords = this.getSettings().maxRecords;
+        if (this.settings.maxRecords && !isNaN(this.settings.maxRecords)) {
+          this.totalRecords = this.settings.maxRecords;
         }
         else {
           // extract the total number of records from the first list request
-          const hitsRequestConfig = KldImporter.createRequestConfig({ ...this.getSettings(), startPosition: 0 }, 'Objekt');
+          const hitsRequestConfig = KldImporter.createRequestConfig({ ...this.settings, startPosition: 0 }, 'Objekt');
           const hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
           try {
               const hitsResponse: ObjectListResponse = await this.requestWithRetries(hitsRequestDelegate);
@@ -129,7 +125,7 @@ export class KldImporter extends Importer<KldSettings> {
           catch (e) {
               const message = `Received empty response when requesting total number of objects. Skipping import.`;
               log.error(message);
-              this.getSummary().errors.push({ type: 'app', error: message });
+              this.summary.errors.push({ type: 'app', error: message });
               return 0;
           }
         }
@@ -137,8 +133,8 @@ export class KldImporter extends Importer<KldSettings> {
 
         // setup concurrency
         const throttle = pThrottle({
-            limit: this.getSettings().maxConcurrent,
-            interval: this.getSettings().maxConcurrentTimespan,
+            limit: this.settings.maxConcurrent,
+            interval: this.settings.maxConcurrentTimespan,
         });
 
         // extract all object ids with their latest change dates
@@ -154,7 +150,7 @@ export class KldImporter extends Importer<KldSettings> {
         let numRequested = 0;
         for (let page = 0; page < numPages && numRequested < this.totalRecords; page++) {
             const params: ObjectListRequestParams = { ...defaultListParams, Seite: page };
-            const requestDelegate = new RequestDelegate(KldImporter.createRequestConfig(this.getSettings(), 'Objekt', params));
+            const requestDelegate = new RequestDelegate(KldImporter.createRequestConfig(this.settings, 'Objekt', params));
             const request = throttle(() => {
                 return this.extractObjectIds(requestDelegate, page, numPages);
             })();
@@ -173,7 +169,7 @@ export class KldImporter extends Importer<KldSettings> {
                 if (id in idMap) {
                     const message = `Record with id ${id} was already received. Skipping record.`;
                     log.warn(message);
-                    this.getSummary().warnings.push([message]);
+                    this.summary.warnings.push([message]);
                     this.totalRecords--;
                 }
                 else {
@@ -192,20 +188,20 @@ export class KldImporter extends Importer<KldSettings> {
         if (numReceived < this.totalRecords) {
             const message = `Received less records than expected ${numReceived}/${this.totalRecords}. Skipping import.`;
             log.error(message);
-            this.getSummary().errors.push({ type: 'app', error: message });
+            this.summary.errors.push({ type: 'app', error: message });
             return 0;
         }
 
         // wait before doing detail requests
-        await KldImporter.sleep(this.getSettings().maxConcurrentTimespan);
+        await KldImporter.sleep(this.settings.maxConcurrentTimespan);
 
         // store details for all objects, take minimumUpdateDate into account for incremental harvesting
         const detailRequests = [];
         for (let i = 0; i < numReceived; i++) {
             const objectId = ids[i];
             const lastUpdateDate = new Date(idMap[objectId]);
-            if (!this.getSettings().isIncremental || lastUpdateDate < this.minimumUpdateDate) {
-                const requestDelegate = new RequestDelegate(KldImporter.createRequestConfig(this.getSettings(), `Objekt/${ids[i]}`));
+            if (!this.isIncremental || lastUpdateDate < this.minimumUpdateDate) {
+                const requestDelegate = new RequestDelegate(KldImporter.createRequestConfig(this.settings, `Objekt/${ids[i]}`));
                 const request = throttle(() => {
                     return this.extractObjectDetails(requestDelegate, i, numReceived)
                 })();
@@ -244,7 +240,7 @@ export class KldImporter extends Importer<KldSettings> {
             // add an error if there is a problem when retrieving record ids to abort the import process later
             const message = `Error while fetching ids from ${requestUrl}: ${MiscUtils.truncateErrorMessage(e)}.`;
             log.error(`Error while fetching ids from ${requestUrl}`, e);
-            this.getSummary().errors.push({ type: 'app', error: message });
+            this.summary.errors.push({ type: 'app', error: message });
         }
         return ids;
     }
@@ -272,7 +268,7 @@ export class KldImporter extends Importer<KldSettings> {
             // add a warning only if details for a single record could not be retrieved to avoid aborting the import
             const message = `Error while fetching record details from ${requestUrl}: ${MiscUtils.truncateErrorMessage(e)}.`;
             log.warn(`Error while fetching record details from ${requestUrl}`, e);
-            this.getSummary().warnings.push(['No details', message]);
+            this.summary.warnings.push(['No details', message]);
         }
     }
 
@@ -280,10 +276,10 @@ export class KldImporter extends Importer<KldSettings> {
         const promises: Promise<BulkResponse>[] = [];
         const id = record.Id;
 
-        this.getSummary().numDocs++;
+        this.summary.numDocs++;
 
         if (!this.filterUtils.isIdAllowed(id)) {
-            this.getSummary().skippedDocs.push(id);
+            this.summary.skippedDocs.push(id);
         }
         else {
             if (log.isDebugEnabled()) {
@@ -293,7 +289,7 @@ export class KldImporter extends Importer<KldSettings> {
                 logRequest.debug("Record content: ", JSON.stringify(record));
             }
 
-            const mapper = new KldMapper(this.getSettings(), record, harvestTime, this.getSummary());
+            const mapper = new KldMapper(this.settings, record, harvestTime, this.summary);
             let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
@@ -302,24 +298,24 @@ export class KldImporter extends Importer<KldSettings> {
             }
             catch (e) {
                 log.warn('Error creating index document', e);
-                this.getSummary().warnings.push(['Indexing error', e.toString()]);
+                this.summary.warnings.push(['Indexing error', e.toString()]);
                 mapper.skipped = true;
             }
 
-            if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
+            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: id,
-                    source: this.getSettings().sourceURL,
-                    catalog_ids: this.getSettings().catalogIds,
+                    source: this.settings.sourceURL,
+                    catalog_ids: this.settings.catalogIds,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };
                 promises.push(this.database.addEntityToBulk(entity));
             }
             else {
-                this.getSummary().skippedDocs.push(id);
+                this.summary.skippedDocs.push(id);
             }
-            this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+            this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.allSettled(promises).catch(e => log.error('Error persisting record', e));
     }
@@ -353,7 +349,7 @@ export class KldImporter extends Importer<KldSettings> {
             // ignore time out errors
             if (e.name != 'AbortError') {
                 const message = e.message ? e.message : e;
-                this.getSummary().warnings.push(['Request failure', message]);
+                this.summary.warnings.push(['Request failure', message]);
                 log.warn('Error during request', e);
             }
         }

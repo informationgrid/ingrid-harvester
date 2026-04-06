@@ -24,6 +24,7 @@
 import type { CatalogSettings, ElasticsearchCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
 import { Catalog, type CatalogColumnType, type CatalogOperation } from '../../catalog/catalog.factory.js';
+import type { ImporterType } from '../../importer/importer.settings.js';
 import type { Importer } from '../../importer/importer.js';
 import type { JsonMapper } from '../../importer/json/json.mapper.js';
 import type { JsonSettings } from '../../importer/json/json.settings.js';
@@ -53,6 +54,10 @@ export class LvrFactory extends ProfileFactory<LvrSettings> {
 
     dateReplacer = MiscUtils.dateReplacer;
 
+    protected getSupportedTypeNames(): ImporterType[] {
+        return ["JSON", "KLD", "OAI"];
+    }
+
     getElasticQueries(): AbstractElasticQueries {
         return ElasticQueries.getInstance();
     }
@@ -62,7 +67,7 @@ export class LvrFactory extends ProfileFactory<LvrSettings> {
             case 'JsonMapper': return new LvrClickRheinMapper(<JsonMapper>mapper);
             case 'KldMapper': return new LvrKldMapper(<KldMapper>mapper);
             case 'OaiMapper':
-                switch ((mapper.getSettings() as OaiSettings).metadataPrefix?.toLowerCase()) {
+                switch ((mapper.settings as OaiSettings).metadataPrefix?.toLowerCase()) {
                     case 'lido': return new LvrOaiLidoMapper(<OaiLidoMapper>mapper);
                     case 'mods': return new LvrOaiModsMapper(<OaiModsMapper>mapper);
                     default: throw new Error('Profile LVR only supports `mods` and `lido` prefixes for OAI-PMH harvester');

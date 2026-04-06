@@ -34,7 +34,7 @@ import { ingridMapper } from './ingrid.mapper.js';
 export class ingridWfsMapper extends ingridMapper<WfsMapper> {
 
     getTitle(): string {
-        const featureTitleAttribute = this.baseMapper.getSettings().featureTitleAttribute;
+        const featureTitleAttribute = this.baseMapper.settings.featureTitleAttribute;
         if (featureTitleAttribute && !this.baseMapper.isFeatureType()) {
             const xpath = `.//${featureTitleAttribute}`;
             const titleNode = this.baseMapper.select(xpath, this.baseMapper.featureOrFeatureType, true);

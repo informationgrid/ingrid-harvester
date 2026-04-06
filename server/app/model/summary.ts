@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import type { ImporterSettings } from '../importer.settings.js';
+import type { ImporterSettings } from '../importer/importer.settings.js';
 import type { ImportLogMessage } from './import.result.js';
 
 export type TypedError = {
@@ -65,7 +65,6 @@ export class Summary {
         if (settings.showCompleteSummaryInfo) {
             this.MAX_ITEMS_TO_SHOW = 1000000;
         }
-        this.isIncremental = settings.isIncremental;
     }
 
     print(logger) {

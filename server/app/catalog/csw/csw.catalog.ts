@@ -25,7 +25,7 @@ import type { CswCatalogSettings } from '@shared/catalog.js';
 import { XMLSerializer } from '@xmldom/xmldom';
 import log4js from 'log4js';
 import type { Observer } from "rxjs";
-import type { ImporterSettings } from "../../importer.settings.js";
+import type { ImporterSettings } from "../../importer/importer.settings.js";
 import { namespaces } from "../../importer/namespaces.js";
 import type { ImportLogMessage } from "../../model/import.result.js";
 import type { Summary } from "../../model/summary.js";

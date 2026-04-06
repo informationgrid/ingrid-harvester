@@ -33,7 +33,7 @@ import { RequestDelegate } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { Importer } from '../importer.js';
 import { JsonMapper } from './json.mapper.js';
-import type { JsonSettings } from './json.settings.js';
+import { jsonDefaults, type JsonSettings } from './json.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
@@ -45,6 +45,10 @@ export class JsonImporter extends Importer<JsonSettings> {
 
     constructor(settings: JsonSettings) {
         super(settings);
+    }
+
+    protected getDefaultSettings(): JsonSettings {
+        return jsonDefaults;
     }
 
     // only here for documentation - use the "default" exec function
@@ -66,14 +70,14 @@ export class JsonImporter extends Importer<JsonSettings> {
 
         await this.preHarvestingHandling();
 
-        const requestConfig = JsonImporter.createRequestConfig(this.getSettings());
+        const requestConfig = JsonImporter.createRequestConfig(this.settings);
         const requestDelegate = new RequestDelegate(requestConfig);
         let harvestTime = new Date(Date.now());
         let response = await requestDelegate.doRequest();
 
         let numReturned = response?.length;
         if (numReturned) {
-            log.debug(`Received ${numReturned} records from ${this.getSettings().sourceURL}`);
+            log.debug(`Received ${numReturned} records from ${this.settings.sourceURL}`);
             await this.extractRecords(response, harvestTime);
             
             let processingTime = Math.floor((Date.now() - harvestTime.getTime()) / 1000);
@@ -82,7 +86,7 @@ export class JsonImporter extends Importer<JsonSettings> {
         else {
             const message = `Error while fetching ClickRhein Records\nServer response: ${MiscUtils.truncateErrorMessage(response?.toString())}.`;
             log.error(message);
-            this.getSummary().errors.push({ type: 'app', error: message });
+            this.summary.errors.push({ type: 'app', error: message });
         }
 
         log.info(`Finished requesting records`);
@@ -96,10 +100,10 @@ export class JsonImporter extends Importer<JsonSettings> {
     protected async extractRecords(records: object[], harvestTime: Date): Promise<void> {
         const promises: Promise<BulkResponse>[] = [];
         for (let record of records) {
-            this.getSummary().numDocs++;
-            let id = record[this.getSettings().idProperty];
+            this.summary.numDocs++;
+            let id = record[this.settings.idProperty];
             if (!this.filterUtils.isIdAllowed(id)) {
-                this.getSummary().skippedDocs.push(id);
+                this.summary.skippedDocs.push(id);
             }
             else {
                 if (log.isDebugEnabled()) {
@@ -109,7 +113,7 @@ export class JsonImporter extends Importer<JsonSettings> {
                     logRequest.debug("Record content: ", JSON.stringify(record));
                 }
 
-                const mapper = new JsonMapper(this.getSettings(), record, harvestTime, this.getSummary());
+                const mapper = new JsonMapper(this.settings, record, harvestTime, this.summary);
                 let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
                 let doc: IndexDocument;
@@ -118,24 +122,24 @@ export class JsonImporter extends Importer<JsonSettings> {
                 }
                 catch (e) {
                     log.warn('Error creating index document', e);
-                    this.getSummary().warnings.push(['Indexing error', e.toString()]);
+                    this.summary.warnings.push(['Indexing error', e.toString()]);
                     mapper.skipped = true;
                 }
 
-                if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
+                if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                     let entity: RecordEntity = {
                         identifier: id,
-                        source: this.getSettings().sourceURL,
-                        catalog_ids: this.getSettings().catalogIds,
+                        source: this.settings.sourceURL,
+                        catalog_ids: this.settings.catalogIds,
                         dataset: doc,
                         original_document: mapper.getHarvestedData()
                     };
                     promises.push(this.database.addEntityToBulk(entity));
                 }
                 else {
-                    this.getSummary().skippedDocs.push(id);
+                    this.summary.skippedDocs.push(id);
                 }
-                this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+                this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
             }
         }
         await Promise.allSettled(promises).catch(e => log.error('Error persisting record', e));

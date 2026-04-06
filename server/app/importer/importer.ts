@@ -25,7 +25,7 @@ import type { GeneralSettings } from '@shared/general-config.settings.js';
 import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import { Observable } from 'rxjs';
-import type { ImporterSettings } from '../importer.settings.js';
+import type { ImporterSettings } from './importer.settings.js';
 import type { ImportLogMessage } from '../model/import.result.js';
 import { Summary } from '../model/summary.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
@@ -35,6 +35,7 @@ import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import { FilterUtils } from '../utils/filter.utils.js';
+import * as MiscUtils from '../utils/misc.utils.js';
 import { MailServer } from '../utils/nodemailer.utils.js';
 
 const log = log4js.getLogger(import.meta.filename)
@@ -50,39 +51,43 @@ const log = log4js.getLogger(import.meta.filename)
  */
 export abstract class Importer<S extends ImporterSettings> {
 
-    private readonly settings: S;
-    private readonly summary: Summary;
-    private stageSummaries: Summary[] = [];
     protected filterUtils: FilterUtils;
     protected generalConfig: GeneralSettings;
+    protected isIncremental: boolean = false;
     protected observer: Observer<ImportLogMessage>;
 
     readonly database: DatabaseUtils;
     readonly elastic: ElasticsearchUtils;
+    readonly summary: Summary;
+    readonly stageSummaries: Summary[] = [];
 
-    protected constructor(settings: S) {
-        this.filterUtils = new FilterUtils(settings);
+    protected constructor(readonly settings: S) {
+        this.settings = MiscUtils.merge(this.getDefaultSettings(), settings);
+        this.filterUtils = new FilterUtils(this.settings);
         this.generalConfig = ConfigService.getGeneralSettings();
         // TODO this needs to be refactored - see below in exec()
-        this.summary = new Summary('harvest', settings);
+        this.summary = new Summary('harvest', this.settings);
         this.database = DatabaseFactory.getDatabaseUtils(this.generalConfig.database, this.summary);
         this.elastic = ElasticsearchFactory.getElasticUtils(this.generalConfig.elasticsearch, this.summary);
 
         // override harvester-specific setting if the general config param is set
         if (this.generalConfig.allowAllUnauthorizedSSL) {
-            settings.rejectUnauthorizedSSL = false;
+            this.settings.rejectUnauthorizedSSL = false;
         }
-        this.settings = settings;
     }
 
-    run: Observable<ImportLogMessage> = new Observable<ImportLogMessage>(observer => {
-        this.observer = observer;
-        this.summary.startTime = new Date();
-        this.exec(observer).then(() => this.elastic.close());
-    });
+    run(isIncremental: boolean = false): Observable<ImportLogMessage> {
+        this.isIncremental = isIncremental;
+        this.summary.isIncremental = isIncremental;
+        return new Observable<ImportLogMessage>(observer => {
+            this.observer = observer;
+            this.summary.startTime = new Date();
+            this.exec(observer).then(() => this.elastic.close());
+        });
+    }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
-        // TODO remove Importer.getSummary() - instead, always use a named summary
+        // TODO remove Importer.summary - instead, always use a named summary
         // const downloadSummary = this.startStage('harvest');
         if (this.settings.dryRun) {
             log.debug('Dry run option enabled. Skipping index creation.');
@@ -95,7 +100,7 @@ export abstract class Importer<S extends ImporterSettings> {
                 let transactionTimestamp = await this.database.beginTransaction();
                 // get datasets
                 let numIndexDocs = await this.harvest();
-                if (!this.settings.isIncremental) {
+                if (!this.isIncremental) {
                     // did the harvesting return results at all?
                     if (numIndexDocs == 0) {
                         throw new Error(`No results during ${this.settings.type} import`);
@@ -155,27 +160,18 @@ export abstract class Importer<S extends ImporterSettings> {
 
     protected abstract harvest(): Promise<number>;
 
+    protected abstract getDefaultSettings(): S;
+
     protected async postHarvestingHandling() {
         // For Profile specific Handling
     }
 
     protected startStage(name: string): Summary {
-        const s = new Summary(name, this.getSettings());
+        const s = new Summary(name, this.settings);
         s.startTime = new Date();
+        s.isIncremental = this.isIncremental;
         this.stageSummaries.push(s);
         return s;
-    }
-
-    getStageSummaries(): Summary[] {
-        return this.stageSummaries;
-    }
-
-    getSettings(): S {
-        return this.settings;
-    }
-
-    getSummary(): Summary {
-        return this.summary;
     }
 
     getDownloadMessage(): string {

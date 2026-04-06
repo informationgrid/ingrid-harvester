@@ -38,13 +38,13 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implement
 
     async createIndexDocument(): Promise<IngridOpendataIndexDocument> {
         let result: IngridOpendataIndexDocument = {
-            ...this.getIngridMetadata(this.baseMapper.getSettings()),
+            ...this.getIngridMetadata(this.baseMapper.settings),
             metadata: this.getMetaMetadata(),
             id: this.getGeneratedId(),
             uuid: this.getGeneratedId(),
             modified: this.getModifiedDate(),
             collection: {
-                name: this.baseMapper.getSettings().dataSourceName,
+                name: this.baseMapper.settings.dataSourceName,
             },
             extras: {
                 metadata: {

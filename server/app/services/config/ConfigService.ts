@@ -27,13 +27,15 @@ import type { GeneralSettings } from '@shared/general-config.settings.js';
 import type { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
 import * as fs from 'fs';
 import log4js from 'log4js';
-import { DefaultImporterSettings, type ImporterSettings } from "../../importer.settings.js";
-import { defaultCKANSettings } from '../../importer/ckan/ckan.settings.js';
-import { defaultCSWSettings } from '../../importer/csw/csw.settings.js';
-import { defaultDCATAPDESettings } from '../../importer/dcatapde/dcatapde.settings.js';
-import { defaultGenesisSettings } from "../../importer/genesis/genesis.settings.js";
-import { defaultKldSettings } from '../../importer/kld/kld.settings.js';
-import { defaultOAISettings } from '../../importer/oai/oai.settings.js';
+import { defaultImporterSettings, type ImporterSettings } from '../../importer/importer.settings.js';
+import { ckanDefaults } from '../../importer/ckan/ckan.settings.js';
+import { cswDefaults } from '../../importer/csw/csw.settings.js';
+import { dcatapdeDefaults } from '../../importer/dcatapde/dcatapde.settings.js';
+import { genesisDefaults } from '../../importer/genesis/genesis.settings.js';
+import { kldDefaults } from '../../importer/kld/kld.settings.js';
+import { oaiDefaults } from '../../importer/oai/oai.settings.js';
+import { sparqlDefaults } from '../../importer/sparql/sparql.settings.js';
+import { wfsDefaults } from '../../importer/wfs/wfs.settings.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 
@@ -229,16 +231,16 @@ export class ConfigService {
         const configs: Datasource[] = JSON.parse(contents.toString());
         return configs
             .map(config => {
-                let defaultSettings: Partial<ImporterSettings> = DefaultImporterSettings;
+                let defaultSettings: ImporterSettings = defaultImporterSettings;
                 switch (config.type) {
-                    case 'CKAN': defaultSettings = defaultCKANSettings; break;
-                    case 'CSW': defaultSettings = defaultCSWSettings; break;
-                    case 'DCATAPDE': defaultSettings = defaultDCATAPDESettings; break;
-                    case 'KLD': defaultSettings = defaultKldSettings; break;
-                    case 'OAI': defaultSettings = defaultOAISettings; break;
-                    case 'GENESIS': defaultSettings = defaultGenesisSettings; break;
-                    //case 'SPARQL': defaultSettings = SparqlImporter.defaultSettings; break;
-                    //case 'WFS': defaultSettings = WfsImporter.defaultSettings; break;
+                    case 'CKAN': defaultSettings = ckanDefaults; break;
+                    case 'CSW': defaultSettings = cswDefaults; break;
+                    case 'DCATAPDE': defaultSettings = dcatapdeDefaults; break;
+                    case 'GENESIS': defaultSettings = genesisDefaults; break;
+                    case 'KLD': defaultSettings = kldDefaults; break;
+                    case 'OAI': defaultSettings = oaiDefaults; break;
+                    case 'SPARQL': defaultSettings = sparqlDefaults; break;
+                    case 'WFS': defaultSettings = wfsDefaults; break;
                 }
                 return MiscUtils.merge(defaultSettings, config);
             })
@@ -257,24 +259,20 @@ export class ConfigService {
      * @param updatedHarvester
      */
     static update(id: number, updatedHarvester: Datasource): number {
-        let newConfig = ConfigService.getHarvesters();
-        const filteredHarvester = MiscUtils.removePaths(updatedHarvester, [
-            "capabilities"
-        ]);
-
+        const newConfig = ConfigService.getHarvesters();
         if (id === -1) {
             id = ++ConfigService.highestID;
-            filteredHarvester.id = id;
-            newConfig.push(filteredHarvester);
+            updatedHarvester.id = id;
+            newConfig.push(updatedHarvester);
         }
         else {
-            const itemIndex = newConfig.findIndex(harvester => harvester.id === filteredHarvester.id);
+            const itemIndex = newConfig.findIndex(harvester => harvester.id === updatedHarvester.id);
             if (itemIndex === -1) {
-                log.warn('ID was not found for harvester. Creating new harvester with given ID: ' + filteredHarvester.id);
-                newConfig.push(filteredHarvester);
+                log.warn('ID was not found for harvester. Creating new harvester with given ID: ' + updatedHarvester.id);
+                newConfig.push(updatedHarvester);
             }
             else {
-                newConfig.splice(itemIndex, 1, filteredHarvester);
+                newConfig.splice(itemIndex, 1, updatedHarvester);
             }
         }
 
@@ -283,10 +281,7 @@ export class ConfigService {
     }
 
     static updateAll(updatedHarvesters: Datasource[]) {
-        const filteredHarvesters = updatedHarvesters.map(harvesterConfig => MiscUtils.removePaths(harvesterConfig, [
-            "capabilities"
-        ]));
-        fs.writeFileSync(this.getHarvesterConfigFile(), JSON.stringify(filteredHarvesters, null, 2));
+        fs.writeFileSync(this.getHarvesterConfigFile(), JSON.stringify(updatedHarvesters, null, 2));
     }
 
     static getThreadpoolSize(): number {

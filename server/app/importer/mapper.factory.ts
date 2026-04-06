@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import type { ImporterSettings } from '../importer.settings.js';
+import type { ImporterSettings } from './importer.settings.js';
 import type { Summary } from '../model/summary.js';
 import type { Mapper } from './mapper.js';
 

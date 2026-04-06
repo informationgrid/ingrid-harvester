@@ -21,9 +21,20 @@
  * ==================================================
  */
 
-import type { ImporterSettings } from '../../importer.settings.js';
+import { defaultImporterSettings, type ImporterCapabilities, type ImporterSettings } from '../importer.settings.js';
 
 export type JsonSettings = {
     idProperty: string,
     additionalSettings: Record<string, string>
 } & ImporterSettings;
+
+export const jsonDefaults: JsonSettings = {
+    ...defaultImporterSettings,
+    idProperty: '',
+    additionalSettings: {}
+};
+
+export const jsonCapabilities: ImporterCapabilities = {
+    isIncrementalSupported: false,
+    supportedCatalogTypes: ['elasticsearch']
+};

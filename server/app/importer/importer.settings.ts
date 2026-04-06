@@ -23,38 +23,6 @@
 
 import type { CatalogType } from '@shared/catalog.js';
 
-export interface CronData {
-    pattern: string;
-    active: boolean;
-}
-
-export const DefaultImporterSettings: ImporterSettings = {
-    priority: null,
-    type: '',
-    maxRecords: 100,
-    startPosition: 0,
-    // catalogId: null,
-    catalogIds: [],
-    customCode: '',
-    defaultMcloudSubgroup: [],
-    defaultDCATCategory: [],
-    dateSourceFormats: [],
-    blacklistedIds: [],
-    whitelistedIds: [],
-    rejectUnauthorizedSSL: true,
-    rules: {
-        containsDocumentsWithData: false
-    },
-    capabilities: {
-        isIncrementalSupported: false,
-        supportedCatalogTypes: ['elasticsearch']
-    },
-    maxConcurrent: 1,
-    skipUrlCheckOnHarvest: false,
-    timeout: 60000,
-    sourceURL: ''
-};
-
 export type ImporterSettings = {
     priority?: number,
     blacklistedIds?: string[],
@@ -69,7 +37,6 @@ export type ImporterSettings = {
     defaultAttribution?: string,
     defaultAttributionLink?: string,
     defaultDCATCategory?: string[],
-    defaultMcloudSubgroup?: string[],
     // Ingrid-PlugDescription
     iPlugId?: string,
     partner?: string,
@@ -81,12 +48,6 @@ export type ImporterSettings = {
     disable?: boolean,
     dryRun?: boolean,
     id?: number,
-    // TODO ED:2022-10-04: the next entry needs to be transient, i.e. not saved into config file but (requested and) given with every run
-    isIncremental?: boolean,
-    capabilities: {
-        isIncrementalSupported: boolean,
-        supportedCatalogTypes: CatalogType[]
-    },
     maxConcurrent: number,
     maxRecords?: number,
     proxy?: string,
@@ -103,3 +64,43 @@ export type ImporterSettings = {
     timeout: number,
     sourceURL: string
 }
+
+export type ImporterCapabilities = {
+    isIncrementalSupported: boolean;
+    supportedCatalogTypes: CatalogType[];
+};
+
+export type ImporterType = 'CKAN' | 'CSW' | 'DCATAPDE' | 'DCATAPPLU' | 'GENESIS' | 'JSON' | 'KLD' | 'OAI' | 'SPARQL' | 'WFS' | 'WFS.FIS' | 'WFS.MS' | 'WFS.XPLAN' | 'WFS.XPLAN.SYN';
+
+export type ImporterTypeInfo = {
+    type: ImporterType;
+    defaults: ImporterSettings & Record<string, any>;
+    capabilities: ImporterCapabilities;
+};
+
+export type CronData = {
+    pattern: string;
+    active: boolean;
+};
+
+export const defaultImporterSettings: ImporterSettings = {
+    priority: null,
+    type: '',
+    maxRecords: 100,
+    startPosition: 0,
+    // catalogId: null,
+    catalogIds: [],
+    customCode: '',
+    defaultDCATCategory: [],
+    dateSourceFormats: [],
+    blacklistedIds: [],
+    whitelistedIds: [],
+    rejectUnauthorizedSSL: true,
+    rules: {
+        containsDocumentsWithData: false
+    },
+    maxConcurrent: 1,
+    skipUrlCheckOnHarvest: false,
+    timeout: 60000,
+    sourceURL: ''
+};

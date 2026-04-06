@@ -90,7 +90,7 @@ export class ZdmIdfGenerator extends IdfGenerator {
         this.addOutput(idfBody, "br");
 
         // // show features, if loaded
-        if (this.baseMapper.getNumberOfFeatures() < this.baseMapper.getSettings().featureLimit) {
+        if (this.baseMapper.getNumberOfFeatures() < this.baseMapper.settings.featureLimit) {
             // NOTE: the below section is filled in the ingrid elasticsearch catalog
             this.addOutput(idfBody, "h2", "Features:");
         }
@@ -161,7 +161,7 @@ export class ZdmIdfGenerator extends IdfGenerator {
         }
         else {
             let mapLink = '';
-            let serviceURL = encodeURIComponent(`${this.mapper.getMetadataSource().source_base}?SERVICE=WFS&VERSION=${this.baseMapper.getSettings().version}&`);
+            let serviceURL = encodeURIComponent(`${this.mapper.getMetadataSource().source_base}?SERVICE=WFS&VERSION=${this.baseMapper.settings.version}&`);
             mapLink += '/DE/dienste/karte?layers=WFS%7C%7C' + encodeURIComponent(title.replaceAll(',','')) + '%7C%7C' + serviceURL + '%7C%7C' + this.baseMapper.getTypename();
             mapLink += '%7C%7C' + title;
 

@@ -25,7 +25,7 @@ import { inject, Injectable, signal } from "@angular/core";
 import { Observable } from "rxjs";
 import { Datasource } from "@shared/datasource";
 import { ImportLogMessage } from "../../../../../server/app/model/import.result";
-import { CronData } from "../../../../../server/app/importer.settings";
+import { CronData } from "../../../../../server/app/importer/importer.settings";
 import { SocketService } from "./socket.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { TranslocoService } from "@ngneat/transloco";

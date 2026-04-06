@@ -4,12 +4,10 @@
     "type": "CSW",
     "maxRecords": 200,
     "startPosition": 1,
-    "catalogId": "harvester-index",
     "catalogIds": [
       1
     ],
     "customCode": null,
-    "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
     "dateSourceFormats": [],
     "blacklistedIds": [],
@@ -18,7 +16,6 @@
     "rules": {
       "containsDocumentsWithData": null
     },
-    "isIncremental": false,
     "maxConcurrent": 6,
     "skipUrlCheckOnHarvest": false,
     "timeout": 60000,
@@ -59,12 +56,10 @@
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
-    "catalogId": "nokis",
     "catalogIds": [
       1
     ],
     "customCode": null,
-    "defaultMcloudSubgroup": null,
     "defaultDCATCategory": null,
     "dateSourceFormats": [],
     "blacklistedIds": [],
@@ -73,7 +68,6 @@
     "rules": {
       "containsDocumentsWithData": null
     },
-    "isIncremental": false,
     "maxConcurrent": 4,
     "skipUrlCheckOnHarvest": false,
     "timeout": 60000,
@@ -130,7 +124,6 @@
       "contributorId": "http://dcat-ap.de/def/contributors/genesisLsa"
     },
 
-    "catalogId": "genesis-lsa",
     "catalogIds": [],
 
     "iPlugId": "/ingrid-group:genesis-lsa",
@@ -142,7 +135,6 @@
 
     "maxConcurrent": 1,
     "timeout": 60000,
-    "isIncremental": false,
     "rejectUnauthorizedSSL": true,
 
     "blacklistedIds": [],
@@ -186,7 +178,6 @@
       "contributorId": "http://dcat-ap.de/def/contributors/genesisDestatis"
     },
 
-    "catalogId": "genesis-lsa",
     "catalogIds": [],
 
     "iPlugId": "/ingrid-group:genesis-lsa",
@@ -198,7 +189,6 @@
 
     "maxConcurrent": 1,
     "timeout": 60000,
-    "isIncremental": false,
     "rejectUnauthorizedSSL": true,
 
     "blacklistedIds": [],

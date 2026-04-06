@@ -26,16 +26,14 @@ import log4js from 'log4js';
 import plain_fetch from 'node-fetch';
 import type { Observer } from 'rxjs';
 import SimpleClient from 'sparql-http-client/SimpleClient.js';
-import { DefaultImporterSettings } from '../../importer.settings.js';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
-import * as MiscUtils from '../../utils/misc.utils.js';
 import { Importer } from '../importer.js';
 import { SparqlMapper } from './sparql.mapper.js';
-import type { SparqlSettings } from './sparql.settings.js';
+import { sparqlDefaults, type SparqlSettings } from './sparql.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
@@ -47,18 +45,12 @@ export class SparqlImporter extends Importer<SparqlSettings> {
 
     private generalSettings = ConfigService.getGeneralSettings();
 
-    static defaultSettings: SparqlSettings = {
-        ...DefaultImporterSettings,
-        sourceURL: '',
-        query: '',
-        filterTags: [],
-        filterThemes: []
-    };
-
     constructor(settings: SparqlSettings) {
-        // merge default settings with configured ones
-        settings = MiscUtils.merge(SparqlImporter.defaultSettings, settings);
         super(settings);
+    }
+
+    protected getDefaultSettings(): SparqlSettings {
+        return sparqlDefaults;
     }
 
     // only here for documentation - use the "default" exec function
@@ -71,7 +63,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
 
         let response = "";
 
-        const endpointUrl = this.getSettings().sourceURL;
+        const endpointUrl = this.settings.sourceURL;
 
         let fetch: any = plain_fetch;
 
@@ -83,7 +75,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
         }
 
         const client = new SimpleClient({endpointUrl, fetch});
-        return new Promise<number>((resolve, reject) => client.query.select(this.getSettings().query).then(result => {
+        return new Promise<number>((resolve, reject) => client.query.select(this.settings.query).then(result => {
             let hadError = result.status >= 400;
 
             result.body.on('data', data => {
@@ -93,7 +85,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
 
             result.body.on('error', err => {
                 hadError = true;
-                this.getSummary().errors.push({ type: 'app', error: err.toString() });
+                this.summary.errors.push({ type: 'app', error: err.toString() });
                 log.error(err);
             })
 
@@ -106,7 +98,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
                         this.extractRecords(json, harvestTime).then(() =>
                             resolve(this.numIndexDocs));
                     } catch (e) {
-                        this.getSummary().errors.push({ type: 'app', error: e.toString() });
+                        this.summary.errors.push({ type: 'app', error: e.toString() });
                         log.error(e);
                         reject(e);
                     }
@@ -115,7 +107,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
             result.body.on('end', () => {
                 if(hadError) {
                     let message = result.statusText + ' - '+response;
-                    this.getSummary().errors.push({ type: 'app', error: message });
+                    this.summary.errors.push({ type: 'app', error: message });
                     log.error(message);
                     reject();
                 }
@@ -135,11 +127,11 @@ export class SparqlImporter extends Importer<SparqlSettings> {
         }
 
         for (let i = 0; i < records.length; i++) {
-            this.getSummary().numDocs++;
+            this.summary.numDocs++;
 
             const uuid = records[i].id.value;
             if (!this.filterUtils.isIdAllowed(uuid)) {
-                this.getSummary().skippedDocs.push(uuid);
+                this.summary.skippedDocs.push(uuid);
                 continue;
             }
 
@@ -150,7 +142,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            const mapper = new SparqlMapper(this.getSettings(), records[i], harvestTime, this.getSummary());
+            const mapper = new SparqlMapper(this.settings, records[i], harvestTime, this.summary);
             let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
@@ -159,15 +151,15 @@ export class SparqlImporter extends Importer<SparqlSettings> {
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.getSummary().errors.push({ type: 'app', error: e.toString() });
+                this.summary.errors.push({ type: 'app', error: e.toString() });
                 mapper.skipped = true;
             }
 
-            if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
+            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: uuid,
-                    source: this.getSettings().sourceURL,
-                    catalog_ids: this.getSettings().catalogIds,
+                    source: this.settings.sourceURL,
+                    catalog_ids: this.settings.catalogIds,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };
@@ -181,9 +173,9 @@ export class SparqlImporter extends Importer<SparqlSettings> {
                         })
                 );
             } else {
-                this.getSummary().skippedDocs.push(uuid);
+                this.summary.skippedDocs.push(uuid);
             }
-            this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+            this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.all(promises)
             .catch(err => log.error('Error indexing DCAT record', err));

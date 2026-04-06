@@ -24,7 +24,7 @@
 import type { CatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
 import type { Observer } from 'rxjs';
-import type { ImporterSettings } from '../importer.settings.js';
+import type { ImporterSettings } from '../importer/importer.settings.js';
 import type { ImportLogMessage } from '../model/import.result.js';
 import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
@@ -54,14 +54,10 @@ export interface CatalogOperation {
  */
 export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSettings, O extends CatalogOperation> {
 
-    readonly settings: S;
-    readonly summary: Summary;
     protected readonly database: DatabaseUtils;
     protected transactionTimestamp: string;
 
-    constructor(settings: S, summary: Summary) {
-        this.settings = settings;
-        this.summary = summary;
+    constructor(readonly settings: S, readonly summary: Summary) {
         this.database = DatabaseFactory.getDatabaseUtils(ConfigService.getGeneralSettings().database, summary);
     }
 

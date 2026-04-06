@@ -41,8 +41,7 @@ import * as ServiceUtils from '../../utils/service.utils.js';
 import * as XpathUtils from '../../utils/xpath.utils.js';
 import { Importer } from '../importer.js';
 import { CswMapper } from './csw.mapper.js';
-import type { CswSettings } from './csw.settings.js';
-import { defaultCSWSettings } from './csw.settings.js';
+import { cswDefaults, type CswSettings } from './csw.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
@@ -63,20 +62,22 @@ export class CswImporter extends Importer<CswSettings> {
     private generalInfo: object = {};
 
     constructor(settings: CswSettings) {
-        // merge default settings with configured ones
-        settings = MiscUtils.merge(defaultCSWSettings, settings);
         super(settings);
         this.domParser = MiscUtils.getDomParser();
     }
 
+    protected getDefaultSettings(): CswSettings {
+        return cswDefaults;
+    }
+
     private appendFilter(newFilter: string): string {
-        if (!this.getSettings().recordFilter) {
+        if (!this.settings.recordFilter) {
             return `<ogc:Filter>${newFilter}</ogc:Filter>`;
         }
         else {
             const parseXml = (s: string) => this.domParser.parseFromString(s);
             try {
-                let recordFilterElem = parseXml(this.getSettings().recordFilter).getElementsByTagName('ogc:Filter')[0];
+                let recordFilterElem = parseXml(this.settings.recordFilter).getElementsByTagName('ogc:Filter')[0];
                 let filterChildElem = XpathUtils.firstElementChild(recordFilterElem);
                 let filterElem = parseXml('<ogc:Filter/>').documentElement;
                 let contentElem = filterElem.appendChild(parseXml('<ogc:And/>').documentElement);
@@ -91,39 +92,39 @@ export class CswImporter extends Importer<CswSettings> {
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
-        // TODO remove Importer.getSummary() - instead, always use a named summary
+        // TODO remove Importer.summary - instead, always use a named summary
         // const downloadSummary = this.startStage('harvest');
-        if (this.getSettings().dryRun) {
+        if (this.settings.dryRun) {
             log.debug('Dry run option enabled. Skipping index creation.');
             await this.harvest();
             log.debug('Skipping finalisation of index for dry run.');
-            observer.next(this.getSummary().msgComplete('Dry run ... no indexing of data'));
+            observer.next(this.summary.msgComplete('Dry run ... no indexing of data'));
         }
         else {
             try {
                 let transactionTimestamp = await this.database.beginTransaction();
                 // configure for incremental harvesting
-                if (this.getSettings().isIncremental) {
+                if (this.isIncremental) {
                     // only change the record filter (i.e. do an incremental harvest) if a previous run exists
-                    let lastHarvestingDate = new SummaryService().get(this.getSettings().id)?.lastExecution;
+                    let lastHarvestingDate = new SummaryService().get(this.settings.id)?.lastExecution;
                     if (lastHarvestingDate) {
                         let lastModifiedFilter = `<ogc:PropertyIsGreaterThanOrEqualTo><ogc:PropertyName>Modified</ogc:PropertyName><ogc:Literal>${new Date(lastHarvestingDate).toISOString()}</ogc:Literal></ogc:PropertyIsGreaterThanOrEqualTo>`;
-                        this.getSettings().recordFilter = this.appendFilter(lastModifiedFilter);
+                        this.settings.recordFilter = this.appendFilter(lastModifiedFilter);
                     }
                     else {
-                        log.warn(`Changing type of harvesting to "full" because no previous harvesting was found for harvester with id ${this.getSettings().id}`);
-                        this.getSettings().isIncremental = false;
+                        log.warn(`Changing type of harvesting to "full" because no previous harvesting was found for harvester with id ${this.settings.id}`);
+                        this.isIncremental = false;
                     }
                 }
                 // get datasets
                 let numIndexDocs = await this.harvest();
-                if (!this.getSettings().isIncremental) {
+                if (!this.isIncremental) {
                     // did the harvesting return results at all?
                     if (numIndexDocs == 0) {
-                        throw new Error(`No results during ${this.getSettings().type} import`);
+                        throw new Error(`No results during ${this.settings.type} import`);
                     }
                     // ensure that less than X percent of existing datasets are slated for deletion
-                    let nonFetchedPercentage = await this.database.nonFetchedPercentage(this.getSettings().sourceURL, transactionTimestamp);
+                    let nonFetchedPercentage = await this.database.nonFetchedPercentage(this.settings.sourceURL, transactionTimestamp);
                     let { mail, cancel } = this.generalConfig.harvesting;
                     if (this.generalConfig.mail.enabled && mail.enabled && nonFetchedPercentage > mail.minDifference) {
                         let msg = `Not enough coverage of previous results (${nonFetchedPercentage}%)`;
@@ -137,56 +138,56 @@ export class CswImporter extends Importer<CswSettings> {
                 // self-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
                 //await this.coupleSelf(this.settings.resolveOgcDistributions);
                 // get services separately (time-intensive)
-                if (this.getSettings().harvestingMode == 'separate') {
+                if (this.settings.harvestingMode == 'separate') {
                     this.startStage('harvestServices');
                     await this.harvestServices();
                 }
                 // data-service-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
                 this.startStage('coupling');
-                await this.coupleDatasetsServices(this.getSettings().resolveOgcDistributions);
+                await this.coupleDatasetsServices(this.settings.resolveOgcDistributions);
 
                 // did fatal errors occur (ie DB or APP errors)?
-                if (this.getSummary().errors.some(e => e.type === 'app' || e.type === 'database')) {
+                if (this.summary.errors.some(e => e.type === 'app' || e.type === 'database')) {
                     throw new Error();
                 }
 
-                if (!this.getSettings().isIncremental) {
-                    await this.database.deleteNonFetchedDatasets(this.getSettings().sourceURL, transactionTimestamp);
+                if (!this.isIncremental) {
+                    await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
                 }
                 await this.database.commitTransaction();
                 // TODO support concurrency of different catalogs
-                for (const catalogId of this.getSettings().catalogIds) {
+                for (const catalogId of this.settings.catalogIds) {
                     const stageSummary = this.startStage(`catalog/${catalogId}`);
                     const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, stageSummary);
                     try {
                         // log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with transaction timestamp ${transactionTimestamp}`);
-                        log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with source ${this.getSettings().sourceURL}`);
+                        log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with source ${this.settings.sourceURL}`);
 
                         // TODO currently this relies on "sourceURL" instead of transactionTimestamp
                         // should this be changed to transactionTimestamp?
                         // for that, we need to consider how to handle "deleted", i.e. non-fetched, datasets
 
-                        await catalog.process(this.getSettings().sourceURL, this.getSettings(), observer);
+                        await catalog.process(this.settings.sourceURL, this.settings, observer);
                     }
                     catch (e) {
                         log.error(`Error while importing into catalog ${catalog.settings.name} (id=${catalogId}):`, e);
-                        this.getSummary().errors.push({ type: 'app', error: `Error while importing into catalog ${catalog.settings.name} (id=${catalogId}): ${e.message}` });
+                        this.summary.errors.push({ type: 'app', error: `Error while importing into catalog ${catalog.settings.name} (id=${catalogId}): ${e.message}` });
                     }
                 }
                 await this.postHarvestingHandling();
-                observer.next(this.getSummary().msgComplete());
+                observer.next(this.summary.msgComplete());
             }
             catch (err) {
                 if (err.message) {
-                    this.getSummary().errors.push({ type: 'app', error: err.message });
+                    this.summary.errors.push({ type: 'app', error: err.message });
                 }
                 await this.database.rollbackTransaction();
-                let msg = this.getSummary().errors.find(e => e.type === 'app' || e.type === 'database')?.error;
+                let msg = this.summary.errors.find(e => e.type === 'app' || e.type === 'database')?.error;
                 if (this.generalConfig.mail.enabled) {
                     MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
                 }
                 log.error(err);
-                observer.next(this.getSummary().msgComplete(msg));
+                observer.next(this.summary.msgComplete(msg));
             }
         }
         observer.complete();
@@ -195,9 +196,9 @@ export class CswImporter extends Importer<CswSettings> {
     protected async harvest(): Promise<number> {
         log.info(`Started requesting records`);
 
-        if (this.getSettings().harvestingMode == 'separate') {
+        if (this.settings.harvestingMode == 'separate') {
             let datasetFilter = '<ogc:PropertyIsEqualTo><ogc:PropertyName>Type</ogc:PropertyName><ogc:Literal>dataset</ogc:Literal></ogc:PropertyIsEqualTo>';
-            this.getSettings().recordFilter = this.appendFilter(datasetFilter);
+            this.settings.recordFilter = this.appendFilter(datasetFilter);
         }
         // obtain GetRecords URL from GetCapabilities
         let getCapabilitiesConfig = this.createRequestConfig(null, 'GetCapabilities');
@@ -227,15 +228,15 @@ export class CswImporter extends Importer<CswSettings> {
         // 1) create paged request delegates
         let delegates = [];
         // TODO this is still not correct?
-        for (let startPosition = this.getSettings().startPosition; startPosition < this.totalRecords + this.getSettings().startPosition; startPosition += this.getSettings().maxRecords) {
+        for (let startPosition = this.settings.startPosition; startPosition < this.totalRecords + this.settings.startPosition; startPosition += this.settings.maxRecords) {
             let requestConfig = this.createRequestConfig({ startPosition });
             delegates.push(new RequestDelegate(requestConfig, CswImporter.createPaging({
                 startPosition: startPosition,
-                maxRecords: this.getSettings().maxRecords
+                maxRecords: this.settings.maxRecords
             })));
         }
         // 2) run in parallel
-        const limit = pLimit(this.getSettings().maxConcurrent);
+        const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
         log.info(`Finished requesting records`);
         // 3) persist leftovers
@@ -245,14 +246,14 @@ export class CswImporter extends Importer<CswSettings> {
     }
 
     async harvestServices(): Promise<void> {
-        let datasetIds = await this.database.getDatasetIdentifiers(this.getSettings().sourceURL);
-        let numChunks = Math.ceil(datasetIds.length / this.getSettings().maxServices);
+        let datasetIds = await this.database.getDatasetIdentifiers(this.settings.sourceURL);
+        let numChunks = Math.ceil(datasetIds.length / this.settings.maxServices);
         log.info(`Requesting services for ${datasetIds.length} datasets in ${numChunks} chunks`);
         // 1) create paged request delegates
         let delegates = [];
-        for (let i = 0; i < datasetIds.length; i+= this.getSettings().maxServices) {
+        for (let i = 0; i < datasetIds.length; i+= this.settings.maxServices) {
             // add ID filter
-            const chunk = datasetIds.slice(i, i + this.getSettings().maxServices);
+            const chunk = datasetIds.slice(i, i + this.settings.maxServices);
             let recordFilter = '<ogc:Filter>' + (chunk.length > 1 ? '<ogc:Or>' : '');
             for (let identifier of chunk) {
                 recordFilter += `<ogc:PropertyIsEqualTo><ogc:PropertyName>OperatesOn</ogc:PropertyName><ogc:Literal>${identifier}</ogc:Literal></ogc:PropertyIsEqualTo>\n`;
@@ -260,11 +261,11 @@ export class CswImporter extends Importer<CswSettings> {
             recordFilter +=  (chunk.length > 1 ? '</ogc:Or>' : '') + '</ogc:Filter>';
             delegates.push(new RequestDelegate(
                 this.createRequestConfig({ recordFilter }),
-                CswImporter.createPaging({ startPosition: this.getSettings().startPosition })
+                CswImporter.createPaging({ startPosition: this.settings.startPosition })
             ));
         }
         // 2) run in parallel
-        const limit = pLimit(this.getSettings().maxConcurrent);
+        const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
         // 3) persist leftovers
         await this.database.sendBulkData();
@@ -274,10 +275,10 @@ export class CswImporter extends Importer<CswSettings> {
     async coupleSelf(resolveOgcDistributions: boolean) {
         log.info(`Started self-coupling`);
         // get all datasets
-        let recordEntities: RecordEntity[] = await this.database.getDatasets(this.getSettings().sourceURL) ?? [];
+        let recordEntities: RecordEntity[] = await this.database.getDatasets(this.settings.sourceURL) ?? [];
         // for all services, get WFS, WMS info and merge into dataset
         // 2) run in parallel
-        const limit = pLimit(this.getSettings().maxConcurrent);
+        const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(recordEntities.map(recordEntity => limit(() => this.coupleService(recordEntity, resolveOgcDistributions, true))));
         log.info(`Finished self-coupling`);
         // 3) persist leftovers
@@ -287,10 +288,10 @@ export class CswImporter extends Importer<CswSettings> {
     async coupleDatasetsServices(resolveOgcDistributions: boolean) {
         log.info(`Started dataset-service coupling`);
         // get all services
-        let serviceEntities: RecordEntity[] = await this.database.getServices(this.getSettings().sourceURL) ?? [];
+        let serviceEntities: RecordEntity[] = await this.database.getServices(this.settings.sourceURL) ?? [];
         // for all services, get WFS, WMS info and merge into dataset
         // 2) run in parallel
-        const limit = pLimit(this.getSettings().maxConcurrent);
+        const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(serviceEntities.map(serviceEntity => limit(() => this.coupleService(serviceEntity, resolveOgcDistributions, false))));
         log.info(`Finished dataset-service coupling`);
         // 3) persist leftovers
@@ -341,7 +342,7 @@ export class CswImporter extends Importer<CswSettings> {
                                 try {
                                     // // resolve GetFeatures, typeNames=<Name>
                                     // // parse, get Polygon
-                                    spatial = await ServiceUtils.parseWfsFeatureCollection(service.accessURL, typeName, this.getSettings().simplifyTolerance);
+                                    spatial = await ServiceUtils.parseWfsFeatureCollection(service.accessURL, typeName, this.settings.simplifyTolerance);
                                     // spatial = GeoJsonUtils.sanitize(spatial);
                                     // // save in dataset
                                     // await this.updateDataset(serviceEntity.operates_on_uuid, geometryCollection);
@@ -419,7 +420,7 @@ export class CswImporter extends Importer<CswSettings> {
         let resultsNode = responseDom.getElementsByTagNameNS(namespaces.CSW, 'SearchResults')[0];
         if (resultsNode) {
             let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
-            log.debug(`Received ${numReturned} records from ${this.getSettings().sourceURL}`);
+            log.debug(`Received ${numReturned} records from ${this.settings.sourceURL}`);
             let importedDocuments = await this.extractRecords(response, processingStart);
             await this.updateRecords(importedDocuments);
             let processingTime = Math.floor((Date.now() - processingStart) / 1000);
@@ -428,7 +429,7 @@ export class CswImporter extends Importer<CswSettings> {
         else {
             const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
             log.error(message);
-            this.getSummary().errors.push({ type: 'app', error: message });
+            this.summary.errors.push({ type: 'app', error: message });
         }
     }
 
@@ -443,11 +444,11 @@ export class CswImporter extends Importer<CswSettings> {
 
         let docsToImport = [];
         for (let i = 0; i < records.length; i++) {
-            this.getSummary().numDocs++;
+            this.summary.numDocs++;
 
             const uuid = CswMapper.getCharacterStringContent(records[i], 'fileIdentifier');
             if (!this.filterUtils.isIdAllowed(uuid)) {
-                this.getSummary().skippedDocs.push(uuid);
+                this.summary.skippedDocs.push(uuid);
                 continue;
             }
 
@@ -458,7 +459,7 @@ export class CswImporter extends Importer<CswSettings> {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = new CswMapper(this.getSettings(), records[i], harvestTime, this.getSummary(), this.generalInfo);
+            let mapper = new CswMapper(this.settings, records[i], harvestTime, this.summary, this.generalInfo);
             let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
@@ -468,24 +469,24 @@ export class CswImporter extends Importer<CswSettings> {
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.getSummary().errors.push({ type: 'app', error: e.toString() });
+                this.summary.errors.push({ type: 'app', error: e.toString() });
                 mapper.skipped = true;
             }
 
-            if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
+            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: uuid,
-                    source: this.getSettings().sourceURL,
-                    catalog_ids: this.getSettings().catalogIds,
+                    source: this.settings.sourceURL,
+                    catalog_ids: this.settings.catalogIds,
                     dataset: doc,
                     dataset_csw: mapper.getHarvestedData(),
                     original_document: mapper.getHarvestedData()
                 };
                 promises.push(this.database.addEntityToBulk(entity));
             } else {
-                this.getSummary().skippedDocs.push(uuid);
+                this.summary.skippedDocs.push(uuid);
             }
-            this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+            this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.allSettled(promises).catch(err => log.error('Error persisting CSW record', err));
         // let settledPromises: void | PromiseSettledResult<BulkResponse>[] = await Promise.allSettled(promises).catch(err => log.error('Error persisting CSW record', err));
@@ -510,7 +511,7 @@ export class CswImporter extends Importer<CswSettings> {
 
     protected createRequestConfig(additionalSettings: Partial<CswSettings> = null, request = 'GetRecords'): RequestOptions {
         let settings = {
-            ...this.getSettings(),
+            ...this.settings,
             ...additionalSettings
         }
         let requestConfig: RequestOptions = {

@@ -95,7 +95,7 @@ export class IdfGenerator {
         this.addOutput(idfBody, "br");
 
         // // show features, if loaded
-        if (this.baseMapper.getNumberOfFeatures() < this.baseMapper.getSettings().featureLimit) {
+        if (this.baseMapper.getNumberOfFeatures() < this.baseMapper.settings.featureLimit) {
             // NOTE: the below section is filled in the ingrid elasticsearch catalog
             this.addOutput(idfBody, "h2", "Features:");
         }
@@ -104,7 +104,7 @@ export class IdfGenerator {
     }
 
     createFeatureIdf(idx?: number): string {
-        var plugDescrDataSourceName = this.baseMapper.getSettings().dataSourceName;
+        var plugDescrDataSourceName = this.baseMapper.settings.dataSourceName;
         var plugDescrOrganisation = this.mapper.getOrganisation();
 
         //---------- <idf:body> ----------

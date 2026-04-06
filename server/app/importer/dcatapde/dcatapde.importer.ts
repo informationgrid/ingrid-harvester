@@ -35,8 +35,7 @@ import * as MiscUtils from '../../utils/misc.utils.js';
 import { dereferenceRdfElements } from "../../utils/rdf.utils.js";
 import { Importer } from '../importer.js';
 import { DcatapdeMapper } from './dcatapde.mapper.js';
-import type { DcatapdeSettings } from './dcatapde.settings.js';
-import { defaultDCATAPDESettings } from './dcatapde.settings.js';
+import { dcatapdeDefaults, type DcatapdeSettings } from './dcatapde.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
@@ -44,25 +43,17 @@ const logRequest = log4js.getLogger('requests');
 export class DcatapdeImporter extends Importer<DcatapdeSettings> {
 
     protected domParser: DOMParser;
-    protected requestConfig : RequestOptions;
-    protected requestDelegate: RequestDelegate;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
 
-    constructor(settings: DcatapdeSettings, requestDelegate?: RequestDelegate) {
-        // merge default settings with configured ones
-        settings = MiscUtils.merge(defaultDCATAPDESettings, settings);
+    constructor(settings: DcatapdeSettings) {
         super(settings);
-
         this.domParser = MiscUtils.getDomParser();
+    }
 
-        if (requestDelegate) {
-            this.requestDelegate = requestDelegate;
-        } else {
-            this.requestConfig = DcatapdeImporter.createRequestConfig(settings);
-            this.requestDelegate = new RequestDelegate(this.requestConfig);
-        }
+    protected getDefaultSettings(): DcatapdeSettings {
+        return dcatapdeDefaults;
     }
 
     // only here for documentation - use the "default" exec function
@@ -73,9 +64,12 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
     protected async harvest(): Promise<number> {
         let retries = 0;
 
+        const requestConfig = DcatapdeImporter.createRequestConfig(this.settings);
+        let requestDelegate = new RequestDelegate(requestConfig);
+
         while (true) {
             log.debug('Requesting next records');
-            let response = await this.requestDelegate.doRequest();
+            let response = await requestDelegate.doRequest();
             let harvestTime = new Date(Date.now());
 
             let responseDom = this.domParser.parseFromString(response);
@@ -95,11 +89,11 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                 isLastPage = thisPageUrl === lastPageUrl;
                 if(!isLastPage){
                     let nextPageUrl = DcatapdeMapper.select('./hydra:nextPage', pagedCollection, true).textContent;
-                    this.requestConfig.uri = nextPageUrl;
-                    this.requestDelegate = new RequestDelegate(this.requestConfig);
+                    requestConfig.uri = nextPageUrl;
+                    requestDelegate = new RequestDelegate(requestConfig);
                 }
 
-                log.debug(`Received ${numReturned} records from ${this.getSettings().sourceURL} - Page: ${thisPageUrl}`);
+                log.debug(`Received ${numReturned} records from ${this.settings.sourceURL} - Page: ${thisPageUrl}`);
                 await this.extractRecords(response, harvestTime)
             }
             else {
@@ -110,7 +104,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                 } else {
                     const message = `Error while fetching DCAT Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
                     log.error(message);
-                    this.getSummary().errors.push({ type: 'app', error: message });
+                    this.summary.errors.push({ type: 'app', error: message });
                     if(retries++ > 3){
                         isLastPage = true;
                         log.error('Stopped after 3 Retries')
@@ -147,14 +141,14 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
          */
 
         for (let i = 0; i < records.length; i++) {
-            this.getSummary().numDocs++;
+            this.summary.numDocs++;
 
             let uuid = DcatapdeMapper.select('./dct:identifier', records[i], true).textContent;
             if(!uuid) {
                 uuid = DcatapdeMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
             }
             if (!this.filterUtils.isIdAllowed(uuid)) {
-                this.getSummary().skippedDocs.push(uuid);
+                this.summary.skippedDocs.push(uuid);
                 continue;
             }
 
@@ -165,7 +159,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = new DcatapdeMapper(this.getSettings(), records[i], harvestTime, this.getSummary());
+            let mapper = new DcatapdeMapper(this.settings, records[i], harvestTime, this.summary);
             let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
@@ -176,15 +170,15 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.getSummary().errors.push({ type: 'app', error: e.toString() });
+                this.summary.errors.push({ type: 'app', error: e.toString() });
                 mapper.skipped = true;
             }
 
-            if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
+            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: uuid,
-                    source: this.getSettings().sourceURL,
-                    catalog_ids: this.getSettings().catalogIds,
+                    source: this.settings.sourceURL,
+                    catalog_ids: this.settings.catalogIds,
                     dataset: doc,
                     dataset_dcatapde: dcatapdeDoc,
                     original_document: mapper.getHarvestedData()
@@ -199,9 +193,9 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                         })
                 );
             } else {
-                this.getSummary().skippedDocs.push(uuid);
+                this.summary.skippedDocs.push(uuid);
             }
-            this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+            this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.all(promises)
             .catch(err => log.error('Error indexing DCAT record', err));

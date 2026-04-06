@@ -73,7 +73,7 @@ export class ImportSocketService {
                 let configData = ConfigService.getHarvesters().filter(config => config.id === id)[0];
                 //configData.deduplicationAlias = configData.index + 'dedup';
 
-                let configHarvester = MiscUtils.merge(configData, configGeneral, { isIncremental });
+                let configHarvester = MiscUtils.merge(configData, configGeneral);
 
                 let profile = ProfileFactoryLoader.get();
                 profile.getImporter(configHarvester).then(importer => {
@@ -81,7 +81,7 @@ export class ImportSocketService {
                     this.log.info(`>> Running importer: [${configHarvester.type}] ${configHarvester.description}`);
                     const jobId = crypto.randomUUID();
                     harvestLogContext.run({ harvesterId: id, jobId }, () => {
-                        importer.run.subscribe({
+                        importer.run(isIncremental).subscribe({
                             next: response => {
                                 response.id = id;
                                 response.jobId = jobId;
@@ -99,18 +99,18 @@ export class ImportSocketService {
                                     let summaryLastRun: ImportLogMessage = this.summaryService.get(id);
 
                                     // TODO this must be done for each catalog - by the importer?
-                                    importer.getSummary().print(this.log);
+                                    importer.summary.print(this.log);
                                     this.summaryService.update(response);
                                     let statisticUtils = new StatisticUtils(configGeneral);
                                     for (const catalogId of configHarvester.catalogIds) {
                                         statisticUtils.saveSummary(response, catalogId);
                                     }
-                                    new JobsUtils(configGeneral).saveJob(response, null, importer.getStageSummaries());
+                                    new JobsUtils(configGeneral).saveJob(response, null, importer.stageSummaries);
 
                                     // when less results send mail
                                     if (!isIncremental && configGeneral.mail.enabled && configGeneral.harvesting.mail.enabled) {
                                         let importedLastRun = (summaryLastRun) ? summaryLastRun.summary.numDocs - summaryLastRun.summary.skippedDocs.length : 0;
-                                        let imported = importer.getSummary().numDocs - importer.getSummary().skippedDocs.length;
+                                        let imported = importer.summary.numDocs - importer.summary.skippedDocs.length;
                                         let diff = configGeneral.harvesting.mail.minDifference ?? 10;
                                         if (importedLastRun * (100 - diff) / 100 >= imported) {
                                             let subject: string;
@@ -119,7 +119,7 @@ export class ImportSocketService {
                                             else
                                                 subject = `Importer [${configHarvester.type}] "${configData.description}" mit weniger Ergebnissen!`;
                                             let text = `Current Run:\n`
-                                                + importer.getSummary().toString();
+                                                + importer.summary.toString();
                                             if (summaryLastRun) {
                                                 text += `\n\n`
                                                     + `Last Run (`+summaryLastRun.lastExecution+`):\n`

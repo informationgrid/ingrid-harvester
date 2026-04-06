@@ -32,6 +32,7 @@ import type { DcatapdeMapper } from '../../importer/dcatapde/dcatapde.mapper.js'
 import type { DcatapdeSettings } from "../../importer/dcatapde/dcatapde.settings.js";
 import type { GenesisMapper } from "../../importer/genesis/genesis.mapper.js";
 import type { GenesisSettings } from "../../importer/genesis/genesis.settings.js";
+import type { ImporterType } from '../../importer/importer.settings.js';
 import type { Importer } from '../../importer/importer.js';
 import type { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
 import type { WfsSettings } from '../../importer/wfs/wfs.settings.js';
@@ -73,6 +74,10 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
             await elastic.prepareIndexWithName(INGRID_META_INDEX, mappings, settings as any);
         }
         return { database, elastic };
+    }
+
+    protected getSupportedTypeNames(): ImporterType[] {
+        return ["CSW", "CKAN", "DCATAPDE", "WFS", "GENESIS"];
     }
 
     getElasticQueries(): AbstractElasticQueries {
@@ -119,7 +124,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
             case 'CkanMapper': return new ingridCkanMapper(mapper as CkanMapper);
             case 'DcatapdeMapper': return new ingridDcatapdeMapper(mapper as DcatapdeMapper);
             case 'WfsMapper': {
-                let wfsProfile = (mapper as WfsMapper).getSettings().wfsProfile;
+                let wfsProfile = (mapper as WfsMapper).settings.wfsProfile;
                 switch (wfsProfile) {
                     case WfsProfile.pegelonline: return new PegelonlineWfsMapper(mapper as WfsMapper);
                     case WfsProfile.zdm: return new ZdmWfsMapper(mapper as WfsMapper);

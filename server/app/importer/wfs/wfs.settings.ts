@@ -21,15 +21,14 @@
  * ==================================================
  */
 
+import type { ImporterCapabilities, ImporterSettings } from '../importer.settings.js';
+import { defaultImporterSettings } from '../importer.settings.js';
 import type { Contact, Organization, Person } from '../../model/agent.js';
-import type { ImporterSettings } from '../../importer.settings.js';
-import { DefaultImporterSettings } from '../../importer.settings.js';
 import type { PluPlanState } from '../../model/dcatApPlu.model.js';
 
 export type WfsSettings = {
     version: '2.0.0' | '1.1.0',
     memberElements: string[],
-    catalogId: string,
     pluPlanState?: PluPlanState,
     contactCswUrl?: string,
     contactMetadata?: Contact,
@@ -48,20 +47,30 @@ export type WfsSettings = {
     featureTitleAttribute?: string,
 } & ImporterSettings;
 
-export const defaultWfsSettings: Partial<WfsSettings> = {
-    ...DefaultImporterSettings,
-    eitherKeywords: [],
-    httpMethod: 'GET',
-    resultType: 'results',
-    memberElements: ["gml:featureMember/*", "wfs:member/*", "gml:featureMembers/*"],
-};
-
 export enum WfsProfile {
     // TODO diplanung profiles
     default = "default",
     pegelonline = "pegelonline",
     zdm = "zdm"
 }
+
+export const wfsDefaults: WfsSettings = {
+    ...defaultImporterSettings,
+    version: '2.0.0',
+    memberElements: ["gml:featureMember/*", "wfs:member/*", "gml:featureMembers/*"],
+    count: 0,
+    featureLimit: 0,
+    harvestTypes: false,
+    eitherKeywords: [],
+    httpMethod: 'GET',
+    resultType: 'results',
+    wfsProfile: WfsProfile.default,
+};
+
+export const wfsCapabilities: ImporterCapabilities = {
+    isIncrementalSupported: false,
+    supportedCatalogTypes: ['elasticsearch']
+};
 
 export const memberElements = {
     [WfsProfile.default]: ["gml:featureMember/*", "wfs:member/*", "gml:featureMembers/*"],

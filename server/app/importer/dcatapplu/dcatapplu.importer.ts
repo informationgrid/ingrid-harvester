@@ -35,8 +35,7 @@ import { RequestDelegate } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { Importer } from '../importer.js';
 import { DcatappluMapper } from './dcatapplu.mapper.js';
-import type { DcatappluSettings } from './dcatapplu.settings.js';
-import { defaultDCATAPPLUSettings } from './dcatapplu.settings.js';
+import { dcatappluDefaults, type DcatappluSettings } from './dcatapplu.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
@@ -44,24 +43,17 @@ const logRequest = log4js.getLogger('requests');
 export class DcatappluImporter extends Importer<DcatappluSettings> {
 
     protected domParser: DOMParser;
-    protected requestDelegate: RequestDelegate;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
 
-    constructor(settings: DcatappluSettings, requestDelegate?: RequestDelegate) {
-        // merge default settings with configured ones
-        settings = MiscUtils.merge(defaultDCATAPPLUSettings, settings);
+    constructor(settings: DcatappluSettings) {
         super(settings);
-
         this.domParser = MiscUtils.getDomParser();
+    }
 
-        if (requestDelegate) {
-            this.requestDelegate = requestDelegate;
-        } else {
-            let requestConfig = DcatappluImporter.createRequestConfig(settings);
-            this.requestDelegate = new RequestDelegate(requestConfig, DcatappluImporter.createPaging(settings));
-        }
+    protected getDefaultSettings(): DcatappluSettings {
+        return dcatappluDefaults;
     }
 
     // only here for documentation - use the "default" exec function
@@ -72,9 +64,12 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
     protected async harvest(): Promise<number> {
         // let retries = 0;
 
+        const requestConfig = DcatappluImporter.createRequestConfig(this.settings);
+        const requestDelegate = new RequestDelegate(requestConfig, DcatappluImporter.createPaging(this.settings));
+
         // while (true) {
             log.debug('Requesting next records');
-            let response = await this.requestDelegate.doRequest();
+            let response = await requestDelegate.doRequest();
             let harvestTime = new Date(Date.now());
 
             // let responseDom = this.domParser.parseFromString(response);
@@ -176,14 +171,14 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
             });
 
             for (let i = 0; i < records.length; i++) {
-                this.getSummary().numDocs++;
+                this.summary.numDocs++;
 
                 let uuid = DcatappluMapper.select('./dct:identifier', records[i], true).textContent;
                 if (!uuid) {
                     uuid = DcatappluMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
                 }
                 if (!this.filterUtils.isIdAllowed(uuid)) {
-                    this.getSummary().skippedDocs.push(uuid);
+                    this.summary.skippedDocs.push(uuid);
                     continue;
                 }
 
@@ -208,7 +203,7 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
                 //         title: 'Globaler Katalog'
                 //     });
                 // }
-                let mapper = new DcatappluMapper(this.getSettings(), records[i], catalog, rootNode, harvestTime, this.getSummary())
+                let mapper = new DcatappluMapper(this.settings, records[i], catalog, rootNode, harvestTime, this.summary)
                 let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
                 let doc: IndexDocument;
@@ -217,24 +212,24 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
                 }
                 catch (e) {
                     log.error('Error creating index document', e);
-                    this.getSummary().errors.push({ type: 'app', error: e.toString() });
+                    this.summary.errors.push({ type: 'app', error: e.toString() });
                     mapper.skipped = true;
                 }
 
-                if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
+                if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                     let entity: RecordEntity = {
                         identifier: uuid,
-                        source: this.getSettings().sourceURL,
-                        catalog_ids: this.getSettings().catalogIds,
+                        source: this.settings.sourceURL,
+                        catalog_ids: this.settings.catalogIds,
                         dataset: doc,
                         original_document: mapper.getHarvestedData()
                     };
                     promises.push(this.database.addEntityToBulk(entity));
                 }
                 else {
-                    this.getSummary().skippedDocs.push(uuid);
+                    this.summary.skippedDocs.push(uuid);
                 }
-                this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+                this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
             }
         }
         await Promise.all(promises).catch(err => log.error('Error indexing DCAT record', err));

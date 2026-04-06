@@ -24,7 +24,7 @@
 import log4js from 'log4js';
 import type { Observer } from "rxjs";
 import { CswCatalog } from "../../../catalog/csw/csw.catalog.js";
-import type { ImporterSettings } from "../../../importer.settings.js";
+import type { ImporterSettings } from "../../../importer/importer.settings.js";
 import type { ImportLogMessage } from "../../../model/import.result.js";
 
 const log = log4js.getLogger('IngridCswCatalog');

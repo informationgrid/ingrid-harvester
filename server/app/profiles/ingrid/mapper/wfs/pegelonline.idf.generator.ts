@@ -49,7 +49,7 @@ export class PegelonlineIdfGenerator extends IdfGenerator {
     }
 
     createFeatureIdf(): string {
-        var plugDescrDataSourceName = this.baseMapper.getSettings().dataSourceName;
+        var plugDescrDataSourceName = this.baseMapper.settings.dataSourceName;
         var plugDescrOrganisation = this.mapper.getOrganisation();
 
         //---------- <idf:body> ----------

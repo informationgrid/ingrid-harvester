@@ -21,7 +21,8 @@
  * ==================================================
  */
 
-import type {ImporterSettings} from '../../importer.settings.js';
+import type { ImporterCapabilities, ImporterSettings } from '../importer.settings.js';
+import { defaultImporterSettings } from '../importer.settings.js';
 
 export type SparqlSettings = {
     query: string,
@@ -31,3 +32,16 @@ export type SparqlSettings = {
     eitherKeywords?: string[],
     recordFilter?: string
 } & ImporterSettings;
+
+export const sparqlDefaults: SparqlSettings = {
+    ...defaultImporterSettings,
+    sourceURL: '',
+    query: '',
+    filterTags: [],
+    filterThemes: []
+};
+
+export const sparqlCapabilities: ImporterCapabilities = {
+    isIncrementalSupported: false,
+    supportedCatalogTypes: ['elasticsearch']
+};

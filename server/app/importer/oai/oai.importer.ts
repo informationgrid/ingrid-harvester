@@ -35,8 +35,7 @@ import * as MiscUtils from '../../utils/misc.utils.js';
 import { Importer } from '../importer.js';
 import type { OaiXPaths } from './oai.paths.js';
 import { oaiXPaths } from './oai.paths.js';
-import type { OaiSettings } from './oai.settings.js';
-import { defaultOAISettings } from './oai.settings.js';
+import { oaiDefaults, type OaiSettings } from './oai.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
@@ -53,21 +52,16 @@ export class OaiImporter extends Importer<OaiSettings> {
 
     private OaiMapper;
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
-        // merge default settings with configured ones
-        settings = MiscUtils.merge(defaultOAISettings, settings);
+    constructor(settings: OaiSettings) {
         super(settings);
-
         this.domParser = MiscUtils.getDomParser();
+        const requestConfig = OaiImporter.createRequestConfig(this.settings);
+        this.requestDelegate = new RequestDelegate(requestConfig);
+        this.xpaths = oaiXPaths[this.settings.metadataPrefix?.toLowerCase()];
+    }
 
-        if (requestDelegate) {
-            this.requestDelegate = requestDelegate;
-        }
-        else {
-            let requestConfig = OaiImporter.createRequestConfig(settings);
-            this.requestDelegate = new RequestDelegate(requestConfig);
-        }
-        this.xpaths = oaiXPaths[this.getSettings().metadataPrefix?.toLowerCase()];
+    protected getDefaultSettings(): OaiSettings {
+        return oaiDefaults;
     }
 
     // only here for documentation - use the "default" exec function
@@ -89,7 +83,7 @@ export class OaiImporter extends Importer<OaiSettings> {
                 }
 
                 let numReturned = resultsNode.getElementsByTagName('record').length;
-                log.debug(`Received ${numReturned} records from ${this.getSettings().sourceURL}`);
+                log.debug(`Received ${numReturned} records from ${this.settings.sourceURL}`);
                 await this.extractRecords(responseDom, harvestTime);
 
                 let resumptionTokenNode = resultsNode.getElementsByTagName('resumptionToken')[0];
@@ -102,7 +96,7 @@ export class OaiImporter extends Importer<OaiSettings> {
                 if (!resumptionToken) {
                     break;
                 }
-                let requestConfig = OaiImporter.createRequestConfig(this.getSettings(), resumptionToken);
+                let requestConfig = OaiImporter.createRequestConfig(this.settings, resumptionToken);
                 this.requestDelegate = new RequestDelegate(requestConfig);
             }
             catch (e) {
@@ -111,7 +105,7 @@ export class OaiImporter extends Importer<OaiSettings> {
                 }
                 const message = `Error while fetching OAI Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(e.message)}.`;
                 log.error(message);
-                this.getSummary().errors.push({ type: 'app', error: message });
+                this.summary.errors.push({ type: 'app', error: message });
             }
         }
         this.database.sendBulkData();
@@ -124,13 +118,13 @@ export class OaiImporter extends Importer<OaiSettings> {
         let records: HTMLCollectionOf<Element> = xml.getElementsByTagName('record');
 
         for (let i = 0; i < records.length; i++) {
-            this.getSummary().numDocs++;
+            this.summary.numDocs++;
             let header = records[i].getElementsByTagName('header').item(0);
             const uuid = MiscUtils.substringAfterLast((xpath.useNamespaces(this.xpaths.prefixMap)(this.xpaths.idElem, header, true) as Node)?.textContent, ':', true);
 
             let isDeleted: boolean = header.attributes.getNamedItem('status')?.textContent == 'deleted';
             if (!this.filterUtils.isIdAllowed(uuid) || isDeleted) {
-                this.getSummary().skippedDocs.push(uuid);
+                this.summary.skippedDocs.push(uuid);
                 continue;
             }
             let record = records[i].getElementsByTagNameNS(this.xpaths.nsPrefix, this.xpaths.mdRoot).item(0);
@@ -142,7 +136,7 @@ export class OaiImporter extends Importer<OaiSettings> {
                 logRequest.debug("Record content: ", record.toString());
             }
 
-            let mapper = await this.getMapper(this.getSettings(), header, record, harvestTime, this.getSummary());
+            let mapper = await this.getMapper(this.settings, header, record, harvestTime, this.summary);
             let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
@@ -151,31 +145,31 @@ export class OaiImporter extends Importer<OaiSettings> {
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.getSummary().errors.push({ type: 'app', error: e.toString() });
+                this.summary.errors.push({ type: 'app', error: e.toString() });
                 mapper.skipped = true;
             }
 
-            if (!this.getSettings().dryRun && !mapper.shouldBeSkipped()) {
+            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
                     identifier: uuid,
-                    source: this.getSettings().sourceURL,
-                    catalog_ids: this.getSettings().catalogIds,
+                    source: this.settings.sourceURL,
+                    catalog_ids: this.settings.catalogIds,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };
                 promises.push(this.database.addEntityToBulk(entity));
             }
             else {
-                this.getSummary().skippedDocs.push(uuid);
+                this.summary.skippedDocs.push(uuid);
             }
-            this.observer.next(this.getSummary().msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+            this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.allSettled(promises).catch(err => log.error('Error indexing OAI record', err));
     }
 
     async getMapper(settings, header, record, harvestTime, summary) {
         if (!this.OaiMapper) {
-            this.OaiMapper = (await import(`./${this.getSettings().metadataPrefix}/oai.mapper.js`)).OaiMapper;
+            this.OaiMapper = (await import(`./${this.settings.metadataPrefix}/oai.mapper.js`)).OaiMapper;
         }
         return new this.OaiMapper(settings, header, record, harvestTime, summary);
     }

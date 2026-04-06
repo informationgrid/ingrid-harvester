@@ -40,7 +40,7 @@ export class JsonMapper extends Mapper<JsonSettings> implements ToElasticMapper<
     constructor(settings: JsonSettings, record: object, harvestTime: Date, summary: Summary) {
         super(settings, summary);
         this.record = record;
-        this.id = record[this.getSettings().idProperty];
+        this.id = record[this.settings.idProperty];
         this.harvestTime = harvestTime;
 
         super.init();
@@ -57,8 +57,8 @@ export class JsonMapper extends Mapper<JsonSettings> implements ToElasticMapper<
 
     getMetadataSource(): MetadataSource {
         return {
-            source_base: this.getSettings().sourceURL,
-            raw_data_source: this.getSettings().sourceURL,
+            source_base: this.settings.sourceURL,
+            raw_data_source: this.settings.sourceURL,
             source_type: 'json'
         };
     }

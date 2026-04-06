@@ -25,7 +25,7 @@ import log4js from 'log4js';
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { BodyParams, Controller, Get, PathParams, Post, QueryParams, UseAuth} from '@tsed/common';
 import { ConfigService } from '../services/config/ConfigService.js';
-import type { CronData } from '../importer.settings.js';
+import type { CronData } from '../importer/importer.settings.js';
 import type { ImportLogMessage } from '../model/import.result.js';
 import { ImportSocketService } from '../sockets/import.socket.service.js';
 import { IndexCheckService } from '../services/statistic/IndexCheckService.js';
