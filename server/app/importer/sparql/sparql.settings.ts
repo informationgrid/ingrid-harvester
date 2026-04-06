@@ -22,7 +22,7 @@
  */
 
 import type { ImporterCapabilities, ImporterSettings } from '../../importer.settings.js';
-import { DefaultImporterSettings } from '../../importer.settings.js';
+import { defaultImporterSettings } from '../../importer.settings.js';
 
 export type SparqlSettings = {
     query: string,
@@ -34,7 +34,7 @@ export type SparqlSettings = {
 } & ImporterSettings;
 
 export const sparqlDefaults: SparqlSettings = {
-    ...DefaultImporterSettings,
+    ...defaultImporterSettings,
     sourceURL: '',
     query: '',
     filterTags: [],

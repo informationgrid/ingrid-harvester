@@ -29,12 +29,10 @@ import type { IndexDocument } from '../../model/index.document.js';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
-import * as MiscUtils from '../../utils/misc.utils.js';
 import { Importer } from '../importer.js';
 import type { CkanMapperData } from './ckan.mapper.js';
 import { CkanMapper } from './ckan.mapper.js';
-import type { CkanSettings } from './ckan.settings.js';
-import { defaultCKANSettings } from './ckan.settings.js';
+import { ckanDefaults, type CkanSettings } from './ckan.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -63,7 +61,7 @@ export class CkanImporter extends Importer<CkanSettings> {
     }
 
     protected getDefaultSettings(): CkanSettings {
-        return defaultCKANSettings;
+        return ckanDefaults;
     }
 
     /**

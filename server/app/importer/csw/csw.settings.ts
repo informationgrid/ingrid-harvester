@@ -22,8 +22,8 @@
  */
 
 import type { ImporterCapabilities, ImporterSettings } from '../../importer.settings.js';
+import { defaultImporterSettings } from '../../importer.settings.js';
 import type { PluPlanState } from '../../model/dcatApPlu.model.js';
-import { DefaultImporterSettings } from '../../importer.settings.js';
 
 export type CswSettings = {
     resultType?: 'hits' | 'results',
@@ -37,8 +37,8 @@ export type CswSettings = {
     simplifyTolerance: number
 } & ImporterSettings;
 
-export const defaultCSWSettings: CswSettings = {
-    ...DefaultImporterSettings,
+export const cswDefaults: CswSettings = {
+    ...defaultImporterSettings,
     maxServices: 30,
     resolveOgcDistributions: false,
     harvestingMode: 'standard',

@@ -35,8 +35,7 @@ import * as MiscUtils from '../../utils/misc.utils.js';
 import { dereferenceRdfElements } from "../../utils/rdf.utils.js";
 import { Importer } from '../importer.js';
 import { DcatapdeMapper } from './dcatapde.mapper.js';
-import type { DcatapdeSettings } from './dcatapde.settings.js';
-import { defaultDCATAPDESettings } from './dcatapde.settings.js';
+import { dcatapdeDefaults, type DcatapdeSettings } from './dcatapde.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
@@ -44,27 +43,17 @@ const logRequest = log4js.getLogger('requests');
 export class DcatapdeImporter extends Importer<DcatapdeSettings> {
 
     protected domParser: DOMParser;
-    protected requestConfig : RequestOptions;
-    protected requestDelegate: RequestDelegate;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
 
-    constructor(settings: DcatapdeSettings, requestDelegate?: RequestDelegate) {
+    constructor(settings: DcatapdeSettings) {
         super(settings);
-
         this.domParser = MiscUtils.getDomParser();
-
-        if (requestDelegate) {
-            this.requestDelegate = requestDelegate;
-        } else {
-            this.requestConfig = DcatapdeImporter.createRequestConfig(this.settings);
-            this.requestDelegate = new RequestDelegate(this.requestConfig);
-        }
     }
 
     protected getDefaultSettings(): DcatapdeSettings {
-        return defaultDCATAPDESettings;
+        return dcatapdeDefaults;
     }
 
     // only here for documentation - use the "default" exec function
@@ -75,9 +64,12 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
     protected async harvest(): Promise<number> {
         let retries = 0;
 
+        const requestConfig = DcatapdeImporter.createRequestConfig(this.settings);
+        let requestDelegate = new RequestDelegate(requestConfig);
+
         while (true) {
             log.debug('Requesting next records');
-            let response = await this.requestDelegate.doRequest();
+            let response = await requestDelegate.doRequest();
             let harvestTime = new Date(Date.now());
 
             let responseDom = this.domParser.parseFromString(response);
@@ -97,8 +89,8 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                 isLastPage = thisPageUrl === lastPageUrl;
                 if(!isLastPage){
                     let nextPageUrl = DcatapdeMapper.select('./hydra:nextPage', pagedCollection, true).textContent;
-                    this.requestConfig.uri = nextPageUrl;
-                    this.requestDelegate = new RequestDelegate(this.requestConfig);
+                    requestConfig.uri = nextPageUrl;
+                    requestDelegate = new RequestDelegate(requestConfig);
                 }
 
                 log.debug(`Received ${numReturned} records from ${this.settings.sourceURL} - Page: ${thisPageUrl}`);

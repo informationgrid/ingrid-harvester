@@ -41,8 +41,7 @@ import { Importer } from '../importer.js';
 import type { ObjectListRequestParams, ObjectListResponse, ObjectResponse } from './kld.api.js';
 import { PAGE_SIZE } from './kld.api.js';
 import { KldMapper } from './kld.mapper.js';
-import type { KldSettings } from './kld.settings.js';
-import { defaultKldSettings } from './kld.settings.js';
+import { kldDefaults, type KldSettings } from './kld.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
@@ -70,7 +69,7 @@ export class KldImporter extends Importer<KldSettings> {
     }
 
     protected getDefaultSettings(): KldSettings {
-        return defaultKldSettings;
+        return kldDefaults;
     }
 
     // only here for documentation - use the "default" exec function

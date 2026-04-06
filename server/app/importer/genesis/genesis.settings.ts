@@ -22,7 +22,7 @@
  */
 
 import type { ImporterCapabilities, ImporterSettings } from '../../importer.settings.js';
-import { DefaultImporterSettings } from '../../importer.settings.js';
+import { defaultImporterSettings } from '../../importer.settings.js';
 
 /**
  * GENESIS-specific configuration, isolated under `typeConfig` to keep
@@ -75,8 +75,8 @@ export type GenesisSettings = {
     typeConfig: GenesisTypeConfig;
 } & ImporterSettings;
 
-export const defaultGenesisSettings: GenesisSettings = {
-    ...DefaultImporterSettings,
+export const genesisDefaults: GenesisSettings = {
+    ...defaultImporterSettings,
     typeConfig: {
         requestDelayMs: 500,
         tableSelections: [],

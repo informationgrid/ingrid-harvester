@@ -26,16 +26,14 @@ import log4js from 'log4js';
 import plain_fetch from 'node-fetch';
 import type { Observer } from 'rxjs';
 import SimpleClient from 'sparql-http-client/SimpleClient.js';
-import { DefaultImporterSettings } from '../../importer.settings.js';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { ConfigService } from '../../services/config/ConfigService.js';
-import * as MiscUtils from '../../utils/misc.utils.js';
 import { Importer } from '../importer.js';
 import { SparqlMapper } from './sparql.mapper.js';
-import type { SparqlSettings } from './sparql.settings.js';
+import { sparqlDefaults, type SparqlSettings } from './sparql.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
@@ -47,20 +45,12 @@ export class SparqlImporter extends Importer<SparqlSettings> {
 
     private generalSettings = ConfigService.getGeneralSettings();
 
-    static defaultSettings: SparqlSettings = {
-        ...DefaultImporterSettings,
-        sourceURL: '',
-        query: '',
-        filterTags: [],
-        filterThemes: []
-    };
-
     constructor(settings: SparqlSettings) {
         super(settings);
     }
 
     protected getDefaultSettings(): SparqlSettings {
-        return SparqlImporter.defaultSettings;
+        return sparqlDefaults;
     }
 
     // only here for documentation - use the "default" exec function

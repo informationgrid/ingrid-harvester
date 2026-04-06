@@ -29,7 +29,6 @@ import pLimit from 'p-limit';
 import type { Observer } from 'rxjs';
 import * as xpath from 'xpath';
 import { namespaces } from '../../importer/namespaces.js';
-import type { Catalog } from '../../model/dcatApPlu.model.js';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
@@ -42,8 +41,7 @@ import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
 import { firstElementChild, getExtendedNsMap, getNsMap } from '../../utils/xpath.utils.js';
 import { Importer } from '../importer.js';
 import { WfsMapper } from './wfs.mapper.js';
-import type { WfsSettings } from './wfs.settings.js';
-import { defaultWfsSettings } from './wfs.settings.js';
+import { wfsDefaults, type WfsSettings } from './wfs.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
@@ -67,7 +65,7 @@ export class WfsImporter extends Importer<WfsSettings> {
     }
 
     protected getDefaultSettings(): WfsSettings {
-        return defaultWfsSettings;
+        return wfsDefaults;
     }
 
     // only here for documentation - use the "default" exec function

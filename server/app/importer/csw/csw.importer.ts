@@ -41,8 +41,7 @@ import * as ServiceUtils from '../../utils/service.utils.js';
 import * as XpathUtils from '../../utils/xpath.utils.js';
 import { Importer } from '../importer.js';
 import { CswMapper } from './csw.mapper.js';
-import type { CswSettings } from './csw.settings.js';
-import { defaultCSWSettings } from './csw.settings.js';
+import { cswDefaults, type CswSettings } from './csw.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
@@ -68,7 +67,7 @@ export class CswImporter extends Importer<CswSettings> {
     }
 
     protected getDefaultSettings(): CswSettings {
-        return defaultCSWSettings;
+        return cswDefaults;
     }
 
     private appendFilter(newFilter: string): string {

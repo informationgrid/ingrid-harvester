@@ -22,7 +22,7 @@
  */
 
 import type { ImporterCapabilities, ImporterSettings } from '../../importer.settings.js';
-import { DefaultImporterSettings } from '../../importer.settings.js';
+import { defaultImporterSettings } from '../../importer.settings.js';
 import type { Contact, Organization, Person } from '../../model/agent.js';
 import type { PluPlanState } from '../../model/dcatApPlu.model.js';
 
@@ -55,8 +55,8 @@ export enum WfsProfile {
     zdm = "zdm"
 }
 
-export const defaultWfsSettings: WfsSettings = {
-    ...DefaultImporterSettings,
+export const wfsDefaults: WfsSettings = {
+    ...defaultImporterSettings,
     version: '2.0.0',
     memberElements: ["gml:featureMember/*", "wfs:member/*", "gml:featureMembers/*"],
     catalogId: '',
@@ -69,13 +69,13 @@ export const defaultWfsSettings: WfsSettings = {
     wfsProfile: WfsProfile.default,
 };
 
+export const wfsCapabilities: ImporterCapabilities = {
+    isIncrementalSupported: false,
+    supportedCatalogTypes: ['elasticsearch']
+};
+
 export const memberElements = {
     [WfsProfile.default]: ["gml:featureMember/*", "wfs:member/*", "gml:featureMembers/*"],
     [WfsProfile.pegelonline]: ["gml:featureMembers/gk:waterlevels"],
     [WfsProfile.zdm]: ["gml:featureMember"]
 }
-
-export const wfsCapabilities: ImporterCapabilities = {
-    isIncrementalSupported: false,
-    supportedCatalogTypes: ['elasticsearch']
-};

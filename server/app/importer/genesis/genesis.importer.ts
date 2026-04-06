@@ -28,11 +28,9 @@ import type { IndexDocument } from '../../model/index.document.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
-import * as MiscUtils from '../../utils/misc.utils.js';
 import { Importer } from '../importer.js';
 import { GenesisMapper } from "./genesis.mapper.js";
-import type { GenesisSettings } from './genesis.settings.js';
-import { defaultGenesisSettings } from './genesis.settings.js';
+import { genesisDefaults, type GenesisSettings } from './genesis.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -69,7 +67,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
     }
 
     protected getDefaultSettings(): GenesisSettings {
-        return defaultGenesisSettings;
+        return genesisDefaults;
     }
 
     protected async harvest(): Promise<number> {

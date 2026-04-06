@@ -21,15 +21,15 @@
  * ==================================================
  */
 
-import { DefaultImporterSettings, type ImporterSettings } from '../../importer.settings.js';
+import { defaultImporterSettings, type ImporterSettings } from '../../importer.settings.js';
 
 export type JsonSettings = {
     idProperty: string,
     additionalSettings: Record<string, string>
 } & ImporterSettings;
 
-export const defaultJsonSettings: JsonSettings = {
-    ...DefaultImporterSettings,
+export const jsonDefaults: JsonSettings = {
+    ...defaultImporterSettings,
     idProperty: '',
     additionalSettings: {}
 };

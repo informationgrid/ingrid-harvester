@@ -35,8 +35,7 @@ import * as MiscUtils from '../../utils/misc.utils.js';
 import { Importer } from '../importer.js';
 import type { OaiXPaths } from './oai.paths.js';
 import { oaiXPaths } from './oai.paths.js';
-import type { OaiSettings } from './oai.settings.js';
-import { defaultOAISettings } from './oai.settings.js';
+import { oaiDefaults, type OaiSettings } from './oai.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
@@ -53,23 +52,16 @@ export class OaiImporter extends Importer<OaiSettings> {
 
     private OaiMapper;
 
-    constructor(settings: OaiSettings, requestDelegate?: RequestDelegate) {
+    constructor(settings: OaiSettings) {
         super(settings);
-
         this.domParser = MiscUtils.getDomParser();
-
-        if (requestDelegate) {
-            this.requestDelegate = requestDelegate;
-        }
-        else {
-            let requestConfig = OaiImporter.createRequestConfig(this.settings);
-            this.requestDelegate = new RequestDelegate(requestConfig);
-        }
+        const requestConfig = OaiImporter.createRequestConfig(this.settings);
+        this.requestDelegate = new RequestDelegate(requestConfig);
         this.xpaths = oaiXPaths[this.settings.metadataPrefix?.toLowerCase()];
     }
 
     protected getDefaultSettings(): OaiSettings {
-        return defaultOAISettings;
+        return oaiDefaults;
     }
 
     // only here for documentation - use the "default" exec function

@@ -23,39 +23,6 @@
 
 import type { CatalogType } from '@shared/catalog.js';
 
-export interface CronData {
-    pattern: string;
-    active: boolean;
-};
-
-export type ImporterCapabilities = {
-    isIncrementalSupported: boolean;
-    supportedCatalogTypes: CatalogType[];
-};
-
-export const DefaultImporterSettings: ImporterSettings = {
-    priority: null,
-    type: '',
-    maxRecords: 100,
-    startPosition: 0,
-    // catalogId: null,
-    catalogIds: [],
-    customCode: '',
-    defaultMcloudSubgroup: [],
-    defaultDCATCategory: [],
-    dateSourceFormats: [],
-    blacklistedIds: [],
-    whitelistedIds: [],
-    rejectUnauthorizedSSL: true,
-    rules: {
-        containsDocumentsWithData: false
-    },
-    maxConcurrent: 1,
-    skipUrlCheckOnHarvest: false,
-    timeout: 60000,
-    sourceURL: ''
-};
-
 export type ImporterSettings = {
     priority?: number,
     blacklistedIds?: string[],
@@ -98,3 +65,36 @@ export type ImporterSettings = {
     timeout: number,
     sourceURL: string
 }
+
+export type ImporterCapabilities = {
+    isIncrementalSupported: boolean;
+    supportedCatalogTypes: CatalogType[];
+};
+
+export type CronData = {
+    pattern: string;
+    active: boolean;
+};
+
+export const defaultImporterSettings: ImporterSettings = {
+    priority: null,
+    type: '',
+    maxRecords: 100,
+    startPosition: 0,
+    // catalogId: null,
+    catalogIds: [],
+    customCode: '',
+    defaultMcloudSubgroup: [],
+    defaultDCATCategory: [],
+    dateSourceFormats: [],
+    blacklistedIds: [],
+    whitelistedIds: [],
+    rejectUnauthorizedSSL: true,
+    rules: {
+        containsDocumentsWithData: false
+    },
+    maxConcurrent: 1,
+    skipUrlCheckOnHarvest: false,
+    timeout: 60000,
+    sourceURL: ''
+};

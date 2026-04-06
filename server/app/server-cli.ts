@@ -44,15 +44,6 @@ log4js.configure(`./log4js${isDev ? '-dev' : ''}.json`);
 const start = new Date();
 let runAsync = false;
 
-function getDateString() {
-    let dt = new Date(Date.now());
-    let year = dt.getFullYear();
-    let month = ('0' + dt.getMonth()).slice(-2);
-    let day = ('0' + dt.getDate()).slice(-2);
-
-    return `${year}${month}${day}`;
-}
-
 function showSummaries(summaries: Summary[]) {
     const duration = (+new Date() - +start) / 1000;
     logSummary.info('#######################################');

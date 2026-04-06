@@ -20,14 +20,15 @@
  * limitations under the Licence.
  * ==================================================
  */
-import type { ImporterCapabilities, ImporterSettings } from '../../importer.settings.js';
-import { DefaultImporterSettings } from '../../importer.settings.js';
 
-export const defaultDCATAPPLUSettings: DcatappluSettings = {
-    ...DefaultImporterSettings
-};
+import type { ImporterCapabilities, ImporterSettings } from '../../importer.settings.js';
+import { defaultImporterSettings } from '../../importer.settings.js';
 
 export type DcatappluSettings = ImporterSettings;
+
+export const dcatappluDefaults: DcatappluSettings = {
+    ...defaultImporterSettings
+};
 
 export const dcatappluCapabilities: ImporterCapabilities = {
     isIncrementalSupported: false,

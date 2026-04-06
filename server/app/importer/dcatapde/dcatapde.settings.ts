@@ -22,15 +22,7 @@
  */
 
 import type { ImporterCapabilities, ImporterSettings } from '../../importer.settings.js';
-import { DefaultImporterSettings } from '../../importer.settings.js';
-
-export type DCATProviderField = 'contactPoint' | 'creator' | 'originator' | 'maintainer' | 'publisher';
-
-export const defaultDCATAPDESettings: DcatapdeSettings = {
-    ...DefaultImporterSettings,
-    filterTags: [],
-    filterThemes: []
-};
+import { defaultImporterSettings } from '../../importer.settings.js';
 
 export type DcatapdeSettings = {
     filterTags?: string[],
@@ -38,6 +30,14 @@ export type DcatapdeSettings = {
     providerPrefix?: string,
     dcatProviderField?: DCATProviderField,
 } & ImporterSettings;
+
+export type DCATProviderField = 'contactPoint' | 'creator' | 'originator' | 'maintainer' | 'publisher';
+
+export const dcatapdeDefaults: DcatapdeSettings = {
+    ...defaultImporterSettings,
+    filterTags: [],
+    filterThemes: []
+};
 
 export const dcatapdeCapabilities: ImporterCapabilities = {
     isIncrementalSupported: false,
