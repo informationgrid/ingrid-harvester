@@ -37,7 +37,6 @@ export type ImporterSettings = {
     defaultAttribution?: string,
     defaultAttributionLink?: string,
     defaultDCATCategory?: string[],
-    defaultMcloudSubgroup?: string[],
     // Ingrid-PlugDescription
     iPlugId?: string,
     partner?: string,
@@ -92,7 +91,6 @@ export const defaultImporterSettings: ImporterSettings = {
     // catalogId: null,
     catalogIds: [],
     customCode: '',
-    defaultMcloudSubgroup: [],
     defaultDCATCategory: [],
     dateSourceFormats: [],
     blacklistedIds: [],

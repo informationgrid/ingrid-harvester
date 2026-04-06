@@ -29,7 +29,6 @@ import type { PluPlanState } from '../../model/dcatApPlu.model.js';
 export type WfsSettings = {
     version: '2.0.0' | '1.1.0',
     memberElements: string[],
-    catalogId: string,
     pluPlanState?: PluPlanState,
     contactCswUrl?: string,
     contactMetadata?: Contact,
@@ -59,7 +58,6 @@ export const wfsDefaults: WfsSettings = {
     ...defaultImporterSettings,
     version: '2.0.0',
     memberElements: ["gml:featureMember/*", "wfs:member/*", "gml:featureMembers/*"],
-    catalogId: '',
     count: 0,
     featureLimit: 0,
     harvestTypes: false,

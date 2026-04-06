@@ -6,7 +6,6 @@
     "maxRecords": 200,
     "startPosition": 1,
     "customCode": null,
-    "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
     "dateSourceFormats": [],
     "blacklistedIds": [],
@@ -51,13 +50,11 @@
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
-    "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
-    "catalogId": "hh",
     "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
@@ -92,13 +89,11 @@
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
-    "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
-    "catalogId": "hh",
     "pluPlanState": "inPreparation",
     "eitherKeywords": [],
     "httpMethod": "GET",
@@ -133,13 +128,11 @@
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
-    "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
-    "catalogId": "hb",
     "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
@@ -172,13 +165,11 @@
     "maxRecords": 3000,
     "startPosition": 0,
     "customCode": null,
-    "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
-    "catalogId": "ni",
     "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
@@ -211,13 +202,11 @@
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
-    "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
-    "catalogId": "bw",
     "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
@@ -249,13 +238,11 @@
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
-    "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
-    "catalogId": "bw",
     "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
@@ -287,13 +274,11 @@
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
-    "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
-    "catalogId": "bw",
     "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
@@ -325,13 +310,11 @@
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
-    "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
-    "catalogId": "bw",
     "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
@@ -363,13 +346,11 @@
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
-    "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
-    "catalogId": "bw",
     "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
@@ -401,13 +382,11 @@
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
-    "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
-    "catalogId": "bw",
     "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
@@ -439,13 +418,11 @@
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
-    "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
-    "catalogId": "bw",
     "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
@@ -477,13 +454,11 @@
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
-    "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
-    "catalogId": "bw",
     "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
@@ -515,13 +490,11 @@
     "maxRecords": null,
     "startPosition": null,
     "customCode": "doc.spatial_text = `Berlin ${doc.spatial_text}`;",
-    "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
-    "catalogId": "be",
     "pluPlanState": null,
     "eitherKeywords": [],
     "httpMethod": "GET",
@@ -554,13 +527,11 @@
     "maxRecords": null,
     "startPosition": null,
     "customCode": null,
-    "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
-    "catalogId": "sh",
     "pluPlanState": "fixed",
     "eitherKeywords": [],
     "httpMethod": "GET",
@@ -596,7 +567,6 @@
     "priority": null,
     "index": "beteiligungsdb",
     "defaultDCATCategory": null,
-    "defaultMcloudSubgroup": null,
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "maxRecords": null,
@@ -611,7 +581,6 @@
     "maxRecords": 200,
     "startPosition": 1,
     "customCode": null,
-    "defaultMcloudSubgroup": null,
     "defaultDCATCategory": null,
     "dateSourceFormats": [],
     "blacklistedIds": [],
@@ -665,12 +634,10 @@
     "dataSourceName": null,
     "boost": null,
     "defaultDCATCategory": null,
-    "defaultMcloudSubgroup": null,
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "maxRecords": 200,
     "startPosition": 0,
-    "catalogId": "zdm",
     "customCode": null,
     "httpMethod": "GET",
     "sourceURL": "https://www.kuestendaten.de/DE/dynamisch/tideelbe_ogc/bs",
@@ -688,7 +655,6 @@
     "type": "GENESIS",
     "description": "GENESIS Online Statistics (Template)",
     "disable": true,
-    "catalogId": "genesis",
     "sourceURL": "https://genesis.sachsen-anhalt.de/genesisWSLSA/rest/2020",
     "typeConfig": {
       "username": "Gast",

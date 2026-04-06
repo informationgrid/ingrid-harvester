@@ -138,7 +138,7 @@ export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMap
                 if (k === 'aviation' || k === 'luft--und-raumfahrt') subgroups.push('aviation');
             });
         }
-        if (subgroups.length === 0) subgroups.push(...this.settings.defaultMcloudSubgroup);
+        // if (subgroups.length === 0) subgroups.push(...this.settings.defaultMcloudSubgroup);
         return subgroups;
     }
 

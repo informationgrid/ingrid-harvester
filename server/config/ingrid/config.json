@@ -4,12 +4,10 @@
     "type": "CSW",
     "maxRecords": 200,
     "startPosition": 1,
-    "catalogId": "harvester-index",
     "catalogIds": [
       1
     ],
     "customCode": null,
-    "defaultMcloudSubgroup": [],
     "defaultDCATCategory": [],
     "dateSourceFormats": [],
     "blacklistedIds": [],
@@ -58,12 +56,10 @@
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
-    "catalogId": "nokis",
     "catalogIds": [
       1
     ],
     "customCode": null,
-    "defaultMcloudSubgroup": null,
     "defaultDCATCategory": null,
     "dateSourceFormats": [],
     "blacklistedIds": [],
@@ -128,7 +124,6 @@
       "contributorId": "http://dcat-ap.de/def/contributors/genesisLsa"
     },
 
-    "catalogId": "genesis-lsa",
     "catalogIds": [],
 
     "iPlugId": "/ingrid-group:genesis-lsa",
@@ -183,7 +178,6 @@
       "contributorId": "http://dcat-ap.de/def/contributors/genesisDestatis"
     },
 
-    "catalogId": "genesis-lsa",
     "catalogIds": [],
 
     "iPlugId": "/ingrid-group:genesis-lsa",
