@@ -25,10 +25,20 @@ import type { CatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
 import { createRequire } from 'module';
 import type { Catalog, CatalogColumnType, CatalogFactory, CatalogOperation } from '../catalog/catalog.factory.js';
-import type { ImporterSettings } from '../importer.settings.js';
+import type { ImporterSettings, ImporterType, ImporterTypeInfo } from '../importer.settings.js';
+import { ckanCapabilities, ckanDefaults } from '../importer/ckan/ckan.settings.js';
+import { cswCapabilities, cswDefaults } from '../importer/csw/csw.settings.js';
+import { dcatapdeCapabilities, dcatapdeDefaults } from '../importer/dcatapde/dcatapde.settings.js';
+import { dcatappluCapabilities, dcatappluDefaults } from '../importer/dcatapplu/dcatapplu.settings.js';
+import { genesisCapabilities, genesisDefaults } from '../importer/genesis/genesis.settings.js';
 import type { ImporterFactory } from '../importer/importer.factory.js';
 import type { Importer } from '../importer/importer.js';
+import { jsonCapabilities, jsonDefaults } from '../importer/json/json.settings.js';
+import { kldCapabilities, kldDefaults } from '../importer/kld/kld.settings.js';
 import type { Mapper } from '../importer/mapper.js';
+import { oaiCapabilities, oaiDefaults } from '../importer/oai/oai.settings.js';
+import { sparqlCapabilities, sparqlDefaults } from '../importer/sparql/sparql.settings.js';
+import { wfsCapabilities, wfsDefaults } from '../importer/wfs/wfs.settings.js';
 import type { DocumentFactory } from '../model/index.document.factory.js';
 import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
@@ -40,13 +50,38 @@ import type { IndexSettings } from '../persistence/elastic.setting.js';
 import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import { PostgresQueries } from '../persistence/postgres.queries.js';
 import { ConfigService } from '../services/config/ConfigService.js';
-import * as MiscUtils from '../utils/misc.utils.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
 export abstract class ProfileFactory<T extends ImporterSettings> implements ImporterFactory<T>, 
-// MapperFactory<T>, 
+// MapperFactory<T>,
 CatalogFactory {
+
+    protected abstract getSupportedTypeNames(): ImporterType[];
+
+    public getImporterTypes(): ImporterTypeInfo[] {
+        const supportedTypes = this.getSupportedTypeNames();
+        return ProfileFactory.getAvailableImporterTypes().filter(info => supportedTypes.includes(info.type));
+    }
+
+    private static getAvailableImporterTypes(): ImporterTypeInfo[] {
+        return [
+            { type: 'CKAN', defaults: ckanDefaults, capabilities: ckanCapabilities },
+            { type: 'CSW', defaults: cswDefaults, capabilities: cswCapabilities },
+            { type: 'DCATAPDE', defaults: dcatapdeDefaults, capabilities: dcatapdeCapabilities },
+            { type: 'DCATAPPLU', defaults: dcatappluDefaults, capabilities: dcatappluCapabilities },
+            { type: 'GENESIS', defaults: genesisDefaults, capabilities: genesisCapabilities },
+            { type: 'JSON', defaults: jsonDefaults, capabilities: jsonCapabilities },
+            { type: 'KLD', defaults: kldDefaults, capabilities: kldCapabilities },
+            { type: 'OAI', defaults: oaiDefaults, capabilities: oaiCapabilities },
+            { type: 'SPARQL', defaults: sparqlDefaults, capabilities: sparqlCapabilities },
+            { type: 'WFS', defaults: wfsDefaults, capabilities: wfsCapabilities },
+            { type: 'WFS.FIS', defaults: wfsDefaults, capabilities: wfsCapabilities },
+            { type: 'WFS.MS', defaults: wfsDefaults, capabilities: wfsCapabilities },
+            { type: 'WFS.XPLAN', defaults: wfsDefaults, capabilities: wfsCapabilities },
+            { type: 'WFS.XPLAN.SYN', defaults: wfsDefaults, capabilities: wfsCapabilities },
+        ];
+    }
 
     /**
      * Set up profile specific environment.

@@ -71,6 +71,14 @@ export type ImporterCapabilities = {
     supportedCatalogTypes: CatalogType[];
 };
 
+export type ImporterType = 'CKAN' | 'CSW' | 'DCATAPDE' | 'DCATAPPLU' | 'GENESIS' | 'JSON' | 'KLD' | 'OAI' | 'SPARQL' | 'WFS' | 'WFS.FIS' | 'WFS.MS' | 'WFS.XPLAN' | 'WFS.XPLAN.SYN';
+
+export type ImporterTypeInfo = {
+    type: ImporterType;
+    defaults: ImporterSettings & Record<string, any>;
+    capabilities: ImporterCapabilities;
+};
+
 export type CronData = {
     pattern: string;
     active: boolean;

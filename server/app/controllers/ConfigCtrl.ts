@@ -26,6 +26,7 @@ import type { MappingDistribution, MappingItem } from '@shared/mapping.model.js'
 import { BodyParams, Controller, Delete, Get, Post, QueryParams, UseAuth } from '@tsed/common';
 import log4js from 'log4js';
 import { KeycloakAuth } from "../decorators/KeycloakAuthOptions.js";
+import type { ImporterTypeInfo } from '../importer.settings.js';
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
@@ -71,6 +72,12 @@ export class ConfigCtrl {
     getProfile(): string {
         let profile = ProfileFactoryLoader.get();
         return profile.getProfileName();
+    }
+
+    @Get('/importer_types')
+    getImporterTypes(): ImporterTypeInfo[] {
+        const profile = ProfileFactoryLoader.get();
+        return profile.getImporterTypes();
     }
 
     @Get('/general')
