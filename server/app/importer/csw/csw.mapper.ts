@@ -969,7 +969,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
     }
 
     getHarvestingDate(): Date {
-        return new Date(Date.now());
+        return new Date();
     }
 
     getSubSections(): any[] {

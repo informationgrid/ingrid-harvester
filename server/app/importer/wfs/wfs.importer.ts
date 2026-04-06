@@ -175,7 +175,7 @@ export class WfsImporter extends Importer<WfsSettings> {
         let requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(this.settings));
         while (true) {
             log.info(`Requesting next features for FeatureType ${featureTypeName} (startIndex=${requestDelegate.getStartRecordIndex()})`);
-            let harvestTime = new Date(Date.now());
+            let harvestTime = new Date();
             let responseDom: Document;
             try {
                 responseDom = await this.getDom(requestDelegate);
@@ -210,7 +210,7 @@ export class WfsImporter extends Importer<WfsSettings> {
         this.generalInfo['numFeatures'] = numFeatures;
         this.generalInfo['title'] = select('./wfs:Title', featureTypeNode, true)?.textContent;
         this.generalInfo['geometryType'] = this.extractGeometryType(select, featureTypeDescriptionNode);
-        let mapper = this.getMapper(new Date(Date.now()), featureTypeNode);
+        let mapper = this.getMapper(new Date(), featureTypeNode);
         let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
         let doc: IndexDocument = await documentFactory.createIndexDocument();
         if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {

@@ -254,7 +254,7 @@ export class KldImporter extends Importer<KldSettings> {
             if (logRequest.isDebugEnabled()) {
                 logRequest.debug(`${counter} Response content: `, JSON.stringify(response));
             }
-            const harvestTime = new Date(Date.now());
+            const harvestTime = new Date();
             const id = response.Id;
             if (STORE_RESPONSES) {
                 writeFileSync(join(this.responseStorageFolder, `${id}.json`), JSON.stringify(response));

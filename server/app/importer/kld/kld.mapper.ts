@@ -157,7 +157,7 @@ export class KldMapper extends Mapper<KldSettings> implements ToElasticMapper<In
 
     getHarvestingDate(): Date {
         // TODO not used?
-        return new Date(Date.now());
+        return new Date();
     }
 
     async getContactPoint(): Promise<Contact> {

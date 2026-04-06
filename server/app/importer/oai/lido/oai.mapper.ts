@@ -247,7 +247,7 @@ export class OaiMapper extends Mapper<OaiSettings> {
     }
 
     getHarvestingDate(): Date {
-        return new Date(Date.now());
+        return new Date();
     }
 
     // TODO

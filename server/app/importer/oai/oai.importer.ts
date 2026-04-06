@@ -74,7 +74,7 @@ export class OaiImporter extends Importer<OaiSettings> {
             try {
                 log.debug('Requesting next records');
                 let response = await this.requestDelegate.doRequest();
-                let harvestTime = new Date(Date.now());
+                let harvestTime = new Date();
 
                 let responseDom = this.domParser.parseFromString(response, 'application/xml');
                 let resultsNode = responseDom.getElementsByTagName('ListRecords')[0];

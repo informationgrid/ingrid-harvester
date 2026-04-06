@@ -88,7 +88,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         if (meta.hits?.total?.value > 0) {
             let entry = meta.hits?.hits[0]._source;
 
-            entry.lastIndexed = new Date(Date.now()).toISOString();
+            entry.lastIndexed = new Date().toISOString();
             entry.plugdescription.dataSourceName = settings.dataSourceName;
             entry.plugdescription.provider = settings.provider?.split(",")?.map(p => p.trim());
             entry.plugdescription.dataType = settings.datatype?.split(",")?.map(d => d.trim());
@@ -103,7 +103,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
                 "plugId": settings.iPlugId,
                 "indexId": index,
                 "iPlugName": "Harvester",
-                "lastIndexed": new Date(Date.now()).toISOString(),
+                "lastIndexed": new Date().toISOString(),
                 "linkedIndex": index,
                 "plugdescription": {
                     "dataSourceName": settings.dataSourceName,

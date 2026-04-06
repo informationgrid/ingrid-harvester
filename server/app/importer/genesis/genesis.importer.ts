@@ -75,7 +75,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
 
         this.numIndexDocs = 0;
 
-        const harvestTime = new Date(Date.now());
+        const harvestTime = new Date();
         const tableSelections = this.settings.typeConfig.tableSelections;
 
         // Stage 1: collect all tables across all selections to establish total count

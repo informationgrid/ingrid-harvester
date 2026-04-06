@@ -274,7 +274,7 @@ export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMap
     }
 
     getHarvestingDate(): Date {
-        return new Date(Date.now());
+        return new Date();
     }
 
     getSubSections(): any[] {

@@ -229,7 +229,7 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
     }
 
     getHarvestingDate(): Date {
-        return new Date(Date.now());
+        return new Date();
     }
 
     // ED: the features themselves contain no contact information

@@ -94,7 +94,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
                 if(!hadError) {
                     try {
                         let json = JSON.parse(response);
-                        let harvestTime = new Date(Date.now());
+                        let harvestTime = new Date();
                         this.extractRecords(json, harvestTime).then(() =>
                             resolve(this.numIndexDocs));
                     } catch (e) {

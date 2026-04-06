@@ -72,7 +72,7 @@ export class JsonImporter extends Importer<JsonSettings> {
 
         const requestConfig = JsonImporter.createRequestConfig(this.settings);
         const requestDelegate = new RequestDelegate(requestConfig);
-        let harvestTime = new Date(Date.now());
+        let harvestTime = new Date();
         let response = await requestDelegate.doRequest();
 
         let numReturned = response?.length;

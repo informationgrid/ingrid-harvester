@@ -355,7 +355,7 @@ export class DcatappluMapper extends Mapper<DcatappluSettings> implements ToElas
     }
 
     getHarvestingDate(): Date {
-        return new Date(Date.now());
+        return new Date();
     }
 
     getIssued(): Date {

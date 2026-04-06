@@ -579,7 +579,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
     }
 
     getHarvestingDate(): Date {
-        return new Date(Date.now());
+        return new Date();
     }
 
     getSubSections(): any[] {

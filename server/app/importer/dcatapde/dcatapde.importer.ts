@@ -70,7 +70,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
         while (true) {
             log.debug('Requesting next records');
             let response = await requestDelegate.doRequest();
-            let harvestTime = new Date(Date.now());
+            let harvestTime = new Date();
 
             let responseDom = this.domParser.parseFromString(response);
 
