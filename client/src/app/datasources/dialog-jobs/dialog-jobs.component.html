@@ -45,29 +45,21 @@
             collapsedHeight="auto"
           >
             <div class="w-full flex-row flex-wrap items-center gap font-normal">
-              @if (job.numErrors === 0) {
-                <ingrid-status-label
-                  status="success"
-                  [tooltip]="t('datasources.status.success.title')"
-                  [svgIcon]="t('datasources.status.success.icon')"
-                />
-              } @else {
-                <ingrid-status-label
-                  status="error"
-                  [tooltip]="t('datasources.status.error.title')"
-                  [svgIcon]="t('datasources.status.error.icon')"
-                />
-              }
+              <ingrid-status-label
+                [status]="job.status"
+                [tooltip]="t('datasources.status.' + job.status + '.title')"
+                [svgIcon]="t('datasources.status.' + job.status + '.icon')"
+              />
 
               <div>
-                {{ job.timestamp | date: "short" }}
+                {{ job.finishTime | date: "short" }}
               </div>
 
               <div class="flex-1"></div>
 
               <div class="flex-row flex-wrap gap">
                 <div class="entry">
-                  {{ t("common.documents") }}: {{ job.numDocs }}
+                  {{ t("common.documents") }}: {{ job.numDocs - job.numSkipped }} / {{ job.numDocs }}
                 </div>
 
                 <div class="entry">

@@ -93,6 +93,16 @@
         "icon": "error",
         "title": "Fehler",
         "tooltip": "{{num}} Fehler beim letzten Import"
+      },
+      "partial": {
+        "icon": "warning",
+        "title": "Teilweise",
+        "tooltip": "Import abgeschlossen, aber einige Datensätze wurden übersprungen"
+      },
+      "cancelled": {
+        "icon": "cancel",
+        "title": "Abgebrochen",
+        "tooltip": "Import wurde abgebrochen"
       }
     }
   },

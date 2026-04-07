@@ -24,6 +24,9 @@
     "numErrors": {
       "type": "long"
     },
+    "numSkipped": {
+      "type": "long"
+    },
     "stages": {
       "properties": {
         "name": {

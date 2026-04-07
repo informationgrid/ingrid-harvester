@@ -173,6 +173,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
 
         if (!apiResponse?.Object) {
             log.warn(`No metadata object returned for ${endpoint} ${entry.Code}`);
+            this.summary.skippedDocs.push(entry.Code);
             return;
         }
 

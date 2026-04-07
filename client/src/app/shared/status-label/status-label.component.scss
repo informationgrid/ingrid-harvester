@@ -72,3 +72,15 @@
   background-color: #fdf0ed;
   border: 1px solid #efd6da;
 }
+
+.status-label.partial {
+  color: #b36200;
+  background-color: #fff8e1;
+  border: 1px solid #ffe082;
+}
+
+.status-label.cancelled {
+  color: #757575;
+  background-color: #f5f5f5;
+  border: 1px solid #e0e0e0;
+}

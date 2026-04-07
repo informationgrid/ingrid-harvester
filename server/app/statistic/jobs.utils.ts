@@ -79,6 +79,7 @@ export class JobsUtils {
                 duration,
                 status,
                 numDocs: globalSummary?.numDocs ?? 0,
+                numSkipped: globalSummary?.skippedDocs?.length ?? 0,
                 numErrors: allStages.reduce((sum, s) => sum + (s?.numErrors ?? 0) + (s?.errors?.length ?? 0), 0),
                 stages,
             }, logMessage.jobId, 1);

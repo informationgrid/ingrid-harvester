@@ -45,6 +45,7 @@ export type JobEntry = {
     duration: number;
     status: JobStatus;
     numDocs: number;
+    numSkipped: number;
     numErrors: number;
     stages: JobStage[];
 };
