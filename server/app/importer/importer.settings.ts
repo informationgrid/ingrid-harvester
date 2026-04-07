@@ -84,17 +84,11 @@ export type CronData = {
 };
 
 export const defaultImporterSettings: ImporterSettings = {
-    priority: null,
-    type: '',
+    type: null,
     maxRecords: 100,
     startPosition: 0,
     // catalogId: null,
     catalogIds: [],
-    customCode: '',
-    defaultDCATCategory: [],
-    dateSourceFormats: [],
-    blacklistedIds: [],
-    whitelistedIds: [],
     rejectUnauthorizedSSL: true,
     rules: {
         containsDocumentsWithData: false
@@ -102,5 +96,5 @@ export const defaultImporterSettings: ImporterSettings = {
     maxConcurrent: 1,
     skipUrlCheckOnHarvest: false,
     timeout: 60000,
-    sourceURL: ''
+    sourceURL: null
 };

@@ -34,9 +34,7 @@ export type DcatapdeSettings = {
 export type DCATProviderField = 'contactPoint' | 'creator' | 'originator' | 'maintainer' | 'publisher';
 
 export const dcatapdeDefaults: DcatapdeSettings = {
-    ...defaultImporterSettings,
-    filterTags: [],
-    filterThemes: []
+    ...defaultImporterSettings
 };
 
 export const dcatapdeCapabilities: ImporterCapabilities = {

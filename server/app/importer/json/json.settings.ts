@@ -30,7 +30,7 @@ export type JsonSettings = {
 
 export const jsonDefaults: JsonSettings = {
     ...defaultImporterSettings,
-    idProperty: '',
+    idProperty: null,
     additionalSettings: {}
 };
 

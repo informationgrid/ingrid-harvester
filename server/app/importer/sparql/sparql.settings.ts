@@ -29,16 +29,12 @@ export type SparqlSettings = {
     filterTags?: string[],
     filterThemes?: string[],
     defaultProvider?: string,
-    eitherKeywords?: string[],
     recordFilter?: string
 } & ImporterSettings;
 
 export const sparqlDefaults: SparqlSettings = {
     ...defaultImporterSettings,
-    sourceURL: '',
-    query: '',
-    filterTags: [],
-    filterThemes: []
+    query: null
 };
 
 export const sparqlCapabilities: ImporterCapabilities = {
