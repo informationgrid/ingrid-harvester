@@ -106,7 +106,7 @@
       "version": "Version",
       "alias": "Alias",
       "index": "Index",
-      "mapping": "Index-Mapping Schema",
+      "mappingFile": "Index-Mapping Schema",
       "catalog": "Katalog",
       "description": "Beschreibung",
       "title": "Titel",
