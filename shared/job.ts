@@ -21,6 +21,11 @@
  * ==================================================
  */
 
+export type TypedError = {
+    type: string,
+    error: string
+};
+
 export type JobStatus = 'success' | 'error' | 'cancelled' | 'partial';
 
 export type JobStage = {
@@ -29,7 +34,7 @@ export type JobStage = {
     numDocs: number;
     numErrors: number;
     numSkipped: number;
-    errors: { type: string; error: string }[];
+    errors: TypedError[];
 };
 
 export type JobEntry = {

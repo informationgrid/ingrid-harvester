@@ -21,13 +21,9 @@
  * ==================================================
  */
 
+import type { TypedError } from '@shared/job.js';
 import type { ImporterSettings } from '../importer/importer.settings.js';
 import type { ImportLogMessage } from './import.result.js';
-
-export type TypedError = {
-    type: string,
-    error: string
-};
 
 export class Summary {
 
