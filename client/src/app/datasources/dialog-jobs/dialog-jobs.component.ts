@@ -24,6 +24,7 @@
 import { Component, Inject, signal, ViewChild } from "@angular/core";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { DatasourceApi } from "../services/datasource.api";
+import type { JobEntry } from "../../../../../server/app/statistic/jobs.utils";
 
 type JobLog = {
   isVisible: boolean;
@@ -53,11 +54,11 @@ export class DialogJobsComponent {
   }
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { harvester: string; jobs: any[] },
+    @Inject(MAT_DIALOG_DATA) public data: { harvester: string; jobs: JobEntry[] },
     private api: DatasourceApi,
   ) {}
 
-  onPanelOpen(job: any) {
+  onPanelOpen(job: JobEntry) {
     const log = this.cloneLog(this.logsByJobId()[job.jobId], {
       isVisible: true,
     });
@@ -68,7 +69,7 @@ export class DialogJobsComponent {
     this.updateLog(job.jobId, log);
   }
 
-  onPanelClose(job: any) {
+  onPanelClose(job: JobEntry) {
     const log: JobLog = this.cloneLog(this.logsByJobId()[job.jobId], {
       isVisible: false,
     });

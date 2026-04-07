@@ -27,6 +27,7 @@ import { Datasource } from "@shared/datasource";
 import { HttpClient } from "@angular/common/http";
 import { ImportLogMessage } from "../../../../../server/app/model/import.result";
 import { CronData } from "../../../../../server/app/importer/importer.settings";
+import type { JobEntry } from "../../../../../server/app/statistic/jobs.utils";
 
 @Injectable({
   providedIn: "root",
@@ -85,8 +86,8 @@ export class DatasourceApi {
     return this.http.get<any>("rest/api/harvester/history/" + id);
   }
 
-  getJobs(id: number): Observable<any> {
-    return this.http.get<any>("rest/api/harvester/jobs/" + id);
+  getJobs(id: number): Observable<{ harvester: string; jobs: JobEntry[] }> {
+    return this.http.get<{ harvester: string; jobs: JobEntry[] }>("rest/api/harvester/jobs/" + id);
   }
 
   getHarvesterLog(harvesterId: number, jobId: string): Observable<string> {

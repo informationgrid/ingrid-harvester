@@ -35,6 +35,27 @@ const log = log4js.getLogger(import.meta.filename);
 
 export type JobStatus = 'success' | 'error' | 'cancelled' | 'partial';
 
+export type JobStage = {
+    name: string;
+    startTime: Date;
+    numDocs: number;
+    numErrors: number;
+    numSkipped: number;
+    errors: { type: string; error: string }[];
+};
+
+export type JobEntry = {
+    jobId: string;
+    harvesterId: number;
+    startTime: Date;
+    finishTime: Date;
+    duration: number;
+    status: JobStatus;
+    numDocs: number;
+    numErrors: number;
+    stages: JobStage[];
+};
+
 export class JobsUtils {
 
     private elasticUtils: ElasticsearchUtils;

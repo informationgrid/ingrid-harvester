@@ -27,6 +27,7 @@ import type { IndexSettings } from '../../persistence/elastic.setting.js';
 import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import jobsMapping from '../../statistic/jobs.mapping.json' with { type: 'json' };
+import type { JobEntry } from '../../statistic/jobs.utils.js';
 import { ConfigService } from '../config/ConfigService.js';
 
 @Service()
@@ -46,12 +47,12 @@ export class JobsService {
         this.indexSettings = ProfileFactoryLoader.get().getIndexSettings();
     }
 
-    async getJobs(harvesterId: number, limit = 10): Promise<{ harvester: string, jobs: any[] }> {
+    async getJobs(harvesterId: number, limit = 10): Promise<{ harvester: string, jobs: JobEntry[] }> {
         await this.ensureIndexExists();
         const harvester = ConfigService.getHarvesters().find(h => h.id === harvesterId);
         const { history } = await this.elasticUtils.getHistory({
             query: { term: { harvesterId } },
-            sort: { timestamp: { order: 'desc' } },
+            sort: { finishTime: { order: 'desc' } },
         }, limit);
         return {
             harvester: harvester?.description ?? String(harvesterId),
