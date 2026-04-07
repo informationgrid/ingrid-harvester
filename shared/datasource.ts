@@ -32,24 +32,3 @@ import type { WfsSettings } from '../server/app/importer/wfs/wfs.settings';
 
 export type Datasource = CkanSettings | CswSettings | DcatapdeSettings | JsonSettings | KldSettings | OaiSettings | SparqlSettings | WfsSettings;
 
-export const GERMAN_STATES = {
-    DE: 'Deutschland',
-    BB: 'Brandenburg',
-    BE: 'Berlin',
-    BW: 'Baden-Württemberg',
-    BY: 'Bayern',
-    HB: 'Bremen',
-    HE: 'Hessen',
-    HH: 'Hamburg',
-    MV: 'Mecklenburg-Vorpommern',
-    NI: 'Niedersachsen',
-    NW: 'Nordrhein-Westfalen',
-    RP: 'Rheinland-Pfalz',
-    SH: 'Schleswig-Holstein',
-    SL: 'Saarland',
-    SN: 'Sachsen',
-    ST: 'Sachsen-Anhalt',
-    TH: 'Thüringen',
-} as const;
-
-export type GermanState = keyof typeof GERMAN_STATES;

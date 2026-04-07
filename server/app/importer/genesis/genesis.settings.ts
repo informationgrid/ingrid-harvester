@@ -23,7 +23,6 @@
 
 import type { ImporterCapabilities, ImporterSettings } from '../importer.settings.js';
 import { defaultImporterSettings } from '../importer.settings.js';
-import type { GermanState } from '@shared/datasource.js';
 
 /**
  * GENESIS-specific configuration, isolated under `typeConfig` to keep
@@ -70,8 +69,6 @@ export type GenesisTypeConfig = {
      * e.g. "https://www-genesis.destatis.de/genesis-old/downloads/00/tables/{code}_00.csv"
      */
     downloadUrlTemplate?: string;
-    /** German federal state this harvester covers */
-    state: GermanState;
 };
 
 export type GenesisSettings = {
@@ -82,8 +79,7 @@ export const genesisDefaults: GenesisSettings = {
     ...defaultImporterSettings,
     typeConfig: {
         requestDelayMs: 500,
-        tableSelections: [],
-        state: undefined
+        tableSelections: []
     }
 };
 

@@ -88,7 +88,7 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
     }
 
     getGeneratedId(): string {
-        return generateUuid([this.settings.typeConfig.state, this.getCode()])
+        return generateUuid([this.settings.partner, this.getCode()])
     }
 
     getTemporal(): DateRange | undefined {
