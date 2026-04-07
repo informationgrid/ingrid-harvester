@@ -27,7 +27,7 @@ import { Datasource } from "@shared/datasource";
 import { HttpClient } from "@angular/common/http";
 import { ImportLogMessage } from "../../../../../server/app/model/import.result";
 import { CronData } from "../../../../../server/app/importer/importer.settings";
-import type { JobEntry } from "../../../../../server/app/statistic/jobs.utils";
+import type { JobEntry } from "@shared/job";
 
 @Injectable({
   providedIn: "root",

@@ -27,7 +27,7 @@ import type { IndexSettings } from '../../persistence/elastic.setting.js';
 import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import jobsMapping from '../../statistic/jobs.mapping.json' with { type: 'json' };
-import type { JobEntry } from '../../statistic/jobs.utils.js';
+import type { JobEntry } from '@shared/job.js';
 import { ConfigService } from '../config/ConfigService.js';
 
 @Service()

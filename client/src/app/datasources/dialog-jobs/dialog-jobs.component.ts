@@ -24,7 +24,7 @@
 import { Component, Inject, signal, ViewChild } from "@angular/core";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { DatasourceApi } from "../services/datasource.api";
-import type { JobEntry } from "../../../../../server/app/statistic/jobs.utils";
+import type { JobEntry } from "@shared/job";
 
 type JobLog = {
   isVisible: boolean;

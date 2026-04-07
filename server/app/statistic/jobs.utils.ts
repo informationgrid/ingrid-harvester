@@ -22,6 +22,7 @@
  */
 
 import type { GeneralSettings } from '@shared/general-config.settings.js';
+import type { JobStatus } from '@shared/job.js';
 import log4js from 'log4js';
 import type { ImportLogMessage } from '../model/import.result.js';
 import type { Summary } from '../model/summary.js';
@@ -33,28 +34,6 @@ import jobsMapping from './jobs.mapping.json' with { type: 'json' };
 
 const log = log4js.getLogger(import.meta.filename);
 
-export type JobStatus = 'success' | 'error' | 'cancelled' | 'partial';
-
-export type JobStage = {
-    name: string;
-    startTime: Date;
-    numDocs: number;
-    numErrors: number;
-    numSkipped: number;
-    errors: { type: string; error: string }[];
-};
-
-export type JobEntry = {
-    jobId: string;
-    harvesterId: number;
-    startTime: Date;
-    finishTime: Date;
-    duration: number;
-    status: JobStatus;
-    numDocs: number;
-    numErrors: number;
-    stages: JobStage[];
-};
 
 export class JobsUtils {
 
@@ -81,7 +60,7 @@ export class JobsUtils {
             name: s.stage,
             startTime: s.startTime,
             numDocs: s.numDocs,
-            numErrors: s.numErrors,
+            numErrors: s.numErrors + (s.errors?.length ?? 0),
             numSkipped: s.skippedDocs?.length ?? 0,
             errors: s.errors ?? [],
         }));
@@ -100,7 +79,7 @@ export class JobsUtils {
                 duration,
                 status,
                 numDocs: globalSummary?.numDocs ?? 0,
-                numErrors: allStages.reduce((sum, s) => sum + (s?.numErrors ?? 0), 0),
+                numErrors: allStages.reduce((sum, s) => sum + (s?.numErrors ?? 0) + (s?.errors?.length ?? 0), 0),
                 stages,
             }, logMessage.jobId, 1);
             await this.elasticUtils.finishIndex();
