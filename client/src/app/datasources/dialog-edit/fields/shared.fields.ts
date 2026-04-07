@@ -107,12 +107,27 @@ export abstract class SharedFields {
             },
             expressions: {
               "props.options": (field) => {
-                return field.options.formState?.catalogs?.map(
-                  (catalog: Catalog) => ({
+                let supportedTypes =
+                  field.options.formState?.importerTypes[field.model.type]
+                    ?.capabilities?.supportedCatalogTypes;
+                if (!supportedTypes) return [];
+
+                return field.options.formState?.catalogs
+                  ?.filter((catalog: Catalog) =>
+                    supportedTypes.includes(catalog.type),
+                  )
+                  .map((catalog: Catalog) => ({
                     label: catalog.name,
                     value: catalog.id,
-                  }),
-                );
+                  }));
+              },
+            },
+            hooks: {
+              onInit: (field) => {
+                // Reset catalogIds when the type changes.
+                field.form.get("type")?.valueChanges.subscribe((value) => {
+                  field.formControl.setValue([]);
+                });
               },
             },
           },
