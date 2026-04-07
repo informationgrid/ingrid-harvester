@@ -389,7 +389,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         for (const distribution of distributions) {
             const dist = dataset.documentElement.appendChild(dataset.createElementNS(namespaces.DCAT, "distribution")).appendChild(dataset.createElementNS(namespaces.DCAT, "Distribution"));
             if(distribution.title) dist.appendChild(dataset.createElementNS(namespaces.DCT, "title")).textContent = distribution.title;
-            if(distribution.description) dist.appendChild(dataset.createElementNS(namespaces.DCT, "title")).textContent = distribution.description;
+            if(distribution.description) dist.appendChild(dataset.createElementNS(namespaces.DCT, "description")).textContent = distribution.description;
             if(distribution.access_url) {
                 const accessUrl = dist.appendChild(dataset.createElementNS(namespaces.DCT, "accessURL"));
                 accessUrl.setAttribute("rdf:ressource", distribution.access_url);
