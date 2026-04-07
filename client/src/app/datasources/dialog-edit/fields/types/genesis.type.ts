@@ -23,6 +23,7 @@
 
 import { FormlyFieldConfig } from "@ngx-formly/core";
 import { SharedFields } from "../shared.fields";
+import { GERMAN_STATES } from "@shared/datasource";
 
 export abstract class GenesisType {
   static fields(): FormlyFieldConfig[] {
@@ -69,6 +70,21 @@ export abstract class GenesisType {
               {
                 key: "typeConfig",
                 fieldGroup: [
+                  {
+                    fieldGroupClassName: "ingrid-row",
+                    fieldGroup: [
+                      {
+                        key: "state",
+                        type: "select",
+                        className: "ingrid-col-10 ingrid-col-md-3",
+                        props: {
+                          label: "Bundesland",
+                          required: true,
+                          options: Object.entries(GERMAN_STATES).map(([value, label]) => ({ label: `${label} (${value})`, value })),
+                        },
+                      },
+                    ],
+                  },
                   {
                     key: "tableSelections",
                     type: "chip",

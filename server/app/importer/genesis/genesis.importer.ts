@@ -194,7 +194,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
 
         if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
             const entity: RecordEntity = {
-                identifier: mapper.getCode(),
+                identifier: mapper.getGeneratedId(),
                 source: this.settings.sourceURL,
                 catalog_ids: this.settings.catalogIds,
                 dataset: doc,

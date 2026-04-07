@@ -36,8 +36,8 @@ export function generateWfsUuid(source_base: string, typename: string, obj_id: s
     return uuidv5(uniqueStr, UUID_NAMESPACE);
 }
 
-export function generateUuid(source_url: string, strings: string[]) {
-    let uniqueStr = [ensureNoEndSlash(source_url), ...strings].join('/');
+export function generateUuid(strings: string[]) {
+    let uniqueStr = strings.join('/');
     return uuidv5(uniqueStr, UUID_NAMESPACE);
 }
 
