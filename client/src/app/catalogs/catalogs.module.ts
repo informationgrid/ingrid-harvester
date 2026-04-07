@@ -31,7 +31,7 @@ import { MatIcon } from "@angular/material/icon";
 import { CatalogEntryComponent } from "./catalog-entry/catalog-entry.component";
 import { MatAccordion } from "@angular/material/expansion";
 import { KeyValuePipe } from "@angular/common";
-import { CatalogIconComponent } from "./catelog-icon/catalog-icon.component";
+import { CatalogIconComponent } from "./catalog-icon/catalog-icon.component";
 
 const routes: Routes = [
   {

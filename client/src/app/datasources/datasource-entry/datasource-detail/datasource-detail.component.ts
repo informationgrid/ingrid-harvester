@@ -29,7 +29,7 @@ import { DatePipe } from "@angular/common";
 import { DetailItemComponent } from "../../../shared/detail-item/detail-item.component";
 import cronstrue from "cronstrue/i18n";
 import { CatalogService } from "../../../catalogs/services/catalog.service";
-import { CatalogIconComponent } from "../../../catalogs/catelog-icon/catalog-icon.component";
+import { CatalogIconComponent } from "../../../catalogs/catalog-icon/catalog-icon.component";
 
 @Component({
   selector: "harvester-datasource-detail",
