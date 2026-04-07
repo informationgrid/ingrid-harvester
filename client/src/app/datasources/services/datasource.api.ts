@@ -34,6 +34,10 @@ import { CronData } from "../../../../../server/app/importer/importer.settings";
 export class DatasourceApi {
   constructor(private http: HttpClient) {}
 
+  getImporterTypes(): Observable<any[]> {
+    return this.http.get<any[]>("rest/api/config/importer_types");
+  }
+
   getDatasources(): Observable<Datasource[]> {
     return this.http.get<Datasource[]>("rest/api/harvester");
   }
@@ -86,7 +90,9 @@ export class DatasourceApi {
   }
 
   getHarvesterLog(harvesterId: number, jobId: string): Observable<string> {
-    console.log("harvester-id", harvesterId, "job:", jobId)
-    return this.http.get(`rest/api/log/${harvesterId}/${jobId}`, { responseType: 'text' });
+    console.log("harvester-id", harvesterId, "job:", jobId);
+    return this.http.get(`rest/api/log/${harvesterId}/${jobId}`, {
+      responseType: "text",
+    });
   }
 }

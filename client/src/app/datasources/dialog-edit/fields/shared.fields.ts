@@ -38,21 +38,48 @@ export abstract class SharedFields {
                   label: "Typ",
                   required: true,
                   contextHelpId: "harvester_field_type",
-                  options: [
-                    { label: "CKAN", value: "CKAN" },
-                    { label: "CSW", value: "CSW" },
-                    { label: "DCAT-AP.de", value: "DCATAPDE" },
-                    { label: "DCAT-AP.PLU", value: "DCATAPPLU" },
-                    { label: "GENESIS", value: "GENESIS" },
-                    { label: "JSON", value: "JSON" },
-                    { label: "KLD", value: "KLD" },
-                    { label: "OAI", value: "OAI" },
-                    { label: "SPARQL", value: "SPARQL" },
-                    { label: "WFS", value: "WFS" },
-                  ],
                 },
                 expressions: {
                   "props.disabled": "model?.id != -1",
+                  "props.options": (field) => {
+                    let supportedTypes = field.options.formState?.importerTypes;
+                    if (!supportedTypes) return [];
+
+                    // Filter out the types that are not supported by the current profile.
+                    supportedTypes = Object.keys(supportedTypes);
+                    const options = [
+                      { label: "CKAN", value: "CKAN" },
+                      { label: "CSW", value: "CSW" },
+                      { label: "DCAT-AP.de", value: "DCATAPDE" },
+                      { label: "DCAT-AP.PLU", value: "DCATAPPLU" },
+                      { label: "GENESIS", value: "GENESIS" },
+                      { label: "JSON", value: "JSON" },
+                      { label: "KLD", value: "KLD" },
+                      { label: "OAI", value: "OAI" },
+                      { label: "SPARQL", value: "SPARQL" },
+                      { label: "WFS", value: "WFS" },
+                    ];
+                    return options.filter((option) =>
+                      supportedTypes.includes(option.value),
+                    );
+                  },
+                },
+                hooks: {
+                  onInit: (field) => {
+                    // Apply default values when the type changes.
+                    field.formControl.valueChanges.subscribe((value) => {
+                      const defaults =
+                        field.options.formState?.importerTypes[value]?.defaults;
+                      if (!defaults) return;
+
+                      // Assign default values only if not present in the model.
+                      for (const key in defaults) {
+                        if (defaults[key] == null) continue;
+                        if (field.model[key] != null) continue;
+                        field.model[key] = defaults[key];
+                      }
+                    });
+                  },
                 },
               },
               {

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Component, input, output, ViewChild } from "@angular/core";
+import { Component, computed, input, output, ViewChild } from "@angular/core";
 import { Datasource } from "@shared/datasource";
 import { ImportLogMessage } from "../../../../../server/app/model/import.result";
 import { TranslocoDirective } from "@ngneat/transloco";
@@ -33,6 +33,7 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { ProgressIndicatorComponent } from "./progress-indicator/progress-indicator.component";
 import { DatasourceDetailComponent } from "./datasource-detail/datasource-detail.component";
 import { ListItemExpandableComponent } from "../../shared/list-item-expandable/list-item-expandable.component";
+import { DatasourceService } from "../services/datasource.service";
 
 @Component({
   selector: "harvester-datasource-entry",
@@ -68,7 +69,14 @@ export class DatasourceEntryComponent {
   onSchedule = output<void>();
   onOpenJobLogs = output<void>();
 
-  constructor() {}
+  isIncrementalSupported = computed(() => {
+    return (
+      this.datasourceService.importerTypes()[this.datasource().type]
+        ?.capabilities?.isIncrementalSupported ?? false
+    );
+  });
+
+  constructor(private datasourceService: DatasourceService) {}
 
   openActionMenu(evt) {
     evt.stopPropagation();

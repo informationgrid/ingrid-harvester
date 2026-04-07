@@ -39,6 +39,9 @@ export class DatasourceService {
   snackBar = inject(MatSnackBar);
   transloco = inject(TranslocoService);
 
+  private _importerTypes = signal<Record<string, any>>({});
+  importerTypes = this._importerTypes.asReadonly();
+
   private _datasources = signal<Record<number, Datasource>>(undefined);
   datasources = this._datasources.asReadonly();
 
@@ -49,10 +52,23 @@ export class DatasourceService {
     private api: DatasourceApi,
     private socketService: SocketService,
   ) {
+    this.fetchImporterTypes();
     this.fetchDatasources();
     this.fetchImportLogs();
     this.listenToImportLogChangesFromServer();
     this.listenToConnectionChangesFromServer();
+  }
+
+  private fetchImporterTypes() {
+    this.api.getImporterTypes().subscribe({
+      next: (items) => {
+        const importerTypes: Record<string, any> = {};
+        for (const item of items) importerTypes[item.type] = item;
+        this._importerTypes.set(importerTypes);
+        console.log(this.importerTypes());
+      },
+      error: (error) => console.error("Error fetching importer types", error),
+    });
   }
 
   private fetchDatasources() {
@@ -108,7 +124,7 @@ export class DatasourceService {
 
   import(id: number, isIncremental: boolean = false): Observable<void> {
     // Reset the import log.
-    this.updateImportLogs({ id, complete: false, stage: '' });
+    this.updateImportLogs({ id, complete: false, stage: "" });
 
     return this.api.import(id, isIncremental);
   }

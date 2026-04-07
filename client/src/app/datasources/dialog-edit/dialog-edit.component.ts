@@ -39,6 +39,7 @@ import { SparqlType } from "./fields/types/sparql.type";
 import { WfsType } from "./fields/types/wfs.type";
 import { GenesisType } from "./fields/types/genesis.type";
 import { CatalogService } from "../../catalogs/services/catalog.service";
+import { DatasourceService } from "../services/datasource.service";
 
 @Component({
   selector: "app-dialog-edit",
@@ -75,6 +76,7 @@ export class DialogEditComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<DialogEditComponent>,
     private configService: ConfigService,
+    private datasourceService: DatasourceService,
     private catalogService: CatalogService,
   ) {
     // Init form.
@@ -85,6 +87,7 @@ export class DialogEditComponent {
         this.formOptions = {
           formState: {
             profile,
+            importerTypes: this.datasourceService.importerTypes(),
             catalogs: this.catalogService.catalogs()
               ? Object.values(this.catalogService.catalogs())
               : [],
