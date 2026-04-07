@@ -40,7 +40,7 @@ export abstract class CkanType {
                         key: "requestType",
                         type: "select",
                         className: "ingrid-col-10 ingrid-col-md-auto",
-                        defaultValue: "ListWithResources",
+                        defaultValue: "Search",
                         props: {
                           label: "API Funktion",
                           options: [
@@ -115,48 +115,6 @@ export abstract class CkanType {
                         },
                       },
                     ],
-                  },
-                ],
-              },
-              {
-                wrappers: ["sub-section"],
-                props: {
-                  label: "Bereitgestellt durch",
-                },
-                fieldGroup: [
-                  {
-                    fieldGroupClassName: "ingrid-row",
-                    fieldGroup: [
-                      {
-                        key: "providerPrefix",
-                        type: "input",
-                        className: "ingrid-col-10 ingrid-col-md-auto",
-                        props: {
-                          label: "Präfix",
-                        },
-                      },
-                      {
-                        key: "providerField",
-                        type: "select",
-                        className: "ingrid-col-10 ingrid-col-md-auto",
-                        defaultValue: "organization",
-                        props: {
-                          label: "CKAN-Feld",
-                          options: [
-                            { label: "maintainer", value: "maintainer" },
-                            { label: "organization", value: "organization" },
-                            { label: "author", value: "author" },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                  {
-                    key: "dateSourceFormats",
-                    type: "chip",
-                    props: {
-                      label: "Datumsformate",
-                    },
                   },
                 ],
               },

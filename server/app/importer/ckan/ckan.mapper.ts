@@ -77,6 +77,11 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
     private harvestTime: any;
     private resourcesDate: Date[] = null;
 
+
+    private fetched: any = {
+        license: null
+    };
+
     constructor(settings: CkanSettings, record: object, harvestTime, summary) {
         super(settings, summary);
         this.harvestTime = harvestTime;
@@ -140,7 +145,8 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
                         format: UrlUtils.mapFormat([res.format], this.summary.warnings),
                         issued: this.handleDate(res.created),
                         modified: this.handleDate(res.last_modified),
-                        byteSize: this.handleByteSize(res.size)
+                        byteSize: this.handleByteSize(res.size),
+                        license: await this.getLicense()
                     };
                     distributions.push(dist);
                 } else {
@@ -197,7 +203,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         return this.handleDate(this.source.metadata_modified);
     }
 
-    async getPublisher(): Promise<Organization[]> {
+    getPublisher(): Organization[] {
         let publisher: Organization;
         if (this.source.organization && this.source.organization.title) {
             let homepage = this.source.organization.description;
@@ -367,7 +373,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         return JSON.stringify(this.source);
     }
 
-    getDcatapde(): string {
+    async getDcatapde(): Promise<string> {
         let dataset = this.dom.createDocument(namespaces.DCAT, "Dataset");
 
         dataset.documentElement.appendChild(dataset.createElementNS(namespaces.DCT, "title")).textContent = this.getTitle();
@@ -378,6 +384,26 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         for(const keyword of keywords) {
             dataset.documentElement.appendChild(dataset.createElementNS(namespaces.DCAT, "keyword")).textContent = keyword;
         }
+
+        const distributions = await this.getDistributions();
+        for (const distribution of distributions) {
+            const dist = dataset.documentElement.appendChild(dataset.createElementNS(namespaces.DCAT, "distribution")).appendChild(dataset.createElementNS(namespaces.DCAT, "Distribution"));
+            if(distribution.title) dist.appendChild(dataset.createElementNS(namespaces.DCT, "title")).textContent = distribution.title;
+            if(distribution.description) dist.appendChild(dataset.createElementNS(namespaces.DCT, "title")).textContent = distribution.description;
+            if(distribution.access_url) {
+                const accessUrl = dist.appendChild(dataset.createElementNS(namespaces.DCT, "accessURL"));
+                accessUrl.setAttribute("rdf:ressource", distribution.access_url);
+            }
+        }
+
+        const themes = this.getThemes().flatMap(theme => theme.split(","));
+        for(const theme of themes) {
+            let themeUri = theme
+            if(!theme.startsWith("http://publications.europa.eu/resource/authority/data-theme/")) themeUri = "http://publications.europa.eu/resource/authority/data-theme/" + theme;
+            const themeNode = dataset.documentElement.appendChild(dataset.createElementNS(namespaces.DCAT, "theme"))
+            themeNode.setAttribute("rdf:ressource", themeUri);
+        }
+
 
         return dataset.toString();
     }
@@ -420,11 +446,11 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         return dates;
     }
 
-    getCreator(): Person {
-        return {
+    getCreator(): Person[] {
+        return [{
             name: this.source.author,
             mbox: this.source.author_email
-        };
+        }];
     }
 
     getGroups(): string[] {
@@ -477,37 +503,45 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
     }
 
     getContactPoint(): any {
-        return undefined;
+        return [];
     }
 
     getOriginator(): Person[] {
-        return undefined;
+        return [];
     }
 
     async getLicense(): Promise<License> {
+        if(this.fetched.license !== null){
+            return this.fetched.license
+        }
+
         const hasNoLicense = !this.source.license_id && !this.source.license_title && !this.source.license_url;
 
         if (this.settings.defaultLicense && hasNoLicense) {
             this.summary.missingLicense++;
-            this.log.warn(`Missing license for ${this.getGeneratedId()} using default one.`);
-
+            //this.log.warn(`Missing license for ${this.getGeneratedId()} using default one.`);
+            this.fetched.license = this.settings.defaultLicense;
             return this.settings.defaultLicense;
         } else if (hasNoLicense) {
             let msg = `No license detected for dataset: ${this.getGeneratedId()} -> ${this.getTitle()}`;
             this.summary.missingLicense++;
 
-            this.log.warn(msg);
-            this.summary.warnings.push(['Missing license', msg]);
+            //this.log.warn(msg);
+            //this.summary.warnings.push(['Missing license', msg]);
+            this.fetched.license = undefined;
         } else {
             let license = await DcatLicensesUtils.get(this.source.license_url);
             if(license) return license;
             license = await DcatLicensesUtils.get(this.source.license_title);
             if(license) return license;
-            return {
+
+            this.fetched.license = {
                 id: this.source.license_id ? this.source.license_id : 'unknown',
-                title: this.source.license_title,
+                name: this.source.license_title,
                 url: this.source.license_url || this.source.license_title
             };
+
+            return this.fetched.license;
         }
     }
 

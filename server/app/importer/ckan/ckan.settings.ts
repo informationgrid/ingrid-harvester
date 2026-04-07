@@ -46,7 +46,7 @@ export const ckanDefaults: CkanSettings = {
     providerPrefix: '',
     providerField: 'organization',
     dateSourceFormats: [],
-    requestType: 'ListWithResources',
+    requestType: 'Search',
     markdownAsDescription: true,
     groupChilds: false,
     defaultLicense: null

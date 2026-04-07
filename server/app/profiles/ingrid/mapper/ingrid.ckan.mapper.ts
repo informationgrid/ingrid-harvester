@@ -79,7 +79,7 @@ export class ingridCkanMapper extends ingridMapper<CkanMapper> {
         };
         result.content = this.getContent(result);
         // add "rdf" at the end, so it does not get included in the "content" array
-        result.rdf = this.baseMapper.getDcatapde();
+        result.rdf = await this.baseMapper.getDcatapde();
 
         this.executeCustomCode(result);
 
@@ -101,15 +101,17 @@ export class ingridCkanMapper extends ingridMapper<CkanMapper> {
         });
         themes?.forEach(theme => {
             if (this.hasValue(theme)) {
-                theme = theme.substring(theme.lastIndexOf("/") + 1)
-                const themeEntry = Codelist.getInstance().getByData("6400", theme)
-                if(!result.some(r => r.id === themeEntry.id && r.source === "THEMES")) {
-                    result.push({
-                        term: themeEntry.value,
-                        id: themeEntry.id,
-                        source: "THEMES",
-                    });
-                }
+                const themes = theme.split(",").map(term => term.substring(term.lastIndexOf("/") + 1))
+                themes.forEach(theme => {
+                    const themeEntry = Codelist.getInstance().getByData("6400", theme)
+                    if (themeEntry && !result.some(r => r.id === themeEntry.id && r.source === "THEMES")) {
+                        result.push({
+                            term: themeEntry.value,
+                            id: themeEntry.id,
+                            source: "THEMES",
+                        });
+                    }
+                });
             }
         });
         return result;
@@ -117,11 +119,21 @@ export class ingridCkanMapper extends ingridMapper<CkanMapper> {
 
     getContacts() {
         return [
-            //...super.getPublisher().map(contact => {return {role: "publisher", ...contact}}),
-            //...super.getCreator().map(contact => {return {role: "creator", ...contact}}),
-            //...super.getMaintainer().map(contact => {return {role: "maintainer", ...contact}}),
-            //...super.getOriginator().map(contact => {return {role: "originator", ...contact}}),
-            ];
+            ...this.baseMapper.getPublisher().map(contact => {return {role: this.getRoleId("publisher"), ...contact}}),
+            ...this.baseMapper.getCreator().map(contact => {return {role: this.getRoleId("creator"), ...contact}}),
+            ...this.baseMapper.getMaintainer().map(contact => {return {role: this.getRoleId("maintainer"), ...contact}}),
+            ...this.baseMapper.getOriginator().map(contact => {return {role: this.getRoleId("originator"), ...contact}}),
+        ];
+    }
+
+    getRoleId(role: string){
+        switch (role) {
+            case "publisher": return 10;
+            case "creator": return 11;
+            case "maintainer": return  2;
+            case "originator": return 6;
+        }
+        return role;
     }
 
     getSpatial(): any {
