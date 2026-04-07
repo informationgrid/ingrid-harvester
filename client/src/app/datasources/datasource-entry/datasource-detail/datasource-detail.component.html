@@ -58,7 +58,7 @@
     [title]="t('common.errors')"
     [value]="errorNum()"
     [hasNavigation]="errorNum() !== '-'"
-    (onNavigate)="onOpenErrorLog.emit()"
+    (onNavigate)="onOpenJobLogs.emit()"
     data-test="num-errors"
   />
 
@@ -67,7 +67,7 @@
     [title]="t('common.warnings')"
     [value]="warningNum()"
     [hasNavigation]="warningNum() !== '-'"
-    (onNavigate)="onOpenWarningLog.emit()"
+    (onNavigate)="onOpenJobLogs.emit()"
     data-test="num-warnings"
   />
 

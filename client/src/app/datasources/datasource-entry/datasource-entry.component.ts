@@ -66,10 +66,7 @@ export class DatasourceEntryComponent {
   onDelete = output<void>();
   onDuplicate = output<void>();
   onSchedule = output<void>();
-  onHistory = output<void>();
-  onJobs = output<void>();
-  onOpenErrorLog = output<void>();
-  onOpenWarningLog = output<void>();
+  onOpenJobLogs = output<void>();
 
   constructor() {}
 

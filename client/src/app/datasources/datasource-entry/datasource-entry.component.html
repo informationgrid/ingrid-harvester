@@ -113,14 +113,9 @@
           </button>
         }
 
-        <button mat-menu-item (click)="onJobs.emit()" data-test="jobs">
+        <button mat-menu-item (click)="onOpenJobLogs.emit()" data-test="jobs">
           <mat-icon svgIcon="Timeline" />
           {{ t("common.jobs") }}
-        </button>
-
-        <button mat-menu-item (click)="onOpenErrorLog.emit()" data-test="log">
-          <mat-icon svgIcon="logging" />
-          {{ t("datasources.log") }}
         </button>
       </mat-menu>
     </div>
@@ -130,8 +125,7 @@
     <harvester-datasource-detail
       [datasource]="datasource()"
       [importLog]="importLog()"
-      (onOpenErrorLog)="onOpenErrorLog.emit()"
-      (onOpenWarningLog)="onOpenWarningLog.emit()"
+      (onOpenJobLogs)="onOpenJobLogs.emit()"
     />
   </ng-container>
 </ingrid-list-item-expandable>

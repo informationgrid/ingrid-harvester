@@ -42,8 +42,7 @@ export class DatasourceDetailComponent {
   datasource = input.required<Datasource>();
   importLog = input<ImportLogMessage>();
 
-  onOpenErrorLog = output<void>();
-  onOpenWarningLog = output<void>();
+  onOpenJobLogs = output<void>();
 
   // Execution info.
   lastExecution = computed(() => {

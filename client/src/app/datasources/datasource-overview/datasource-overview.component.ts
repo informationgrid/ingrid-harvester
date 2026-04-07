@@ -214,12 +214,12 @@ export class DatasourceOverviewComponent {
     });
   }
 
-  onShowJobs(datasource: Datasource) {
+  onOpenJobLogs(datasource: Datasource) {
     this.datasourceService.getJobs(datasource.id).subscribe({
       next: (data) => {
         this.dialog.open(DialogJobsComponent, {
           data: data,
-          width: '900px',
+          width: "900px",
         });
       },
       error: (err) => alert(err.message),
