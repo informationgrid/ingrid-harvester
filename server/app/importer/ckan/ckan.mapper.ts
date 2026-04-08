@@ -46,6 +46,7 @@ import { Mapper } from '../mapper.js';
 import { namespaces } from "../namespaces.js";
 import type { ToDcatapdeMapper } from "../to.dcatapde.mapper.js";
 import type { CkanSettings } from './ckan.settings.js';
+import * as CkanUtils from './ckan.utils.js';
 
 export interface CkanMapperData {
     harvestTime: Date;
@@ -641,21 +642,8 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
                 start: settings.startPosition,
                 rows: settings.maxRecords
             };
-            if(settings.filterGroups.length > 0 || settings.filterTags.length > 0 || settings.additionalSearchFilter)
-            {
-                let fq = '';
-                if(settings.filterGroups.length > 0) {
-                    fq += '+groups:(' + settings.filterGroups.join(' OR ') + ')';
-                }
-                if(settings.filterTags.length > 0) {
-                    fq += '+tags:(' + settings.filterTags.join(' OR ') + ')';
-                }
-                if(settings.additionalSearchFilter){
-                    fq += '+'+settings.additionalSearchFilter;
-                }
-                if(settings.whitelistedIds.length > 0){
-                    fq = '(('+fq+ ') OR id:('+settings.whitelistedIds.join(' OR ')+'))'
-                }
+            const fq = CkanUtils.createQs(settings);
+            if (fq) {
                 qs['fq'] = fq;
             }
             return {

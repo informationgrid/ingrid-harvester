@@ -33,6 +33,7 @@ import { Importer } from '../importer.js';
 import type { CkanMapperData } from './ckan.mapper.js';
 import { CkanMapper } from './ckan.mapper.js';
 import { ckanDefaults, type CkanSettings } from './ckan.settings.js';
+import * as CkanUtils from './ckan.utils.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -243,20 +244,8 @@ export class CkanImporter extends Importer<CkanSettings> {
                     rows: this.settings.maxRecords
                 }
             };
-            if (this.settings.filterGroups.length > 0 || this.settings.filterTags.length > 0 || this.settings.additionalSearchFilter) {
-                let fq = '';
-                if (this.settings.filterGroups.length > 0) {
-                    fq += '+groups:(' + this.settings.filterGroups.join(' OR ') + ')';
-                }
-                if (this.settings.filterTags.length > 0) {
-                    fq += '+tags:(' + this.settings.filterTags.join(' OR ') + ')';
-                }
-                if (this.settings.additionalSearchFilter) {
-                    fq += '+' + this.settings.additionalSearchFilter;
-                }
-                if (this.settings.whitelistedIds.length > 0) {
-                    fq = '((' + fq + ') OR id:(' + this.settings.whitelistedIds.join(' OR ') + '))';
-                }
+            const fq = CkanUtils.createQs(this.settings);
+            if (fq) {
                 partialConfig['fq'] = fq;
             }
             this.requestDelegate.updateConfig(partialConfig);
