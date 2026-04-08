@@ -128,6 +128,20 @@ You may wish to run the server and the client outside of the docker container, f
 <br />
 <br />
 
+## Setup behind a proxy
+
+If you run this component behind a proxy, make sure the websocket communication ist routed through the proxy.
+
+Sample configuration apache:
+
+```
+  # 1. Ensure headers are passed (Socket.io needs these to stay intact)
+  # ensure the module proxy_wstunnel is activated
+  RewriteEngine On
+  RewriteCond %{HTTP:Upgrade} =websocket [NC]
+  RewriteRule ^/socket.io/(.*) ws://127.0.0.1:8090/socket.io/$1 [P,L]
+```
+
 ---
 
 ***Below you find the old version of the readme, which targeted an RPM release***
