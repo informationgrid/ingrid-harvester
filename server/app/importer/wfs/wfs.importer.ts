@@ -149,12 +149,13 @@ export class WfsImporter extends Importer<WfsSettings> {
         log.info(`Found ${numFeatures} features at ${this.settings.sourceURL} for FeatureType "${featureTypeName}"`);
         let featureTypeDescriptionNode = await this.getTypeDescription(featureTypeName);
         this.generalInfo['typename'] = featureTypeName;
+        this.generalInfo['numFeatures'] = numFeatures;
         this.generalInfo['featureTypeDescription'] = featureTypeDescriptionNode;
 
         // if harvesting FeatureTypes, do it here (to include the feature names)
         if (this.settings.harvestTypes) {
             try {
-                await this.extractFeatureType(featureTypeName, featureTypeNode, featureTypeDescriptionNode, numFeatures);
+                await this.extractFeatureType(featureTypeName, featureTypeNode, featureTypeDescriptionNode);
             }
             catch (e) {
                 const message = `Error while fetching FeatureType "${featureTypeName}"\n  ${e.toString()}.`;
@@ -204,10 +205,9 @@ export class WfsImporter extends Importer<WfsSettings> {
         }
     }
 
-    async extractFeatureType(featureTypeName: string, featureTypeNode: Node, featureTypeDescriptionNode: Node, numFeatures: number) {
+    async extractFeatureType(featureTypeName: string, featureTypeNode: Node, featureTypeDescriptionNode: Node) {
         let select = <XPathNodeSelect>xpath.useNamespaces(this.nsMap);
         this.generalInfo['select'] = select;
-        this.generalInfo['numFeatures'] = numFeatures;
         this.generalInfo['title'] = select('./wfs:Title', featureTypeNode, true)?.textContent;
         this.generalInfo['geometryType'] = this.extractGeometryType(select, featureTypeDescriptionNode);
         let mapper = this.getMapper(new Date(), featureTypeNode);
