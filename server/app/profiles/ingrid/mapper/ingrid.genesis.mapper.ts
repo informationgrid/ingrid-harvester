@@ -32,6 +32,8 @@ import {ensureNoEndSlash} from "../ingrid.utils.js";
 
 export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
 
+    private _dcatapdeDoc: string | undefined;
+
     async createIndexDocument(): Promise<IngridOpendataIndexDocument> {
         let result: IngridOpendataIndexDocument = {
             ...this.getIngridMetadata(this.baseMapper.settings),
@@ -70,7 +72,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             dcat: { landingPage: null },
             legal_basis: null,
             political_geocoding_level_uri: null,
-            rdf: null,
+            rdf: this.createDcatapdeDocument(),
             sort_hash: this.getSortHash(),
             content: null,
         };
@@ -80,6 +82,13 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
     }
 
     createDcatapdeDocument(): string {
+        if (this._dcatapdeDoc === undefined) {
+            this._dcatapdeDoc = this._buildDcatapdeDocument();
+        }
+        return this._dcatapdeDoc;
+    }
+
+    private _buildDcatapdeDocument(): string {
         const dom = new DOMImplementation();
         const doc = dom.createDocument(namespaces.RDF, 'rdf:RDF', null);
         const rdfRoot = doc.documentElement;
@@ -142,15 +151,10 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         for (const dist of distributions) {
             const distEl = doc.createElement('dcat:distribution');
             const distNode = doc.createElement('dcat:Distribution');
-            if (dist.accessURL) {
+            if (dist.access_url) {
                 const accessEl = doc.createElement('dcat:accessURL');
-                accessEl.setAttribute('rdf:resource', dist.accessURL);
+                accessEl.setAttribute('rdf:resource', dist.access_url);
                 distNode.appendChild(accessEl);
-            }
-            if (dist.downloadURL) {
-                const downloadEl = doc.createElement('dcat:downloadURL');
-                downloadEl.setAttribute('rdf:resource', dist.downloadURL);
-                distNode.appendChild(downloadEl);
             }
             if (dist.format?.[0]) {
                 const formatCode = UrlUtils.mapFormat([dist.format[0]])[0];

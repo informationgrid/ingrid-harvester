@@ -155,7 +155,7 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
         const downloadURL = template.replace('{code}', code);
         return [{
             access_url: downloadURL,
-            format: ['text/csv'],
+            format: ['text/html'],
             description: this.getTitle(),
         }];
     }
