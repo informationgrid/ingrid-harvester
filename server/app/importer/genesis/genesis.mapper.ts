@@ -30,6 +30,7 @@ import type { Summary } from '../../model/summary.js';
 import { Mapper } from '../mapper.js';
 import type { GenesisSettings } from './genesis.settings.js';
 import { generateUuid } from "../../profiles/ingrid/ingrid.utils.js";
+import dayjs from '../../utils/dayjs.js';
 
 /**
  * Base mapper for GENESIS Online REST API records.
@@ -96,9 +97,21 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
         const to = this.record?.Object?.Time?.To;
         if (!from && !to) return undefined;
         return {
-            gte: from ? new Date(parseInt(from), 0, 1) : undefined,
-            lte: to   ? new Date(parseInt(to),   11, 31) : undefined,
+            gte: from ? this.parseTemporalBound(from, false) : undefined,
+            lte: to   ? this.parseTemporalBound(to,   true)  : undefined,
         };
+    }
+
+    private parseTemporalBound(value: string, isEnd: boolean): Date | undefined {
+        const year = dayjs(value, 'YYYY', true);
+        if (year.isValid()) {
+            const y = year.year();
+            return isEnd ? new Date(y, 11, 31) : new Date(y, 0, 1);
+        }
+        const date = dayjs(value, 'DD.MM.YYYY', true);
+        if (date.isValid()) return date.toDate();
+        this.log.warn(`getTemporal: unrecognised date format "${value}"`);
+        return undefined;
     }
 
     getKeywords(): string[] {
@@ -161,12 +174,7 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
     }
 
     private parseGenesisDate(dateStr: string): Date {
-        // dateStr = "15.07.2025 11:27:48h"
-        dateStr = dateStr.replace('h', '');
-        const [datePart, timePart] = dateStr.split(' ');
-        const [day, month, year] = datePart.split('.').map(Number);
-        const [hours, minutes, seconds] = timePart.split(':').map(Number);
-        return new Date(year, month - 1, day, hours, minutes, seconds);
+        return dayjs(dateStr.replace('h', ''), 'DD.MM.YYYY HH:mm:ss', true).toDate();
     }
 
 }

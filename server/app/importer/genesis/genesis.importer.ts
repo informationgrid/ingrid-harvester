@@ -207,7 +207,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
                     log.error(`Error saving entity ${entry.Code}`, err);
                     this.summary.errors.push({ type: 'app', error: `DB error for ${entry.Code}: ${err.message}` });
                 });
-        } else {
+        } else if (mapper.shouldBeSkipped()) {
             this.summary.skippedDocs.push(entry.Code);
         }
 
