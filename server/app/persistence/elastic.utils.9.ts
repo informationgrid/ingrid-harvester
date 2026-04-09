@@ -40,14 +40,14 @@ export class ElasticsearchUtils9 extends ElasticsearchUtils {
         config.prefix ??= '';
         super(config, summary);
 
-        // timeout is set to 0 as per recommendation (NodeJS ES 8.x uses UndiciConnection)
-        // https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/timeout-best-practices.html
         this.client = new Client({
             node: config.url,
             auth: {
                 username: config.user,
                 password: config.password
             },
+            // timeout is set to 0 (= no timeout) for clarity; it is the default for ES 9.x
+            // https://www.elastic.co/docs/reference/elasticsearch/clients/javascript/timeout-best-practices
             requestTimeout: 0,
             tls: {
                 rejectUnauthorized: config.rejectUnauthorized
