@@ -21,14 +21,13 @@
  * ==================================================
  */
 
-import type { GeneralSettings } from '@shared/general-config.settings.js';
 import log4js from 'log4js';
 import type { ImportLogMessage } from '../model/import.result.js';
-import type { Summary } from '../model/summary.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import type { IndexSettings } from '../persistence/elastic.setting.js';
 import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
+import { ConfigService } from '../services/config/ConfigService.js';
 import * as MiscUtils from '../utils/misc.utils.js';
 import statisticMapping from './statistic.mapping.json' with { type: 'json' };
 
@@ -36,21 +35,21 @@ const log = log4js.getLogger(import.meta.filename);
 
 export class StatisticUtils {
 
-    private elasticUtils: ElasticsearchUtils;
     private indexSettings: IndexSettings;
     private static maxBulkSize = 100;
 
-    constructor(generalSettings: GeneralSettings) {
-        let config = {
-            ...generalSettings.elasticsearch,
+    constructor() {
+        this.indexSettings = ProfileFactoryLoader.get().getIndexSettings();
+    }
+    
+    private get elasticUtils(): ElasticsearchUtils {
+        const config = {
+            ...ConfigService.getGeneralSettings().elasticsearch,
             includeTimestamp: false,
             index: 'harvester_statistic'
         };
         // @ts-ignore
-        const summary: Summary = {};
-        let profile = ProfileFactoryLoader.get();
-        this.elasticUtils = ElasticsearchFactory.getElasticUtils(config, summary);
-        this.indexSettings = profile.getIndexSettings();
+        return ElasticsearchFactory.getElasticUtils(config, { errors: [] });
     }
 
     async saveSummary(logMessage: ImportLogMessage, baseIndex: string) {

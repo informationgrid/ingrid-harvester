@@ -21,11 +21,11 @@
  * ==================================================
  */
 
-import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
-import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '@tsed/common';
 import type { Index } from '@shared/index.model.js';
+import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '@tsed/common';
+import { KeycloakAuth } from "../decorators/KeycloakAuthOptions.js";
+import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { IndexService } from '../services/IndexService.js';
-import {KeycloakAuth} from "../decorators/KeycloakAuthOptions.js";
 
 @Controller('/api/indices')
 @UseAuth(AuthMiddleware)
@@ -33,13 +33,10 @@ import {KeycloakAuth} from "../decorators/KeycloakAuthOptions.js";
 export class IndicesCtrl {
 
     constructor(private indexService: IndexService) {
-        indexService.initialize();
     }
 
     @Get('/')
     async getIndices(): Promise<Index[]> {
-        // re-initialize in case settings have changed
-        this.indexService.initialize();
         return await this.indexService.getIndices();
     }
 

@@ -21,34 +21,36 @@
  * ==================================================
  */
 
+import type { JobEntry } from '@shared/job.js';
 import { Service } from '@tsed/di';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import type { IndexSettings } from '../../persistence/elastic.setting.js';
 import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import jobsMapping from '../../statistic/jobs.mapping.json' with { type: 'json' };
-import type { JobEntry } from '@shared/job.js';
 import { ConfigService } from '../config/ConfigService.js';
 
 @Service()
 export class JobsService {
 
-    private elasticUtils: ElasticsearchUtils;
     private indexSettings: IndexSettings;
 
     constructor() {
-        const config = {
-            ...ConfigService.getGeneralSettings().elasticsearch,
-            includeTimestamp: false,
-            index: 'harvester_jobs',
-        };
-        // @ts-ignore
-        this.elasticUtils = ElasticsearchFactory.getElasticUtils(config, { errors: [] });
         this.indexSettings = ProfileFactoryLoader.get().getIndexSettings();
     }
 
+    private get elasticUtils(): ElasticsearchUtils {
+        const config = {
+            ...ConfigService.getGeneralSettings().elasticsearch,
+            includeTimestamp: false,
+            index: 'harvester_jobs'
+        };
+        // @ts-ignore
+        return ElasticsearchFactory.getElasticUtils(config, { errors: [] });
+    }
+
     async getJobs(harvesterId: number, limit = 10): Promise<{ harvester: string, jobs: JobEntry[] }> {
-        await this.ensureIndexExists();
+        await this.elasticUtils.prepareIndex(jobsMapping, this.indexSettings, true);
         const harvester = ConfigService.getHarvesters().find(h => h.id === harvesterId);
         const { history } = await this.elasticUtils.getHistory({
             query: { term: { harvesterId } },
@@ -58,12 +60,5 @@ export class JobsService {
             harvester: harvester?.description ?? String(harvesterId),
             jobs: history,
         };
-    }
-
-    async ensureIndexExists() {
-        const indexExists = await this.elasticUtils.isIndexPresent(this.elasticUtils.indexName);
-        if (!indexExists) {
-            await this.elasticUtils.prepareIndex(jobsMapping, this.indexSettings, true);
-        }
     }
 }

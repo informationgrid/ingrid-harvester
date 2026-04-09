@@ -31,25 +31,27 @@ import type { IndexSettings } from '../persistence/elastic.setting.js';
 import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import jobsMapping from './jobs.mapping.json' with { type: 'json' };
+import { ConfigService } from '../services/config/ConfigService.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
 
 export class JobsUtils {
 
-    private elasticUtils: ElasticsearchUtils;
     private indexSettings: IndexSettings;
 
-    constructor(generalSettings: GeneralSettings) {
+    constructor() {
+        this.indexSettings = ProfileFactoryLoader.get().getIndexSettings();
+    }
+    
+    private get elasticUtils(): ElasticsearchUtils {
         const config = {
-            ...generalSettings.elasticsearch,
+            ...ConfigService.getGeneralSettings().elasticsearch,
             includeTimestamp: false,
             index: 'harvester_jobs'
         };
         // @ts-ignore
-        const summary: Summary = {};
-        this.elasticUtils = ElasticsearchFactory.getElasticUtils(config, summary);
-        this.indexSettings = ProfileFactoryLoader.get().getIndexSettings();
+        return ElasticsearchFactory.getElasticUtils(config, { errors: [] });
     }
 
     async saveJob(logMessage: ImportLogMessage, baseIndex: string, stageSummaries: Summary[] = []): Promise<void> {
