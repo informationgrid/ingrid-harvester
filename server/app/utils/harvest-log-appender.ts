@@ -23,9 +23,8 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { ConfigService } from '../services/config/ConfigService.js';
 import { harvestLogContext } from './harvest-log-context.js';
-
-const MAX_LOGS_PER_HARVESTER = parseInt(process.env.MAX_LOGS_PER_HARVESTER) || 10;
 
 export function configure(config: any, layouts: any) {
     const layout = layouts.basicLayout;
@@ -36,7 +35,7 @@ export function configure(config: any, layouts: any) {
         fs.mkdirSync(dir, { recursive: true });
         const filePath = path.join(dir, `${ctx.jobId}.log`);
         if (!fs.existsSync(filePath)) {
-            pruneOldLogs(dir, MAX_LOGS_PER_HARVESTER);
+            pruneOldLogs(dir, ConfigService.getMaxLogsPerHarvester());
         }
         fs.appendFileSync(filePath, layout(loggingEvent) + '\n');
     };

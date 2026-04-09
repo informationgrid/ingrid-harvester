@@ -288,6 +288,10 @@ export class ConfigService {
         return parseInt(process.env.THREADPOOL_SIZE ?? '5', 10);
     }
 
+    static getMaxLogsPerHarvester(): number {
+        return parseInt(process.env.MAX_LOGS_PER_HARVESTER ?? '10', 10) || 10;
+    }
+
     static getGeneralSettings(): GeneralSettings {
         const configExists = fs.existsSync(this.GENERAL_CONFIG_FILE);
         if (configExists) {
