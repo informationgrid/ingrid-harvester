@@ -320,6 +320,10 @@ button[matbutton="filled"]:hover {
   padding-bottom: 10px !important;
 }
 
+.mat-mdc-dialog-container .mat-mdc-dialog-title {
+  margin: 0;
+}
+
 // Accessibility requirement.
 input,
 textarea {

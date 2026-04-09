@@ -21,95 +21,101 @@
     ==================================================
 -->
 
-<ingrid-dialog-header
-  *transloco="let t"
-  [title]="t('common.jobs')"
-  svgIcon="Timeline"
-></ingrid-dialog-header>
+<div cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+  <ingrid-dialog-header
+    cdkDragHandle
+    *transloco="let t"
+    [title]="t('common.jobs')"
+    svgIcon="Timeline"
+  ></ingrid-dialog-header>
 
-<mat-dialog-content *transloco="let t">
-  @if (!data.jobs?.length) {
-    <div class="no-jobs">
-      <mat-icon svgIcon="logging"></mat-icon>
-      <span>{{ t("datasources.noLogs") }}</span>
-    </div>
-  } @else {
-    <mat-accordion displayMode="flat">
-      @for (job of data.jobs; track job.jobId) {
-        <mat-expansion-panel
-          (opened)="onPanelOpen(job)"
-          (closed)="onPanelClose(job)"
-        >
-          <mat-expansion-panel-header
-            expandedHeight="auto"
-            collapsedHeight="auto"
+  <mat-dialog-content *transloco="let t">
+    @if (!data.jobs?.length) {
+      <div class="no-jobs">
+        <mat-icon svgIcon="logging"></mat-icon>
+        <span>{{ t("datasources.noLogs") }}</span>
+      </div>
+    } @else {
+      <mat-accordion displayMode="flat">
+        @for (job of data.jobs; track job.jobId) {
+          <mat-expansion-panel
+            (opened)="onPanelOpen(job)"
+            (closed)="onPanelClose(job)"
           >
-            <div class="w-full flex-row flex-wrap items-center gap font-normal">
-              <ingrid-status-label
-                [status]="job.status"
-                [tooltip]="t('datasources.status.' + job.status + '.title')"
-                [svgIcon]="t('datasources.status.' + job.status + '.icon')"
-              />
-
-              <div>
-                {{ job.finishTime | date: "short" }}
-              </div>
-
-              <div class="flex-1"></div>
-
-              <div class="flex-row flex-wrap gap">
-                <div class="entry">
-                  {{ t("common.documents") }}: {{ job.numDocs - job.numSkipped }} / {{ job.numDocs }}
-                </div>
-
-                <div class="entry">
-                  {{ t("common.errors") }}: {{ job.numErrors }}
-                </div>
-
-                <div class="entry">
-                  {{ t("common.duration") }}:
-                  {{ job.duration * 1000 | date: "HH:mm:ss" : "UTC" }}
-                </div>
-              </div>
-            </div>
-          </mat-expansion-panel-header>
-
-          <!-- Per-catalog breakdown -->
-          <mat-divider></mat-divider>
-
-          @if (
-            logsByJobId()[job.jobId]?.isVisible &&
-            logsByJobId()[job.jobId]?.lines
-          ) {
-            <cdk-virtual-scroll-viewport
-              #logsContainer
-              class="logs-container"
-              itemSize="20"
+            <mat-expansion-panel-header
+              expandedHeight="auto"
+              collapsedHeight="auto"
             >
               <div
-                class="log"
-                *cdkVirtualFor="let line of logsByJobId()[job.jobId].lines"
-                [class]="line.type"
+                class="w-full flex-row flex-wrap items-center gap font-normal"
               >
-                {{ line.message }}
-              </div>
-            </cdk-virtual-scroll-viewport>
-          } @else if (logsByJobId()[job.jobId]?.isLoading) {
-            <div
-              class="w-full h-full flex-row items-center justify-center gap-8"
-            >
-              <ingrid-circular-progress-indicator [size]="18" />
-              <span class="text-md">{{ t("common.loading") }}</span>
-            </div>
-          }
-        </mat-expansion-panel>
-      }
-    </mat-accordion>
-  }
-</mat-dialog-content>
+                <ingrid-status-label
+                  [status]="job.status"
+                  [tooltip]="t('datasources.status.' + job.status + '.title')"
+                  [svgIcon]="t('datasources.status.' + job.status + '.icon')"
+                />
 
-<mat-dialog-actions *transloco="let t" align="end">
-  <button mat-button mat-dialog-close>
-    {{ t("common.close") }}
-  </button>
-</mat-dialog-actions>
+                <div>
+                  {{ job.finishTime | date: "short" }}
+                </div>
+
+                <div class="flex-1"></div>
+
+                <div class="flex-row flex-wrap gap">
+                  <div class="entry">
+                    {{ t("common.documents") }}:
+                    {{ job.numDocs - job.numSkipped }} / {{ job.numDocs }}
+                  </div>
+
+                  <div class="entry">
+                    {{ t("common.errors") }}: {{ job.numErrors }}
+                  </div>
+
+                  <div class="entry">
+                    {{ t("common.duration") }}:
+                    {{ job.duration * 1000 | date: "HH:mm:ss" : "UTC" }}
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel-header>
+
+            <!-- Per-catalog breakdown -->
+            <mat-divider></mat-divider>
+
+            @if (
+              logsByJobId()[job.jobId]?.isVisible &&
+              logsByJobId()[job.jobId]?.lines
+            ) {
+              <cdk-virtual-scroll-viewport
+                #logsContainer
+                class="logs-container"
+                itemSize="20"
+              >
+                <div
+                  class="log"
+                  *cdkVirtualFor="let line of logsByJobId()[job.jobId].lines"
+                  [class]="line.type"
+                >
+                  {{ line.message }}
+                </div>
+              </cdk-virtual-scroll-viewport>
+            } @else if (logsByJobId()[job.jobId]?.isLoading) {
+              <div
+                class="w-full h-full flex-row items-center justify-center gap-8"
+              >
+                <ingrid-circular-progress-indicator [size]="18" />
+                <span class="text-md">{{ t("common.loading") }}</span>
+              </div>
+            }
+          </mat-expansion-panel>
+        }
+      </mat-accordion>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions *transloco="let t" align="end">
+    <button mat-button mat-dialog-close>
+      {{ t("common.close") }}
+    </button>
+  </mat-dialog-actions>
+</div>

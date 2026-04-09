@@ -64,6 +64,7 @@ import {
 } from "../shared/circular-progress-indicator/circular-progress-indicator.component";
 import { StatusLabelComponent } from "../shared/status-label/status-label.component";
 import { DetailItemComponent } from "../shared/detail-item/detail-item.component";
+import { CdkDrag, CdkDragHandle } from "@angular/cdk/drag-drop";
 
 const routes: Routes = [
   {
@@ -119,6 +120,8 @@ const routes: Routes = [
     CircularProgressIndicatorComponent,
     StatusLabelComponent,
     DetailItemComponent,
+    CdkDrag,
+    CdkDragHandle,
   ],
   exports: [DatasourceOverviewComponent],
 })

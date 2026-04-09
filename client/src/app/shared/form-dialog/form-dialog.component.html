@@ -21,37 +21,40 @@
     ==================================================
 -->
 
-<ingrid-dialog-header
-  [title]="data.title"
-  [svgIcon]="data.icon ?? 'Add'"
-></ingrid-dialog-header>
+<div cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+  <ingrid-dialog-header
+    cdkDragHandle
+    [title]="data.title"
+    [svgIcon]="data.icon ?? 'Add'"
+  ></ingrid-dialog-header>
 
-<mat-dialog-content>
-  @if (formFields) {
-    <formly-form
-      [form]="form"
-      [fields]="formFields"
-      [model]="formModel"
-      [attr.inert]="data.readonly"
-    ></formly-form>
-  }
-</mat-dialog-content>
+  <mat-dialog-content>
+    @if (formFields) {
+      <formly-form
+        [form]="form"
+        [fields]="formFields"
+        [model]="formModel"
+        [attr.inert]="data.readonly"
+      ></formly-form>
+    }
+  </mat-dialog-content>
 
-<mat-dialog-actions *transloco="let t; read: 'common'">
-  <button matButton mat-dialog-close>
-    {{ t("cancel") }}
-  </button>
-
-  <div class="flex-1"></div>
-
-  @if (data.submitText) {
-    <button
-      matButton="filled"
-      color="primary"
-      (click)="submit()"
-      data-test="dlg-update"
-    >
-      {{ data.submitText }}
+  <mat-dialog-actions *transloco="let t; read: 'common'">
+    <button matButton mat-dialog-close>
+      {{ t("cancel") }}
     </button>
-  }
-</mat-dialog-actions>
+
+    <div class="flex-1"></div>
+
+    @if (data.submitText) {
+      <button
+        matButton="filled"
+        color="primary"
+        (click)="submit()"
+        data-test="dlg-update"
+      >
+        {{ data.submitText }}
+      </button>
+    }
+  </mat-dialog-actions>
+</div>

@@ -25,6 +25,7 @@ import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent } from "@angular/material/dialog";
 import { DialogHeaderComponent } from "../dialog-header/dialog-header.component";
 import { MatButton } from "@angular/material/button";
+import { CdkDrag, CdkDragHandle } from "@angular/cdk/drag-drop";
 
 @Component({
   selector: "app-confirm-dialog",
@@ -36,6 +37,8 @@ import { MatButton } from "@angular/material/button";
     MatDialogActions,
     MatDialogClose,
     MatButton,
+    CdkDrag,
+    CdkDragHandle,
   ],
 })
 export class ConfirmDialogComponent implements OnInit {

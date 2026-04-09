@@ -34,6 +34,7 @@ import { FormlyFieldConfig, FormlyForm } from "@ngx-formly/core";
 import { DialogHeaderComponent } from "../dialog-header/dialog-header.component";
 import { MatButton } from "@angular/material/button";
 import { TranslocoDirective } from "@ngneat/transloco";
+import { CdkDrag, CdkDragHandle } from "@angular/cdk/drag-drop";
 
 @Component({
   selector: "ingrid-form-dialog",
@@ -47,6 +48,8 @@ import { TranslocoDirective } from "@ngneat/transloco";
     MatDialogClose,
     TranslocoDirective,
     FormlyForm,
+    CdkDrag,
+    CdkDragHandle,
   ],
 })
 export class FormDialogComponent implements OnDestroy {
