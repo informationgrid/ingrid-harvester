@@ -473,14 +473,10 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
         });
     }
 
-    async isIndexPresent(index: string) {
+    async isIndexPresent(index: string): Promise<boolean> {
         index = this.addPrefixIfNotExists(index) as string;
         try {
-            let response = await this.client.cat.indices({
-                h: ['index'],
-                format: 'json'
-            })
-            return response.some(json => index === json.index);
+            return await this.client.indices.exists({ index });
         }
         catch(e) {
             this.handleError('Error while checking existence of index: ' + index, e);
