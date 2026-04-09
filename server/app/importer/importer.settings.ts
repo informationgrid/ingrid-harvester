@@ -86,7 +86,7 @@ export type CronData = {
 export const defaultImporterSettings: ImporterSettings = {
     type: null,
     maxRecords: 100,
-    startPosition: 0,
+    startPosition: 1,
     // catalogId: null,
     catalogIds: [],
     rejectUnauthorizedSSL: true,
