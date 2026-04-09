@@ -65,6 +65,7 @@ import {
 import { StatusLabelComponent } from "../shared/status-label/status-label.component";
 import { DetailItemComponent } from "../shared/detail-item/detail-item.component";
 import { CdkDrag, CdkDragHandle } from "@angular/cdk/drag-drop";
+import { JobEntryComponent } from "./dialog-jobs/job-entry/job-entry.component";
 
 const routes: Routes = [
   {
@@ -122,6 +123,7 @@ const routes: Routes = [
     DetailItemComponent,
     CdkDrag,
     CdkDragHandle,
+    JobEntryComponent,
   ],
   exports: [DatasourceOverviewComponent],
 })

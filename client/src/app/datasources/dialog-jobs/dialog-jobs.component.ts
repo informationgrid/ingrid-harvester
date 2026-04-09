@@ -26,7 +26,7 @@ import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { DatasourceApi } from "../services/datasource.api";
 import type { JobEntry } from "@shared/job";
 
-type JobLog = {
+export type JobLog = {
   isVisible: boolean;
   isLoading: boolean;
   lines?: LogLine[];
@@ -45,13 +45,6 @@ type LogLine = {
 })
 export class DialogJobsComponent {
   logsByJobId = signal<Record<string, JobLog>>({});
-
-  // Auto scroll to bottom, one a logs container is opened.
-  @ViewChild("logsContainer")
-  set container(container: any) {
-    const el = container?.elementRef?.nativeElement;
-    if (el) setTimeout(() => (el.scrollTop = el.scrollHeight));
-  }
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { harvester: string; jobs: JobEntry[] },

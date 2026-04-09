@@ -67,6 +67,7 @@
     "noHistory": "Keine Historie vorhanden.",
     "log": "Error-Log",
     "noLogs": "Keine Log-Dateien vorhanden.",
+    "planSchedule": "Ausführung planen",
     "status": {
       "success": {
         "icon": "Success",

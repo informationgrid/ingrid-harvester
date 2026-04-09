@@ -21,19 +21,64 @@
  * ==================================================
  */
 
-.info-icon {
-  vertical-align: middle;
-  cursor: pointer;
-}
+:host {
+  --mat-expansion-container-elevation-shadow: none;
 
-.info {
-  padding-bottom: 20px;
-  font-size: small;
+  ::ng-deep {
+    .mat-content {
+      margin-right: 16px;
+    }
 
-  & div span {
-    display: inline-block;
-    width: 100px;
-    white-space: pre;
+    .mat-expansion-panel-body {
+      padding: 0;
+      min-height: 100px;
+      background-color: #fafafa;
+    }
   }
 }
 
+mat-expansion-panel-header {
+  padding: 10px 18px 10px 12px;
+
+  .entry {
+    padding: 2px 10px;
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}
+
+mat-divider {
+  margin-left: -24px;
+  margin-right: -24px;
+}
+
+.logs-container {
+  height: 300px;
+  font-size: 12px;
+  font-family: monospace;
+
+  .log {
+    white-space: pre;
+    padding: 0 4px;
+  }
+
+  .debug {
+    color: #888;
+  }
+
+  .info {
+    color: #333;
+  }
+
+  .warn {
+    color: #f57f17;
+  }
+
+  .error {
+    color: #b71c1c;
+  }
+}
+
+.gap {
+  row-gap: 8px;
+  column-gap: 12px;
+}

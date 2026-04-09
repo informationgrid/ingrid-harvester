@@ -25,35 +25,14 @@
 
 :host {
   --mat-dialog-with-actions-content-padding: none;
-  --mat-expansion-container-elevation-shadow: none;
-
-  ::ng-deep .mat-content {
-    margin-right: 16px;
-  }
-
-  ::ng-deep .mat-expansion-panel-body {
-    padding: 0;
-    min-height: 100px;
-    background-color: #fafafa;
-  }
 }
 
-mat-expansion-panel:not(:last-child) {
-  border-bottom: var(--mat-divider-width) solid var(--mat-divider-color);
-}
+harvester-job-entry {
+  display: block;
 
-mat-expansion-panel-header {
-  padding: 10px 18px 10px 12px;
-
-  .entry {
-    padding: 2px 10px;
-    background-color: rgba(0, 0, 0, 0.05);
+  &:not(:last-child) {
+    border-bottom: var(--mat-divider-width) solid var(--mat-divider-color);
   }
-}
-
-mat-divider {
-  margin-left: -24px;
-  margin-right: -24px;
 }
 
 .no-jobs {
@@ -69,36 +48,4 @@ mat-divider {
     height: 60px;
     color: vars.$ige-secondary;
   }
-}
-
-.logs-container {
-  height: 300px;
-  font-size: 12px;
-  font-family: monospace;
-
-  .log {
-    white-space: pre;
-    padding: 0 4px;
-  }
-
-  .debug {
-    color: #888;
-  }
-
-  .info {
-    color: #333;
-  }
-
-  .warn {
-    color: #f57f17;
-  }
-
-  .error {
-    color: #b71c1c;
-  }
-}
-
-.gap {
-  row-gap: 8px;
-  column-gap: 12px;
 }

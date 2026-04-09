@@ -21,37 +21,41 @@
     ==================================================
 -->
 
-<div cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+<div cdkDrag cdkDragRootElement=".cdk-overlay-pane" *transloco="let t">
   <ingrid-dialog-header
     cdkDragHandle
-    title="Ausführung planen"
+    [title]="t('datasources.planSchedule')"
     svgIcon="schedule"
   ></ingrid-dialog-header>
 
   <mat-dialog-content>
-    <harvester-cronjob-form-field
-      title="Komplettes Harvesting"
-      [form]="schedulerForm"
-      formKey="full"
-      activeKeyName="active"
-      cronKeyName="pattern"
-    />
-
-    @if (harvesterType == "CSW") {
-      <mat-divider class="padding-below"></mat-divider>
-
+    <div class="flex-col gap-20">
       <harvester-cronjob-form-field
-        title="Inkrementelles Harvesting"
+        [title]="t('datasources.completeImport')"
         [form]="schedulerForm"
-        formKey="incr"
+        formKey="full"
         activeKeyName="active"
         cronKeyName="pattern"
       />
-    }
+
+      @if (harvesterType === "CSW") {
+        <mat-divider></mat-divider>
+
+        <harvester-cronjob-form-field
+          [title]="t('datasources.incrementalImport')"
+          [form]="schedulerForm"
+          formKey="incr"
+          activeKeyName="active"
+          cronKeyName="pattern"
+        />
+      }
+    </div>
   </mat-dialog-content>
 
   <mat-dialog-actions>
-    <button matButton mat-dialog-close>Abbrechen</button>
+    <button matButton mat-dialog-close>
+      {{ t("common.cancel") }}
+    </button>
 
     <div class="flex-1"></div>
 
@@ -62,7 +66,7 @@
       [disabled]="!schedulerForm.valid"
       data-test="dlg-schedule"
     >
-      Aktualisieren
+      {{ t("common.update") }}
     </button>
   </mat-dialog-actions>
 </div>
