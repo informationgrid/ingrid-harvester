@@ -29,14 +29,26 @@ import type { ElasticsearchUtils } from './elastic.utils.js';
 
 export class ElasticsearchFactory {
 
+    private static instances: Map<string, ElasticsearchUtils> = new Map();
+
     public static getElasticUtils(config: ElasticsearchConfiguration, summary: Summary): ElasticsearchUtils {
+        const cacheKey = `${config.url}_${config.version}_${config.user}_${config.index}`;
+        if (this.instances.has(cacheKey)) {
+            return this.instances.get(cacheKey)!;
+        }
+
+        let instance: ElasticsearchUtils;
         switch (String(config.version)) {
             case '8':
-                return new ElasticsearchUtils8(config, summary);
+                instance = new ElasticsearchUtils8(config, summary);
+                break;
             case '9':
-                return new ElasticsearchUtils9(config, summary);
+                instance = new ElasticsearchUtils9(config, summary);
+                break;
             default:
-                throw new Error(`Only ES versions 8 and 9 are supported; [${config.version}] was specified`);
+                throw new Error(`Only ES versions 8 and 9 are supported`);
         }
+        this.instances.set(cacheKey, instance);
+        return instance;
     }
 }
