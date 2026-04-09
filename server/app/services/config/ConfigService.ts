@@ -409,7 +409,7 @@ export class ConfigService {
     static removeCatalog(id: number) {
         const existingSettings = ConfigService.getCatalogSettings();
         const catalogIndex = existingSettings.findIndex(catalog => catalog.id == id);
-        if (!catalogIndex) {
+        if (catalogIndex === -1) {
             throw new Error(`Catalog with id ${id} not found`);
         }
         // persist changes
