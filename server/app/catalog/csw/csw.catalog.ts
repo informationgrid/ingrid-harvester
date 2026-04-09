@@ -278,12 +278,12 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
             <ogc:Filter>
                 <ogc:And>
                     <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
-                        <ogc:PropertyName>csw:AnyText</ogc:PropertyName>
+                        <ogc:PropertyName>subject</ogc:PropertyName>
                         <ogc:Literal>%source:${datasourceId}%</ogc:Literal>
                     </ogc:PropertyIsLike>
                     <ogc:Not>
                         <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
-                            <ogc:PropertyName>csw:AnyText</ogc:PropertyName>
+                            <ogc:PropertyName>subject</ogc:PropertyName>
                             <ogc:Literal>%transaction:${excludeTimestamp}%</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Not>
