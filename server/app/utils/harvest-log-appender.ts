@@ -25,6 +25,8 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { harvestLogContext } from './harvest-log-context.js';
 
+const MAX_LOGS_PER_HARVESTER = parseInt(process.env.MAX_LOGS_PER_HARVESTER) || 10;
+
 export function configure(config: any, layouts: any) {
     const layout = layouts.basicLayout;
     return (loggingEvent: any) => {
@@ -32,6 +34,20 @@ export function configure(config: any, layouts: any) {
         if (!ctx) return;
         const dir = path.join('logs', 'harvester', String(ctx.harvesterId));
         fs.mkdirSync(dir, { recursive: true });
-        fs.appendFileSync(path.join(dir, `${ctx.jobId}.log`), layout(loggingEvent) + '\n');
+        const filePath = path.join(dir, `${ctx.jobId}.log`);
+        if (!fs.existsSync(filePath)) {
+            pruneOldLogs(dir, MAX_LOGS_PER_HARVESTER);
+        }
+        fs.appendFileSync(filePath, layout(loggingEvent) + '\n');
     };
+}
+
+export function pruneOldLogs(dir: string, maxLogs: number): void {
+    const files = fs.readdirSync(dir)
+        .filter(f => f.endsWith('.log'))
+        .map(f => ({ name: f, mtime: fs.statSync(path.join(dir, f)).mtimeMs }))
+        .sort((a, b) => a.mtime - b.mtime);
+    for (let i = 0; i < files.length - maxLogs; i++) {
+        fs.rmSync(path.join(dir, files[i].name));
+    }
 }
