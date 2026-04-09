@@ -23,6 +23,10 @@ export function registerTranslateExtension(transloco: TranslocoService) {
         name: "json",
         message: transloco.translate("form.validationMessages.json"),
       },
+      {
+        name: "pattern",
+        message: transloco.translate("form.validationMessages.pattern"),
+      },
     ],
   };
 }

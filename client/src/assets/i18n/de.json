@@ -152,7 +152,8 @@
       "email": "Dieses Feld muss eine gültige E-Mail Adresse sein.",
       "url": "Verwenden Sie bitte eine gültige URL.",
       "uniqueKey": "Die Schlüssel müssen eindeutig sein.",
-      "json": "Kein gültiges JSON-Objekt."
+      "json": "Kein gültiges JSON-Objekt.",
+      "pattern": "Das Feld enthält ungültige Zeichen."
     }
   }
 }
