@@ -78,8 +78,4 @@ export abstract class ElasticsearchCatalog extends Catalog<IndexDocument, Elasti
     getDatasetColumn(): string {
         return 'dataset';
     }
-
-    getElastic(): ElasticsearchUtils {
-        return this.elastic;
-    }
 }

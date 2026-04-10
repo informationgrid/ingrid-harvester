@@ -44,7 +44,17 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
     private externalUuids: Set<string>;
 
     /**
-     * Gather all metadata from configured aliases that are used for interstellar deduplication.
+     * This ElasticUtils instance connects to the Elasticsearch cluster configured for the InGrid-wide metadata index,
+     * instead of the catalog-specific cluster used by the main ElasticUtils instance of this class (`this.elastic`).
+     * This is necessary to gather the existing dataset metadata for deduplication and to update the metadata after import,
+     * while the instance `this.elastic` is used for importing the datasets (potentially to a different cluster).
+     */
+    private get ingridMetaEsUtils() {
+        return ElasticsearchFactory.getElasticUtils(ConfigService.getGeneralSettings().elasticsearch, this.summary);
+    }
+
+    /**
+     * Gather all metadata from configured aliases that are used for InGrid-wide deduplication.
      * 
      * @param transactionHandle 
      * @param settings 
@@ -56,11 +66,11 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         this.externalUuids = new Set<string>();
 
         const indices = await this.getExternalIndices();
-        const total = await this.elastic.count(indices);
+        const total = await this.ingridMetaEsUtils.count(indices);
 
         // const scrollSearch = this.elastic.scroll<{ uuid: string, iPlugName: string, modified: Date }>(indices, ['uuid']);//, 'iPlugName', 'modified']);
         // TODO if necessary, implement slicing for scroll search
-        const scrollSearch = this.elastic.scroll<{ uuid: string }>(indices, ['uuid']);//, 'iPlugName', 'modified']);
+        const scrollSearch = this.ingridMetaEsUtils.scroll<{ uuid: string }>(indices, ['uuid']);//, 'iPlugName', 'modified']);
         let processed = 0;
         for await (const hit of scrollSearch) {
             // this.deduplicationMetadata.set(hit.uuid, {
@@ -86,7 +96,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
      */
     async postImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         const iPlugClass = `de.ingrid.iplug.${settings.type.toLowerCase()}.dsc.${camelize(settings.type)}.DscSearchPlug`;
-        const meta = await this.getElastic().search(INGRID_META_INDEX,
+        const meta = await this.ingridMetaEsUtils.search(INGRID_META_INDEX,
             {
                 "query": {
                     "term": {
@@ -105,7 +115,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
             entry.plugdescription.dataType = settings.datatype?.split(",")?.map(d => d.trim());
             entry.plugdescription.partner = settings.partner?.split(",")?.map(p => p.trim());
 
-            await this.getElastic().update(INGRID_META_INDEX, meta.hits?.hits[0]._id, entry, false);
+            await this.ingridMetaEsUtils.update(INGRID_META_INDEX, meta.hits?.hits[0]._id, entry, false);
         }
         else {
             const esSettings = this.settings.settings;
@@ -131,7 +141,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
                 },
                 "active": true
             }
-            await this.getElastic().index(INGRID_META_INDEX, entry, false);
+            await this.ingridMetaEsUtils.index(INGRID_META_INDEX, entry, false);
         }
     }
 
@@ -198,8 +208,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
     }
 
     private async getExternalIndices(): Promise<string[]> {
-        const esUtils = ElasticsearchFactory.getElasticUtils(ConfigService.getGeneralSettings().elasticsearch, this.summary);
-        const { hits } = await esUtils.search(INGRID_META_INDEX, {
+        const { hits } = await this.ingridMetaEsUtils.search(INGRID_META_INDEX, {
             "_source": ["linkedIndex"],
             "query": {
                 "bool": {
