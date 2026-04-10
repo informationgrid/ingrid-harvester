@@ -145,17 +145,19 @@ export class WfsImporter extends Importer<WfsSettings> {
     }
 
     async extractCompleteFeatureType(featureTypeName: string, featureTypeNode: Node): Promise<void> {
-        let numFeatures = await this.getNumFeatures(featureTypeName);
-        log.info(`Found ${numFeatures} features at ${this.settings.sourceURL} for FeatureType "${featureTypeName}"`);
-        let featureTypeDescriptionNode = await this.getTypeDescription(featureTypeName);
         this.generalInfo['typename'] = featureTypeName;
+        const numFeatures = await this.getNumFeatures(featureTypeName);
         this.generalInfo['numFeatures'] = numFeatures;
+        log.info(`Found ${numFeatures} features at ${this.settings.sourceURL} for FeatureType "${featureTypeName}"`);
+        const featureTypeDescriptionNode = await this.getTypeDescription(featureTypeName);
         this.generalInfo['featureTypeDescription'] = featureTypeDescriptionNode;
+        const select = <XPathNodeSelect>xpath.useNamespaces(this.nsMap);
+        this.generalInfo['title'] = (<Element>select('./wfs:Title', featureTypeNode, true))?.textContent;
 
         // if harvesting FeatureTypes, do it here (to include the feature names)
         if (this.settings.harvestTypes) {
             try {
-                await this.extractFeatureType(featureTypeName, featureTypeNode, featureTypeDescriptionNode);
+                await this.extractFeatureType(featureTypeName, featureTypeNode, featureTypeDescriptionNode, select);
             }
             catch (e) {
                 const message = `Error while fetching FeatureType "${featureTypeName}"\n  ${e.toString()}.`;
@@ -205,10 +207,8 @@ export class WfsImporter extends Importer<WfsSettings> {
         }
     }
 
-    async extractFeatureType(featureTypeName: string, featureTypeNode: Node, featureTypeDescriptionNode: Node) {
-        let select = <XPathNodeSelect>xpath.useNamespaces(this.nsMap);
+    async extractFeatureType(featureTypeName: string, featureTypeNode: Node, featureTypeDescriptionNode: Node, select: XPathNodeSelect) {
         this.generalInfo['select'] = select;
-        this.generalInfo['title'] = select('./wfs:Title', featureTypeNode, true)?.textContent;
         this.generalInfo['geometryType'] = this.extractGeometryType(select, featureTypeDescriptionNode);
         let mapper = this.getMapper(new Date(), featureTypeNode);
         let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
