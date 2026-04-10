@@ -328,7 +328,7 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
     }
 
     async count(index: string | string[]): Promise<number> {
-        const { count } =  await this.client.count({ index });
+        const { count } =  await this.client.count({ index, ignore_unavailable: true });
         return count;
     }
 
@@ -346,6 +346,7 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
     async * scroll<T = unknown>(index: string | string[], fields: string[], query: object = { match_all: {} }): AsyncGenerator<T> {
         const scrollSearch = this.client.helpers.scrollSearch<T>({
             index,
+            ignore_unavailable: true,
             size: 5000,
             _source: false,
             docvalue_fields: fields,
