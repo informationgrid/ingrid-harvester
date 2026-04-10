@@ -29,6 +29,7 @@ import type { Summary } from '../model/summary.js';
 import type { IndexSettings } from './elastic.setting.js';
 import type { BulkResponse, EsOperation } from './elastic.utils.js';
 import { ElasticsearchUtils } from './elastic.utils.js';
+import { events } from "@elastic/transport/lib/Diagnostic.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -52,6 +53,16 @@ export class ElasticsearchUtils8 extends ElasticsearchUtils {
             tls: {
                 rejectUnauthorized: config.rejectUnauthorized
             }
+        });
+        // monitor for total cluster failure
+        this.client.diagnostic.on(events.REQUEST, (error) => {
+            if (error?.name === 'NoLivingConnectionsError') {
+                this.clientAlive = false;
+            }
+        });
+        // reset if the client manages to recover a node
+        this.client.diagnostic.on(events.RESURRECT, () => {
+            this.clientAlive = true;
         });
     }
 

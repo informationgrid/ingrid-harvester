@@ -52,6 +52,7 @@ export abstract class ElasticsearchUtils {
 
     protected client: Client8 | Client9;
 
+    protected clientAlive: boolean = true;
     public static maxBulkSize: number = 50;
     public elasticQueries: ElasticQueries;
     public indexName: string;
@@ -207,6 +208,10 @@ export abstract class ElasticsearchUtils {
     async close(): Promise<void> {
         await this.client.close();
     };
+
+    isAlive(): boolean {
+        return this.clientAlive;
+    }
 
     // abstract health(status?: 'green' | 'GREEN' | 'yellow' | 'YELLOW' | 'red' | 'RED'): Promise<any>;
     async health(status: 'green' | 'yellow' | 'red' = 'yellow'): Promise<any> {
