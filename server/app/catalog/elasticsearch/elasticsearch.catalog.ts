@@ -63,9 +63,11 @@ export abstract class ElasticsearchCatalog extends Catalog<IndexDocument, Elasti
         if (operations?.length) {
             this.summary.numDocs += operations.filter(op => ['index', 'create', 'update'].includes(op.operation)).length;
             await this.elastic.addOperationChunksToBulk(operations);
-        } else {
-            this.summary.skippedDocs.push('no operations produced');
         }
+        // TODO revisit: marking these as skipped produces unclear feedback for the user
+        // else {
+        //     this.summary.skippedDocs.push('no operations produced');
+        // }
     }
 
     async flushImport(): Promise<void> {
