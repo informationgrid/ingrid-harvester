@@ -68,6 +68,12 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         const indices = await this.getExternalIndices();
         const total = await this.ingridMetaEsUtils.count(indices);
 
+        // skip scrolling in case no documents exist, to avoid scrolling cleanup errors
+        if (total == 0) {
+            log.info('No existing datasets found for indices ${indices}, skipping InGrid-wide deduplication.');
+            return;
+        }
+
         // const scrollSearch = this.elastic.scroll<{ uuid: string, iPlugName: string, modified: Date }>(indices, ['uuid']);//, 'iPlugName', 'modified']);
         // TODO if necessary, implement slicing for scroll search
         const scrollSearch = this.ingridMetaEsUtils.scroll<{ uuid: string }>(indices, ['uuid']);//, 'iPlugName', 'modified']);
