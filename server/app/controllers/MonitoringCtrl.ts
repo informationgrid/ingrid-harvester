@@ -21,12 +21,12 @@
  * ==================================================
  */
 
-import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { BodyParams, Controller, Get, UseAuth } from '@tsed/common';
+import { KeycloakAuth } from "../decorators/KeycloakAuthOptions.js";
+import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { HistoryService } from "../services/statistic/HistoryService.js";
 import { IndexCheckService } from "../services/statistic/IndexCheckService.js";
 import { UrlCheckService } from "../services/statistic/UrlCheckService.js";
-import {KeycloakAuth} from "../decorators/KeycloakAuthOptions.js";
 
 @Controller('/api/monitoring')
 @UseAuth(AuthMiddleware)
@@ -40,22 +40,16 @@ export class MonitoringCtrl {
 
     @Get('/urlcheck')
     async getUrlCheckHistory(): Promise<any> {
-        // re-initialize in case settings have changed
-        this.urlCheckService.initialize();
         return this.urlCheckService.getHistory()
     }
 
     @Get('/indexcheck')
     async getIndexCheckHistory(): Promise<any> {
-        // re-initialize in case settings have changed
-        this.indexCheckService.initialize();
         return this.indexCheckService.getHistory()
     }
 
     @Get('/harvester')
     getAllHarvesterHistory(@BodyParams() request: any) {
-        // re-initialize in case settings have changed
-        this.historyService.initialize();
         return this.historyService.getHistoryAll();
     }
 }

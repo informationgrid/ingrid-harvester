@@ -29,6 +29,7 @@ import type { Summary } from '../model/summary.js';
 import type { IndexSettings } from './elastic.setting.js';
 import type { BulkResponse, EsOperation } from './elastic.utils.js';
 import { ElasticsearchUtils } from './elastic.utils.js';
+import { events } from "@elastic/transport/lib/Diagnostic.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -40,18 +41,28 @@ export class ElasticsearchUtils9 extends ElasticsearchUtils {
         config.prefix ??= '';
         super(config, summary);
 
-        // timeout is set to 0 as per recommendation (NodeJS ES 8.x uses UndiciConnection)
-        // https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/timeout-best-practices.html
         this.client = new Client({
             node: config.url,
             auth: {
                 username: config.user,
                 password: config.password
             },
+            // timeout is set to 0 (= no timeout) for clarity; it is the default for ES 9.x
+            // https://www.elastic.co/docs/reference/elasticsearch/clients/javascript/timeout-best-practices
             requestTimeout: 0,
             tls: {
                 rejectUnauthorized: config.rejectUnauthorized
             }
+        });
+        // monitor for total cluster failure
+        this.client.diagnostic.on(events.REQUEST, (error) => {
+            if (error?.name === 'NoLivingConnectionsError') {
+                this.clientAlive = false;
+            }
+        });
+        // reset if the client manages to recover a node
+        this.client.diagnostic.on(events.RESURRECT, () => {
+            this.clientAlive = true;
         });
     }
 
@@ -473,14 +484,10 @@ export class ElasticsearchUtils9 extends ElasticsearchUtils {
         });
     }
 
-    async isIndexPresent(index: string) {
+    async isIndexPresent(index: string): Promise<boolean> {
         index = this.addPrefixIfNotExists(index) as string;
         try {
-            let response = await this.client.cat.indices({
-                h: ['index'],
-                format: 'json'
-            })
-            return response.some(json => index === json.index);
+            return await this.client.indices.exists({ index });
         }
         catch(e) {
             this.handleError('Error while checking existence of index: ' + index, e);

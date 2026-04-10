@@ -23,7 +23,6 @@
 
 import { Service } from '@tsed/di';
 import log4js from 'log4js';
-import { Summary } from '../../model/summary.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import type { ElasticQueries } from '../../persistence/elastic.queries.js';
 import type { IndexSettings } from '../../persistence/elastic.setting.js';
@@ -39,37 +38,27 @@ const log = log4js.getLogger(import.meta.filename);
 export class IndexCheckService {
 
     private elasticQueries: ElasticQueries;
-    private elasticUtils: ElasticsearchUtils;
     private indexSettings: IndexSettings;
 
     constructor() {
-        this.initialize();
+        const profile = ProfileFactoryLoader.get();
+        this.elasticQueries = profile.getElasticQueries();
+        this.indexSettings = profile.getIndexSettings();
     }
 
-    initialize() {
-        let config = {
+    private get elasticUtils(): ElasticsearchUtils {
+        const config = {
             ...ConfigService.getGeneralSettings().elasticsearch,
             includeTimestamp: false,
             index: 'index_check_history'
         };
         // @ts-ignore
-        const summary: Summary = {};
-        let profile = ProfileFactoryLoader.get();
-        this.elasticUtils = ElasticsearchFactory.getElasticUtils(config, summary);
-        this.indexSettings = profile.getIndexSettings();
-        this.elasticQueries = profile.getElasticQueries();
+        return ElasticsearchFactory.getElasticUtils(config, { errors: [] });
     }
 
     async getHistory() {
-        await this.ensureIndexExists();
+        await this.elasticUtils.prepareIndex(indexCheckMapping, this.indexSettings, true);
         return this.elasticUtils.getHistory(this.elasticQueries.getIndexCheckHistory());
-    }
-
-    async ensureIndexExists() {
-        let indexExists = await this.elasticUtils.isIndexPresent(this.elasticUtils.indexName);
-        if (!indexExists) {
-            await this.elasticUtils.prepareIndex(indexCheckMapping, this.indexSettings, true);
-        }
     }
 
     async start() {

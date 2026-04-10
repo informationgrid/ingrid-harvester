@@ -21,48 +21,31 @@
  * ==================================================
  */
 
-import log4js from 'log4js';
 import type { Index } from '@shared/index.model.js';
 import { Service } from '@tsed/di';
 import * as fs from "fs";
-import { Summary } from '../model/summary.js';
-import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
-import type { IndexConfiguration } from '../persistence/elastic.setting.js';
-import { ElasticsearchUtils } from '../persistence/elastic.utils.js';
-import type { BulkResponse } from '../persistence/elastic.utils.js';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
-import { ConfigService } from './config/ConfigService.js';
-import { Readable } from 'stream';
+import log4js from 'log4js';
 import path from "path";
+import { Readable } from 'stream';
 import zlib from "zlib";
+import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
+import type { BulkResponse } from '../persistence/elastic.utils.js';
+import { ElasticsearchUtils } from '../persistence/elastic.utils.js';
+import { ConfigService } from './config/ConfigService.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
 @Service()
 export class IndexService {
 
-    private alias: string;
-    private config: IndexConfiguration;
-    private elasticUtils: ElasticsearchUtils;
-
-    constructor() {
-        this.initialize();
-    }
-
-    /**
-     * Start all cron jobs configured in each harvester
-     */
-    initialize() {
-        let elasticsearchConfiguration = ConfigService.getGeneralSettings().elasticsearch;
-        this.config = {
-            ...elasticsearchConfiguration,
+    private get elasticUtils(): ElasticsearchUtils {
+        const config = {
+            ...ConfigService.getGeneralSettings().elasticsearch,
             includeTimestamp: true,
             index: ''
         };
-        this.alias = elasticsearchConfiguration.alias;
         // @ts-ignore
-        const summary: Summary = {errors: []};
-        this.elasticUtils = ElasticsearchFactory.getElasticUtils(this.config, summary);
+        return ElasticsearchFactory.getElasticUtils(config, { errors: [] });
     }
 
     async getIndices(): Promise<Index[]> {

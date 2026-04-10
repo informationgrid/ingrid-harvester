@@ -28,7 +28,6 @@ import log4js from 'log4js';
 import pLimit from 'p-limit';
 import * as SocketIO from 'socket.io';
 import type { ImportLogMessage } from '../model/import.result.js';
-import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import { SummaryService } from '../services/config/SummaryService.js';
@@ -101,11 +100,11 @@ export class ImportSocketService {
                                     // TODO this must be done for each catalog - by the importer?
                                     importer.summary.print(this.log);
                                     this.summaryService.update(response);
-                                    let statisticUtils = new StatisticUtils(configGeneral);
+                                    let statisticUtils = new StatisticUtils();
                                     for (const catalogId of configHarvester.catalogIds) {
                                         statisticUtils.saveSummary(response, catalogId);
                                     }
-                                    new JobsUtils(configGeneral).saveJob(response, null, importer.stageSummaries);
+                                    new JobsUtils().saveJob(response, null, importer.stageSummaries);
 
                                     // when less results send mail
                                     if (!isIncremental && configGeneral.mail.enabled && configGeneral.harvesting.mail.enabled) {
