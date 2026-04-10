@@ -70,7 +70,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
 
         // skip scrolling in case no documents exist, to avoid scrolling cleanup errors
         if (total == 0) {
-            log.info('No existing datasets found for indices ${indices}, skipping InGrid-wide deduplication.');
+            log.info(`No existing datasets found for indices ${indices}, skipping InGrid-wide deduplication.`);
             return;
         }
 
@@ -87,7 +87,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
             processed++;
             if (processed % 500 === 0 || processed === total) {
                 const msg = 'Existierende Datensätze sammeln';
-                log.info(`$msg: $processed/$total`);
+                log.info(`${msg}: ${processed}/${total}`);
                 observer.next(this.summary.msgRunning(processed, total, msg));
             }
         }

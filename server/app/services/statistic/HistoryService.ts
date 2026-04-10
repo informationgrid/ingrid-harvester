@@ -57,7 +57,7 @@ export class HistoryService {
         await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
         const harvester = ConfigService.getHarvesters().find(h => h.id === id);
         const catalogs = harvester.catalogIds.map(catalogId => ConfigService.getCatalogSettings(catalogId));
-        const esCatalogs = catalogs.filter(settings => settings.type == 'elasticsearch') as ElasticsearchCatalogSettings[];
+        const esCatalogs = <ElasticsearchCatalogSettings[]>catalogs.filter(settings => settings.type == 'elasticsearch');
         const histories = [];
         for (const catalog of esCatalogs) {
             let index = catalog.settings.index;

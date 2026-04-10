@@ -129,7 +129,7 @@ export function flip<T>(spatial: number[] | Geometry): T {
     }
     if ('type' in spatial) {
         if ('coordinates' in spatial) {
-            return turfFlip(spatial) as T;
+            return <T>turfFlip(spatial);
         }
         else if ('geometries' in spatial) {
             return <T>{ ...spatial, geometries: spatial.geometries.map<Geometry>(geom => turfFlip<Geometry>(geom)) };
@@ -140,7 +140,7 @@ export function flip<T>(spatial: number[] | Geometry): T {
         }
     }
     else {
-        return turfFlip({ type: 'Point', coordinates: spatial }) as T;
+        return <T>turfFlip({ type: 'Point', coordinates: spatial });
     }
 }
 
@@ -605,12 +605,12 @@ export function parse(_: Node, opts: { crs?: any, stride?: number } = { crs: nul
                     coordinates: parsePoint(_, opts, childCtx)
                 };
             case 'gml:LineString':
-                return rewind({
+                return <Geometry>rewind({
                     type: 'LineString',
                     coordinates: parseLinearRingOrLineString(_, opts, childCtx)
-                }) as Geometry;
+                });
             case 'gml:Envelope':
-                return parseEnvelope(_, opts, childCtx) as Geometry;
+                return <Geometry>parseEnvelope(_, opts, childCtx);
             case 'gml:MultiCurve':
                 return {
                     type: 'MultiLineString',
@@ -619,20 +619,20 @@ export function parse(_: Node, opts: { crs?: any, stride?: number } = { crs: nul
             case 'gml:Rectangle':
                 // same as polygon
             case 'gml:Polygon':
-                return rewind({
+                return <Geometry>rewind({
                     type: 'Polygon',
                     coordinates: parsePolygonOrRectangle(_, opts, childCtx)
-                }) as Geometry;
+                });
             case 'gml:Surface':
-                return rewind({
+                return <Geometry>rewind({
                     type: 'MultiPolygon',
                     coordinates: parseSurface(_, opts, childCtx)
-                }) as Geometry;
+                });
             case 'gml:MultiSurface':
-                return rewind({
+                return <Geometry>rewind({
                     type: 'MultiPolygon',
                     coordinates: parseMultiSurface(_, opts, childCtx)
-                }) as Geometry;
+                });
             case 'gml:MultiGeometry':
                 // TODO similar to gml:MultiSurface ??
                 // example: https://metropolplaner.de/osterholz/wfs?typeNames=plu:LU.SupplementaryRegulation&request=GetFeature

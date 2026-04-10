@@ -238,7 +238,7 @@ export class WfsImporter extends Importer<WfsSettings> {
         // this.nsMap = { ...XPathUtils.getNsMap(xml), ...XPathUtils.getExtendedNsMap(xml) };
         // TODO: the above does not work, because it doesn't contain the NS for the FeatureType;
         let nsMap = MiscUtils.merge(this.nsMap, getNsMap(xml));
-        let select = xpath.useNamespaces(nsMap) as XPathNodeSelect;
+        let select = <XPathNodeSelect>xpath.useNamespaces(nsMap);
 
         // store xpath handling stuff in general info
         this.generalInfo['nsMap'] = nsMap;
@@ -344,7 +344,7 @@ export class WfsImporter extends Importer<WfsSettings> {
         let typeConditions = GML_GEOMETRY_PROPERTY_TYPES.map(type => `contains(@type, '${type}')`).join(' or ');
         let pathNames: string[] = ["schema", "complexType", "complexContent", "extension", "sequence", "element"];
         let path = pathNames.map(step => `*[local-name()='${step}']`).join('/');
-        return (select(`/${path}[${typeConditions}]/@name`, featureTypeDescriptionNode, true) as Attr)?.value;
+        return (<Attr>select(`/${path}[${typeConditions}]/@name`, featureTypeDescriptionNode, true))?.value;
     }
 
     createRequestConfig(settings: WfsSettings, request = 'GetFeature'): RequestOptions {

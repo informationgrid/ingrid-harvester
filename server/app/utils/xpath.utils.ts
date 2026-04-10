@@ -28,7 +28,7 @@ import * as MiscUtils from './misc.utils.js';
  *  This is an adhoc replacement for node.firstElementChild because xmldom does not support it.
  */
 export function firstElementChild(node: Node): Node & Element {
-    return Object.values(node.childNodes).find(child => child.nodeType === 1) as Element;//Node.ELEMENT_NODE);
+    return <Element>Object.values(node.childNodes).find(child => child.nodeType === 1);//Node.ELEMENT_NODE);
 }
 
 /**
@@ -90,7 +90,7 @@ function _extractNamespaces(attributes: NamedNodeMap, defaultPrefix: string = un
  * @returns a copy of the given node with renamed nodes
  */
 export function renameNodes(oldName: string, newName: string, node: Node): Node {
-    let clone = node.cloneNode(true) as Element;
+    let clone = <Element>node.cloneNode(true);
     const [sourceNsPrefix, sourceTagName] = oldName.split(":", 2);
     const sourceNsUri = namespaces[sourceNsPrefix.toUpperCase()];
     const [targetNsPrefix, targetTagName] = newName.split(":", 2);
