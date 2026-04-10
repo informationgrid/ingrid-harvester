@@ -45,6 +45,10 @@ export class ImportSocketService {
 
     private limit = pLimit(ConfigService.getThreadpoolSize());
 
+    // throttling of messages to frontend to make UI more responsive
+    private lastEmitTimes = new Map<number, number>();
+    private static readonly THROTTLE_MS = 500;
+
     constructor(private summaryService: SummaryService) {
     }
 
@@ -90,10 +94,17 @@ export class ImportSocketService {
                                     }).nextDate().toDate();
                                 }
                                 response.duration = (new Date().getTime() - lastExecution.getTime()) / 1000;
-                                this.nsp.emit('/log', response);
+
+                                const now = Date.now();
+                                const lastEmit = this.lastEmitTimes.get(id) || 0;
+                                if (response.complete || (now - lastEmit > ImportSocketService.THROTTLE_MS)) {
+                                    this.nsp.emit('/log', response);
+                                    this.lastEmitTimes.set(id, now);
+                                }
 
                                 // when complete then write information log to file
                                 if (response.complete) {
+                                    this.lastEmitTimes.delete(id);
                                     // save old summary to compare
                                     let summaryLastRun: ImportLogMessage = this.summaryService.get(id);
 
