@@ -51,7 +51,7 @@ export default abstract class ElasticsearchType {
                     className: "ingrid-col-10 ingrid-col-md-auto",
                     defaultValue: "default-mapping",
                     props: {
-                      label: transloco.transform("catalogs.formLabel.mapping"),
+                      label: transloco.transform("catalogs.formLabel.mappingFile"),
                       required: true,
                       options: [
                         // TODO these options should come from the backend. they will differ for each profile
