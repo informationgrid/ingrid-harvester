@@ -29,6 +29,10 @@ import { ZdmIdfGenerator } from './zdm.idf.generator.js';
 
 export class ZdmWfsMapper extends ingridWfsMapper {
 
+    getTitle(): string {
+        return this.baseMapper.getTitle();
+    }
+
     getDescription(): string {
         var summary = this.baseMapper.select('./wfs:Abstract', this.baseMapper.featureOrFeatureType, true)?.textContent;
         var name = this.baseMapper.getTypename();

@@ -63,6 +63,7 @@ export const wfsDefaults: WfsSettings = {
     httpMethod: 'GET',
     resultType: 'results',
     wfsProfile: WfsProfile.default,
+    featureTitleAttribute: '@gml:id'
 };
 
 export const wfsCapabilities: ImporterCapabilities = {
