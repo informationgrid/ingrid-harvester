@@ -140,6 +140,18 @@ export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings,
         log.warn(`deleteAllRecordsForCatalog not yet implemented for source '${datasourceId}'`);
     }
 
+    async deleteCatalog(): Promise<void> {
+        log.info(`Deleting Piveau catalog '${this.settings.settings.catalog}'`);
+        const targetUrl = `${this.settings.url}/catalogues/${this.settings.settings.catalog}`;
+        // TODO check response for error
+        await RequestDelegate.doRequest({
+            uri: targetUrl,
+            method: 'DELETE',
+            resolveWithFullResponse: true,
+            headers: {"X-API-KEY": this.settings.settings.apiKey},
+        });
+    }
+
     /**
      * Build the full Piveau target URL with query parameters.
      */
