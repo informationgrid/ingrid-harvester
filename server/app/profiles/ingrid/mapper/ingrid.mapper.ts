@@ -149,7 +149,7 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
         return {};
     }
 
-    getDistributions(): Promise<Distribution[]>{
+    async getDistributions(): Promise<Distribution[]>{
         return undefined
     }
 

@@ -224,7 +224,7 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
      * Fetch all existing record identifiers from the target CSW catalog (unfiltered).
      * Used during import to decide Insert vs Update.
      */
-    private fetchExistingIdentifiers(): Promise<Set<string>> {
+    private async fetchExistingIdentifiers(): Promise<Set<string>> {
         return this.paginatedGetRecords(this.settings.url, (start, max) => `<?xml version="1.0" encoding="UTF-8"?>
 <csw:GetRecords xmlns:csw="${namespaces.CSW}"
                 xmlns:dc="${namespaces.DC}"

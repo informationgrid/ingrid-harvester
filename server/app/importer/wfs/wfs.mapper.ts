@@ -123,7 +123,7 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
         }
     }
 
-    getDistributions(): Promise<Distribution[]> {
+    async getDistributions(): Promise<Distribution[]> {
         return undefined;
     }
 

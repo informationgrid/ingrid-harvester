@@ -95,7 +95,7 @@ const metadataResponse = (code: string) => ({
 });
 
 // Helper to run the importer and wait for completion
-function runImporter(importer: GenesisImporter): Promise<void> {
+async function runImporter(importer: GenesisImporter): Promise<void> {
     return new Promise((resolve, reject) => {
         importer.run(false).subscribe({
             complete: resolve,

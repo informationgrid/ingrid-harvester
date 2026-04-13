@@ -401,7 +401,7 @@ export class PostgresUtils extends DatabaseUtils {
         }
     }
 
-    sendBulkData(commitTransaction: boolean = false): Promise<BulkResponse> {
+    async sendBulkData(commitTransaction: boolean = false): Promise<BulkResponse> {
         if (this._bulkData.length > 0) {
             log.debug('Sending BULK message with ' + this._bulkData.length + ' items to persist');
             let promise = this.bulk(this._bulkData, commitTransaction);
@@ -413,7 +413,7 @@ export class PostgresUtils extends DatabaseUtils {
         }));
     }
 
-    sendBulkCouples(commitTransaction: boolean = false): Promise<BulkResponse> {
+    async sendBulkCouples(commitTransaction: boolean = false): Promise<BulkResponse> {
         if (this._bulkCouples.length > 0) {
             log.debug('Sending BULK message with ' + this._bulkCouples.length + ' items to persist');
             let promise = this.bulk(this._bulkCouples, commitTransaction);

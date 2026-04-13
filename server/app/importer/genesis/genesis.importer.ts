@@ -279,7 +279,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         };
     }
 
-    private sleep(ms: number): Promise<void> {
+    private async sleep(ms: number): Promise<void> {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 }
