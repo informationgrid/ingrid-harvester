@@ -70,6 +70,10 @@ export abstract class ElasticsearchCatalog extends Catalog<IndexDocument, Elasti
         // }
     }
 
+    async deleteCatalog(): Promise<void> {
+        await this.elastic.deleteIndex(this.settings.settings.index);
+    }
+
     async flushImport(): Promise<void> {
         // send and empty current queue
         const errorsBefore = this.summary.errors.length;
