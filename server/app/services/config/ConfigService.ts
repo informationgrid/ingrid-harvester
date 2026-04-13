@@ -21,17 +21,16 @@
  * ==================================================
  */
 
-import type { CatalogSettings, ElasticsearchCatalogSettings, PiveauCatalogSettings } from '@shared/catalog.js';
 import type { Datasource } from '@shared/datasource.js';
 import type { GeneralSettings } from '@shared/general-config.settings.js';
 import type { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
 import * as fs from 'fs';
 import log4js from 'log4js';
-import { defaultImporterSettings, type ImporterSettings } from '../../importer/importer.settings.js';
 import { ckanDefaults } from '../../importer/ckan/ckan.settings.js';
 import { cswDefaults } from '../../importer/csw/csw.settings.js';
 import { dcatapdeDefaults } from '../../importer/dcatapde/dcatapde.settings.js';
 import { genesisDefaults } from '../../importer/genesis/genesis.settings.js';
+import { defaultImporterSettings, type ImporterSettings } from '../../importer/importer.settings.js';
 import { kldDefaults } from '../../importer/kld/kld.settings.js';
 import { oaiDefaults } from '../../importer/oai/oai.settings.js';
 import { sparqlDefaults } from '../../importer/sparql/sparql.settings.js';
@@ -53,8 +52,6 @@ function parseBooleanOrUndefined(b: string): boolean {
 export class ConfigService {
 
     private static GENERAL_CONFIG_FILE = "config-general.json";
-
-    private static CATALOG_CONFIG_FILE = "config-catalogs.json";
 
     private static HARVESTER_CONFIG_FILE = "config.json";
 
@@ -325,101 +322,6 @@ export class ConfigService {
         fs.writeFileSync(this.GENERAL_CONFIG_FILE, JSON.stringify(config, null, 2));
     }
 
-    static getCatalogSettings(): CatalogSettings[];
-
-    static getCatalogSettings(id: number): CatalogSettings;
-
-    static getCatalogSettings(id?: number): CatalogSettings | CatalogSettings[] {
-        const catalogConfigFile = this.getCatalogConfigFile();
-        const configExists = fs.existsSync(catalogConfigFile);
-        if (configExists) {
-            const catalogSettings = JSON.parse(fs.readFileSync(catalogConfigFile).toString());
-
-            if (id) {
-              const catalog = catalogSettings.find(settings => settings.id == id);
-              if (!catalog) throw new Error(`Catalog with id ${id} not found`);
-              return catalog;
-            } else {
-              return catalogSettings;
-            }
-        }
-        else {
-            log.warn("No catalog config file found (config-catalogs.json).");
-            return [];
-        }
-    }
-
-    static getFilteredCatalogSettings(): CatalogSettings[];
-
-    static getFilteredCatalogSettings(id: number): CatalogSettings;
-
-    static getFilteredCatalogSettings(id?: number): CatalogSettings | CatalogSettings[] {
-        const catalogSettings = id == null ? this.getCatalogSettings() : [this.getCatalogSettings(id)];
-        const filteredCatalogsSettings = catalogSettings.map(catalog => {
-            let filtered = { ...catalog } as any;
-
-            // Remove sensitive information from catalog settings.
-            if (catalog['settings']?.['password'] || catalog['settings']?.['apiKey']) {
-                return MiscUtils.removePaths(catalog as ElasticsearchCatalogSettings | PiveauCatalogSettings, [
-                    "settings.password",
-                    "settings.apiKey"
-                ]);
-            }
-
-            return filtered;
-        });
-        if (filteredCatalogsSettings.length == 1) {
-            return filteredCatalogsSettings[0];
-        }
-        return filteredCatalogsSettings;
-    }
-
-    static setCatalogSettings(config: CatalogSettings[]) {
-        fs.writeFileSync(this.getCatalogConfigFile(), JSON.stringify(config, null, 2));
-    }
-
-    static addOrEditCatalog(settings: CatalogSettings): CatalogSettings {
-        const createId = (settings: CatalogSettings[]) => {
-            const ids = settings.map(s => s.id).sort();
-            const maxId = ids.length > 0 ? Math.max(...ids) : 0;
-            return maxId + 1;
-        };
-        const existingSettings = ConfigService.getCatalogSettings();
-        // if id is given, update the pertaining catalog settings
-        if (settings.id) {
-            const catalogIndex = existingSettings.findIndex(catalog => catalog.id == settings.id);
-            if (catalogIndex == -1) {
-                throw new Error(`Catalog with id ${settings.id} not found`);
-            }
-            const existing = existingSettings[catalogIndex];
-            if (existing.type == 'elasticsearch' && settings.type == 'elasticsearch') {
-                MiscUtils.restorePaths(settings as ElasticsearchCatalogSettings, existing as ElasticsearchCatalogSettings, ['settings.password']);
-            }
-            else if (existing.type == 'piveau' && settings.type == 'piveau') {
-                MiscUtils.restorePaths(settings as PiveauCatalogSettings, existing as PiveauCatalogSettings, ['settings.apiKey']);
-            }
-            existingSettings[catalogIndex] = settings;
-        }
-        // else create id and add new catalog settings to list
-        else {
-            settings.id = createId(existingSettings);
-            existingSettings.push(settings);
-        }
-        // persist changes
-        ConfigService.setCatalogSettings(existingSettings);
-        return settings;
-    }
-
-    static removeCatalog(id: number) {
-        const existingSettings = ConfigService.getCatalogSettings();
-        const catalogIndex = existingSettings.findIndex(catalog => catalog.id == id);
-        if (catalogIndex === -1) {
-            throw new Error(`Catalog with id ${id} not found`);
-        }
-        // persist changes
-        ConfigService.setCatalogSettings(existingSettings.filter(catalog => catalog.id != id));
-    }
-
     static getMappingDistribution(): MappingDistribution[] {
         return this.mappingDistribution;
     }
@@ -492,7 +394,11 @@ export class ConfigService {
         return ordered;
     }
 
-    private static getConfigFile(filename: string) {
+    private static getHarvesterConfigFile() {
+        return this.getConfigFile(this.HARVESTER_CONFIG_FILE);
+    }
+
+    static getConfigFile(filename: string) {
         let configDir = process.env.IMPORTER_CONFIG_DIR;
         if (!configDir) {
             configDir = process.argv.find(arg => arg.toLowerCase().startsWith('--config_dir=')) ?? '';
@@ -501,13 +407,5 @@ export class ConfigService {
         return configDir
             ? configDir + '/' + filename
             : filename;
-    }
-
-    private static getHarvesterConfigFile() {
-        return this.getConfigFile(this.HARVESTER_CONFIG_FILE);
-    }
-
-    private static getCatalogConfigFile() {
-        return this.getConfigFile(this.CATALOG_CONFIG_FILE);
     }
 }

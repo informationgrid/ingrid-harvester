@@ -28,14 +28,14 @@ import type { CswMapper } from '../../importer/csw/csw.mapper.js';
 import type { CswSettings } from '../../importer/csw/csw.settings.js';
 import type { DcatappluMapper } from '../../importer/dcatapplu/dcatapplu.mapper.js';
 import type { DcatappluSettings } from '../../importer/dcatapplu/dcatapplu.settings.js';
-import type { ImporterType } from '../../importer/importer.settings.js';
 import type { Importer } from '../../importer/importer.js';
+import type { ImporterType } from '../../importer/importer.settings.js';
 import type { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
 import type { WfsSettings } from '../../importer/wfs/wfs.settings.js';
 import type { DocumentFactory } from '../../model/index.document.factory.js';
 import type { Summary } from '../../model/summary.js';
 import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
-import { ConfigService } from '../../services/config/ConfigService.js';
+import { CatalogService } from '../../services/catalog/CatalogService.js';
 import { ProfileFactory } from '../profile.factory.js';
 import { DiplanungCswMapper } from './mapper/diplanung.csw.mapper.js';
 import { DiplanungDcatappluMapper } from './mapper/diplanung.dcatapplu.mapper.js';
@@ -115,7 +115,7 @@ export class DiplanungFactory extends ProfileFactory<DiplanungSettings> {
     }
 
     async getCatalog(catalogId: number, summary: Summary): Promise<Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>> {
-        const catalogSettings = ConfigService.getCatalogSettings(catalogId);
+        const catalogSettings = CatalogService.getCatalogSettings(catalogId);
         switch (catalogSettings?.type) {
             case 'elasticsearch':
                 const { DiplanungElasticsearchCatalog } = await import('./catalog/elasticsearch.catalog.js');

@@ -162,6 +162,17 @@ export class PostgresUtils extends DatabaseUtils {
         await this.transactionClient.query(this.queries.deleteNonFetchedRecords, [source, last_modified]);
     }
 
+    async deleteCatalogDatasets(catalogId: number): Promise<void> {
+        await this.transactionClient.query(
+            'DELETE FROM record WHERE catalog_ids = ARRAY[$1]',
+            [catalogId]
+        );
+        await this.transactionClient.query(
+            'UPDATE record SET catalog_ids = array_remove(catalog_ids, $1) WHERE catalog_ids @> ARRAY[$1]',
+            [catalogId]
+        );
+    }
+
     /**
      * Stream datasets from the database to a given catalog,
      * while observing catalog-specific transformation and deduplication rules.

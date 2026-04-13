@@ -66,7 +66,6 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
     }
 
     async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
-        // TODO semantics are wrong, fix it
         await this.deleteStaleRecords(importerSettings.id);
     }
 
@@ -134,10 +133,39 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         }
     }
 
-    async deleteAllRecordsForCatalog(sourceId: string): Promise<void> {
+    async deleteRecordsForDatasource(sourceId: number): Promise<void> {
         log.info(`Deleting all records for source '${sourceId}' from CSW catalog '${this.settings.id}'`);
         // TODO: Issue a CSW-T Delete with filter subject = source:${sourceId}
-        log.warn(`deleteAllRecordsForCatalog not yet implemented for source '${sourceId}'`);
+        log.warn(`deleteRecordsForDatasource not yet implemented for source '${sourceId}'`);
+    }
+
+    async deleteCatalog(): Promise<void> {
+        log.info(`Deleting all records for catalog '${this.settings.id}' from CSW`);
+        const targetUrl = this.buildTargetUrl();
+
+        // Build a filter that matches the catalog keyword
+        const deleteXml = `<?xml version="1.0" encoding="UTF-8"?>
+<csw:Transaction xmlns:csw="${namespaces.CSW}" xmlns:ogc="${namespaces.OGC}" service="CSW" version="2.0.2">
+    <csw:Delete typeName="gmd:MD_Metadata">
+        <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+                <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
+                    <ogc:PropertyName>subject</ogc:PropertyName>
+                    <ogc:Literal>%catalog:${this.settings.id}%</ogc:Literal>
+                </ogc:PropertyIsLike>
+            </ogc:Filter>
+        </csw:Constraint>
+    </csw:Delete>
+</csw:Transaction>`;
+
+        const response = await this.postTransaction(targetUrl, deleteXml);
+        const result = this.parseTransactionResponse(response);
+
+        if (result.success) {
+            log.info(`Successfully deleted ${result.deleted} records from CSW for catalog ${this.settings.id}`);
+        } else {
+            log.error(`Failed to delete records from CSW: ${response}`);
+        }
     }
 
     /**
@@ -211,7 +239,6 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
 </csw:GetRecords>`);
     }
 
-
     /**
      * Add transaction timestamp and source ID as ISO 19139 descriptiveKeywords
      * to the MD_Metadata XML. Implements the abstract addTraceability from Catalog.
@@ -228,6 +255,9 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         </gmd:keyword>
         <gmd:keyword>
             <gco:CharacterString>source:${datasourceId}</gco:CharacterString>
+        </gmd:keyword>
+        <gmd:keyword>
+            <gco:CharacterString>catalog:${this.settings.id}</gco:CharacterString>
         </gmd:keyword>
     </gmd:MD_Keywords>
 </gmd:descriptiveKeywords>`;
