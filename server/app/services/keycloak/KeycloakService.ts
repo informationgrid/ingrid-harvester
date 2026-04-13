@@ -40,17 +40,6 @@ export class KeycloakService {
         return this.memoryStore;
     }
 
-    /*public getToken(): Token {
-        return this.token;
-    }*/
-
-    /**
-     * @deprecated
-     */
-    public setToken(token: Token): void {
-        // this.token = token;
-    }
-
     public getRoles(token: any): string[] {
         if (!token) return [];
 

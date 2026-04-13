@@ -49,7 +49,6 @@ export class AuthMiddleware implements MiddlewareMethods {
           tokenData = JSON.parse(tokenData);
         }
         const accessToken = typeof tokenData === 'string' ? tokenData : (tokenData.token || tokenData.access_token);
-        this.keycloakService.setToken(accessToken);
       } catch (e) {
         console.error('Error parsing token from session:', e);
       }
@@ -58,7 +57,6 @@ export class AuthMiddleware implements MiddlewareMethods {
     // 2. Check if keycloak-connect already authenticated the request
     let grant = ctx.getRequest().kauth?.grant;
     if (grant) {
-      this.keycloakService.setToken(grant.access_token);
       // Store tokens in session for BFF
       if (request.session) {
         request.session['keycloak-token'] = grant.__raw || JSON.stringify(grant);
@@ -99,7 +97,6 @@ export class AuthMiddleware implements MiddlewareMethods {
         }
 
         (request as any).kauth = { grant: grantObj };
-        this.keycloakService.setToken(grantObj.access_token);
       } catch (e) {
         if (e instanceof Unauthorized) {
           throw e;
@@ -118,6 +115,15 @@ export class AuthMiddleware implements MiddlewareMethods {
     // - Token validation (including expiration)
     // - Redirecting to login if not authenticated (for browser requests)
     // - Checking roles if provided
+
+    // If request is AJAX and not authenticated, return 401 instead of redirecting
+    const isAjax = (request as any).xhr || ((request as any).headers.accept && (request as any).headers.accept.indexOf('application/json') !== -1);
+    const isAuthenticated = !!(request as any).kauth?.grant;
+
+    if (isAjax && !isAuthenticated) {
+      throw new Unauthorized('Session expired, please login again');
+    }
+
     // return keycloak.enforcer(options.role, {response_mode: 'token'});
     // return keycloak.protect(options.role);
     let protect: any = options.role;
