@@ -120,7 +120,7 @@ export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSett
     // /**
     //  * Remove records in the target catalog that are no longer present in the current
     //  * harvest. Records belonging to this source are identified by sourceId
-    //  * (ImporterSettings.catalogId), which was embedded via addTraceability.
+    //  * (ImporterSettings.id), which was embedded via addTraceability.
     //  */
     // abstract deleteStaleRecords(sourceId: string): Promise<void>;
 
@@ -130,4 +130,17 @@ export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSett
     //  * Called when a data source is deleted by a user.
     //  */
     // abstract deleteAllRecordsForCatalog(sourceId: string): Promise<void>;
+
+    abstract deleteCatalog(): Promise<void>;
+
+    async deleteCatalogRecordsFromDatabase(): Promise<void> {
+        try {
+            await this.database.beginTransaction();
+            await this.database.deleteCatalogDatasets(this.settings.id);
+            await this.database.commitTransaction();
+        }
+        catch (e) {
+            await this.database.rollbackTransaction();
+        }
+    }
 }

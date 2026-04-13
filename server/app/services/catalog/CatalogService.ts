@@ -24,6 +24,8 @@
 import type { CatalogSettings, ElasticsearchCatalogSettings, PiveauCatalogSettings } from '@shared/catalog.js';
 import * as fs from 'fs';
 import log4js from 'log4js';
+import { Summary } from '../../model/summary.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { ConfigService } from '../config/ConfigService.js';
 
@@ -118,17 +120,19 @@ export class CatalogService {
         return settings;
     }
 
-    static removeCatalog(id: number) {
+    static async removeCatalog(id: number) {
         const existingSettings = CatalogService.getCatalogSettings();
         const catalogIndex = existingSettings.findIndex(catalog => catalog.id == id);
         if (catalogIndex === -1) {
             throw new Error(`Catalog with id ${id} not found`);
         }
-        // remove catalog datasets from database
 
         // remove catalog datasets from target (elasticsearch, csw, piveau, ...)
+        const catalog = await ProfileFactoryLoader.get().getCatalog(id, new Summary('catalogRemoval', {}));
+        await catalog.deleteCatalog();
+        await catalog.deleteCatalogRecordsFromDatabase();
 
-        // persist changes
+        // persist changes in settings
         CatalogService.setCatalogSettings(existingSettings.filter(catalog => catalog.id != id));
     }
 
