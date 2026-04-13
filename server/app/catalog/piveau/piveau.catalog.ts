@@ -134,10 +134,10 @@ export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings,
         }
     }
 
-    async deleteAllRecordsForCatalog(datasourceId: number): Promise<void> {
-        log.info(`Deleting all records for source '${datasourceId}' from Piveau catalog '${this.settings.id}'`);
+    async deleteRecordsForDatasource(sourceId: number): Promise<void> {
+        log.info(`Deleting all records for source '${sourceId}' from Piveau catalog '${this.settings.id}'`);
         // TODO: Issue a Piveau Delete with filter subject = source:${sourceId}
-        log.warn(`deleteAllRecordsForCatalog not yet implemented for source '${datasourceId}'`);
+        log.warn(`deleteRecordsForDatasource not yet implemented for source '${sourceId}'`);
     }
 
     async deleteCatalog(): Promise<void> {

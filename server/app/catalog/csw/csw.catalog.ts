@@ -66,7 +66,6 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
     }
 
     async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
-        // TODO semantics are wrong, fix it
         await this.deleteStaleRecords(importerSettings.id);
     }
 
@@ -134,10 +133,10 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         }
     }
 
-    async deleteAllRecordsForCatalog(sourceId: string): Promise<void> {
+    async deleteRecordsForDatasource(sourceId: number): Promise<void> {
         log.info(`Deleting all records for source '${sourceId}' from CSW catalog '${this.settings.id}'`);
         // TODO: Issue a CSW-T Delete with filter subject = source:${sourceId}
-        log.warn(`deleteAllRecordsForCatalog not yet implemented for source '${sourceId}'`);
+        log.warn(`deleteRecordsForDatasource not yet implemented for source '${sourceId}'`);
     }
 
     async deleteCatalog(): Promise<void> {

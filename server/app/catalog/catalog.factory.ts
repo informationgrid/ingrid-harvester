@@ -124,12 +124,12 @@ export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSett
     //  */
     // abstract deleteStaleRecords(sourceId: string): Promise<void>;
 
-    // /**
-    //  * Remove ALL records in the target catalog that originated from the given source
-    //  * (identified by sourceId = ImporterSettings.catalogId).
-    //  * Called when a data source is deleted by a user.
-    //  */
-    // abstract deleteAllRecordsForCatalog(sourceId: string): Promise<void>;
+    /**
+     * Remove ALL records in the target catalog that originated from the given source
+     * (identified by sourceId = ImporterSettings.id).
+     * Called when a data source is deleted by a user.
+     */
+    abstract deleteRecordsForDatasource(sourceId: number): Promise<void>;
 
     abstract deleteCatalog(): Promise<void>;
 
