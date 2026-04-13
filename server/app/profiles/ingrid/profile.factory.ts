@@ -32,8 +32,8 @@ import type { DcatapdeMapper } from '../../importer/dcatapde/dcatapde.mapper.js'
 import type { DcatapdeSettings } from "../../importer/dcatapde/dcatapde.settings.js";
 import type { GenesisMapper } from "../../importer/genesis/genesis.mapper.js";
 import type { GenesisSettings } from "../../importer/genesis/genesis.settings.js";
-import type { ImporterType } from '../../importer/importer.settings.js';
 import type { Importer } from '../../importer/importer.js';
+import type { ImporterType } from '../../importer/importer.settings.js';
 import type { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
 import type { WfsSettings } from '../../importer/wfs/wfs.settings.js';
 import { WfsProfile } from '../../importer/wfs/wfs.settings.js';
@@ -43,7 +43,7 @@ import type { Summary } from '../../model/summary.js';
 import type { DatabaseUtils } from '../../persistence/database.utils.js';
 import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
 import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
-import { ConfigService } from '../../services/config/ConfigService.js';
+import { CatalogService } from '../../services/catalog/CatalogService.js';
 import { ProfileFactory } from '../profile.factory.js';
 import { ingridCkanMapper } from './mapper/ingrid.ckan.mapper.js';
 import { ingridCswMapper } from './mapper/ingrid.csw.mapper.js';
@@ -139,7 +139,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
     }
 
     async getCatalog(catalogId: number, summary: Summary): Promise<Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>> {
-        const catalogSettings = ConfigService.getCatalogSettings(catalogId);
+        const catalogSettings = CatalogService.getCatalogSettings(catalogId);
         switch (catalogSettings?.type) {
             case 'elasticsearch':
                 const { IngridElasticsearchCatalog } = await import('./catalog/elasticsearch.catalog.js');

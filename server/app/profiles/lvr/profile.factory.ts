@@ -24,8 +24,8 @@
 import type { CatalogSettings, ElasticsearchCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
 import { Catalog, type CatalogColumnType, type CatalogOperation } from '../../catalog/catalog.factory.js';
-import type { ImporterType } from '../../importer/importer.settings.js';
 import type { Importer } from '../../importer/importer.js';
+import type { ImporterType } from '../../importer/importer.settings.js';
 import type { JsonMapper } from '../../importer/json/json.mapper.js';
 import type { JsonSettings } from '../../importer/json/json.settings.js';
 import type { KldMapper } from '../../importer/kld/kld.mapper.js';
@@ -36,7 +36,7 @@ import type { OaiSettings } from '../../importer/oai/oai.settings.js';
 import type { DocumentFactory } from '../../model/index.document.factory.js';
 import type { Summary } from '../../model/summary.js';
 import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
-import { ConfigService } from '../../services/config/ConfigService.js';
+import { CatalogService } from '../../services/catalog/CatalogService.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { ProfileFactory } from '../profile.factory.js';
 import { LvrClickRheinMapper } from './mapper/lvr.clickrhein.mapper.js';
@@ -102,7 +102,7 @@ export class LvrFactory extends ProfileFactory<LvrSettings> {
     }
 
     async getCatalog(catalogId: number, summary: Summary): Promise<Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>> {
-        const catalogSettings = ConfigService.getCatalogSettings(catalogId);
+        const catalogSettings = CatalogService.getCatalogSettings(catalogId);
         switch (catalogSettings?.type) {
             case 'elasticsearch':
                 const { LvrElasticsearchCatalog } = await import('./catalog/elasticsearch.catalog.js');

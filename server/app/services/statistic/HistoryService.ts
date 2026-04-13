@@ -29,6 +29,7 @@ import type { IndexSettings } from '../../persistence/elastic.setting.js';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import elasticsearchMapping from '../../statistic/statistic.mapping.json' with { type: 'json' };
+import { CatalogService } from '../catalog/CatalogService.js';
 import { ConfigService } from '../config/ConfigService.js';
 
 @Service()
@@ -56,7 +57,7 @@ export class HistoryService {
     async getHistory(id: number): Promise<any> {
         await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
         const harvester = ConfigService.getHarvesters().find(h => h.id === id);
-        const catalogs = harvester.catalogIds.map(catalogId => ConfigService.getCatalogSettings(catalogId));
+        const catalogs = harvester.catalogIds.map(catalogId => CatalogService.getCatalogSettings(catalogId));
         const esCatalogs = <ElasticsearchCatalogSettings[]>catalogs.filter(settings => settings.type == 'elasticsearch');
         const histories = [];
         for (const catalog of esCatalogs) {

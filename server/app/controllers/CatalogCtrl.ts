@@ -24,9 +24,9 @@
 import type { CatalogSettings } from '@shared/catalog.js';
 import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '@tsed/common';
 import log4js from 'log4js';
+import { KeycloakAuth } from "../decorators/KeycloakAuthOptions.js";
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
-import { ConfigService } from '../services/config/ConfigService.js';
-import {KeycloakAuth} from "../decorators/KeycloakAuthOptions.js";
+import { CatalogService } from '../services/catalog/CatalogService.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -37,80 +37,23 @@ export class CatalogCtrl {
 
     @Get('/')
     getCatalogs(): CatalogSettings[] {
-        return ConfigService.getFilteredCatalogSettings();
+        return CatalogService.getFilteredCatalogSettings();
     }
 
     @Get('/:identifier')
     getCatalog(@PathParams('identifier') id: number): CatalogSettings {
-        return ConfigService.getFilteredCatalogSettings(id);
+        return CatalogService.getFilteredCatalogSettings(id);
     }
 
     @Post('/')
     @KeycloakAuth({role: ["admin"]})
     addOrEditCatalog(@BodyParams() settings: CatalogSettings): CatalogSettings {
-        return ConfigService.addOrEditCatalog(settings);
+        return CatalogService.addOrEditCatalog(settings);
     }
-
-    // @Put('/:identifier')
-    // async enableCatalog(@PathParams('identifier') catalogIdentifier: string,
-    //         @QueryParams('enable') enable: boolean) {
-    //     await ConfigService.enableLegacyCatalog(catalogIdentifier, enable);
-    // }
 
     @Delete('/:identifier')
     @KeycloakAuth({role: ["admin"]})
     async deleteCatalog(@PathParams('identifier') id: number): Promise<void> {
-        await ConfigService.removeCatalog(id);
+        await CatalogService.removeCatalog(id);
     }
-
-    // @Post('/import/:id')
-    // importFromHarvester(@PathParams('id') id: number, @QueryParams('isIncremental') isIncremental: boolean) {
-    //     this.importSocketService.runImport(+id, isIncremental);
-    // }
-
-    // @Post('/importAll')
-    // async importAllFromHarvester() {
-    //     if (this.importAllProcessIsRunning) {
-    //         log.info('Import process for all harvesters is already running - not starting again');
-    //     }
-    //     else {
-    //         log.info('Started import process for all harvesters');
-    //         this.importAllProcessIsRunning = true;
-
-    //         let activeConfigs = ConfigService.get().filter(config => !config.disable);
-    //         // run higher priority harvesters first (sort descending)
-    //         activeConfigs.sort((harvesterA, harvesterB) => harvesterB.priority - harvesterA.priority);
-
-    //         for (var i = 0; i < activeConfigs.length; i++) {
-    //             await this.importSocketService.runImport(activeConfigs[i].id);
-    //         }
-
-    //         this.importAllProcessIsRunning = false;
-    //     }
-    // }
-
-    // @Get('/lastLogs')
-    // getLastLogs(): ImportLogMessage[] {
-    //     return this.summaryService.getAll();
-    // }
-
-    // @Get('/log')
-    // getLog(): string {
-    //     return this.logService.get();
-    // }
-
-    // @Post('/schedule/:id')
-    // schedule(@PathParams('id') id: number, @BodyParams('cron') cron: { full: CronData, incr: CronData }): Date[] {
-    //     return this.scheduleService.set(+id, cron);
-    // }
-
-    // @Post('/url_check')
-    // async checkURLs() {
-    //     this.urlCheckService.start();
-    // }
-
-    // @Post('/index_check')
-    // async checkIndices() {
-    //     this.indexCheckService.start();
-    // }
 }
