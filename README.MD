@@ -13,7 +13,7 @@ The InGrid Harvester runs two components in a single docker container: the actua
 
 ## General steps
 
-* Checkout this repo
+* Check out this repo
 * Add readonly wemove docker hub credentials to your docker setup
     ```bash
     sudo docker login docker-registry.wemove.com
@@ -44,30 +44,7 @@ In a docker setup, you probably want to map these files from the host system int
 
 Several general settings can also be configured via environment variables. These settings take precedence over configuration files.
 
-| Variable                    | Note                                                              |
-|-----------------------------|-------------------------------------------------------------------|
-| DB_CONNECTION_STRING        |                                                                   |
-| DB_URL                      |                                                                   |
-| DB_PORT                     |                                                                   |
-| DB_NAME                     |                                                                   |
-| DB_USER                     |                                                                   |
-| DB_PASSWORD                 |                                                                   |
-| ELASTIC_URL                 |                                                                   |
-| ELASTIC_VERSION             | Major version (6, 7, or 8)                                        |
-| ELASTIC_USER                |                                                                   |
-| ELASTIC_PASSWORD            |                                                                   |
-| ELASTIC_REJECT_UNAUTHORIZED | Whether to reject Es connections if the certificate is invalid    |
-| ELASTIC_INDEX               |                                                                   |
-| ELASTIC_ALIAS               |                                                                   |
-| ELASTIC_PREFIX              |                                                                   |
-| ELASTIC_NUM_SHARDS          |                                                                   |
-| ELASTIC_NUM_REPLICAS        |                                                                   |
-| PORTAL_URL                  | Base URL for displaying portal website (no trailing slash)        |
-| PROXY_URL                   | URL needs to contain credentials and port, if applicable          |
-| ALLOW_ALL_UNAUTHORIZED      | If all connections should be allowed, regardless of SSL state     |
-| IMPORTER_PROFILE            | Profile to use for the application: diplanung, mcloud             |
-| BASE_URL                    | Subpath where the Harvester is being served at, if not on `/`     |
-
+For a complete list check the documentation at: [https://ingrid-oss.eu/latest/components/harvester/#umgebungsvariablen](https://ingrid-oss.eu/latest/components/harvester/#umgebungsvariablen)
 
 ## Local development setup
 
