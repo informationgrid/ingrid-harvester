@@ -121,6 +121,7 @@ export class CswImporter extends Importer<CswSettings> {
                 if (!this.isIncremental) {
                     // did the harvesting return results at all?
                     if (numIndexDocs == 0) {
+                        log.error(`No results during ${this.settings.type} import`);
                         throw new Error(`No results during ${this.settings.type} import`);
                     }
                     // ensure that less than X percent of existing datasets are slated for deletion
@@ -131,6 +132,7 @@ export class CswImporter extends Importer<CswSettings> {
                         MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
                     }
                     if (cancel.enabled && nonFetchedPercentage > cancel.minDifference) {
+                        log.error(`Not enough coverage of previous results (${nonFetchedPercentage}%)`);
                         throw new Error(`Not enough coverage of previous results (${nonFetchedPercentage}%)`);
                     }
                 }
