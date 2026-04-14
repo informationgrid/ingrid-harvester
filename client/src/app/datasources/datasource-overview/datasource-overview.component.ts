@@ -190,12 +190,17 @@ export class DatasourceOverviewComponent {
     this.dialog
       .open(DialogSchedulerComponent, {
         width: "500px",
-        data: { harvesterType: datasource.type, cron: datasource.cron },
+        data: {
+          cron: datasource.cron,
+          isIncrementalSupported:
+            this.datasourceService.importerTypes()[datasource.type]
+              ?.capabilities?.isIncrementalSupported ?? false,
+        },
       })
       .afterClosed()
       .subscribe((result) => {
         if (!result) return;
-        this.datasourceService.scheduleByCron(datasource, result.value);
+        this.datasourceService.scheduleByCron(datasource, result);
       });
   }
 

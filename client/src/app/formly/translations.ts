@@ -27,6 +27,10 @@ export function registerTranslateExtension(transloco: TranslocoService) {
         name: "pattern",
         message: transloco.translate("form.validationMessages.pattern"),
       },
+      {
+        name: "cron",
+        message: transloco.translate("form.validationMessages.cron"),
+      },
     ],
   };
 }

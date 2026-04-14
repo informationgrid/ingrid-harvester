@@ -77,6 +77,7 @@ import { FormlyRepeatFormTypeComponent } from "./formly/types/formly-repeat-form
 import { FormlySubSectionWrapperComponent } from "./formly/wrappers/formly-sub-section-wrapper/formly-sub-section-wrapper.component";
 import { FormlyToggleTypeComponent } from "./formly/types/formly-toggle-type/formly-toggle-type.component";
 import {
+  CronValidator,
   JsonValidator,
   UniqueKeyValidator,
   UrlValidator,
@@ -181,6 +182,7 @@ const appRoutes: Routes = routes;
         { name: "url", validation: UrlValidator },
         { name: "uniqueKey", validation: UniqueKeyValidator },
         { name: "json", validation: JsonValidator },
+        { name: "cron", validation: CronValidator },
       ],
       ...withFormlyMaterial(),
     }),

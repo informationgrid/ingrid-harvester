@@ -34,7 +34,6 @@ import { MatRadioModule } from "@angular/material/radio";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatTabsModule } from "@angular/material/tabs";
 import { TranslocoModule } from "@ngneat/transloco";
-import { CronjobFormFieldComponent } from "../shared/cronjob-form-field/cronjob-form-field.component";
 import { PageTemplateModule } from "../shared/page-template/page-template.module";
 import { SharedModule } from "../shared/shared.module";
 import { ConfigGeneralComponent } from "./config-general/config-general.component";
@@ -71,7 +70,6 @@ import { FormlyForm } from "@ngx-formly/core";
     routing,
     TranslocoModule,
     PageTemplateModule,
-    CronjobFormFieldComponent,
     ContextHelpDirective,
     MatTooltip,
     FormlyForm,

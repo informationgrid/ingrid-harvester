@@ -21,59 +21,133 @@
  * ==================================================
  */
 
-import { isValidCron } from 'cron-validator';
-import { Component, Inject, OnInit, Optional } from '@angular/core';
-import { CronData } from '../../../../../server/app/importer/importer.settings';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Component, Inject, OnDestroy, OnInit, Optional } from "@angular/core";
+import { CronData } from "../../../../../server/app/importer/importer.settings";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { UntypedFormGroup } from "@angular/forms";
+import { FormlyFieldConfig } from "@ngx-formly/core";
+import { translateCronExpression } from "../../utils/cronUtils";
+import { FormDialogComponent } from "../../shared/form-dialog/form-dialog.component";
 
 @Component({
-    selector: 'app-dialog-scheduler',
-    templateUrl: './dialog-scheduler.component.html',
-    styleUrls: ['./dialog-scheduler.component.scss'],
-    standalone: false
+  selector: "app-dialog-scheduler",
+  templateUrl: "./dialog-scheduler.component.html",
+  styleUrls: ["./dialog-scheduler.component.scss"],
+  standalone: false,
 })
-export class DialogSchedulerComponent implements OnInit {
-
-  schedulerForm: UntypedFormGroup;
-
-  harvesterType: string;
+export class DialogSchedulerComponent implements OnDestroy {
+  form = new UntypedFormGroup({});
+  formModel: any;
+  formFields: FormlyFieldConfig[];
 
   constructor(
-    private formBuilder: UntypedFormBuilder,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: { harvesterType: string, cron: { full: CronData, incr: CronData } }
+    @Inject(MAT_DIALOG_DATA)
+    private data: {
+      isIncrementalSupported: boolean;
+      cron: { full: CronData; incr: CronData };
+    },
+    private dialogRef: MatDialogRef<FormDialogComponent>,
   ) {
-    if (!data.cron) {
-      data.cron = {
-        "full": {
-          "pattern": "",
-          "active": false
-        },
-        "incr": {
-          "pattern": "",
-          "active": false
-        }
-      };
+    this.initForm();
+  }
+
+  private initForm() {
+    this.formModel = this.data.cron
+      ? JSON.parse(JSON.stringify(this.data.cron))
+      : {};
+    this.formFields = [
+      {
+        key: "full",
+        className: "block",
+        fieldGroup: [
+          {
+            key: "active",
+            type: "toggle",
+            defaultValue: false,
+            props: {
+              label: "Komplettes Harvesting",
+            },
+            expressions: {
+              "props.subLabel": this.getCronSubLabel,
+            },
+          },
+          {
+            key: "pattern",
+            type: "input",
+            wrappers: ["form-field", "inline-help"],
+            defaultValue: "",
+            props: {
+              label: "Cron Expression",
+              placeholder: "* * * * *",
+              description:
+                "Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag",
+              contextHelpId: "config_cron",
+            },
+            expressions: {
+              "props.required": "model.active",
+            },
+            validators: {
+              validation: ["cron"],
+            },
+          },
+        ],
+      },
+    ];
+
+    if (this.data.isIncrementalSupported) {
+      this.formFields.push({
+        key: "incr",
+        className: "block mt-4",
+        fieldGroup: [
+          {
+            key: "active",
+            type: "toggle",
+            defaultValue: false,
+            props: {
+              label: "Inkrementelles Harvesting",
+            },
+            expressions: {
+              "props.subLabel": this.getCronSubLabel,
+            },
+          },
+          {
+            key: "pattern",
+            type: "input",
+            wrappers: ["form-field", "inline-help"],
+            defaultValue: "",
+            props: {
+              label: "Cron Expression",
+              placeholder: "* * * * *",
+              description:
+                "Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag",
+              contextHelpId: "config_cron",
+            },
+            expressions: {
+              "props.required": "model.active",
+            },
+            validators: {
+              validation: ["cron"],
+            },
+          },
+        ],
+      });
     }
-
-    this.harvesterType = data.harvesterType;
-    this.schedulerForm = this.formBuilder.group({
-      full: this.formBuilder.group({
-        pattern: [data.cron.full.pattern],
-        active: [data.cron.full.active]
-      }),
-      incr: this.formBuilder.group({
-        pattern: [data.cron.incr.pattern],
-        active: [data.cron.incr.active]
-      }),
-    })
-
   }
 
-  ngOnInit(): void {}
-
-  validationCheck(expression: string){
-    return !isValidCron(expression)
+  submit() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    this.dialogRef.close(this.formModel);
   }
 
+  ngOnDestroy() {
+    this.form.reset();
+  }
+
+  private getCronSubLabel = (field: FormlyFieldConfig) => {
+    if (!field.model.active) return "Planung ausgeschaltet";
+    return translateCronExpression(field.form.value.pattern);
+  };
 }

@@ -153,7 +153,8 @@
       "url": "Verwenden Sie bitte eine gültige URL.",
       "uniqueKey": "Die Schlüssel müssen eindeutig sein.",
       "json": "Kein gültiges JSON-Objekt.",
-      "pattern": "Das Feld enthält ungültige Zeichen."
+      "pattern": "Das Feld enthält ungültige Zeichen.",
+      "cron": "Kein gültiger Cron-Ausdruck."
     }
   }
 }

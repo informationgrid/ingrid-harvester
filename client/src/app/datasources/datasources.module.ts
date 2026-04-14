@@ -41,7 +41,6 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatTabsModule } from "@angular/material/tabs";
 import { RouterModule, Routes } from "@angular/router";
-import { CronjobFormFieldComponent } from "../shared/cronjob-form-field/cronjob-form-field.component";
 import { SharedModule } from "../shared/shared.module";
 import { DialogEditComponent } from "./dialog-edit/dialog-edit.component";
 import { DialogHistoryComponent } from "./dialog-history/dialog-history.component";
@@ -59,9 +58,7 @@ import { DialogHeaderComponent } from "../shared/dialog-header/dialog-header.com
 import { DatasourceEntryComponent } from "./datasource-entry/datasource-entry.component";
 import { OverviewTemplateComponent } from "../shared/overview-template/overview-template.component";
 import { FormlyForm } from "@ngx-formly/core";
-import {
-  CircularProgressIndicatorComponent
-} from "../shared/circular-progress-indicator/circular-progress-indicator.component";
+import { CircularProgressIndicatorComponent } from "../shared/circular-progress-indicator/circular-progress-indicator.component";
 import { StatusLabelComponent } from "../shared/status-label/status-label.component";
 import { DetailItemComponent } from "../shared/detail-item/detail-item.component";
 import { CdkDrag, CdkDragHandle } from "@angular/cdk/drag-drop";
@@ -103,7 +100,6 @@ const routes: Routes = [
     MatCheckboxModule,
     MatBadgeModule,
     ScrollingModule,
-    CronjobFormFieldComponent,
     MatAutocompleteModule,
     ContextHelpDirective,
     MatTooltip,

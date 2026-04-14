@@ -45,13 +45,11 @@ export default abstract class ChecksSection {
                     "Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag",
                   contextHelpId: "config_cron",
                 },
-                hooks: {
-                  onInit: (field) => {
-                    field.formControl.valueChanges.subscribe((value) => {
-                      if (isValidCron(value)) return;
-                      field.form.get("active")?.setValue(false);
-                    });
-                  },
+                expressions: {
+                  "props.required": "model.active",
+                },
+                validators: {
+                  validation: ["cron"],
                 },
               },
             ],
@@ -81,13 +79,11 @@ export default abstract class ChecksSection {
                     "Syntax: Minute | Stunde | Tag(Monat) | Monat | Wochentag",
                   contextHelpId: "config_cron",
                 },
-                hooks: {
-                  onInit: (field) => {
-                    field.formControl.valueChanges.subscribe((value) => {
-                      if (isValidCron(value)) return;
-                      field.form.get("active")?.setValue(false);
-                    });
-                  },
+                expressions: {
+                  "props.required": "model.active",
+                },
+                validators: {
+                  validation: ["cron"],
                 },
               },
             ],

@@ -29,27 +29,13 @@
   ></ingrid-dialog-header>
 
   <mat-dialog-content>
-    <div class="flex-col gap-20">
-      <harvester-cronjob-form-field
-        [title]="t('datasources.completeImport')"
-        [form]="schedulerForm"
-        formKey="full"
-        activeKeyName="active"
-        cronKeyName="pattern"
-      />
-
-      @if (harvesterType === "CSW") {
-        <mat-divider></mat-divider>
-
-        <harvester-cronjob-form-field
-          [title]="t('datasources.incrementalImport')"
-          [form]="schedulerForm"
-          formKey="incr"
-          activeKeyName="active"
-          cronKeyName="pattern"
-        />
-      }
-    </div>
+    @if (formFields) {
+      <formly-form
+        [form]="form"
+        [model]="formModel"
+        [fields]="formFields"
+      ></formly-form>
+    }
   </mat-dialog-content>
 
   <mat-dialog-actions>
@@ -62,9 +48,8 @@
     <button
       matButton="filled"
       color="primary"
-      [mat-dialog-close]="schedulerForm || null"
-      [disabled]="!schedulerForm.valid"
       data-test="dlg-schedule"
+      (click)="submit()"
     >
       {{ t("common.update") }}
     </button>

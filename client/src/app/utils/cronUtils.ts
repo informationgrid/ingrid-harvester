@@ -1,9 +1,7 @@
 import cronstrue from "cronstrue/i18n";
+import { isValidCron } from "cron-validator";
 
 export function translateCronExpression(expression: string): string {
-  try {
-    return cronstrue.toString(expression, { locale: "de" });
-  } catch (e) {
-    return "Kein gültiger Ausdruck";
-  }
+  if (!isValidCron(expression)) return "Kein gültiger Cron-Ausdruck";
+  return cronstrue.toString(expression, { locale: "de" });
 }

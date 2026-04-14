@@ -22,6 +22,7 @@
  */
 
 import { AbstractControl, ValidationErrors } from "@angular/forms";
+import { isValidCron } from "cron-validator";
 
 export function IdentifierValidator(control: AbstractControl): boolean {
   const value: string = control.value;
@@ -86,5 +87,14 @@ export function JsonKeysValidator(
     }
   } catch (error) {
     return false;
+  }
+}
+
+export function CronValidator(control: AbstractControl): ValidationErrors {
+  try {
+    if (!control.value?.trim()) return null;
+    return isValidCron(control.value) ? null : { cron: true };
+  } catch (error) {
+    return { cron: true };
   }
 }
