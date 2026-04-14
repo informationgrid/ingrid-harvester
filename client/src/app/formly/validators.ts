@@ -34,6 +34,8 @@ export function IdentifierValidator(control: AbstractControl): boolean {
 }
 
 export function UrlValidator(control: AbstractControl): ValidationErrors {
+  if (!control.value?.trim()) return null;
+
   try {
     const url = new URL(control.value);
     const isUrl = url.protocol === "http:" || url.protocol === "https:";

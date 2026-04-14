@@ -21,21 +21,10 @@
     ==================================================
 -->
 
-@if (props.label) {
-  <div class="flex-row items-center gap-8 mb-4">
-    <h3 class="text-lg m-0">
-      {{ props.label }}
-    </h3>
-    @if (props.contextHelpId) {
-      <app-context-help-button
-        [helpKey]="props.contextHelpId"
-      ></app-context-help-button>
-    }
+@if (props.leading) {
+  <div class="mb-4">
+    {{ props.leading }}
   </div>
 }
 
 <ng-template #fieldComponent></ng-template>
-
-@if (!props.noDivider) {
-  <mat-divider></mat-divider>
-}

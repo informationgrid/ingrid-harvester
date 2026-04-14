@@ -75,6 +75,7 @@ import { FormlyChipTypeComponent } from "./formly/types/formly-chip-type/formly-
 import { FormlyAutocompleteTypeComponent } from "./formly/types/formly-autocomplete-type/formly-autocomplete-type.component";
 import { FormlyRepeatFormTypeComponent } from "./formly/types/formly-repeat-form-type/formly-repeat-form-type.component";
 import { FormlySubSectionWrapperComponent } from "./formly/wrappers/formly-sub-section-wrapper/formly-sub-section-wrapper.component";
+import { FormlyToggleTypeComponent } from "./formly/types/formly-toggle-type/formly-toggle-type.component";
 import {
   JsonValidator,
   UniqueKeyValidator,
@@ -84,6 +85,9 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
 import { PageTitleService } from "./services/page-title.service";
 import { registerTranslateExtension } from "./formly/translations";
 import { TranslocoService } from "@ngneat/transloco";
+import { FormlyActionWrapperComponent } from "./formly/wrappers/formly-action-wrapper/formly-action-wrapper.component";
+import { FormlyBlockWrapperComponent } from "./formly/wrappers/formly-block-wrapper/formly-block-wrapper.component";
+import { FormlyLeadingWrapperComponent } from "./formly/wrappers/formly-leading-wrapper/formly-leading-wrapper.component";
 
 registerLocaleData(localeDe);
 
@@ -160,6 +164,7 @@ const appRoutes: Routes = routes;
     provideHttpClient(withInterceptorsFromDi()),
     provideFormlyCore({
       types: [
+        { name: "toggle", component: FormlyToggleTypeComponent },
         { name: "chip", component: FormlyChipTypeComponent },
         { name: "autocomplete", component: FormlyAutocompleteTypeComponent },
         { name: "repeat-form", component: FormlyRepeatFormTypeComponent },
@@ -168,6 +173,9 @@ const appRoutes: Routes = routes;
         { name: "section", component: FormlySectionWrapperComponent },
         { name: "sub-section", component: FormlySubSectionWrapperComponent },
         { name: "inline-help", component: FormlyInlineHelpWrapperComponent },
+        { name: "block", component: FormlyBlockWrapperComponent },
+        { name: "leading", component: FormlyLeadingWrapperComponent },
+        { name: "action", component: FormlyActionWrapperComponent },
       ],
       validators: [
         { name: "url", validation: UrlValidator },

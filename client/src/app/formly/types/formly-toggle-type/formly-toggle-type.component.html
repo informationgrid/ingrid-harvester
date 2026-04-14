@@ -1,0 +1,13 @@
+<div class="toggle-type">
+  <div class="flex-col">
+    @if (props.label) {
+      <div>{{ props.label }}</div>
+    }
+    @if (props.subLabel) {
+      <div class="text-sm">{{ props.subLabel }}</div>
+    }
+  </div>
+
+  <mat-slide-toggle [formControl]="formControl" [formlyAttributes]="field">
+  </mat-slide-toggle>
+</div>

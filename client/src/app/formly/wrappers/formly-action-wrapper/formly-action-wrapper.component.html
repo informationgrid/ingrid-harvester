@@ -21,21 +21,26 @@
     ==================================================
 -->
 
-@if (props.label) {
-  <div class="flex-row items-center gap-8 mb-4">
-    <h3 class="text-lg m-0">
-      {{ props.label }}
-    </h3>
-    @if (props.contextHelpId) {
-      <app-context-help-button
-        [helpKey]="props.contextHelpId"
-      ></app-context-help-button>
-    }
-  </div>
-}
-
 <ng-template #fieldComponent></ng-template>
 
-@if (!props.noDivider) {
-  <mat-divider></mat-divider>
+@if (props.action) {
+  @if (props.action.isLoading) {
+    <button matButton="filled" color="primary" disabled>
+      <span class="flex-row items-center gap-12">
+        <mat-spinner diameter="18" strokeWidth="2.5"></mat-spinner>
+        {{ props.action.loadingText ?? "wird geladen..." }}
+      </span>
+    </button>
+  } @else {
+    <button
+      matButton="filled"
+      [color]="props.action.color ?? 'primary'"
+      (click)="props.action.onClick()"
+    >
+      @if (props.action.icon) {
+        <mat-icon [svgIcon]="props.action.icon"></mat-icon>
+      }
+      {{ props.action.text }}
+    </button>
+  }
 }

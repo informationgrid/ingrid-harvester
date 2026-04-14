@@ -648,6 +648,10 @@ mat-card-header {
   margin: 16px;
 }
 
+.m-0 {
+  margin: 0;
+}
+
 .mt-0 {
   margin-top: 0;
 }
@@ -659,6 +663,10 @@ mat-card-header {
 
 .my-4 {
   margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.mb-4 {
   margin-bottom: 16px;
 }
 
@@ -2170,6 +2178,10 @@ mat-form-field .context-help-button {
 
 .isolate {
   isolation: isolate;
+}
+
+.block {
+  display: block;
 }
 
 .inherit {

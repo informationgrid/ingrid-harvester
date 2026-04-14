@@ -30,12 +30,12 @@ export abstract class IngridProfile {
                   label: "iPlugId",
                   required: true,
                   maxLength: 24,
-                  pattern: "^[a-zA-Z0-9_-]*$",
+                  pattern: "^[a-zA-Z0-9_\\-\\.]*$",
                 },
                 validation: {
                   messages: {
                     pattern:
-                      "Nur Buchstaben, Zahlen, Bindestrich (-) und Unterstrich (_) erlaubt.",
+                      "Nur Buchstaben, Zahlen, Bindestrich (-), Unterstrich (_) und Punkt (.) erlaubt.",
                   },
                 },
               },

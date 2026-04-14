@@ -21,63 +21,62 @@
  * ==================================================
  */
 
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatTabsModule } from '@angular/material/tabs';
-import { TranslocoModule } from '@ngneat/transloco';
-import { CronjobFormFieldComponent } from '../shared/cronjob-form-field/cronjob-form-field.component';
-import { PageTemplateModule } from '../shared/page-template/page-template.module';
-import { SharedModule } from '../shared/shared.module';
-import { ConfigGeneralComponent } from './config-general/config-general.component';
-import { ConfigImportExportComponent } from './config-import-export/config-import-export.component';
-import { AddMappingItemComponent } from './config-mapping/add-mapping-item/add-mapping-item.component';
-import { ConfigMappingComponent } from './config-mapping/config-mapping.component';
-import { ConfigComponent } from './config.component';
-import { routing } from './config.routing';
-import {ContextHelpDirective} from "../shared/context-help/context-help.directive";
+import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
+import { ReactiveFormsModule } from "@angular/forms";
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCardModule } from "@angular/material/card";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatIconModule } from "@angular/material/icon";
+import { MatListModule } from "@angular/material/list";
+import { MatRadioModule } from "@angular/material/radio";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatTabsModule } from "@angular/material/tabs";
+import { TranslocoModule } from "@ngneat/transloco";
+import { CronjobFormFieldComponent } from "../shared/cronjob-form-field/cronjob-form-field.component";
+import { PageTemplateModule } from "../shared/page-template/page-template.module";
+import { SharedModule } from "../shared/shared.module";
+import { ConfigGeneralComponent } from "./config-general/config-general.component";
+import { ConfigImportExportComponent } from "./config-import-export/config-import-export.component";
+import { AddMappingItemComponent } from "./config-mapping/add-mapping-item/add-mapping-item.component";
+import { ConfigMappingComponent } from "./config-mapping/config-mapping.component";
+import { ConfigComponent } from "./config.component";
+import { routing } from "./config.routing";
+import { ContextHelpDirective } from "../shared/context-help/context-help.directive";
 import { MatTooltip } from "@angular/material/tooltip";
+import { FormlyForm } from "@ngx-formly/core";
 
 @NgModule({
-    declarations: [
-        ConfigComponent,
-        ConfigMappingComponent,
-        ConfigGeneralComponent,
-        ConfigImportExportComponent,
-        AddMappingItemComponent,
-    ],
-    imports: [
-        CommonModule,
-        SharedModule,
-        MatButtonModule,
-        ReactiveFormsModule,
-        MatTabsModule,
-        MatListModule,
-        MatIconModule,
-        MatAutocompleteModule,
-        MatSlideToggleModule,
-        MatCardModule,
-        MatCheckboxModule,
-        MatRadioModule,
-        routing,
-        TranslocoModule,
-        PageTemplateModule,
-        CronjobFormFieldComponent,
-        ContextHelpDirective,
-        MatTooltip
-    ],
-    exports: [
-        ConfigComponent
-    ],
-    providers: [
-    ]
+  declarations: [
+    ConfigComponent,
+    ConfigMappingComponent,
+    ConfigGeneralComponent,
+    ConfigImportExportComponent,
+    AddMappingItemComponent,
+  ],
+  imports: [
+    CommonModule,
+    SharedModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    MatTabsModule,
+    MatListModule,
+    MatIconModule,
+    MatAutocompleteModule,
+    MatSlideToggleModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    routing,
+    TranslocoModule,
+    PageTemplateModule,
+    CronjobFormFieldComponent,
+    ContextHelpDirective,
+    MatTooltip,
+    FormlyForm,
+  ],
+  exports: [ConfigComponent],
+  providers: [],
 })
-export class ConfigModule { }
+export class ConfigModule {}

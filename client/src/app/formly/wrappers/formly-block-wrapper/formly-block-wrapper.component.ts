@@ -21,7 +21,13 @@
  * ==================================================
  */
 
-mat-divider {
-  margin-top: 4px;
-  margin-bottom: 28px;
-}
+import { Component } from "@angular/core";
+import { FieldTypeConfig, FieldWrapper } from "@ngx-formly/core";
+
+@Component({
+  selector: "formly-section-wrapper",
+  templateUrl: "./formly-block-wrapper.component.html",
+  styleUrls: ["./formly-block-wrapper.component.scss"],
+  imports: [],
+})
+export class FormlyBlockWrapperComponent extends FieldWrapper<FieldTypeConfig> {}

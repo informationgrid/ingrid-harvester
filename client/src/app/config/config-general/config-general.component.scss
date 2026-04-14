@@ -20,21 +20,3 @@
  * limitations under the Licence.
  * ==================================================
  */
-
-@use "../../../variables";
-
-.form-section {
-  margin-bottom: 20px;
-  padding: 8px 20px;
-}
-
-.center-right {
-  inset: 0;
-  margin: auto;
-  margin-right: 0;
-}
-
-input[readonly] {
-  cursor: default;
-  color: #0009 !important;
-}

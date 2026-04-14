@@ -21,7 +21,15 @@
  * ==================================================
  */
 
-mat-divider {
-  margin-top: 4px;
-  margin-bottom: 28px;
-}
+import { Component } from "@angular/core";
+import { FieldType, FieldTypeConfig, FormlyModule } from "@ngx-formly/core";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { ReactiveFormsModule } from "@angular/forms";
+
+@Component({
+  selector: "formly-toggle-type",
+  templateUrl: "./formly-toggle-type.component.html",
+  styleUrls: ["./formly-toggle-type.component.scss"],
+  imports: [ReactiveFormsModule, MatSlideToggleModule, FormlyModule],
+})
+export class FormlyToggleTypeComponent extends FieldType<FieldTypeConfig> {}
