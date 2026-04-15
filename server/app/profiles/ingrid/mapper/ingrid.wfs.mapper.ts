@@ -30,6 +30,7 @@ import { IdfGenerator } from '../idf.generator.js';
 import { generateWfsUuid } from '../ingrid.utils.js';
 import type { IngridIndexDocument } from '../model/index.document.js';
 import { ingridMapper } from './ingrid.mapper.js';
+import type { Distribution } from '../../../model/distribution.js';
 
 export class ingridWfsMapper extends ingridMapper<WfsMapper> {
 
@@ -54,6 +55,18 @@ export class ingridWfsMapper extends ingridMapper<WfsMapper> {
             this.baseMapper.getBoundingBox(),
             this.baseMapper.getSpatial()
         ];
+    }
+
+    async getDistributions(): Promise<Distribution[]> {
+        const emptyDistribution = [
+            {
+                "accessURL": null,
+                "format": null,
+                "operates_on": null,
+                "title": null
+            }
+        ];
+        return emptyDistribution;
     }
 
     getIDF() {
