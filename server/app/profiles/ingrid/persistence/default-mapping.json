@@ -285,41 +285,55 @@
         "distributions": {
             "type": "object",
             "properties": {
-                "accessURL": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
+                "license": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
                             "type": "keyword",
-                            "ignore_above": 256
+                            "store": true
+                        },
+                        "attribution_by_text": {
+                            "type": "text",
+                            "store": true
+                        },
+                        "url": {
+                            "type": "text",
+                            "store": true
                         }
                     }
+                },
+                "languages": {
+                    "type": "keyword",
+                    "store": true
+                },
+                "access_url": {
+                    "type": "text",
+                    "store": true
                 },
                 "format": {
-                    "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "type": "keyword",
+                    "store": true
                 },
-                "operates_on": {
+                "description": {
                     "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "copy_to": [
+                        "content"
+                    ]
+                },
+                "modified": {
+                    "type": "text",
+                    "store": true
+                },
+                "availability": {
+                    "type": "text",
+                    "store": true
                 },
                 "title": {
                     "type": "text",
-                    "fields": {
-                        "keyword": {
-                            "type": "keyword",
-                            "ignore_above": 256
-                        }
-                    }
+                    "copy_to": [
+                        "content"
+                    ],
+                    "store": true
                 }
             }
         }

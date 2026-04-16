@@ -173,6 +173,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
                     const formatArray = protocol ? [protocol] : formats;
                     let dist: Distribution = {
                         accessURL: url,
+                        access_url: url,
                         title: title,
                         // format: UrlUtils.mapFormat(formatArray, this.summary.warnings)
                         format: formatArray

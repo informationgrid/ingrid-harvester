@@ -60,7 +60,7 @@ export class ingridWfsMapper extends ingridMapper<WfsMapper> {
     async getDistributions(): Promise<Distribution[]> {
         const emptyDistribution = [
             {
-                "accessURL": null,
+                "access_url": null,
                 "format": null,
                 "operates_on": null,
                 "title": null
