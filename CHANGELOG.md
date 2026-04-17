@@ -1,4 +1,22 @@
 
+## 8.3.0 (17.04.2026)
+
+### Features
+
+* Keycloak-Logout aus Harvester soll auf Harvester-Login-Seite leiten (#8900)
+* Harvester: Ausschluss von internen Dateireferenzen von der URL Prüfung (#8696)
+* Open Data - Zeitbezüge (#8640)
+* Harvester: Einführung von Nutzermanagement mit keycloak (#8438)
+* Harvester: Grundsätzliche Verbesserungen der Oberfläche (#8437)
+* ES Indexmapping für Ortssuche anpassen, Felder befüllen (#8425)
+* Verbesserung des URL-Routings im Harvester (#7566)
+* ZEITERFASSUNG - InGrid Installation Niedersachsen (NUMIS) (#3)
+
+### Bugfixes
+
+* Refactoring des Harvesters (#8910)
+* Harvester muss HTML Tags bei der Erstellung von IDF Dokumenten escapen (#8690)
+    
 ## 8.1.0 (10.10.2025)
 
 ### Features
