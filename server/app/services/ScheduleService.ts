@@ -26,7 +26,7 @@ import {Service} from '@tsed/di';
 import {ConfigService} from './config/ConfigService.js';
 import {ImportSocketService} from '../sockets/import.socket.service.js';
 import {CronJob} from 'cron';
-import type {CronData} from '../importer.settings.js';
+import type {CronData} from '../importer/importer.settings.js';
 import {UrlCheckService} from "./statistic/UrlCheckService.js";
 import {IndexCheckService} from "./statistic/IndexCheckService.js";
 import {IndexService} from "./IndexService.js";
@@ -56,7 +56,7 @@ export class ScheduleService {
 
         // activate scheduler for all harvester that have a cron pattern
         // but only run those immediately that actually are enabled
-        ConfigService.get()
+        ConfigService.getHarvesters()
             .forEach(config => {
                 for (let mode of <('full' | 'incr')[]>['full', 'incr']) {
                     if (config.cron?.[mode]?.active) {
@@ -79,7 +79,7 @@ export class ScheduleService {
     set(id: number, cron: { full: CronData, incr: CronData }): Date[] {
 
         // update cron pattern in configuration
-        let configData = ConfigService.get().filter(config => config.id === id)[0];
+        let configData = ConfigService.getHarvesters().filter(config => config.id === id)[0];
         configData.cron = cron;
         ConfigService.update(id, configData);
 
@@ -145,7 +145,7 @@ export class ScheduleService {
         if (this.jobs[id][mode]) {
             this.jobs[id][mode].start();
         } else {
-            let config = ConfigService.get().filter(config => config.id === id && config.cron?.[mode] && config.cron[mode].active)[0];
+            let config = ConfigService.getHarvesters().filter(config => config.id === id && config.cron?.[mode] && config.cron[mode].active)[0];
             this.scheduleJob(id, mode, config.cron[mode].pattern, false);
             // log.error(`Job "${id}" could not be started.`);
         }

@@ -31,7 +31,7 @@ export function formatDay(timestamp: Date) {
     const seconds = date.getSeconds().toString().padStart(2, '0');
     return `${day}.${month}.`;
   }
-  
+
 export function formatDateAndTime(timestamp : Date){
     const date = new Date(timestamp);
     const day = date.getDate().toString().padStart(2, '0');
@@ -41,4 +41,9 @@ export function formatDateAndTime(timestamp : Date){
     const minutes = date.getMinutes().toString().padStart(2, '0');
     const seconds = date.getSeconds().toString().padStart(2, '0');
     return `${day}.${month}.${year} ${hours}:${minutes}:${seconds}`;
+}
+
+export function getLatestDate(timestamps?: Date[]) {
+  if (timestamps.length === 0) return undefined;
+  return timestamps.reduce((min, current) => current < min ? current : min);
 }

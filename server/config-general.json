@@ -10,7 +10,7 @@
   },
   "elasticsearch": {
     "url": "http://localhost:9200",
-    "version": "9",
+    "version": "8",
     "user": "elastic",
     "password": "elastic",
     "rejectUnauthorized": true,
@@ -20,6 +20,7 @@
     "numberOfShards": 1,
     "numberOfReplicas": 0
   },
+  "cronOffset": 0,
   "mappingLogLevel": "info",
   "proxy": null,
   "allowAllUnauthorizedSSL": false,
@@ -32,7 +33,6 @@
     "active": false,
     "pattern": "10 04 * * *"
   },
-  "sessionSecret": "mysecretkey",
   "mail": {
     "enabled": false,
     "mailServer": {
@@ -66,6 +66,5 @@
       "enabled": false,
       "minDifference": 10
     }
-  },
-  "cronOffset": 0
+  }
 }

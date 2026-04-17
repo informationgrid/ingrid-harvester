@@ -21,45 +21,42 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../utils/misc.utils.js';
 import log4js from 'log4js';
-import { elasticsearchMapping} from './statistic.mapping.js';
+import type { ImportLogMessage } from '../model/import.result.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
-import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
-import type { GeneralSettings } from '@shared/general-config.settings.js';
-import type { ImportLogMessage} from '../model/import.result.js';
 import type { IndexSettings } from '../persistence/elastic.setting.js';
+import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
-import type { Summary} from '../model/summary.js';
+import { ConfigService } from '../services/config/ConfigService.js';
+import * as MiscUtils from '../utils/misc.utils.js';
+import statisticMapping from './statistic.mapping.json' with { type: 'json' };
 
 const log = log4js.getLogger(import.meta.filename);
 
 export class StatisticUtils {
 
-    private elasticUtils: ElasticsearchUtils;
     private indexSettings: IndexSettings;
     private static maxBulkSize = 100;
 
-    constructor(generalSettings: GeneralSettings) {
-        let config = {
-            ...generalSettings.elasticsearch,
+    constructor() {
+        this.indexSettings = ProfileFactoryLoader.get().getIndexSettings();
+    }
+    
+    private get elasticUtils(): ElasticsearchUtils {
+        const config = {
+            ...ConfigService.getGeneralSettings().elasticsearch,
             includeTimestamp: false,
             index: 'harvester_statistic'
         };
         // @ts-ignore
-        const summary: Summary = {};
-        let profile = ProfileFactoryLoader.get();
-        this.elasticUtils = ElasticsearchFactory.getElasticUtils(config, summary);
-        this.indexSettings = profile.getIndexSettings();
+        return ElasticsearchFactory.getElasticUtils(config, { errors: [] });
     }
 
     async saveSummary(logMessage: ImportLogMessage, baseIndex: string) {
         let timestamp = new Date();
 
         let errors = new Map();
-        this.collectErrorsOrWarnings(errors, logMessage.summary.appErrors);
-        this.collectErrorsOrWarnings(errors, logMessage.summary.databaseErrors);
-        this.collectErrorsOrWarnings(errors, logMessage.summary.elasticErrors);
+        this.collectErrorsOrWarnings(errors, logMessage.summary.errors.map(e => e.error));
 
         let warnings = new Map();
         this.collectErrorsOrWarnings(warnings, logMessage.summary.warnings.map(entry => entry[1]?entry[0]+": "+entry[1]:entry[0]));
@@ -71,17 +68,17 @@ export class StatisticUtils {
                 numSkipped: logMessage.summary.skippedDocs.length,
                 numWarnings: logMessage.summary.warnings.length,
                 numRecordErrors: logMessage.summary.numErrors,
-                numAppErrors: logMessage.summary.appErrors.length,
-                numDBErrors: logMessage.summary.databaseErrors.length,
-                numESErrors: logMessage.summary.elasticErrors.length,
+                numAppErrors: logMessage.summary.errors.filter(e => e.type === 'app').length,
+                numDBErrors: logMessage.summary.errors.filter(e => e.type === 'database').length,
+                numESErrors: logMessage.summary.errors.filter(e => e.type === 'elastic').length,
                 duration: logMessage.duration,
                 warnings: Array.from(warnings.entries()).map(entry => ({ message: entry[0], count: entry[1] })),
                 errors: Array.from(errors.entries()).map(entry => ({ message: entry[0], count: entry[1] }))
         }, baseIndex, StatisticUtils.maxBulkSize);
 
         try {
-            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
-            await this.elasticUtils.finishIndex(false);
+            await this.elasticUtils.prepareIndex(statisticMapping, this.indexSettings, true);
+            await this.elasticUtils.finishIndex();
         }
         catch(err) {
             let message = 'Error occurred creating statistic index';

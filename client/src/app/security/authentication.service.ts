@@ -21,42 +21,97 @@
  * ==================================================
  */
 
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
-import {map, tap} from 'rxjs/operators';
+import { inject, Injectable } from "@angular/core";
+import { BehaviorSubject, Observable, of } from "rxjs";
+import { catchError, map, tap } from "rxjs/operators";
+import { KeycloakService } from "./keycloak.service";
+import { PassportService } from "./passport.service";
+import { AuthMethod, AuthStrategy } from "./AuthStrategy";
+import { HttpClient } from "@angular/common/http";
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: "root" })
 export class AuthenticationService {
-  private currentUserSubject: BehaviorSubject<any>;
-  public currentUser: Observable<any>;
+  private http = inject(HttpClient);
+  public currentUser: BehaviorSubject<any>;
 
-  constructor(private http: HttpClient) {
-    this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('currentUser')));
-    this.currentUser = this.currentUserSubject.asObservable();
+  constructor(
+    private keycloakService: KeycloakService,
+    private passportService: PassportService,
+  ) {
+    this.currentUser = new BehaviorSubject<any>(null);
   }
 
-  public get currentUserValue() {
-    return this.currentUserSubject.value;
-  }
-
-  login(username, password) {
-    return this.http.post<any>(`rest/passport/login`, {username, password})
-      .pipe(map(user => {
-        // store user details and jwt token in local storage to keep user logged in between page refreshes
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        this.currentUserSubject.next(user);
-        return user;
-      }));
-  }
-
-  logout() {
-    // remove user from local storage and set current user to null
-    return this.http.get('rest/passport/logout', {responseType: 'text'}).pipe(
-      tap(() => {
-        localStorage.removeItem('currentUser');
-        this.currentUserSubject.next(null);
-      })
+  public checkAuthentication(): Observable<any> {
+    return this.http.get<any>(`rest/auth/check`).pipe(
+      tap((user) => {
+        if (user) {
+          this.currentUser.next(user);
+        }
+      }),
+      catchError(() => {
+        this.currentUser.next(null);
+        return of(null);
+      }),
     );
+  }
+
+  private getStrategy(overrideStrategy?: AuthMethod): AuthStrategy {
+    const strategy = overrideStrategy || this.currentUser.getValue().authMethod;
+    return strategy === AuthMethod.KEYCLOAK
+      ? this.keycloakService
+      : this.passportService;
+  }
+
+  isAuthenticated(): Observable<boolean> {
+    return this.currentUser.pipe(map((user) => !!user));
+  }
+
+  getRoles(): string[] {
+    const user = this.currentUser.getValue();
+    return user ? user.roles || [] : [];
+  }
+
+  hasRole(role: string): boolean {
+    return this.getRoles().includes(role);
+  }
+
+  getUsername(): string {
+    const user = this.currentUser.getValue();
+    return user ? user.username : "";
+  }
+
+  login(
+    username: string,
+    password: string,
+    strategy?: AuthMethod,
+  ): Observable<any> {
+    return this.getStrategy(strategy)
+      .login(username, password)
+      .pipe(
+        tap((user) => {
+          if (user) {
+            this.currentUser.next(user);
+          }
+        }),
+      );
+  }
+
+  logout(fullKeycloakLogout: boolean = true): Observable<any> {
+    const user = this.currentUser.getValue();
+    if (
+      user &&
+      user.authMethod === AuthMethod.KEYCLOAK &&
+      !fullKeycloakLogout
+    ) {
+      this.currentUser.next(null);
+      return of(null);
+    }
+    return this.getStrategy()
+      .logout()
+      .pipe(
+        tap(() => {
+          this.currentUser.next(null);
+        }),
+      );
   }
 }

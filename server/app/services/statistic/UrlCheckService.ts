@@ -21,22 +21,20 @@
  * ==================================================
  */
 
-import fetch from 'node-fetch';
-import type { RequestInit } from 'node-fetch';
-import log4js from 'log4js';
-import { elasticsearchMapping } from '../../statistic/url_check.mapping.js';
-import { Agent } from 'https';
-import { ConfigService } from '../config/ConfigService.js';
-import type { ElasticQueries } from '../../persistence/elastic.queries.js';
-import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
-import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
-import type { IndexSettings } from '../../persistence/elastic.setting.js';
-import type { GeneralSettings } from '@shared/general-config.settings.js';
-import { HttpsProxyAgent } from 'https-proxy-agent';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { Service } from '@tsed/di';
-import { Summary } from '../../model/summary.js';
-import dayjs from "dayjs";
+import { Agent } from 'https';
+import { HttpsProxyAgent } from 'https-proxy-agent';
+import log4js from 'log4js';
+import type { RequestInit } from 'node-fetch';
+import fetch from 'node-fetch';
+import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
+import type { ElasticQueries } from '../../persistence/elastic.queries.js';
+import type { IndexSettings } from '../../persistence/elastic.setting.js';
+import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import urlCheckMapping from '../../statistic/url_check.mapping.json' with { type: 'json' };
+import dayjs from '../../utils/dayjs.js';
+import { ConfigService } from '../config/ConfigService.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -44,50 +42,39 @@ const log = log4js.getLogger(import.meta.filename);
 export class UrlCheckService {
 
     private elasticQueries: ElasticQueries;
-    private elasticUtils: ElasticsearchUtils;
-    private generalSettings: GeneralSettings;
     private indexSettings: IndexSettings;
 
-    private httpsAgent: Agent;
-
     constructor() {
-        this.initialize();
+        const profile = ProfileFactoryLoader.get();
+        this.elasticQueries = profile.getElasticQueries();
+        this.indexSettings = profile.getIndexSettings();
     }
 
-    initialize() {
-        this.generalSettings = ConfigService.getGeneralSettings();
-        let config = {
-            ...this.generalSettings.elasticsearch,
+    private get elasticUtils(): ElasticsearchUtils {
+        const config = {
+            ...ConfigService.getGeneralSettings().elasticsearch,
             includeTimestamp: false,
             index: 'url_check_history'
         };
         // @ts-ignore
-        const summary: Summary = {};
-        let profile = ProfileFactoryLoader.get();
-        this.elasticUtils = ElasticsearchFactory.getElasticUtils(config, summary);
-        this.indexSettings = profile.getIndexSettings();
-        this.elasticQueries = profile.getElasticQueries();
-        if (this.generalSettings.proxy) {
-            this.httpsAgent = new HttpsProxyAgent(this.generalSettings.proxy);
-            this.httpsAgent.options.rejectUnauthorized = false;
+        return ElasticsearchFactory.getElasticUtils(config, { errors: [] });
+    }
+
+    private get httpsAgent(): Agent {
+        const { proxy } = ConfigService.getGeneralSettings();
+        if (proxy) {
+            const httpsAgent = new HttpsProxyAgent(proxy);
+            httpsAgent.options.rejectUnauthorized = false;
+            return httpsAgent;
         }
         else {
-            this.httpsAgent = new Agent({
-                rejectUnauthorized: false
-            });
+            return new Agent({ rejectUnauthorized: false });
         }
     }
 
     async getHistory() {
-        await this.ensureIndexExists();
+        await this.elasticUtils.prepareIndex(urlCheckMapping, this.indexSettings, true);
         return this.elasticUtils.getHistory(this.elasticQueries.getUrlCheckHistory());
-    }
-
-    async ensureIndexExists() {
-        let indexExists = await this.elasticUtils.isIndexPresent(this.elasticUtils.indexName);
-        if (!indexExists) {
-            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
-        }
     }
 
     async start() {
@@ -135,10 +122,11 @@ export class UrlCheckService {
             return { url: urlAggregation, status: 'ftp'};
         }
         if (url.startsWith('/')) {
-            if (this.generalSettings.portalUrl.endsWith('/')) {
+            const portalUrl = ConfigService.getGeneralSettings().portalUrl;
+            if (portalUrl.endsWith('/')) {
                 url = url.substring(1);
             }
-            url = this.generalSettings.portalUrl + url;
+            url = portalUrl + url;
         }
         let options: RequestInit = {
             method: 'HEAD',
@@ -187,8 +175,8 @@ export class UrlCheckService {
             }, timestamp.toISOString());
 
             try {
-                await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
-                await this.elasticUtils.finishIndex(false);
+                await this.elasticUtils.prepareIndex(urlCheckMapping, this.indexSettings, true);
+                await this.elasticUtils.finishIndex();
             }
             catch(err) {
                 let message = 'Error occurred creating UrlCheck index';

@@ -22,21 +22,23 @@
  */
 
 import log4js from 'log4js';
-import { ingridFactory } from './ingrid/profile.factory.js';
-import { mcloudFactory } from './mcloud/profile.factory.js';
-import type { BaseMapper } from '../importer/base.mapper.js';
-import { DiplanungFactory } from './diplanung/profile.factory.js';
-import { LvrFactory } from './lvr/profile.factory.js';
+import type { ImporterSettings } from '../importer/importer.settings.js';
+// import { DiplanungFactory } from './diplanung/profile.factory.js';
+// import { ingridFactory } from './ingrid/profile.factory.js';
+// import { LvrFactory } from './lvr/profile.factory.js';
 import type { ProfileFactory } from './profile.factory.js';
-import { ZdmFactory } from './zdm/profile.factory.js';
 
 const log = log4js.getLogger(import.meta.filename);
+// TODO this is an ugly workaround and must be resolved differently, e.g. via a custom registry
+// TODO also consider registry for importers and mappers
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 
 export class ProfileFactoryLoader {
 
-    private static instance: ProfileFactory<BaseMapper>;
+    private static instance: ProfileFactory<any>;
 
-    public static get(): ProfileFactory<BaseMapper> {
+    public static get<T extends ImporterSettings>(): ProfileFactory<T> {
         if (this.instance) {
             return this.instance;
         }
@@ -51,21 +53,32 @@ export class ProfileFactoryLoader {
     }
 
     private static createInstance(profile: string) {
+        // TODO this is a horrible workaround and needs to be changed!
+        const loadFactory = (path: string) => {
+            try {
+                // Try .js first (Production)
+                return require(`${path}.js`);
+            } catch (e: any) {
+                if (e.code === 'MODULE_NOT_FOUND') {
+                    // Fallback to .ts (Development)
+                    return require(`${path}.ts`);
+                }
+                throw e;
+            }
+        };
+
         switch (profile) {
             case 'ingrid':
+                const { ingridFactory } = loadFactory('./ingrid/profile.factory');
                 this.instance = new ingridFactory();
                 break;
-            case 'mcloud':
-                this.instance = new mcloudFactory();
-                break;
             case 'diplanung':
+                const { DiplanungFactory } = loadFactory('./diplanung/profile.factory');
                 this.instance = new DiplanungFactory();
                 break;
             case 'lvr':
+                const { LvrFactory } = loadFactory('./lvr/profile.factory');
                 this.instance = new LvrFactory();
-                break;
-            case 'zdm':
-                this.instance = new ZdmFactory();
                 break;
             default:
                 let errorMsg = `Could not find profile: ${profile}`;

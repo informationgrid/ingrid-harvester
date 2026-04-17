@@ -1,0 +1,86 @@
+/*
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
+ *
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
+ * ==================================================
+ */
+
+@use "../../../_variables" as vars;
+
+.status-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px 4px 4px;
+  font-size: 12px;
+  border-radius: 4px;
+  line-height: 1;
+
+  &.single {
+    padding: 4px;
+  }
+
+  mat-icon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+
+.status-label.success {
+  color: #568d44;
+  background-color: #eefeeb;
+  border: 1px solid #deebd8;
+}
+
+.status-label.disable {
+  color: #fd933b;
+  background-color: #fffaed;
+  border: 1px solid #f5e3d0;
+}
+
+.status-label.cron {
+  color: vars.$ige-hint-color;
+  background-color: #fafafa;
+  border: 1px solid #dddddd;
+}
+
+.status-label.importing {
+  color: vars.$ige-primary;
+  background-color: vars.$ige-mark-color;
+  border: 1px solid rgba(25, 110, 162, 0.5);
+}
+
+.status-label.error {
+  color: #f34247;
+  background-color: #fdf0ed;
+  border: 1px solid #efd6da;
+}
+
+.status-label.partial {
+  color: #b36200;
+  background-color: #fff8e1;
+  border: 1px solid #ffe082;
+}
+
+.status-label.cancelled {
+  color: #757575;
+  background-color: #f5f5f5;
+  border: 1px solid #e0e0e0;
+}

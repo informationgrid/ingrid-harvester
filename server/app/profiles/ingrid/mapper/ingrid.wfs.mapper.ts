@@ -21,21 +21,18 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../utils/misc.utils.js';
+import type { Geometry } from 'geojson';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
 import type { MetadataSource } from '../../../model/index.document.js';
 import * as GeojsonUtils from '../../../utils/geojson.utils.js';
+import * as MiscUtils from '../../../utils/misc.utils.js';
 import { IdfGenerator } from '../idf.generator.js';
 import { generateWfsUuid } from '../ingrid.utils.js';
 import type { IngridIndexDocument } from '../model/index.document.js';
 import { ingridMapper } from './ingrid.mapper.js';
-import type { Geometry } from 'geojson';
+import type { Distribution } from '../../../model/distribution.js';
 
 export class ingridWfsMapper extends ingridMapper<WfsMapper> {
-
-    constructor(baseMapper: WfsMapper) {
-        super(baseMapper);
-    }
 
     getTitle(): string {
         const featureTitleAttribute = this.baseMapper.settings.featureTitleAttribute;
@@ -49,15 +46,27 @@ export class ingridWfsMapper extends ingridMapper<WfsMapper> {
         return this.baseMapper.getTitle();
     }
 
-    getSummary() {
+    getDescription() {
         return "";
     }
 
-    getSpatial(): Geometry | Geometry[] {
+    getSpatial(): Geometry[] {
         return [
             this.baseMapper.getBoundingBox(),
             this.baseMapper.getSpatial()
         ];
+    }
+
+    async getDistributions(): Promise<Distribution[]> {
+        const emptyDistribution = [
+            {
+                "access_url": null,
+                "format": null,
+                "operates_on": null,
+                "title": null
+            }
+        ];
+        return emptyDistribution;
     }
 
     getIDF() {

@@ -37,25 +37,24 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import * as xpath from 'xpath';
-import * as MiscUtils from './misc.utils.js';
 import bbox from '@turf/bbox';
 import bboxPolygon from '@turf/bbox-polygon';
 import booleanWithin from '@turf/boolean-within';
 import buffer from '@turf/buffer';
 import centroid from '@turf/centroid';
 import combine from '@turf/combine';
+import * as xpath from 'xpath';
 // import flatten from '@turf/flatten';
+import turfFlatten from "@turf/flatten";
 import turfFlip from '@turf/flip';
+import type { AllGeoJSON } from '@turf/helpers';
 import rewind from '@turf/rewind';
 import simplify from '@turf/simplify';
-import { firstElementChild } from './xpath.utils.js';
-import type { AllGeoJSON } from '@turf/helpers';
-import type { Feature, FeatureCollection, Geometry, GeometryCollection, MultiPoint, MultiLineString, MultiPolygon, Point } from 'geojson';
-import turfFlatten from "@turf/flatten";
 import deepEqual from "deep-equal";
+import type { Feature, FeatureCollection, Geometry, GeometryCollection, MultiLineString, MultiPoint, MultiPolygon, Point } from 'geojson';
 import proj4 from "proj4";
 import proj4jsMappings from '../../proj4.json' with { type: 'json' };
+import { firstElementChild } from './xpath.utils.js';
 
 
 // prepare proj4js
@@ -130,7 +129,7 @@ export function flip<T>(spatial: number[] | Geometry): T {
     }
     if ('type' in spatial) {
         if ('coordinates' in spatial) {
-            return turfFlip(spatial) as T;
+            return <T>turfFlip(spatial);
         }
         else if ('geometries' in spatial) {
             return <T>{ ...spatial, geometries: spatial.geometries.map<Geometry>(geom => turfFlip<Geometry>(geom)) };
@@ -141,7 +140,7 @@ export function flip<T>(spatial: number[] | Geometry): T {
         }
     }
     else {
-        return turfFlip({ type: 'Point', coordinates: spatial }) as T;
+        return <T>turfFlip({ type: 'Point', coordinates: spatial });
     }
 }
 
@@ -250,7 +249,7 @@ export function projectFeatureCollection(featureCollection: FeatureCollection, s
         return feature;
     };
 
-    let projectedFeatureCollection = MiscUtils.structuredClone(featureCollection);
+    let projectedFeatureCollection = structuredClone(featureCollection);
     projectedFeatureCollection.features = featureCollection.features.map(feature => projectFeature(feature));
     return projectedFeatureCollection;
 }
@@ -606,12 +605,12 @@ export function parse(_: Node, opts: { crs?: any, stride?: number } = { crs: nul
                     coordinates: parsePoint(_, opts, childCtx)
                 };
             case 'gml:LineString':
-                return rewind({
+                return <Geometry>rewind({
                     type: 'LineString',
                     coordinates: parseLinearRingOrLineString(_, opts, childCtx)
-                }) as Geometry;
+                });
             case 'gml:Envelope':
-                return parseEnvelope(_, opts, childCtx) as Geometry;
+                return <Geometry>parseEnvelope(_, opts, childCtx);
             case 'gml:MultiCurve':
                 return {
                     type: 'MultiLineString',
@@ -620,20 +619,20 @@ export function parse(_: Node, opts: { crs?: any, stride?: number } = { crs: nul
             case 'gml:Rectangle':
                 // same as polygon
             case 'gml:Polygon':
-                return rewind({
+                return <Geometry>rewind({
                     type: 'Polygon',
                     coordinates: parsePolygonOrRectangle(_, opts, childCtx)
-                }) as Geometry;
+                });
             case 'gml:Surface':
-                return rewind({
+                return <Geometry>rewind({
                     type: 'MultiPolygon',
                     coordinates: parseSurface(_, opts, childCtx)
-                }) as Geometry;
+                });
             case 'gml:MultiSurface':
-                return rewind({
+                return <Geometry>rewind({
                     type: 'MultiPolygon',
                     coordinates: parseMultiSurface(_, opts, childCtx)
-                }) as Geometry;
+                });
             case 'gml:MultiGeometry':
                 // TODO similar to gml:MultiSurface ??
                 // example: https://metropolplaner.de/osterholz/wfs?typeNames=plu:LU.SupplementaryRegulation&request=GetFeature

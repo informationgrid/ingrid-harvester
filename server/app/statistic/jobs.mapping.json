@@ -1,0 +1,60 @@
+{
+  "properties": {
+    "jobId": {
+      "type": "keyword"
+    },
+    "harvesterId": {
+      "type": "long"
+    },
+    "startTime": {
+      "type": "date"
+    },
+    "finishTime": {
+      "type": "date"
+    },
+    "status": {
+      "type": "keyword"
+    },
+    "duration": {
+      "type": "long"
+    },
+    "numDocs": {
+      "type": "long"
+    },
+    "numErrors": {
+      "type": "long"
+    },
+    "numSkipped": {
+      "type": "long"
+    },
+    "stages": {
+      "properties": {
+        "name": {
+          "type": "keyword"
+        },
+        "startTime": {
+          "type": "date"
+        },
+        "numDocs": {
+          "type": "long"
+        },
+        "numErrors": {
+          "type": "long"
+        },
+        "numSkipped": {
+          "type": "long"
+        },
+        "errors": {
+          "properties": {
+            "type": {
+              "type": "keyword"
+            },
+            "messages": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    }
+  }
+}

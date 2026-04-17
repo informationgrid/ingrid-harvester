@@ -23,12 +23,10 @@
 
 import { Component, HostListener, OnInit } from "@angular/core";
 import { AuthenticationService } from "./security/authentication.service";
-import { NavigationEnd, Router } from "@angular/router";
+import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ConfigService } from "./config.service";
-import { TranslocoService } from "@ngneat/transloco";
-import { combineLatest } from "rxjs";
-import { DomSanitizer, Title } from "@angular/platform-browser";
+import { DomSanitizer } from "@angular/platform-browser";
 import { MatIconRegistry } from "@angular/material/icon";
 
 @Component({
@@ -52,9 +50,7 @@ export class AppComponent implements OnInit {
     private authService: AuthenticationService,
     private snack: MatSnackBar,
     private configService: ConfigService,
-    private transloco: TranslocoService,
     private domSanitizer: DomSanitizer,
-    private titleService: Title,
     private registry: MatIconRegistry,
     ) {
       this.loadIcons();
@@ -62,7 +58,6 @@ export class AppComponent implements OnInit {
       const profile = "ingrid"
       if (profile == "ingrid") {
         this.favIcon.href = "./assets/icons/favicon.ico";
-        titleService.setTitle("InGrid Harvester");
       }
   }
 
@@ -88,25 +83,6 @@ export class AppComponent implements OnInit {
     this.authService.currentUser.subscribe(user => {
       this.isLoggedIn = user !== null;
     });
-
-    combineLatest([
-      this.transloco.selectTranslation(),
-      this.router.events,
-    ]).subscribe(([_, event]) => {
-      if (event instanceof NavigationEnd) {
-        const mainTitle = this.transloco.translate("pageTitle.default");
-        const splittedByParams = this.router.url.split(";");
-        const mappedPath = splittedByParams[0].split("/").slice(2).join(".");
-        const key = `pageTitle.${mappedPath}`;
-        const pageTitle = this.transloco.translate(key);
-        let newTitle = mainTitle;
-        if (key !== pageTitle) {
-          newTitle = pageTitle + " | " + mainTitle;
-        }
-        this.titleService.setTitle(newTitle);
-      }
-    });
-
   }
 
   logout() {

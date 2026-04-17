@@ -42,33 +42,8 @@ export interface ImportLogMessage {
     lastExecution?: Date;
 
     nextExecution?: Date;
-}
 
-export class ImportResult {
+    jobId?: string;
 
-    static message(message: string) {
-        return {
-            complete: false,
-            message: message
-        }
-    }
-
-    static running(current: number, total: number, message?: string): ImportLogMessage {
-        return {
-            complete: false,
-            progress: {
-                current: current,
-                total: total
-            },
-            message: message ? message : undefined
-        };
-    }
-
-    static complete(summary: Summary, message?: string): ImportLogMessage {
-        return {
-            complete: true,
-            summary: summary,
-            message: message ? message : undefined
-        };
-    }
+    stage: string;
 }

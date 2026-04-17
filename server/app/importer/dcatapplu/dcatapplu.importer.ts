@@ -21,56 +21,39 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../utils/misc.utils.js';
-import type { DcatappluSettings } from './dcatapplu.settings.js';
-import { defaultDCATAPPLUSettings } from './dcatapplu.settings.js';
+import type { DOMParser } from '@xmldom/xmldom';
 import log4js from 'log4js';
+import type { Observer } from 'rxjs';
 import { namespaces } from '../../importer/namespaces.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
-import { DcatappluMapper } from './dcatapplu.mapper.js';
-import type { DOMParser } from '@xmldom/xmldom';
-import { Importer} from '../importer.js';
-import type { ImportLogMessage} from '../../model/import.result.js';
-import { ImportResult} from '../../model/import.result.js';
-import type { IndexDocument } from '../../model/index.document.js';
-import type { Observer } from 'rxjs';
-import type { ProfileFactory } from '../../profiles/profile.factory.js';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { RecordEntity } from '../../model/entity.js';
+import type { ImportLogMessage } from '../../model/import.result.js';
+import type { IndexDocument } from '../../model/index.document.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
-import type { Summary } from '../../model/summary.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import { Importer } from '../importer.js';
+import { DcatappluMapper } from './dcatapplu.mapper.js';
+import { dcatappluDefaults, type DcatappluSettings } from './dcatapplu.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
 
-export class DcatappluImporter extends Importer {
+export class DcatappluImporter extends Importer<DcatappluSettings> {
 
     protected domParser: DOMParser;
-    protected profile: ProfileFactory<DcatappluMapper>;
-    protected requestDelegate: RequestDelegate;
-    protected settings: DcatappluSettings;
 
     private totalRecords = 0;
     private numIndexDocs = 0;
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
+    constructor(settings: DcatappluSettings) {
         super(settings);
-
-        this.profile = ProfileFactoryLoader.get();
         this.domParser = MiscUtils.getDomParser();
+    }
 
-        // merge default settings with configured ones
-        settings = MiscUtils.merge(defaultDCATAPPLUSettings, settings);
-
-        if (requestDelegate) {
-            this.requestDelegate = requestDelegate;
-        } else {
-            let requestConfig = DcatappluImporter.createRequestConfig(settings);
-            this.requestDelegate = new RequestDelegate(requestConfig, DcatappluImporter.createPaging(settings));
-        }
-
-        this.settings = settings;
+    protected getDefaultSettings(): DcatappluSettings {
+        return dcatappluDefaults;
     }
 
     // only here for documentation - use the "default" exec function
@@ -81,10 +64,13 @@ export class DcatappluImporter extends Importer {
     protected async harvest(): Promise<number> {
         // let retries = 0;
 
+        const requestConfig = DcatappluImporter.createRequestConfig(this.settings);
+        const requestDelegate = new RequestDelegate(requestConfig, DcatappluImporter.createPaging(this.settings));
+
         // while (true) {
             log.debug('Requesting next records');
-            let response = await this.requestDelegate.doRequest();
-            let harvestTime = new Date(Date.now());
+            let response = await requestDelegate.doRequest();
+            let harvestTime = new Date();
 
             // let responseDom = this.domParser.parseFromString(response);
 
@@ -205,26 +191,28 @@ export class DcatappluImporter extends Importer {
 
                 let rdfAboutAttribute = DcatappluMapper.select('./@rdf:about', records[i], true)?.textContent;
                 let catalogId = datasetAboutsToCatalogAbouts[rdfAboutAttribute];
-                let catalog = catalogAboutsToCatalogs[catalogId] ?? this.database.getCatalog(this.generalConfig.elasticsearch.index);
-                if (!catalog) {
-                    catalog = await this.database.createCatalog({
-                        description: 'Globaler Katalog',
-                        identifier: this.generalConfig.elasticsearch.index,
-                        publisher: {
-                            name: ''
-                        },
-                        title: 'Globaler Katalog'
-                    });
-                }
-                let mapper = this.getMapper(this.settings, records[i], catalog, rootNode, harvestTime, this.summary);
+                let catalog = catalogAboutsToCatalogs[catalogId];
+                // let catalog = catalogAboutsToCatalogs[catalogId] ?? this.database.getLegacyCatalog(this.generalConfig.elasticsearch.index);
+                // if (!catalog) {
+                //     catalog = await this.database.createLegacyCatalog({
+                //         description: 'Globaler Katalog',
+                //         identifier: this.generalConfig.elasticsearch.index,
+                //         publisher: {
+                //             name: ''
+                //         },
+                //         title: 'Globaler Katalog'
+                //     });
+                // }
+                let mapper = new DcatappluMapper(this.settings, records[i], catalog, rootNode, harvestTime, this.summary)
+                let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
                 let doc: IndexDocument;
                 try {
-                    doc = await this.profile.getIndexDocumentFactory(mapper).create();
+                    doc = await documentFactory.createIndexDocument();
                 }
                 catch (e) {
                     log.error('Error creating index document', e);
-                    this.summary.appErrors.push(e.toString());
+                    this.summary.errors.push({ type: 'app', error: e.toString() });
                     mapper.skipped = true;
                 }
 
@@ -232,7 +220,7 @@ export class DcatappluImporter extends Importer {
                     let entity: RecordEntity = {
                         identifier: uuid,
                         source: this.settings.sourceURL,
-                        collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
+                        catalog_ids: this.settings.catalogIds,
                         dataset: doc,
                         original_document: mapper.getHarvestedData()
                     };
@@ -241,7 +229,7 @@ export class DcatappluImporter extends Importer {
                 else {
                     this.summary.skippedDocs.push(uuid);
                 }
-                this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
+                this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
             }
         }
         await Promise.all(promises).catch(err => log.error('Error indexing DCAT record', err));
@@ -274,10 +262,6 @@ export class DcatappluImporter extends Importer {
             startPosition: settings.startPosition,
             numRecords: settings.maxRecords
         }
-    }
-
-    getSummary(): Summary {
-        return this.summary;
     }
 
     private static getPageFromUrl(url: string) {

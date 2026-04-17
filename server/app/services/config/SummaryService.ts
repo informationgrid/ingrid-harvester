@@ -65,7 +65,7 @@ export class SummaryService {
      * Get all import summaries from each harvester.
      */
     getAll(): ImportLogMessage[] {
-        let harvesters = ConfigService.get();
+        let harvesters = ConfigService.getHarvesters();
 
         return this.summaries
             .map(summary => {

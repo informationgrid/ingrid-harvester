@@ -24,20 +24,19 @@
 /**
  * A mapper for LIDO XML documents harvested over OAI.
  */
-import * as xpath from 'xpath';
-import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import log4js from 'log4js';
-import { oaiXPaths } from '../oai.paths.js';
-import { BaseMapper } from '../../base.mapper.js';
-import type { Event, Record, Relation, Repository, Resource, Subject } from './lido.model.js';
-import type { ImporterSettings } from '../../../importer.settings.js';
+import * as xpath from 'xpath';
 import type { MetadataSource } from '../../../model/index.document.js';
-import type { OaiSettings } from '../oai.settings.js';
 import type { Summary } from '../../../model/summary.js';
-import type { XPathElementSelect } from '../../../utils/xpath.utils.js';
+import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import { normalizeDateTime } from '../../../utils/misc.utils.js';
+import type { XPathElementSelect } from '../../../utils/xpath.utils.js';
+import { Mapper } from '../../mapper.js';
+import { oaiXPaths } from '../oai.paths.js';
+import type { OaiSettings } from '../oai.settings.js';
+import type { Event, Record, Relation, Repository, Resource, Subject } from './lido.model.js';
 
-export class OaiMapper extends BaseMapper {
+export class OaiMapper extends Mapper<OaiSettings> {
 
     static select = <XPathElementSelect>xpath.useNamespaces(oaiXPaths.lido.prefixMap);
 
@@ -54,17 +53,13 @@ export class OaiMapper extends BaseMapper {
     private harvestTime: any;
 
     protected readonly idInfo; // : SelectedValue;
-    private settings: OaiSettings;
     private readonly uuid: string;
-    private summary: Summary;
 
-    constructor(settings, header: Element, record: Element, harvestTime, summary) {
-        super();
-        this.settings = settings;
+    constructor(settings: OaiSettings, header: Element, record: Element, harvestTime, summary: Summary) {
+        super(settings, summary);
         this.header = header;
         this.record = record;
         this.harvestTime = harvestTime;
-        this.summary = summary;
 
         super.init();
     }
@@ -247,20 +242,12 @@ export class OaiMapper extends BaseMapper {
         return resources;
     }
 
-    getSettings(): ImporterSettings {
-        return this.settings;
-    }
-
-    getSummary(): Summary {
-        return this.summary;
-    }
-
     getHarvestedData(): string {
         return this.record.toString();
     }
 
     getHarvestingDate(): Date {
-        return new Date(Date.now());
+        return new Date();
     }
 
     // TODO

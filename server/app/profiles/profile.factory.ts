@@ -21,27 +21,67 @@
  * ==================================================
  */
 
-import { createRequire } from 'module';
+import type { CatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
-import type { BaseMapper } from '../importer/base.mapper.js';
+import { createRequire } from 'module';
+import type { Catalog, CatalogColumnType, CatalogFactory, CatalogOperation } from '../catalog/catalog.factory.js';
+import type { ImporterSettings, ImporterType, ImporterTypeInfo } from '../importer/importer.settings.js';
+import { ckanCapabilities, ckanDefaults } from '../importer/ckan/ckan.settings.js';
+import { cswCapabilities, cswDefaults } from '../importer/csw/csw.settings.js';
+import { dcatapdeCapabilities, dcatapdeDefaults } from '../importer/dcatapde/dcatapde.settings.js';
+import { dcatappluCapabilities, dcatappluDefaults } from '../importer/dcatapplu/dcatapplu.settings.js';
+import { genesisCapabilities, genesisDefaults } from '../importer/genesis/genesis.settings.js';
 import type { ImporterFactory } from '../importer/importer.factory.js';
-import type { Catalog } from '../model/dcatApPlu.model.js';
+import type { Importer } from '../importer/importer.js';
+import { jsonCapabilities, jsonDefaults } from '../importer/json/json.settings.js';
+import { kldCapabilities, kldDefaults } from '../importer/kld/kld.settings.js';
+import type { Mapper } from '../importer/mapper.js';
+import { oaiCapabilities, oaiDefaults } from '../importer/oai/oai.settings.js';
+import { sparqlCapabilities, sparqlDefaults } from '../importer/sparql/sparql.settings.js';
+import { wfsCapabilities, wfsDefaults } from '../importer/wfs/wfs.settings.js';
+import type { DocumentFactory } from '../model/index.document.factory.js';
 import type { IndexDocument } from '../model/index.document.js';
-import type { IndexDocumentFactory } from '../model/index.document.factory.js';
+import type { Summary } from '../model/summary.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
 import type { DatabaseUtils } from '../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import type { ElasticQueries } from '../persistence/elastic.queries.js';
 import type { IndexSettings } from '../persistence/elastic.setting.js';
 import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
-import type { PostgresAggregator } from '../persistence/postgres.aggregator.js';
 import { PostgresQueries } from '../persistence/postgres.queries.js';
 import { ConfigService } from '../services/config/ConfigService.js';
-import * as MiscUtils from '../utils/misc.utils.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
-export abstract class ProfileFactory<M extends BaseMapper> {
+export abstract class ProfileFactory<T extends ImporterSettings> implements ImporterFactory<T>, 
+// MapperFactory<T>,
+CatalogFactory {
+
+    protected abstract getSupportedTypeNames(): ImporterType[];
+
+    public getImporterTypes(): ImporterTypeInfo[] {
+        const supportedTypes = this.getSupportedTypeNames();
+        return ProfileFactory.getAvailableImporterTypes().filter(info => supportedTypes.includes(info.type));
+    }
+
+    private static getAvailableImporterTypes(): ImporterTypeInfo[] {
+        return [
+            { type: 'CKAN', defaults: ckanDefaults, capabilities: ckanCapabilities },
+            { type: 'CSW', defaults: cswDefaults, capabilities: cswCapabilities },
+            { type: 'DCATAPDE', defaults: dcatapdeDefaults, capabilities: dcatapdeCapabilities },
+            { type: 'DCATAPPLU', defaults: dcatappluDefaults, capabilities: dcatappluCapabilities },
+            { type: 'GENESIS', defaults: genesisDefaults, capabilities: genesisCapabilities },
+            { type: 'JSON', defaults: jsonDefaults, capabilities: jsonCapabilities },
+            { type: 'KLD', defaults: kldDefaults, capabilities: kldCapabilities },
+            { type: 'OAI', defaults: oaiDefaults, capabilities: oaiCapabilities },
+            { type: 'SPARQL', defaults: sparqlDefaults, capabilities: sparqlCapabilities },
+            { type: 'WFS', defaults: wfsDefaults, capabilities: wfsCapabilities },
+            { type: 'WFS.FIS', defaults: wfsDefaults, capabilities: wfsCapabilities },
+            { type: 'WFS.MS', defaults: wfsDefaults, capabilities: wfsCapabilities },
+            { type: 'WFS.XPLAN', defaults: wfsDefaults, capabilities: wfsCapabilities },
+            { type: 'WFS.XPLAN.SYN', defaults: wfsDefaults, capabilities: wfsCapabilities },
+        ];
+    }
 
     /**
      * Set up profile specific environment.
@@ -51,43 +91,24 @@ export abstract class ProfileFactory<M extends BaseMapper> {
         let database = DatabaseFactory.getDatabaseUtils(dbConfig, null);
         let elastic = ElasticsearchFactory.getElasticUtils(esConfig, null);
 
-        // try to initialize the ES index if it does not exist
-        await elastic.prepareIndex(this.getIndexMappings(), this.getIndexSettings(), true);
-        await elastic.addAlias(esConfig.prefix + esConfig.index, esConfig.alias);
-
         // try to initialize the DB tables if they do not exist
         await database.init();
 
         return { database, elastic };
+    }
+
+    dateReplacer(this: any, key: string, value: any): any {
+        return value;
     };
 
-    async createCatalogIfNotExist(catalog: string | Catalog, database?: DatabaseUtils, elastic?: ElasticsearchUtils): Promise<Catalog> {
-        const { database: dbConfig, elasticsearch: esConfig } = ConfigService.getGeneralSettings();
-        database ??= DatabaseFactory.getDatabaseUtils(dbConfig, null);
-        elastic ??= ElasticsearchFactory.getElasticUtils(esConfig, null);
-
-        if (typeof(catalog) == 'string') {
-            catalog = {
-                description: `${catalog} (automatically created)`,
-                identifier: catalog,
-                publisher: undefined,
-                title: `${catalog} (automatically created)`
-            };
-        }
-        log.info(`Ensuring existence of DB entry for catalog "${catalog.identifier}"`);
-        return await database.createCatalog(catalog);
+    getIndexMappings(mappingName?: string): any {
+        const require = createRequire(import.meta.url);
+        return require(`./${this.getProfileName()}/persistence/${mappingName ?? 'default-mapping'}.json`);
     }
 
-    dateReplacer = MiscUtils.dateReplacer;
-
-    getIndexMappings(): any {
+    getIndexSettings(settingsName?: string): IndexSettings {
         const require = createRequire(import.meta.url);
-        return require(`./${this.getProfileName()}/persistence/elastic.mappings.json`);
-    }
-
-    getIndexSettings(): IndexSettings {
-        const require = createRequire(import.meta.url);
-        return require(`./${this.getProfileName()}/persistence/elastic.settings.json`);
+        return require(`./${this.getProfileName()}/persistence/${settingsName ?? 'default-settings'}.json`);
     }
 
     getPostgresQueries(): PostgresQueries {
@@ -95,9 +116,12 @@ export abstract class ProfileFactory<M extends BaseMapper> {
     }
 
     abstract getElasticQueries(): ElasticQueries;
-    abstract getImporterFactory(): ImporterFactory;
-    abstract getIndexDocumentFactory(mapper: M): IndexDocumentFactory<IndexDocument>;
-    abstract getPostgresAggregator(): PostgresAggregator<IndexDocument>;
+
+    abstract getImporter(settings: T): Promise<Importer<T>>;
+
+    abstract getDocumentFactory(mapper: Mapper<ImporterSettings>): DocumentFactory<IndexDocument>;
+
+    abstract getCatalog(catalogId: number, summary: Summary): Promise<Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>>;
+
     abstract getProfileName(): string;
-    abstract useIndexPerCatalog(): boolean;
 }

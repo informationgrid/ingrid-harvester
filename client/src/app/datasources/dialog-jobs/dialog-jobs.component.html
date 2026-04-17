@@ -1,0 +1,56 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<div cdkDrag cdkDragRootElement=".cdk-overlay-pane" *transloco="let t">
+  <ingrid-dialog-header
+    cdkDragHandle
+    [title]="t('common.jobs')"
+    svgIcon="Timeline"
+  ></ingrid-dialog-header>
+
+  <mat-dialog-content>
+    @if (!data.jobs?.length) {
+      <div class="no-jobs">
+        <mat-icon svgIcon="logging"></mat-icon>
+        <span>{{ t("datasources.noLogs") }}</span>
+      </div>
+    } @else {
+      <mat-accordion displayMode="flat">
+        @for (job of data.jobs; track job.jobId) {
+          <harvester-job-entry
+            [job]="job"
+            [jobLog]="logsByJobId()[job.jobId]"
+            (onPanelOpen)="onPanelOpen(job)"
+            (onPanelClose)="onPanelClose(job)"
+          ></harvester-job-entry>
+        }
+      </mat-accordion>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>
+      {{ t("common.close") }}
+    </button>
+  </mat-dialog-actions>
+</div>

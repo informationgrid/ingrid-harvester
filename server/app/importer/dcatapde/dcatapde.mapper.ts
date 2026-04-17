@@ -1,0 +1,692 @@
+/*
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
+ *
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
+ * ==================================================
+ */
+
+/**
+ * A mapper for ISO-XML documents harvested over CSW.
+ */
+import type { License } from '@shared/license.model.js';
+import log4js from 'log4js';
+import { throwError } from 'rxjs';
+import * as xpath from 'xpath';
+import { namespaces } from '../../importer/namespaces.js';
+import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
+import type { Contact, Person } from '../../model/agent.js';
+import type { DateRange } from '../../model/dateRange.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
+import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
+import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
+import type { RequestOptions } from '../../utils/http-request.utils.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import { UrlUtils } from '../../utils/url.utils.js';
+import type { XPathElementSelect } from '../../utils/xpath.utils.js';
+import { Mapper } from '../mapper.js';
+import type { DcatapdeSettings } from './dcatapde.settings.js';
+import type {ToDcatapdeMapper} from "../to.dcatapde.mapper.js";
+import { DCAT_LANGUAGE_URL } from './dcatapde.utils.js';
+
+export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasticMapper<IndexDocument>, ToDcatapdeMapper {
+
+    static select = <XPathElementSelect>xpath.useNamespaces({
+        'foaf': namespaces.FOAF,
+        'locn': namespaces.LOCN,
+        'hydra': namespaces.HYDRA,
+        'rdf': namespaces.RDF,
+        'rdfs': namespaces.RDFS,
+        'dcat': namespaces.DCAT,
+        'dcatap': namespaces.DCATAP,
+        'dct': namespaces.DCT,
+        'skos': namespaces.SKOS,
+        'schema': namespaces.SCHEMA,
+        'vcard': namespaces.VCARD,
+        'dcatde': namespaces.DCATDE,
+        'ogc': namespaces.OGC
+    });
+
+    private readonly record: any;
+    private harvestTime: any;
+
+//    protected readonly idInfo; // : SelectedValue;
+    private readonly uuid: string;
+
+    private keywordsAlreadyFetched = false;
+    private fetched: any = {
+        contactPoint: null,
+        publishers: null,
+        keywords: {},
+        themes: null
+    };
+
+    log = log4js.getLogger();
+
+    constructor(settings: DcatapdeSettings, record, harvestTime, summary) {
+        super(settings, summary);
+        this.record = record;
+        this.harvestTime = harvestTime;
+
+        let uuid = DcatapdeMapper.select('./dct:identifier', record, true).textContent;
+        if(!uuid) {
+            uuid = DcatapdeMapper.select('./dct:identifier/@rdf:resource', record, true).textContent;
+        }
+        this.uuid = uuid;
+
+        super.init();
+    }
+
+    async createIndexDocument(): Promise<IndexDocument> {
+        return {
+            uuid: this.getGeneratedId(),
+            extras: {
+                metadata: this.getHarvestingMetadata(),
+            }
+        };
+    }
+
+    async createDcatapdeDocument(): Promise<string> {
+        return this.getHarvestedData();
+    }
+
+    getDescription() {
+        let description = DcatapdeMapper.select('./dct:description', this.record, true);
+        if (!description) {
+            description = DcatapdeMapper.select('./dct:abstract', this.record, true);
+        }
+        if (!description) {
+            let msg = `Dataset doesn't have an description. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.sourceURL}\'`;
+            this.log.warn(msg);
+            this.summary.warnings.push(['No description', msg]);
+            this.valid = false;
+        } else {
+            return description.textContent;
+        }
+
+        return undefined;
+    }
+
+    getLandingPage() {
+        let landingPage = DcatapdeMapper.select('./dcat:landingPage', this.record, true)?.getAttribute('rdf:resource');
+        return landingPage && landingPage.trim() !== '' ? landingPage : undefined;
+    }
+
+
+    getPoliticalGeocodingLevelURI() {
+        let politicalGeocodingLevelURI = DcatapdeMapper.select('./dcatde:politicalGeocodingLevelURI', this.record, true)?.getAttribute('rdf:resource');
+        return politicalGeocodingLevelURI && politicalGeocodingLevelURI.trim() !== '' ? politicalGeocodingLevelURI : undefined;
+    }
+
+    getLegalBasis() {
+        let legalBasis = DcatapdeMapper.select('./dcatde:legalBasis', this.record, true)?.textContent;
+        return legalBasis?.trim() ? legalBasis : undefined;
+    }
+
+    getDistributions():Distribution[] {
+        let dists:Distribution[] = [];
+
+        const distributions = DcatapdeMapper.select('./dcat:distribution/dcat:Distribution', this.record);
+
+            for (const distribution of distributions) {
+
+                let format: string = "Unbekannt";
+                let formatNode = DcatapdeMapper.select('./dct:format', distribution, true);
+                let mediaTypeNode = DcatapdeMapper.select('./dcat:mediaType', distribution, true);
+                if (formatNode) {
+                    let formatLabel = DcatapdeMapper.select('.//rdfs:label', formatNode, true);
+                    let formatValue = DcatapdeMapper.select('.//rdf:value', formatNode, true);
+                    if(formatLabel){
+                        format = formatLabel.textContent;
+                    }
+                    else if(formatValue){
+                        format = formatValue.textContent;
+                    }
+                    else if (formatNode.textContent) {
+                        format = formatNode.textContent.trim();
+                    } else {
+                        format = formatNode.getAttribute('rdf:resource');
+                    }
+                    if(format.startsWith("http://publications.europa.eu/resource/authority/file-type/")){
+                        format = format.substring("http://publications.europa.eu/resource/authority/file-type/".length)
+                    }
+                } else if (mediaTypeNode) {
+                    if (mediaTypeNode.textContent) {
+                        format = mediaTypeNode.textContent;
+                    } else {
+                        format = mediaTypeNode.getAttribute('rdf:resource');
+                    }
+                    if(format.startsWith("https://www.iana.org/assignments/media-types/")){
+                        format = format.substring("https://www.iana.org/assignments/media-types/".length)
+                    }
+                }
+
+
+                let license = undefined;
+                let licenseResource = DcatapdeMapper.select('dct:license', distribution, true);
+                if (licenseResource) {
+                    license = DcatLicensesUtils.get(licenseResource.getAttribute('rdf:resource'));
+                    license = {
+                        name: license.title,
+                        url: license.url
+                    };
+                    let licenseAttributionByText = DcatapdeMapper.select('dcatde:licenseAttributionByText', distribution, true)?.textContent;
+                    if (licenseAttributionByText) {
+                        license["attribution_by_text"] = licenseAttributionByText;
+                    }
+                }
+
+                let url = DcatapdeMapper.select('./dcat:accessURL', distribution, true);
+                let title = DcatapdeMapper.select('./dct:title', distribution, true);
+                let description = DcatapdeMapper.select('./dct:description', distribution, true);
+                let issued = DcatapdeMapper.select('./dct:issued', distribution, true);
+                let modified = DcatapdeMapper.select('./dct:modified', distribution, true);
+                let size = DcatapdeMapper.select('./dcat:byteSize', distribution, true);
+                let availability = DcatapdeMapper.select('./dcatap:availability', distribution, true)?.getAttribute('rdf:resource');
+
+                let languages = [];
+                let languageNodes  = DcatapdeMapper.select('./dcat:language', distribution);
+                if (languageNodes) {
+                    for (let j = 0; j < languageNodes.length; j++) {
+                        let language = languageNodes[j].getAttribute('rdf:resource');
+                        if(language && language.startsWith(DCAT_LANGUAGE_URL)) {
+                            language = language.substring(DCAT_LANGUAGE_URL.length);
+                        }
+                        if(language && language.trim().length > 0) {
+                            languages.push(language.trim())
+                        }
+                    }
+                }
+
+
+                if(url) {
+                    let dist = {
+                        format: UrlUtils.mapFormat([format], this.summary.warnings).filter(x => x != "Unbekannt"),
+                        access_url: url.getAttribute('rdf:resource')?url.getAttribute('rdf:resource'):url.textContent,
+                        title: title ? title.textContent : undefined,
+                        description: description ? description.textContent : undefined,
+                        issued: issued ? new Date(issued.textContent) : undefined,
+                        modified: modified ? new Date(modified.textContent) : undefined,
+                        byteSize: size ? Number(size.textContent) : undefined,
+                        license,
+                        availability,
+                        languages: languages ? languages : undefined,
+                    }
+
+                    dists.push(dist);
+                }
+            }
+
+        return dists;
+    }
+
+
+    getPublisher(): any[] {
+        if(this.fetched.publishers != null){
+            return this.fetched.publishers
+        }
+
+        let publishers = [];
+
+        let dctPublishers = DcatapdeMapper.select('./dct:publisher', this.record);
+        for (let i = 0; i < dctPublishers.length; i++) {
+            let organization = DcatapdeMapper.select('./foaf:Organization', dctPublishers[i], true);
+            if (organization) {
+                let name = DcatapdeMapper.select('./foaf:name', organization, true);
+                if(name) {
+                    let infos: any = {
+                        organization: name.textContent
+                    };
+
+                    publishers.push(infos);
+                }
+            }
+        }
+
+        if (publishers.length === 0) {
+            this.summary.missingPublishers++;
+        }
+
+        this.fetched.publishers = publishers;
+        return publishers;
+    }
+
+    getTitle() {
+        let title = DcatapdeMapper.select('./dct:title', this.record, true).textContent;
+        return title && title.trim() !== '' ? title : undefined;
+    }
+
+    /**
+     * For Open Data, GDI-DE expects access rights to be defined three times:
+     * - As text in useLimitation
+     * - As text in a useConstraints/otherConstraints combination
+     * - As a JSON-snippet in a useConstraints/otherConstraints combination
+     *
+     * Use limitations can also be defined as separate fields
+     * Plus access constraints can be set from the ISO codelist MD_RestrictionCode
+     *
+     * GeoDCAT-AP of the EU on the other had uses the
+     * useLimitation/accessConstraints=otherRestritions/otherConstraints
+     * combination and uses the accessRights field to store this information.
+     *
+     * We use a combination of these strategies:
+     * - Use the accessRights field like GeoDCAT-AP but store:
+     *    + all the useLimitation items
+     *    + all otherConstraints texts for useConstraints/otherConstraints
+     *      combinations that are not JSON-snippets.
+     */
+    getAccessRights(): string[] {
+        return undefined;
+    }
+
+    getCitation(): string {
+        return undefined;
+    }
+
+    getGeneratedId(): string {
+        return this.uuid;
+    }
+
+    /**
+     * Extracts and returns an array of keywords defined in the ISO-XML document.
+     * This method also checks if these keywords contain at least one of the
+     * given mandatory keywords. If this is not the case, then the mapped
+     * document is flagged to be skipped from the index. By default this array
+     * contains just one entry 'opendata' i.e. if the ISO-XML document doesn't
+     * have this keyword defined, then it will be skipped from the index.
+     */
+    getKeywords(): string[] {
+        let keywords = [];
+        let keywordNodes = DcatapdeMapper.select('./dcat:keyword', this.record);
+        if (keywordNodes) {
+            for (let i = 0; i < keywordNodes.length; i++) {
+                keywords.push(keywordNodes[i].textContent)
+            }
+        }
+
+        if(this.settings.filterTags && this.settings.filterTags.length > 0 && !keywords.some(keyword => this.settings.filterTags.includes(keyword))){
+            this.skipped = true;
+        }
+
+        return keywords;
+    }
+
+    getMetadataSource(): MetadataSource {
+        let dcatLink; //=  DcatMapper.select('.//dct:creator', this.record);
+        let portalLink = this.record.getAttribute('rdf:about');
+        return {
+            source_base: this.settings.sourceURL,
+            raw_data_source: dcatLink,
+            source_type: 'dcat',
+            portal_link: portalLink,
+            attribution: this.settings.defaultAttribution
+        };
+    }
+
+    getModifiedDate() {
+        let modified = DcatapdeMapper.select('./dct:modified', this.record, true);
+        return modified?new Date(modified.textContent):undefined;
+    }
+
+    getSpatial(): any {
+        let geometry = DcatapdeMapper.select('./dct:spatial/dct:Location/locn:geometry[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
+        if(geometry){
+            return JSON.parse(geometry.textContent);
+        }
+        geometry = DcatapdeMapper.select('./dct:spatial/ogc:Polygon/ogc:asWKT[./@rdf:datatype="http://www.opengis.net/rdf#WKTLiteral"]', this.record, true);
+        if(geometry){
+            return this.wktToGeoJson(geometry.textContent);
+        }
+        return undefined;
+    }
+
+    wktToGeoJson(wkt: string):any{
+        try {
+            var coordsPos = wkt.indexOf("(");
+            var type = wkt.substring(0, coordsPos).trim();
+            if(type.lastIndexOf(' ') > -1){
+                type = type.substring(type.lastIndexOf(' ')).trim();
+            }
+            type = type.toLowerCase();
+            var coords = wkt.substring(coordsPos).trim();
+            coords = coords.replace(/\(/g, "[").replace(/\)/g, "]");
+            coords = coords.replace(/\[(\s*[-0-9][^\]]*\,[^\]]*[0-9]\s*)\]/g, "[[$1]]");
+            coords = coords.replace(/([0-9])\s*\,\s*([-0-9])/g, "$1], [$2");
+            coords = coords.replace(/([0-9])\s+([-0-9])/g, "$1, $2");
+            return {
+                'type': type,
+                'coordinates': JSON.parse(coords)
+            };
+        } catch(e) {
+            this.summary.errors.push({ type: 'app', error: "Can't parse WKT: "+e.message });
+        }
+    }
+
+    getSpatialText(): string {
+        let prefLabel = DcatapdeMapper.select('./dct:spatial/dct:Location/skos:prefLabel', this.record, true);
+        if(prefLabel){
+            return prefLabel.textContent;
+        }
+        return undefined;
+    }
+
+    getTemporal(): DateRange[] {
+        let result: DateRange[] = [];
+
+        let nodes = DcatapdeMapper.select('./dct:temporal/dct:PeriodOfTime', this.record);
+        for (let i = 0; i < nodes.length; i++) {
+            let begin = this.getTimeValue(nodes[i], 'startDate');
+            let end = this.getTimeValue(nodes[i], 'endDate');
+
+            if (begin || end) {
+                result.push({
+                    gte: begin ? begin : undefined,
+                    lte: end ? end : undefined
+                });
+            }
+        }
+
+        if(result.length)
+            return result;
+
+        return undefined;
+    }
+
+    getTimeValue(node, beginOrEnd: 'startDate' | 'endDate'): Date {
+        let dateNode = DcatapdeMapper.select('./schema:' + beginOrEnd, node, true);
+        if (dateNode) {
+            let text = dateNode.textContent;
+            let date = new Date(Date.parse(text));
+            if (date) {
+                return date;
+            } else {
+                this.log.warn(`Error parsing date, which was '${text}'. It will be ignored.`);
+            }
+        }
+    }
+
+
+    getThemes() {
+        // Return cached value, if present
+        if (this.fetched.themes) return this.fetched.themes;
+
+        // Evaluate the themes
+        let themes : string[] = DcatapdeMapper.select('./dcat:theme', this.record)
+            .map(node => node.getAttribute('rdf:resource'))
+            .filter(theme => theme); // Filter out falsy values
+
+        if(this.settings.filterThemes && this.settings.filterThemes.length > 0 && !themes.some(theme => this.settings.filterThemes.includes(theme.substr(theme.lastIndexOf('/')+1)))){
+            this.skipped = true;
+        }
+
+        this.fetched.themes = themes;
+        return themes;
+    }
+
+    isRealtime(): boolean {
+        return undefined;
+    }
+
+    getAccrualPeriodicity(): string {
+        let accrualPeriodicity = DcatapdeMapper.select('./dct:accrualPeriodicity', this.record, true);
+        if (accrualPeriodicity) {
+            let res = accrualPeriodicity.getAttribute('rdf:resource');
+            let periodicity;
+            if(res.length > 0)
+                periodicity =  res.substr(res.lastIndexOf('/') + 1);
+            else if(accrualPeriodicity.textContent.trim().length > 0)
+                periodicity =  accrualPeriodicity.textContent;
+
+
+            if(periodicity){
+                let period = DcatPeriodicityUtils.getPeriodicity(periodicity)
+                if(!period){
+                    this.summary.warnings.push(["Unbekannte Periodizität", periodicity]);
+                }
+                return period;
+            }
+        }
+        return undefined;
+    }
+
+    async getLicense(): Promise<License> {
+        let license: License;
+
+        let accessRights = DcatapdeMapper.select('./dct:accessRights', this.record);
+        if(accessRights){
+            for(let i=0; i < accessRights.length; i++){
+                try {
+                    let json = JSON.parse(accessRights[i]?.textContent);
+
+                    if (!json.id || !json.url) continue;
+
+                    let requestConfig = this.getUrlCheckRequestConfig(json.url);
+                    license = {
+                        id: json.id,
+                        title: json.name,
+                        url: await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest)
+                    };
+
+                } catch(ignored) {}
+
+            }
+        }
+        if(!license){
+            const distributions = DcatapdeMapper.select('./dcat:distribution/dcat:Distribution', this.record);
+
+            for (const distribution of distributions) {
+                let licenseResource = DcatapdeMapper.select('dct:license', distribution, true);
+                if(licenseResource) {
+                    license = await DcatLicensesUtils.get(licenseResource.getAttribute('rdf:resource'));
+                    break;
+                }
+            }
+        }
+
+        if (!license) {
+            let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
+            this.summary.missingLicense++;
+
+            this.log.warn(msg);
+            this.summary.warnings.push(['Missing license', msg]);
+            return {
+                id: 'unknown',
+                title: 'Unbekannt',
+                url: undefined
+            };
+        }
+
+        return license;
+    }
+
+    getErrorSuffix(uuid, title) {
+        return `Id: '${uuid}', title: '${title}', source: '${this.settings.sourceURL}'.`;
+    }
+
+    getHarvestedData(): string {
+        return this.record.toString();
+    }
+
+    getCreator(): Person[] {
+        let creators = [];
+
+        let creatorNodes = DcatapdeMapper.select('./dct:creator', this.record);
+        for (let i = 0; i < creatorNodes.length; i++) {
+            let organization = DcatapdeMapper.select('./foaf:Organization', creatorNodes[i], true);
+            if (organization) {
+                let name = DcatapdeMapper.select('./foaf:name', organization, true);
+                let mbox = DcatapdeMapper.select('./foaf:mbox', organization, true);
+                if(name) {
+                    let infos: any = {
+                        name: name.textContent
+                    };
+                    if (mbox) infos.mbox = mbox.textContent;
+
+                    creators.push(infos);
+                }
+            }
+        }
+
+        return creators;
+    }
+
+    getMaintainer(): Person[] {
+        let maintainers = [];
+
+        let maintainerNodes = DcatapdeMapper.select('./dct:maintainer', this.record);
+        for (let i = 0; i < maintainerNodes.length; i++) {
+            let organization = DcatapdeMapper.select('./foaf:Organization', maintainerNodes[i], true);
+            if (organization) {
+                let name = DcatapdeMapper.select('./foaf:name', organization, true);
+                let mbox = DcatapdeMapper.select('./foaf:mbox', organization, true);
+                if(name) {
+                    let infos: any = {
+                        name: name.textContent
+                    };
+                    if (mbox) infos.mbox = mbox.textContent;
+
+                    maintainers.push(infos);
+                }
+            }
+        }
+
+        return maintainers;
+    }
+
+    getGroups(): string[] {
+        return undefined;
+    }
+
+    getIssued(): Date {
+        let modified = DcatapdeMapper.select('./dct:modified', this.record, true);
+        return modified?new Date(modified.textContent):undefined;
+    }
+
+    getHarvestingDate(): Date {
+        return new Date();
+    }
+
+    getSubSections(): any[] {
+        return undefined;
+    }
+
+    getOriginator(): Person[] {
+        let originators = [];
+        let originatorNode = DcatapdeMapper.select('./dcatde:originator', this.record);
+        for (let i = 0; i < originatorNode.length; i++) {
+            let organization = DcatapdeMapper.select('./foaf:Organization', originatorNode[i], true);
+            if (organization) {
+                let name = DcatapdeMapper.select('./foaf:name', organization, true);
+                let mbox = DcatapdeMapper.select('./foaf:mbox', organization, true);
+                let infos: any = {
+                    name: name.textContent
+                };
+                if(mbox) infos.mbox = mbox.textContent;
+
+                originators.push(infos);
+            }
+        }
+
+        return originators;
+    }
+
+    getContactPoint(): any {
+        let contactPoint = this.fetched.contactPoint;
+        if (contactPoint) {
+            return contactPoint;
+        }
+        let infos: any = {};
+        let contact = DcatapdeMapper.select('./dcat:contactPoint', this.record, true);
+        if (contact) {
+            let organization = DcatapdeMapper.select('./vcard:Organization', contact, true);
+            if(organization) {
+                let name = DcatapdeMapper.select('./vcard:fn', organization, true);
+                let org = DcatapdeMapper.select('./organization-name', organization, true);
+                let region = DcatapdeMapper.select('./vcard:region', organization, true);
+                let country = DcatapdeMapper.select('./vcard:hasCountryName', organization, true);
+                let postCode = DcatapdeMapper.select('./vcard:hasPostalCode', organization, true);
+                let email = DcatapdeMapper.select('./vcard:hasEmail', organization, true);
+                let phone = DcatapdeMapper.select('./vcard:hasTelephone', organization, true);
+                let urlNode = DcatapdeMapper.select('./vcard:hasURL', organization, true);
+                let url = null;
+                if (urlNode) {
+                    url = urlNode.getAttribute('rdf:resource');
+                }
+
+                let infos: Contact = {
+                    fn: name?.textContent,
+                };
+
+                if (contact.getAttribute('uuid')) {
+                    infos.hasUID = contact.getAttribute('uuid');
+                }
+
+                if (org) infos['organization-name'] = org.textContent;
+
+                if (region) infos.hasRegion = region.textContent;
+                if (country) infos.hasCountryName = country.textContent.trim();
+                if (postCode) infos.hasPostalCode = postCode.textContent;
+
+                if (email) infos.hasEmail = email.getAttribute('rdf:resource').replace('mailto:', '');
+                if (phone) infos.hasTelephone = phone.getAttribute('rdf:resource').replace('tel:', '');
+                if (url) infos.hasURL = url;
+            }
+
+        }
+
+        this.fetched.contactPoint = infos;
+        return infos;
+    }
+
+    private getUrlCheckRequestConfig(uri: string): RequestOptions {
+        let config: RequestOptions = {
+            method: 'HEAD',
+            json: false,
+            headers: RequestDelegate.defaultRequestHeaders(),
+            qs: {},
+            uri: uri
+        };
+
+        if (this.settings.proxy) {
+            config.proxy = this.settings.proxy;
+        }
+
+        return config;
+    }
+
+    protected getUuid(): string {
+        return this.uuid;
+    }
+
+    executeCustomCode(doc: any) {
+        try {
+            if (this.settings.customCode) {
+                eval(this.settings.customCode);doc
+            }
+        } catch (error) {
+            throwError('An error occurred in custom code: ' + error.message);
+        }
+    }
+}
+
+// Private interface. Do not export
+interface creatorType {
+    name?: string;
+    mbox?: string;
+}

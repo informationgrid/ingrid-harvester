@@ -114,8 +114,21 @@ form-toolbar mat-icon svg .coloring {
   fill: #000000;
 }
 
-mat-checkbox .mdc-label {
-  font-size: 16px;
+.mat-mdc-form-field-type-checkbox {
+  --mat-form-field-container-vertical-padding: 0px;
+
+  .mdc-text-field--outlined {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .mdc-label {
+    font-size: 16px;
+  }
+}
+
+mat-option mat-pseudo-checkbox {
+  border-color: black !important;
 }
 
 .mat-mdc-header-row {
@@ -183,7 +196,8 @@ mat-tab-nav-panel {
 
 .mat-mdc-form-field-error,
 .mat-mdc-form-field-hint {
-  padding-top: 6px;
+  padding-top: 3px;
+  padding-bottom: 3px;
   line-height: 16px;
 
   &.mat-mdc-form-field-bottom-align {
@@ -227,13 +241,15 @@ mat-icon.dark-blue {
   }
 }
 
-.mat-mdc-snack-bar-container.green {
-  .mdc-snackbar__label {
-    color: black;
-  }
-
+.mat-mdc-snack-bar-container.success {
   .mdc-snackbar__surface {
-    background-color: variables.$ige-info-background;
+    background-color: variables.$ige-check-color;
+  }
+}
+
+.mat-mdc-snack-bar-container.error {
+  .mdc-snackbar__surface {
+    background-color: variables.$error-color;
   }
 }
 
@@ -310,6 +326,15 @@ button[matbutton="filled"]:hover {
   background-color: color.adjust(variables.$ige-secondary, $lightness: 8%);
 }
 
+.mat-mdc-menu-item {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
+.mat-mdc-dialog-container .mat-mdc-dialog-title {
+  margin: 0;
+}
+
 // Accessibility requirement.
 input,
 textarea {
@@ -321,3 +346,4 @@ textarea {
 .mat-mdc-standard-chip.mdc-evolution-chip--disabled {
   opacity: 0.7 !important;
 }
+

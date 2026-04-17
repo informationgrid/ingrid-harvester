@@ -1,0 +1,191 @@
+import { FormlyFieldConfig } from "@ngx-formly/core";
+import { SharedFields } from "../shared.fields";
+
+export abstract class CkanType {
+  static fields(): FormlyFieldConfig[] {
+    return [
+      {
+        expressions: {
+          hide: "model.type != 'CKAN'",
+        },
+        fieldGroup: [
+          {
+            wrappers: ["section"],
+            props: {
+              label: "CKAN Einstellungen",
+            },
+            fieldGroup: [
+              {
+                key: "sourceURL",
+                type: "input",
+                wrappers: ["form-field"],
+                props: {
+                  label: "CKAN Basis URL",
+                  required: true,
+                },
+                validators: {
+                  validation: ["url"],
+                },
+              },
+              {
+                wrappers: ["sub-section"],
+                props: {
+                  label: "API",
+                },
+                fieldGroup: [
+                  {
+                    fieldGroupClassName: "ingrid-row",
+                    fieldGroup: [
+                      {
+                        key: "requestType",
+                        type: "select",
+                        className: "ingrid-col-10 ingrid-col-md-auto",
+                        defaultValue: "Search",
+                        props: {
+                          label: "API Funktion",
+                          options: [
+                            {
+                              label: "ListWithResources",
+                              value: "ListWithResources",
+                            },
+                            { label: "Search", value: "Search" },
+                          ],
+                        },
+                      },
+                      {
+                        key: "additionalSearchFilter",
+                        type: "input",
+                        className: "ingrid-col-10 ingrid-col-md-auto",
+                        props: {
+                          label: "Zusätzlicher Filter Search-API",
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    fieldGroupClassName: "ingrid-row",
+                    fieldGroup: [
+                      {
+                        key: "maxRecords",
+                        type: "input",
+                        className: "ingrid-col-10 ingrid-col-md-auto",
+                        defaultValue: 200,
+                        props: {
+                          label: "Max. Datensätze pro Anfrage",
+                          type: "number",
+                          min: 1,
+                          max: 10000,
+                          required: true,
+                        },
+                      },
+                      {
+                        key: "startPosition",
+                        type: "input",
+                        className: "ingrid-col-10 ingrid-col-md-auto",
+                        defaultValue: 1,
+                        props: {
+                          label: "Start Datensatz",
+                          type: "number",
+                          min: 0,
+                        },
+                      },
+                    ],
+                  },
+                  {
+                    fieldGroupClassName: "ingrid-row",
+                    fieldGroup: [
+                      {
+                        key: "markdownAsDescription",
+                        type: "checkbox",
+                        className:
+                          "ingrid-checkbox ingrid-col-10 ingrid-col-md-auto",
+                        defaultValue: false,
+                        props: {
+                          label: "Beschreibung als Markdown",
+                        },
+                      },
+                      {
+                        key: "groupChilds",
+                        type: "checkbox",
+                        className:
+                          "ingrid-checkbox ingrid-col-10 ingrid-col-md-auto",
+                        defaultValue: false,
+                        props: {
+                          label: "Datensatzreihen zusammenfassen",
+                        },
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                key: "defaultLicense",
+                wrappers: ["sub-section"],
+                props: {
+                  label: "Default-Lizenz",
+                },
+                fieldGroupClassName: "ingrid-row",
+                fieldGroup: [
+                  {
+                    key: "id",
+                    type: "input",
+                    className: "ingrid-col-10 ingrid-col-md-2",
+                    props: {
+                      label: "ID",
+                    },
+                  },
+                  {
+                    key: "title",
+                    type: "input",
+                    className: "ingrid-col-10 ingrid-col-md-4",
+                    props: {
+                      label: "Titel",
+                    },
+                  },
+                  {
+                    key: "url",
+                    type: "input",
+                    className: "ingrid-col-10 ingrid-col-md-4",
+                    props: {
+                      label: "URL",
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            wrappers: ["section"],
+            props: {
+              label: "Filter und Regeln",
+            },
+            fieldGroup: [
+              ...SharedFields.sharedRules(),
+              {
+                fieldGroupClassName: "ingrid-row",
+                fieldGroup: [
+                  {
+                    key: "filterTags",
+                    type: "chip",
+                    className: "ingrid-col-10 ingrid-col-md-auto",
+                    props: {
+                      label: "Filter Tags",
+                    },
+                  },
+                  {
+                    key: "filterGroups",
+                    type: "chip",
+                    className: "ingrid-col-10 ingrid-col-md-auto",
+                    props: {
+                      label: "Filter Groups",
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ];
+  }
+}

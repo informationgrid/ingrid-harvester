@@ -24,25 +24,25 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import * as xpath from 'xpath';
-import * as MiscUtils from '../../utils/misc.utils.js';
-import log4js from 'log4js';
-import { namespaces } from '../../importer/namespaces.js';
-import { throwError } from 'rxjs';
-import type { Agent, Contact } from '../../model/agent.js';
-import { BaseMapper } from '../base.mapper.js';
-import type { DateRange } from '../../model/dateRange.js';
-import type { DcatappluSettings } from './dcatapplu.settings.js';
-import type { Distribution } from '../../model/distribution.js';
 import type { Geometry, Point } from 'geojson';
-import type { ImporterSettings } from '../../importer.settings.js';
-import type { MetadataSource } from '../../model/index.document.js';
-import type { ProcessStep, Catalog } from '../../model/dcatApPlu.model.js';
+import log4js from 'log4js';
+import { throwError } from 'rxjs';
+import * as xpath from 'xpath';
+import { namespaces } from '../../importer/namespaces.js';
+import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
+import type { Agent, Contact } from '../../model/agent.js';
+import type { DateRange } from '../../model/dateRange.js';
+import type { Catalog, ProcessStep } from '../../model/dcatApPlu.model.js';
 import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, PluProcessStepType } from '../../model/dcatApPlu.model.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
 import type { XPathElementSelect } from '../../utils/xpath.utils.js';
+import { Mapper } from '../mapper.js';
+import type { DcatappluSettings } from './dcatapplu.settings.js';
 
-export class DcatappluMapper extends BaseMapper {
+export class DcatappluMapper extends Mapper<DcatappluSettings> implements ToElasticMapper<IndexDocument> {
 
     static select = <XPathElementSelect>xpath.useNamespaces({
         'adms': namespaces.ADMS,
@@ -70,9 +70,7 @@ export class DcatappluMapper extends BaseMapper {
     private harvestTime: any;
 
     //    protected readonly idInfo; // : SelectedValue;
-    private settings: DcatappluSettings;
     private readonly uuid: string;
-    private summary: Summary;
 
     private keywordsAlreadyFetched = false;
     private fetched: any = {
@@ -84,13 +82,11 @@ export class DcatappluMapper extends BaseMapper {
         themes: null
     };
 
-    constructor(settings, record, catalog, catalogPage, harvestTime, summary) {
-        super();
-        this.settings = settings;
+    constructor(settings: DcatappluSettings, record, catalog, catalogPage, harvestTime, summary: Summary) {
+        super(settings, summary);
         this.record = record;
         this.fetched.catalog = catalog;
         this.harvestTime = harvestTime;
-        this.summary = summary;
         this.catalogPage = catalogPage;
         this.linkedDistributions = DcatappluMapper.select('./dcat:Distribution', catalogPage);
         this.linkedProcessSteps = DcatappluMapper.select('./plu:ProcessStep', catalogPage);
@@ -102,6 +98,15 @@ export class DcatappluMapper extends BaseMapper {
         this.uuid = uuid;
 
         super.init();
+    }
+
+    async createIndexDocument(): Promise<IndexDocument> {
+        return {
+            uuid: this.getGeneratedId(),
+            extras: {
+                metadata: this.getHarvestingMetadata(),
+            }
+        };
     }
 
     async getContactPoint(): Promise<Contact> {
@@ -350,7 +355,7 @@ export class DcatappluMapper extends BaseMapper {
     }
 
     getHarvestingDate(): Date {
-        return new Date(Date.now());
+        return new Date();
     }
 
     getIssued(): Date {
@@ -387,14 +392,6 @@ export class DcatappluMapper extends BaseMapper {
     getSpatialText(): string {
         let geographicName = DcatappluMapper.select('./dct:spatial/dct:Location/locn:geographicName', this.record, true)?.textContent;
         return geographicName;
-    }
-
-    public getSettings(): ImporterSettings {
-        return this.settings;
-    }
-
-    public getSummary(): Summary {
-        return this.summary;
     }
 
     executeCustomCode(doc: any) {

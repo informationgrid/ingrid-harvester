@@ -23,7 +23,11 @@
 
 import type { IndexDocument } from './index.document.js';
 
-export abstract class IndexDocumentFactory<T extends IndexDocument> {
+export abstract class DocumentFactory<T extends IndexDocument> {
 
-    abstract create(): Promise<T>;
+    abstract createCswIsoDocument(): string;
+
+    abstract createDcatapdeDocument(): string;
+
+    abstract createIndexDocument(): Promise<T>;
 }

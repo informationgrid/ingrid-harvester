@@ -1,11 +1,12 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "strict": false,
     "baseUrl": ".",
     "outDir": "./dist/out-tsc",
     "declaration": false,
     "esModuleInterop": true,
-    "module": "es2020",
+    "module": "esnext",
     "moduleResolution": "bundler",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -15,7 +16,7 @@
       "node_modules/@types"
     ],
     "lib": [
-      "es2018",
+      "es2022",
       "dom"
     ],
     "paths": {
@@ -27,5 +28,10 @@
       ]
     },
     "useDefineForClassFields": false
-  }
+  },
+  "exclude": [
+    "cypress",
+    "cypress.config.ts",
+    "src/**/*.spec.ts"
+  ]
 }

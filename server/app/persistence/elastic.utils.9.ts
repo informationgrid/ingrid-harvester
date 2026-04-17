@@ -21,14 +21,15 @@
  * ==================================================
  */
 
+import type { ElasticsearchConfiguration } from '@shared/general-config.settings.js';
+import type { Index } from '@shared/index.model.js';
+import { Client } from 'elasticsearch9';
 import log4js from 'log4js';
+import type { Summary } from '../model/summary.js';
+import type { IndexSettings } from './elastic.setting.js';
 import type { BulkResponse, EsOperation } from './elastic.utils.js';
 import { ElasticsearchUtils } from './elastic.utils.js';
-import { Client } from 'elasticsearch9';
-import type { Index } from '@shared/index.model.js';
-import type { IndexConfiguration, IndexSettings } from './elastic.setting.js';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
-import type { Summary } from '../model/summary.js';
+import { events } from "@elastic/transport/lib/Diagnostic.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -36,28 +37,33 @@ export class ElasticsearchUtils9 extends ElasticsearchUtils {
 
     protected client: Client;
 
-    constructor(config: IndexConfiguration, summary: Summary) {
-        super(config);
-        this.summary = summary;
+    constructor(config: ElasticsearchConfiguration, summary: Summary) {
+        config.prefix ??= '';
+        super(config, summary);
 
-        // timeout is set to 0 as per recommendation (NodeJS ES 8.x uses UndiciConnection)
-        // https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/timeout-best-practices.html
         this.client = new Client({
             node: config.url,
             auth: {
                 username: config.user,
                 password: config.password
             },
+            // timeout is set to 0 (= no timeout) for clarity; it is the default for ES 9.x
+            // https://www.elastic.co/docs/reference/elasticsearch/clients/javascript/timeout-best-practices
             requestTimeout: 0,
             tls: {
                 rejectUnauthorized: config.rejectUnauthorized
             }
         });
-        this._bulkOperationChunks = [];
-        this.indexName = config.prefix + config.index;
-
-        let profile = ProfileFactoryLoader.get();
-        this.elasticQueries = profile.getElasticQueries();
+        // monitor for total cluster failure
+        this.client.diagnostic.on(events.REQUEST, (error) => {
+            if (error?.name === 'NoLivingConnectionsError') {
+                this.clientAlive = false;
+            }
+        });
+        // reset if the client manages to recover a node
+        this.client.diagnostic.on(events.RESURRECT, () => {
+            this.clientAlive = true;
+        });
     }
 
     async cloneIndex(mapping, settings: IndexSettings) {
@@ -131,22 +137,10 @@ export class ElasticsearchUtils9 extends ElasticsearchUtils {
         }
     }
 
-    async finishIndex(closeIndex: boolean = true) {
-        if (this.config.dryRun) {
-            log.debug('Skipping finalisation of index for dry run.');
-            return;
-        }
-
+    async finishIndex() {
         try {
             await this.client.cluster.health({ wait_for_status: 'yellow' });
             await this.sendBulkOperations();
-            if (closeIndex) {
-                // await this.deleteOldIndices(this.config.index, this.indexName);
-                // if (this.config.addAlias) {
-                //     await this.addAlias(this.indexName, this.config.alias);
-                // }
-                await this.client.close();
-            }
             log.info('Successfully added data into index: ' + this.indexName);
         }
         catch(err) {
@@ -319,7 +313,7 @@ export class ElasticsearchUtils9 extends ElasticsearchUtils {
     }
 
     private handleError(message: string, error: any) {
-        this.summary?.elasticErrors?.push(message);
+        this.summary?.errors.push({ type: 'elastic', error: message });
         log.error(message, error);
     }
 
@@ -333,6 +327,11 @@ export class ElasticsearchUtils9 extends ElasticsearchUtils {
         }
     }
 
+    async count(index: string | string[]): Promise<number> {
+        const { count } =  await this.client.count({ index, ignore_unavailable: true });
+        return count;
+    }
+
     async search(index: string | string[], body: object, usePrefix: boolean = true): Promise<{ hits: any }> {
         if (usePrefix) {
             index = this.addPrefixIfNotExists(index);
@@ -342,6 +341,28 @@ export class ElasticsearchUtils9 extends ElasticsearchUtils {
             ...body
         });
         return response;
+    }
+
+    async * scroll<T = unknown>(index: string | string[], fields: string[], query: object = { match_all: {} }): AsyncGenerator<T> {
+        const scrollSearch = this.client.helpers.scrollSearch<T>({
+            index,
+            ignore_unavailable: true,
+            size: 5000,
+            _source: false,
+            docvalue_fields: fields,
+            query
+        });
+        for await (const result of scrollSearch) {
+            const hits = result.body.hits.hits;
+            if (hits) {
+                for (const hit of hits) {
+                    const flatHit = Object.fromEntries(
+                        Object.entries(hit.fields || {}).map(([k, v]) => [k, Array.isArray(v) ? v[0] : v])
+                    );
+                    yield flatHit as T;
+                }
+            }
+        }
     }
 
     async get(index: string, id: string): Promise<any> {
@@ -464,14 +485,10 @@ export class ElasticsearchUtils9 extends ElasticsearchUtils {
         });
     }
 
-    async isIndexPresent(index: string) {
+    async isIndexPresent(index: string): Promise<boolean> {
         index = this.addPrefixIfNotExists(index) as string;
         try {
-            let response = await this.client.cat.indices({
-                h: ['index'],
-                format: 'json'
-            })
-            return response.some(json => index === json.index);
+            return await this.client.indices.exists({ index });
         }
         catch(e) {
             this.handleError('Error while checking existence of index: ' + index, e);

@@ -21,37 +21,31 @@
     ==================================================
 -->
 
-<mat-toolbar
-  *transloco="let t; read: 'menu'"
->
+<mat-toolbar *transloco="let t">
   <button
     class="side-menu-btn"
     matIconButton
     color="primary"
-    [matTooltip]="t('logout')"
-    [attr.aria-label]="t('logout')"
+    [matTooltip]="t('common.logout')"
+    [attr.aria-label]="t('common.logout')"
     (click)="onSideMenuToggle.emit()"
   >
     <mat-icon svgIcon="menu" />
   </button>
 
-  <img
-    class="logo"
-    src="assets/icons/logo.svg"
-    alt="Logo"
-  />
+  <img class="logo" src="assets/icons/logo.svg" alt="Logo" />
 
   <div class="site-title">
     <strong class="text-xl">
-      {{ t("application") }}
+      {{ t("project") }}
     </strong>
     <span class="text-xl uppercase">
-      {{ t("harvester") }}
+      {{ t("application") }}
     </span>
   </div>
 
   <h1>
-    {{ pageTitle ? t(pageTitle) : "" }}
+    {{ pageTitle() }}
   </h1>
 
   <div class="flex-1"></div>
@@ -63,14 +57,14 @@
     data-test="logout"
   >
     <mat-icon svgIcon="logout" />
-    {{ t("logout") }}
+    {{ t("common.logout") }}
   </button>
 
   <button
     matIconButton
     color="primary"
-    [matTooltip]="t('logout')"
-    [attr.aria-label]="t('logout')"
+    [matTooltip]="t('common.logout')"
+    [attr.aria-label]="t('common.logout')"
     (click)="onLogout.emit()"
   >
     <mat-icon svgIcon="logout" />

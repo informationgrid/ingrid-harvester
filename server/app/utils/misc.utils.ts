@@ -21,21 +21,24 @@
  * ==================================================
  */
 
-import log4js from 'log4js';
-import { cloneDeep, merge as lodashMerge, trim } from 'lodash-es';
+import { DOMParser } from '@xmldom/xmldom';
 import { imageSize } from 'image-size';
+import { get, merge as lodashMerge, set, trim, unset } from 'lodash-es';
+import log4js from 'log4js';
 import type { Dimensions } from '../model/dimensions.js';
 import type { Distribution } from '../model/distribution.js';
-import { DOMParser } from '@xmldom/xmldom';
-import customParseFormat from 'dayjs/plugin/customParseFormat.js';
-import dayjs from "dayjs";
+import dayjs from './dayjs.js';
 
 const log = log4js.getLogger(import.meta.filename);
-dayjs.extend(customParseFormat);
 
 const CUSTOM_DATE_TIME_FORMATS = ["YYYY-MM-DDZ"];
 const MAX_MSG_LENGTH = 4096;
 const TRUNC_STR = '... (truncated)';
+
+type Paths<T> = T extends object ? { [K in keyof T]:
+    K extends string ? `${K}` | `${K}.${Paths<T[K]>}` : never
+}[keyof T] : never;
+
 
 /**
  * Remove all `undefined` properties from an object.
@@ -60,11 +63,36 @@ export function cleanObject(obj: object) {
     // return pickBy(obj, v => v !== undefined);
 }
 
-export function structuredClone(obj: object) {
-    // TODO from nodejs 17 on, we can use the inbuilt function
-    // return structuredClone(obj);
-    // TODO until then, use an lodash equivalent
-    return cloneDeep(obj);
+/**
+ * Remove given paths in a copy of a given object.
+ *
+ * @param obj the object to clone and remove paths from
+ * @param paths the paths to remove
+ * @return a clone of the given object with given paths removed
+ */
+export function removePaths<T extends object>(obj: T, paths: Paths<T>[]): T {
+    const clone = structuredClone(obj);
+    paths.forEach(path => unset(clone, path));
+    return clone;
+}
+
+/**
+ * Restore given paths from a source object in a target object if the target object has empty/null values at those paths.
+ * 
+ * @param target the object to restore paths in
+ * @param source the object to restore paths from
+ * @param paths the paths to restore
+ */
+export function restorePaths<T extends object>(target: T, source: T, paths: Paths<T>[]): void {
+    paths.forEach(path => {
+        const value = get(target, path);
+        if (value === null || value === undefined || value === '') {
+            const sourceValue = get(source, path);
+            if (sourceValue !== undefined && sourceValue !== null && sourceValue !== '') {
+                set(target, path, sourceValue);
+            }
+        }
+    });
 }
 
 /**
@@ -338,3 +366,19 @@ export function escapeXml(unsafe: string): string {
         }
     });
 }
+
+/**
+ * Converts a string to camelCase. Supported word boundaries are spaces.
+ * 
+ * @param s the string to convert to camelCase
+ * @param  lowerFirst if the first character should be converted to lower
+ * @returns the camelCased string
+ */
+export const camelize = (s: string, lowerFirst: boolean = true) => {
+    return s.split(' ').map(function(word, index) {
+        if (index == 0) {
+            return word.toLowerCase();
+        }
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    }).join('');
+};

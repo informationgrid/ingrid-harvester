@@ -202,7 +202,9 @@ export class DiplanungCswMapper extends DiplanungMapper<CswMapper> {
     }
 
     async getCatalog(): Promise<Catalog> {
-        return this.baseMapper.fetched.catalog;
+        // TODO
+        // return this.baseMapper.fetched.catalog;
+        return null;
     }
 
     async getPublisher(): Promise<Person[] | Organization[]> {

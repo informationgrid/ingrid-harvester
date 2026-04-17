@@ -21,6 +21,7 @@ services:
      - DB_USER=ogcrecords
      - DB_PASSWORD=ogcrecords
      - DB_CONNECTION_STRING
+#    - MAX_LOGS_PER_HARVESTER=10
     ports:
       - 8090:8090
     working_dir: /opt/ingrid/harvester/server

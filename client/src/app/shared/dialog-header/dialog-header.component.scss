@@ -21,19 +21,16 @@
  * ==================================================
  */
 
-@use "../../../variables";
-
-:host {
-  background-color: variables.$ige-secondary-dark;
-}
+@use "../../../variables" as vars;
 
 .header {
   width: 100%;
   display: flex;
   flex-direction: row;
-  gap: 16px;
-  padding: 16px 24px;
+  gap: 12px;
+  padding: 12px 18px;
   align-items: center;
+  background-color: vars.$ige-secondary;
 
   &:before {
     display: none;

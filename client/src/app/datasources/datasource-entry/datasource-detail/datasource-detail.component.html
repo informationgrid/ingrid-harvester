@@ -1,0 +1,109 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<div
+  class="pt-4 grid gap-12 grid-cols-3 grid-cols-md-2 grid-cols-sm-1"
+  *transloco="let t"
+>
+  <ingrid-detail-item
+    icon="available"
+    [title]="t('datasources.lastImport')"
+    [value]="lastExecution()"
+    data-test="last-execution"
+  />
+
+  <ingrid-detail-item
+    icon="timer"
+    [title]="t('datasources.durationImport')"
+    [value]="executionDuration()"
+    data-test="duration"
+  />
+
+  <ingrid-detail-item
+    icon="upcoming"
+    [title]="t('datasources.nextImport')"
+    [value]="nextExecution()"
+    data-test="next-execution"
+  />
+
+  <ingrid-detail-item
+    icon="document"
+    [title]="t('common.documents')"
+    [value]="docNum()"
+    data-test="num-docs"
+  />
+
+  <ingrid-detail-item
+    icon="error"
+    [title]="t('common.errors')"
+    [value]="errorNum()"
+    [hasNavigation]="errorNum() !== '-'"
+    (onNavigate)="onOpenJobLogs.emit()"
+    data-test="num-errors"
+  />
+
+  <ingrid-detail-item
+    icon="warning"
+    [title]="t('common.warnings')"
+    [value]="warningNum()"
+    [hasNavigation]="warningNum() !== '-'"
+    (onNavigate)="onOpenJobLogs.emit()"
+    data-test="num-warnings"
+  />
+
+  <ingrid-detail-item
+    icon="catalogs"
+    [title]="t('pageTitle.catalogs')"
+    [value]="catalogs() ? undefined : '-'"
+    data-test="incremental-import"
+  >
+    <ng-container content>
+      <div class="flex flex-row flex-wrap gap-4">
+        @for (catalog of catalogs(); track catalog.id) {
+          <div class="catalog">
+            <harvester-catalog-icon [type]="catalog.type" />
+            {{ catalog.name }}
+          </div>
+        }
+      </div>
+    </ng-container>
+  </ingrid-detail-item>
+
+  @if (completeImportDate()) {
+    <ingrid-detail-item
+      icon="Harvester"
+      [title]="t('datasources.completeImport')"
+      [value]="completeImportDate()"
+      data-test="complete-import"
+    />
+  }
+
+  @if (incrementalImportDate()) {
+    <ingrid-detail-item
+      icon="Harvester"
+      [title]="t('datasources.incrementalImport')"
+      [value]="incrementalImportDate()"
+      data-test="incremental-import"
+    />
+  }
+</div>

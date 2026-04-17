@@ -37,7 +37,7 @@ describe('Initialize Elasticsearch', function () {
 
     // @ts-ignore
     let summary: Summary = {
-        elasticErrors: []
+        errors: []
     };
 
    let elasticsearchUtils = ElasticsearchFactory.getElasticUtils(config, summary);

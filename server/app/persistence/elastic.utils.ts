@@ -21,15 +21,16 @@
  * ==================================================
  */
 
-import type { Client as Client6 } from 'elasticsearch6';
-import type { Client as Client7 } from 'elasticsearch7';
+import type { ElasticsearchConfiguration } from '@shared/general-config.settings.js';
+import type { Index } from '@shared/index.model.js';
 import type { Client as Client8 } from 'elasticsearch8';
 import type { Client as Client9 } from 'elasticsearch9';
-import type { ElasticQueries } from './elastic.queries.js';
-import type { Index } from '@shared/index.model.js';
-import type { IndexConfiguration, IndexSettings } from './elastic.setting.js';
+import type { CatalogOperation } from '../catalog/catalog.factory.js';
 import type { Summary } from '../model/summary.js';
 import { INGRID_META_INDEX } from '../profiles/ingrid/profile.factory.js';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
+import type { ElasticQueries } from './elastic.queries.js';
+import type { IndexSettings } from './elastic.setting.js';
 
 export interface BulkResponse {
     queued: boolean;
@@ -39,7 +40,7 @@ export interface BulkResponse {
 /**
  * Contains an operation to send to Elasticsearch via bulk request.
  */
-export interface EsOperation {
+export interface EsOperation extends CatalogOperation {
     operation: 'index' | 'create' | 'update' | 'delete',
     _id: any,
     _index?: string,
@@ -49,15 +50,19 @@ export interface EsOperation {
 
 export abstract class ElasticsearchUtils {
 
-    protected client: Client6 | Client7 | Client8 | Client9;
-    protected summary: Summary;
+    protected client: Client8 | Client9;
 
+    protected clientAlive: boolean = true;
     public static maxBulkSize: number = 50;
     public elasticQueries: ElasticQueries;
     public indexName: string;
     public _bulkOperationChunks: object;//any[][];
 
-    constructor(readonly config: IndexConfiguration) {
+    constructor(readonly config: ElasticsearchConfiguration, readonly summary: Summary) {
+        this._bulkOperationChunks = [];
+        this.indexName = config.prefix + config.index;
+        let profile = ProfileFactoryLoader.get();
+        this.elasticQueries = profile.getElasticQueries();
     }
 
     /**
@@ -84,7 +89,7 @@ export abstract class ElasticsearchUtils {
      */
     abstract prepareIndexWithName(index: string, mappings, settings: IndexSettings, openIfPresent?: boolean);
 
-    abstract finishIndex(closeIndex?: boolean);
+    abstract finishIndex();
 
     /**
      * Add the specified alias to an index.
@@ -168,7 +173,11 @@ export abstract class ElasticsearchUtils {
 
     abstract deleteIndex(indicesToDelete: string | string[]): Promise<any>;
 
+    abstract count(index: string | string[]): Promise<number>;
+
     abstract search(index: string | string[], body?: object, usePrefix?: boolean): Promise<{ hits: any, aggregations?: any }>;
+
+    abstract scroll<T>(index: string | string[], fields: string[], query?: object): AsyncGenerator<T>;
 
     abstract get(index: string, id: string): Promise<any>;
 
@@ -199,6 +208,10 @@ export abstract class ElasticsearchUtils {
     async close(): Promise<void> {
         await this.client.close();
     };
+
+    isAlive(): boolean {
+        return this.clientAlive;
+    }
 
     // abstract health(status?: 'green' | 'GREEN' | 'yellow' | 'YELLOW' | 'red' | 'RED'): Promise<any>;
     async health(status: 'green' | 'yellow' | 'red' = 'yellow'): Promise<any> {

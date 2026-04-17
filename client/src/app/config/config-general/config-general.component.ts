@@ -21,227 +21,140 @@
  * ==================================================
  */
 
-import {Component, OnInit} from '@angular/core';
-import {ConfigService} from '../config.service';
-import {HarvesterService} from '../../harvester/harvester.service';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {of} from 'rxjs';
-import {GeneralSettings} from '@shared/general-config.settings';
-
-import { delay } from 'rxjs/operators';
-import { ActivatedRoute } from "@angular/router";
+import { Component, OnInit } from "@angular/core";
+import { ConfigService } from "../config.service";
+import { UntypedFormGroup } from "@angular/forms";
+import { delay } from "rxjs/operators";
+import { FormlyFieldConfig, FormlyFormOptions } from "@ngx-formly/core";
+import DatabaseSection from "./form-fields/database.section";
+import ElasticsearchSection from "./form-fields/elasticsearch.section";
+import AdditionalSection from "./form-fields/additional.section";
+import HarvestingSection from "./form-fields/harvesting.section";
+import EmailSection from "./form-fields/email.section";
+import ChecksSection from "./form-fields/checks.section";
+import BackupSection from "./form-fields/backup.section";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
-    selector: 'app-config-general',
-    templateUrl: './config-general.component.html',
-    styleUrls: ['./config-general.component.scss'],
-    standalone: false
+  selector: "app-config-general",
+  templateUrl: "./config-general.component.html",
+  styleUrls: ["./config-general.component.scss"],
+  standalone: false,
 })
 export class ConfigGeneralComponent implements OnInit {
-
-  configForm: UntypedFormGroup;
-
-  profile: string;
+  form = new UntypedFormGroup({});
+  formModel: any;
+  formFields: FormlyFieldConfig[];
+  formOptions: FormlyFormOptions;
 
   constructor(
-    private formBuilder: UntypedFormBuilder, 
-    private configService: ConfigService, 
-    private harvesterService: HarvesterService,
-    private route: ActivatedRoute,
-  ) {
-  }
-
+    private configService: ConfigService,
+    private snackbar: MatSnackBar,
+  ) {}
 
   ngOnInit() {
-    this.reset();
-    this.configService.getProfileName().subscribe(data => {
-      this.profile = data;
+    this.initForm();
+  }
+
+  initForm() {
+    this.configService.fetch().subscribe({
+      next: (data) => {
+        this.formModel = data;
+        this.formOptions = {
+          formState: {
+            database: {
+              isLoading: false,
+              text: "Verbindung testen",
+              icon: "cloud",
+              color: "primary",
+            },
+            elasticsearch: {
+              isLoading: false,
+              text: "Verbindung testen",
+              icon: "cloud",
+              color: "primary",
+            },
+          },
+        };
+        this.formFields = [
+          ...DatabaseSection.fields({
+            onDbCheck: () => this.onDbCheck(),
+          }),
+          ...ElasticsearchSection.fields({
+            onEsCheck: () => this.onEsCheck(),
+          }),
+          ...AdditionalSection.fields(),
+          ...ChecksSection.fields(),
+          ...BackupSection.fields(),
+          ...HarvestingSection.fields(),
+          ...EmailSection.fields(),
+        ];
+      },
+      error: (error) => {
+        console.error(error);
+      },
     });
   }
 
-  private static noWhitespaceValidator(control: UntypedFormControl) {
-    const isWhitespace = (control.value || '').trim().length === 0;
-    const isValid = !isWhitespace;
-    return of(isValid ? null : {'whitespace': true});
+  onDbCheck() {
+    this.formOptions.formState.database.isLoading = true;
+    this.configService
+      .checkDbConnection({ ...this.formModel.database })
+      .pipe(delay(1000))
+      .subscribe({
+        next: (isConnected) => {
+          this.formOptions.formState.database = this.getTestState(isConnected);
+        },
+        error: (error) => {
+          this.formOptions.formState.database = this.getTestState(false);
+        },
+      });
   }
 
-  private static elasticUrlValidator(control: UntypedFormControl) {
-    if (!control.value) {
-      return of(null);
-    }
-
-    let isValid = false;
-
-    const protocolPart = control.value.split('://');
-    if (protocolPart.length === 2) {
-      const portPart = protocolPart[1].split(':');
-      if (portPart.length === 2) {
-        const port = portPart[1];
-        isValid = !isNaN(port) && port > 0 && port < 10000;
-      }
-    }
-    return of(isValid ? null : {'elasticUrl': true});
+  onEsCheck() {
+    this.formOptions.formState.elasticsearch.isLoading = true;
+    this.configService
+      .checkEsConnection({ ...this.formModel.elasticsearch })
+      .pipe(delay(1000))
+      .subscribe({
+        next: (isConnected) => {
+          this.formOptions.formState.elasticsearch =
+            this.getTestState(isConnected);
+        },
+        error: (error) => {
+          this.formOptions.formState.elasticsearch = this.getTestState(false);
+        },
+      });
   }
 
-  connectionStatus = {
-    success: ['Success', 'Test erfolgreich', 'accent'],
-    fail: ['Error', 'Test fehlgeschlagen', 'warn'],
-    working: ['cloud_sync', '... wird getestet', 'primary']
-  };
-
-  statusIcon(value: string) {
-    return this.connectionStatus[value][0];
-  }
-
-  statusMsg(value: string) {
-    return this.connectionStatus[value][1];
-  }
-
-  statusColor(value: string) {
-    return this.connectionStatus[value][2];
-  }
-
-  checkDbConnection() {
-    this.dbConnectionCheck = 'working';
-    let checkResult = this.configService.checkDbConnection({
-      type: this.configForm.get('database.type').value,
-      connectionString: this.configForm.get('database.connectionString').value,
-      host: this.configForm.get('database.host').value,
-      port: this.configForm.get('database.port').value,
-      database: this.configForm.get('database.database').value,
-      user: this.configForm.get('database.user').value,
-      password: this.configForm.get('database.password').value
-    });
-    checkResult.pipe(delay(1000)).subscribe(response => {
-      this.dbConnectionCheck = response ? 'success' : 'fail';
-    });
-  }
-
-  checkEsConnection() {
-    this.esConnectionCheck = 'working';
-    let checkResult = this.configService.checkEsConnection({
-      url: this.configForm.get('elasticsearch.url').value,
-      version: this.configForm.get('elasticsearch.version').value,
-      user: this.configForm.get('elasticsearch.user').value,
-      password: this.configForm.get('elasticsearch.password').value,
-      rejectUnauthorized: this.configForm.get('elasticsearch.rejectUnauthorized').value
-    });
-    checkResult.pipe(delay(1000)).subscribe(response => {
-      this.esConnectionCheck = response ? 'success' : 'fail';
-    });
+  private getTestState(isConnected: boolean) {
+    return {
+      isLoading: false,
+      text: isConnected
+        ? "Verbindung erfolgreich"
+        : "Verbindung fehlgeschlagen",
+      icon: isConnected ? "Success" : "error",
+      color: isConnected ? "primary" : "warn",
+    };
   }
 
   save() {
-    this.configService.save(this.configForm.value).subscribe();
-  }
-
-  reset() {
-    this.configService.fetch().subscribe(data => this.buildForm(data));
-  }
-
-  private buildForm(settings: GeneralSettings) {
-
-    if (!settings.urlCheck) {
-      settings.urlCheck = {
-        active: false,
-        pattern: ""
-      }
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.snackbar.open("Manche Felder sind ungültig.", null, {
+        duration: 3 * 1000,
+        panelClass: ["error"],
+      });
+      return;
     }
 
-    if (!settings.mail) {
-      settings.mail = {
-        enabled: false,
-        mailServer: {
-          host: "",
-          port: 451,
-          secure: false,
-          tls: {
-              rejectUnauthorized: true
-          },
-          auth: {
-            user: "",
-            pass: ""
-          }
-        },
-        from: "",
-        to: "",
-        subjectTag: ""
-      }
-    }
-
-    this.configForm = this.formBuilder.group({
-      database: this.formBuilder.group({
-        type: [settings.database.type],
-        connectionString: [settings.database.connectionString],
-        host: [settings.database.host],
-        port: [settings.database.port],
-        database: [settings.database.database],
-        user: [settings.database.user],
-        password: [settings.database.password]
-      }),
-      elasticsearch: this.formBuilder.group({
-        url: [settings.elasticsearch.url, Validators.required],
-        version: [settings.elasticsearch.version],
-        user: [settings.elasticsearch.user],
-        password: [settings.elasticsearch.password],
-        rejectUnauthorized: [settings.elasticsearch.rejectUnauthorized],
-        alias: [settings.elasticsearch.alias, Validators.required, ConfigGeneralComponent.noWhitespaceValidator],
-        prefix: [settings.elasticsearch.prefix],
-        index: [settings.elasticsearch.index],
-        numberOfShards: [settings.elasticsearch.numberOfShards],
-        numberOfReplicas: [settings.elasticsearch.numberOfReplicas]
-      }),
-      cronOffset: [settings.cronOffset],
-      mappingLogLevel: [settings.mappingLogLevel],
-      proxy: [settings.proxy],
-      allowAllUnauthorizedSSL: [settings.allowAllUnauthorizedSSL],
-      portalUrl: [settings.portalUrl],
-      urlCheck: this.formBuilder.group({
-        active: [settings.urlCheck.active],
-        pattern: [settings.urlCheck.pattern]
-      }),
-      indexCheck: this.formBuilder.group({
-        active: [settings.indexCheck.active],
-        pattern: [settings.indexCheck.pattern]
-      }),
-      mail: this.formBuilder.group({
-        enabled: [settings.mail.enabled],
-        mailServer: this.formBuilder.group({
-          host: [settings.mail.mailServer.host],
-          port: [settings.mail.mailServer.port],
-          secure: [settings.mail.mailServer.secure],
-          tls: this.formBuilder.group({
-            rejectUnauthorized: [settings.mail.mailServer.tls.rejectUnauthorized]
-          }),
-          auth: this.formBuilder.group({
-            user: [settings.mail.mailServer.auth.user],
-            pass: [settings.mail.mailServer.auth.pass]
-          })
-        }),
-        from: [settings.mail.from],
-        to: [settings.mail.to],
-        subjectTag: [settings.mail.subjectTag]
-      }),
-      indexBackup: this.formBuilder.group({
-        active: [settings.indexBackup.active],
-        indexPattern: [settings.indexBackup.indexPattern],
-        cronPattern: [settings.indexBackup.cronPattern],
-        dir: [settings.indexBackup.dir]
-      }),
-      harvesting: this.formBuilder.group({
-        mail: this.formBuilder.group({
-          enabled: [settings.harvesting.mail.enabled],
-          minDifference: [settings.harvesting.mail.minDifference]
-        }),
-        cancel: this.formBuilder.group({
-          enabled: [settings.harvesting.cancel.enabled],
-          minDifference: [settings.harvesting.cancel.minDifference]
-        })
-      })
-    })
+    this.configService.save({ ...this.formModel }).subscribe({
+      next: () => {
+        this.snackbar.open("Konfiguration erfolgreich gespeichert.", null, {
+          duration: 3 * 1000,
+          panelClass: ["success"],
+        });
+      },
+    });
   }
-
-  dbConnectionCheck: string;
-  esConnectionCheck: string;
-  
 }

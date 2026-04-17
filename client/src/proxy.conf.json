@@ -7,6 +7,10 @@
     "target": "http://0.0.0.0:8090",
     "secure": false
   },
+  "/rest/auth": {
+    "target": "http://0.0.0.0:8090",
+    "secure": false
+  },
   "/healh": {
     "target": "http://0.0.0.0:8090",
     "secure": false

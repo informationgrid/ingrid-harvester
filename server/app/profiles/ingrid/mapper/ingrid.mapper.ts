@@ -22,19 +22,26 @@
  */
 
 import * as crypto from "crypto";
-import dayjs from "dayjs";
-import 'dayjs/locale/de.js';
+import type { Geometry } from "geojson";
 import log4js from 'log4js';
+import type { ImporterSettings } from '../../../importer/importer.settings.js';
+import type { CkanMapper } from "../../../importer/ckan/ckan.mapper.js";
 import type { CswMapper } from "../../../importer/csw/csw.mapper.js";
+import type { DcatapdeMapper } from '../../../importer/dcatapde/dcatapde.mapper.js';
+import type { GenesisMapper } from "../../../importer/genesis/genesis.mapper.js";
+import type { ToElasticMapper } from '../../../importer/to.elastic.mapper.js';
 import type { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
 import type { Distribution } from "../../../model/distribution.js";
-import type { Geometry } from "geojson";
-import type { IndexDocumentFactory } from "../../../model/index.document.factory.js";
+import type { DocumentFactory } from "../../../model/index.document.factory.js";
+import type { IndexDocument } from '../../../model/index.document.js';
+import type { Metadata } from '../../../model/ingrid.index.document.js';
 import type { IngridIndexDocument } from "../model/index.document.js";
+import type { IngridMetadata } from '../model/ingrid.metadata.js';
 import { Codelist } from "../utils/codelist.js";
-dayjs.locale('de');
 
-export abstract class ingridMapper<M extends CswMapper | WfsMapper> implements IndexDocumentFactory<IngridIndexDocument>{
+export type ingridMapperType = CswMapper | CkanMapper | DcatapdeMapper | WfsMapper | GenesisMapper;
+
+export abstract class ingridMapper<M extends ingridMapperType> implements DocumentFactory<IndexDocument & IngridMetadata>, ToElasticMapper<IndexDocument> {
 
     readonly baseMapper: M;
 
@@ -44,17 +51,24 @@ export abstract class ingridMapper<M extends CswMapper | WfsMapper> implements I
         this.baseMapper = baseMapper;
     }
 
-    async create() : Promise<IngridIndexDocument> {
-        let result = <IngridIndexDocument>{
+    // TODO make abstract
+    createCswIsoDocument(): string {
+        return null;
+    }
+
+    // TODO make abstract
+    createDcatapdeDocument(): string {
+        return null;
+    }
+
+    // TODO make abstract (?)
+    async createIndexDocument(): Promise<IndexDocument & IngridMetadata> {
+        let result: IngridIndexDocument = {
             // put custom entries first, so they can potentially get overwritten with more specific getters below
             ...this.getCustomEntries(),
-            iPlugId: this.getIPlugId(),
+            ...this.getIngridMetadata(this.baseMapper.settings),
+            metadata: this.getMetaMetadata(),
             uuid: this.getGeneratedId(),
-            partner: this.getPartner(),
-            provider: this.getProvider(),
-            organisation: this.getOrganisation(),
-            datatype: this.getDataType(),
-            dataSourceName: this.getDataSourceName(),
             collection: {
                 name: this.getDataSourceName(),
             },
@@ -77,11 +91,10 @@ export abstract class ingridMapper<M extends CswMapper | WfsMapper> implements I
             t01_object: this.getT01_object(),
             t2: this.getT2(),
             hierarchylevel: this.getHierarchyLevel(),
-            alternatetitle: this.getAlternateTitle(),
+            alternatetitle: this.getAlternateTitle()?.[0],
             t02_address: this.getAddress(),
-            boost: this.getBoost(),
             title: this.getTitle(),
-            summary: this.getSummary(),
+            summary: this.getDescription(),
             location: this.getLocation(),
             x1: this.getX1(),
             x2: this.getX2(),
@@ -114,7 +127,7 @@ export abstract class ingridMapper<M extends CswMapper | WfsMapper> implements I
             t0113_dataset_reference: this.getT0113_dataset_reference(),
             t017_url_ref: this.getT017_url_ref(),
             t021_communication: this.getT021_communication(),
-            object_use: this.getObjectUse(),
+            object_use: this.getObjectUse(),    // TODO does not exist in mapping
             object_use_constraint: this.getObjectUseConstraint(),
             object_access: this.getObjectAccess(),
             is_hvd: this.isHvd(),
@@ -136,7 +149,7 @@ export abstract class ingridMapper<M extends CswMapper | WfsMapper> implements I
         return {};
     }
 
-    getDistributions(): Promise<Distribution[]>{
+    async getDistributions(): Promise<Distribution[]>{
         return undefined
     }
 
@@ -175,28 +188,28 @@ export abstract class ingridMapper<M extends CswMapper | WfsMapper> implements I
     }
 
     getIPlugId(){
-        return this.baseMapper.getSettings().iPlugId;
+        return this.baseMapper.settings.iPlugId;
     }
 
     getPartner(): string[] {
-        return this.baseMapper.getSettings().partner?.split(",")?.map(p => p.trim());
+        return this.baseMapper.settings.partner?.split(",")?.map(p => p.trim());
     }
 
     getProvider(): string[] {
-        return this.baseMapper.getSettings().provider?.split(",")?.map(p => p.trim());
+        return this.baseMapper.settings.provider?.split(",")?.map(p => p.trim());
     }
 
     getOrganisation() {
-        let organisation = this.transformToIgcDomainId(this.baseMapper.getSettings().provider, "111");
+        let organisation = this.transformToIgcDomainId(this.baseMapper.settings.provider, "111");
         return organisation;
     }
 
     getDataType(): string[] {
-        return this.baseMapper.getSettings().datatype?.split(",")?.map(p => p.trim()) ?? ["default"];
+        return this.baseMapper.settings.datatype?.split(",")?.map(p => p.trim()) ?? ["default"];
     }
 
     getDataSourceName() {
-        return this.baseMapper.getSettings().dataSourceName;
+        return this.baseMapper.settings.dataSourceName;
     }
 
     getT0() {
@@ -226,26 +239,8 @@ export abstract class ingridMapper<M extends CswMapper | WfsMapper> implements I
         return undefined;
     }
 
-    getBoost() {
-        return this.baseMapper.getSettings().boost;
-    }
-
-    abstract getSummary();
-
-    getContent(resultObj) {
-        const values = [];
-        const traverse = obj => {
-            if (obj == null) {
-                return;
-            }
-            if (typeof obj !== 'object') {
-                values.push(obj);
-                return;
-            }
-            Object.values(obj).forEach(traverse);
-        };
-        traverse(resultObj);
-        return values;
+    getDescription() {
+        return undefined;
     }
 
     getLocation() {
@@ -268,9 +263,13 @@ export abstract class ingridMapper<M extends CswMapper | WfsMapper> implements I
         return undefined;
     }
 
-    abstract getSpatial(): Geometry | Geometry[];
+    getSpatial(): Geometry[] {
+        return undefined;
+    }
 
-    abstract getIDF();
+    getIDF(): string {
+        return undefined;
+    };
 
     getCapabilitiesURL() {
         return undefined;
@@ -422,5 +421,41 @@ export abstract class ingridMapper<M extends CswMapper | WfsMapper> implements I
 
     protected transformGeneric(value, map, defaultValue) {
         return map[value] ?? defaultValue;
+    }
+
+    protected getContent(resultObj) {
+        const values = [];
+        const traverse = obj => {
+            if (obj == null) {
+                return;
+            }
+            if (typeof obj !== 'object') {
+                values.push(obj);
+                return;
+            }
+            Object.values(obj).forEach(traverse);
+        };
+        traverse(resultObj);
+        return values;
+    }
+
+    protected getIngridMetadata(settings: ImporterSettings): IngridMetadata {
+        return {
+            iPlugId: settings.iPlugId,
+            partner: settings.partner?.split(",")?.map(p => p.trim()),
+            provider: settings.provider?.split(",")?.map(p => p.trim()),
+            organisation: this.transformToIgcDomainId(settings.provider, "111"),
+            datatype: settings.datatype?.split(",")?.map(p => p.trim()) ?? ["default"],
+            dataSourceName: settings.dataSourceName,
+            boost: settings.boost,
+            isfolder: "false" // this *should* be boolean, but IGE does not map the field, so default is text
+        };
+    }
+
+    protected getMetaMetadata(): Metadata {
+        return {
+            created: null, // TODO
+            modified: this.getModifiedDate()
+        };
     }
 }

@@ -25,7 +25,8 @@ import type { DateRange } from './dateRange.js';
 
 export interface Distribution {
     format?: string[];
-    accessURL: string;
+    accessURL?: string;
+    access_url?: string;
     downloadURL?: string;
     id?: string;
     title?: string;

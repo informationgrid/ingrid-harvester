@@ -1,0 +1,46 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<ng-template #fieldComponent></ng-template>
+
+@if (props.action) {
+  @if (props.action.isLoading) {
+    <button matButton="filled" color="primary" disabled>
+      <span class="flex-row items-center gap-12">
+        <mat-spinner diameter="18" strokeWidth="2.5"></mat-spinner>
+        {{ props.action.loadingText ?? "wird geladen..." }}
+      </span>
+    </button>
+  } @else {
+    <button
+      matButton="filled"
+      [color]="props.action.color ?? 'primary'"
+      (click)="props.action.onClick()"
+    >
+      @if (props.action.icon) {
+        <mat-icon [svgIcon]="props.action.icon"></mat-icon>
+      }
+      {{ props.action.text }}
+    </button>
+  }
+}

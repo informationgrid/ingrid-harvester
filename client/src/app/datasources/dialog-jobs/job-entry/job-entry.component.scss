@@ -1,0 +1,84 @@
+/*
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
+ *
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
+ * ==================================================
+ */
+
+:host {
+  --mat-expansion-container-elevation-shadow: none;
+
+  ::ng-deep {
+    .mat-content {
+      margin-right: 16px;
+    }
+
+    .mat-expansion-panel-body {
+      padding: 0;
+      min-height: 100px;
+      background-color: #fafafa;
+    }
+  }
+}
+
+mat-expansion-panel-header {
+  padding: 10px 18px 10px 12px;
+
+  .entry {
+    padding: 2px 10px;
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}
+
+mat-divider {
+  margin-left: -24px;
+  margin-right: -24px;
+}
+
+.logs-container {
+  height: 300px;
+  font-size: 12px;
+  font-family: monospace;
+
+  .log {
+    white-space: pre;
+    padding: 0 4px;
+  }
+
+  .debug {
+    color: #888;
+  }
+
+  .info {
+    color: #333;
+  }
+
+  .warn {
+    color: #f57f17;
+  }
+
+  .error {
+    color: #b71c1c;
+  }
+}
+
+.gap {
+  row-gap: 8px;
+  column-gap: 12px;
+}

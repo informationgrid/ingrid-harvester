@@ -54,17 +54,18 @@ export class DcatLicensesUtils {
     constructor() {
     }
 
-    static async get(licenseURL) {
+    static get(licenseURL) {
         if(!licenseURL) return undefined;
 
         if (!DcatLicensesUtils.licenses) DcatLicensesUtils.import();
 
         if(licenseURL.startsWith("https://")) licenseURL = licenseURL.substring("https://".length);
         if(licenseURL.startsWith("http://")) licenseURL = licenseURL.substring("http://".length);
-        return DcatLicensesUtils.licenses[licenseURL];
+        return DcatLicensesUtils.licenses ? DcatLicensesUtils.licenses[licenseURL] : undefined;
 
     }
 
+    // TODO refactor to create License objects that the Portal actually understands
     static import() {
         try {
             const data = fs.readFileSync('def_licenses.rdf');

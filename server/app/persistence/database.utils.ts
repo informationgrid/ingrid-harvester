@@ -21,13 +21,13 @@
  * ==================================================
  */
 
-import type { Catalog } from '../model/dcatApPlu.model.js';
-import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
 import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
-import type { ElasticsearchUtils } from './elastic.utils.js';
+import type { Observer } from "rxjs";
+import type { CatalogColumnType } from '../catalog/catalog.factory.js';
+import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
+import type { ImportLogMessage } from "../model/import.result.js";
 import type { Summary } from '../model/summary.js';
-import type {Observer} from "rxjs";
-import type {ImportLogMessage} from "../model/import.result.js";
+import type { Bucket } from './postgres.utils.js';
 
 export interface BulkResponse {
     queued: boolean;
@@ -44,8 +44,6 @@ export abstract class DatabaseUtils {
     public _bulkCouples: CouplingEntity[];
 
     abstract init(): Promise<void>;
-
-    abstract write(entity: RecordEntity);
 
     abstract bulk(entities: RecordEntity[], commitTransaction: boolean): Promise<BulkResponse>;
 
@@ -71,47 +69,30 @@ export abstract class DatabaseUtils {
 
     abstract rollbackTransaction(): Promise<void>;
 
-    // abstract pushToElastic(elastic: ElasticsearchUtils, source: string): Promise<void>;
-
-    // abstract pushToElastic2ElectricBoogaloo(elastic: ElasticsearchUtils, source: string): Promise<void>;
-
     abstract nonFetchedPercentage(source: string, last_modified: Date): Promise<number>;
 
     abstract deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void>;
 
-    abstract pushToElasticsearch(elastic: ElasticsearchUtils, source: string, observer: Observer<ImportLogMessage>): Promise<void>;
+    abstract deleteCatalogDatasets(catalogId: number): Promise<void>;
+
+    abstract streamBuckets<T extends CatalogColumnType>(source: string, datasetColumn: string, observer: Observer<ImportLogMessage>, summary: Summary): AsyncGenerator<Bucket<T>>;
 
     abstract getStoredData(ids: string[]): Promise<any[]>;
 
     abstract getDatasetIdentifiers(source: string): Promise<string[]>;
 
     /**
-     * Retrieve all datasets pertaining to either a specified source or a specified collection (id)
-     * @param source if a string, search as a source - if a number, search as a collection
+     * Retrieve all datasets for a specified source.
      */
-    abstract getDatasets(source: string | number, useTransaction?: boolean): Promise<RecordEntity[]>;
+    abstract getDatasets(source: string, useTransaction?: boolean): Promise<RecordEntity[]>;
 
-    abstract deleteDatasets(catalogId: number): Promise<void>;
+    // abstract getDatasetsWithOriginalDocument(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'original_document'>[]>;
 
-    abstract moveDatasets(catalogId: number, targetCatalogId: number): Promise<void>;
+    // abstract getDcatapdeDatasetsBySource(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'dataset_dcatapde'>[]>;
+
+    abstract getIdentifiersByCatalog(catalog_id: number): Promise<string[]>
 
     abstract getServices(source: string): Promise<RecordEntity[]>;
 
-    abstract getCatalogSizes(useTransaction: boolean): Promise<any[]>;
-
-    abstract listCatalogs(): Promise<Catalog[]>;
-
-    abstract createCatalog(catalog: Catalog): Promise<Catalog>;
-
-    abstract getCatalog(catalogIdentifier: string): Promise<Catalog>;
-
-    abstract updateCatalog(catalog: Catalog): Promise<Catalog>;
-
-    abstract deleteCatalog(catalogId: number): Promise<Catalog>;
-
     abstract ping(): Promise<boolean>;
-
-    static ping(configuration?: Partial<DatabaseConfiguration>): Promise<boolean> {
-        throw new Error('Method not implemented.');
-    }
 }

@@ -21,38 +21,34 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../utils/misc.utils.js';
 import log4js from 'log4js';
-import type { BulkResponse } from '../../persistence/elastic.utils.js';
-import { Importer } from '../importer.js';
-import type { ImportLogMessage} from '../../model/import.result.js';
-import { ImportResult } from '../../model/import.result.js';
-import type { IndexDocument } from '../../model/index.document.js';
-import { JsonMapper } from './json.mapper.js';
-import type { JsonSettings } from './json.settings.js';
 import type { Observer } from 'rxjs';
-import type { ProfileFactory } from '../../profiles/profile.factory.js';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { RecordEntity } from '../../model/entity.js';
+import type { ImportLogMessage } from '../../model/import.result.js';
+import type { IndexDocument } from '../../model/index.document.js';
+import type { BulkResponse } from '../../persistence/elastic.utils.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
-import type { Summary } from '../../model/summary.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import { Importer } from '../importer.js';
+import { JsonMapper } from './json.mapper.js';
+import { jsonDefaults, type JsonSettings } from './json.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
 
-export class JsonImporter extends Importer {
-
-    protected profile: ProfileFactory<JsonMapper>;
-    protected settings: JsonSettings;
+export class JsonImporter extends Importer<JsonSettings> {
 
     private totalRecords = 0;
     private numIndexDocs = 0;
 
     constructor(settings: JsonSettings) {
         super(settings);
-        this.profile = ProfileFactoryLoader.get();
-        this.settings = settings;
+    }
+
+    protected getDefaultSettings(): JsonSettings {
+        return jsonDefaults;
     }
 
     // only here for documentation - use the "default" exec function
@@ -66,7 +62,7 @@ export class JsonImporter extends Importer {
 
     /**
      * Harvest method implementation
-     * NOTE Any error added to summary.appErrors will cause a database transaction rollback!
+     * NOTE Any error added to summary.errors with type 'app' or 'database' will cause a database transaction rollback!
      * @returns number
      */
     protected async harvest(): Promise<number> {
@@ -76,7 +72,7 @@ export class JsonImporter extends Importer {
 
         const requestConfig = JsonImporter.createRequestConfig(this.settings);
         const requestDelegate = new RequestDelegate(requestConfig);
-        let harvestTime = new Date(Date.now());
+        let harvestTime = new Date();
         let response = await requestDelegate.doRequest();
 
         let numReturned = response?.length;
@@ -90,7 +86,7 @@ export class JsonImporter extends Importer {
         else {
             const message = `Error while fetching ClickRhein Records\nServer response: ${MiscUtils.truncateErrorMessage(response?.toString())}.`;
             log.error(message);
-            this.summary.appErrors.push(message);
+            this.summary.errors.push({ type: 'app', error: message });
         }
 
         log.info(`Finished requesting records`);
@@ -117,11 +113,12 @@ export class JsonImporter extends Importer {
                     logRequest.debug("Record content: ", JSON.stringify(record));
                 }
 
-                const mapper = this.getMapper(this.settings, record, harvestTime, this.summary);
+                const mapper = new JsonMapper(this.settings, record, harvestTime, this.summary);
+                let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
                 let doc: IndexDocument;
                 try {
-                    doc = await this.profile.getIndexDocumentFactory(mapper).create();
+                    doc = await documentFactory.createIndexDocument();
                 }
                 catch (e) {
                     log.warn('Error creating index document', e);
@@ -133,7 +130,7 @@ export class JsonImporter extends Importer {
                     let entity: RecordEntity = {
                         identifier: id,
                         source: this.settings.sourceURL,
-                        collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
+                        catalog_ids: this.settings.catalogIds,
                         dataset: doc,
                         original_document: mapper.getHarvestedData()
                     };
@@ -142,14 +139,10 @@ export class JsonImporter extends Importer {
                 else {
                     this.summary.skippedDocs.push(id);
                 }
-                this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
+                this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
             }
         }
         await Promise.allSettled(promises).catch(e => log.error('Error persisting record', e));
-    }
-
-    getMapper(settings: JsonSettings, record: object, harvestTime: Date, summary: Summary): JsonMapper {
-        return new JsonMapper(settings, record, harvestTime, summary);
     }
 
     protected static createRequestConfig(settings: JsonSettings): RequestOptions {
@@ -162,9 +155,5 @@ export class JsonImporter extends Importer {
             timeout: settings.timeout
         };
         return requestConfig;
-    }
-
-    getSummary(): Summary {
-        return this.summary;
     }
 }

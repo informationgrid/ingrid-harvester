@@ -6,13 +6,16 @@ CREATE TABLE IF NOT EXISTS public.record (
     identifier VARCHAR(255) NOT NULL,
     source VARCHAR(255) NOT NULL,
     collection_id INTEGER,
+    catalog_ids VARCHAR(255)[],
     dataset JSONB,
+    dataset_csw TEXT,
+    dataset_dcatapde TEXT,
     original_document TEXT,
     created_on TIMESTAMP(3) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_modified TIMESTAMP(3) with time zone NULL,
     deleted_on TIMESTAMP(3) with time zone NULL,
     CONSTRAINT record_pkey PRIMARY KEY(id),
-    CONSTRAINT record_full_identifier UNIQUE(identifier, collection_id, source),
+    CONSTRAINT record_full_identifier UNIQUE(identifier, source),
     CONSTRAINT fkivo5l0rletq7kni6xstvejy5a FOREIGN KEY(collection_id) REFERENCES public.collection(id)
 );
 

@@ -24,33 +24,36 @@
 /**
  * A mapper for CKAN documents.
  */
+import type { License } from '@shared/license.model.js';
+import { DOMImplementation } from "@xmldom/xmldom";
 import log4js from 'log4js';
 import { marked } from 'marked';
 import { throwError } from 'rxjs';
-import { BaseMapper } from '../base.mapper.js';
+import mapping from "../../../mappings.json" with { type: "json" };
+import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
+import type { Organization, Person } from '../../model/agent.js';
+import type { DateRange } from '../../model/dateRange.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
+import dayjs from '../../utils/dayjs.js';
+import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
+import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
 import type { CkanParameters, CkanParametersListWithResources, RequestOptions, RequestPaging } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
-import type { CkanSettings } from './ckan.settings.js';
-import type { DateRange } from '../../model/dateRange.js';
-import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
-import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
-import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
-import type { Distribution } from '../../model/distribution.js';
-import type { License } from '@shared/license.model.js';
-import type { MetadataSource } from '../../model/index.document.js';
-import type { Organization, Person } from '../../model/agent.js';
-import type { Summary } from '../../model/summary.js';
 import { UrlUtils } from '../../utils/url.utils.js';
-import mapping from "../../../mappings.json" with { type: "json" };
+import { DCAT_CATEGORY_URL } from '../dcatapde/dcatapde.utils.js';
+import { Mapper } from '../mapper.js';
+import { namespaces } from "../namespaces.js";
+import type { ToDcatapdeMapper } from "../to.dcatapde.mapper.js";
+import type { CkanSettings } from './ckan.settings.js';
+import * as CkanUtils from './ckan.utils.js';
 
 export interface CkanMapperData {
     harvestTime: Date;
     source: any;
-    currentIndexName: string;
-    summary: Summary;
 }
 
-export class CkanMapper extends BaseMapper {
+export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<IndexDocument>, ToDcatapdeMapper {
 
     protected sizeMap = {
         byte: 1,
@@ -67,30 +70,41 @@ export class CkanMapper extends BaseMapper {
     };
 
     log = log4js.getLogger();
+    private dom =  new DOMImplementation();
 
     private readonly source: any;
     private readonly data: CkanMapperData;
+    readonly record: any;
+    private harvestTime: any;
     private resourcesDate: Date[] = null;
-    private settings: CkanSettings;
-    private summary: Summary;
 
-    constructor(settings: CkanSettings, data: CkanMapperData) {
-        super();
-        this.settings = settings;
-        this.source = data.source;
-        this.data = data;
-        this.summary = data.summary;
+
+    private fetched: any = {
+        license: null
+    };
+
+    constructor(settings: CkanSettings, record: object, harvestTime, summary) {
+        super(settings, summary);
+        this.harvestTime = harvestTime;
+        this.source = record;
 
         super.init();
     }
 
-    public getSettings(): CkanSettings {
-        return this.settings;
+    async createIndexDocument(): Promise<IndexDocument> {
+        return {
+            uuid: this.getGeneratedId(),
+            extras: {
+                metadata: this.getHarvestingMetadata(),
+            }
+        };
     }
 
-    public getSummary(): Summary{
-        return this.summary;
+
+    async createDcatapdeDocument(): Promise<string> {
+        return this.getDcatapde();
     }
+
 
     getAccessRights() {
         return undefined;
@@ -128,15 +142,16 @@ export class CkanMapper extends BaseMapper {
                         id: res.id,
                         title: res.name,
                         description: res.description,
-                        accessURL: this.cleanupURL(accessURL),
+                        access_url: this.cleanupURL(accessURL),
                         format: UrlUtils.mapFormat([res.format], this.summary.warnings),
                         issued: this.handleDate(res.created),
                         modified: this.handleDate(res.last_modified),
-                        byteSize: this.handleByteSize(res.size)
+                        byteSize: this.handleByteSize(res.size),
+                        license: await this.getLicense()
                     };
                     distributions.push(dist);
                 } else {
-                    let msg = `Invalid URL '${res.url} found for item with id: '${this.source.id}', title: '${this.source.title}', index: '${this.data.currentIndexName}'.`;
+                    let msg = `Invalid URL '${res.url} found for item with id: '${this.source.id}', title: '${this.source.title}'.`;
                     urlErrors.push(msg);
                     this.log.warn(msg);
                 }
@@ -189,7 +204,7 @@ export class CkanMapper extends BaseMapper {
         return this.handleDate(this.source.metadata_modified);
     }
 
-    async getPublisher(): Promise<Organization[]> {
+    getPublisher(): Organization[] {
         let publisher: Organization;
         if (this.source.organization && this.source.organization.title) {
             let homepage = this.source.organization.description;
@@ -287,10 +302,10 @@ export class CkanMapper extends BaseMapper {
         }
 
         if (mappedThemes.length === 0) {
-            mappedThemes = this.settings.defaultDCATCategory;
+            mappedThemes = this.settings.defaultDCATCategory || [];
         }
         return mappedThemes
-            .map(category => DcatMapper.DCAT_CATEGORY_URL + category);
+            .map(category => DCAT_CATEGORY_URL + category);
     }
 
     getTitle() {
@@ -359,6 +374,43 @@ export class CkanMapper extends BaseMapper {
         return JSON.stringify(this.source);
     }
 
+    async getDcatapde(): Promise<string> {
+        const doc = this.dom.createDocument(namespaces.RDF, 'RDF', null);
+        const rdfRoot = doc.documentElement;
+        const dataset = doc.createElementNS(namespaces.DCAT, 'Dataset');
+        rdfRoot.appendChild(dataset);
+
+        dataset.appendChild(doc.createElementNS(namespaces.DCT, "title")).textContent = this.getTitle();
+        dataset.appendChild(doc.createElementNS(namespaces.DCT, "description")).textContent = this.getDescription();
+        dataset.appendChild(doc.createElementNS(namespaces.DCT, "identifier")).textContent = this.getGeneratedId();
+
+        const keywords = this.getKeywords();
+        for(const keyword of keywords) {
+            dataset.appendChild(doc.createElementNS(namespaces.DCAT, "keyword")).textContent = keyword;
+        }
+
+        const distributions = await this.getDistributions();
+        for (const distribution of distributions) {
+            const dist = dataset.appendChild(doc.createElementNS(namespaces.DCAT, "distribution")).appendChild(doc.createElementNS(namespaces.DCAT, "Distribution"));
+            if(distribution.title) dist.appendChild(doc.createElementNS(namespaces.DCT, "title")).textContent = distribution.title;
+            if(distribution.description) dist.appendChild(doc.createElementNS(namespaces.DCT, "description")).textContent = distribution.description;
+            if(distribution.access_url) {
+                const accessUrl = dist.appendChild(doc.createElementNS(namespaces.DCAT, "accessURL"));
+                accessUrl.setAttributeNS(namespaces.RDF, "resource", distribution.access_url);
+            }
+        }
+
+        const themes = this.getThemes().flatMap(theme => theme.split(","));
+        for(const theme of themes) {
+            let themeUri = theme
+            if(!theme.startsWith("http://publications.europa.eu/resource/authority/data-theme/")) themeUri = "http://publications.europa.eu/resource/authority/data-theme/" + theme;
+            const themeNode = dataset.appendChild(doc.createElementNS(namespaces.DCAT, "theme"));
+            themeNode.setAttribute("rdf:ressource", themeUri);
+        }
+
+        return doc.toString();
+    }
+
     private getResourcesData() {
 
         if (this.resourcesDate) {
@@ -397,11 +449,11 @@ export class CkanMapper extends BaseMapper {
         return dates;
     }
 
-    getCreator(): Person {
-        return {
+    getCreator(): Person[] {
+        return [{
             name: this.source.author,
             mbox: this.source.author_email
-        };
+        }];
     }
 
     getGroups(): string[] {
@@ -423,7 +475,7 @@ export class CkanMapper extends BaseMapper {
     }
 
     getHarvestingDate(): Date {
-        return this.data.harvestTime;
+        return this.harvestTime;
     }
 
     getSubSections(): any[] {
@@ -454,37 +506,45 @@ export class CkanMapper extends BaseMapper {
     }
 
     getContactPoint(): any {
-        return undefined;
+        return [];
     }
 
     getOriginator(): Person[] {
-        return undefined;
+        return [];
     }
 
     async getLicense(): Promise<License> {
+        if(this.fetched.license !== null){
+            return this.fetched.license
+        }
+
         const hasNoLicense = !this.source.license_id && !this.source.license_title && !this.source.license_url;
 
         if (this.settings.defaultLicense && hasNoLicense) {
             this.summary.missingLicense++;
-            this.log.warn(`Missing license for ${this.getGeneratedId()} using default one.`);
-
+            //this.log.warn(`Missing license for ${this.getGeneratedId()} using default one.`);
+            this.fetched.license = this.settings.defaultLicense;
             return this.settings.defaultLicense;
         } else if (hasNoLicense) {
             let msg = `No license detected for dataset: ${this.getGeneratedId()} -> ${this.getTitle()}`;
             this.summary.missingLicense++;
 
-            this.log.warn(msg);
-            this.summary.warnings.push(['Missing license', msg]);
+            //this.log.warn(msg);
+            //this.summary.warnings.push(['Missing license', msg]);
+            this.fetched.license = undefined;
         } else {
             let license = await DcatLicensesUtils.get(this.source.license_url);
             if(license) return license;
             license = await DcatLicensesUtils.get(this.source.license_title);
             if(license) return license;
-            return {
+
+            this.fetched.license = {
                 id: this.source.license_id ? this.source.license_id : 'unknown',
-                title: this.source.license_title,
+                name: this.source.license_title,
                 url: this.source.license_url || this.source.license_title
             };
+
+            return this.fetched.license;
         }
     }
 
@@ -584,21 +644,8 @@ export class CkanMapper extends BaseMapper {
                 start: settings.startPosition,
                 rows: settings.maxRecords
             };
-            if(settings.filterGroups.length > 0 || settings.filterTags.length > 0 || settings.additionalSearchFilter)
-            {
-                let fq = '';
-                if(settings.filterGroups.length > 0) {
-                    fq += '+groups:(' + settings.filterGroups.join(' OR ') + ')';
-                }
-                if(settings.filterTags.length > 0) {
-                    fq += '+tags:(' + settings.filterTags.join(' OR ') + ')';
-                }
-                if(settings.additionalSearchFilter){
-                    fq += '+'+settings.additionalSearchFilter;
-                }
-                if(settings.whitelistedIds.length > 0){
-                    fq = '(('+fq+ ') OR id:('+settings.whitelistedIds.join(' OR ')+'))'
-                }
+            const fq = CkanUtils.createQs(settings);
+            if (fq) {
                 qs['fq'] = fq;
             }
             return {
@@ -623,6 +670,10 @@ export class CkanMapper extends BaseMapper {
             headers: RequestDelegate.defaultRequestHeaders(),
             proxy: settings.proxy || null,
             rejectUnauthorized: settings.rejectUnauthorizedSSL,
+            qs: <CkanParametersListWithResources> {
+                offset: settings.startPosition,
+                limit: settings.maxRecords
+            },
             timeout: settings.timeout
         };
     }
@@ -640,7 +691,7 @@ export class CkanMapper extends BaseMapper {
         let logDateError = () => {
             let message = `Date has incorrect format: ${date}`;
             this.summary.numErrors++;
-            this.summary.appErrors.push(message);
+            this.summary.errors.push({ type: 'app', error: message });
             this.log.warn(message);
         };
 
@@ -651,7 +702,7 @@ export class CkanMapper extends BaseMapper {
         } else {
             if (this.settings.dateSourceFormats && this.settings.dateSourceFormats.length > 0) {
                 // let dateObj = this.moment(date, this.settings.dateSourceFormats);
-                let dateObj = this.dayjs(date, this.settings.dateSourceFormats);
+                let dateObj = dayjs(date, this.settings.dateSourceFormats);
 
                 if (dateObj.isValid()) {
                     return dateObj.toDate();
@@ -685,7 +736,7 @@ export class CkanMapper extends BaseMapper {
 
             let message = `Byte size has incorrect format: ${size}`;
             this.summary.numErrors++; //.push(message);
-            this.summary.appErrors.push(message);
+            this.summary.errors.push({ type: 'app', error: message });
             this.log.warn(message);
             return undefined;
         }

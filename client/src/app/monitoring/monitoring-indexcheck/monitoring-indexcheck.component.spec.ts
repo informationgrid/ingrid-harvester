@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MonitoringIndexCheckComponent } from './monitoring-indexcheck.component';
 
@@ -29,7 +29,7 @@ describe('MonitoringIndexCheckComponent', () => {
   let component: MonitoringIndexCheckComponent;
   let fixture: ComponentFixture<MonitoringIndexCheckComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ MonitoringIndexCheckComponent ]
     })

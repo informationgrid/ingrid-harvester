@@ -21,15 +21,15 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../../utils/misc.utils.js';
 import log4js from 'log4js';
 import pLimit from 'p-limit';
-import { generateXplanWmsDistributions } from '../diplanung.utils.js';
 import { CswImporter } from '../../../importer/csw/csw.importer.js';
-import type { DiplanungIndexDocument } from '../model/index.document.js';
-import type { Distribution } from '../../../model/distribution.js';
 import type { PluPlanType } from '../../../model/dcatApPlu.model.js';
+import type { Distribution } from '../../../model/distribution.js';
 import type { RecordEntity } from '../../../model/entity.js';
+import * as MiscUtils from '../../../utils/misc.utils.js';
+import { generateXplanWmsDistributions } from '../diplanung.utils.js';
+import type { DiplanungIndexDocument } from '../model/index.document.js';
 // import { RequestDelegate } from '../../../utils/http-request.utils';
 // import { WmsXPath } from './wms.xpath';
 
@@ -43,7 +43,7 @@ export class DiplanungCswImporter extends CswImporter {
 
     private tempUrlCache = new Map<string, string[]>();
 
-    protected async updateRecords(documents: DiplanungIndexDocument[], collectionId: number) {
+    protected async updateRecords(documents: DiplanungIndexDocument[]) {
         let promises: (() => Promise<RecordEntity>)[] = [];
         for (let doc of documents) {
             promises.push(() => new Promise(async (resolve, reject) => {
@@ -54,7 +54,7 @@ export class DiplanungCswImporter extends CswImporter {
                 let updatedDistributions = await this.updateDistributions(doc.distributions, doc.plan_type as PluPlanType);
                 if (updatedDistributions?.length > 0) {
                     updateDoc.distributions = updatedDistributions;
-                    updateDoc.extras = MiscUtils.merge(MiscUtils.structuredClone(doc.extras), updateDoc.extras);
+                    updateDoc.extras = MiscUtils.merge(structuredClone(doc.extras), updateDoc.extras);
                     updateQuality(updateDoc, 'WMS layer names have been added to a distribution', null, true);
                     docIsUpdated = true;
                 }
@@ -62,7 +62,7 @@ export class DiplanungCswImporter extends CswImporter {
                 // // purposely simplistic heuristic: is centroid inside bbox for Germany?
                 // if (!GeoJsonUtils.within(doc.centroid, GeoJsonUtils.BBOX_GERMANY)) {
                 //     // copy and/or create relevant metadata structure
-                //     updateDoc.extras = MiscUtils.merge(MiscUtils.structuredClone(doc.extras), updateDoc.extras);
+                //     updateDoc.extras = MiscUtils.merge(structuredClone(doc.extras), updateDoc.extras);
                 //     // if not, try to swap lat and lon
                 //     let flippedBbox = GeoJsonUtils.flip<Geometry>(doc.bounding_box);
                 //     if (GeoJsonUtils.within(flippedBbox, GeoJsonUtils.BBOX_GERMANY)) {
@@ -81,11 +81,12 @@ export class DiplanungCswImporter extends CswImporter {
                     // TODO find an efficient postgres way to only send the update instead of the full document
                     // keywords: jsonb_set, json_agg, SQL/JSON Path Language, postgres14+
                     let mergedDocument: DiplanungIndexDocument = MiscUtils.merge(doc, updateDoc);
-                    mergedDocument.extras.metadata.modified = new Date(Date.now());
+                    mergedDocument.extras.metadata.modified = new Date();
                     let entity: RecordEntity = {
                         identifier: doc.identifier,
                         source: doc.extras.metadata.source.source_base,
-                        collection_id: collectionId,
+                        collection_id: null, // TODO set default catalog for diplanung from ENV VAR
+                        catalog_ids: this.settings.catalogIds,
                         dataset: mergedDocument,
                         original_document: undefined
                     };
@@ -98,7 +99,16 @@ export class DiplanungCswImporter extends CswImporter {
         }
         // TODO 10 seems to hit a sweet spot. 20 is already too much with our default fetch timeout of 20sec
         const limit = pLimit(10);
-        let results = (await Promise.allSettled(promises.map(pf => limit(pf)))).filter(result => result.status === 'fulfilled');
+        const settled = await Promise.allSettled(promises.map(pf => limit(pf)));
+        // surface real errors (not the normal "not updating" path, which rejects with a plain string)
+        for (const result of settled) {
+            if (result.status === 'rejected' && typeof result.reason === 'object') {
+                const msg = result.reason?.message ?? String(result.reason);
+                this.summary.warnings.push([msg]);
+                log.warn(`Error updating record: ${msg}`);
+            }
+        }
+        let results = settled.filter(result => result.status === 'fulfilled');
         let entities = (results as PromiseFulfilledResult<any>[]).map(result => result.value);
         for (let entity of entities) {
             await this.database.addEntityToBulk(entity);

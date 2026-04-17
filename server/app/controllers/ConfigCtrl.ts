@@ -21,12 +21,13 @@
  * ==================================================
  */
 
-import log4js from 'log4js';
 import type { DatabaseConfiguration, ElasticsearchConfiguration, GeneralSettings } from '@shared/general-config.settings.js';
 import type { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
-import { BodyParams, Controller, Delete, Get, PathParams, Post, Put, QueryParams, UseAuth } from '@tsed/common';
+import { BodyParams, Controller, Delete, Get, Post, QueryParams, UseAuth } from '@tsed/common';
+import log4js from 'log4js';
+import { KeycloakAuth } from "../decorators/KeycloakAuthOptions.js";
+import type { ImporterTypeInfo } from '../importer/importer.settings.js';
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
-import type { Catalog } from '../model/dcatApPlu.model.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import { ElasticsearchUtils } from '../persistence/elastic.utils.js';
@@ -38,6 +39,7 @@ const log = log4js.getLogger(import.meta.filename);
 
 @Controller("/api/config")
 @UseAuth(AuthMiddleware)
+@KeycloakAuth({role: ["admin", "editor", "viewer"]})
 export class ConfigCtrl {
 
     constructor(
@@ -58,7 +60,7 @@ export class ConfigCtrl {
     async checkEsConnection(@BodyParams() body: Partial<ElasticsearchConfiguration>): Promise<boolean> {
         try {
             // @ts-ignore
-            let esUtils: ElasticsearchUtils = ElasticsearchFactory.getElasticUtils(body, { elasticErrors: [] });
+            let esUtils: ElasticsearchUtils = ElasticsearchFactory.getElasticUtils(body, { errors: [] });
             return await esUtils.ping();
         } catch (error) {
             log.warn(error);
@@ -72,44 +74,24 @@ export class ConfigCtrl {
         return profile.getProfileName();
     }
 
+    @Get('/importer_types')
+    getImporterTypes(): ImporterTypeInfo[] {
+        const profile = ProfileFactoryLoader.get();
+        return profile.getImporterTypes();
+    }
+
     @Get('/general')
     getGeneralConfig(): GeneralSettings {
-        return ConfigService.getGeneralSettings();
+        return ConfigService.getFilteredGeneralSettings();
     }
 
     @Post('/general')
+    @KeycloakAuth({role: ["admin"]})
     setGeneralConfig(@BodyParams() body: GeneralSettings): void {
         if(body.elasticsearch.url && body.elasticsearch.alias) {
             ConfigService.setGeneralConfig(body);
             this.scheduleService.initialize();
         }
-    }
-
-    @Get('/catalogs')
-    async getCatalogs(): Promise<Catalog[]> {
-        return await ConfigService.getCatalogs();
-    }
-
-    @Get('/catalogsizes')
-    async getCatalogSizes(): Promise<any[]> {
-        return await ConfigService.getCatalogSizes();
-    }
-
-    @Post('/catalogs')
-    async addOrEditCatalog(@BodyParams() catalog: Catalog): Promise<void> {
-        await ConfigService.addOrEditCatalog(catalog);
-    }
-
-    @Put('/catalogs/:identifier')
-    async enableCatalog(@PathParams('identifier') catalogIdentifier: string,
-            @QueryParams('enable') enable: boolean) {
-        await ConfigService.enableCatalog(catalogIdentifier, enable);
-    }
-
-    @Delete('/catalogs/:identifier')
-    async deleteCatalog(@PathParams('identifier') catalogIdentifier: string,
-            @QueryParams('target') target: string) {
-        await ConfigService.removeCatalog(catalogIdentifier, target);
     }
 
     @Get('/mapping/distribution')
@@ -123,17 +105,20 @@ export class ConfigCtrl {
     }
 
     @Post('/mapping/distribution')
+    @KeycloakAuth({role: ["admin"]})
     addMappingDistribution(@BodyParams() item: MappingItem): void {
         ConfigService.addMappingDistribution(item);
     }
 
     @Post('/mapping/filecontent')
+    @KeycloakAuth({role: ["admin"]})
     importMappingFile(@BodyParams() file: any): void {
         if(file.format && file.ckan_dcat)
             ConfigService.importMappingFileContent(file);
     }
 
     @Delete('/mapping/distribution')
+    @KeycloakAuth({role: ["admin"]})
     deleteMappingDistribution(
         @QueryParams('source') source: string,
         @QueryParams('target') target: string): void {

@@ -21,13 +21,23 @@
  * ==================================================
  */
 
-import type {ImporterSettings} from '../../importer.settings.js';
+import type { ImporterCapabilities, ImporterSettings } from '../importer.settings.js';
+import { defaultImporterSettings } from '../importer.settings.js';
 
 export type SparqlSettings = {
     query: string,
     filterTags?: string[],
     filterThemes?: string[],
     defaultProvider?: string,
-    eitherKeywords?: string[],
     recordFilter?: string
 } & ImporterSettings;
+
+export const sparqlDefaults: SparqlSettings = {
+    ...defaultImporterSettings,
+    query: null
+};
+
+export const sparqlCapabilities: ImporterCapabilities = {
+    isIncrementalSupported: false,
+    supportedCatalogTypes: ['elasticsearch']
+};

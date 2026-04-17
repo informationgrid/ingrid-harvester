@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0",
+    "start-me": "ng serve --host 0.0.0.0 --disable-host-check --port 4400",
     "build": "ng build",
     "prod": "ng build --configuration production",
     "update": "ng update @angular/cli @angular/core --allow-dirty",
@@ -26,6 +27,8 @@
     "@angular/router": "^20.2.1",
     "@ngneat/transloco": "^6.0.4",
     "@ngneat/until-destroy": "^10.0.0",
+    "@ngx-formly/core": "^7.1.0",
+    "@ngx-formly/material": "^7.1.0",
     "chart.js": "^4.4.1",
     "core-js": "^3.36.0",
     "cron-validator": "^1.3.1",
@@ -65,6 +68,7 @@
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
+    "prettier": "^3.8.1",
     "ts-node": "~10.9.2",
     "typescript": "~5.9.2"
   },

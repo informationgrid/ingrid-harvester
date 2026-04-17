@@ -24,27 +24,26 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import * as xpath from 'xpath';
-import log4js from 'log4js';
-import { namespaces } from '../../namespaces.js';
-import { throwError } from 'rxjs';
-import type { Agent, Contact, Organization, Person } from '../../../model/agent.js';
-import { BaseMapper } from '../../base.mapper.js';
-import type { DateRange } from '../../../model/dateRange.js';
-import { DcatMapper } from '../../../importer/dcat/dcat.mapper.js';
-import { DcatPeriodicityUtils } from '../../../utils/dcat.periodicity.utils.js';
-import type { Distribution } from '../../../model/distribution.js';
-import type { ImporterSettings } from '../../../importer.settings.js';
 import type { License } from '@shared/license.model.js';
+import log4js from 'log4js';
+import { throwError } from 'rxjs';
+import * as xpath from 'xpath';
+import { DCAT_CATEGORY_URL, dcatThemeUriFromKeyword } from '../../dcatapde/dcatapde.utils.js';
+import type { Agent, Contact, Organization, Person } from '../../../model/agent.js';
+import type { DateRange } from '../../../model/dateRange.js';
+import type { Distribution } from '../../../model/distribution.js';
 import type { MetadataSource } from '../../../model/index.document.js';
-import type { OaiSettings } from '../oai.settings.js';
+import type { Summary } from '../../../model/summary.js';
+import { DcatPeriodicityUtils } from '../../../utils/dcat.periodicity.utils.js';
 import type { RequestOptions } from '../../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../../utils/http-request.utils.js';
-import type { Summary } from '../../../model/summary.js';
 import { UrlUtils } from '../../../utils/url.utils.js';
 import type { XPathElementSelect } from '../../../utils/xpath.utils.js';
+import { Mapper } from '../../mapper.js';
+import { namespaces } from '../../namespaces.js';
+import type { OaiSettings } from '../oai.settings.js';
 
-export class OaiMapper extends BaseMapper {
+export class OaiMapper extends Mapper<OaiSettings> {
 
     static select = <XPathElementSelect>xpath.useNamespaces({
         'gmd': namespaces.GMD,
@@ -61,9 +60,7 @@ export class OaiMapper extends BaseMapper {
     private harvestTime: any;
 
     protected readonly idInfo; // : SelectedValue;
-    private settings: OaiSettings;
     private readonly uuid: string;
-    private summary: Summary;
 
     private keywordsAlreadyFetched = false;
     private fetched: any = {
@@ -73,27 +70,17 @@ export class OaiMapper extends BaseMapper {
     };
 
 
-    constructor(settings, header, record, harvestTime, summary) {
-        super();
-        this.settings = settings;
+    constructor(settings: OaiSettings, header, record, harvestTime, summary: Summary) {
+        super(settings, summary);
         this.header = header;
         this.record = record;
         this.harvestTime = harvestTime;
-        this.summary = summary;
 
         this.uuid = OaiMapper.getCharacterStringContent(record, 'fileIdentifier');
 
         this.idInfo = OaiMapper.select('./gmd:identificationInfo', record, true);
 
         super.init();
-    }
-
-    public getSettings(): ImporterSettings {
-        return this.settings;
-    }
-
-    public getSummary(): Summary{
-        return this.summary;
     }
 
     getDescription() {
@@ -564,13 +551,13 @@ export class OaiMapper extends BaseMapper {
         // Evaluate the themes
         let xpath = './/gmd:descriptiveKeywords/gmd:MD_Keywords[./gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString/text()="Data theme (EU MDR)"]/gmd:keyword/gco:CharacterString';
         let themes = OaiMapper.select(xpath, this.record)
-            .map(node => DcatMapper.dcatThemeUriFromKeyword(node.textContent))
+            .map(node => dcatThemeUriFromKeyword(node.textContent))
             .filter(theme => theme); // Filter out falsy values
 
         if (!themes || themes.length === 0) {
             // Fall back to default value
             themes = this.settings.defaultDCATCategory
-                .map( category => DcatMapper.DCAT_CATEGORY_URL + category);
+                .map( category => DCAT_CATEGORY_URL + category);
         }
 
         this.fetched.themes = themes;
@@ -708,7 +695,7 @@ export class OaiMapper extends BaseMapper {
     }
 
     getHarvestingDate(): Date {
-        return new Date(Date.now());
+        return new Date();
     }
 
     getSubSections(): any[] {

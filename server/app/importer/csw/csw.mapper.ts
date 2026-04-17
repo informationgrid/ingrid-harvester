@@ -24,31 +24,32 @@
 /**
  * A mapper for ISO-XML documents harvested over CSW.
  */
-import * as xpath from 'xpath';
-import * as GeoJsonUtils from '../../utils/geojson.utils.js';
-import * as MiscUtils from '../../utils/misc.utils.js';
-import * as ServiceUtils from '../../utils/service.utils.js';
-import log4js from 'log4js';
-import { namespaces } from '../../importer/namespaces.js';
-import { throwError } from 'rxjs';
-import type { Agent, Contact, Organization, Person } from '../../model/agent.js';
-import { BaseMapper } from '../base.mapper.js';
-import type { CswSettings } from './csw.settings.js';
-import type { DateRange } from '../../model/dateRange.js';
-import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
-import { DcatMapper } from '../../importer/dcat/dcat.mapper.js';
-import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
-import type { Distribution } from '../../model/distribution.js';
-import type { Geometry, Point } from 'geojson';
 import type { License } from '@shared/license.model.js';
-import type { MetadataSource } from '../../model/index.document.js';
+import type { Geometry, Point } from 'geojson';
+import log4js from 'log4js';
+import { throwError } from 'rxjs';
+import * as xpath from 'xpath';
+import { DCAT_CATEGORY_URL, DCAT_THEMES, dcatThemeUriFromKeyword } from '../dcatapde/dcatapde.utils.js';
+import { namespaces } from '../../importer/namespaces.js';
+import type { Agent, Contact, Organization, Person } from '../../model/agent.js';
+import type { DateRange } from '../../model/dateRange.js';
+import type { Distribution } from '../../model/distribution.js';
+import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
+import type { Summary } from '../../model/summary.js';
+import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
+import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
+import * as GeoJsonUtils from '../../utils/geojson.utils.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
-import type { Summary } from '../../model/summary.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import * as ServiceUtils from '../../utils/service.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 import type { XPathElementSelect } from '../../utils/xpath.utils.js';
+import { Mapper } from '../mapper.js';
+import type { ToElasticMapper } from '../to.elastic.mapper.js';
+import type { CswSettings } from './csw.settings.js';
 
-export class CswMapper extends BaseMapper {
+export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<IndexDocument> {
 
     static readonly cswNsMap = {
         'csw': namespaces.CSW,
@@ -70,24 +71,19 @@ export class CswMapper extends BaseMapper {
     private harvestTime: any;
 
     readonly idInfo; // : SelectedValue;
-    readonly settings: CswSettings;
     private readonly uuid: string;
-    protected summary: Summary;
 
     private keywordsAlreadyFetched = false;
     fetched = {
-        catalog: null,
         contactPoint: null,
         keywords: {},
         themes: null
     };
 
-    constructor(settings, record, harvestTime, summary, generalInfo) {
-        super();
-        this.settings = settings;
+    constructor(settings: CswSettings, record, harvestTime, summary: Summary, generalInfo) {
+        super(settings, summary);
         this.record = record;
         this.harvestTime = harvestTime;
-        this.summary = summary;
         this.fetched = MiscUtils.merge(this.fetched, generalInfo);
 
         this.uuid = CswMapper.getCharacterStringContent(record, 'fileIdentifier');
@@ -97,12 +93,13 @@ export class CswMapper extends BaseMapper {
         super.init();
     }
 
-    public getSettings(): CswSettings {
-        return this.settings;
-    }
-
-    public getSummary(): Summary {
-        return this.summary;
+    async createIndexDocument(): Promise<IndexDocument> {
+        return {
+            uuid: this.getGeneratedId(),
+            extras: {
+                metadata: this.getHarvestingMetadata()
+            }
+        }
     }
 
     // _getResourceIdentifier() {
@@ -176,6 +173,7 @@ export class CswMapper extends BaseMapper {
                     const formatArray = protocol ? [protocol] : formats;
                     let dist: Distribution = {
                         accessURL: url,
+                        access_url: url,
                         title: title,
                         // format: UrlUtils.mapFormat(formatArray, this.summary.warnings)
                         format: formatArray
@@ -355,15 +353,15 @@ export class CswMapper extends BaseMapper {
         return title && title.trim() !== '' ? title : undefined;
     }
 
-    _getAlternateTitle() {
+    _getAlternateTitle(): string[] {
         let result = []
         let alternateTitles = CswMapper.select('./*/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString', this.idInfo);
         for(let alternateTitle of alternateTitles){
-            if(alternateTitle.textContent && alternateTitle.textContent.trim() !== ''){
-                result.push(alternateTitle.textContent)
+            if(alternateTitle.textContent?.trim() !== ''){
+                result.push(alternateTitle.textContent);
             }
         }
-        return result.length? result : undefined;
+        return result.length ? result : undefined;
     }
 
     /**
@@ -705,22 +703,22 @@ export class CswMapper extends BaseMapper {
             themes = this.mapCategoriesToThemes(categories, keywords);
         }
 
-        keywords.filter(keyword => DcatMapper.DCAT_THEMES.includes(keyword)).forEach(keyword => themes.push(DcatMapper.DCAT_CATEGORY_URL + keyword));
+        keywords.filter(keyword => DCAT_THEMES.includes(keyword)).forEach(keyword => themes.push(DCAT_CATEGORY_URL + keyword));
 
         themes = themes.concat(CswMapper.select(xpath, this.record)
-            .map(node => DcatMapper.dcatThemeUriFromKeyword(node.textContent))
+            .map(node => dcatThemeUriFromKeyword(node.textContent))
             .filter(theme => theme)); // Filter out falsy values
 
         // Evaluate the themes
         xpath = './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords[./gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString/text()="Data theme (EU MDR)"]/gmd:keyword/gco:CharacterString';
         themes = themes.concat(CswMapper.select(xpath, this.record)
-            .map(node => DcatMapper.dcatThemeUriFromKeyword(node.textContent))
+            .map(node => dcatThemeUriFromKeyword(node.textContent))
             .filter(theme => theme)); // Filter out falsy values
 
         if (!themes || themes.length === 0) {
             // Fall back to default value
             themes = this.settings.defaultDCATCategory
-                .map(category => DcatMapper.DCAT_CATEGORY_URL + category);
+                .map(category => DCAT_CATEGORY_URL + category);
         }
 
         themes = themes.filter((keyword, index, self) => self.indexOf(keyword) === index);
@@ -735,100 +733,100 @@ export class CswMapper extends BaseMapper {
         categories.map(category => category.textContent).forEach(category => {
             switch (category) {
                 case "farming":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'AGRI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DCAT_CATEGORY_URL + 'AGRI');
+                    themes.push(DCAT_CATEGORY_URL + 'ENVI');
                     break;
                 case "biota":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DCAT_CATEGORY_URL + 'ENVI');
                     break;
                 case "boundaries":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'REGI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'GOVE');
+                    themes.push(DCAT_CATEGORY_URL + 'REGI');
+                    themes.push(DCAT_CATEGORY_URL + 'GOVE');
                     break;
                 case "climatologyMeteorology Atmosphere":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TECH');
+                    themes.push(DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DCAT_CATEGORY_URL + 'TECH');
                     break;
                 case "economy":
                     themes.push('ECON');
                     if (keywords.includes("Energiequellen")) {
-                        themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENER');
-                        themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
-                        themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TECH');
+                        themes.push(DCAT_CATEGORY_URL + 'ENER');
+                        themes.push(DCAT_CATEGORY_URL + 'ENVI');
+                        themes.push(DCAT_CATEGORY_URL + 'TECH');
                     }
                     if (keywords.includes("Mineralische Bodenschätze")) {
-                        themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
-                        themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TECH');
+                        themes.push(DCAT_CATEGORY_URL + 'ENVI');
+                        themes.push(DCAT_CATEGORY_URL + 'TECH');
                     }
                     break;
                 case "elevation":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'GOVE');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TECH');
+                    themes.push(DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DCAT_CATEGORY_URL + 'GOVE');
+                    themes.push(DCAT_CATEGORY_URL + 'TECH');
                     break;
                 case "environment":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DCAT_CATEGORY_URL + 'ENVI');
                     break;
                 case "geoscientificInformation":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'REGI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TECH');
+                    themes.push(DCAT_CATEGORY_URL + 'REGI');
+                    themes.push(DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DCAT_CATEGORY_URL + 'TECH');
                     break;
                 case "health":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'HEAL');
+                    themes.push(DCAT_CATEGORY_URL + 'HEAL');
                     break;
                 case "imageryBaseMapsEarthCover ":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'GOVE');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TECH');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'REGI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'AGRI');
+                    themes.push(DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DCAT_CATEGORY_URL + 'GOVE');
+                    themes.push(DCAT_CATEGORY_URL + 'TECH');
+                    themes.push(DCAT_CATEGORY_URL + 'REGI');
+                    themes.push(DCAT_CATEGORY_URL + 'AGRI');
                     break;
                 case "intelligenceMilitary":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'JUST');
+                    themes.push(DCAT_CATEGORY_URL + 'JUST');
                     break;
                 case "inlandWaters":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TRAN');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'AGRI');
+                    themes.push(DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DCAT_CATEGORY_URL + 'TRAN');
+                    themes.push(DCAT_CATEGORY_URL + 'AGRI');
                     break;
                 case "location":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'REGI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'GOVE');
+                    themes.push(DCAT_CATEGORY_URL + 'REGI');
+                    themes.push(DCAT_CATEGORY_URL + 'GOVE');
                     break;
                 case "oceans":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TRAN');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'AGRI');
+                    themes.push(DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DCAT_CATEGORY_URL + 'TRAN');
+                    themes.push(DCAT_CATEGORY_URL + 'AGRI');
                     break;
                 case "planningCadastre":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'REGI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'GOVE');
+                    themes.push(DCAT_CATEGORY_URL + 'REGI');
+                    themes.push(DCAT_CATEGORY_URL + 'GOVE');
                     if (keywords.includes("Flurstücke/Grundstücke")) {
-                        themes.push(DcatMapper.DCAT_CATEGORY_URL + 'JUST');
+                        themes.push(DCAT_CATEGORY_URL + 'JUST');
                     }
                     break;
                 case "society":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'SOCI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'EDUC');
+                    themes.push(DCAT_CATEGORY_URL + 'SOCI');
+                    themes.push(DCAT_CATEGORY_URL + 'EDUC');
                     break;
                 case "structure":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'REGI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TRAN');
+                    themes.push(DCAT_CATEGORY_URL + 'REGI');
+                    themes.push(DCAT_CATEGORY_URL + 'TRAN');
                     if (keywords.includes("Produktions- und Industrieanlagen")) {
-                        themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ECON');
+                        themes.push(DCAT_CATEGORY_URL + 'ECON');
                     }
                     if (keywords.includes("Umweltüberwachung")) {
-                        themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
+                        themes.push(DCAT_CATEGORY_URL + 'ENVI');
                     }
                     break;
                 case "transportation":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'TRAN');
+                    themes.push(DCAT_CATEGORY_URL + 'TRAN');
                     break;
                 case "utilitiesCommunication":
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENER');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'ENVI');
-                    themes.push(DcatMapper.DCAT_CATEGORY_URL + 'GOVE');
+                    themes.push(DCAT_CATEGORY_URL + 'ENER');
+                    themes.push(DCAT_CATEGORY_URL + 'ENVI');
+                    themes.push(DCAT_CATEGORY_URL + 'GOVE');
                     break;
             }
         });
@@ -972,7 +970,7 @@ export class CswMapper extends BaseMapper {
     }
 
     getHarvestingDate(): Date {
-        return new Date(Date.now());
+        return new Date();
     }
 
     getSubSections(): any[] {
@@ -1132,7 +1130,7 @@ export class CswMapper extends BaseMapper {
                     job: position,
                     descr: contactInstructions
                 };
-                // (#8604): only set identificationinfo_administrative_area_value for 
+                // (#8604): only set identificationinfo_administrative_area_value for
                 // * MD_Metadata/identificationInfo/MD_DataIdentification/pointOfContact/*/contactInfo/*/address/*/administrativeArea
                 // * MD_Metadata/identificationInfo/SV_ServiceIdentification/pointOfContact/*/contactInfo/*/address/*/administrativeArea
                 let grandparent = (contact?.parentNode?.parentNode as Element);

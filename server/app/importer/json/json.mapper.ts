@@ -22,39 +22,37 @@
  */
 
 import log4js from 'log4js';
-import { BaseMapper } from '../base.mapper.js';
-import type { MetadataSource } from '../../model/index.document.js';
-import type { JsonSettings } from './json.settings.js';
+import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
+import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
+import { Mapper } from '../mapper.js';
+import type { JsonSettings } from './json.settings.js';
 
-export class JsonMapper extends BaseMapper {
+export class JsonMapper extends Mapper<JsonSettings> implements ToElasticMapper<IndexDocument> {
 
     log = log4js.getLogger();
 
     readonly record: object;
     readonly id: string;
 
-    private settings: JsonSettings;
     private harvestTime: Date;
-    private summary: Summary;
 
     constructor(settings: JsonSettings, record: object, harvestTime: Date, summary: Summary) {
-        super();
-        this.settings = settings;
+        super(settings, summary);
         this.record = record;
         this.id = record[this.settings.idProperty];
         this.harvestTime = harvestTime;
-        this.summary = summary;
 
         super.init();
     }
 
-    getSettings(): JsonSettings {
-        return this.settings;
-    }
-
-    getSummary(): Summary {
-        return this.summary;
+    async createIndexDocument(): Promise<IndexDocument> {
+        return {
+            uuid: this.getGeneratedId(),
+            extras: {
+                metadata: this.getHarvestingMetadata(),
+            }
+        };
     }
 
     getMetadataSource(): MetadataSource {

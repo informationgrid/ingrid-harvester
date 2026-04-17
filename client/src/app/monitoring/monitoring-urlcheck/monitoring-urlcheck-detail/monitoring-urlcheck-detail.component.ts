@@ -22,7 +22,7 @@
  */
 
 import {AfterViewInit, Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {Harvester} from '@shared/harvester';
+import {Datasource} from '@shared/datasource';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { Chart } from 'chart.js';

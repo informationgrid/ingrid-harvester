@@ -21,27 +21,27 @@
  * ==================================================
  */
 
-import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
-import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '@tsed/common';
 import type { Index } from '@shared/index.model.js';
+import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '@tsed/common';
+import { KeycloakAuth } from "../decorators/KeycloakAuthOptions.js";
+import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { IndexService } from '../services/IndexService.js';
 
 @Controller('/api/indices')
 @UseAuth(AuthMiddleware)
+@KeycloakAuth({role: ["admin", "editor", "viewer"]})
 export class IndicesCtrl {
 
     constructor(private indexService: IndexService) {
-        indexService.initialize();
     }
 
     @Get('/')
     async getIndices(): Promise<Index[]> {
-        // re-initialize in case settings have changed
-        this.indexService.initialize();
         return await this.indexService.getIndices();
     }
 
     @Delete('/:name')
+    @KeycloakAuth({role: ["admin"]})
     async deleteIndex(@PathParams('name') name: string): Promise<void> {
         return this.indexService.deleteIndex(name);
     }
@@ -52,6 +52,7 @@ export class IndicesCtrl {
     }
 
     @Post('/')
+    @KeycloakAuth({role: ["admin"]})
     async importMappingFile(@BodyParams() file: any): Promise<void> {
         if(file.index && file.settings && file.mappings && file.data)
             await this.indexService.importIndex(file);

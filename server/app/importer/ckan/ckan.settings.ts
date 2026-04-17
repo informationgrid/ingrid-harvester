@@ -21,25 +21,9 @@
  * ==================================================
  */
 
-import type { ImporterSettings} from '../../importer.settings.js';
-import {DefaultImporterSettings} from '../../importer.settings.js';
-import type {License} from '@shared/license.model.js';
-
-export type ProviderField = 'maintainer' | 'organization' | 'author';
-
-
-export const defaultCKANSettings: CkanSettings = {
-    ...DefaultImporterSettings,
-    filterTags: [],
-    filterGroups: [],
-    providerPrefix: '',
-    providerField: 'organization',
-    dateSourceFormats: [],
-    requestType: 'ListWithResources',
-    markdownAsDescription: true,
-    groupChilds: false,
-    defaultLicense: null
-};
+import type { License } from '@shared/license.model.js';
+import type { ImporterCapabilities, ImporterSettings } from '../importer.settings.js';
+import { defaultImporterSettings } from '../importer.settings.js';
 
 export type CkanSettings = {
     filterTags?: string[],
@@ -52,3 +36,23 @@ export type CkanSettings = {
     groupChilds?: boolean,
     defaultLicense?: License;
 } & ImporterSettings;
+
+export type ProviderField = 'maintainer' | 'organization' | 'author';
+
+export const ckanDefaults: CkanSettings = {
+    ...defaultImporterSettings,
+    filterTags: [],
+    filterGroups: [],
+    providerPrefix: '',
+    providerField: 'organization',
+    dateSourceFormats: [],
+    requestType: 'Search',
+    markdownAsDescription: true,
+    groupChilds: false,
+    defaultLicense: null
+};
+
+export const ckanCapabilities: ImporterCapabilities = {
+    isIncrementalSupported: false,
+    supportedCatalogTypes: ['elasticsearch']
+}

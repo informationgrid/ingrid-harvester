@@ -21,41 +21,34 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../utils/misc.utils.js';
-import * as ServiceUtils from '../../utils/service.utils.js';
-import * as XpathUtils from '../../utils/xpath.utils.js';
-import type { CswSettings } from './csw.settings.js';
-import { defaultCSWSettings } from './csw.settings.js';
+import type { DOMParser } from '@xmldom/xmldom';
 import log4js from 'log4js';
 import pLimit from 'p-limit';
+import type { Observer } from 'rxjs';
 import { namespaces } from '../../importer/namespaces.js';
-import type { BulkResponse } from '../../persistence/elastic.utils.js';
-import type { Catalog } from '../../model/dcatApPlu.model.js';
+import type { Distribution } from '../../model/distribution.js';
 import type { CouplingEntity, RecordEntity } from '../../model/entity.js';
-import { CswMapper } from './csw.mapper.js';
+import type { ImportLogMessage } from '../../model/import.result.js';
+import type { IndexDocument } from '../../model/index.document.js';
+import type { BulkResponse } from '../../persistence/elastic.utils.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import { SummaryService } from '../../services/config/SummaryService.js';
 import type { CswParameters, RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
-import type { Distribution } from '../../model/distribution.js';
-import type { DOMParser } from '@xmldom/xmldom';
-import { Importer } from '../importer.js';
-import type { ImportLogMessage} from '../../model/import.result.js';
-import { ImportResult } from '../../model/import.result.js';
-import type { IndexDocument } from '../../model/index.document.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
 import { MailServer } from '../../utils/nodemailer.utils.js';
-import type { Observer } from 'rxjs';
-import type { ProfileFactory } from '../../profiles/profile.factory.js';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
-import type { Summary } from '../../model/summary.js';
-import { SummaryService } from '../../services/config/SummaryService.js';
+import * as ServiceUtils from '../../utils/service.utils.js';
+import * as XpathUtils from '../../utils/xpath.utils.js';
+import { Importer } from '../importer.js';
+import { CswMapper } from './csw.mapper.js';
+import { cswDefaults, type CswSettings } from './csw.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
 
-export class CswImporter extends Importer {
+export class CswImporter extends Importer<CswSettings> {
 
     protected domParser: DOMParser;
-    protected profile: ProfileFactory<CswMapper>;
-    protected settings: CswSettings;
     protected getRecordsURL: string;
 
     // ServiceType#GetCapabilitiesURL -> { DatasetUUID -> typenames[] }
@@ -68,11 +61,13 @@ export class CswImporter extends Importer {
 
     private generalInfo: object = {};
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
+    constructor(settings: CswSettings) {
         super(settings);
-        this.profile = ProfileFactoryLoader.get();
         this.domParser = MiscUtils.getDomParser();
-        this.settings = MiscUtils.merge(defaultCSWSettings, settings);
+    }
+
+    protected getDefaultSettings(): CswSettings {
+        return cswDefaults;
     }
 
     private appendFilter(newFilter: string): string {
@@ -97,17 +92,19 @@ export class CswImporter extends Importer {
     }
 
     async exec(observer: Observer<ImportLogMessage>): Promise<void> {
+        // TODO remove Importer.summary - instead, always use a named summary
+        // const downloadSummary = this.startStage('harvest');
         if (this.settings.dryRun) {
             log.debug('Dry run option enabled. Skipping index creation.');
             await this.harvest();
             log.debug('Skipping finalisation of index for dry run.');
-            observer.next(ImportResult.complete(this.summary, 'Dry run ... no indexing of data'));
+            observer.next(this.summary.msgComplete('Dry run ... no indexing of data'));
         }
         else {
             try {
                 let transactionTimestamp = await this.database.beginTransaction();
                 // configure for incremental harvesting
-                if (this.settings.isIncremental) {
+                if (this.isIncremental) {
                     // only change the record filter (i.e. do an incremental harvest) if a previous run exists
                     let lastHarvestingDate = new SummaryService().get(this.settings.id)?.lastExecution;
                     if (lastHarvestingDate) {
@@ -116,14 +113,15 @@ export class CswImporter extends Importer {
                     }
                     else {
                         log.warn(`Changing type of harvesting to "full" because no previous harvesting was found for harvester with id ${this.settings.id}`);
-                        this.settings.isIncremental = false;
+                        this.isIncremental = false;
                     }
                 }
                 // get datasets
                 let numIndexDocs = await this.harvest();
-                if (!this.settings.isIncremental) {
+                if (!this.isIncremental) {
                     // did the harvesting return results at all?
                     if (numIndexDocs == 0) {
+                        log.error(`No results during ${this.settings.type} import`);
                         throw new Error(`No results during ${this.settings.type} import`);
                     }
                     // ensure that less than X percent of existing datasets are slated for deletion
@@ -134,6 +132,7 @@ export class CswImporter extends Importer {
                         MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
                     }
                     if (cancel.enabled && nonFetchedPercentage > cancel.minDifference) {
+                        log.error(`Not enough coverage of previous results (${nonFetchedPercentage}%)`);
                         throw new Error(`Not enough coverage of previous results (${nonFetchedPercentage}%)`);
                     }
                 }
@@ -142,35 +141,55 @@ export class CswImporter extends Importer {
                 //await this.coupleSelf(this.settings.resolveOgcDistributions);
                 // get services separately (time-intensive)
                 if (this.settings.harvestingMode == 'separate') {
+                    this.startStage('harvestServices');
                     await this.harvestServices();
                 }
                 // data-service-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
+                this.startStage('coupling');
                 await this.coupleDatasetsServices(this.settings.resolveOgcDistributions);
 
                 // did fatal errors occur (ie DB or APP errors)?
-                if (this.summary.databaseErrors.length > 0 || this.summary.appErrors.length > 0) {
+                if (this.summary.errors.some(e => e.type === 'app' || e.type === 'database')) {
                     throw new Error();
                 }
 
-                if (!this.settings.isIncremental) {
+                if (!this.isIncremental) {
                     await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
                 }
                 await this.database.commitTransaction();
-                await this.database.pushToElasticsearch(this.elastic, this.settings.sourceURL, observer);
+                // TODO support concurrency of different catalogs
+                for (const catalogId of this.settings.catalogIds) {
+                    const stageSummary = this.startStage(`catalog/${catalogId}`);
+                    const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, stageSummary);
+                    try {
+                        // log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with transaction timestamp ${transactionTimestamp}`);
+                        log.info(`Starting import for catalog ${catalogId} (${catalog.settings.type}) with source ${this.settings.sourceURL}`);
+
+                        // TODO currently this relies on "sourceURL" instead of transactionTimestamp
+                        // should this be changed to transactionTimestamp?
+                        // for that, we need to consider how to handle "deleted", i.e. non-fetched, datasets
+
+                        await catalog.process(this.settings.sourceURL, this.settings, observer);
+                    }
+                    catch (e) {
+                        log.error(`Error while importing into catalog ${catalog.settings.name} (id=${catalogId}):`, e);
+                        this.summary.errors.push({ type: 'app', error: `Error while importing into catalog ${catalog.settings.name} (id=${catalogId}): ${e.message}` });
+                    }
+                }
                 await this.postHarvestingHandling();
-                observer.next(ImportResult.complete(this.summary));
+                observer.next(this.summary.msgComplete());
             }
             catch (err) {
                 if (err.message) {
-                    this.summary.appErrors.push(err.message);
+                    this.summary.errors.push({ type: 'app', error: err.message });
                 }
                 await this.database.rollbackTransaction();
-                let msg = this.summary.appErrors.length > 0 ? this.summary.appErrors[0] : this.summary.databaseErrors[0];
+                let msg = this.summary.errors.find(e => e.type === 'app' || e.type === 'database')?.error;
                 if (this.generalConfig.mail.enabled) {
                     MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
                 }
                 log.error(err);
-                observer.next(ImportResult.complete(this.summary, msg));
+                observer.next(this.summary.msgComplete(msg));
             }
         }
         observer.complete();
@@ -178,11 +197,6 @@ export class CswImporter extends Importer {
 
     protected async harvest(): Promise<number> {
         log.info(`Started requesting records`);
-        let catalog: Catalog = await this.database.getCatalog(this.settings.catalogId);
-        if (catalog == null) {
-            throw new Error(`Catalog with identifier '${this.settings.catalogId}' not found.`)
-        }
-        this.generalInfo['catalog'] = catalog;
 
         if (this.settings.harvestingMode == 'separate') {
             let datasetFilter = '<ogc:PropertyIsEqualTo><ogc:PropertyName>Type</ogc:PropertyName><ogc:Literal>dataset</ogc:Literal></ogc:PropertyIsEqualTo>';
@@ -287,7 +301,7 @@ export class CswImporter extends Importer {
     }
 
     async coupleService(serviceEntity: RecordEntity, resolveOgcDistributions: boolean, coupleSelf = false) {
-        for (let service of serviceEntity.dataset.distributions) {
+        for (let service of serviceEntity.dataset['distributions']) {
             if (coupleSelf) {
                 service.operates_on = [serviceEntity.identifier];
                 // let rsidentifier = MiscUtils.extractDatasetUuid(serviceEntity.dataset.resource_identifier);
@@ -303,7 +317,7 @@ export class CswImporter extends Importer {
             switch (serviceType) {
                 case 'WFS':
                     for (let identifier of service.operates_on) {
-                        let distribution: Distribution = MiscUtils.structuredClone(service);
+                        let distribution: Distribution = structuredClone(service);
                         if (resolveOgcDistributions) {
                             if (!this.wfsFeatureTypeMap.has(service.accessURL)) {
                                 this.wfsFeatureTypeMap.set(service.accessURL, await ServiceUtils.getWfsFeatureTypeMap(service.accessURL));
@@ -362,7 +376,7 @@ export class CswImporter extends Importer {
                     break;
                 case 'WMS':
                     for (let identifier of service.operates_on) {
-                        let distribution: Distribution = MiscUtils.structuredClone(service);
+                        let distribution: Distribution = structuredClone(service);
                         if (resolveOgcDistributions) {
                             if (!this.wmsLayerNameMap.has(service.accessURL)) {
                                 this.wmsLayerNameMap.set(service.accessURL, await ServiceUtils.getWmsLayerNameMap(service.accessURL));
@@ -410,14 +424,14 @@ export class CswImporter extends Importer {
             let numReturned = resultsNode.getAttribute('numberOfRecordsReturned');
             log.debug(`Received ${numReturned} records from ${this.settings.sourceURL}`);
             let importedDocuments = await this.extractRecords(response, processingStart);
-            await this.updateRecords(importedDocuments, this.generalInfo['catalog'].id);
+            await this.updateRecords(importedDocuments);
             let processingTime = Math.floor((Date.now() - processingStart) / 1000);
             log.info(`Finished processing batch from ${delegate.getStartRecordIndex().toString().padStart(6, ' ')}, ${processingTime.toString().padStart(3, ' ')}s`);
         }
         else {
             const message = `Error while fetching CSW Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
             log.error(message);
-            this.summary.appErrors.push(message);
+            this.summary.errors.push({ type: 'app', error: message });
         }
     }
 
@@ -447,16 +461,17 @@ export class CswImporter extends Importer {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = this.getMapper(this.settings, records[i], harvestTime, this.summary, this.generalInfo);
+            let mapper = new CswMapper(this.settings, records[i], harvestTime, this.summary, this.generalInfo);
+            let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
             try {
-                doc = await this.profile.getIndexDocumentFactory(mapper).create();
+                doc = await documentFactory.createIndexDocument();
                 docsToImport.push(doc);
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.summary.appErrors.push(e.toString());
+                this.summary.errors.push({ type: 'app', error: e.toString() });
                 mapper.skipped = true;
             }
 
@@ -464,15 +479,16 @@ export class CswImporter extends Importer {
                 let entity: RecordEntity = {
                     identifier: uuid,
                     source: this.settings.sourceURL,
-                    collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
+                    catalog_ids: this.settings.catalogIds,
                     dataset: doc,
+                    dataset_csw: mapper.getHarvestedData(),
                     original_document: mapper.getHarvestedData()
                 };
                 promises.push(this.database.addEntityToBulk(entity));
             } else {
                 this.summary.skippedDocs.push(uuid);
             }
-            this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
+            this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.allSettled(promises).catch(err => log.error('Error persisting CSW record', err));
         // let settledPromises: void | PromiseSettledResult<BulkResponse>[] = await Promise.allSettled(promises).catch(err => log.error('Error persisting CSW record', err));
@@ -491,12 +507,8 @@ export class CswImporter extends Importer {
      * Is called after a batch of records has been added to the bulk persisting queue.
      * They may not necessarily have been persisted yet.
      */
-    protected async updateRecords(documents: any[], collectionId: number) {
+    protected async updateRecords(documents: any[]) {
         // For Profile specific Handling
-    }
-
-    getMapper(settings, record, harvestTime, summary, generalInfo): CswMapper {
-        return new CswMapper(settings, record, harvestTime, summary, generalInfo);
     }
 
     protected createRequestConfig(additionalSettings: Partial<CswSettings> = null, request = 'GetRecords'): RequestOptions {
@@ -584,9 +596,5 @@ export class CswImporter extends Importer {
             startPosition: settings.startPosition,
             numRecords: settings.maxRecords
         }
-    }
-
-    getSummary(): Summary {
-        return this.summary;
     }
 }

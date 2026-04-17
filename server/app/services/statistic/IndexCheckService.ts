@@ -21,17 +21,16 @@
  * ==================================================
  */
 
-import log4js from 'log4js';
-import { elasticsearchMapping } from '../../statistic/index_check.mapping.js';
-import { ConfigService } from '../config/ConfigService.js';
-import type { ElasticQueries } from '../../persistence/elastic.queries.js';
-import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
-import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
-import type { IndexSettings } from '../../persistence/elastic.setting.js';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import { Service } from '@tsed/di';
-import { Summary } from '../../model/summary.js';
-import dayjs from "dayjs";
+import log4js from 'log4js';
+import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
+import type { ElasticQueries } from '../../persistence/elastic.queries.js';
+import type { IndexSettings } from '../../persistence/elastic.setting.js';
+import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import indexCheckMapping from '../../statistic/index_check.mapping.json' with { type: 'json' };
+import dayjs from '../../utils/dayjs.js';
+import { ConfigService } from '../config/ConfigService.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -39,37 +38,27 @@ const log = log4js.getLogger(import.meta.filename);
 export class IndexCheckService {
 
     private elasticQueries: ElasticQueries;
-    private elasticUtils: ElasticsearchUtils;
     private indexSettings: IndexSettings;
 
     constructor() {
-        this.initialize();
+        const profile = ProfileFactoryLoader.get();
+        this.elasticQueries = profile.getElasticQueries();
+        this.indexSettings = profile.getIndexSettings();
     }
 
-    initialize() {
-        let config = {
+    private get elasticUtils(): ElasticsearchUtils {
+        const config = {
             ...ConfigService.getGeneralSettings().elasticsearch,
             includeTimestamp: false,
             index: 'index_check_history'
         };
         // @ts-ignore
-        const summary: Summary = {};
-        let profile = ProfileFactoryLoader.get();
-        this.elasticUtils = ElasticsearchFactory.getElasticUtils(config, summary);
-        this.indexSettings = profile.getIndexSettings();
-        this.elasticQueries = profile.getElasticQueries();
+        return ElasticsearchFactory.getElasticUtils(config, { errors: [] });
     }
 
     async getHistory() {
-        await this.ensureIndexExists();
+        await this.elasticUtils.prepareIndex(indexCheckMapping, this.indexSettings, true);
         return this.elasticUtils.getHistory(this.elasticQueries.getIndexCheckHistory());
-    }
-
-    async ensureIndexExists() {
-        let indexExists = await this.elasticUtils.isIndexPresent(this.elasticUtils.indexName);
-        if (!indexExists) {
-            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
-        }
     }
 
     async start() {
@@ -85,8 +74,8 @@ export class IndexCheckService {
                 timestamp: timestamp,
                 attributions: result
             }, timestamp.toISOString());
-            await this.elasticUtils.prepareIndex(elasticsearchMapping, this.indexSettings, true);
-            await this.elasticUtils.finishIndex(false);
+            await this.elasticUtils.prepareIndex(indexCheckMapping, this.indexSettings, true);
+            await this.elasticUtils.finishIndex();
         }
         catch(err) {
             let message = 'Error occurred creating UrlCheck index';

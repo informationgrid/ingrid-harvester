@@ -1,0 +1,130 @@
+<!--
+    ==================================================
+    ingrid-harvester
+    ==================================================
+    Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+    ==================================================
+    Licensed under the EUPL, Version 1.2 or - as soon they will be
+    approved by the European Commission - subsequent versions of the
+    EUPL (the "Licence");
+
+    You may not use this work except in compliance with the Licence.
+    You may obtain a copy of the Licence at:
+
+    https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the Licence is distributed on an "AS IS" basis,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the Licence for the specific language governing permissions and
+    limitations under the Licence.
+    ==================================================
+-->
+
+<ingrid-list-item-expandable
+  *transloco="let t"
+  [title]="datasource().description"
+  [subtitle]="datasource().sourceURL"
+>
+  <ng-container header-content>
+    <harvester-status-indicator
+      [datasource]="datasource()"
+      [importLog]="importLog()"
+    />
+
+    <harvester-progress-indicator [importLog]="importLog()" />
+  </ng-container>
+
+  <ng-container header-end>
+    <div class="flex-row self-center">
+      <button
+        #actionMenuBtn="matMenuTrigger"
+        matIconButton
+        color="primary"
+        matTooltip="{{ t('common.actionMenu') }}"
+        aria-label="{{ t('common.actionMenu') }}"
+        (click)="openActionMenu($event)"
+        (keydown.enter)="openActionMenu($event)"
+        [matMenuTriggerFor]="actionMenu"
+        data-test="more"
+      >
+        <mat-icon svgIcon="Options" />
+      </button>
+      <mat-menu data-test="action-menu" #actionMenu>
+        @if (canEdit()) {
+          <button
+            mat-menu-item
+            [disabled]="
+              importLog() !== undefined && importLog().complete === false
+            "
+            (click)="onImport.emit()"
+            data-test="import"
+          >
+            <mat-icon svgIcon="Harvester" />
+            {{ t("datasources.import") }}
+          </button>
+
+          @if (isIncrementalSupported()) {
+            <button
+              mat-menu-item
+              [disabled]="
+                importLog() !== undefined && importLog().complete === false
+              "
+              (click)="onIncrementImport.emit()"
+              data-test="importIncrement"
+            >
+              <mat-icon svgIcon="Harvester" />
+              {{ t("datasources.importIncrement") }}
+            </button>
+          }
+
+          <button mat-menu-item (click)="onEdit.emit()" data-test="edit">
+            <mat-icon svgIcon="cursor-edit" />
+            {{ t("common.edit") }}
+          </button>
+
+          <button mat-menu-item (click)="onDelete.emit()" data-test="delete">
+            <mat-icon color="warn" svgIcon="delete" />
+            {{ t("common.delete") }}
+          </button>
+
+          <button
+            mat-menu-item
+            (click)="onDuplicate.emit()"
+            data-test="duplicate"
+          >
+            <mat-icon svgIcon="Copy" />
+            {{ t("common.duplicate") }}
+          </button>
+
+          <button
+            mat-menu-item
+            (click)="onSchedule.emit()"
+            data-test="schedule"
+          >
+            <mat-icon svgIcon="schedule" />
+            {{ t("common.schedule") }}
+          </button>
+        } @else {
+          <button mat-menu-item (click)="onView.emit()" data-test="view">
+            <mat-icon svgIcon="visibility_fill" />
+            {{ t("common.view") }}
+          </button>
+        }
+
+        <button mat-menu-item (click)="onOpenJobLogs.emit()" data-test="jobs">
+          <mat-icon svgIcon="Timeline" />
+          {{ t("common.jobs") }}
+        </button>
+      </mat-menu>
+    </div>
+  </ng-container>
+
+  <ng-container content>
+    <harvester-datasource-detail
+      [datasource]="datasource()"
+      [importLog]="importLog()"
+      (onOpenJobLogs)="onOpenJobLogs.emit()"
+    />
+  </ng-container>
+</ingrid-list-item-expandable>

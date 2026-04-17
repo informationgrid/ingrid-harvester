@@ -21,64 +21,57 @@
  * ==================================================
  */
 
-import log4js from 'log4js';
-import type { Harvester } from '@shared/harvester.js';
+import type { Datasource } from '@shared/datasource.js';
 import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '@tsed/common';
+import log4js from 'log4js';
+import { KeycloakAuth } from "../decorators/KeycloakAuthOptions.js";
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from '../services/config/ConfigService.js';
-import { IndexService } from '../services/IndexService.js';
 import { ScheduleService } from '../services/ScheduleService.js';
 import { HistoryService } from '../services/statistic/HistoryService.js';
+import { JobsService } from '../services/statistic/JobsService.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
 @Controller('/api/harvester')
 @UseAuth(AuthMiddleware)
+@KeycloakAuth({role: ["admin", "editor", "viewer"]})
 export class HarvesterCtrl {
 
     constructor(
-        private indexService: IndexService,
         private scheduleService: ScheduleService,
-        private historyService: HistoryService) {
+        private historyService: HistoryService,
+        private jobsService: JobsService) {
     }
 
     @Get('/')
-    async getHarvesterConfig(): Promise<Harvester[]> {
-        return ConfigService.get();
+    async getHarvesterConfig(): Promise<Datasource[]> {
+        return ConfigService.getHarvesters();
     }
 
     @Post('/filecontent')
-    importHarvesterConfigs(@BodyParams() config: Harvester[]) {
+    @KeycloakAuth({role: ["admin", "editor"]})
+    importHarvesterConfigs(@BodyParams() config: Datasource[]) {
         if(config && config.length > 0 && config[0].type)
             ConfigService.importHarvester(config);
     }
 
     @Post('/:id')
-    updateHarvesterConfig(@PathParams('id') id: number, @BodyParams() config: Harvester) {
+    @KeycloakAuth({role: ["admin", "editor"]})
+    updateHarvesterConfig(@PathParams('id') id: number, @BodyParams() config: Datasource) {
         const updatedID = ConfigService.update(+id, config);
-
-        let profile = ProfileFactoryLoader.get();
-        if (profile.useIndexPerCatalog()) {
-            profile.createCatalogIfNotExist(config.catalogId);
-        }
-
-        let mode: 'full' | 'incr' = config.isIncremental ? 'incr' : 'full';
-        if (config.disable) {
-            this.scheduleService.stopJob(updatedID, mode);
-            // this.indexService.removeFromAlias(updatedID)
-            //     .catch(e => log.error('Error removing alias', e));
-        } else {
-            if (config.cron?.[mode]?.active) {
+        for (const mode of <('full' | 'incr')[]>['full', 'incr']) {
+            if (config.disable || !config.cron?.[mode]?.active) {
+                this.scheduleService.stopJob(updatedID, mode);
+            }
+            else {
                 this.scheduleService.startJob(updatedID, mode);
             }
-
-            // this.indexService.addToAlias(updatedID)
-            //     .catch(e => log.error('Error adding alias', e));
         }
     }
 
     @Delete('/:id')
+    @KeycloakAuth({role: ["admin", "editor"]})
     deleteHarvesterConfig(@PathParams('id') id: number) {
 
         // // remove from search index/alias
@@ -90,7 +83,7 @@ export class HarvesterCtrl {
         this.scheduleService.stopJob(+id, 'incr');
 
         // update config without the selected harvester
-        const filtered = ConfigService.get()
+        const filtered = ConfigService.getHarvesters()
             .filter(harvester => harvester.id !== +id);
 
         ConfigService.updateAll(filtered);
@@ -100,5 +93,10 @@ export class HarvesterCtrl {
     @Get('/history/:id')
     async getHarvesterHistory(@PathParams('id') id: number): Promise<any[]> {
         return await this.historyService.getHistory(id);
+    }
+
+    @Get('/jobs/:id')
+    async getHarvesterJobs(@PathParams('id') id: number): Promise<any> {
+        return await this.jobsService.getJobs(id);
     }
 }

@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
+    "strict": false,
     "target": "es2021",
     "lib": [
-      "es2021", 
+      "es2021",
       "dom",
       "dom.iterable"
     ],
@@ -17,9 +18,8 @@
     "verbatimModuleSyntax": true,
     "resolveJsonModule": true,
     "sourceMap": true,
-    "baseUrl": "./app",
     "paths": {
-      "@shared/*": ["../../shared/*"]
+      "@shared/*": ["../shared/*"]
     }
   },
   "exclude": [

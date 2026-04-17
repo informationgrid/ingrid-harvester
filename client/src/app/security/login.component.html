@@ -21,47 +21,95 @@
     ==================================================
 -->
 
-<mat-card *transloco="let t; read: 'menu'" class="login-container">
-
+<mat-card *transloco="let t" class="login-container">
   <div class="flex flex-row gap-20 login-header">
     <div class="login-logo">
       <img src="assets/icons/logo.svg" alt="logo" />
     </div>
     <div class="flex-space login-title">
-      {{ t("application") }} <div class="login-subtitle">HARVESTER</div>
+      {{ t("project") }}
+      <div class="login-subtitle">
+        {{ t("application") }}
+      </div>
     </div>
   </div>
 
-
-  <mat-card-title class="card-title">Melden Sie sich mit Ihren Zugangsdaten an:</mat-card-title>
+  <mat-card-title class="card-title"
+    >Melden Sie sich mit Ihren Zugangsdaten an:</mat-card-title
+  >
   <mat-card-content>
-    <form [formGroup]="form" (ngSubmit)="submit()">
-      <p>
-        <mat-form-field>
-          <mat-label>Benutzername</mat-label>
-          <input type="text" matInput autocomplete="username" formControlName="username">
-        </mat-form-field>
-      </p>
-      
-      <p>
-        <mat-form-field>
-          <mat-label>Passwort</mat-label>
-          <input type="password" matInput autocomplete="current-password" formControlName="password">
-        </mat-form-field>
-      </p>
+    @if (passportEnabled || !keycloakEnabled) {
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <p>
+          <mat-form-field>
+            <mat-label>Benutzername</mat-label>
+            <input
+              type="text"
+              matInput
+              autocomplete="username"
+              formControlName="username"
+            />
+          </mat-form-field>
+        </p>
 
-      @if (showErrorMessage) {
-<p class="error">
-        Benutzername oder Passwort falsch
-      </p>
-}
+        <p>
+          <mat-form-field>
+            <mat-label>Passwort</mat-label>
+            <input
+              type="password"
+              matInput
+              autocomplete="current-password"
+              formControlName="password"
+            />
+          </mat-form-field>
+        </p>
 
-      <button mat-flat-button color="primary" id="btnSubmit" type="submit" data-test="login" class="w-full button">Login</button>
-      
-      <div class="forgetPassword">
-        <p></p>
+        <button
+          mat-flat-button
+          color="primary"
+          id="btnSubmit"
+          type="submit"
+          data-test="login"
+          class="w-full button"
+          [disabled]="form.invalid"
+        >
+          Login
+        </button>
+
+        @if (showErrorMessage) {
+          <p class="error">Benutzername oder Passwort falsch</p>
+        }
+        @if (noRolesMessage) {
+          <p class="error">
+            Ihr Benutzer hat keine Berechtigung für diese Anwendung.
+          </p>
+        }
+      </form>
+    }
+
+    @if (passportEnabled && keycloakEnabled) {
+      <div class="mt-4 text-center">
+        <p>oder</p>
       </div>
+    }
 
-    </form>
+    @if (keycloakEnabled) {
+      <button
+        mat-flat-button
+        color="accent"
+        id="btnKeycloak"
+        type="button"
+        (click)="loginWithKeycloak()"
+        class="w-full button mt-2"
+      >
+        Mit Keycloak anmelden
+      </button>
+    }
+
+    @if (noRolesMessage && !passportEnabled) {
+      <p class="error mt-4 text-center">
+        Ihr Benutzer hat keine Berechtigung für diese Anwendung.
+      </p>
+    }
   </mat-card-content>
 </mat-card>

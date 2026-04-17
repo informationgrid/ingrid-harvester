@@ -21,37 +21,29 @@
  * ==================================================
  */
 
-import * as xpath from 'xpath';
-import * as MiscUtils from '../../utils/misc.utils.js';
-import { createRequire } from 'module';
-import type { OaiSettings } from './oai.settings.js';
-import { defaultOAISettings } from './oai.settings.js';
-import log4js from 'log4js';
-import type { OaiXPaths } from './oai.paths.js';
-import { oaiXPaths } from './oai.paths.js';
 import type { DOMParser } from '@xmldom/xmldom';
-import { Importer } from '../importer.js';
-import type { ImportLogMessage} from '../../model/import.result.js';
-import { ImportResult } from '../../model/import.result.js';
-import type { IndexDocument } from '../../model/index.document.js';
+import log4js from 'log4js';
 import type { Observer } from 'rxjs';
-import type { ProfileFactory } from '../../profiles/profile.factory.js';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import * as xpath from 'xpath';
 import type { RecordEntity } from '../../model/entity.js';
+import type { ImportLogMessage } from '../../model/import.result.js';
+import type { IndexDocument } from '../../model/index.document.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
-import type { Summary } from '../../model/summary.js';
-import type { BaseMapper } from '../../importer/base.mapper.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import { Importer } from '../importer.js';
+import type { OaiXPaths } from './oai.paths.js';
+import { oaiXPaths } from './oai.paths.js';
+import { oaiDefaults, type OaiSettings } from './oai.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
 
-export class OaiImporter extends Importer {
+export class OaiImporter extends Importer<OaiSettings> {
 
     protected domParser: DOMParser;
-    protected profile: ProfileFactory<BaseMapper>;
     protected requestDelegate: RequestDelegate;
-    protected settings: OaiSettings;
 
     private xpaths: OaiXPaths;
 
@@ -60,24 +52,16 @@ export class OaiImporter extends Importer {
 
     private OaiMapper;
 
-    constructor(settings, requestDelegate?: RequestDelegate) {
+    constructor(settings: OaiSettings) {
         super(settings);
-
-        this.profile = ProfileFactoryLoader.get();
         this.domParser = MiscUtils.getDomParser();
-
-        // merge default settings with configured ones
-        settings = MiscUtils.merge(defaultOAISettings, settings);
-
-        if (requestDelegate) {
-            this.requestDelegate = requestDelegate;
-        }
-        else {
-            let requestConfig = OaiImporter.createRequestConfig(settings);
-            this.requestDelegate = new RequestDelegate(requestConfig);
-        }
-        this.settings = settings;
+        const requestConfig = OaiImporter.createRequestConfig(this.settings);
+        this.requestDelegate = new RequestDelegate(requestConfig);
         this.xpaths = oaiXPaths[this.settings.metadataPrefix?.toLowerCase()];
+    }
+
+    protected getDefaultSettings(): OaiSettings {
+        return oaiDefaults;
     }
 
     // only here for documentation - use the "default" exec function
@@ -90,7 +74,7 @@ export class OaiImporter extends Importer {
             try {
                 log.debug('Requesting next records');
                 let response = await this.requestDelegate.doRequest();
-                let harvestTime = new Date(Date.now());
+                let harvestTime = new Date();
 
                 let responseDom = this.domParser.parseFromString(response, 'application/xml');
                 let resultsNode = responseDom.getElementsByTagName('ListRecords')[0];
@@ -121,7 +105,7 @@ export class OaiImporter extends Importer {
                 }
                 const message = `Error while fetching OAI Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(e.message)}.`;
                 log.error(message);
-                this.summary.appErrors.push(message);
+                this.summary.errors.push({ type: 'app', error: message });
             }
         }
         this.database.sendBulkData();
@@ -153,14 +137,15 @@ export class OaiImporter extends Importer {
             }
 
             let mapper = await this.getMapper(this.settings, header, record, harvestTime, this.summary);
+            let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
             try {
-                doc = await this.profile.getIndexDocumentFactory(mapper).create();
+                doc = await documentFactory.createIndexDocument();
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.summary.appErrors.push(e.toString());
+                this.summary.errors.push({ type: 'app', error: e.toString() });
                 mapper.skipped = true;
             }
 
@@ -168,7 +153,7 @@ export class OaiImporter extends Importer {
                 let entity: RecordEntity = {
                     identifier: uuid,
                     source: this.settings.sourceURL,
-                    collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
+                    catalog_ids: this.settings.catalogIds,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };
@@ -177,7 +162,7 @@ export class OaiImporter extends Importer {
             else {
                 this.summary.skippedDocs.push(uuid);
             }
-            this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
+            this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.allSettled(promises).catch(err => log.error('Error indexing OAI record', err));
     }
@@ -228,9 +213,4 @@ export class OaiImporter extends Importer {
             resumptionToken: resumptionToken
         }
     }
-
-    getSummary(): Summary {
-        return this.summary;
-    }
-
 }

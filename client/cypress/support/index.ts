@@ -9,8 +9,6 @@ declare namespace Cypress {
  * options for all harvesters
  */
 interface HarvesterOptions {
-  excelFilePath?: string; //excel
-
   ckanBasisUrl?: string; //ckan
   filterTag?: string;
   filterGroups?: string;
@@ -25,7 +23,7 @@ interface HarvesterOptions {
   keywords?: string;
 
   //required fields
-  type?: 'CKAN' | 'CSW' | 'EXCEL';
+  type?: 'CKAN' | 'CSW';
   description?: string;
   indexName?: string;
   //optional fields

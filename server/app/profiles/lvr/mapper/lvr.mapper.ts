@@ -22,11 +22,10 @@
  */
 
 import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
-import 'dayjs/locale/de.js';
 import { createEsId } from '../lvr.utils.js';
 import { v5 as uuidv5 } from 'uuid';
 import type { GeometryInformation, Temporal } from '../../../model/index.document.js';
-import type { IndexDocumentFactory } from '../../../model/index.document.factory.js';
+import type { DocumentFactory } from '../../../model/index.document.factory.js';
 import type { IngridIndexDocument, Keyword, Spatial } from '../../../model/ingrid.index.document.js';
 import type { JsonMapper } from '../../../importer/json/json.mapper.js';
 import type { KldMapper } from '../../../importer/kld/kld.mapper.js';
@@ -34,11 +33,10 @@ import type { License } from '@shared/license.model.js';
 import type { LvrIndexDocument, Media, Person, Relation, Source } from '../model/index.document.js';
 import type { OaiMapper as OaiLidoMapper } from '../../../importer/oai/lido/oai.mapper.js';
 import type { OaiMapper as OaiModsMapper } from '../../../importer/oai/mods/oai.mapper.js';
-import dayjs from "dayjs";
-dayjs.locale('de');
+
 const UUID_NAMESPACE = '0afd6f59-d498-4da3-8919-1890d718d69e'; // randomly generated using uuid.v4
 
-export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMapper | JsonMapper> implements IndexDocumentFactory<LvrIndexDocument> {
+export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMapper | JsonMapper> implements DocumentFactory<LvrIndexDocument> {
 
     protected baseMapper: M;
 
@@ -46,7 +44,15 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
         this.baseMapper = baseMapper;
     }
 
-    async create(): Promise<LvrIndexDocument> {
+    createCswIsoDocument(): string {
+        return null;
+    }
+
+    createDcatapdeDocument(): string {
+        return null;
+    }
+
+    async createIndexDocument(): Promise<LvrIndexDocument> {
         // ignore empty date ranges
         const temporals = this.getTemporal()?.filter((t: Temporal) => t.date_range.gte || t.date_range.lte);
 
@@ -73,6 +79,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
 
         let result: LvrIndexDocument = {
             ...ingridDocument,
+            uuid: this.getUrlSafeIdentifier(),
             lvr: {
                 identifier: this.getIdentifier(),
                 genres: this.getGenres(),

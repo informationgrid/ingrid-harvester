@@ -49,7 +49,7 @@ export class PegelonlineWfsMapper extends ingridWfsMapper {
         return `${water} ${station} (km ${kilometer})`;
     }
 
-    getSummary(): string {
+    getDescription(): string {
         let date = this.formatDate(new Date(this.baseMapper.getTextContent('./gk:date')));
         let value = this.baseMapper.getTextContent('./gk:value');
         let unit = this.baseMapper.getTextContent('./gk:unit');
@@ -57,10 +57,8 @@ export class PegelonlineWfsMapper extends ingridWfsMapper {
         return summary;
     }
 
-    getSpatial(): Geometry | Geometry[] {
-        return [
-            this.baseMapper.getBoundingBox(),
-        ];
+    getSpatial(): Geometry[] {
+        return [this.baseMapper.getBoundingBox()];
     }
 
     getGeneratedId(): string {

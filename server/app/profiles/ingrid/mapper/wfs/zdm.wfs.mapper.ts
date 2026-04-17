@@ -21,14 +21,19 @@
  * ==================================================
  */
 
-import * as GeojsonUtils from '../../../../utils/geojson.utils.js';
+import type { Geometry } from 'geojson';
 import type { MetadataSource } from '../../../../model/index.document.js';
+import * as GeojsonUtils from '../../../../utils/geojson.utils.js';
 import { ingridWfsMapper } from '../ingrid.wfs.mapper.js';
 import { ZdmIdfGenerator } from './zdm.idf.generator.js';
 
 export class ZdmWfsMapper extends ingridWfsMapper {
 
-    getSummary(): string {
+    getTitle(): string {
+        return this.baseMapper.getTitle();
+    }
+
+    getDescription(): string {
         var summary = this.baseMapper.select('./wfs:Abstract', this.baseMapper.featureOrFeatureType, true)?.textContent;
         var name = this.baseMapper.getTypename();
         var portal = "Küstendaten";
@@ -88,8 +93,8 @@ export class ZdmWfsMapper extends ingridWfsMapper {
         return idfGenerator.createIdf(this.baseMapper.fetched.idx);
     }
 
-    getSpatial() {
-        return this.baseMapper.getBoundingBox();
+    getSpatial(): Geometry[] {
+        return [this.baseMapper.getBoundingBox()];
     }
 
     getModifiedDate(): Date{

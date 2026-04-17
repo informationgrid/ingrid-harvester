@@ -24,45 +24,42 @@
 /**
  * A mapper for documents harvested from KuLaDig.
  */
-import * as MiscUtils from '../../utils/misc.utils.js';
-import log4js from 'log4js';
-import { BaseMapper } from '../../importer/base.mapper.js';
-import type { Contact, Organization, Person } from '../../model/agent.js';
-import type { Geometry } from 'geojson';
-import type { ImporterSettings } from '../../importer.settings.js';
-import type { KldSettings } from './kld.settings.js';
 import type { License } from '@shared/license.model.js';
-import type { LvrDateRange, Media, Relation } from '../../profiles/lvr/model/index.document.js';
-import type { ObjectResponse, RelatedObject, Document} from './kld.api.js';
-import { getDocumentUrl, RelationType, MediaType } from './kld.api.js';
+import type { Geometry } from 'geojson';
+import log4js from 'log4js';
+import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
+import type { Contact, Organization, Person } from '../../model/agent.js';
+import type { IndexDocument } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
+import type { LvrDateRange, Media, Relation } from '../../profiles/lvr/model/index.document.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
+import { Mapper } from '../mapper.js';
+import type { Document, ObjectResponse, RelatedObject } from './kld.api.js';
+import { getDocumentUrl, MediaType, RelationType } from './kld.api.js';
+import type { KldSettings } from './kld.settings.js';
 
-export class KldMapper extends BaseMapper {
+export class KldMapper extends Mapper<KldSettings> implements ToElasticMapper<IndexDocument> {
 
     log = log4js.getLogger();
 
     private readonly record: ObjectResponse;
     private readonly id: string;
 
-    private settings: KldSettings;
-    private summary: Summary;
-
     constructor(settings: KldSettings, record: ObjectResponse, harvestTime: Date, summary: Summary) {
-        super();
-        this.settings = settings;
+        super(settings, summary);
         this.record = record;
-        this.summary = summary;
         this.id = record.Id;
 
         super.init();
     }
 
-    public getSettings(): ImporterSettings {
-        return this.settings;
-    }
-
-    public getSummary(): Summary {
-        return this.summary;
+    async createIndexDocument(): Promise<IndexDocument> {
+        return {
+            uuid: this.getGeneratedId(),
+            extras: {
+                metadata: this.getHarvestingMetadata(),
+            }
+        };
     }
 
     getGeneratedId(): string {
@@ -160,7 +157,7 @@ export class KldMapper extends BaseMapper {
 
     getHarvestingDate(): Date {
         // TODO not used?
-        return new Date(Date.now());
+        return new Date();
     }
 
     async getContactPoint(): Promise<Contact> {

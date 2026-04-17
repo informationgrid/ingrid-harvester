@@ -21,44 +21,40 @@
  * ==================================================
  */
 
-import * as GeoJsonUtils from '../../utils/geojson.utils.js';
+import type { Geometry, Point } from 'geojson';
 import log4js from 'log4js';
 import { throwError } from 'rxjs';
-import { BaseMapper } from '../base.mapper.js';
-import type { Catalog } from '../../model/dcatApPlu.model.js';
+import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
 import type { Contact, Organization, Person } from '../../model/agent.js';
+import type { Catalog } from '../../model/dcatApPlu.model.js';
 import type { Distribution } from '../../model/distribution.js';
-import type { Geometry, Point } from 'geojson';
-import type { ImporterSettings } from '../../importer.settings.js';
-import type { MetadataSource } from '../../model/index.document.js';
+import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
+import type { Summary } from '../../model/summary.js';
+import * as GeoJsonUtils from '../../utils/geojson.utils.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
-import type { Summary } from '../../model/summary.js';
-import type { WfsSettings } from './wfs.settings.js';
 import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
+import { Mapper } from '../mapper.js';
+import type { WfsSettings } from './wfs.settings.js';
 
-export class WfsMapper extends BaseMapper {
+export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<IndexDocument> {
 
     log = log4js.getLogger();
 
     readonly featureOrFeatureType: Node & Element;
     readonly featureTypeDescription: Node & Element;
     readonly fetched: any;
-    readonly settings: WfsSettings;
     readonly gmlId: string;
 
     private harvestTime: any;
-    private summary: Summary;
 
     select: XPathNodeSelect;
 
-    constructor(settings, featureOrFeatureType, harvestTime, summary, generalInfo) {
-        super();
-        this.settings = settings;
+    constructor(settings: WfsSettings, featureOrFeatureType, harvestTime, summary: Summary, generalInfo) {
+        super(settings, summary);
         this.featureOrFeatureType = featureOrFeatureType;
         this.featureTypeDescription = generalInfo['featureTypeDescription'];
         this.harvestTime = harvestTime;
-        this.summary = summary;
         this.fetched = {
             boundingBox: null,
             contactPoint: null,
@@ -86,16 +82,18 @@ export class WfsMapper extends BaseMapper {
         super.init();
     }
 
-    getSettings(): ImporterSettings {
-        return this.settings;
-    }
-
-    getSummary(): Summary {
-        return this.summary;
+    async createIndexDocument(): Promise<IndexDocument> {
+        return {
+            uuid: this.getGeneratedId(),
+            extras: {
+                metadata: this.getHarvestingMetadata(),
+            }
+        };
     }
 
     async getPublisher(): Promise<Person[] | Organization[]> {
-        return [this.fetched.catalog.publisher];
+        // return [this.fetched.catalog.publisher];
+        return null;
     }
 
     async getMaintainers(): Promise<Person[] | Organization[]> {
@@ -125,7 +123,7 @@ export class WfsMapper extends BaseMapper {
         }
     }
 
-    getDistributions(): Promise<Distribution[]> {
+    async getDistributions(): Promise<Distribution[]> {
         return undefined;
     }
 
@@ -221,7 +219,9 @@ export class WfsMapper extends BaseMapper {
     }
 
     getCatalog(): Catalog {
-        return this.fetched.catalog;
+        // TODO
+        // return this.baseMapper.fetched.catalog;
+        return null;
     }
 
     getHarvestedData(): string {
@@ -229,7 +229,7 @@ export class WfsMapper extends BaseMapper {
     }
 
     getHarvestingDate(): Date {
-        return new Date(Date.now());
+        return new Date();
     }
 
     // ED: the features themselves contain no contact information

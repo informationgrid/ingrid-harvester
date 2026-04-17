@@ -21,21 +21,20 @@
  * ==================================================
  */
 
+import type { Datasource } from '@shared/datasource.js';
 import type { GeneralSettings } from '@shared/general-config.settings.js';
-import type { Harvester } from '@shared/harvester.js';
 import type { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
 import * as fs from 'fs';
 import log4js from 'log4js';
-import { defaultCKANSettings } from '../../importer/ckan/ckan.settings.js';
-import { defaultCSWSettings } from '../../importer/csw/csw.settings.js';
-import { defaultDCATSettings } from '../../importer/dcat/dcat.settings.js';
-import { defaultExcelSettings } from '../../importer/excel/excel.settings.js';
-import { defaultKldSettings } from '../../importer/kld/kld.settings.js';
-import { defaultOAISettings } from '../../importer/oai/oai.settings.js';
-import type { Catalog } from '../../model/dcatApPlu.model.js';
-import { DatabaseFactory } from '../../persistence/database.factory.js';
-import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import { ckanDefaults } from '../../importer/ckan/ckan.settings.js';
+import { cswDefaults } from '../../importer/csw/csw.settings.js';
+import { dcatapdeDefaults } from '../../importer/dcatapde/dcatapde.settings.js';
+import { genesisDefaults } from '../../importer/genesis/genesis.settings.js';
+import { defaultImporterSettings, type ImporterSettings } from '../../importer/importer.settings.js';
+import { kldDefaults } from '../../importer/kld/kld.settings.js';
+import { oaiDefaults } from '../../importer/oai/oai.settings.js';
+import { sparqlDefaults } from '../../importer/sparql/sparql.settings.js';
+import { wfsDefaults } from '../../importer/wfs/wfs.settings.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 
@@ -151,7 +150,7 @@ export class ConfigService {
     }
 
     static fixIDs() {
-        let harvesters = ConfigService.get();
+        let harvesters = ConfigService.getHarvesters();
         if (harvesters.some(h => !h.id)) {
             // get highest ID from all harvester
             ConfigService.highestID = harvesters
@@ -216,37 +215,33 @@ export class ConfigService {
      *
      * @returns a list of Harvester
      */
-    static get(): Harvester[] {
-
+    static getHarvesters(): Datasource[] {
         const harvesterConfigFile = this.getHarvesterConfigFile();
-
         const configExists = fs.existsSync(harvesterConfigFile);
 
-        if (configExists) {
-            let contents = fs.readFileSync(harvesterConfigFile);
-            let configs: Harvester[] = JSON.parse(contents.toString());
-            return configs
-                .map(config => {
-                    let defaultSettings = {};
-                    switch (config.type) {
-                        case 'CKAN': defaultSettings = defaultCKANSettings; break;
-                        case 'CSW': defaultSettings = defaultCSWSettings; break;
-                        case 'DCAT': defaultSettings = defaultDCATSettings; break;
-                        case 'EXCEL': defaultSettings = defaultExcelSettings; break;
-                        //case 'EXCEL_SPARSE': defaultSettings = ExcelSparseImporter.defaultSettings; break;
-                        case 'KLD': defaultSettings = defaultKldSettings; break;
-                        case 'OAI': defaultSettings = defaultOAISettings; break;
-                        //case 'SPARQL': defaultSettings = SparqlImporter.defaultSettings; break;
-                        //case 'WFS': defaultSettings = WfsImporter.defaultSettings; break;
-                    }
-                    return MiscUtils.merge(defaultSettings, config);
-                })
-                .filter(config => config); // remove all invalid configurations
-        } else {
+        if (!configExists) {
             log.warn("No config.json file found. Please configure using the admin GUI.");
             return [];
         }
 
+        const contents = fs.readFileSync(harvesterConfigFile);
+        const configs: Datasource[] = JSON.parse(contents.toString());
+        return configs
+            .map(config => {
+                let defaultSettings: ImporterSettings = defaultImporterSettings;
+                switch (config.type) {
+                    case 'CKAN': defaultSettings = ckanDefaults; break;
+                    case 'CSW': defaultSettings = cswDefaults; break;
+                    case 'DCATAPDE': defaultSettings = dcatapdeDefaults; break;
+                    case 'GENESIS': defaultSettings = genesisDefaults; break;
+                    case 'KLD': defaultSettings = kldDefaults; break;
+                    case 'OAI': defaultSettings = oaiDefaults; break;
+                    case 'SPARQL': defaultSettings = sparqlDefaults; break;
+                    case 'WFS': defaultSettings = wfsDefaults; break;
+                }
+                return MiscUtils.merge(defaultSettings, config);
+            })
+            .filter(config => config); // remove all invalid configurations
     }
 
 
@@ -256,22 +251,24 @@ export class ConfigService {
 
     /**
      * Update a harvester and write to file this.HARVESTER_CONFIG_FILE
+     * 
      * @param id
      * @param updatedHarvester
      */
-    static update(id: number, updatedHarvester: Harvester): number {
-        let newConfig = ConfigService.get();
-
+    static update(id: number, updatedHarvester: Datasource): number {
+        const newConfig = ConfigService.getHarvesters();
         if (id === -1) {
             id = ++ConfigService.highestID;
             updatedHarvester.id = id;
             newConfig.push(updatedHarvester);
-        } else {
+        }
+        else {
             const itemIndex = newConfig.findIndex(harvester => harvester.id === updatedHarvester.id);
             if (itemIndex === -1) {
                 log.warn('ID was not found for harvester. Creating new harvester with given ID: ' + updatedHarvester.id);
                 newConfig.push(updatedHarvester);
-            } else {
+            }
+            else {
                 newConfig.splice(itemIndex, 1, updatedHarvester);
             }
         }
@@ -280,16 +277,20 @@ export class ConfigService {
         return id;
     }
 
-    static updateAll(updatedHarvesters: Harvester[]) {
-
+    static updateAll(updatedHarvesters: Datasource[]) {
         fs.writeFileSync(this.getHarvesterConfigFile(), JSON.stringify(updatedHarvesters, null, 2));
+    }
 
+    static getThreadpoolSize(): number {
+        return parseInt(process.env.THREADPOOL_SIZE ?? '5', 10);
+    }
+
+    static getMaxLogsPerHarvester(): number {
+        return parseInt(process.env.MAX_LOGS_PER_HARVESTER ?? '10', 10) || 10;
     }
 
     static getGeneralSettings(): GeneralSettings {
-
         const configExists = fs.existsSync(this.GENERAL_CONFIG_FILE);
-
         if (configExists) {
             let contents = fs.readFileSync(this.GENERAL_CONFIG_FILE);
             const settingsFromFile = JSON.parse(contents.toString());
@@ -301,89 +302,24 @@ export class ConfigService {
             log.warn("No general config file found (config-general.json). Using default config");
             return this.defaultSettings;
         }
+    }
 
+    static getFilteredGeneralSettings(): GeneralSettings {
+        return MiscUtils.removePaths(this.getGeneralSettings(), [
+            "database.password",
+            "elasticsearch.password",
+            "mail.mailServer.auth.pass"
+        ]);
     }
 
     static setGeneralConfig(config: GeneralSettings) {
-
+        const existing = this.getGeneralSettings();
+        MiscUtils.restorePaths(config, existing, [
+            "database.password",
+            "elasticsearch.password",
+            "mail.mailServer.auth.pass"
+        ]);
         fs.writeFileSync(this.GENERAL_CONFIG_FILE, JSON.stringify(config, null, 2));
-    }
-
-    private static getDbUtils() {
-        let generalConfig = ConfigService.getGeneralSettings();
-        return DatabaseFactory.getDatabaseUtils(generalConfig.database, null);
-    }
-
-    private static getEsUtils() {
-        let generalConfig = ConfigService.getGeneralSettings();
-        return ElasticsearchFactory.getElasticUtils(generalConfig.elasticsearch, null);
-    }
-
-    static async getCatalogSizes(): Promise<any[]> {
-        return await ConfigService.getDbUtils().getCatalogSizes(false);
-    }
-
-    static async getCatalogs(): Promise<Catalog[]> {
-        let catalogs = await ConfigService.getDbUtils().listCatalogs();
-        let esUtils = ConfigService.getEsUtils();
-        let alias = ConfigService.getGeneralSettings().elasticsearch.alias;
-        for (let catalog of catalogs) {
-            let aliases = await esUtils.listAliases(catalog.identifier);
-            catalog['isEnabled'] = aliases.includes(alias);
-        }
-        return catalogs;
-    }
-
-    static async addOrEditCatalog(catalog: Catalog) {
-        if (catalog.id) {
-            return await ConfigService.getDbUtils().updateCatalog(catalog);
-        }
-        else {
-            let catalogPromise = await ConfigService.getDbUtils().createCatalog(catalog);
-
-            // for ingrid, create a new index when a new catalog is created
-            let profile = ProfileFactoryLoader.get();
-            if (profile.useIndexPerCatalog()) {
-                await this.getEsUtils().prepareIndexWithName(
-                    catalog.identifier, profile.getIndexMappings(), profile.getIndexSettings(), true);
-            }
-            return profile.createCatalogIfNotExist(catalog);
-        }
-    }
-
-    static async enableCatalog(catalogIdentifier: string, enable: boolean) {
-        let alias = ConfigService.getGeneralSettings().elasticsearch.alias;
-        if (enable) {
-            await this.getEsUtils().addAlias(catalogIdentifier, alias);
-        }
-        else {
-            await this.getEsUtils().removeAlias(catalogIdentifier, alias);
-        }
-    }
-
-    static async removeCatalog(catalogIdentifier: string, datasetTarget: string) {
-        let database = this.getDbUtils();
-        let { id: catalogId } = await database.getCatalog(catalogIdentifier);
-        // if no target is specified, delete datasets
-        if (!datasetTarget) {
-            await database.deleteDatasets(catalogId);
-        }
-        // otherwise, move them to target
-        else {
-            let targetCatalog = await database.getCatalog(datasetTarget);
-            if (!targetCatalog) {
-                throw new Error(`Target catalog ${datasetTarget} could not be found.`);
-            }
-            await database.moveDatasets(catalogId, targetCatalog.id) ;
-        }
-        // TODO then deduplicate all affected sources
-        // then delete catalog from DB
-        await database.deleteCatalog(catalogId);
-        // at last, delete index from ES if applicable
-        if (ProfileFactoryLoader.get().useIndexPerCatalog()) {
-            let elastic = this.getEsUtils();
-            await elastic.deleteIndex(catalogIdentifier);
-        }
     }
 
     static getMappingDistribution(): MappingDistribution[] {
@@ -459,13 +395,17 @@ export class ConfigService {
     }
 
     private static getHarvesterConfigFile() {
+        return this.getConfigFile(this.HARVESTER_CONFIG_FILE);
+    }
+
+    static getConfigFile(filename: string) {
         let configDir = process.env.IMPORTER_CONFIG_DIR;
         if (!configDir) {
             configDir = process.argv.find(arg => arg.toLowerCase().startsWith('--config_dir=')) ?? '';
             configDir = configDir.toLowerCase().replace('--config_dir=', '');
         }
         return configDir
-            ? configDir + '/' + this.HARVESTER_CONFIG_FILE
-            : this.HARVESTER_CONFIG_FILE;
+            ? configDir + '/' + filename
+            : filename;
     }
 }

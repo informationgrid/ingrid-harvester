@@ -21,13 +21,13 @@
  * ==================================================
  */
 
-import { ConfigService } from '../services/config/ConfigService.js';
-import { ContentType } from '@tsed/schema';
 import { Controller, Get } from '@tsed/common';
+import { ContentType } from '@tsed/schema';
 import { DatabaseFactory } from '../persistence/database.factory.js';
 import { DatabaseUtils } from '../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import { ElasticsearchUtils } from '../persistence/elastic.utils.js';
+import { ConfigService } from '../services/config/ConfigService.js';
 
 @Controller('/health')
 export class HealthCtrl {
@@ -35,7 +35,7 @@ export class HealthCtrl {
     private static database: DatabaseUtils;
     private static elasticsearch: ElasticsearchUtils;
 
-    static getDatabase() {
+    static getDatabase(): DatabaseUtils {
         if (!HealthCtrl.database) {
             let generalConfig = ConfigService.getGeneralSettings();
             HealthCtrl.database = DatabaseFactory.getDatabaseUtils(generalConfig.database, null);
@@ -43,7 +43,7 @@ export class HealthCtrl {
         return HealthCtrl.database;
     }
 
-    static getElasticsearch() {
+    static getElasticsearch(): ElasticsearchUtils {
         if (!HealthCtrl.elasticsearch) {
             let generalConfig = ConfigService.getGeneralSettings();
             HealthCtrl.elasticsearch = ElasticsearchFactory.getElasticUtils(generalConfig.elasticsearch, null);

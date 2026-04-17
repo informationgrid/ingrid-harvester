@@ -21,20 +21,32 @@
  * ==================================================
  */
 
-import type { Distribution } from "./distribution.js";
+import type { Distribution } from './distribution.js';
+import type { IndexDocument } from './index.document.js';
 
 export interface Entity {
-    id?: string
+    id?: string     // optional because it is usually set by the DB automatically at the time of insertion
 }
 
 export interface RecordEntity extends Entity {
+    /* automatically created database id */
     identifier: string,
+    /* source of the dataset, usually an URL (for CSW, WFS, ...), sometimes a system name (cockpit, beteiligung) */
     source: string,
-    collection_id: number,
-    dataset: any,
+    collection_id?: number,  // TODO keep for diplanung, null value by default
+    /* IDs of the catalogs for which this dataset was harvested */
+    catalog_ids: number[],
+    /* elasticsearch document */
+    dataset: IndexDocument, // TODO rename to dataset_elastic, make optional - 
+    /* CSW XML document */
+    dataset_csw?: any,
+    /* DCAT-AP.DE XML document */
+    dataset_dcatapde?: any,
+    /* originally harvested document */
     original_document: string
 }
 
+// TODO revise coupling handling
 export interface CouplingEntity extends Entity {
     dataset_identifier: string,
     service_id: string,

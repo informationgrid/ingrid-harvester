@@ -142,20 +142,12 @@ export class UrlUtils {
 
         return formatArray.map(format => {
             const value = UrlUtils.formatMapping[format.toLowerCase()];
-
             if (!value) {
                 if (Object.values(UrlUtils.formatMapping).indexOf(format) === -1) {
-                    if (ConfigService.getGeneralSettings().mappingLogLevel == 'info') {
-                        log.info('Distribution format unknown: ' + format);
-                    }
-                    else {
-                        log.warn('Distribution format unknown: ' + format);
-                    }
-                    warnings?.push(['Distribution format unknown', format]);
+                    log.debug(`Distribution format unknown: ${format}`);
                 }
                 return format;
             }
-
             return value;
         });
 

@@ -12,7 +12,7 @@ describe('Elasticsearch Utils', function () {
         let settings: ImporterSettings = {
             type: 'XXX'
         };
-        elastic = new ElasticsearchUtils(settings, new Summary(settings));
+        elastic = new ElasticsearchUtils(settings, new Summary('test', settings));
     });
 
     it('generated the correct timestamp', function () {

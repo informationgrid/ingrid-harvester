@@ -1,0 +1,43 @@
+server:
+  url: http://localhost:8000
+  mimetype: application/xml; charset=UTF-8
+  encoding: UTF-8
+  language: en-US
+  maxrecords: 10
+  pretty_print: true
+
+logging:
+  level: DEBUG
+  logfile: /tmp/pycsw.log
+
+profiles:
+  - apiso
+
+manager:
+  transactions: true
+  allowed_ips:
+    - 0.0.0.0/0
+
+metadata:
+  identification:
+    title: My CSW Catalog
+    abstract: Transactional CSW Service
+    keywords:
+      - catalog
+      - csw
+      - spatial
+    keywords_type: theme
+    fees: None
+    accessconstraints: None
+  provider:
+    name: My Organization
+    url: http://example.com
+  contact:
+    name: Admin
+    email: admin@example.com
+  inspire:
+    enabled: false
+
+repository:
+  database: postgresql://pycsw:pycsw_secret@pycsw-db/pycsw
+  table: records

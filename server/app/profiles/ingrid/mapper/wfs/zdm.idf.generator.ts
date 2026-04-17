@@ -21,11 +21,7 @@
  * **************************************************#
  */
 
-import * as MiscUtils from '../../../../utils/misc.utils.js';
-import * as XPathUtils from '../../../../utils/xpath.utils.js';
 import { IdfGenerator } from '../../idf.generator.js';
-import { WfsMapper } from '../../../../importer/wfs/wfs.mapper.js';
-import type { ingridWfsMapper } from '../ingrid.wfs.mapper.js';
 import type { ZdmWfsMapper } from './zdm.wfs.mapper.js';
 
 export class ZdmIdfGenerator extends IdfGenerator {
@@ -56,7 +52,7 @@ export class ZdmIdfGenerator extends IdfGenerator {
         this.addOutput(idfBody, "h1", this.mapper.getTitle());
 
         //add the summary
-        this.addOutput(idfBody, "p", this.mapper.getSummary());
+        this.addOutput(idfBody, "p", this.mapper.getDescription());
 
         //add the bounding box
         let boundingBox = this.baseMapper.getOriginalBoundingBox();
@@ -95,7 +91,7 @@ export class ZdmIdfGenerator extends IdfGenerator {
 
         // // show features, if loaded
         if (this.baseMapper.getNumberOfFeatures() < this.baseMapper.settings.featureLimit) {
-            // NOTE: the below section is filled in server/app/profiles/zdm/persistence/postgres.aggregator.ts
+            // NOTE: the below section is filled in the ingrid elasticsearch catalog
             this.addOutput(idfBody, "h2", "Features:");
         }
 

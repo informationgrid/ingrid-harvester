@@ -23,11 +23,12 @@
 
 import { urlCheckChart } from '../../charts/reuseableChart';
 import { Chart } from 'chart.js';
-import { Component, OnInit } from '@angular/core';
+import {Component, inject, AfterViewInit} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MonitoringUrlcheckDetailComponent } from './monitoring-urlcheck-detail/monitoring-urlcheck-detail.component';
 import { Observable } from 'rxjs';
+import { AuthenticationService } from '../../security/authentication.service';
 
 @Component({
     selector: 'app-monitoring-urlcheck',
@@ -35,20 +36,15 @@ import { Observable } from 'rxjs';
     styleUrls: ['./monitoring-urlcheck.component.scss'],
     standalone: false
 })
-export class MonitoringUrlCheckComponent implements OnInit {
-
-  data;
-
+export class MonitoringUrlCheckComponent implements AfterViewInit {
+  private authService = inject(AuthenticationService);
+  private http = inject(HttpClient);
+  private dialog = inject(MatDialog);
 
   private chartUrlCheck : Chart;
-  private dialog: MatDialog;
 
-
-  constructor(private http: HttpClient, private _dialog: MatDialog) {
-    this.dialog = _dialog;
-  }
-
-  ngOnInit() {
+  get canStart(): boolean {
+    return !this.authService.hasRole('viewer');
   }
 
   ngAfterViewInit() {
@@ -59,7 +55,6 @@ export class MonitoringUrlCheckComponent implements OnInit {
   }
 
   public async draw_chart() {
-    let dialog = this.dialog;
     if (!this.chartUrlCheck) {
       this.getHarvesterHistory(6).toPromise().then((data) => {
         this.chartUrlCheck = urlCheckChart('chart_urlcheck', data.history)

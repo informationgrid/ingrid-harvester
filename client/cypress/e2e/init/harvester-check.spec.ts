@@ -174,20 +174,20 @@ describe('All harvesters used in tests can import successfully', () => {
     mcloudPage.checkDownloadCount(1);
   });
 
-  it('should find search results of the excel index', () => {
-    const docTitle = 'Historische 10-minütige Stationsmessungen der Solarstrahlung, ' +
-      'der atmosphärischen Gegenstrahlung und der Sonnenscheindauer in Deutschland';
+  // it('should find search results of the excel index', () => {
+  //   const docTitle = 'Historische 10-minütige Stationsmessungen der Solarstrahlung, ' +
+  //     'der atmosphärischen Gegenstrahlung und der Sonnenscheindauer in Deutschland';
 
-    // harvester imported already by schedule
-    mcloudPage.visitMcloudHome();
-    mcloudPage.urlIsMcloudHome();
-    mcloudPage.searchFor(docTitle);
-    mcloudPage.clickOnSearchResult(docTitle);
-    mcloudPage.checkAuthor('Bundesministerium für Verkehr und digitale Infrastruktur (BMVI)');
-    mcloudPage.checkCopyrightNotice('Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes');
-    mcloudPage.checkDataHasDownloadType('Dateidownload');
-    mcloudPage.checkDownloadCount(1);
-  });
+  //   // harvester imported already by schedule
+  //   mcloudPage.visitMcloudHome();
+  //   mcloudPage.urlIsMcloudHome();
+  //   mcloudPage.searchFor(docTitle);
+  //   mcloudPage.clickOnSearchResult(docTitle);
+  //   mcloudPage.checkAuthor('Bundesministerium für Verkehr und digitale Infrastruktur (BMVI)');
+  //   mcloudPage.checkCopyrightNotice('Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes');
+  //   mcloudPage.checkDataHasDownloadType('Dateidownload');
+  //   mcloudPage.checkDownloadCount(1);
+  // });
 
   it('should find search results of the IGE index', () => {
     const docTitle = 'mCLOUD IGE Datensatz';

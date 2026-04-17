@@ -1,0 +1,29 @@
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { Catalog } from "@shared/catalog";
+import { HttpClient } from "@angular/common/http";
+
+@Injectable({
+  providedIn: "root",
+})
+export class CatalogApi {
+  constructor(private http: HttpClient) {}
+
+  getCatalogs(): Observable<Catalog[]> {
+    return this.http.get<Catalog[]>("rest/api/catalogs");
+  }
+
+  // The given catalog should not contain the id.
+  createCatalog(catalog: Catalog): Observable<any> {
+    return this.http.post("rest/api/catalogs", catalog);
+  }
+
+  // The given catalog must contain the id.
+  updateCatalog(catalog: Catalog): Observable<any> {
+    return this.http.post("rest/api/catalogs", catalog);
+  }
+
+  deleteCatalog(id: number): Observable<any> {
+    return this.http.delete("rest/api/catalogs/" + id);
+  }
+}

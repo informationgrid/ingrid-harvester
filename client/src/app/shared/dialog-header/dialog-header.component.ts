@@ -27,21 +27,14 @@ import { MatIcon } from "@angular/material/icon";
 import { MatIconButton } from "@angular/material/button";
 
 @Component({
-  selector: "app-dialog-header",
+  selector: "ingrid-dialog-header",
+  imports: [MatDialogTitle, MatIcon, MatIconButton, MatDialogClose],
   templateUrl: "./dialog-header.component.html",
-  imports: [
-    MatDialogTitle,
-    MatIcon,
-    MatIconButton,
-    MatDialogClose
-  ],
-  standalone: true,
-  styleUrls: ["./dialog-header.component.scss"]
+  styleUrls: ["./dialog-header.component.scss"],
 })
 export class DialogHeaderComponent {
-  icon = input<string>();
   title = input<string>();
+  svgIcon = input<string>();
 
-  constructor() {
-  }
+  constructor() {}
 }

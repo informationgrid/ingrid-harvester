@@ -6,6 +6,7 @@ import {AuthMiddleware} from "../middlewares/auth/AuthMiddleware.js";
 import { marked } from "marked";
 import {ProfileFactoryLoader} from "../profiles/profile.factory.loader.js";
 import matter from "gray-matter";
+import {KeycloakAuth} from "../decorators/KeycloakAuthOptions.js";
 const BASE_HELP_DIR = path.join(import.meta.dirname, "../contextHelp");
 
 interface ContextHelpResult {
@@ -17,6 +18,7 @@ interface ContextHelpResult {
 
 @Controller("/api/help")
 @UseAuth(AuthMiddleware)
+@KeycloakAuth({role: ["admin", "editor", "viewer"]})
 export class ContextHelpCtrl {
 
     @Get("/:locale/:contextHelpId")

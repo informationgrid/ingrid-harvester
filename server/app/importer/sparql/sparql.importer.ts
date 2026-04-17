@@ -21,56 +21,36 @@
  * ==================================================
  */
 
-import * as MiscUtils from '../../utils/misc.utils.js';
-import log4js from 'log4js';
-import { ConfigService } from '../../services/config/ConfigService.js';
-import { DefaultImporterSettings } from '../../importer.settings.js';
 import { HttpsProxyAgent } from 'https-proxy-agent';
-import { Importer } from '../importer.js';
-import type { ImportLogMessage} from '../../model/import.result.js';
-import { ImportResult } from '../../model/import.result.js';
-import type { IndexDocument } from '../../model/index.document.js';
+import log4js from 'log4js';
+import plain_fetch from 'node-fetch';
 import type { Observer } from 'rxjs';
-import type { ProfileFactory } from '../../profiles/profile.factory.js';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import SimpleClient from 'sparql-http-client/SimpleClient.js';
 import type { RecordEntity } from '../../model/entity.js';
-import type { RequestDelegate } from '../../utils/http-request.utils.js';
+import type { ImportLogMessage } from '../../model/import.result.js';
+import type { IndexDocument } from '../../model/index.document.js';
+import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import { ConfigService } from '../../services/config/ConfigService.js';
+import { Importer } from '../importer.js';
 import { SparqlMapper } from './sparql.mapper.js';
-import type { SparqlSettings } from './sparql.settings.js';
-import type { Summary } from '../../model/summary.js';
-import plain_fetch from "node-fetch";
-import SimpleClient from "sparql-http-client/SimpleClient.js";
+import { sparqlDefaults, type SparqlSettings } from './sparql.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
 
-export class SparqlImporter extends Importer {
-
-    protected profile: ProfileFactory<SparqlMapper>;
-    protected settings: SparqlSettings;
+export class SparqlImporter extends Importer<SparqlSettings> {
 
     private totalRecords = 0;
     private numIndexDocs = 0;
 
     private generalSettings = ConfigService.getGeneralSettings();
 
-    static defaultSettings: SparqlSettings = {
-        ...DefaultImporterSettings,
-        sourceURL: '',
-        query: '',
-        filterTags: [],
-        filterThemes: []
-    };
-
-    constructor(settings, requestDelegate?: RequestDelegate) {
+    constructor(settings: SparqlSettings) {
         super(settings);
+    }
 
-        this.profile = ProfileFactoryLoader.get();
-
-        // merge default settings with configured ones
-        settings = MiscUtils.merge(SparqlImporter.defaultSettings, settings);
-
-        this.settings = settings;
+    protected getDefaultSettings(): SparqlSettings {
+        return sparqlDefaults;
     }
 
     // only here for documentation - use the "default" exec function
@@ -105,7 +85,7 @@ export class SparqlImporter extends Importer {
 
             result.body.on('error', err => {
                 hadError = true;
-                this.summary.appErrors.push(err.toString());
+                this.summary.errors.push({ type: 'app', error: err.toString() });
                 log.error(err);
             })
 
@@ -114,11 +94,11 @@ export class SparqlImporter extends Importer {
                 if(!hadError) {
                     try {
                         let json = JSON.parse(response);
-                        let harvestTime = new Date(Date.now());
+                        let harvestTime = new Date();
                         this.extractRecords(json, harvestTime).then(() =>
                             resolve(this.numIndexDocs));
                     } catch (e) {
-                        this.summary.appErrors.push(e.toString());
+                        this.summary.errors.push({ type: 'app', error: e.toString() });
                         log.error(e);
                         reject(e);
                     }
@@ -127,7 +107,7 @@ export class SparqlImporter extends Importer {
             result.body.on('end', () => {
                 if(hadError) {
                     let message = result.statusText + ' - '+response;
-                    this.summary.appErrors.push(message);
+                    this.summary.errors.push({ type: 'app', error: message });
                     log.error(message);
                     reject();
                 }
@@ -162,15 +142,16 @@ export class SparqlImporter extends Importer {
                 logRequest.debug("Record content: ", records[i].toString());
             }
 
-            let mapper = this.getMapper(this.settings, records[i], harvestTime, this.summary);
+            const mapper = new SparqlMapper(this.settings, records[i], harvestTime, this.summary);
+            let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
-            try{
-                doc = await this.profile.getIndexDocumentFactory(mapper).create();
+            try {
+                doc = await documentFactory.createIndexDocument();
             }
             catch (e) {
                 log.error('Error creating index document', e);
-                this.summary.appErrors.push(e.toString());
+                this.summary.errors.push({ type: 'app', error: e.toString() });
                 mapper.skipped = true;
             }
 
@@ -178,7 +159,7 @@ export class SparqlImporter extends Importer {
                 let entity: RecordEntity = {
                     identifier: uuid,
                     source: this.settings.sourceURL,
-                    collection_id: (await this.database.getCatalog(this.settings.catalogId)).id,
+                    catalog_ids: this.settings.catalogIds,
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };
@@ -194,19 +175,9 @@ export class SparqlImporter extends Importer {
             } else {
                 this.summary.skippedDocs.push(uuid);
             }
-            this.observer.next(ImportResult.running(++this.numIndexDocs, this.totalRecords));
+            this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.all(promises)
             .catch(err => log.error('Error indexing DCAT record', err));
     }
-
-    getMapper(settings, record, harvestTime, summary): SparqlMapper {
-        return new SparqlMapper(settings, record, harvestTime, summary);
-    }
-
-
-    getSummary(): Summary {
-        return this.summary;
-    }
-
 }

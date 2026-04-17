@@ -21,13 +21,13 @@
  * ==================================================
  */
 
-import * as GeoJsonUtils from "../../../utils/geojson.utils.js";
-import log4js from 'log4js';
-import {ingridMapper} from "./ingrid.mapper.js";
-import {CswMapper} from "../../../importer/csw/csw.mapper.js";
-import type {Distribution} from "../../../model/distribution.js";
-import * as XpathUtils from "../../../utils/xpath.utils.js";
 import type { Geometry } from 'geojson';
+import log4js from 'log4js';
+import { CswMapper } from "../../../importer/csw/csw.mapper.js";
+import type { Distribution } from "../../../model/distribution.js";
+import * as GeoJsonUtils from "../../../utils/geojson.utils.js";
+import * as XpathUtils from "../../../utils/xpath.utils.js";
+import { ingridMapper } from "./ingrid.mapper.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -36,7 +36,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     getT0() {
         let temporal = this.baseMapper.getTemporal()?.[0];
         if (temporal && temporal.gte === temporal.lte) {
-            return temporal.gte;
+            return this.formatDate(temporal.gte);
         }
         return undefined;
     }
@@ -65,7 +65,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
        return this.baseMapper.getAddress();
     }
 
-    getSummary() {
+    getDescription() {
         return this.baseMapper.getDescription();
     }
 
@@ -272,11 +272,11 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             });
         };
         // check for INSPIRE themes
-        addKeywords(".//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='GEMET - INSPIRE themes, version 1.0']/keyword/gco:CharacterString", "I");
+        addKeywords(".//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='GEMET - INSPIRE themes, version 1.0']/gmd:keyword/gco:CharacterString", "I");
         // check for GEMET keywords
-        addKeywords(".//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='GEMET - Concepts, version 2.1']/keyword/gco:CharacterString", "G");
+        addKeywords(".//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='GEMET - Concepts, version 2.1']/gmd:keyword/gco:CharacterString", "G");
         // check for UMTHES keywords
-        addKeywords(".//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='UMTHES Thesaurus']/keyword/gco:CharacterString", "T");
+        addKeywords(".//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='UMTHES Thesaurus']/gmd:keyword/gco:CharacterString", "T");
         // check for other keywords
         addKeywords(".//gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString", "F");
         return this.getSingleEntryOrArray(result);

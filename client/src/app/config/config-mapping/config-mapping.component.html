@@ -55,7 +55,7 @@
             role="list"
             aria-label="{{ type.name }}"
           >
-            @for (item of type.items; track item) {
+            @for (item of type.items; track $index) {
               <div
                 class="mapping-item"
                 role="listitem"

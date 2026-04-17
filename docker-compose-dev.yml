@@ -50,6 +50,7 @@ services:
      - ELASTIC_ALIAS=harvester
      - ELASTIC_USER=elastic
      - ELASTIC_PASSWORD=
+#    - MAX_LOGS_PER_HARVESTER=10
     ports:
       - "8090:8090"
     working_dir: /opt/ingrid/harvester/server

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IndicesListComponent } from './indices-list.component';
 
@@ -29,7 +29,7 @@ describe('IndicesListComponent', () => {
   let component: IndicesListComponent;
   let fixture: ComponentFixture<IndicesListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ IndicesListComponent ]
     })

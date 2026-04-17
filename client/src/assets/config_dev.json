@@ -1,5 +1,7 @@
 {
   "url": "ws://localhost:8090",
-  "contextPath": "",
-  "version": "dev"
+  "contextPath": "/",
+  "version": "dev",
+  "passportEnabled": true,
+  "keycloakEnabled": true
 }

@@ -32,7 +32,7 @@ import { ProfileFactoryLoader} from './profiles/profile.factory.loader.js';
 import type { Summary } from './model/summary.js';
 import process from 'node:process'; 
 
-let config = ConfigService.get(),
+let config = ConfigService.getHarvesters(),
     configGeneral = ConfigService.getGeneralSettings(),
     log = log4js.getLogger(),
     logSummary = log4js.getLogger('summary');
@@ -43,15 +43,6 @@ log4js.configure(`./log4js${isDev ? '-dev' : ''}.json`);
 
 const start = new Date();
 let runAsync = false;
-
-function getDateString() {
-    let dt = new Date(Date.now());
-    let year = dt.getFullYear();
-    let month = ('0' + dt.getMonth()).slice(-2);
-    let day = ('0' + dt.getDate()).slice(-2);
-
-    return `${year}${month}${day}`;
-}
 
 function showSummaries(summaries: Summary[]) {
     const duration = (+new Date() - +start) / 1000;
@@ -79,7 +70,7 @@ async function startProcess() {
         let configHarvester = merge(importerConfig, configGeneral);
 
         let profile = ProfileFactoryLoader.get();
-        let importer = await profile.getImporterFactory().get(configHarvester);
+        let importer = await profile.getImporter(configHarvester);
         if (!importer) {
             log.error( 'Importer not defined for: ' + configHarvester.type );
             return;
@@ -87,10 +78,10 @@ async function startProcess() {
         log.info("Starting import ...");
         try {
             if (runAsync) {
-                processes.push(importer.run.toPromise());
-            } else {
-                importers.push(importer.run);
-                //summaries.push(await importer.run.subscribe());
+                processes.push(importer.run(isIncremental).toPromise());
+            }
+            else {
+                importers.push(importer.run(isIncremental));
             }
         } catch (e) {
             log.error(`Importer ${configHarvester.type} failed: `, e);
@@ -116,5 +107,6 @@ async function startProcess() {
 
 let myArgs = process.argv.slice(2);
 runAsync = false; //myArgs.includes('--async');
+const isIncremental = myArgs.includes('-i') || myArgs.includes('--incremental');
 
 startProcess();

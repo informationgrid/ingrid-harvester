@@ -76,9 +76,73 @@ services:
     networks:
       - harvester-network
 
+  pycsw-db:
+    image: postgis/postgis:15-3.3
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: pycsw
+      POSTGRES_USER: pycsw
+      POSTGRES_PASSWORD: pycsw_secret
+    volumes:
+      - pycsw:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pycsw"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pycsw:
+    image: geopython/pycsw:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./docker-dev/pycsw.yml:/etc/pycsw/pycsw.yml
+    depends_on:
+      pycsw-db:
+        condition: service_healthy
+    environment:
+      - PYCSW_CONFIG=/etc/pycsw/pycsw.yml
+
+  harvester:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ingrid-harvester
+    image: ingrid-harvester
+    environment:
+      - IMPORTER_PROFILE=diplanung
+      - DB_URL=postgres
+      - ELASTIC_URL=http://elastic:9200
+      - ELASTIC_VERSION=9
+      - ELASTIC_ALIAS=harvester
+      - ELASTIC_USER=elastic
+      - ELASTIC_PASSWORD=elastic
+      - BASE_URL=/harvester/
+    working_dir: /opt/ingrid/harvester
+    command: node app/index.js
+    volumes:
+      - ./client/src/assets/config.json:/opt/ingrid/harvester/server/app/webapp/assets/config.json
+#    ports:
+#      - "8091:8090"
+    networks:
+      - harvester-network
+
+  apache:
+    image: httpd:2.4
+    container_name: apache
+    ports:
+      - "8090:80"
+    volumes:
+      - ./apache/proxy.conf:/usr/local/apache2/conf/conf.d/proxy.conf:ro
+      - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
+    networks:
+      - harvester-network
+
 volumes:
   esdata:
   postgresdata:
+  pycsw:
 
 networks:
   harvester-network:

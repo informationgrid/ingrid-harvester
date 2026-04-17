@@ -21,79 +21,31 @@
  * ==================================================
  */
 
-import log4js from 'log4js';
 import type { Index } from '@shared/index.model.js';
 import { Service } from '@tsed/di';
 import * as fs from "fs";
-import { Summary } from '../model/summary.js';
-import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
-import type { IndexConfiguration } from '../persistence/elastic.setting.js';
-import { ElasticsearchUtils } from '../persistence/elastic.utils.js';
-import type { BulkResponse } from '../persistence/elastic.utils.js';
-import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
-import { ConfigService } from './config/ConfigService.js';
-import { Readable } from 'stream';
+import log4js from 'log4js';
 import path from "path";
+import { Readable } from 'stream';
 import zlib from "zlib";
+import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
+import type { BulkResponse } from '../persistence/elastic.utils.js';
+import { ElasticsearchUtils } from '../persistence/elastic.utils.js';
+import { ConfigService } from './config/ConfigService.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
 @Service()
 export class IndexService {
 
-    private alias: string;
-    private config: IndexConfiguration;
-    private elasticUtils: ElasticsearchUtils;
-
-    constructor() {
-        this.initialize();
-    }
-
-    /**
-     * Start all cron jobs configured in each harvester
-     */
-    initialize() {
-        let elasticsearchConfiguration = ConfigService.getGeneralSettings().elasticsearch;
-        this.config = {
-            ...elasticsearchConfiguration,
+    private get elasticUtils(): ElasticsearchUtils {
+        const config = {
+            ...ConfigService.getGeneralSettings().elasticsearch,
             includeTimestamp: true,
             index: ''
         };
-        this.alias = elasticsearchConfiguration.alias;
         // @ts-ignore
-        const summary: Summary = {elasticErrors: []};
-        this.elasticUtils = ElasticsearchFactory.getElasticUtils(this.config, summary);
-    }
-
-    async addToAlias(id: number) {
-        const index = await this.getIndexFromHarvesterID(id);
-
-        if (index) {
-            return this.elasticUtils.addAlias(index, this.alias);
-        }
-    }
-
-    async removeFromAlias(id: number) {
-        const index = await this.getIndexFromHarvesterID(id);
-        if (index) {
-            return this.elasticUtils.removeAlias(index, this.alias);
-        }
-    }
-
-    private async getIndexFromHarvesterID(id: number): Promise<string> {
-        const harvester = ConfigService.get().find(h => h.id === id);
-
-        let index = ProfileFactoryLoader.get().useIndexPerCatalog() ? harvester.catalogId : this.elasticUtils.indexName;
-        let indices = await this.elasticUtils.getIndicesFromBasename(index);
-
-        // if multiple indices, then there might be an indexing process
-        // we should be able to ignore adding an alias, since it should happen automatically after indexing
-        if (indices.length !== 1) {
-            log.warn('The index cannot be identified by its basename in a unique name ' + JSON.stringify(indices));
-            log.warn('Is there a harvest going on, where a temporary new index is created?');
-            return null;
-        }
-        return indices[0].name;
+        return ElasticsearchFactory.getElasticUtils(config, { errors: [] });
     }
 
     async getIndices(): Promise<Index[]> {
@@ -107,10 +59,10 @@ export class IndexService {
         this.elasticUtils.deleteIndex(name);
     }
 
-    async deleteIndexFromHarvester(id: number) {
-        const indexName = await this.getIndexFromHarvesterID(id);
-        this.elasticUtils.deleteIndex(indexName);
-    }
+    // async deleteIndexFromHarvester(id: number) {
+    //     const indexName = await this.getIndexFromHarvesterID(id);
+    //     this.elasticUtils.deleteIndex(indexName);
+    // }
 
     async search(indexName: string): Promise<any> {
         const response = await this.elasticUtils.search(indexName);

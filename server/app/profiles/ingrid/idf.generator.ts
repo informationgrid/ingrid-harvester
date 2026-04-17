@@ -22,8 +22,8 @@
  */
 
 import type { DOMParser } from '@xmldom/xmldom';
+import type { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
-import type { WfsMapper } from 'importer/wfs/wfs.mapper.js';
 import type { ingridMapper } from './mapper/ingrid.mapper.js';
 
 export class IdfGenerator {
@@ -57,7 +57,7 @@ export class IdfGenerator {
         this.addOutput(idfBody, "h1", this.mapper.getTitle());
 
         //add the summary
-        this.addOutput(idfBody, "p", this.mapper.getSummary());
+        this.addOutput(idfBody, "p", this.mapper.getDescription());
 
         //add the bounding box
         let boundingBox = this.baseMapper.getOriginalBoundingBox();
@@ -96,7 +96,7 @@ export class IdfGenerator {
 
         // // show features, if loaded
         if (this.baseMapper.getNumberOfFeatures() < this.baseMapper.settings.featureLimit) {
-            // NOTE: the below section is filled in server/app/profiles/zdm/persistence/postgres.aggregator.ts
+            // NOTE: the below section is filled in the ingrid elasticsearch catalog
             this.addOutput(idfBody, "h2", "Features:");
         }
 
@@ -126,7 +126,7 @@ export class IdfGenerator {
         var detailNavContent = this.addOutputWithAttributes(detail, "section", ["class"], ["row nav-content search-filtered"]);
 
         // navigation
-        this.addDetailHeaderWrapperNewLayoutDetailNavigation(detailNavContent, this.mapper.getSummary(), null, undefined, plugDescrDataSourceName, plugDescrOrganisation)
+        this.addDetailHeaderWrapperNewLayoutDetailNavigation(detailNavContent, this.mapper.getDescription(), null, undefined, plugDescrDataSourceName, plugDescrOrganisation)
 
         // content
         this.addOutputWithAttributes(detailNavContent, "a", ["class", "id"], ["anchor", "detail_overview"]);
@@ -160,12 +160,12 @@ export class IdfGenerator {
         //     detailNavContentData.appendChild(dataMapElement);
         // }
 
-        if (this.mapper.getSummary()) {
+        if (this.mapper.getDescription()) {
             var detailNavContentSection = this.addOutputWithAttributes(detailNavContent, "div", ["class"], ["section"]);
             this.addOutputWithAttributes(detailNavContentSection, "a", ["class", "id"], ["anchor", "detail_description"]);
             this.addOutput(detailNavContentSection, "h3", "Beschreibung");
             var result = this.addOutputWithAttributes(detailNavContentSection, "div", ["class"], ["row columns"]);
-            result = this.addOutput(result, "p", this.mapper.getSummary());
+            result = this.addOutput(result, "p", this.mapper.getDescription());
         }
 
         let detailNodes = this.baseMapper.select("//*/*[local-name()='extension'][@base='gml:AbstractFeatureType']/*[local-name()='sequence']/*[local-name()='element']", this.baseMapper.featureTypeDescription);
