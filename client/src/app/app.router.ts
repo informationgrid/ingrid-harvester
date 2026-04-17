@@ -85,17 +85,19 @@ export const routes: Routes = [
       roles: ["admin", "editor"],
     },
   },
-  {
-    path: "log",
-    canActivate: [authGuard],
-    loadChildren: () => import("./log/log.module").then((mod) => mod.LogModule),
-    title: "pageTitle.log",
-    data: {
-      icon: "logging",
-      partOfMenu: true,
-      roles: ["admin", "editor"],
-    },
-  },
+  // disable /log route
+  // JM 2026-04-17: LOG Seite: Ich finde das passt nicht und stört die sonst sehr schone GUI. Bitte raus nehmen.
+  // {
+  //   path: "log",
+  //   canActivate: [authGuard],
+  //   loadChildren: () => import("./log/log.module").then((mod) => mod.LogModule),
+  //   title: "pageTitle.log",
+  //   data: {
+  //     icon: "logging",
+  //     partOfMenu: true,
+  //     roles: ["admin", "editor"],
+  //   },
+  // },
   {
     path: "login",
     component: LoginComponent,
