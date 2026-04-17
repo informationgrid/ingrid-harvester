@@ -132,6 +132,11 @@ export class CatalogService {
         await catalog.deleteCatalog();
         await catalog.deleteCatalogRecordsFromDatabase();
 
+        // remove catalog from datasources
+        // TODO
+        // this also must invalidate a datasource if it no longer contains any catalog after removal of this catalog
+        // needs frontend changes
+
         // persist changes in settings
         CatalogService.setCatalogSettings(existingSettings.filter(catalog => catalog.id != id));
     }
