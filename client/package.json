@@ -9,9 +9,7 @@
     "prod": "ng build --configuration production",
     "update": "ng update @angular/cli @angular/core --allow-dirty",
     "test": "ng test",
-    "lint": "ng lint",
-    "cypress": "cypress open",
-    "cy:run": "node scripts/cypress.js"
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -71,12 +69,5 @@
     "prettier": "^3.8.1",
     "ts-node": "~10.9.2",
     "typescript": "~5.9.2"
-  },
-  "optionalDependencies": {
-    "cypress": "^13.6.4",
-    "mocha": "^10.3.0",
-    "mochawesome": "^7.1.3",
-    "mochawesome-merge": "^4.3.0",
-    "mochawesome-report-generator": "^6.2.0"
   }
 }

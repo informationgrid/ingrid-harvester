@@ -30,8 +30,5 @@
     "useDefineForClassFields": false
   },
   "exclude": [
-    "cypress",
-    "cypress.config.ts",
-    "src/**/*.spec.ts"
   ]
 }

@@ -119,6 +119,7 @@ export class ConfigService {
 
   /**
    * Download a file.
+   * @param fileName
    * @param data - Array Buffer data
    */
   static downLoadFile(fileName: string, data: any) {
@@ -131,12 +132,6 @@ export class ConfigService {
     linkElement.style.display = 'none';
     linkElement.href = url;
     linkElement.download = fileName;
-
-    // do not actually download file during test
-    // @ts-ignore
-    if (window.Cypress) {
-      return;
-    }
 
     linkElement.click();
     window.URL.revokeObjectURL(url);
