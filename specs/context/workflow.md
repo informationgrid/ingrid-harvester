@@ -59,9 +59,6 @@ flowchart TD
 feature: <kebab-case-name>
 status: draft | stable | deprecated
 created: YYYY-MM-DD
-applies-context:
-  - context/architecture   # list only what applies
-  - context/conventions
 ---
 ```
 

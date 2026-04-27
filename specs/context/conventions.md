@@ -191,7 +191,29 @@ Supported diagram types: `flowchart`, `sequenceDiagram`, `classDiagram`, `erDiag
 | Client | Karma/Jasmine |
 | E2E | Cypress 13 (`client/cypress/e2e/**/*.spec.ts`) |
 
-Stub collaborators with sinon (e.g. `postTransaction`, database methods). Do not mock the database for integration-level tests.
+Stub collaborators with sinon. Do not mock the database for integration-level tests.
+
+**Catalog tests** — the `Catalog` base constructor calls `DatabaseFactory.getDatabaseUtils()`, which internally calls `ProfileFactoryLoader.get()`. Both must be stubbed in `before()` before instantiating any `Catalog` subclass:
+```typescript
+sinon.stub(DatabaseFactory, 'getDatabaseUtils').returns({} as any);
+sinon.stub(ProfileFactoryLoader, 'get').returns({} as any);
+```
+
+**Stubbing HTTP calls in Catalog tests** — stub `RequestDelegate.doRequest` (static method) to control HTTP responses. Do not stub private methods such as `postTransaction` on catalog instances; this is fragile.
+
+**Asserting on log output** — `log4js.getLogger()` returns a **new** `Logger` instance on every call. Sinon spying on the result of `getLogger` wraps a different object than the `const log` captured at module load time, so calls are not intercepted. Use a log4js inline appender instead:
+```typescript
+const events: Array<{ level: string; message: string }> = [];
+log4js.configure({
+    appenders: {
+        capture: {
+            type: { configure: () => (event: any) => events.push({ level: event.level.levelStr, message: String(event.data[0]) }) },
+        },
+    },
+    categories: { default: { appenders: ['capture'], level: 'all' } },
+});
+```
+Clear `events` in `beforeEach` and assert on it after each call.
 
 ---
 

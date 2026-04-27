@@ -1,7 +1,7 @@
 ---
 feature: csw-delete-records-for-datasource
 spec: ./spec.md
-status: draft
+status: stable
 ---
 
 ## Architecture

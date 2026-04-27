@@ -135,8 +135,19 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
 
     async deleteRecordsForDatasource(sourceId: number): Promise<void> {
         log.info(`Deleting all records for source '${sourceId}' from CSW catalog '${this.settings.id}'`);
-        // TODO: Issue a CSW-T Delete with filter subject = source:${sourceId}
-        log.warn(`deleteRecordsForDatasource not yet implemented for source '${sourceId}'`);
+        const targetUrl = this.buildTargetUrl();
+        const deleteXml = this.buildDeleteBySourceTransaction(sourceId);
+        try {
+            const response = await this.postTransaction(targetUrl, deleteXml);
+            const result = this.parseTransactionResponse(response);
+            if (result.success) {
+                log.info(`Deleted ${result.deleted} records for source '${sourceId}' from CSW catalog '${this.settings.id}'`);
+            } else {
+                log.error(`Failed to delete records for source '${sourceId}' from CSW catalog '${this.settings.id}': ${response}`);
+            }
+        } catch (e) {
+            log.error(`Failed to delete records for source '${sourceId}' from CSW catalog '${this.settings.id}': ${e}`);
+        }
     }
 
     async deleteCatalog(): Promise<void> {
@@ -144,19 +155,7 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         const targetUrl = this.buildTargetUrl();
 
         // Build a filter that matches the catalog keyword
-        const deleteXml = `<?xml version="1.0" encoding="UTF-8"?>
-<csw:Transaction xmlns:csw="${namespaces.CSW}" xmlns:ogc="${namespaces.OGC}" service="CSW" version="2.0.2">
-    <csw:Delete typeName="gmd:MD_Metadata">
-        <csw:Constraint version="1.1.0">
-            <ogc:Filter>
-                <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
-                    <ogc:PropertyName>subject</ogc:PropertyName>
-                    <ogc:Literal>%catalog:${this.settings.id}%</ogc:Literal>
-                </ogc:PropertyIsLike>
-            </ogc:Filter>
-        </csw:Constraint>
-    </csw:Delete>
-</csw:Transaction>`;
+        const deleteXml = this.buildDeleteAllRecordsOfCatalog();
 
         const response = await this.postTransaction(targetUrl, deleteXml);
         const result = this.parseTransactionResponse(response);
@@ -301,6 +300,7 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         return `<?xml version="1.0" encoding="UTF-8"?>
 <csw:Transaction xmlns:csw="${namespaces.CSW}"
                  xmlns:ogc="${namespaces.OGC}"
+                 xmlns:dc="${namespaces.DC}"
                  service="CSW"
                  version="2.0.2">
     <csw:Delete typeName="gmd:MD_Metadata">
@@ -308,16 +308,54 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
             <ogc:Filter>
                 <ogc:And>
                     <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
-                        <ogc:PropertyName>subject</ogc:PropertyName>
+                        <ogc:PropertyName>dc:subject</ogc:PropertyName>
                         <ogc:Literal>%source:${datasourceId}%</ogc:Literal>
                     </ogc:PropertyIsLike>
                     <ogc:Not>
                         <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
-                            <ogc:PropertyName>subject</ogc:PropertyName>
+                            <ogc:PropertyName>dc:subject</ogc:PropertyName>
                             <ogc:Literal>%transaction:${excludeTimestamp}%</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Not>
                 </ogc:And>
+            </ogc:Filter>
+        </csw:Constraint>
+    </csw:Delete>
+</csw:Transaction>`;
+    }
+
+    private buildDeleteBySourceTransaction(sourceId: number): string {
+        return `<?xml version="1.0" encoding="UTF-8"?>
+<csw:Transaction xmlns:csw="${namespaces.CSW}" xmlns:ogc="${namespaces.OGC}" service="CSW" version="2.0.2">
+    <csw:Delete typeName="gmd:MD_Metadata">
+        <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+                <ogc:And>
+                    <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
+                        <ogc:PropertyName>dc:subject</ogc:PropertyName>
+                        <ogc:Literal>%source:${sourceId}%</ogc:Literal>
+                    </ogc:PropertyIsLike>
+                    <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
+                        <ogc:PropertyName>dc:subject</ogc:PropertyName>
+                        <ogc:Literal>%catalog:${this.settings.id}%</ogc:Literal>
+                    </ogc:PropertyIsLike>
+                </ogc:And>
+            </ogc:Filter>
+        </csw:Constraint>
+    </csw:Delete>
+</csw:Transaction>`;
+    }
+
+    private buildDeleteAllRecordsOfCatalog() {
+        return `<?xml version="1.0" encoding="UTF-8"?>
+<csw:Transaction xmlns:csw="${namespaces.CSW}" xmlns:ogc="${namespaces.OGC}" xmlns:dc="${namespaces.DC}" service="CSW" version="2.0.2">
+    <csw:Delete typeName="gmd:MD_Metadata">
+        <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+                <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
+                    <ogc:PropertyName>dc:subject</ogc:PropertyName>
+                    <ogc:Literal>%catalog:${this.settings.id}%</ogc:Literal>
+                </ogc:PropertyIsLike>
             </ogc:Filter>
         </csw:Constraint>
     </csw:Delete>
