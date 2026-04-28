@@ -39,7 +39,9 @@ import * as MiscUtils from '../../utils/misc.utils.js';
 import { MailServer } from '../../utils/nodemailer.utils.js';
 import * as ServiceUtils from '../../utils/service.utils.js';
 import * as XpathUtils from '../../utils/xpath.utils.js';
-import { Importer } from '../importer.js';
+import type { Catalog } from '../../catalog/catalog.factory.js';
+import { CswCatalog } from '../../catalog/csw/csw.catalog.js';
+import { Importer, HarvestRunCancelledError } from '../importer.js';
 import { CswMapper } from './csw.mapper.js';
 import { cswDefaults, type CswSettings } from './csw.settings.js';
 
@@ -101,8 +103,11 @@ export class CswImporter extends Importer<CswSettings> {
             observer.next(this.summary.msgComplete('Dry run ... no indexing of data'));
         }
         else {
+            let transactionTimestamp: Date;
+            let transactionCommitted = false;
+            const processedCatalogs: Catalog[] = [];
             try {
-                let transactionTimestamp = await this.database.beginTransaction();
+                transactionTimestamp = await this.database.beginTransaction();
                 // configure for incremental harvesting
                 if (this.isIncremental) {
                     // only change the record filter (i.e. do an incremental harvest) if a previous run exists
@@ -118,6 +123,7 @@ export class CswImporter extends Importer<CswSettings> {
                 }
                 // get datasets
                 let numIndexDocs = await this.harvest();
+                if (this.harvesterRunCancelled) throw new HarvestRunCancelledError();
                 if (!this.isIncremental) {
                     // did the harvesting return results at all?
                     if (numIndexDocs == 0) {
@@ -143,10 +149,12 @@ export class CswImporter extends Importer<CswSettings> {
                 if (this.settings.harvestingMode == 'separate') {
                     this.startStage('harvestServices');
                     await this.harvestServices();
+                    if (this.harvesterRunCancelled) throw new HarvestRunCancelledError();
                 }
                 // data-service-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
                 this.startStage('coupling');
                 await this.coupleDatasetsServices(this.settings.resolveOgcDistributions);
+                if (this.harvesterRunCancelled) throw new HarvestRunCancelledError();
 
                 // did fatal errors occur (ie DB or APP errors)?
                 if (this.summary.errors.some(e => e.type === 'app' || e.type === 'database')) {
@@ -157,8 +165,10 @@ export class CswImporter extends Importer<CswSettings> {
                     await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
                 }
                 await this.database.commitTransaction();
+                transactionCommitted = true;
                 // TODO support concurrency of different catalogs
                 for (const catalogId of this.settings.catalogIds) {
+                    if (this.harvesterRunCancelled) throw new HarvestRunCancelledError();
                     const stageSummary = this.startStage(`catalog/${catalogId}`);
                     const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, stageSummary);
                     try {
@@ -170,6 +180,7 @@ export class CswImporter extends Importer<CswSettings> {
                         // for that, we need to consider how to handle "deleted", i.e. non-fetched, datasets
 
                         await catalog.process(this.settings.sourceURL, this.settings, observer);
+                        processedCatalogs.push(catalog);
                     }
                     catch (e) {
                         log.error(`Error while importing into catalog ${catalog.settings.name} (id=${catalogId}):`, e);
@@ -180,16 +191,36 @@ export class CswImporter extends Importer<CswSettings> {
                 observer.next(this.summary.msgComplete());
             }
             catch (err) {
-                if (err.message) {
-                    this.summary.errors.push({ type: 'app', error: err.message });
+                if (err instanceof HarvestRunCancelledError) {
+                    if (!transactionCommitted) {
+                        const rollbackDbStage = this.startStage('rollbackSourceImport');
+                        await this.database.rollbackTransaction();
+                        observer.next(rollbackDbStage.msgComplete('Transaction rolled back'));
+                    } else {
+                        const rollbackDbStage = this.startStage('rollbackSourceImport');
+                        const count = await this.database.rollbackSourceImport(this.settings.sourceURL, transactionTimestamp);
+                        observer.next(rollbackDbStage.msgComplete(`Rolled back ${count} records`));
+                        for (const catalog of processedCatalogs) {
+                            if (catalog instanceof CswCatalog) {
+                                const rollbackCatalogStage = this.startStage('rollbackTargetCatalog');
+                                await catalog.rollbackTargetCatalog(this.settings.id, transactionTimestamp);
+                                observer.next(rollbackCatalogStage.msgComplete());
+                            }
+                        }
+                    }
+                    observer.next(this.summary.msgCancelled());
+                } else {
+                    if (err.message) {
+                        this.summary.errors.push({ type: 'app', error: err.message });
+                    }
+                    await this.database.rollbackTransaction();
+                    let msg = this.summary.errors.find(e => e.type === 'app' || e.type === 'database')?.error;
+                    if (this.generalConfig.mail.enabled) {
+                        MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
+                    }
+                    log.error(err);
+                    observer.next(this.summary.msgComplete(msg));
                 }
-                await this.database.rollbackTransaction();
-                let msg = this.summary.errors.find(e => e.type === 'app' || e.type === 'database')?.error;
-                if (this.generalConfig.mail.enabled) {
-                    MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
-                }
-                log.error(err);
-                observer.next(this.summary.msgComplete(msg));
             }
         }
         observer.complete();

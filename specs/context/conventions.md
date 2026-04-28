@@ -77,6 +77,7 @@ Cross-package rule: use `@shared/*` alias only. Never import between `server/` a
 | Methods / functions | camelCase | `deleteRecordsForDatasource()` |
 | Private methods | camelCase (no prefix) | `buildDeleteBySourceTransaction()` |
 | Constants | UPPER_SNAKE_CASE | `MAX_RETRY_COUNT` |
+| Local stage summaries | Descriptive camelCase reflecting the stage purpose | `rollbackDbStage`, `rollbackCatalogStage` — not `s`, `cs`, or `stage` |
 
 ---
 

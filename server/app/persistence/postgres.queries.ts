@@ -45,6 +45,7 @@ export class PostgresQueries {
     readonly bulkUpsertCoupling = this.readFile('bulkUpsertCoupling');
     readonly nonFetchedRatio = this.readFile('nonFetchedRatio');
     readonly deleteNonFetchedRecords = this.readFile('deleteNonFetchedRecords');
+    readonly rollbackSourceImport = this.readFile('rollbackSourceImport');
     readonly getStoredData = this.readFile('getStoredData');
     readonly getDatasetsBySource = this.readFile('getDatasetsBySource');
     readonly getDatasetsBySourceWithOriginal = this.readFile('getDatasetsBySourceWithOriginal');

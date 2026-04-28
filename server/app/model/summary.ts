@@ -159,4 +159,13 @@ export class Summary {
             message: message ? message : undefined
         };
     }
+
+    msgCancelled(): ImportLogMessage {
+        return {
+            stage: this.stage,
+            complete: true,
+            summary: this,
+            cancelled: true
+        };
+    }
 }

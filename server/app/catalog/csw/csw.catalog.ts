@@ -133,6 +133,44 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         }
     }
 
+    async rollbackTargetCatalog(datasourceId: number, transactionTimestamp: Date): Promise<void> {
+        const targetUrl = this.buildTargetUrl();
+        const deleteXml = this.buildRollbackTargetCatalogTransaction(datasourceId, transactionTimestamp);
+        try {
+            const response = await this.postTransaction(targetUrl, deleteXml);
+            const result = this.parseTransactionResponse(response);
+            log.info(`Rollback: deleted ${result.deleted} records for source '${datasourceId}' from CSW catalog '${this.settings.id}'`);
+        } catch (e) {
+            log.error(`Rollback failed for source '${datasourceId}' in CSW catalog '${this.settings.id}': ${e}`);
+        }
+    }
+
+    private buildRollbackTargetCatalogTransaction(datasourceId: number, transactionTimestamp: Date): string {
+        return `<?xml version="1.0" encoding="UTF-8"?>
+<csw:Transaction xmlns:csw="${namespaces.CSW}" xmlns:ogc="${namespaces.OGC}" service="CSW" version="2.0.2">
+    <csw:Delete typeName="gmd:MD_Metadata">
+        <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+                <ogc:And>
+                    <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
+                        <ogc:PropertyName>dc:subject</ogc:PropertyName>
+                        <ogc:Literal>%transaction:${transactionTimestamp.toISOString()}%</ogc:Literal>
+                    </ogc:PropertyIsLike>
+                    <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
+                        <ogc:PropertyName>dc:subject</ogc:PropertyName>
+                        <ogc:Literal>%source:${datasourceId}%</ogc:Literal>
+                    </ogc:PropertyIsLike>
+                    <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
+                        <ogc:PropertyName>dc:subject</ogc:PropertyName>
+                        <ogc:Literal>%catalog:${this.settings.id}%</ogc:Literal>
+                    </ogc:PropertyIsLike>
+                </ogc:And>
+            </ogc:Filter>
+        </csw:Constraint>
+    </csw:Delete>
+</csw:Transaction>`;
+    }
+
     async deleteRecordsForDatasource(sourceId: number): Promise<void> {
         log.info(`Deleting all records for source '${sourceId}' from CSW catalog '${this.settings.id}'`);
         const targetUrl = this.buildTargetUrl();

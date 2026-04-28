@@ -73,6 +73,8 @@ export abstract class DatabaseUtils {
 
     abstract deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void>;
 
+    abstract rollbackSourceImport(source: string, transactionTimestamp: Date): Promise<number>;
+
     abstract deleteCatalogDatasets(catalogId: number): Promise<void>;
 
     abstract streamBuckets<T extends CatalogColumnType>(source: string, datasetColumn: string, observer: Observer<ImportLogMessage>, summary: Summary): AsyncGenerator<Bucket<T>>;

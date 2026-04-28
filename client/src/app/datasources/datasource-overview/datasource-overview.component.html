@@ -84,6 +84,7 @@
               "
               (onImport)="onImport(datasource.id)"
               (onIncrementImport)="onImport(datasource.id, true)"
+              (onCancel)="onCancel(datasource.id, importLogs()[datasource.id]?.jobId)"
               (onView)="onView(datasource)"
               (onEdit)="onEdit(datasource)"
               (onDelete)="onDelete(datasource)"

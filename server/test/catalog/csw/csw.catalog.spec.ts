@@ -84,6 +84,41 @@ function makeCatalog(): IngridCswCatalog {
     return new IngridCswCatalog(settings, summary);
 }
 
+describe('CswCatalog.rollbackTargetCatalog', function () {
+    let sandbox: sinon.SinonSandbox;
+
+    beforeEach(function () {
+        capturedEvents.length = 0;
+        sandbox = sinon.createSandbox();
+    });
+
+    afterEach(function () {
+        sandbox.restore();
+    });
+
+    it('logs deleted count at INFO on TransactionResponse', async function () {
+        sandbox.stub(RequestDelegate, 'doRequest').resolves(TRANSACTION_RESPONSE_3_DELETED);
+        const catalog = makeCatalog();
+
+        await catalog.rollbackTargetCatalog(42, new Date('2024-01-01T00:00:00.000Z'));
+
+        const errorEvents = capturedEvents.filter(e => e.level === 'ERROR');
+        const infoWithCount = capturedEvents.filter(e => e.level === 'INFO' && e.message.includes('3'));
+        expect(errorEvents).to.be.empty;
+        expect(infoWithCount).to.have.length.greaterThan(0);
+    });
+
+    it('logs at ERROR and does not rethrow on request failure', async function () {
+        sandbox.stub(RequestDelegate, 'doRequest').rejects(new Error('network error'));
+        const catalog = makeCatalog();
+
+        await expect(catalog.rollbackTargetCatalog(42, new Date('2024-01-01T00:00:00.000Z'))).to.be.fulfilled;
+
+        const errorEvents = capturedEvents.filter(e => e.level === 'ERROR');
+        expect(errorEvents).to.have.length.greaterThan(0);
+    });
+});
+
 describe('CswCatalog.deleteRecordsForDatasource', function () {
     let sandbox: sinon.SinonSandbox;
 
