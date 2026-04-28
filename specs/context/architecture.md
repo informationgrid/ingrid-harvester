@@ -48,8 +48,6 @@ flowchart TD
 
 ## Key Abstractions
 
-All extension points are abstract base classes; concrete implementations live inside profile packages.
-
 **`Catalog<C,S,O>`** — `server/app/catalog/catalog.factory.ts`
 ```typescript
 abstract processBucket(bucket: Bucket<C>, settings: ImporterSettings): Promise<O[]>

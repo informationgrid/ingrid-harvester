@@ -103,4 +103,3 @@ flowchart TD
 | `diplanung` | Urban/regional land-use planning | CSW, DCATAPPLU, WFS.FIS, WFS.MS, WFS.XPLAN, WFS.XPLAN.SYN |
 | `lvr` | LVR-specific | see `server/app/profiles/lvr/profile.factory.ts` |
 
-Each profile provides: `getImporter()`, `getDocumentFactory()`, `getCatalog()`, `getProfileName()`, capability flags (`isIncrementalSupported`, `supportedCatalogTypes`).

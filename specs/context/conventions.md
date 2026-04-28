@@ -5,6 +5,16 @@ status: draft
 updated: 2026-04-24
 ---
 
+## Documentation Style
+
+Write all `specs/` documents token-efficiently:
+- One rule per line; no restating content already captured elsewhere — cross-reference with "see X" instead
+- Tables over prose for reference material (naming, decisions, settings)
+- No filler phrases (`Note that…`, `It is important to…`, `This applies to…`)
+- Omit examples when the rule description is unambiguous; add one only when the bad pattern is easily confused with the good pattern
+
+---
+
 ## Language & Runtime
 
 | | Server | Client |
@@ -21,8 +31,6 @@ Server compiler flags: `experimentalDecorators`, `emitDecoratorMetadata`, `verba
 
 ## Package Structure
 
-Three independent npm packages, no root `package.json`:
-
 ```
 server/    Node.js backend
 client/    Angular frontend
@@ -30,11 +38,6 @@ shared/    TypeScript types only — no build step, imported via @shared/* alias
 ```
 
 Cross-package rule: use `@shared/*` alias only. Never import between `server/` and `client/`.
-
-```typescript
-import type { Datasource } from '@shared/datasource.js'  // correct
-import { something } from '../../client/src/...'          // never
-```
 
 ---
 
@@ -159,16 +162,7 @@ const xml = `<dct:title>${this.getTitle()}</dct:title>`
 
 ## Diagrams
 
-Use **Mermaid** for all diagrams in spec and context documents. Do not use ASCII art.
-
-````markdown
-```mermaid
-flowchart TD
-    A[Step one] --> B[Step two]
-```
-````
-
-Supported diagram types: `flowchart`, `sequenceDiagram`, `classDiagram`, `erDiagram`. Mermaid renders natively on GitHub, GitLab, and Obsidian.
+Use **Mermaid** for all diagrams (`flowchart`, `sequenceDiagram`, `classDiagram`, `erDiagram`). No ASCII art or indented code blocks for structure — see AP-003.
 
 ---
 
@@ -193,15 +187,15 @@ Supported diagram types: `flowchart`, `sequenceDiagram`, `classDiagram`, `erDiag
 
 Stub collaborators with sinon. Do not mock the database for integration-level tests.
 
-**Catalog tests** — the `Catalog` base constructor calls `DatabaseFactory.getDatabaseUtils()`, which internally calls `ProfileFactoryLoader.get()`. Both must be stubbed in `before()` before instantiating any `Catalog` subclass:
+**Catalog tests** — stub both in `before()` before instantiating any `Catalog` subclass:
 ```typescript
 sinon.stub(DatabaseFactory, 'getDatabaseUtils').returns({} as any);
 sinon.stub(ProfileFactoryLoader, 'get').returns({} as any);
 ```
 
-**Stubbing HTTP calls in Catalog tests** — stub `RequestDelegate.doRequest` (static method) to control HTTP responses. Do not stub private methods such as `postTransaction` on catalog instances; this is fragile.
+**HTTP calls** — stub `RequestDelegate.doRequest` (static). Never stub private methods like `postTransaction`; this is fragile.
 
-**Asserting on log output** — `log4js.getLogger()` returns a **new** `Logger` instance on every call. Sinon spying on the result of `getLogger` wraps a different object than the `const log` captured at module load time, so calls are not intercepted. Use a log4js inline appender instead:
+**Log output** — `log4js.getLogger()` returns a new instance per call; sinon.spy wraps a different object than the module-level `const log`. Use an inline appender instead:
 ```typescript
 const events: Array<{ level: string; message: string }> = [];
 log4js.configure({

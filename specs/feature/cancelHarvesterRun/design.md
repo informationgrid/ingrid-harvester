@@ -10,24 +10,28 @@ created: 2026-04-27
 
 ```mermaid
 flowchart TD
-    FE["Frontend\nactive job/progress view"]
+    FE["Frontend — Cancel button click\nstopPropagation · status → cancelling"]
     EP["POST /api/import/:id/cancel\nApiCtrl — auth: admin | editor"]
-    SVC["ImportSocketService.cancelImport(harvesterId, jobId)\nsets CancellationToken.cancelled = true"]
-    IMP["Importer.run()\nchecks token at each bucket boundary"]
-    P1["Phase 1 — DB open\nrollbackTransaction()"]
-    P2["Phase 2 — DB committed\ndeleteHarvestedDatasets(sourceURL, transactionTimestamp)\n+ catalog.deleteHarvestRun(transactionTimestamp)\nfor each CSW catalog already processed"]
-    DONE["job status → cancelled\nSocket.IO emit → frontend"]
+    SVC["ImportSocketService.cancelImport\ncalls importer.cancel()"]
+    IMP["Importer.exec()\nnext stage boundary: throw HarvestRunCancelledError"]
+    P1["Phase 1 — DB open\nstartStage rollbackSourceImport\nrollbackTransaction()"]
+    P2["Phase 2 — DB committed\nstartStage rollbackSourceImport → rollbackSourceImport()\nstartStage rollbackTargetCatalog → rollbackTargetCatalog() × n"]
+    DONE["observer.next msgCancelled()\njobs.utils: cancelled: true → status cancelled\nSocket.IO emit → frontend status cancelled"]
 
-    FE -->|Cancel click| EP
+    FE -->|Cancel click stopPropagation| EP
     EP --> SVC
     SVC --> IMP
-    IMP -->|cancelled before commitTransaction| P1
-    IMP -->|cancelled after commitTransaction| P2
+    IMP -->|before commitTransaction| P1
+    IMP -->|after commitTransaction| P2
     P1 --> DONE
     P2 --> DONE
 ```
 
-**`commitTransaction()` remains before the catalog loop** (existing position, ~line 125 of `importer.ts`). This preserves the invariant that PostgreSQL records survive Phase 2 catalog errors. Cancellation is handled by deliberate cleanup code, not transaction rollback.
+**`commitTransaction()` remains before the catalog loop** (existing position). This preserves the invariant that PostgreSQL records survive Phase 2 catalog errors. Cancellation is handled by deliberate cleanup code, not transaction rollback.
+
+**Stage-level cancellation**: `harvesterRunCancelled` is checked at stage boundaries (after `harvest()`, after `harvestServices()`, after `coupleDatasetsServices()`, before/between catalog iterations) — not inside parallel batch loops. This satisfies NFR-001 and avoids modifying every importer's internal loops.
+
+**Two exec() files only**: `Importer.exec()` (base) covers all importers that call `super.exec()`; `CswImporter.exec()` is modified separately because it replaces exec() entirely. Level-3 importers (e.g. `DiplanungCswImporter`) inherit from their Level-2 parent and require no changes. See `specs/context/importers.md`.
 
 ## Data Model
 
@@ -35,8 +39,8 @@ No schema changes. The `last_modified` column on the `record` table (set to `tra
 
 CSW traceability keywords (injected by `addTraceability()`) already carry all three identifiers needed for safe cleanup:
 - `transaction:${transactionTimestamp.toISOString()}` — identifies the specific run
-- `source:${datasourceId}` — scopes deletion to the correct datasource
-- `catalog:${catalogId}` — scopes deletion to the correct catalog instance
+- `source:${datasourceId}` — scopes deletion to the correct datasource (`ImporterSettings.id`)
+- `catalog:${catalogId}` — scopes deletion to the correct catalog instance (`CswCatalog.settings.id`)
 
 ## API / Interface
 
@@ -50,43 +54,83 @@ POST /api/import/:id/cancel
   Response 404: { error: "no running harvest for id" }
 ```
 
-### CancellationToken (new, in importer.ts or model/cancellation.ts)
+### `ImportLogMessage` change (`server/app/model/import.result.ts`)
+
+Add `cancelled?: boolean` field. `Summary.msgCancelled()` (new method on `Summary`) returns `{ stage, complete: true, summary: this, cancelled: true }`. `jobs.utils.ts` `deriveStatus()` checks `logMessage.cancelled` instead of the fragile `message === 'Import cancelled'` string.
+
+### Rollback stage tracking
+
+In the `HarvestRunCancelledError` catch block, start named stages before each cleanup operation so rollback progress is visible in the WebSocket stream and job record:
 
 ```typescript
-export interface CancellationToken {
-    cancelled: boolean;
+const s = this.startStage('rollbackSourceImport');
+await this.database.rollbackTransaction();          // Phase 1
+// or:
+const count = await this.database.rollbackSourceImport(sourceURL, transactionTimestamp);  // Phase 2
+observer.next(s.msgComplete(`Rolled back ${count} records`));
+
+for (const catalog of processedCatalogs) {
+    if (catalog instanceof CswCatalog) {
+        const cs = this.startStage('rollbackTargetCatalog');
+        await catalog.rollbackTargetCatalog(this.settings.id, transactionTimestamp);
+        observer.next(cs.msgComplete());
+    }
 }
-
-export class CancelledError extends Error {}
+observer.next(this.summary.msgCancelled());
 ```
 
-### ImportSocketService additions
+### `HarvestRunCancelledError` (new, in `server/app/importer/importer.ts`)
 
 ```typescript
-// Keyed by harvesterId
-private activeJobs: Map<number, { token: CancellationToken; jobId: string }> = new Map();
-
-cancelImport(harvesterId: number, jobId: string): boolean
-// Sets token.cancelled = true; returns true if found, false if not running.
+export class HarvestRunCancelledError extends Error {}
 ```
 
-### PostgresUtils addition
+Justified deviation from the "no custom exception classes" convention — required by NFR-004 for `instanceof` catch discrimination.
+
+### `Importer` additions
 
 ```typescript
-async deleteHarvestedDatasets(source: string, last_modified: Date): Promise<number>
-// DELETE FROM record WHERE source = $1 AND last_modified = $2
-// Returns count of deleted rows.
+protected harvesterRunCancelled: boolean = false;
+
+public cancel(): void {
+    this.harvesterRunCancelled = true;
+}
 ```
 
-### CswCatalog addition
+Stage-boundary check: `if (this.harvesterRunCancelled) throw new HarvestRunCancelledError();`
+
+Scaffolding declared before try block:
+```typescript
+let transactionCommitted = false;   // set true after commitTransaction()
+const processedCatalogs: Catalog[]; // push after each catalog.process()
+```
+
+Catch: single block with `instanceof` — `if (err instanceof HarvestRunCancelledError) { … } else { /* existing */ }`
+
+### `ImportSocketService` additions
 
 ```typescript
-async deleteHarvestRun(transactionTimestamp: Date): Promise<void>
+private activeJobs: Map<number, { importer: Importer<any>; jobId: string }> = new Map();
+cancelImport(harvesterId: number, jobId: string): boolean  // calls importer.cancel(); true if found
+```
+
+### `DatabaseUtils` addition (abstract method)
+
+```typescript
+abstract rollbackSourceImport(source: string, transactionTimestamp: Date): Promise<number>
+// DELETE FROM record WHERE source=$1 AND last_modified=$2; returns deleted count
+```
+Implemented in `server/app/persistence/postgres.utils.ts`.
+
+### `CswCatalog` addition
+
+```typescript
+async rollbackTargetCatalog(datasourceId: number, transactionTimestamp: Date): Promise<void>
 // Issues CSW-T Delete with ogc:And of three PropertyIsLike filters (see XML below).
 // Reuses buildTargetUrl(), postTransaction(), parseTransactionResponse().
 // Logs totalDeleted at INFO; catches errors and logs at ERROR without rethrowing.
 
-private buildDeleteByTransactionTransaction(transactionTimestamp: Date): string
+private buildRollbackTargetCatalogTransaction(datasourceId: number, transactionTimestamp: Date): string
 // Returns CSW-T Transaction XML for the delete above.
 ```
 
@@ -105,7 +149,7 @@ private buildDeleteByTransactionTransaction(transactionTimestamp: Date): string
                     </ogc:PropertyIsLike>
                     <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
                         <ogc:PropertyName>dc:subject</ogc:PropertyName>
-                        <ogc:Literal>%source:${this.settings.id}%</ogc:Literal>
+                        <ogc:Literal>%source:${datasourceId}%</ogc:Literal>
                     </ogc:PropertyIsLike>
                     <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
                         <ogc:PropertyName>dc:subject</ogc:PropertyName>
@@ -118,14 +162,30 @@ private buildDeleteByTransactionTransaction(transactionTimestamp: Date): string
 </csw:Transaction>
 ```
 
+### Frontend cancel button state machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> idle
+    idle --> running : harvest starts
+    running --> cancelling : Cancel clicked\nstopPropagation · POST cancel
+    cancelling --> cancelled : WebSocket cancelled: true
+    running --> idle : WebSocket complete (success/error)
+    cancelled --> idle : user dismisses
+```
+
+The button element uses `(click)="onCancel($event)"` with `$event.stopPropagation()` to prevent the parent accordion from toggling. While in `cancelling` state the button label is "Cancelling…" and is disabled. The accordion must remain in its current open/closed state throughout.
+
 ## Key Decisions
 
 | Decision | Rationale | Rejected Alternative |
 |----------|-----------|----------------------|
-| CancellationToken as plain `{ cancelled: boolean }` | Simple; checked synchronously at bucket boundaries; no extra dependency | AbortController/AbortSignal — overkill for a synchronous bucket loop |
+| `harvesterRunCancelled: boolean` field on `Importer` | Simple; no indirection; service holds importer directly and calls `cancel()` | `CancellationToken` object — adds a reference hop with no benefit when the service stores the importer instance |
+| Field on importer, not parameter on `run()` | No signature change to `run()`; no param threading through 8+ exec() overrides | Optional `token?` param on `run()` — every exec() override signature must be updated |
 | `POST /api/import/:id/cancel` | Clear intent; no collision with `DELETE /api/harvester/:id` | `DELETE /api/import/:id` |
 | Keep `commitTransaction()` before catalog loop | Preserves the invariant that PostgreSQL is source of truth; catalog errors must not roll back DB records | Moving commit to after catalogs — would roll back DB on any catalog error (regression) |
-| New `deleteHarvestedDatasets` for Phase 2 DB cleanup | Precisely removes only this run's records; previous-run records unaffected | `deleteRecordsForDatasource` at DB level — removes all records for the datasource, including previous runs |
-| Three-way CSW filter (transaction + source + catalog) | Maximally safe; avoids collateral deletion across runs, datasources, and catalog instances | source + catalog only — would delete records from previous successful runs |
-| Track already-processed catalogs during run | Call `deleteHarvestRun` only for catalogs already written to | Delete from all configured catalogs — over-deletes when cancel arrives before catalog loop starts |
-| `CancelledError` separate from regular errors | Keeps cancel cleanup path strictly isolated from existing catalog-error handling (NFR-004) | Reusing existing error catch block — risks triggering cancel cleanup on unrelated catalog failures |
+| `rollbackSourceImport` for Phase 2 DB cleanup | Precisely removes only this run's records; previous-run records unaffected | `deleteRecordsForDatasource` at DB level — removes all records for the datasource, including previous runs |
+| Three-way CSW filter in `rollbackTargetCatalog` (transaction + source + catalog) | Maximally safe; avoids collateral deletion across runs, datasources, and catalog instances | source + catalog only — would delete records from previous successful runs |
+| Track already-processed catalogs during run | Call `rollbackTargetCatalog` only for catalogs already written to | Delete from all configured catalogs — over-deletes when cancel arrives before catalog loop starts |
+| `HarvestRunCancelledError` separate from regular errors | Keeps cancel cleanup path strictly isolated from existing error handling (NFR-004); `instanceof` check in single catch block | Reusing existing error catch block — risks triggering cancel cleanup on unrelated catalog failures |
+| Stage-level cancellation checks (not mid-loop) | Avoids modifying all importer harvest loops; satisfies NFR-001 (not mid-bucket) | Per-batch check inside harvest/service loops — more responsive but requires touching all importers |
