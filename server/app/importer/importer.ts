@@ -25,8 +25,8 @@ import type { GeneralSettings } from '@shared/general-config.settings.js';
 import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import { Observable } from 'rxjs';
-import type { Catalog } from '../catalog/catalog.factory.js';
-import { CswCatalog } from '../catalog/csw/csw.catalog.js';
+import type { Catalog, CatalogColumnType, CatalogOperation } from '../catalog/catalog.factory.js';
+import type { CatalogSettings } from '@shared/catalog.js';
 import type { ImporterSettings } from './importer.settings.js';
 import type { ImportLogMessage } from '../model/import.result.js';
 import { Summary } from '../model/summary.js';
@@ -85,6 +85,10 @@ export abstract class Importer<S extends ImporterSettings> {
         this.harvesterRunCancelled = true;
     }
 
+    protected checkCancellation(): void {
+        if (this.harvesterRunCancelled) throw new HarvestRunCancelledError();
+    }
+
     run(isIncremental: boolean = false): Observable<ImportLogMessage> {
         this.isIncremental = isIncremental;
         this.summary.isIncremental = isIncremental;
@@ -107,12 +111,13 @@ export abstract class Importer<S extends ImporterSettings> {
         else {
             let transactionTimestamp: Date;
             let transactionCommitted = false;
-            const processedCatalogs: Catalog[] = [];
+            const processedCatalogs: Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>[] = [];
             try {
+                this.checkCancellation();
                 transactionTimestamp = await this.database.beginTransaction();
                 // get datasets
                 let numIndexDocs = await this.harvest();
-                if (this.harvesterRunCancelled) throw new HarvestRunCancelledError();
+                this.checkCancellation();
                 if (!this.isIncremental) {
                     // did the harvesting return results at all?
                     if (numIndexDocs == 0) {
@@ -139,7 +144,7 @@ export abstract class Importer<S extends ImporterSettings> {
                 transactionCommitted = true;
                 // TODO support concurrency of different catalogs
                 for (const catalogId of this.settings.catalogIds) {
-                    if (this.harvesterRunCancelled) throw new HarvestRunCancelledError();
+                    this.checkCancellation();
                     const stageSummary = this.startStage(`catalog/${catalogId}`);
                     const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, stageSummary);
                     try {
@@ -172,9 +177,9 @@ export abstract class Importer<S extends ImporterSettings> {
                         const count = await this.database.rollbackSourceImport(this.settings.sourceURL, transactionTimestamp);
                         observer.next(rollbackDbStage.msgComplete(`Rolled back ${count} records`));
                         for (const catalog of processedCatalogs) {
-                            if (catalog instanceof CswCatalog) {
+                            if ('rollbackTargetCatalog' in catalog) {
                                 const rollbackCatalogStage = this.startStage('rollbackTargetCatalog');
-                                await catalog.rollbackTargetCatalog(this.settings.id, transactionTimestamp);
+                                await (catalog as any).rollbackTargetCatalog(this.settings.id, transactionTimestamp);
                                 observer.next(rollbackCatalogStage.msgComplete());
                             }
                         }

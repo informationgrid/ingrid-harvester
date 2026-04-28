@@ -39,8 +39,8 @@ import * as MiscUtils from '../../utils/misc.utils.js';
 import { MailServer } from '../../utils/nodemailer.utils.js';
 import * as ServiceUtils from '../../utils/service.utils.js';
 import * as XpathUtils from '../../utils/xpath.utils.js';
-import type { Catalog } from '../../catalog/catalog.factory.js';
-import { CswCatalog } from '../../catalog/csw/csw.catalog.js';
+import type { Catalog, CatalogColumnType, CatalogOperation } from '../../catalog/catalog.factory.js';
+import type { CatalogSettings } from '@shared/catalog.js';
 import { Importer, HarvestRunCancelledError } from '../importer.js';
 import { CswMapper } from './csw.mapper.js';
 import { cswDefaults, type CswSettings } from './csw.settings.js';
@@ -105,8 +105,9 @@ export class CswImporter extends Importer<CswSettings> {
         else {
             let transactionTimestamp: Date;
             let transactionCommitted = false;
-            const processedCatalogs: Catalog[] = [];
+            const processedCatalogs: Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>[] = [];
             try {
+                this.checkCancellation();
                 transactionTimestamp = await this.database.beginTransaction();
                 // configure for incremental harvesting
                 if (this.isIncremental) {
@@ -123,7 +124,7 @@ export class CswImporter extends Importer<CswSettings> {
                 }
                 // get datasets
                 let numIndexDocs = await this.harvest();
-                if (this.harvesterRunCancelled) throw new HarvestRunCancelledError();
+                this.checkCancellation();
                 if (!this.isIncremental) {
                     // did the harvesting return results at all?
                     if (numIndexDocs == 0) {
@@ -149,12 +150,12 @@ export class CswImporter extends Importer<CswSettings> {
                 if (this.settings.harvestingMode == 'separate') {
                     this.startStage('harvestServices');
                     await this.harvestServices();
-                    if (this.harvesterRunCancelled) throw new HarvestRunCancelledError();
+                    this.checkCancellation();
                 }
                 // data-service-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
                 this.startStage('coupling');
                 await this.coupleDatasetsServices(this.settings.resolveOgcDistributions);
-                if (this.harvesterRunCancelled) throw new HarvestRunCancelledError();
+                this.checkCancellation();
 
                 // did fatal errors occur (ie DB or APP errors)?
                 if (this.summary.errors.some(e => e.type === 'app' || e.type === 'database')) {
@@ -168,7 +169,7 @@ export class CswImporter extends Importer<CswSettings> {
                 transactionCommitted = true;
                 // TODO support concurrency of different catalogs
                 for (const catalogId of this.settings.catalogIds) {
-                    if (this.harvesterRunCancelled) throw new HarvestRunCancelledError();
+                    this.checkCancellation();
                     const stageSummary = this.startStage(`catalog/${catalogId}`);
                     const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, stageSummary);
                     try {
@@ -201,9 +202,9 @@ export class CswImporter extends Importer<CswSettings> {
                         const count = await this.database.rollbackSourceImport(this.settings.sourceURL, transactionTimestamp);
                         observer.next(rollbackDbStage.msgComplete(`Rolled back ${count} records`));
                         for (const catalog of processedCatalogs) {
-                            if (catalog instanceof CswCatalog) {
+                            if ('rollbackTargetCatalog' in catalog) {
                                 const rollbackCatalogStage = this.startStage('rollbackTargetCatalog');
-                                await catalog.rollbackTargetCatalog(this.settings.id, transactionTimestamp);
+                                await (catalog as any).rollbackTargetCatalog(this.settings.id, transactionTimestamp);
                                 observer.next(rollbackCatalogStage.msgComplete());
                             }
                         }
@@ -442,6 +443,7 @@ export class CswImporter extends Importer<CswSettings> {
     }
 
     async handleHarvest(delegate: RequestDelegate): Promise<void> {
+        this.checkCancellation();
         log.info('Requesting next records, starting at', delegate.getStartRecordIndex());
         let harvestStart = Date.now();
         let response = await delegate.doRequest();
@@ -477,6 +479,7 @@ export class CswImporter extends Importer<CswSettings> {
 
         let docsToImport = [];
         for (let i = 0; i < records.length; i++) {
+            this.checkCancellation();
             this.summary.numDocs++;
 
             const uuid = CswMapper.getCharacterStringContent(records[i], 'fileIdentifier');

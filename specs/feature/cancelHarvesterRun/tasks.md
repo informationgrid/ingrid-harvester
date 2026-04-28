@@ -64,6 +64,12 @@ created: 2026-04-27
   - Details: Stub `RequestDelegate.doRequest` (see conventions.md). (1) Success: valid TransactionResponse → assert `totalDeleted` at INFO. (2) Error: reject/ExceptionReport → assert ERROR logged, no rethrow. Follow csw-delete-records-for-datasource test pattern.
   - Acceptance: Both pass under `npm test`; no regressions.
 
+- [x] **TASK-010** Mid-batch and per-record cancellation in `CswImporter.handleHarvest()` / `extractRecords()`
+  - Refs: FR-005, NFR-001 (revised)
+  - File: `server/app/importer/csw/csw.importer.ts`
+  - Details: Add `this.checkCancellation()` as first line of `handleHarvest()`. After each `Promise.allSettled(delegates.map(...handleHarvest...))` in `harvest()` and `harvestServices()`, check for a `HarvestRunCancelledError` rejection and rethrow it so `exec()`'s catch block receives it.
+  - Acceptance: Setting cancel mid-batch causes pending delegates to skip immediately; first cancelled rejection propagates out of `harvest()` into `exec()` cancel path.
+
 - [x] **TASK-009** Unit tests for Phase 1/2 cancellation paths in `Importer`
   - Refs: FR-005, FR-006, NFR-004
   - File: `server/test/importer/importer.spec.ts`

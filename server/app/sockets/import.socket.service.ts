@@ -50,7 +50,7 @@ export class ImportSocketService {
     private lastEmitTimes = new Map<number, number>();
     private static readonly THROTTLE_MS = 500;
 
-    private activeJobs = new Map<number, { importer: Importer<any>; jobId: string }>();
+    private activeJobs = new Map<number, { importer: { cancel(): void }; jobId: string }>();
 
     cancelImport(harvesterId: number, jobId: string): boolean {
         const entry = this.activeJobs.get(harvesterId);
@@ -89,11 +89,15 @@ export class ImportSocketService {
                 let configHarvester = MiscUtils.merge(configData, configGeneral);
 
                 let profile = ProfileFactoryLoader.get();
+                const jobId = crypto.randomUUID();
+                let cancelBeforeStart = false;
+                this.activeJobs.set(id, { importer: { cancel: () => { cancelBeforeStart = true; } }, jobId });
+                this.nsp.emit('/log', { id, jobId, complete: false, stage: 'starting', lastExecution });
                 profile.getImporter(configHarvester).then(importer => {
+                    if (cancelBeforeStart) importer.cancel();
+                    this.activeJobs.set(id, { importer, jobId });
                     let mode = isIncremental ? 'incr' : 'full';
                     this.log.info(`>> Running importer: [${configHarvester.type}] ${configHarvester.description}`);
-                    const jobId = crypto.randomUUID();
-                    this.activeJobs.set(id, { importer, jobId });
                     harvestLogContext.run({ harvesterId: id, jobId }, () => {
                         importer.run(isIncremental).subscribe({
                             next: response => {
