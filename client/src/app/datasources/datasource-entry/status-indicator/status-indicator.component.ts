@@ -49,6 +49,7 @@ export class StatusIndicatorComponent {
       this.importLog().summary.warnings.length
     );
   });
+  cancelled = computed(() => this.importLog().cancelled);
 
   constructor() {}
 
@@ -59,7 +60,9 @@ export class StatusIndicatorComponent {
       if (this.importLog().complete == false) {
         statuses.push("importing");
       } else if (this.importLog().summary) {
-        if (this.errorNum() > 0) {
+        if (this.cancelled()) {
+          statuses.push("cancelled");
+        } else if (this.errorNum() > 0) {
           statuses.push("error");
         } else {
           statuses.push("success");
