@@ -47,5 +47,7 @@ export interface ImportLogMessage {
 
     cancelled?: boolean;
 
+    cancelling?: boolean;
+
     stage: string;
 }

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Component, computed, effect, input, output, signal, ViewChild } from "@angular/core";
+import { Component, computed, input, output, ViewChild } from "@angular/core";
 import { Datasource } from "@shared/datasource";
 import { ImportLogMessage } from "../../../../../server/app/model/import.result";
 import { TranslocoDirective } from "@ngneat/transloco";
@@ -71,7 +71,7 @@ export class DatasourceEntryComponent {
   onOpenJobLogs = output<void>();
   onCancel = output<void>();
 
-  cancelling = signal(false);
+  cancelling = computed(() => this.importLog()?.cancelling === true);
 
   isIncrementalSupported = computed(() => {
     return (
@@ -80,15 +80,10 @@ export class DatasourceEntryComponent {
     );
   });
 
-  constructor(private datasourceService: DatasourceService) {
-    effect(() => {
-      if (this.importLog()?.complete) this.cancelling.set(false);
-    });
-  }
+  constructor(private datasourceService: DatasourceService) {}
 
   cancelImport(evt: Event): void {
     evt.stopPropagation();
-    this.cancelling.set(true);
     this.onCancel.emit();
   }
 

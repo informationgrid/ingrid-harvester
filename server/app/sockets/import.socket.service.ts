@@ -56,6 +56,14 @@ export class ImportSocketService {
         const entry = this.activeJobs.get(harvesterId);
         if (!entry || entry.jobId !== jobId) return false;
         entry.importer.cancel();
+        const existing = this.summaryService.get(harvesterId);
+        if (existing?.summary) {
+            const cancellingMsg: ImportLogMessage = { ...existing, id: harvesterId, jobId, complete: false, cancelling: true };
+            this.summaryService.update(cancellingMsg);
+            this.nsp.emit('/log', cancellingMsg);
+        } else {
+            this.nsp.emit('/log', { id: harvesterId, jobId, complete: false, cancelling: true, stage: '' });
+        }
         return true;
     }
 
