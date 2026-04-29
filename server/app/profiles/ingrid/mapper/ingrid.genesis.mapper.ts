@@ -21,14 +21,14 @@
  * ==================================================
  */
 
-import { DOMImplementation } from "@xmldom/xmldom";
+import { DOMImplementation } from '@xmldom/xmldom';
+import { DCAT_FILE_TYPE_URL, DCAT_LANGUAGE_URL, ISO_639_1_TO_3 } from '../../../importer/dcatapde/dcatapde.utils.js';
 import { GenesisMapper } from '../../../importer/genesis/genesis.mapper.js';
-import { DCAT_FILE_TYPE_URL, DCAT_LANGUAGE_URL, ISO_639_1_TO_3, prettyPrintXml } from '../../../importer/dcatapde/dcatapde.utils.js';
 import { namespaces } from '../../../importer/namespaces.js';
 import { UrlUtils } from '../../../utils/url.utils.js';
+import { ensureNoEndSlash, generateUuid } from "../ingrid.utils.js";
 import type { IngridOpendataIndexDocument } from '../model/opendataindex.document.js';
-import { ingridMapper } from "./ingrid.mapper.js";
-import {ensureNoEndSlash} from "../ingrid.utils.js";
+import { ingridMapper } from './ingrid.mapper.js';
 
 export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
 
@@ -144,8 +144,8 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             dataset.appendChild(period);
         }
 
-        for (const keyword of this.baseMapper.getKeywords()) {
-            dataset.appendChild(doc.createElement('dcat:keyword')).textContent = keyword;
+        for (const keyword of this.getKeywords()) {
+            dataset.appendChild(doc.createElement('dcat:keyword')).textContent = keyword.term;
         }
 
         const theme = this.baseMapper.getTheme();
@@ -158,8 +158,11 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         const licenseUrl = this.baseMapper.getLicenseUrl();
         const distributions = this.baseMapper.getDistributions();
         for (const dist of distributions) {
+            const distId = `urn:uuid:${generateUuid([dist.access_url])}`;
             const distEl = doc.createElement('dcat:distribution');
+            distEl.setAttribute('rdf:resource', distId);
             const distNode = doc.createElement('dcat:Distribution');
+            distNode.setAttribute('rdf:about', distId);
             if (dist.access_url) {
                 const accessEl = doc.createElement('dcat:accessURL');
                 accessEl.setAttribute('rdf:resource', dist.access_url);
@@ -179,7 +182,8 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
                 licEl.setAttribute('rdf:resource', licenseUrl);
                 distNode.appendChild(licEl);
             }
-            distEl.appendChild(distNode);
+            // interface-search cannot handle correct RDF/XML. we have to serve its preferred format
+            rdfRoot.appendChild(distNode);
             dataset.appendChild(distEl);
         }
 
