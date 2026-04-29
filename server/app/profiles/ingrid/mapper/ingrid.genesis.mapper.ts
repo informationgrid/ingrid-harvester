@@ -190,7 +190,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         const publisher = this.baseMapper.getPublisher();
         if (publisher) {
             const pubEl = doc.createElement('dct:publisher');
-            const orgEl = doc.createElement('foaf:Organization');
+            const orgEl = doc.createElement('foaf:Agent');
             orgEl.appendChild(doc.createElement('foaf:name')).textContent = publisher.name;
             pubEl.appendChild(orgEl);
             dataset.appendChild(pubEl);
