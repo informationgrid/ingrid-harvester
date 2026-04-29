@@ -114,6 +114,16 @@ export class ingridCkanMapper extends ingridMapper<CkanMapper> {
                 });
             }
         });
+
+        // explicitly add "opendata" keyword if not already present
+        if (!result.some(keyword => keyword.term.toLowerCase() === 'opendata')) {
+            result.push({
+                term: 'opendata',
+                id: null,
+                source: 'FREE'
+            });
+        }
+
         return result;
     }
 
