@@ -198,6 +198,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             if (publisher.email) {
                 const contactEl = doc.createElement('dcat:contactPoint');
                 const vcardEl = doc.createElement('vcard:Organization');
+                vcardEl.appendChild(doc.createElement('vcard:fn')).textContent = publisher.name;
                 vcardEl.appendChild(doc.createElement('vcard:hasEmail')).textContent = publisher.email;
                 contactEl.appendChild(vcardEl);
                 dataset.appendChild(contactEl);
