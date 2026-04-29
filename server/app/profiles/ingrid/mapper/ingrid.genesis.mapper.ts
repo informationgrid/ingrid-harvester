@@ -67,7 +67,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
                 "accrual_periodicity_key": ""
             },
             contacts: [],
-            keywords: this.baseMapper.getKeywords().map(term => ({ id: null, term, source: 'FREE' })),
+            keywords: this.getKeywords(),
             distributions: this.baseMapper.getDistributions(),
             dcat: { landingPage: null },
             legal_basis: null,
@@ -86,6 +86,15 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             this._dcatapdeDoc = this._buildDcatapdeDocument();
         }
         return this._dcatapdeDoc;
+    }
+
+    getKeywords(): any[] {
+        const keywords = this.baseMapper.getKeywords() ?? [];
+        // explicitly add "opendata" keyword if not already present
+        if (!keywords.some(term => term.toLowerCase() === 'opendata')) {
+            keywords.push('opendata');
+        }
+        return keywords.map(term => ({ id: null, term, source: 'FREE' }));
     }
 
     private _buildDcatapdeDocument(): string {
@@ -206,6 +215,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             dataset.appendChild(langEl);
         }
 
-        return '<?xml version="1.0" encoding="utf-8"?>\n' + prettyPrintXml(doc.toString());
+        // return '<?xml version="1.0" encoding="utf-8"?>\n' + prettyPrintXml(doc.toString());
+        return '<?xml version="1.0" encoding="utf-8"?>\n' + doc.toString();
     }
 }
