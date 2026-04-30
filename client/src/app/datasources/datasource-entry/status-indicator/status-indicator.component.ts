@@ -41,39 +41,39 @@ export class StatusIndicatorComponent {
   datasource = input.required<Datasource>();
   importLog = input<ImportLogMessage>();
 
-  statuses = computed(() => this.getStatuses());
-  errorNum = computed(() => {
-    return (
-      this.importLog().summary.numErrors +
-      (this.importLog().summary.errors?.length ?? 0) +
-      this.importLog().summary.warnings.length
-    );
+  /** Result of the last import run — null if no run has completed yet. */
+  runStatus = computed<Status | null>(() => {
+    const log = this.importLog();
+    if (!log) return null;
+    if (log.complete === false) return "importing";
+    if (log.status) return log.status as Status;
+    if (log.summary) {
+      const s = log.summary;
+      const hasError = log.message || (s.numErrors ?? 0) > 0 || (s.errors?.length ?? 0) > 0;
+      return hasError ? "error" : "success";
+    }
+    return null;
+  });
+
+  /** Configuration state of the harvester, independent of run result. */
+  configStatuses = computed<Status[]>(() => {
+    if (this.datasource().disable) return ["disable"];
+    const cron = this.datasource().cron;
+    return cron?.full?.active || cron?.incr?.active ? ["cron"] : [];
+  });
+
+  statuses = computed<Status[]>(() =>
+    [this.runStatus(), ...this.configStatuses()].filter(
+      (s): s is Status => s !== null
+    )
+  );
+
+  /** Total number of errors + warnings from the last completed run, for display in the error tooltip. */
+  errorNum = computed<number>(() => {
+    const summary = this.importLog()?.summary;
+    if (!summary) return 0;
+    return summary.numErrors + (summary.errors?.length ?? 0) + summary.warnings.length;
   });
 
   constructor() {}
-
-  getStatuses() {
-    let statuses: Status[] = [];
-
-    if (this.importLog() !== undefined) {
-      if (this.importLog().complete == false) {
-        statuses.push("importing");
-      } else if (this.importLog().summary) {
-        if (this.errorNum() > 0) {
-          statuses.push("error");
-        } else {
-          statuses.push("success");
-        }
-      }
-    }
-
-    const cron = this.datasource().cron;
-    if (this.datasource().disable) {
-      statuses = ["disable"];
-    } else if (cron?.full?.active || cron?.incr?.active) {
-      statuses.push("cron");
-    }
-
-    return statuses;
-  }
 }

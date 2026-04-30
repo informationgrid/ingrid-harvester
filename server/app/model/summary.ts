@@ -156,7 +156,7 @@ export class Summary {
             stage: this.stage,
             complete: true,
             summary: this,
-            message: message ? message : undefined
+            message: message ?? undefined
         };
     }
 }

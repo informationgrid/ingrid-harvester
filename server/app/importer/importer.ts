@@ -37,6 +37,7 @@ import { ConfigService } from '../services/config/ConfigService.js';
 import { FilterUtils } from '../utils/filter.utils.js';
 import * as MiscUtils from '../utils/misc.utils.js';
 import { MailServer } from '../utils/nodemailer.utils.js';
+import { JobsUtils } from '../statistic/jobs.utils.js';
 
 const log = log4js.getLogger(import.meta.filename)
 
@@ -143,7 +144,9 @@ export abstract class Importer<S extends ImporterSettings> {
                     }
                 }
                 await this.postHarvestingHandling();
-                observer.next(this.summary.msgComplete());
+                const completeMsg = this.summary.msgComplete();
+                completeMsg.status = JobsUtils.deriveStatus(completeMsg, [this.summary, ...this.stageSummaries]);
+                observer.next(completeMsg);
             }
             catch (err) {
                 if (err.message) {

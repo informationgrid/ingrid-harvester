@@ -57,7 +57,7 @@ export class JobsUtils {
     async saveJob(logMessage: ImportLogMessage, baseIndex: string, stageSummaries: Summary[] = []): Promise<void> {
         const globalSummary = logMessage.summary;
         const allStages = [logMessage.summary, ...stageSummaries];
-        const status = this.deriveStatus(logMessage, allStages);
+        const status = JobsUtils.deriveStatus(logMessage, allStages);
         const stages = allStages.map(s => ({
             name: s.stage,
             startTime: s.startTime,
@@ -92,11 +92,12 @@ export class JobsUtils {
         }
     }
 
-    private deriveStatus(logMessage: ImportLogMessage, allStages: Summary[]): JobStatus {
+    static deriveStatus(logMessage: ImportLogMessage, allStages: Summary[]): JobStatus {
         if (logMessage.message === 'Import cancelled') return 'cancelled';
         if (!logMessage.summary) return 'success';
-        if (allStages.some(s => s?.errors?.length > 0)) return 'error';
-        if (allStages.some(s => s?.skippedDocs?.length > 0)) return 'partial';
+        if (logMessage.message) return 'error';
+        if (allStages.some(s => (s?.errors?.length ?? 0) > 0 || (s?.numErrors ?? 0) > 0)) return 'error';
+        if (allStages.some(s => (s?.skippedDocs?.length ?? 0) > 0)) return 'partial';
         return 'success';
     }
 }

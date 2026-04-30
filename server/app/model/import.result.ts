@@ -21,12 +21,15 @@
  * ==================================================
  */
 
+import type { JobStatus } from '@shared/job.js';
 import type {Summary} from './summary.js';
 
 export interface ImportLogMessage {
     id?: number;
 
     complete?: boolean;
+
+    status?: JobStatus;
 
     message?: string;
 
