@@ -251,7 +251,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
                 let name = DcatapdeMapper.select('./foaf:name', organization, true);
                 if(name) {
                     let infos: any = {
-                        organization: name.textContent
+                        name: name.textContent
                     };
 
                     publishers.push(infos);

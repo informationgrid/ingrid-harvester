@@ -1006,12 +1006,12 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
                     if (name) {
                         (<Person>originator).name = name.textContent
                     } else {
-                        (<Organization>originator).organization = org.textContent
+                        (<Organization>originator).name = org.textContent
                     }
 
                     let alreadyPresent = originators.filter(other => {
                         return other.name === (<Person>originator).name
-                            && other.organization === (<Organization>originator).organization
+                            && other.organization === (<Organization>originator).name
                             && other.mbox === originator.mbox
                             && other.homepage === originator.homepage;
                     }).length > 0;

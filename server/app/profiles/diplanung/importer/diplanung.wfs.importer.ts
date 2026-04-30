@@ -49,7 +49,7 @@ export class DiplanungWfsImporter extends WfsImporter {
         // role -> contact
         let contacts: Map<string, Contact> = new Map();
         if (this.settings.contactCswUrl) {
-            let response = await RequestDelegate.doRequest({ 
+            let response = await RequestDelegate.doRequest({
                 uri: this.settings.contactCswUrl,
                 accept: 'text/xml',
                 ...getProxyConfig()
@@ -103,14 +103,14 @@ export class DiplanungWfsImporter extends WfsImporter {
         generalInfo['contactPoint'] = pointOfContact;
 
         // general maintainer
-        let maintainer: Person | Organization = { organization: contacts.get('custodian')?.hasOrganizationName };
+        let maintainer: Person | Organization = { name: contacts.get('custodian')?.hasOrganizationName };
         // fallbacks
-        if (!maintainer.organization?.trim()) {
+        if (!maintainer.name?.trim()) {
             if (contacts.get('custodian')?.fn?.trim()) {
                 maintainer = { name: contacts.get('custodian')?.fn };
             }
             else if (pointOfContact.hasOrganizationName?.trim()) {
-                maintainer = { organization: pointOfContact.hasOrganizationName };
+                maintainer = { name: pointOfContact.hasOrganizationName };
             }
             else if (pointOfContact.fn?.trim()) {
                 maintainer = { name: pointOfContact.fn };

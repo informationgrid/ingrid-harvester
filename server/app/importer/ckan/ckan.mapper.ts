@@ -210,7 +210,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
             let homepage = this.source.organization.description;
             let match = homepage.match(/]\(([^)]+)/); // Square bracket followed by text in parentheses
             publisher = {
-                organization: this.source.organization.title,
+                name: this.source.organization.title,
                 homepage: match ? match[1] : undefined
             };
         }

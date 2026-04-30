@@ -147,7 +147,7 @@ export class DcatApPluDocumentFactory {// no can do with TS: extends ExportDocum
     }
 
     private static xmlFoafAgent(parent: string, agent: Person | Organization): string {
-        let name = (<Organization>agent)?.organization ?? (<Person>agent)?.name;
+        let name = (<Organization>agent)?.name ?? (<Person>agent)?.name;
         return `<${parent}>
             <foaf:Agent>
                 <foaf:name>${esc(name)}</foaf:name>

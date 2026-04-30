@@ -32,7 +32,7 @@ export interface Person extends Agent {
 }
 
 export interface Organization extends Agent {
-    organization: string;
+    name: string;
 }
 
 export interface Contact {
