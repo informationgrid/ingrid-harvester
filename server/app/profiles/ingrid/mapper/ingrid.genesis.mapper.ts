@@ -67,7 +67,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
                 "accrual_periodicity_key": ""
             },
             contacts: this.baseMapper.getContact(),
-            keywords: this.getKeywords().map(term => ({ id: null, term, source: 'FREE' })),
+            keywords: this.getKeywords(),
             distributions: this.baseMapper.getDistributions(),
             dcat: { landingPage: null },
             legal_basis: null,
