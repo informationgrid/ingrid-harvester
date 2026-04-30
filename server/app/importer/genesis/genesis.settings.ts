@@ -64,6 +64,10 @@ export type GenesisTypeConfig = {
     licenseUrl?: string;
     /** Contributor registry URI — maps to dcatde:contributorID */
     contributorId?: string;
+    /** Spatial coverage URI — maps to dct:spatial, e.g. a Geo-URI for a federal state */
+    spatialUri?: string;
+    /** Landing page URL — maps to dcat:landingPage */
+    landingPageUrl?: string;
     /**
      * URL template for CSV downloads. Use `{code}` as placeholder for the table code.
      * e.g. "https://www-genesis.destatis.de/genesis-old/downloads/00/tables/{code}_00.csv"

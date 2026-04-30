@@ -167,6 +167,28 @@ export abstract class GenesisType {
                     ],
                   },
                   {
+                    fieldGroupClassName: "ingrid-row",
+                    fieldGroup: [
+                      {
+                        key: "spatialUri",
+                        type: "input",
+                        className: "ingrid-col-10",
+                        props: { label: "Räumliche Abdeckung (URI)" },
+                      },
+                    ],
+                  },
+                  {
+                    fieldGroupClassName: "ingrid-row",
+                    fieldGroup: [
+                      {
+                        key: "landingPageUrl",
+                        type: "input",
+                        className: "ingrid-col-10",
+                        props: { label: "Einstiegsseite (URL)" },
+                      },
+                    ],
+                  },
+                  {
                     key: "publisher",
                     fieldGroup: [
                       {

@@ -136,6 +136,17 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
         return this.settings.typeConfig.publisher;
     }
 
+    getContact() {
+        const contacts = [];
+        if (this.getPublisher().name) {
+            contacts.push({
+                name: this.getPublisher().name,
+                role: 10
+            })
+        }
+        return contacts
+    }
+
     getTheme(): string | undefined {
         return this.settings.typeConfig.theme;
     }
@@ -146,6 +157,14 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
 
     getContributorId(): string | undefined {
         return this.settings.typeConfig.contributorId;
+    }
+
+    getSpatialUri(): string | undefined {
+        return this.settings.typeConfig.spatialUri;
+    }
+
+    getLandingPageUrl(): string | undefined {
+        return this.settings.typeConfig.landingPageUrl;
     }
 
     getDistributions(): any[] {

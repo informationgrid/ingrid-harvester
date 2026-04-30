@@ -66,8 +66,8 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
                 "accrual_periodicity": "",
                 "accrual_periodicity_key": ""
             },
-            contacts: [],
-            keywords: this.getKeywords(),
+            contacts: this.baseMapper.getContact(),
+            keywords: this.getKeywords().map(term => ({ id: null, term, source: 'FREE' })),
             distributions: this.baseMapper.getDistributions(),
             dcat: { landingPage: null },
             legal_basis: null,
@@ -218,6 +218,20 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             const langEl = doc.createElement('dct:language');
             langEl.setAttribute('rdf:resource', DCAT_LANGUAGE_URL + iso3);
             dataset.appendChild(langEl);
+        }
+
+        const spatialUri = this.baseMapper.getSpatialUri();
+        if (spatialUri) {
+            const spatialEl = doc.createElement('dct:spatial');
+            spatialEl.setAttribute('rdf:resource', spatialUri);
+            dataset.appendChild(spatialEl);
+        }
+
+        const landingPageUrl = this.baseMapper.getLandingPageUrl();
+        if (landingPageUrl) {
+            const landingPageEl = doc.createElement('dcat:landingPage');
+            landingPageEl.setAttribute('rdf:resource', landingPageUrl);
+            dataset.appendChild(landingPageEl);
         }
 
         // return '<?xml version="1.0" encoding="utf-8"?>\n' + prettyPrintXml(doc.toString());
