@@ -167,6 +167,15 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
         return this.settings.typeConfig.landingPageUrl;
     }
 
+    getFrequency(): string | undefined {
+        const entries: { From: string; To: string | null; Type: string }[] =
+            this.record?.StatisticMetadata?.Object?.Frequency ?? [];
+        if (!entries.length) return undefined;
+        const active = entries.find(e => e.To === null)
+            ?? entries.reduce((latest, e) => e.From > latest.From ? e : latest);
+        return active.Type;
+    }
+
     getDistributions(): any[] {
         const code = this.getCode();
         const template = this.settings.typeConfig.downloadUrlTemplate;

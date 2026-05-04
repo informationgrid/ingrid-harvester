@@ -61,6 +61,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
 
     private totalRecords = 0;
     private numIndexDocs = 0;
+    private statisticCache = new Map<string, any>();
 
     constructor(settings: GenesisSettings) {
         super(settings);
@@ -177,6 +178,8 @@ export class GenesisImporter extends Importer<GenesisSettings> {
             return;
         }
 
+        apiResponse.StatisticMetadata = await this.fetchStatisticMetadata(entry.Code);
+
         // Create document via profile-specific mapper
         let mapper = new GenesisMapper(this.settings, apiResponse, harvestTime, this.summary);
         let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
@@ -212,6 +215,28 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         }
 
         this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+    }
+
+    /**
+     * Fetches statistic metadata for the given table code, using the leading
+     * numeric part of the code as the statistic identifier. Results are cached
+     * so each statistic is only requested once per harvest run.
+     */
+    private async fetchStatisticMetadata(tableCode: string): Promise<any> {
+        const statisticCode = tableCode.match(/^\d+/)?.[0];
+        if (!statisticCode) return null;
+        if (this.statisticCache.has(statisticCode)) {
+            return this.statisticCache.get(statisticCode);
+        }
+        try {
+            const result = await this.doApiRequest('/metadata/statistic', { name: statisticCode, language: 'de' });
+            this.statisticCache.set(statisticCode, result);
+            return result;
+        } catch (e) {
+            log.warn(`Failed to fetch statistic metadata for "${statisticCode}": ${e.message}`);
+            this.statisticCache.set(statisticCode, null);
+            return null;
+        }
     }
 
     /**

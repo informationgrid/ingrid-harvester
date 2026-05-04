@@ -97,6 +97,30 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         return keywords.map(term => ({ id: null, term, source: 'FREE' }));
     }
 
+    private getAccrualPeriodicityUri(): string | undefined {
+        const FREQUENCY_BASE = 'http://publications.europa.eu/resource/authority/frequency/';
+        const map: Record<string, string> = {
+            'täglich':          'DAILY',
+            'wöchentlich':      'WEEKLY',
+            'zweiwöchentlich':  'BIWEEKLY',
+            'monatlich':        'MONTHLY',
+            'zweimonatlich':    'BIMONTHLY',
+            'vierteljährlich':  'QUARTERLY',
+            'quartalsweise':    'QUARTERLY',
+            'halbjährlich':     'BIANNUAL',
+            'jährlich':         'ANNUAL',
+            'zweijährlich':     'BIENNIAL',
+            'dreijährlich':     'TRIENNIAL',
+            'unregelmäßig':     'IRREGULAR',
+            'einmalig':         'NEVER',
+        };
+        const type = this.baseMapper.getFrequency();
+        if (!type) return undefined;
+        const key = type.toLowerCase();
+        const code = map[key];
+        return code ? FREQUENCY_BASE + code : undefined;
+    }
+
     private _buildDcatapdeDocument(): string {
         const dom = new DOMImplementation();
         const doc = dom.createDocument(namespaces.RDF, 'rdf:RDF', null);
@@ -153,6 +177,13 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             const themeEl = doc.createElement('dcat:theme');
             themeEl.setAttribute('rdf:resource', theme);
             dataset.appendChild(themeEl);
+        }
+
+        const accrualPeriodicityUri = this.getAccrualPeriodicityUri();
+        if (accrualPeriodicityUri) {
+            const periodicityEl = doc.createElement('dct:accrualPeriodicity');
+            periodicityEl.setAttribute('rdf:resource', accrualPeriodicityUri);
+            dataset.appendChild(periodicityEl);
         }
 
         const licenseUrl = this.baseMapper.getLicenseUrl();
