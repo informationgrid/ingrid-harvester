@@ -69,9 +69,9 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             contacts: this.baseMapper.getContact(),
             keywords: this.getKeywords(),
             distributions: this.baseMapper.getDistributions(),
-            dcat: { landingPage: null },
+            dcat: { landingPage: this.baseMapper.getLandingPageUrl() },
             legal_basis: null,
-            political_geocoding_level_uri: null,
+            political_geocoding_level_uri: this.baseMapper.getSpatialUri(),
             rdf: this.createDcatapdeDocument(),
             sort_hash: this.getSortHash(),
             content: null,
@@ -194,6 +194,9 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             distEl.setAttribute('rdf:resource', distId);
             const distNode = doc.createElement('dcat:Distribution');
             distNode.setAttribute('rdf:about', distId);
+            if (dist.title) {
+                distNode.appendChild(doc.createElement('dct:title')).textContent = dist.title;
+            }
             if (dist.access_url) {
                 const accessEl = doc.createElement('dcat:accessURL');
                 accessEl.setAttribute('rdf:resource', dist.access_url);
@@ -207,6 +210,9 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
                 const formatEl = doc.createElement('dct:format');
                 formatEl.setAttribute('rdf:resource', formatIri);
                 distNode.appendChild(formatEl);
+            }
+            if (dist.modified) {
+                addDate(distNode, 'dct:modified', dist.modified);
             }
             if (licenseUrl) {
                 const licEl = doc.createElement('dct:license');

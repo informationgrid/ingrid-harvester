@@ -204,7 +204,7 @@ describe('GenesisMapper — field extraction', function () {
                 ...baseSettings,
                 typeConfig: {
                     ...baseSettings.typeConfig,
-                    downloadUrlTemplate: 'https://example.com/tables/{code}_00.csv',
+                    tableUrlTemplate: 'https://example.com/tables/{code}_00.csv',
                 },
             };
             // @ts-ignore
@@ -215,7 +215,7 @@ describe('GenesisMapper — field extraction', function () {
             expect(distributions[0].access_url).to.equal('https://example.com/tables/11911-0002_00.csv');
         });
 
-        it('returns empty array when downloadUrlTemplate is not set', function () {
+        it('returns empty array when tableUrlTemplate is not set', function () {
             expect(makeMapper(realRecord).getDistributions()).to.deep.equal([]);
         });
     });

@@ -74,7 +74,7 @@ const baseSettings: GenesisSettings = {
     dryRun: true,
     typeConfig: {
         ...genesisDefaults.typeConfig,
-        tableSelections: ['12345*'],
+        statisticCodes: ['12345*'],
     },
 };
 

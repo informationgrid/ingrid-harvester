@@ -44,10 +44,10 @@ export type GenesisTypeConfig = {
     /** Delay in milliseconds between consecutive API calls to avoid rate limiting. Default: 500 */
     requestDelayMs: number;
     /**
-     * API `selection` patterns (may contain wildcards, e.g. "11111*") passed to
-     * /catalogue/tables. One request is made per entry.
+     * API `selection` patterns (may contain wildcards, e.g. "11*") passed to
+     * /catalogue/statistics. One request is made per entry.
      */
-    tableSelections: string[];
+    statisticCodes: string[];
     /**
      * Publisher/contact metadata for DCAT-AP.de output.
      * Maps to dct:publisher, dcat:contactPoint, vcard:fn, foaf:name, vcard:hasEmail.
@@ -66,13 +66,17 @@ export type GenesisTypeConfig = {
     contributorId?: string;
     /** Spatial coverage URI — maps to dct:spatial, e.g. a Geo-URI for a federal state */
     spatialUri?: string;
-    /** Landing page URL — maps to dcat:landingPage */
-    landingPageUrl?: string;
     /**
-     * URL template for CSV downloads. Use `{code}` as placeholder for the table code.
-     * e.g. "https://www-genesis.destatis.de/genesis-old/downloads/00/tables/{code}_00.csv"
+     * URL template for the statistic landing page. Use `{code}` as placeholder for the statistic code.
+     * e.g. "https://genesis.sachsen-anhalt.de/genesis/online?operation=statistic&code={code}"
+     * Maps to dcat:landingPage.
      */
-    downloadUrlTemplate?: string;
+    statisticUrlTemplate?: string;
+    /**
+     * URL template for table online resource. Use `{code}` as placeholder for the table code.
+     * e.g. "https://genesis.sachsen-anhalt.de/genesis/online?operation=table&code={code}"
+     */
+    tableUrlTemplate?: string;
 };
 
 export type GenesisSettings = {
@@ -83,7 +87,7 @@ export const genesisDefaults: GenesisSettings = {
     ...defaultImporterSettings,
     typeConfig: {
         requestDelayMs: 500,
-        tableSelections: []
+        statisticCodes: []
     }
 };
 

@@ -77,7 +77,7 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
     }
 
     getDescription(): string {
-        return this.getTitle();
+        return this.record?.Object?.Information ?? this.getTitle();
     }
 
     getModifiedDate(): Date {
@@ -115,12 +115,14 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
     }
 
     getKeywords(): string[] {
-        const structure = this.record?.Object?.Structure;
-        if (!structure) return [];
         const contents = new Set<string>();
-        this.collectContent(structure.Head, contents);
-        (structure.Columns ?? []).forEach(col => this.collectContent(col, contents));
-        (structure.Rows   ?? []).forEach(row => this.collectContent(row, contents));
+        for (const table of this.record?.Tables ?? []) {
+            const structure = table?.Object?.Structure;
+            if (!structure) continue;
+            this.collectContent(structure.Head, contents);
+            (structure.Columns ?? []).forEach(col => this.collectContent(col, contents));
+            (structure.Rows   ?? []).forEach(row => this.collectContent(row, contents));
+        }
         return Array.from(contents);
     }
 
@@ -164,28 +166,35 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
     }
 
     getLandingPageUrl(): string | undefined {
-        return this.settings.typeConfig.landingPageUrl;
+        const template = this.settings.typeConfig.statisticUrlTemplate;
+        if (!template) return undefined;
+        return template.replace('{code}', this.getCode());
     }
 
     getFrequency(): string | undefined {
         const entries: { From: string; To: string | null; Type: string }[] =
-            this.record?.StatisticMetadata?.Object?.Frequency ?? [];
+            this.record?.Object?.Frequency ?? [];
         if (!entries.length) return undefined;
         const active = entries.find(e => e.To === null)
             ?? entries.reduce((latest, e) => e.From > latest.From ? e : latest);
         return active.Type;
     }
 
-    getDistributions(): any[] {
-        const code = this.getCode();
-        const template = this.settings.typeConfig.downloadUrlTemplate;
-        if (!code || !template) return [];
-        const downloadURL = template.replace('{code}', code);
-        return [{
-            access_url: downloadURL,
-            format: ['text/html'],
-            description: this.getTitle(),
-        }];
+    getDistributions(): Distribution[] {
+        const template = this.settings.typeConfig.tableUrlTemplate;
+        if (!template) return [];
+        return (this.record?.Tables ?? [])
+            .filter(table => table?.Object?.Code)
+            .map(table => (<Distribution>{
+                access_url: template.replace('{code}', table.Object.Code),
+                format: ['text/html'],
+                title: table.Object.Content ?? '',
+                modified: table.Object.Updated ? this.parseGenesisDate(table.Object.Updated) : undefined,
+                temporal: (table.Object.Time?.From || table.Object.Time?.To) ? {
+                    gte: table.Object.Time?.From ? this.parseTemporalBound(table.Object.Time.From, false) : undefined,
+                    lte: table.Object.Time?.To   ? this.parseTemporalBound(table.Object.Time.To,   true)  : undefined,
+                } : undefined,
+            }));
     }
 
     private collectContent(node: any, result: Set<string>): void {

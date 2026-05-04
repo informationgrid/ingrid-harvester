@@ -70,9 +70,9 @@ export abstract class GenesisType {
                 key: "typeConfig",
                 fieldGroup: [
                   {
-                    key: "tableSelections",
+                    key: "statisticCodes",
                     type: "chip",
-                    props: { label: "Tabellenauswahl" },
+                    props: { label: "Statistikauswahl" },
                   },
                   {
                     fieldGroupClassName: "ingrid-row",
@@ -126,10 +126,21 @@ export abstract class GenesisType {
                     fieldGroupClassName: "ingrid-row",
                     fieldGroup: [
                       {
-                        key: "downloadUrlTemplate",
+                        key: "statisticUrlTemplate",
                         type: "input",
                         className: "ingrid-col-10",
-                        props: { label: "Download-URL-Vorlage" },
+                        props: { label: "Statistik-URL-Vorlage (Einstiegsseite)" },
+                      },
+                    ],
+                  },
+                  {
+                    fieldGroupClassName: "ingrid-row",
+                    fieldGroup: [
+                      {
+                        key: "tableUrlTemplate",
+                        type: "input",
+                        className: "ingrid-col-10",
+                        props: { label: "Tabellen-URL-Vorlage (Distribution)" },
                       },
                     ],
                   },
@@ -174,17 +185,6 @@ export abstract class GenesisType {
                         type: "input",
                         className: "ingrid-col-10",
                         props: { label: "Räumliche Abdeckung (URI)" },
-                      },
-                    ],
-                  },
-                  {
-                    fieldGroupClassName: "ingrid-row",
-                    fieldGroup: [
-                      {
-                        key: "landingPageUrl",
-                        type: "input",
-                        className: "ingrid-col-10",
-                        props: { label: "Einstiegsseite (URL)" },
                       },
                     ],
                   },
