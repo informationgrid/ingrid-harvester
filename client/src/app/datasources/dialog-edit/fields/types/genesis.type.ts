@@ -34,7 +34,10 @@ export abstract class GenesisType {
         fieldGroup: [
           {
             wrappers: ["section"],
-            props: { label: "GENESIS Einstellungen" },
+            props: {
+              label: "GENESIS Einstellungen",
+              contextHelpId: "harvester_genesis_settings"
+            },
             fieldGroup: [
               {
                 fieldGroupClassName: "ingrid-row",
