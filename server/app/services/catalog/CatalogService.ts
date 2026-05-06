@@ -78,7 +78,7 @@ export class CatalogService {
 
             return filtered;
         });
-        if (filteredCatalogsSettings.length == 1) {
+        if (id != null && filteredCatalogsSettings.length == 1) {
             return filteredCatalogsSettings[0];
         }
         return filteredCatalogsSettings;
