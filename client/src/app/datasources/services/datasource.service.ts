@@ -220,6 +220,10 @@ export class DatasourceService {
     return this.api.getJobs(id);
   }
 
+  cancelImport(id: number, jobId: string): Observable<{ cancelled: boolean }> {
+    return this.api.cancelImport(id, jobId);
+  }
+
   private updateImportLogs(log: ImportLogMessage) {
     this._importLogs.update((current) => ({
       ...current,

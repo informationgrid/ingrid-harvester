@@ -90,6 +90,10 @@ export class DatasourceApi {
     return this.http.get<{ harvester: string; jobs: JobEntry[] }>("rest/api/harvester/jobs/" + id);
   }
 
+  cancelImport(id: number, jobId: string): Observable<{ cancelled: boolean }> {
+    return this.http.post<{ cancelled: boolean }>(`rest/api/import/${id}/cancel`, { jobId });
+  }
+
   getHarvesterLog(harvesterId: number, jobId: string): Observable<string> {
     console.log("harvester-id", harvesterId, "job:", jobId);
     return this.http.get(`rest/api/log/${harvesterId}/${jobId}`, {

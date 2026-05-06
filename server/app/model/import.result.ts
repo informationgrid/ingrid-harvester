@@ -48,5 +48,9 @@ export interface ImportLogMessage {
 
     jobId?: string;
 
+    cancelled?: boolean;
+
+    cancelling?: boolean;
+
     stage: string;
 }

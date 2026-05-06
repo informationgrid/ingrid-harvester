@@ -26,6 +26,7 @@ import { BodyParams, Controller, Delete, Get, PathParams, Post, UseAuth } from '
 import log4js from 'log4js';
 import { KeycloakAuth } from "../decorators/KeycloakAuthOptions.js";
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
+import { CatalogService } from '../services/catalog/CatalogService.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import { ScheduleService } from '../services/ScheduleService.js';
 import { HistoryService } from '../services/statistic/HistoryService.js';
@@ -58,8 +59,17 @@ export class HarvesterCtrl {
 
     @Post('/:id')
     @KeycloakAuth({role: ["admin", "editor"]})
-    updateHarvesterConfig(@PathParams('id') id: number, @BodyParams() config: Datasource) {
+    async updateHarvesterConfig(@PathParams('id') id: number, @BodyParams() config: Datasource) {
+        const oldConfig = +id === -1 ? null : ConfigService.getHarvesters().find(h => h.id === +id);
         const updatedID = ConfigService.update(+id, config);
+
+        const oldCatalogIds = oldConfig?.catalogIds ?? [];
+        const newCatalogIds = config.catalogIds ?? [];
+        const removedCatalogIds = oldCatalogIds.filter(cid => !newCatalogIds.includes(cid));
+        if (removedCatalogIds.length > 0) {
+            await CatalogService.deleteRecordsFromCatalogs(updatedID, removedCatalogIds);
+        }
+
         for (const mode of <('full' | 'incr')[]>['full', 'incr']) {
             if (config.disable || !config.cron?.[mode]?.active) {
                 this.scheduleService.stopJob(updatedID, mode);

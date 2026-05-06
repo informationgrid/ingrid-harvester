@@ -79,6 +79,12 @@ export class DatasourceOverviewComponent {
     private authService: AuthenticationService,
   ) {}
 
+  onCancel(datasourceId: number, jobId: string): void {
+    if (jobId) {
+      this.datasourceService.cancelImport(datasourceId, jobId).subscribe();
+    }
+  }
+
   onImport(id: number, isIncremental: boolean = false) {
     this.datasourceService.import(id, isIncremental).subscribe();
     this.snackBar.open(

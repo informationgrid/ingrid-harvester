@@ -24,6 +24,7 @@
 import log4js from 'log4js';
 import { AuthMiddleware } from '../middlewares/auth/AuthMiddleware.js';
 import { BodyParams, Controller, Get, PathParams, Post, QueryParams, UseAuth} from '@tsed/common';
+import { NotFound } from '@tsed/exceptions';
 import { ConfigService } from '../services/config/ConfigService.js';
 import type { CronData } from '../importer/importer.settings.js';
 import type { ImportLogMessage } from '../model/import.result.js';
@@ -55,6 +56,16 @@ export class ApiCtrl {
     @KeycloakAuth({role: ["admin", "editor"]})
     importFromHarvester(@PathParams('id') id: number, @QueryParams('isIncremental') isIncremental: boolean) {
         this.importSocketService.runImport(+id, isIncremental);
+    }
+
+    @Post('/import/:id/cancel')
+    @KeycloakAuth({role: ["admin", "editor"]})
+    cancelImport(@PathParams('id') id: number, @BodyParams() body: { jobId: string }) {
+        const cancelled = this.importSocketService.cancelImport(+id, body.jobId);
+        if (!cancelled) {
+            throw new NotFound('no running harvest for id');
+        }
+        return { cancelled: true };
     }
 
     @Post('/importAll')

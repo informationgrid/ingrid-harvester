@@ -28,6 +28,7 @@ import log4js from 'log4js';
 import pLimit from 'p-limit';
 import * as SocketIO from 'socket.io';
 import type { ImportLogMessage } from '../model/import.result.js';
+import type { Importer } from '../importer/importer.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import { SummaryService } from '../services/config/SummaryService.js';
@@ -48,6 +49,23 @@ export class ImportSocketService {
     // throttling of messages to frontend to make UI more responsive
     private lastEmitTimes = new Map<number, number>();
     private static readonly THROTTLE_MS = 500;
+
+    private activeJobs = new Map<number, { importer: { cancel(): void }; jobId: string }>();
+
+    cancelImport(harvesterId: number, jobId: string): boolean {
+        const entry = this.activeJobs.get(harvesterId);
+        if (!entry || entry.jobId !== jobId) return false;
+        entry.importer.cancel();
+        const existing = this.summaryService.get(harvesterId);
+        if (existing?.summary) {
+            const cancellingMsg: ImportLogMessage = { ...existing, id: harvesterId, jobId, complete: false, cancelling: true };
+            this.summaryService.update(cancellingMsg);
+            this.nsp.emit('/log', cancellingMsg);
+        } else {
+            this.nsp.emit('/log', { id: harvesterId, jobId, complete: false, cancelling: true, stage: '' });
+        }
+        return true;
+    }
 
     constructor(private summaryService: SummaryService) {
     }
@@ -79,10 +97,15 @@ export class ImportSocketService {
                 let configHarvester = MiscUtils.merge(configData, configGeneral);
 
                 let profile = ProfileFactoryLoader.get();
+                const jobId = crypto.randomUUID();
+                let cancelBeforeStart = false;
+                this.activeJobs.set(id, { importer: { cancel: () => { cancelBeforeStart = true; } }, jobId });
+                this.nsp.emit('/log', { id, jobId, complete: false, stage: 'starting', lastExecution });
                 profile.getImporter(configHarvester).then(importer => {
+                    if (cancelBeforeStart) importer.cancel();
+                    this.activeJobs.set(id, { importer, jobId });
                     let mode = isIncremental ? 'incr' : 'full';
                     this.log.info(`>> Running importer: [${configHarvester.type}] ${configHarvester.description}`);
-                    const jobId = crypto.randomUUID();
                     harvestLogContext.run({ harvesterId: id, jobId }, () => {
                         importer.run(isIncremental).subscribe({
                             next: response => {
@@ -141,16 +164,21 @@ export class ImportSocketService {
                                 }
                             },
                             error: error => {
+                                this.activeJobs.delete(id);
                                 this.log.error('There was an error: ', error);
                                 if (configGeneral.mail.enabled) {
                                     MailServer.getInstance().send(`Importer [${configHarvester.type}] ${configData.description} failed`, error.toString());
                                 }
                                 resolve();
                             },
-                            complete: () => resolve()
+                            complete: () => {
+                                this.activeJobs.delete(id);
+                                resolve();
+                            }
                         });
                     });
                 }).catch(e => {
+                    this.activeJobs.delete(id);
                     this.log.error(`An error occured while harvesting (id=${id}): `, e);
                     resolve();
                 });
