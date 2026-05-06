@@ -196,16 +196,16 @@ export class CswImporter extends Importer<CswSettings> {
                     if (!transactionCommitted) {
                         const rollbackDbStage = this.startStage('rollbackSourceImport');
                         await this.database.rollbackTransaction();
-                        observer.next(rollbackDbStage.msgComplete('Transaction rolled back'));
+                        observer.next(rollbackDbStage.msgImport('Transaction rolled back'));
                     } else {
                         const rollbackDbStage = this.startStage('rollbackSourceImport');
                         const count = await this.database.rollbackSourceImport(this.settings.sourceURL, transactionTimestamp);
-                        observer.next(rollbackDbStage.msgComplete(`Rolled back ${count} records`));
+                        observer.next(rollbackDbStage.msgImport(`Rolled back ${count} records`));
                         for (const catalog of processedCatalogs) {
                             if ('rollbackTargetCatalog' in catalog) {
                                 const rollbackCatalogStage = this.startStage('rollbackTargetCatalog');
                                 await (catalog as any).rollbackTargetCatalog(this.settings.id, transactionTimestamp);
-                                observer.next(rollbackCatalogStage.msgComplete());
+                                observer.next(rollbackCatalogStage.msgImport());
                             }
                         }
                     }

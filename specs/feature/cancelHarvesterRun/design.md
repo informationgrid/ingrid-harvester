@@ -58,6 +58,8 @@ POST /api/import/:id/cancel
 
 Add `cancelled?: boolean` field. `Summary.msgCancelled()` (new method on `Summary`) returns `{ stage, complete: true, summary: this, cancelled: true }`. `jobs.utils.ts` `deriveStatus()` checks `logMessage.cancelled` instead of the fragile `message === 'Import cancelled'` string.
 
+`status` is widened from `JobStatus` to `JobStatus | 'importing'`. All `Summary` message factories set `status` explicitly: `msgImport()` and `msgRunning()` emit `'importing'`; `msgCancelled()` emits `'cancelled'`; `msgComplete()` does not set `status` — callers assign it via `JobsUtils.deriveStatus()`. The error catch path in `Importer.exec()` now calls `deriveStatus()` and assigns `status` exactly like the success path. This allows the frontend to read `log.status` directly without any derivation logic.
+
 ### Rollback stage tracking
 
 In the `HarvestRunCancelledError` catch block, start named stages before each cleanup operation so rollback progress is visible in the WebSocket stream and job record:

@@ -138,6 +138,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
     // -------------------------------------------------------------------------
 
     private async processStatistic(entry: GenesisListEntry, harvestTime: Date): Promise<void> {
+        this.checkCancellation();
         this.summary.numDocs++;
 
         if (!this.filterUtils.isIdAllowed(entry.Code)) {

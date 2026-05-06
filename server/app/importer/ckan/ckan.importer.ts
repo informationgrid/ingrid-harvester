@@ -150,6 +150,7 @@ export class CkanImporter extends Importer<CkanSettings> {
         let promises = [];
 
         while (true) {
+            this.checkCancellation();
             let now = new Date();
             let results = await this.requestDocuments();
 
@@ -167,6 +168,7 @@ export class CkanImporter extends Importer<CkanSettings> {
             this.summary.numDocs += results.length - filteredResults.length;
 
             for (let i = 0; i < filteredResults.length; i++) {
+                this.checkCancellation();
                 promises.push(
                     await this.importDataset({
                         source: filteredResults[i],

@@ -22,7 +22,6 @@
  */
 
 import type { GeneralSettings } from '@shared/general-config.settings.js';
-import type { JobStatus } from '@shared/job.js';
 import log4js from 'log4js';
 import type { ImportLogMessage } from '../model/import.result.js';
 import type { Summary } from '../model/summary.js';
@@ -57,7 +56,7 @@ export class JobsUtils {
     async saveJob(logMessage: ImportLogMessage, baseIndex: string, stageSummaries: Summary[] = []): Promise<void> {
         const globalSummary = logMessage.summary;
         const allStages = [logMessage.summary, ...stageSummaries];
-        const status = JobsUtils.deriveStatus(logMessage, allStages);
+        const status = logMessage.status;
         const stages = allStages.map(s => ({
             name: s.stage,
             startTime: s.startTime,
@@ -92,12 +91,4 @@ export class JobsUtils {
         }
     }
 
-    static deriveStatus(logMessage: ImportLogMessage, allStages: Summary[]): JobStatus {
-        if (logMessage.cancelled === true) return 'cancelled';
-        if (!logMessage.summary) return 'success';
-        if (logMessage.message) return 'error';
-        if (allStages.some(s => (s?.errors?.length ?? 0) > 0 || (s?.numErrors ?? 0) > 0)) return 'error';
-        if (allStages.some(s => (s?.skippedDocs?.length ?? 0) > 0)) return 'partial';
-        return 'success';
-    }
 }

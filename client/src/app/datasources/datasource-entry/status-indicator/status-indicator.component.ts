@@ -43,24 +43,10 @@ export class StatusIndicatorComponent {
 
   /** Result of the last import run — null if no run has completed yet. */
   runStatus = computed<Status | null>(() => {
-    const log = this.importLog();
-    if (!log) return null;
-    if (log.complete === false) return "importing";
-    if (log.cancelled) {
-      return "cancelled";
+      console.log("status", this.importLog()?.status)
+      return (this.importLog()?.status as Status) ?? null
     }
-    if (log.status) return log.status as Status;
-    if (log.summary) {
-      const s = log.summary;
-      const hasError = log.message || (s.numErrors ?? 0) > 0 || (s.errors?.length ?? 0) > 0;
-      return hasError ? "error" : "success";
-    }
-    return null;
-  });
-  cancelled = computed(() => this.importLog().cancelled);
-  // if (this.cancelled()) {
-  //   statuses.push("cancelled");
-  // }
+  );
 
   /** Configuration state of the harvester, independent of run result. */
   configStatuses = computed<Status[]>(() => {

@@ -58,7 +58,7 @@ export class ImportSocketService {
         entry.importer.cancel();
         const existing = this.summaryService.get(harvesterId);
         if (existing?.summary) {
-            const cancellingMsg: ImportLogMessage = { ...existing, id: harvesterId, jobId, complete: false, cancelling: true };
+            const cancellingMsg: ImportLogMessage = { ...existing, id: harvesterId, jobId, complete: false, cancelling: true, status: 'importing' };
             this.summaryService.update(cancellingMsg);
             this.nsp.emit('/log', cancellingMsg);
         } else {

@@ -39,7 +39,6 @@ import { ConfigService } from '../services/config/ConfigService.js';
 import { FilterUtils } from '../utils/filter.utils.js';
 import * as MiscUtils from '../utils/misc.utils.js';
 import { MailServer } from '../utils/nodemailer.utils.js';
-import { JobsUtils } from '../statistic/jobs.utils.js';
 
 const log = log4js.getLogger(import.meta.filename)
 
@@ -165,25 +164,23 @@ export abstract class Importer<S extends ImporterSettings> {
                     }
                 }
                 await this.postHarvestingHandling();
-                const completeMsg = this.summary.msgComplete();
-                completeMsg.status = JobsUtils.deriveStatus(completeMsg, [this.summary, ...this.stageSummaries]);
-                observer.next(completeMsg);
+                observer.next(this.summary.msgComplete());
             }
             catch (err) {
                 if (err instanceof HarvestRunCancelledError) {
                     if (!transactionCommitted) {
                         const rollbackDbStage = this.startStage('rollbackSourceImport');
                         await this.database.rollbackTransaction();
-                        observer.next(rollbackDbStage.msgComplete('Transaction rolled back'));
+                        observer.next(rollbackDbStage.msgImport('Transaction rolled back'));
                     } else {
                         const rollbackDbStage = this.startStage('rollbackSourceImport');
                         const count = await this.database.rollbackSourceImport(this.settings.sourceURL, transactionTimestamp);
-                        observer.next(rollbackDbStage.msgComplete(`Rolled back ${count} records`));
+                        observer.next(rollbackDbStage.msgImport(`Rolled back ${count} records`));
                         for (const catalog of processedCatalogs) {
                             if ('rollbackTargetCatalog' in catalog) {
                                 const rollbackCatalogStage = this.startStage('rollbackTargetCatalog');
                                 await (catalog as any).rollbackTargetCatalog(this.settings.id, transactionTimestamp);
-                                observer.next(rollbackCatalogStage.msgComplete());
+                                observer.next(rollbackCatalogStage.msgImport());
                             }
                         }
                     }
