@@ -71,6 +71,7 @@ export class OaiImporter extends Importer<OaiSettings> {
 
     protected async harvest(): Promise<number> {
         while (true) {
+            this.checkCancellation();
             try {
                 log.debug('Requesting next records');
                 let response = await this.requestDelegate.doRequest();
@@ -118,6 +119,7 @@ export class OaiImporter extends Importer<OaiSettings> {
         let records: HTMLCollectionOf<Element> = xml.getElementsByTagName('record');
 
         for (let i = 0; i < records.length; i++) {
+            this.checkCancellation();
             this.summary.numDocs++;
             let header = records[i].getElementsByTagName('header').item(0);
             const uuid = MiscUtils.substringAfterLast((xpath.useNamespaces(this.xpaths.prefixMap)(this.xpaths.idElem, header, true) as Node)?.textContent, ':', true);

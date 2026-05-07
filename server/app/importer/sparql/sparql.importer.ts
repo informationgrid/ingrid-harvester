@@ -95,8 +95,9 @@ export class SparqlImporter extends Importer<SparqlSettings> {
                     try {
                         let json = JSON.parse(response);
                         let harvestTime = new Date();
-                        this.extractRecords(json, harvestTime).then(() =>
-                            resolve(this.numIndexDocs));
+                        this.extractRecords(json, harvestTime)
+                            .then(() => resolve(this.numIndexDocs))
+                            .catch(reject);
                     } catch (e) {
                         this.summary.errors.push({ type: 'app', error: e.toString() });
                         log.error(e);
@@ -127,6 +128,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
         }
 
         for (let i = 0; i < records.length; i++) {
+            this.checkCancellation();
             this.summary.numDocs++;
 
             const uuid = records[i].id.value;
