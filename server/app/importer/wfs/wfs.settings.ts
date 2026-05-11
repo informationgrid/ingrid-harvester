@@ -60,6 +60,7 @@ export const wfsDefaults: WfsSettings = {
     count: 0,
     featureLimit: 0,
     harvestTypes: false,
+    startPosition: 0,
     httpMethod: 'GET',
     resultType: 'results',
     wfsProfile: WfsProfile.default,
