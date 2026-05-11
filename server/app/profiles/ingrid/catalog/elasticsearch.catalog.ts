@@ -32,6 +32,7 @@ import type { EsOperation } from '../../../persistence/elastic.utils.js';
 import type { Bucket } from '../../../persistence/postgres.utils.js';
 import { ConfigService } from '../../../services/config/ConfigService.js';
 import { camelize, escapeXml } from '../../../utils/misc.utils.js';
+import { ProfileFactoryLoader } from '../../profile.factory.loader.js';
 import { createEsId } from '../ingrid.utils.js';
 import type { IngridIndexDocument } from '../model/index.document.js';
 import { APPLICATION_NAME, INGRID_META_INDEX } from '../profile.factory.js';
@@ -93,21 +94,28 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         }
     }
 
+    protected getBucketQuery(importerSettings: ImporterSettings): string {
+        if (importerSettings['wfsProfile'] == 'zdm') {
+            return ProfileFactoryLoader.get().getPostgresQueries().getModifiedBuckets('zdm');
+        }
+        return super.getBucketQuery(importerSettings);
+    }
+
     /**
      * Update ingrid meta index.
      * 
      * @param transactionHandle 
-     * @param settings 
+     * @param importerSettings
      * @param observer 
      */
-    async postImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
-        const iPlugClass = `de.ingrid.iplug.${settings.type.toLowerCase()}.dsc.${camelize(settings.type)}.DscSearchPlug`;
+    async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+        const iPlugClass = `de.ingrid.iplug.${importerSettings.type.toLowerCase()}.dsc.${camelize(importerSettings.type)}.DscSearchPlug`;
         const meta = await this.ingridMetaEsUtils.search(INGRID_META_INDEX,
             {
                 "query": {
                     "term": {
                         "plugId": {
-                            "value": settings.iPlugId,
+                            "value": importerSettings.iPlugId,
                         }
                     }
                 }
@@ -116,10 +124,10 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
             let entry = meta.hits?.hits[0]._source;
 
             entry.lastIndexed = new Date().toISOString();
-            entry.plugdescription.dataSourceName = settings.dataSourceName;
-            entry.plugdescription.provider = settings.provider?.split(",")?.map(p => p.trim());
-            entry.plugdescription.dataType = settings.datatype?.split(",")?.map(d => d.trim());
-            entry.plugdescription.partner = settings.partner?.split(",")?.map(p => p.trim());
+            entry.plugdescription.dataSourceName = importerSettings.dataSourceName;
+            entry.plugdescription.provider = importerSettings.provider?.split(",")?.map(p => p.trim());
+            entry.plugdescription.dataType = importerSettings.datatype?.split(",")?.map(d => d.trim());
+            entry.plugdescription.partner = importerSettings.partner?.split(",")?.map(p => p.trim());
 
             await this.ingridMetaEsUtils.update(INGRID_META_INDEX, meta.hits?.hits[0]._id, entry, false);
         }
@@ -127,22 +135,22 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
             const esSettings = this.settings.settings;
             let index = (esSettings.prefix ?? '') + esSettings.index;
             let entry = {
-                "plugId": settings.iPlugId,
+                "plugId": importerSettings.iPlugId,
                 "indexId": index,
                 "iPlugName": APPLICATION_NAME,
                 "lastIndexed": new Date().toISOString(),
                 "linkedIndex": index,
                 "plugdescription": {
-                    "dataSourceName": settings.dataSourceName,
-                    "provider": settings.provider?.split(",")?.map(p => p.trim()),
-                    "dataType": settings.datatype?.split(",")?.map(d => d.trim()),
-                    "partner": settings.partner?.split(",")?.map(p => p.trim()),
+                    "dataSourceName": importerSettings.dataSourceName,
+                    "provider": importerSettings.provider?.split(",")?.map(p => p.trim()),
+                    "dataType": importerSettings.datatype?.split(",")?.map(d => d.trim()),
+                    "partner": importerSettings.partner?.split(",")?.map(p => p.trim()),
                     "ranking": [
                         "score"
                     ],
                     "iPlugClass": iPlugClass,
                     "fields": [],
-                    "proxyServiceUrl": settings.iPlugId,
+                    "proxyServiceUrl": importerSettings.iPlugId,
                     "useRemoteElasticsearch": true
                 },
                 "active": true
@@ -160,7 +168,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         }
 
         // resolve CSW coupling
-        if ('capabilities_url' in document) {
+        if (isCsw(document) && 'capabilities_url' in document) {
             for (let [id, service] of bucket.operatingServices) {
                 this.resolveCoupling(document as IngridIndexDocument, service);
             }
@@ -205,7 +213,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         }
 
         // handle WFS
-        if ('capabilities_url' in document) {
+        if (isWfs(document)) {
             this.createIdfForWfs(document as IngridIndexDocument, duplicates as Map<string | number, IngridIndexDocument>);
         }
 
@@ -239,12 +247,36 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         let mainDocument: IndexDocument;
         let duplicates: Map<string | number, IndexDocument> = new Map<string | number, IndexDocument>();
 
+        // Special case for WFS: if bucket contains ONLY WFS documents and there is a feature type document,
+        // it should be the main document.
+        let allWfs = true;
+        let featureTypeDocId: string | number = null;
+
         for (let [id, document] of bucket.duplicates) {
-            if (mainDocument == null) {
-                mainDocument = document;
+            if (!isWfs(document)) {
+                allWfs = false;
             }
-            else {
-                duplicates.set(id, document);
+            if ((document as any).is_feature_type === true) {
+                featureTypeDocId = id;
+            }
+        }
+
+        if (allWfs && featureTypeDocId !== null) {
+            mainDocument = bucket.duplicates.get(featureTypeDocId);
+            for (let [id, document] of bucket.duplicates) {
+                if (id !== featureTypeDocId) {
+                    duplicates.set(id, document);
+                }
+            }
+        }
+        else {
+            for (let [id, document] of bucket.duplicates) {
+                if (mainDocument == null) {
+                    mainDocument = document;
+                }
+                else {
+                    duplicates.set(id, document);
+                }
             }
         }
 
@@ -343,6 +375,14 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         }
         document.idf = document.idf.replace('<h2>Features:</h2>', '<h2>Features:</h2>\n' + features.join('\n'));
     }
+}
+
+function isCsw(document: IndexDocument): boolean {
+    return document.extras?.metadata?.source?.source_type === 'csw';
+}
+
+function isWfs(document: IndexDocument): boolean {
+    return document.extras?.metadata?.source?.source_type === 'wfs';
 }
 
 function escapeIdf(literals: TemplateStringsArray, ...substitutions: any[]) {

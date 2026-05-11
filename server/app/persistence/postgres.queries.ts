@@ -24,6 +24,8 @@
 import * as fs from 'fs';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 
+// NOTE: we are using a singleton class instead of a module
+// because the members depend on the profile
 export class PostgresQueries {
 
     private static instance: PostgresQueries;
@@ -32,7 +34,7 @@ export class PostgresQueries {
     }
 
     public static getInstance() {
-        if (!this.instance) {
+        if (!PostgresQueries.instance) {
             PostgresQueries.instance = new PostgresQueries();
         }
         return PostgresQueries.instance;
@@ -47,18 +49,28 @@ export class PostgresQueries {
     readonly deleteNonFetchedRecords = this.readFile('deleteNonFetchedRecords');
     readonly getStoredData = this.readFile('getStoredData');
     readonly getDatasetsBySource = this.readFile('getDatasetsBySource');
-    readonly getDatasetsBySourceWithOriginal = this.readFile('getDatasetsBySourceWithOriginal');
-    readonly getDcatapdeDatasetsBySource = this.readFile('getDcatapdeDatasetsBySource');
     readonly getIdentifiersByCatalog = this.readFile('getIdentifiersByCatalog');
     readonly getServices = this.readFile('getServices');
     readonly getBuckets = this.readFile('getBuckets');
 
-    private readFile(script: string): string {
-        let profile = ProfileFactoryLoader.get().getProfileName();
-        // use from profile if file exists there
+    getModifiedBuckets(modifier: string): string {
+        return this.readFile('getBuckets', modifier);
+    }
+
+    private readFile(script: string, modifier?: string): string {
+        if (modifier) {
+            script += `_${modifier}`;
+        }
+        // use script from profile if file exists there
+        try {
+            const profile = ProfileFactoryLoader.get().getProfileName();
+            const profileQueryPath = `app/profiles/${profile}/persistence/queries/${script}.sql`;
+            return fs.readFileSync(profileQueryPath, { encoding: 'utf8', flag: 'r' });
+        }
         // otherwise, use default from `queries` dir
-        let profileQueryPath = `app/profiles/${profile}/persistence/queries/${script}.sql`;
-        let queryPath = fs.existsSync(profileQueryPath) ? profileQueryPath : `app/persistence/queries/${script}.sql`;
-        return fs.readFileSync(queryPath, { encoding: 'utf8', flag: 'r' });
+        catch (e) {
+            const queryPath = `app/persistence/queries/${script}.sql`;
+            return fs.readFileSync(queryPath, { encoding: 'utf8', flag: 'r' });
+        }
     }
 }
