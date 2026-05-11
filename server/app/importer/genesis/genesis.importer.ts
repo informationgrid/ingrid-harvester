@@ -150,19 +150,26 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         try {
             statisticMetadata = await this.fetchStatisticMetadata(entry.Code);
         } catch (e) {
-            log.error(`Failed to fetch statistic metadata for ${entry.Code}: ${e.message}`);
-            this.summary.errors.push({ type: 'app', error: `Failed to fetch statistic metadata for ${entry.Code}: ${e.message}` });
+            log.warn(`Skip record: Failed to fetch statistic metadata for ${entry.Code}: ${e.message}`);
+            this.summary.skippedDocs.push(entry.Code);
             return;
         }
 
         if (!statisticMetadata?.Object) {
-            log.warn(`No metadata returned for statistic ${entry.Code}`);
+            log.warn(`Skip record: No metadata returned for statistic ${entry.Code}`);
             this.summary.skippedDocs.push(entry.Code);
             return;
         }
 
         // Fetch tables and their metadata
-        const tableEntries = await this.fetchTableList(entry.Code);
+        let tableEntries: GenesisListEntry[] = [];
+        try {
+            tableEntries = await this.fetchTableList(entry.Code);
+        } catch (e) {
+            log.warn(`Skip record: Failed to fetch table list for ${entry.Code}: ${e.message}`);
+            this.summary.skippedDocs.push(entry.Code);
+            return;
+        }
         const tables: any[] = [];
         await Promise.allSettled(
             tableEntries.map(async tableEntry => {
