@@ -112,6 +112,7 @@ export class WfsImporter extends Importer<WfsSettings> {
             let typename = select('./*[local-name()="Name"]', featureType, true).textContent;
             if (this.settings.requireGeometry && !select('./ows:WGS84BoundingBox/ows:LowerCorner', featureType, true)) {
                 log.warn(`Skipping FeatureType ${typename} because it doesn't contain a geometry`);
+                this.summary.warnings.push([typename, `Skipping FeatureType: doesn't contain a geometry`]);
                 continue;
             }
             if (!requestedTypes || requestedTypes.includes(typename)) {

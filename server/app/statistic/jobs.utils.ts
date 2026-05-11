@@ -43,7 +43,7 @@ export class JobsUtils {
     constructor() {
         this.indexSettings = ProfileFactoryLoader.get().getIndexSettings();
     }
-    
+
     private get elasticUtils(): ElasticsearchUtils {
         const config = {
             ...ConfigService.getGeneralSettings().elasticsearch,
@@ -65,6 +65,8 @@ export class JobsUtils {
             numErrors: s.numErrors + (s.errors?.length ?? 0),
             numSkipped: s.skippedDocs?.length ?? 0,
             errors: s.errors ?? [],
+            warnings: s.warnings?.map(w => w.join(' ')) ?? [],
+            skippedDocs: s.skippedDocs ?? [],
         }));
 
         try {

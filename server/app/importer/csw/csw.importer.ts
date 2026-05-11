@@ -113,6 +113,7 @@ export class CswImporter extends Importer<CswSettings> {
                     }
                     else {
                         log.warn(`Changing type of harvesting to "full" because no previous harvesting was found for harvester with id ${this.settings.id}`);
+                        this.summary.warnings.push([`Harvester ${this.settings.id}`, 'No previous harvesting found, switching to full harvest']);
                         this.isIncremental = false;
                     }
                 }

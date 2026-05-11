@@ -83,12 +83,18 @@ export class GenesisImporter extends Importer<GenesisSettings> {
                 log.debug(`Fetching statistics for selection "${selection}"`);
                 try {
                     const statistics = await this.fetchStatisticList(selection);
-                    log.info(`Selection "${selection}": ${statistics.length} statistics`);
+                    if (statistics.length === 0) {
+                        log.warn(`Selection "${selection}": no statistics found`);
+                        this.summary.warnings.push([selection, 'No statistics found for this selection']);
+                    } else {
+                        log.info(`Selection "${selection}": ${statistics.length} statistics`);
+                    }
                     allStatistics.push(...statistics);
                     this.observer.next(this.summary.msgImport(`Selection "${selection}": ${statistics.length} statistics found`));
                 } catch (e) {
                     log.warn(`Failed to fetch statistics for selection "${selection}": ${e.message}`);
-                    this.summary.errors.push({ type: 'app', error: `Failed to fetch statistics for "${selection}": ${e.message}` });
+                    this.summary.warnings.push([selection, `Failed to fetch statistics: ${e.message}`]);
+                    this.summary.numErrors++;
                 }
             }))
         );
@@ -139,6 +145,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
 
     private async processStatistic(entry: GenesisListEntry, harvestTime: Date): Promise<void> {
         this.summary.numDocs++;
+        this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
 
         if (!this.filterUtils.isIdAllowed(entry.Code)) {
             this.summary.skippedDocs.push(entry.Code);
@@ -150,13 +157,15 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         try {
             statisticMetadata = await this.fetchStatisticMetadata(entry.Code);
         } catch (e) {
-            log.warn(`Skip record: Failed to fetch statistic metadata for ${entry.Code}: ${e.message}`);
+            log.warn(`Failed to fetch statistic metadata for ${entry.Code}: ${e.message}`);
+            this.summary.warnings.push([entry.Code, `Failed to fetch statistic metadata: ${e.message}`]);
             this.summary.skippedDocs.push(entry.Code);
             return;
         }
 
         if (!statisticMetadata?.Object) {
-            log.warn(`Skip record: No metadata returned for statistic ${entry.Code}`);
+            log.warn(`No metadata returned for statistic ${entry.Code}`);
+            this.summary.warnings.push([entry.Code, `No metadata returned`]);
             this.summary.skippedDocs.push(entry.Code);
             return;
         }
@@ -166,7 +175,8 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         try {
             tableEntries = await this.fetchTableList(entry.Code);
         } catch (e) {
-            log.warn(`Skip record: Failed to fetch table list for ${entry.Code}: ${e.message}`);
+            log.warn(`Failed to fetch table list for ${entry.Code}: ${e.message}`);
+            this.summary.warnings.push([entry.Code, `Failed to fetch table list: ${e.message}`]);
             this.summary.skippedDocs.push(entry.Code);
             return;
         }
@@ -180,6 +190,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
                     }
                 } catch (e) {
                     log.warn(`Failed to fetch table metadata for ${tableEntry.Code}: ${e.message}`);
+                    this.summary.warnings.push([tableEntry.Code, `Failed to fetch table metadata: ${e.message}`]);
                 }
             })
         );
@@ -220,7 +231,6 @@ export class GenesisImporter extends Importer<GenesisSettings> {
             this.summary.skippedDocs.push(entry.Code);
         }
 
-        this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
     }
 
     // -------------------------------------------------------------------------
@@ -298,7 +308,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         }
 
         if (statusCode === 104) {
-            log.warn(`GENESIS object not found at ${path} (Status 104): ${statusContent}`);
+            log.debug(`GENESIS object not found at ${path} (Status 104): ${statusContent}`);
             return null;
         }
 

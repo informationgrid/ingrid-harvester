@@ -53,6 +53,12 @@
               "type": "keyword"
             }
           }
+        },
+        "warnings": {
+          "type": "keyword"
+        },
+        "skippedDocs": {
+          "type": "keyword"
         }
       }
     }
