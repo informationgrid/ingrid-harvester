@@ -31,6 +31,7 @@ import type { Summary } from '../model/summary.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
 import type { DatabaseUtils } from '../persistence/database.utils.js';
 import type { Bucket } from '../persistence/postgres.utils.js';
+import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import type { CswDataset } from './csw/csw.catalog.js';
 import type { PiveauDataset } from './piveau/piveau.catalog.js';
@@ -92,13 +93,21 @@ export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSett
      */
     async import(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         log.info(`Importing data for transaction: ${transactionHandle}`);
-        const bucketGenerator = this.database.streamBuckets<C>(transactionHandle, this.getDatasetColumn(), observer, this.summary);
+        const bucketGenerator = this.database.streamBuckets<C>(transactionHandle, this.getDatasetColumn(), observer, this.summary, this.getBucketQuery(importerSettings));
         for await (const bucket of bucketGenerator) {
             const ops = await this.processBucket(bucket, importerSettings);
             await this.importIntoCatalog(ops);
         }
         // finish importing
         await this.flushImport();
+    }
+
+    /**
+     * Can be overwritten by extending catalogs in case the bucket query depends on even more parameters.
+     * Example: zdm
+     */
+    protected getBucketQuery(importerSettings: ImporterSettings): string {
+        return ProfileFactoryLoader.get().getPostgresQueries().getBuckets;
     }
 
     /**

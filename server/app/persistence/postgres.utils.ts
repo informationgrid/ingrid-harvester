@@ -180,12 +180,12 @@ export class PostgresUtils extends DatabaseUtils {
      * @param source
      * @param observer
      */
-    async *streamBuckets<T extends CatalogColumnType>(source: string, datasetColumn: string, observer: Observer<ImportLogMessage>, summary: Summary): AsyncGenerator<Bucket<T>> {
+    async *streamBuckets<T extends CatalogColumnType>(source: string, datasetColumn: string, observer: Observer<ImportLogMessage>, summary: Summary, query: string = this.queries.getBuckets): AsyncGenerator<Bucket<T>> {
         const client: pg.PoolClient = await PostgresUtils.pool.connect();
         log.debug('Connection started');
         const startDate = Date.now();
 
-        const query = this.queries.getBuckets.replaceAll('{{DATASET_COLUMN}}', datasetColumn);
+        query = query.replaceAll('{{DATASET_COLUMN}}', datasetColumn);
 
         // get total rows before creating the cursor
         const { rows: [{ count: totalRows }] } = await client.query(
