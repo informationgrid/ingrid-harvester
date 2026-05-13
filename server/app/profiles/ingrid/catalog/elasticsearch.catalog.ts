@@ -371,7 +371,9 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         // create idf
         let features = [];
         for (let [id, featureDocument] of duplicates) {
-            features.push(featureDocument.idf);
+            if ((document as any).is_feature_type === false) {
+                features.push(featureDocument.idf);
+            }
         }
         document.idf = document.idf.replace('<h2>Features:</h2>', '<h2>Features:</h2>\n' + features.join('\n'));
     }
