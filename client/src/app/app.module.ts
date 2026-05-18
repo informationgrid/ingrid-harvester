@@ -59,6 +59,7 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { AuthenticationService } from "./security/authentication.service";
 import { KeycloakService } from "./security/keycloak.service";
 import { SideMenuComponent } from "./side-menu/side-menu.component";
+import { MatMenuModule } from "@angular/material/menu";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { TranslocoRootModule } from "./transloco-root.module";
 import { MainHeaderComponent } from "./main-header/main-header.component";
@@ -135,6 +136,7 @@ const appRoutes: Routes = routes;
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatMenuModule,
     MatTooltipModule,
     TranslocoRootModule,
     FormlyModule.forRoot(),

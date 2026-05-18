@@ -21,10 +21,19 @@
  * ==================================================
  */
 
-import { Component, output, signal } from "@angular/core";
+import { Component, inject, output, signal } from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
+import { HttpClient } from "@angular/common/http";
 import { TranslocoService } from "@ngneat/transloco";
 import { filter, switchMap } from "rxjs";
+import { ConfigService } from "../config.service";
+
+type VersionInfo = {
+  version: string;
+  buildDate: string;
+  commitId: string;
+};
 
 @Component({
   selector: "ige-main-header",
@@ -37,11 +46,13 @@ export class MainHeaderComponent {
   onSideMenuToggle = output<void>();
 
   pageTitle = signal<string>(undefined);
+  versionInfo = toSignal(inject(HttpClient).get<VersionInfo>('rest/api/version'));
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private transloco: TranslocoService,
+    private configService: ConfigService,
   ) {}
 
   ngOnInit() {

@@ -21,42 +21,33 @@
  * ==================================================
  */
 
-import {Injectable} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import { Controller, Get } from '@tsed/common';
+import { ContentType } from '@tsed/schema';
+import { execSync } from 'child_process';
+import pkg from '../../package.json' with { type: 'json' };
 
-export class Configuration {
-  constructor(
-    public contextPath: string,
-    public url?: string,
-    public version?: string,
-    public passportEnabled?: boolean,
-    public keycloakEnabled?: boolean
-  ) {}
+@Controller('/api/version')
+export class VersionCtrl {
+
+    @Get('/')
+    @ContentType('application/json')
+    getVersion(): VersionInfo {
+        let commitId: string;
+        try {
+            commitId = process.env.GIT_COMMIT ?? execSync('git rev-parse HEAD').toString().trim();
+        } catch {
+            commitId = 'unknown';
+        }
+        return {
+            version: process.env.VERSION ?? pkg.version,
+            buildDate: process.env.BUILD_DATE ?? new Date().toISOString(),
+            commitId,
+        };
+    }
 }
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ConfigService {
-
-  config: Configuration;
-  config$ = new BehaviorSubject<Partial<Configuration>>({});
-
-  constructor(private http: HttpClient) {
-  }
-
-  load(url: string): Observable<Configuration> {
-    console.log('=== ConfigService ===');
-
-    return this.http.get<Configuration>(url)
-      .pipe(
-        tap((json => {
-          this.config = json;
-          this.config$.next(json);
-        }))
-      );
-
-  }
+type VersionInfo = {
+    version: string;
+    buildDate: string;
+    commitId: string;
 }

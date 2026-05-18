@@ -69,4 +69,26 @@
   >
     <mat-icon svgIcon="logout" />
   </button>
+
+  <button
+    class="info-menu-btn"
+    matIconButton
+    [matMenuTriggerFor]="infoMenu"
+    matTooltip="Systemeinformationen"
+    aria-label="Systemeinformationen"
+  >
+    <mat-icon svgIcon="more_vert" />
+  </button>
+
+  <mat-menu #infoMenu="matMenu" xPosition="before" class="info-popup-menu">
+    <div class="user-popup-header">
+      <mat-card-title><strong>{{ t("project") }}</strong> {{ t("application") }}</mat-card-title>
+    </div>
+    <div (click)="$event.stopPropagation()" class="versioninfo">
+      <div>Version</div>
+      <div>{{ versionInfo()?.version }}, {{ versionInfo()?.buildDate | date: "dd.LL.yyyy, HH:mm" }}</div>
+      <div>GIT Commit ID</div>
+      <div>{{ versionInfo()?.commitId }}</div>
+    </div>
+  </mat-menu>
 </mat-toolbar>

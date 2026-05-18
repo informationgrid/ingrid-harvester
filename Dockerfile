@@ -47,6 +47,10 @@ FROM ${NODE_BASE_IMAGE} AS final
 
 ENV IMPORTER_PROFILE=ingrid
 
+ARG VERSION="unknown"
+ARG GIT_COMMIT="unknown"
+ENV VERSION=${VERSION} GIT_COMMIT=${GIT_COMMIT}
+
 # install tini
 RUN apk add --no-cache tini
 
