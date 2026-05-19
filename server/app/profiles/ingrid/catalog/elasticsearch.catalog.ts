@@ -67,6 +67,10 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         this.externalUuids = new Set<string>();
 
         const indices = await this.getExternalIndices();
+        if (indices?.length == 0) {
+            log.info(`No existing indices found that are not managed by InGrid Harvester, skipping InGrid-wide deduplication.`);
+            return;
+        }
         const total = await this.ingridMetaEsUtils.count(indices);
 
         // skip scrolling in case no documents exist, to avoid scrolling cleanup errors
