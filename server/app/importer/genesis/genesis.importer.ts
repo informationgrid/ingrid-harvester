@@ -79,7 +79,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         this.observer.next(this.summary.msgImport(`Fetching statistics`));
         const selectionLimit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(
-            statisticCodes.map(selection => selectionLimit(async () => {
+            statisticCodes.map(selection => this.database.limitedRun(selectionLimit, async () => {
                 log.debug(`Fetching statistics for selection "${selection}"`);
                 try {
                     const statistics = await this.fetchStatisticList(selection);
@@ -98,7 +98,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         // Stage 2: process each statistic
         const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(
-            allStatistics.map(stat => limit(() => this.processStatistic(stat, harvestTime)))
+            allStatistics.map(stat => this.database.limitedRun(limit, () => this.processStatistic(stat, harvestTime)))
         );
 
         await this.database.sendBulkData();
@@ -138,7 +138,6 @@ export class GenesisImporter extends Importer<GenesisSettings> {
     // -------------------------------------------------------------------------
 
     private async processStatistic(entry: GenesisListEntry, harvestTime: Date): Promise<void> {
-        this.checkCancellation();
         this.summary.numDocs++;
 
         if (!this.filterUtils.isIdAllowed(entry.Code)) {

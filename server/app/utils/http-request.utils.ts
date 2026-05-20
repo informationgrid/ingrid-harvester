@@ -27,6 +27,7 @@ import fetch from 'node-fetch';
 import log4js from 'log4js';
 import { Agent } from 'https';
 import { HttpsProxyAgent } from 'https-proxy-agent';
+import { HarvestRunCancelledError, cancellationSignalStorage } from './cancellation.utils.js';
 
 const log = log4js.getLogger('requests');
 
@@ -264,7 +265,11 @@ export class RequestDelegate {
         // this is a workaround - we want to use `signal`, but cannot give it directly as it starts running as soon as
         // it is declared. `timeout` (which is deprecated) works different (worse). So we just take the timeout value
         // and create the signal here directly, then remove the timeout
-        config.signal = AbortSignal.timeout(config.timeout ?? DEFAULT_TIMEOUT_MS);
+        const timeoutSignal = AbortSignal.timeout(config.timeout ?? DEFAULT_TIMEOUT_MS);
+        const cancellationSignal = cancellationSignalStorage.getStore();
+        config.signal = cancellationSignal
+            ? AbortSignal.any([timeoutSignal, cancellationSignal])
+            : timeoutSignal;
         config.timeout = null;
         config.compress = false;
         let response = fetch(fullURL, config);
@@ -280,14 +285,17 @@ export class RequestDelegate {
                 break;
             }
             catch (e) {
-                // if a connection error occurs, retry
-                if (retry > 0) {
+                // if a connection error occurs, retry (but not on user-initiated cancellation)
+                if (retry > 0 && e.name !== 'AbortError') {
                     retry -= 1;
                     log.info(`Retrying request for ${fullURL} (waiting ${waitMilliSeconds}ms)`);
                     await RequestDelegate.sleep(waitMilliSeconds);
                     response = fetch(fullURL, config);
                 }
                 else {
+                    if (e.name === 'AbortError' && cancellationSignalStorage.getStore()?.aborted) {
+                        throw new HarvestRunCancelledError();
+                    }
                     throw e;
                 }
             }

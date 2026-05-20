@@ -100,7 +100,6 @@ export class JsonImporter extends Importer<JsonSettings> {
     protected async extractRecords(records: object[], harvestTime: Date): Promise<void> {
         const promises: Promise<BulkResponse>[] = [];
         for (let record of records) {
-            this.checkCancellation();
             this.summary.numDocs++;
             let id = record[this.settings.idProperty];
             if (!this.filterUtils.isIdAllowed(id)) {

@@ -41,7 +41,8 @@ import * as ServiceUtils from '../../utils/service.utils.js';
 import * as XpathUtils from '../../utils/xpath.utils.js';
 import type { Catalog, CatalogColumnType, CatalogOperation } from '../../catalog/catalog.factory.js';
 import type { CatalogSettings } from '@shared/catalog.js';
-import { Importer, HarvestRunCancelledError } from '../importer.js';
+import { Importer } from '../importer.js';
+import { HarvestRunCancelledError } from '../../utils/cancellation.utils.js';
 import { CswMapper } from './csw.mapper.js';
 import { cswDefaults, type CswSettings } from './csw.settings.js';
 
@@ -107,7 +108,6 @@ export class CswImporter extends Importer<CswSettings> {
             let transactionCommitted = false;
             const processedCatalogs: Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>[] = [];
             try {
-                this.checkCancellation();
                 transactionTimestamp = await this.database.beginTransaction();
                 // configure for incremental harvesting
                 if (this.isIncremental) {
@@ -124,7 +124,6 @@ export class CswImporter extends Importer<CswSettings> {
                 }
                 // get datasets
                 let numIndexDocs = await this.harvest();
-                this.checkCancellation();
                 if (!this.isIncremental) {
                     // did the harvesting return results at all?
                     if (numIndexDocs == 0) {
@@ -150,12 +149,10 @@ export class CswImporter extends Importer<CswSettings> {
                 if (this.settings.harvestingMode == 'separate') {
                     this.startStage('harvestServices');
                     await this.harvestServices();
-                    this.checkCancellation();
                 }
                 // data-service-coupling (can include resolving WFS and WMS distributions, which is time-intensive)
                 this.startStage('coupling');
                 await this.coupleDatasetsServices(this.settings.resolveOgcDistributions);
-                this.checkCancellation();
 
                 // did fatal errors occur (ie DB or APP errors)?
                 if (this.summary.errors.some(e => e.type === 'app' || e.type === 'database')) {
@@ -169,7 +166,7 @@ export class CswImporter extends Importer<CswSettings> {
                 transactionCommitted = true;
                 // TODO support concurrency of different catalogs
                 for (const catalogId of this.settings.catalogIds) {
-                    this.checkCancellation();
+                    this.database.checkCancellation();
                     const stageSummary = this.startStage(`catalog/${catalogId}`);
                     const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, stageSummary);
                     try {
@@ -271,7 +268,7 @@ export class CswImporter extends Importer<CswSettings> {
         }
         // 2) run in parallel
         const limit = pLimit(this.settings.maxConcurrent);
-        await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
+        await Promise.allSettled(delegates.map(delegate => this.database.limitedRun(limit, () => this.handleHarvest(delegate))));
         log.info(`Finished requesting records`);
         // 3) persist leftovers
         await this.database.sendBulkData();
@@ -300,7 +297,7 @@ export class CswImporter extends Importer<CswSettings> {
         }
         // 2) run in parallel
         const limit = pLimit(this.settings.maxConcurrent);
-        await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
+        await Promise.allSettled(delegates.map(delegate => this.database.limitedRun(limit, () => this.handleHarvest(delegate))));
         // 3) persist leftovers
         await this.database.sendBulkData();
         log.info(`Finished requesting services`);
@@ -313,7 +310,7 @@ export class CswImporter extends Importer<CswSettings> {
         // for all services, get WFS, WMS info and merge into dataset
         // 2) run in parallel
         const limit = pLimit(this.settings.maxConcurrent);
-        await Promise.allSettled(recordEntities.map(recordEntity => limit(() => this.coupleService(recordEntity, resolveOgcDistributions, true))));
+        await Promise.allSettled(recordEntities.map(recordEntity => this.database.limitedRun(limit, () => this.coupleService(recordEntity, resolveOgcDistributions, true))));
         log.info(`Finished self-coupling`);
         // 3) persist leftovers
         await this.database.sendBulkCouples();
@@ -326,7 +323,7 @@ export class CswImporter extends Importer<CswSettings> {
         // for all services, get WFS, WMS info and merge into dataset
         // 2) run in parallel
         const limit = pLimit(this.settings.maxConcurrent);
-        await Promise.allSettled(serviceEntities.map(serviceEntity => limit(() => this.coupleService(serviceEntity, resolveOgcDistributions, false))));
+        await Promise.allSettled(serviceEntities.map(serviceEntity => this.database.limitedRun(limit, () => this.coupleService(serviceEntity, resolveOgcDistributions, false))));
         log.info(`Finished dataset-service coupling`);
         // 3) persist leftovers
         await this.database.sendBulkCouples();
@@ -443,7 +440,6 @@ export class CswImporter extends Importer<CswSettings> {
     }
 
     async handleHarvest(delegate: RequestDelegate): Promise<void> {
-        this.checkCancellation();
         log.info('Requesting next records, starting at', delegate.getStartRecordIndex());
         let harvestStart = Date.now();
         let response = await delegate.doRequest();
@@ -479,7 +475,6 @@ export class CswImporter extends Importer<CswSettings> {
 
         let docsToImport = [];
         for (let i = 0; i < records.length; i++) {
-            this.checkCancellation();
             this.summary.numDocs++;
 
             const uuid = CswMapper.getCharacterStringContent(records[i], 'fileIdentifier');

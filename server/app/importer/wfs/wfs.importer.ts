@@ -39,7 +39,8 @@ import { RequestDelegate } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
 import { firstElementChild, getExtendedNsMap, getNsMap } from '../../utils/xpath.utils.js';
-import { Importer, HarvestRunCancelledError } from '../importer.js';
+import { Importer } from '../importer.js';
+import { HarvestRunCancelledError } from '../../utils/cancellation.utils.js';
 import { WfsMapper } from './wfs.mapper.js';
 import { wfsDefaults, type WfsSettings } from './wfs.settings.js';
 
@@ -124,12 +125,9 @@ export class WfsImporter extends Importer<WfsSettings> {
 
         // for each FeatureType, get all Features
         const limit = pLimit(this.settings.maxConcurrent);
-        const featureTypeResults = await Promise.allSettled(Object.keys(featureTypes).map(featureTypeName =>
-            limit(() => this.extractCompleteFeatureType(featureTypeName, featureTypes[featureTypeName]))
+        await Promise.allSettled(Object.keys(featureTypes).map(featureTypeName =>
+            this.database.limitedRun(limit, () => this.extractCompleteFeatureType(featureTypeName, featureTypes[featureTypeName]))
         ));
-        const cancelledFeatureType = featureTypeResults.find(r => r.status === 'rejected' && r.reason instanceof HarvestRunCancelledError);
-        if (cancelledFeatureType) throw (cancelledFeatureType as PromiseRejectedResult).reason;
-
         log.info(`Finished requests`);
         await this.database.sendBulkData();
 
@@ -147,7 +145,6 @@ export class WfsImporter extends Importer<WfsSettings> {
     }
 
     async extractCompleteFeatureType(featureTypeName: string, featureTypeNode: Node): Promise<void> {
-        this.checkCancellation();
         this.generalInfo['typename'] = featureTypeName;
         const numFeatures = await this.getNumFeatures(featureTypeName);
         this.generalInfo['numFeatures'] = numFeatures;
@@ -180,7 +177,6 @@ export class WfsImporter extends Importer<WfsSettings> {
         });
         let requestDelegate = new RequestDelegate(requestConfig, WfsImporter.createPaging(this.settings));
         while (true) {
-            this.checkCancellation();
             log.info(`Requesting next features for FeatureType ${featureTypeName} (startIndex=${requestDelegate.getStartRecordIndex()})`);
             let harvestTime = new Date();
             let responseDom: Document;
@@ -267,7 +263,6 @@ export class WfsImporter extends Importer<WfsSettings> {
             }
         }
         for (let i = 0; i < features.length; i++) {
-            this.checkCancellation();
             this.summary.numDocs++;
 
             // TODO use ID-property from settings (tbi)
@@ -318,7 +313,9 @@ export class WfsImporter extends Importer<WfsSettings> {
                 this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.numItems, 'Features werden heruntergeladen'));
             }
         }
-        await Promise.all(promises).catch(err => log.error('Error indexing WFS record', err));
+        await Promise.all(promises).catch(err => {
+            log.error('Error indexing WFS record', err);
+        });
     }
 
     getMapper(harvestTime: Date, feature: Node): WfsMapper {

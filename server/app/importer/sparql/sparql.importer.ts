@@ -128,7 +128,6 @@ export class SparqlImporter extends Importer<SparqlSettings> {
         }
 
         for (let i = 0; i < records.length; i++) {
-            this.checkCancellation();
             this.summary.numDocs++;
 
             const uuid = records[i].id.value;
@@ -179,7 +178,6 @@ export class SparqlImporter extends Importer<SparqlSettings> {
             }
             this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
-        await Promise.all(promises)
-            .catch(err => log.error('Error indexing DCAT record', err));
+        await Promise.all(promises).catch(err => log.error('Error indexing DCAT record', err));
     }
 }

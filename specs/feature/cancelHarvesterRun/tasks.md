@@ -94,6 +94,18 @@ created: 2026-04-27
   - Details: In `saveJob`, replace `JobsUtils.deriveStatus(logMessage, allStages)` with `logMessage.status`. Delete `deriveStatus` static method. Remove unused `JobStatus` import.
   - Acceptance: `deriveStatus` no longer exists; `saveJob` stores whatever status the message already carries; no behaviour change for normal runs.
 
+- [x] **TASK-016** Remove all remaining `checkCancellation()` calls from `CswImporter`
+  - Refs: NFR-001
+  - Files: `server/app/persistence/database.utils.ts`, `server/app/persistence/postgres.utils.ts`, `server/app/importer/csw/csw.importer.ts`
+  - Details: Add `checkCancellation(): void` to `DatabaseUtils` (calls `_cancellationCheck?.())`). Add `this._cancellationCheck?.()` to start of `sendBulkData()` and `sendBulkCouples()` in `PostgresUtils` (handles 0-record case). Add `HarvestRunCancelledError` re-throw detection after `Promise.allSettled` in `CswImporter.harvest()`, `harvestServices()`, and `coupleDatasetsServices()`. Remove `checkCancellation()` from `handleHarvest()` and from exec() stage checks (lines 110, 127, 153, 158). Replace catalog-loop check (line 172) with `this.database.checkCancellation()`.
+  - Acceptance: `grep checkCancellation csw.importer.ts` returns 0 results; TypeScript compiles clean.
+
+- [x] **TASK-015** Centralize per-record cancellation check in `DatabaseUtils.addEntityToBulk()`
+  - Refs: NFR-001
+  - Files: `server/app/persistence/database.utils.ts`, `server/app/persistence/postgres.utils.ts`, `server/app/importer/importer.ts`, all importer files
+  - Details: Add `protected _cancellationCheck: (() => void) | null = null` and `setCancellationCheck(check: () => void): void` to `DatabaseUtils`. Call `this._cancellationCheck?.()` as first line of `PostgresUtils.addEntityToBulk()`. In `Importer.run()`, call `this.database.setCancellationCheck(() => this.checkCancellation())` before `exec()`. Fix Promise catch handlers in all importers to re-throw `HarvestRunCancelledError` instead of swallowing it. Remove `this.checkCancellation()` from all inner record-processing loops. Keep outer while-loop checks (before HTTP requests) and stage-boundary checks in `exec()`.
+  - Acceptance: New importers using `addEntityToBulk()` get per-record cancellation automatically; no `checkCancellation()` calls remain in inner for loops; existing tests pass.
+
 - [x] **TASK-009** Unit tests for Phase 1/2 cancellation paths in `Importer`
   - Refs: FR-005, FR-006, NFR-004
   - File: `server/test/importer/importer.spec.ts`
