@@ -117,7 +117,7 @@ export class CkanImporter extends Importer<CkanSettings> {
                 dataset_dcatapde: dcatapdeDoc,
                 original_document: harvestedData
             };
-            return this.database.addEntityToBulk(entity)
+            return this.addEntityToBulk(entity)
                 .then(response => {
                     if (!response.queued) {
                         this.numIndexDocs += ElasticsearchUtils.maxBulkSize;

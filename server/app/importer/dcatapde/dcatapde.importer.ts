@@ -184,7 +184,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                     original_document: mapper.getHarvestedData()
                 };
                 promises.push(
-                    this.database.addEntityToBulk(entity)
+                    this.addEntityToBulk(entity)
                         .then(response => {
                             if (!response.queued) {
                                 // numIndexDocs += ElasticsearchUtils.maxBulkSize;

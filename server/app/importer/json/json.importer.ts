@@ -134,7 +134,7 @@ export class JsonImporter extends Importer<JsonSettings> {
                         dataset: doc,
                         original_document: mapper.getHarvestedData()
                     };
-                    promises.push(this.database.addEntityToBulk(entity));
+                    promises.push(this.addEntityToBulk(entity));
                 }
                 else {
                     this.summary.skippedDocs.push(id);

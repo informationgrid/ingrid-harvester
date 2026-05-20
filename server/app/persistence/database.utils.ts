@@ -39,29 +39,9 @@ export abstract class DatabaseUtils {
     public static maxBulkSize: number = 50;
     protected configuration: DatabaseConfiguration;
     protected summary: Summary;
-    protected _cancellationCheck: (() => void) | null = null;
 
     public _bulkData: RecordEntity[];
     public _bulkCouples: CouplingEntity[];
-
-    setCancellationCheck(check: () => void): void {
-        this._cancellationCheck = check;
-    }
-
-    checkCancellation(): void {
-        this._cancellationCheck?.();
-    }
-
-    /**
-     * Run `fn` inside a pLimit slot, checking for cancellation before invoking `fn`.
-     * When cancelled, the check throws synchronously so `fn` (and its HTTP request) is never called.
-     */
-    limitedRun<T>(limit: (fn: () => Promise<T>) => Promise<T>, fn: () => Promise<T>): Promise<T> {
-        return limit(() => {
-            this.checkCancellation();
-            return fn();
-        });
-    }
 
     abstract init(): Promise<void>;
 

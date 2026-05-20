@@ -31,7 +31,8 @@ import type { ImporterSettings } from './importer.settings.js';
 import type { ImportLogMessage } from '../model/import.result.js';
 import { Summary } from '../model/summary.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
-import type { DatabaseUtils } from '../persistence/database.utils.js';
+import type { BulkResponse, DatabaseUtils } from '../persistence/database.utils.js';
+import type { Entity } from '../model/entity.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
@@ -90,13 +91,17 @@ export abstract class Importer<S extends ImporterSettings> {
         if (this.harvesterRunCancelled) throw new HarvestRunCancelledError();
     }
 
+    protected addEntityToBulk(entity: Entity): Promise<BulkResponse> {
+        this.checkCancellation();
+        return this.database.addEntityToBulk(entity);
+    }
+
     run(isIncremental: boolean = false): Observable<ImportLogMessage> {
         this.isIncremental = isIncremental;
         this.summary.isIncremental = isIncremental;
         return new Observable<ImportLogMessage>(observer => {
             this.observer = observer;
             this.summary.startTime = new Date();
-            this.database.setCancellationCheck(() => this.checkCancellation());
             this._cancellationScope.run(() => {
                 this.exec(observer);
             });
@@ -146,7 +151,7 @@ export abstract class Importer<S extends ImporterSettings> {
                 transactionCommitted = true;
                 // TODO support concurrency of different catalogs
                 for (const catalogId of this.settings.catalogIds) {
-                    this.database.checkCancellation();
+                    this.checkCancellation();
                     const stageSummary = this.startStage(`catalog/${catalogId}`);
                     const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, stageSummary);
                     try {

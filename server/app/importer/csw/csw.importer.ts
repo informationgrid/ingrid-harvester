@@ -166,7 +166,7 @@ export class CswImporter extends Importer<CswSettings> {
                 transactionCommitted = true;
                 // TODO support concurrency of different catalogs
                 for (const catalogId of this.settings.catalogIds) {
-                    this.database.checkCancellation();
+                    this.checkCancellation();
                     const stageSummary = this.startStage(`catalog/${catalogId}`);
                     const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, stageSummary);
                     try {
@@ -268,7 +268,7 @@ export class CswImporter extends Importer<CswSettings> {
         }
         // 2) run in parallel
         const limit = pLimit(this.settings.maxConcurrent);
-        await Promise.allSettled(delegates.map(delegate => this.database.limitedRun(limit, () => this.handleHarvest(delegate))));
+        await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
         log.info(`Finished requesting records`);
         // 3) persist leftovers
         await this.database.sendBulkData();
@@ -297,7 +297,7 @@ export class CswImporter extends Importer<CswSettings> {
         }
         // 2) run in parallel
         const limit = pLimit(this.settings.maxConcurrent);
-        await Promise.allSettled(delegates.map(delegate => this.database.limitedRun(limit, () => this.handleHarvest(delegate))));
+        await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
         // 3) persist leftovers
         await this.database.sendBulkData();
         log.info(`Finished requesting services`);
@@ -310,7 +310,7 @@ export class CswImporter extends Importer<CswSettings> {
         // for all services, get WFS, WMS info and merge into dataset
         // 2) run in parallel
         const limit = pLimit(this.settings.maxConcurrent);
-        await Promise.allSettled(recordEntities.map(recordEntity => this.database.limitedRun(limit, () => this.coupleService(recordEntity, resolveOgcDistributions, true))));
+        await Promise.allSettled(recordEntities.map(recordEntity => limit(() => this.coupleService(recordEntity, resolveOgcDistributions, true))));
         log.info(`Finished self-coupling`);
         // 3) persist leftovers
         await this.database.sendBulkCouples();
@@ -323,7 +323,7 @@ export class CswImporter extends Importer<CswSettings> {
         // for all services, get WFS, WMS info and merge into dataset
         // 2) run in parallel
         const limit = pLimit(this.settings.maxConcurrent);
-        await Promise.allSettled(serviceEntities.map(serviceEntity => this.database.limitedRun(limit, () => this.coupleService(serviceEntity, resolveOgcDistributions, false))));
+        await Promise.allSettled(serviceEntities.map(serviceEntity => limit(() => this.coupleService(serviceEntity, resolveOgcDistributions, false))));
         log.info(`Finished dataset-service coupling`);
         // 3) persist leftovers
         await this.database.sendBulkCouples();
@@ -396,7 +396,7 @@ export class CswImporter extends Importer<CswSettings> {
                             service_type: serviceType,
                             distribution
                         };
-                        await this.database.addEntityToBulk(coupling);
+                        await this.addEntityToBulk(coupling);
                         // }
                         // else {
                         //     log.warn(`Did not fetch WFS from ${serviceEntity.identifier}: ${errors.join(', ')}`);
@@ -430,7 +430,7 @@ export class CswImporter extends Importer<CswSettings> {
                             service_type: serviceType,
                             distribution
                         };
-                        await this.database.addEntityToBulk(coupling);
+                        await this.addEntityToBulk(coupling);
                     }
                     break;
                 default:
@@ -513,7 +513,7 @@ export class CswImporter extends Importer<CswSettings> {
                     dataset_csw: mapper.getHarvestedData(),
                     original_document: mapper.getHarvestedData()
                 };
-                promises.push(this.database.addEntityToBulk(entity));
+                promises.push(this.addEntityToBulk(entity));
             } else {
                 this.summary.skippedDocs.push(uuid);
             }

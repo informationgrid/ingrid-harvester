@@ -35,6 +35,7 @@ import type { Summary } from '../model/summary.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import type { BulkResponse } from './database.utils.js';
 import { DatabaseUtils } from './database.utils.js';
+import { HarvestRunCancelledError, cancellationSignalStorage } from '../utils/cancellation.utils.js';
 import type { PostgresQueries } from './postgres.queries.js';
 
 const log = log4js.getLogger(import.meta.filename);
@@ -377,7 +378,6 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async addEntityToBulk(entity: Entity): Promise<BulkResponse> {
-        this.checkCancellation();
         if ((entity as RecordEntity).catalog_ids) {
             this._bulkData.push(entity as RecordEntity);
             // send data to database if limit is reached
@@ -408,7 +408,7 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async sendBulkData(commitTransaction: boolean = false): Promise<BulkResponse> {
-        this.checkCancellation();
+        if (cancellationSignalStorage.getStore()?.aborted) throw new HarvestRunCancelledError();
         if (this._bulkData.length > 0) {
             log.debug('Sending BULK message with ' + this._bulkData.length + ' items to persist');
             let promise = this.bulk(this._bulkData, commitTransaction);
@@ -421,7 +421,7 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async sendBulkCouples(commitTransaction: boolean = false): Promise<BulkResponse> {
-        this.checkCancellation();
+        if (cancellationSignalStorage.getStore()?.aborted) throw new HarvestRunCancelledError();
         if (this._bulkCouples.length > 0) {
             log.debug('Sending BULK message with ' + this._bulkCouples.length + ' items to persist');
             let promise = this.bulk(this._bulkCouples, commitTransaction);

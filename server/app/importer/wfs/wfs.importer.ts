@@ -126,7 +126,7 @@ export class WfsImporter extends Importer<WfsSettings> {
         // for each FeatureType, get all Features
         const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(Object.keys(featureTypes).map(featureTypeName =>
-            this.database.limitedRun(limit, () => this.extractCompleteFeatureType(featureTypeName, featureTypes[featureTypeName]))
+            limit(() => this.extractCompleteFeatureType(featureTypeName, featureTypes[featureTypeName]))
         ));
         log.info(`Finished requests`);
         await this.database.sendBulkData();
@@ -222,7 +222,7 @@ export class WfsImporter extends Importer<WfsSettings> {
                 dataset: doc,
                 original_document: mapper.getHarvestedData()
             };
-            await this.database.addEntityToBulk(entity);
+            await this.addEntityToBulk(entity);
         }
         else {
             this.summary.skippedDocs.push(featureTypeName);
@@ -304,7 +304,7 @@ export class WfsImporter extends Importer<WfsSettings> {
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };
-                promises.push(this.database.addEntityToBulk(entity));
+                promises.push(this.addEntityToBulk(entity));
             } else {
                 this.summary.skippedDocs.push(gmlId);
             }
