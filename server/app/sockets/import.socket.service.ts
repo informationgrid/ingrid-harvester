@@ -48,6 +48,7 @@ export class ImportSocketService {
     private limit = pLimit(this.threadpoolSize);
     private activeImportIds = new Set<number>();
     private cancelledJobs = new Set<string>();
+    private batchTotal = 0;
 
     // throttling of messages to frontend to make UI more responsive
     private lastEmitTimes = new Map<number, number>();
@@ -94,6 +95,12 @@ export class ImportSocketService {
         for (const msg of this.summaryService.getLiveStates()) {
             socket.emit('/log', msg);
         }
+        if (this.batchTotal > 0) {
+            socket.emit('/batchProgress', {
+                total: this.batchTotal,
+                finished: this.batchTotal - this.activeImportIds.size,
+            });
+        }
     }
 
     /**
@@ -107,7 +114,13 @@ export class ImportSocketService {
     @Emit('/log')
     async runImport(id: number, isIncremental?: boolean): Promise<void> {
         if (this.activeImportIds.has(id)) return;
+
+        this.batchTotal = this.activeImportIds.size === 0 ? 1 : this.batchTotal + 1;
         this.activeImportIds.add(id);
+        this.nsp.emit('/batchProgress', {
+            total: this.batchTotal,
+            finished: this.batchTotal - this.activeImportIds.size,
+        });
 
         const jobId = crypto.randomUUID();
 
@@ -120,7 +133,13 @@ export class ImportSocketService {
         }
 
         return this.limit(() => new Promise<void>((resolve) => {
-            const done = () => { this.activeImportIds.delete(id); resolve(); };
+            const done = () => {
+                this.activeImportIds.delete(id);
+                const finished = this.batchTotal - this.activeImportIds.size;
+                this.nsp.emit('/batchProgress', { total: this.batchTotal, finished });
+                if (this.activeImportIds.size === 0) this.batchTotal = 0;
+                resolve();
+            };
 
             if (this.cancelledJobs.has(jobId)) {
                 this.cancelledJobs.delete(jobId);

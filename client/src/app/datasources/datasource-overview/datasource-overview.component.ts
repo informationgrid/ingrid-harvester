@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Component, computed, Signal } from "@angular/core";
+import { Component, computed, effect, signal, Signal } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { UntilDestroy } from "@ngneat/until-destroy";
@@ -45,6 +45,13 @@ import { AuthenticationService } from "../../security/authentication.service";
 })
 export class DatasourceOverviewComponent {
   importLogs = computed(() => this.datasourceService.importLogs());
+
+  hasActiveImports = computed(() =>
+    Object.values(this.importLogs() ?? {}).some(log => !log.complete)
+  );
+  importProgress = computed(() => this.datasourceService.batchProgress());
+  progressVisible = signal(false);
+  private hideTimer: ReturnType<typeof setTimeout> | null = null;
   groupedDatasources: Signal<Record<string, Datasource[]>> = computed(() => {
     if (!this.datasourceService.datasources()) return {};
     return Object.values(this.datasourceService.datasources()).reduce(
@@ -77,7 +84,22 @@ export class DatasourceOverviewComponent {
     private datasourceService: DatasourceService,
     private transloco: TranslocoService,
     private authService: AuthenticationService,
-  ) {}
+  ) {
+    effect(() => {
+      if (this.hasActiveImports()) {
+        if (this.hideTimer !== null) {
+          clearTimeout(this.hideTimer);
+          this.hideTimer = null;
+        }
+        this.progressVisible.set(true);
+      } else if (this.progressVisible()) {
+        this.hideTimer = setTimeout(() => {
+          this.progressVisible.set(false);
+          this.hideTimer = null;
+        }, 1000);
+      }
+    });
+  }
 
   onCancel(datasourceId: number, jobId: string): void {
     if (jobId) {

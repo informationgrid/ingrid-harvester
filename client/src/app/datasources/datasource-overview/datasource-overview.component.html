@@ -68,6 +68,15 @@
     </ng-container>
 
     <ng-container content>
+      <div
+        style="position: sticky; top: 0px; z-index: 1000; transition: opacity 0.8s ease;"
+        [style.opacity]="progressVisible() ? 1 : 0"
+      >
+        <mat-progress-bar
+          [mode]="importProgress() ? 'determinate' : 'indeterminate'"
+          [value]="importProgress() ? (2 + importProgress().finished / importProgress().total * 98) : 0"
+        />
+      </div>
       <mat-accordion>
         @for (group of groupedDatasources() | keyvalue; track group.key) {
           <h3>
