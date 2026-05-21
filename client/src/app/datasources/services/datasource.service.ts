@@ -130,13 +130,6 @@ export class DatasourceService {
   }
 
   importAll(): Observable<void> {
-    // Reset all import logs.
-    const importLogs: Record<number, ImportLogMessage> = {};
-    for (const id of Object.keys(this.importLogs())) {
-      importLogs[id] = { complete: false };
-    }
-    this._importLogs.set(importLogs);
-
     return this.api.importAll();
   }
 

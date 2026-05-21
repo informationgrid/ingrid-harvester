@@ -25,7 +25,7 @@ import { Component, input } from "@angular/core";
 import { MatIcon } from "@angular/material/icon";
 import { MatTooltip } from "@angular/material/tooltip";
 
-export type Status = "success" | "disable" | "cron" | "importing" | "error" | "partial" | "cancelled";
+export type Status = "success" | "disable" | "cron" | "importing" | "queued" | "error" | "partial" | "cancelled";
 
 @Component({
   selector: "ingrid-status-label",
