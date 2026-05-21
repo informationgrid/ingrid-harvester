@@ -70,7 +70,7 @@ export class SummaryService {
         return this.summaries
             .map(summary => {
                 let harvester = harvesters.find(h => h.id === summary.id);
-                // for (let mode of <('full' | 'incr')[]>['full', 'incr']) {
+                if (summary.summary) {
                     let mode = summary.summary.isIncremental ? 'incr' : 'full';
                     if (harvester?.cron?.[mode]?.active) {
                         let cronJob = new CronJob(harvester.cron[mode].pattern, () => {}, null, false);
@@ -78,9 +78,9 @@ export class SummaryService {
                     } else {
                         summary.nextExecution = null;
                     }
-                    return summary;
-                // }
-            } );
+                }
+                return summary;
+            });
     }
 
     /**
@@ -98,6 +98,17 @@ export class SummaryService {
             this.summaries[position] = summary;
         }
 
-        writeFileSync(this.summaryPath, JSON.stringify(this.summaries, null, 2));
+        // only persist completed runs to disk; in-progress status lives in memory only
+        if (summary.complete) {
+            writeFileSync(this.summaryPath, JSON.stringify(
+                this.summaries.filter(s => s.complete),
+                null, 2
+            ));
+        }
+    }
+
+    delete(id: number): void {
+        const position = this.summaries.findIndex(s => s.id === id);
+        if (position !== -1) this.summaries.splice(position, 1);
     }
 }

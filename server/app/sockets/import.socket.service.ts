@@ -100,7 +100,9 @@ export class ImportSocketService {
                 const jobId = crypto.randomUUID();
                 let cancelBeforeStart = false;
                 this.activeJobs.set(id, { importer: { cancel: () => { cancelBeforeStart = true; } }, jobId });
-                this.nsp.emit('/log', { id, jobId, complete: false, stage: 'starting', lastExecution });
+                const startingMsg: ImportLogMessage = { id, jobId, complete: false, stage: 'starting', lastExecution, status: 'importing' };
+                this.nsp.emit('/log', startingMsg);
+                this.summaryService.update(startingMsg);
                 profile.getImporter(configHarvester).then(importer => {
                     if (cancelBeforeStart) importer.cancel();
                     this.activeJobs.set(id, { importer, jobId });
@@ -123,6 +125,7 @@ export class ImportSocketService {
                                 if (response.complete || (now - lastEmit > ImportSocketService.THROTTLE_MS)) {
                                     this.nsp.emit('/log', response);
                                     this.lastEmitTimes.set(id, now);
+                                    this.summaryService.update(response);
                                 }
 
                                 // when complete then write information log to file
@@ -165,6 +168,7 @@ export class ImportSocketService {
                             },
                             error: error => {
                                 this.activeJobs.delete(id);
+                                this.summaryService.delete(id);
                                 this.log.error('There was an error: ', error);
                                 if (configGeneral.mail.enabled) {
                                     MailServer.getInstance().send(`Importer [${configHarvester.type}] ${configData.description} failed`, error.toString());
