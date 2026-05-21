@@ -54,5 +54,5 @@ export const ckanDefaults: CkanSettings = {
 
 export const ckanCapabilities: ImporterCapabilities = {
     isIncrementalSupported: false,
-    supportedCatalogTypes: ['elasticsearch']
+    supportedCatalogTypes: ['elasticsearch', 'piveau']
 }
