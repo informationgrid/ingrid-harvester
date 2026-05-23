@@ -141,9 +141,14 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
         return this.gmlId;
     }
 
-    // TODO:check
     getMetadataSource(): MetadataSource {
-        let wfsLink = `${this.settings.sourceURL}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.settings.version}&outputFormat=application/xml&featureId=${this.gmlId}`;
+        let wfsLink;
+        if (this.isFeatureType()) {
+            wfsLink = `${this.settings.sourceURL}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.settings.version}&typeName=${this.getTypename()}`;
+        }
+        else {
+            wfsLink = `${this.settings.sourceURL}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.settings.version}&featureId=${this.gmlId}`;
+        }
         return {
             source_base: this.settings.sourceURL,
             raw_data_source: wfsLink,
