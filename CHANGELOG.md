@@ -1,4 +1,11 @@
 
+## 8.3.1 (27.05.2026)
+
+
+### Bugfixes
+
+* [WFS] Informationen werden vermischt, wenn Anzahl paralleler Abfragen > 1 (#9056)
+    
 ## 8.3.0 (17.04.2026)
 
 ### Features
