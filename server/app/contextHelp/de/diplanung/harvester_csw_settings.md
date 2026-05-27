@@ -36,3 +36,21 @@ Nur im Modus *Separat* relevant. Gibt die maximale Anzahl an Diensten an, die in
 Legt fest, wie viele Datensätze pro Abfrage maximal abgerufen werden. Eine Bündelung kann den Harvesting-Prozess effizienter gestalten.
 
 **Beispielwert:** `200`
+
+# WFS/WMS auflösen (Pflichtfeld)
+
+Steuert, ob enthaltene WFS- oder WMS-Dienste aufgelöst werden.
+
+**Beispielwert:** `Ja (langsam)`
+
+# Toleranz: Polygone vereinfachen
+
+Optional. Ermöglicht die Vereinfachung sehr detaillierter Geometrien, um die Datenmenge zu reduzieren. Ein höherer Wert führt zu stärkeren Vereinfachungen.
+
+**Beispielwert:** `0.0001`
+
+# Planstatus
+
+Filteroption für Datensätze nach Planungsstatus.
+
+**Mögliche Werte:** unbekannt, eingestellt, ganz aufgehoben, festgestellt, in Aufstellung, simuliert

@@ -13,6 +13,7 @@ export abstract class CswType {
             wrappers: ["section"],
             props: {
               label: "CSW Einstellungen",
+              contextHelpId: "harvester_csw_settings",
             },
             fieldGroup: [
               {
@@ -181,6 +182,7 @@ export abstract class CswType {
             wrappers: ["section"],
             props: {
               label: "Filter und Regeln",
+              contextHelpId: "harvester_csw_filter",
             },
             fieldGroup: [
               ...SharedFields.sharedRules(),
