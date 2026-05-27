@@ -25,9 +25,7 @@ import type { ImporterCapabilities, ImporterSettings } from '../importer.setting
 import { defaultImporterSettings } from '../importer.settings.js';
 
 export type KldSettings = {
-  // time in milliseconds to wait for the next set of concurrent API requests defined in the maxConcurrent setting
-  // NOTE a higher number will result in higher throttling of the request rate
-  maxConcurrentTimespan: number,
+    maxConcurrentTimespan: number, // milliseconds to wait between batches of concurrent requests; higher = more throttling; UI-configurable
 } & ImporterSettings;
 
 export const kldDefaults: KldSettings = {

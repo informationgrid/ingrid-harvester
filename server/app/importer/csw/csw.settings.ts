@@ -26,15 +26,15 @@ import { defaultImporterSettings } from '../importer.settings.js';
 import type { PluPlanState } from '../../model/dcatApPlu.model.js';
 
 export type CswSettings = {
-    resultType?: 'hits' | 'results',
-    pluPlanState?: PluPlanState,
-    maxServices: number,
-    resolveOgcDistributions: boolean,
-    harvestingMode: 'standard' | 'separate',
-    eitherKeywords: string[],
-    httpMethod: 'GET' | 'POST',
-    recordFilter?: string,
-    simplifyTolerance: number
+    resultType?: 'hits' | 'results',         // CSW GetRecords result mode; 'hits' = count only, 'results' = fetch records; backend-only (not in UI)
+    pluPlanState?: PluPlanState,             // planning status assigned to all harvested records; UI-configurable (DiPlanung profile only)
+    maxServices: number,                     // max dataset IDs per service-query chunk in 'separate' harvesting mode; UI-configurable
+    resolveOgcDistributions: boolean,        // resolve WFS/WMS endpoints to fetch geometry (slow); UI-configurable (DiPlanung profile only)
+    harvestingMode: 'standard' | 'separate', // 'standard' harvests all record types together; 'separate' queries services by dataset chunk; UI-configurable
+    eitherKeywords: string[],                // record must match at least one of these keywords to be included; UI-configurable
+    httpMethod: 'GET' | 'POST',              // HTTP method for CSW requests; UI-configurable
+    recordFilter?: string,                   // OGC XML filter to restrict which records are harvested; UI-configurable
+    simplifyTolerance: number                // Douglas-Peucker tolerance for polygon simplification (0 = off); UI-configurable (DiPlanung profile only)
 } & ImporterSettings;
 
 export const cswDefaults: CswSettings = {

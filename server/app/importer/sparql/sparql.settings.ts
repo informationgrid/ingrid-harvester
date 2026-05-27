@@ -25,11 +25,11 @@ import type { ImporterCapabilities, ImporterSettings } from '../importer.setting
 import { defaultImporterSettings } from '../importer.settings.js';
 
 export type SparqlSettings = {
-    query: string,
-    filterTags?: string[],
-    filterThemes?: string[],
-    defaultProvider?: string,
-    recordFilter?: string
+    query: string,               // SPARQL SELECT query executed against the endpoint; UI-configurable
+    filterTags?: string[],       // skip records whose keywords don't include at least one of these tags; backend-only (not in UI)
+    filterThemes?: string[],     // Deprecated? theme filter; declared but not used in mapper; backend-only
+    defaultProvider?: string,    // Deprecated? default provider attribution; declared but not used in mapper; backend-only
+    recordFilter?: string        // Deprecated? record filter; declared but not used in mapper; backend-only
 } & ImporterSettings;
 
 export const sparqlDefaults: SparqlSettings = {

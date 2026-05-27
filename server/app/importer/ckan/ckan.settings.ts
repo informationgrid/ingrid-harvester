@@ -26,15 +26,15 @@ import type { ImporterCapabilities, ImporterSettings } from '../importer.setting
 import { defaultImporterSettings } from '../importer.settings.js';
 
 export type CkanSettings = {
-    filterTags?: string[],
-    filterGroups?: string[],
-    providerPrefix?: string,
-    providerField?: ProviderField,
-    requestType?: 'ListWithResources' | 'Search',
-    additionalSearchFilter?: string,
-    markdownAsDescription?: boolean,
-    groupChilds?: boolean,
-    defaultLicense?: License;
+    filterTags?: string[],             // skip datasets whose tags don't include at least one of these; UI-configurable
+    filterGroups?: string[],           // skip datasets whose groups don't include at least one of these; UI-configurable
+    providerPrefix?: string,           // prefix prepended to author/maintainer names; backend-only
+    providerField?: ProviderField,     // Deprecated? intended to select which CKAN field to use as provider; unused in mapper; backend-only
+    requestType?: 'ListWithResources' | 'Search', // CKAN API endpoint: 'Search' uses package_search, 'ListWithResources' uses current_package_list_with_resources; UI-configurable
+    additionalSearchFilter?: string,   // Solr filter query appended to the Search API request; UI-configurable
+    markdownAsDescription?: boolean,   // if true, dataset notes are rendered as markdown HTML; UI-configurable
+    groupChilds?: boolean,             // Deprecated? intended for grouping child datasets; unused in importer and mapper; UI-configurable
+    defaultLicense?: License;          // fallback license assigned to datasets that have no license; UI-configurable
 } & ImporterSettings;
 
 export type ProviderField = 'maintainer' | 'organization' | 'author';
