@@ -53,7 +53,7 @@ import { ConfigService } from '../services/config/ConfigService.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
-export abstract class ProfileFactory<T extends ImporterSettings> implements ImporterFactory<T>, 
+export abstract class ProfileFactory<T extends ImporterSettings> implements ImporterFactory<T>,
 // MapperFactory<T>,
 CatalogFactory {
 
@@ -109,6 +109,16 @@ CatalogFactory {
     getIndexSettings(settingsName?: string): IndexSettings {
         const require = createRequire(import.meta.url);
         return require(`./${this.getProfileName()}/persistence/${settingsName ?? 'default-settings'}.json`);
+    }
+
+    getIndexSchema(): object | null {
+        const require = createRequire(import.meta.url);
+        try {
+            return require(`../persistence/schemas/index-${this.getProfileName()}.json`);
+        }
+        catch {
+            return null;
+        }
     }
 
     getPostgresQueries(): PostgresQueries {

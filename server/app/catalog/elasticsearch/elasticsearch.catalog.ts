@@ -31,6 +31,7 @@ import type { Summary } from '../../model/summary.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import type { ElasticsearchUtils, EsOperation } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import { validateDocument } from '../../persistence/elastic.validation.js';
 import { Catalog } from '../catalog.factory.js';
 
 const log = log4js.getLogger(import.meta.filename);
@@ -38,6 +39,7 @@ const log = log4js.getLogger(import.meta.filename);
 export abstract class ElasticsearchCatalog extends Catalog<IndexDocument, ElasticsearchCatalogSettings, EsOperation> {
 
     protected readonly elastic: ElasticsearchUtils;
+    protected schema: object | null = null;
 
     constructor(catalogSettings: ElasticsearchCatalogSettings, summary: Summary) {
         super(catalogSettings, summary);
@@ -56,13 +58,30 @@ export abstract class ElasticsearchCatalog extends Catalog<IndexDocument, Elasti
             await this.elastic.prepareIndexWithName(esSettings.index, mapping, settings);
             await this.elastic.addAlias(esSettings.index, esSettings.alias);
         }
+        this.schema = ProfileFactoryLoader.get().getIndexSchema();
     }
 
     async importIntoCatalog(operations: EsOperation[]) {
+        let validOps = operations;
+        if (operations?.length && this.schema) {
+            validOps = [];
+            for (const op of operations) {
+                if (op.document && ['index', 'create', 'update'].includes(op.operation)) {
+                    const errors = validateDocument(op.document, this.schema);
+                    if (errors.length) {
+                        const msg = `Schema validation failed for ${op._id}: ${errors.join('; ')}`;
+                        log.error(msg);
+                        this.summary.errors.push({ type: 'app', error: msg });
+                        continue;
+                    }
+                }
+                validOps.push(op);
+            }
+        }
         // will implicitly send bulk ops when queue is full
-        if (operations?.length) {
-            this.summary.numDocs += operations.filter(op => ['index', 'create', 'update'].includes(op.operation)).length;
-            await this.elastic.addOperationChunksToBulk(operations);
+        if (validOps?.length) {
+            this.summary.numDocs += validOps.filter(op => ['index', 'create', 'update'].includes(op.operation)).length;
+            await this.elastic.addOperationChunksToBulk(validOps);
         }
         // TODO revisit: marking these as skipped produces unclear feedback for the user
         // else {
