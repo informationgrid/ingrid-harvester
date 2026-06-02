@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import type { IndexMappingOption } from '@shared/catalog.js';
 import type { DatabaseConfiguration, ElasticsearchConfiguration, GeneralSettings } from '@shared/general-config.settings.js';
 import type { MappingDistribution, MappingItem } from '@shared/mapping.model.js';
 import { BodyParams, Controller, Delete, Get, Post, QueryParams, UseAuth } from '@tsed/common';
@@ -78,6 +79,11 @@ export class ConfigCtrl {
     getImporterTypes(): ImporterTypeInfo[] {
         const profile = ProfileFactoryLoader.get();
         return profile.getImporterTypes();
+    }
+
+    @Get('/index_mappings')
+    getIndexMappings(): IndexMappingOption[] {
+        return ProfileFactoryLoader.get().getAvailableIndexMappings();
     }
 
     @Get('/general')

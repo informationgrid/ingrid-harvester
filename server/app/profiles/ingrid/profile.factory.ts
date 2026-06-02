@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import type { CatalogSettings, CswCatalogSettings, ElasticsearchCatalogSettings, PiveauCatalogSettings } from '@shared/catalog.js';
+import type { CatalogSettings, CswCatalogSettings, ElasticsearchCatalogSettings, IndexMappingOption, PiveauCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
 import { Catalog, type CatalogColumnType, type CatalogOperation } from '../../catalog/catalog.factory.js';
 import type { CkanMapper } from '../../importer/ckan/ckan.mapper.js';
@@ -79,6 +79,13 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
 
     protected getSupportedTypeNames(): ImporterType[] {
         return ["CSW", "CKAN", "DCATAPDE", "WFS", "GENESIS"];
+    }
+
+    override getAvailableIndexMappings(): IndexMappingOption[] {
+        return [
+            { label: 'InGrid', value: 'default-mapping' },
+            { label: 'OpenData', value: 'opendata-mapping' },
+        ];
     }
 
     getElasticQueries(): AbstractElasticQueries {

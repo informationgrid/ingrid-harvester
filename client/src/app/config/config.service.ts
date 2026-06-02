@@ -23,6 +23,7 @@
 
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { IndexMappingOption } from '@shared/catalog';
 import { DatabaseConfiguration, ElasticsearchConfiguration, GeneralSettings } from '@shared/general-config.settings';
 import { MappingItem } from '@shared/mapping.model';
 import { Observable } from 'rxjs';
@@ -47,6 +48,10 @@ export class ConfigService {
 
   getProfileName(): Observable<string> {
     return this.http.get('rest/api/config/profile', { responseType: 'text' });
+  }
+
+  getIndexMappings(): Observable<IndexMappingOption[]> {
+    return this.http.get<IndexMappingOption[]>('rest/api/config/index_mappings');
   }
 
   getCatalogs(): Observable<Catalog[]> {

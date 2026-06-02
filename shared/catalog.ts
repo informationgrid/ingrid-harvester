@@ -63,3 +63,5 @@ export type Catalog = CatalogSettings
   & Partial<CswCatalogSettings>;
 
 export type CatalogType = 'elasticsearch' | 'csw' | 'piveau';
+
+export type IndexMappingOption = { label: string; value: string };

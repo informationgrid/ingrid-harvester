@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import type { CatalogSettings } from '@shared/catalog.js';
+import type { CatalogSettings, IndexMappingOption } from '@shared/catalog.js';
 import log4js from 'log4js';
 import { createRequire } from 'module';
 import type { Catalog, CatalogColumnType, CatalogFactory, CatalogOperation } from '../catalog/catalog.factory.js';
@@ -100,6 +100,10 @@ CatalogFactory {
     dateReplacer(this: any, key: string, value: any): any {
         return value;
     };
+
+    getAvailableIndexMappings(): IndexMappingOption[] {
+        return [{ label: 'Default', value: 'default-mapping' }];
+    }
 
     getIndexMappings(mappingName?: string): any {
         const require = createRequire(import.meta.url);

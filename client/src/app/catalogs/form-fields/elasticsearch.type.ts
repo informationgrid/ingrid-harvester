@@ -1,10 +1,12 @@
 import { FormlyFieldConfig } from "@ngx-formly/core";
 import { inject } from "@angular/core";
 import { TranslocoPipe } from "@ngneat/transloco";
+import { ConfigService } from "../../config/config.service";
 
 export default abstract class ElasticsearchType {
   static fields(): FormlyFieldConfig[] {
     const transloco = inject(TranslocoPipe);
+    const configService = inject(ConfigService);
 
     return [
       {
@@ -53,11 +55,7 @@ export default abstract class ElasticsearchType {
                     props: {
                       label: transloco.transform("catalogs.formLabel.mappingFile"),
                       required: true,
-                      options: [
-                        // TODO these options should come from the backend. they will differ for each profile
-                        { label: "Default", value: "default-mapping" },
-                        { label: "Opendata", value: "opendata-mapping" },
-                      ],
+                      options: configService.getIndexMappings(),
                     },
                   },
                 ],
