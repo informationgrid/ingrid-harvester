@@ -58,7 +58,7 @@ export abstract class ElasticsearchCatalog extends Catalog<IndexDocument, Elasti
             await this.elastic.prepareIndexWithName(esSettings.index, mapping, settings);
             await this.elastic.addAlias(esSettings.index, esSettings.alias);
         }
-        this.schema = ProfileFactoryLoader.get().getIndexSchema();
+        this.schema = ProfileFactoryLoader.get().getIndexSchema(esSettings.mappingFile);
     }
 
     async importIntoCatalog(operations: EsOperation[]) {

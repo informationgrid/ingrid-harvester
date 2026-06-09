@@ -83,8 +83,8 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
 
     override getAvailableIndexMappings(): IndexMappingOption[] {
         return [
-            { label: 'InGrid', value: 'default-mapping' },
-            { label: 'OpenData', value: 'opendata-mapping' },
+            { label: 'InGrid',   value: 'default-mapping',  schemaName: 'ingrid'   },
+            { label: 'OpenData', value: 'opendata-mapping', schemaName: 'opendata' },
         ];
     }
 

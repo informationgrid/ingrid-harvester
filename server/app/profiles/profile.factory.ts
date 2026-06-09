@@ -102,7 +102,7 @@ CatalogFactory {
     };
 
     getAvailableIndexMappings(): IndexMappingOption[] {
-        return [{ label: 'Default', value: 'default-mapping' }];
+        return [{ label: 'Default', value: 'default-mapping', schemaName: this.getProfileName() }];
     }
 
     getIndexMappings(mappingName?: string): any {
@@ -115,10 +115,17 @@ CatalogFactory {
         return require(`./${this.getProfileName()}/persistence/${settingsName ?? 'default-settings'}.json`);
     }
 
-    getIndexSchema(): object | null {
+    getIndexSchema(mappingName?: string): object | null {
         const require = createRequire(import.meta.url);
+        let schemaName = this.getProfileName();
+        if (mappingName) {
+            const option = this.getAvailableIndexMappings().find(o => o.value === mappingName);
+            if (option?.schemaName) {
+                schemaName = option.schemaName;
+            }
+        }
         try {
-            return require(`../persistence/schemas/index-${this.getProfileName()}.json`);
+            return require(`../persistence/schemas/index-${schemaName}.json`);
         }
         catch {
             return null;
