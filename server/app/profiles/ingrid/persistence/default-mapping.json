@@ -152,6 +152,10 @@
             "type": "text",
             "index": false
         },
+        "map_iframe": {
+            "type": "text",
+            "store": true
+        },
         "modified": {
             "type": "date",
             "store": true
