@@ -93,7 +93,7 @@ export class AppComponent implements OnInit {
   }
 
   @HostListener("window:resize", ["$event"])
-  onResize() {
+  onResize(event?: Event) {
     const preIsMinimized = this.isMinimized;
     this.isMinimized = window.innerWidth < 640;
 
