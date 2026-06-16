@@ -21,80 +21,101 @@
  * ==================================================
  */
 
-import type { Geometry } from 'geojson';
-import type { Distribution } from '../../../model/distribution.js';
-import type { IndexDocument } from '../../../model/index.document.js';
-import type { IngridMetadata } from "./ingrid.metadata.js";
+import type { IndexDocument, IndexDocumentMetadata, IndexTemporal } from '../../../model/index.document.js';
 
-export type IngridIndexDocument = IndexDocument & IngridMetadata & {
-    extras: {
-        hierarchy_level?: string,
+export type IngridIndexDocument = IndexDocument & {
+    metadata: IndexDocumentMetadata & { data_type: 'INGRID' },
+    temporal?: IngridTemporal,
+    exports?: { iso?: string },
+    ingrid?: IngridSpecific,
+};
+
+export type IngridSpecific = {
+    alternate_title?: string,
+    metadata?: {
+        type?: 'InGridGeoDataset' | 'InGridDataCollection' | 'InGridGeoService'
+               | 'InGridInformationSystem' | 'InGridPublication' | 'InGridProject'
+               | 'InGridSpecialisedTask',
+        character_set?: { key: string | null, value: string | null }, // deprecated
     },
-    collection: {
-        name: string
+    references?: IngridReference[],
+    licenses?: IngridLicense[],
+    parent_identifier?: string,
+    datasource_identifier?: string,
+    spatial_representation?: IngridSpatialRepresentation[],
+    specific_usage?: string,
+    purpose?: string,
+    conformance_result?: IngridConformanceResult[],
+    order_info?: string,
+    data_quality?: IngridDataQuality,
+};
+
+export type IngridTemporal = IndexTemporal & {
+    status?: { key: string | null, value: string | null },
+    maintenance_frequency?: { key: string | null, value: string | null },
+    user_defined_maintenance_frequency_in_sec?: string,
+};
+
+export type IngridReference = {
+    internal?: boolean,
+    url?: string,
+    uuidRef?: string,
+    type?: { key: string | null, value: string | null },
+    title?: string,
+    explanation?: string,
+};
+
+export type IngridLicense = {
+    type?: 'accessConstraints' | 'useConstraints' | 'useLimitations',
+    items?: { key: string | null, value: string | null }[],
+};
+
+export type IngridConformanceResult = {
+    pass?: 'conformant' | 'not-conformant' | 'not-evaluated',
+    specification?: { key: string | null, value: string | null },
+    publicationDate?: string,
+    explanation?: string,
+};
+
+export type IngridDataQuality = {
+    completenessOmission?: number,
+    positionalAccuracy?: {
+        horizontal?: number,
+        vertical?: number,
     },
-    distributions?: Distribution[],
-    t0: string,
-    t1: string,
-    t2: string,
-    t01_object: any,
-    hierarchylevel: string,
-    alternatetitle: string,
-    t02_address: any[],
-    title: string,
-    summary: string,
-    content: string[],
-    location: string[],
-    x1: number[],
-    x2: number[],
-    y1: number[],
-    y2: number[],
-    spatial: {
-        geometries: Geometry[]
+    qualities?: {
+        type?: 'completenessComission' | 'conceptualConsistency' | 'domainConsistency'
+             | 'formatConsistency' | 'topologicalConsistency' | 'temporalConsistency'
+             | 'thematicClassificationCorrectness' | 'nonQuantitativeAttributeAccuracy'
+             | 'quantitativeAttributeAccuracy' | 'relativeInternalPositionalAccuracy',
+        measure_type?: { key: string | null, value: string | null },
+        value?: number,
+        parameter?: string,
+    }[],
+};
+
+export type IngridSpatialRepresentation = {
+    type?: 'text' | 'vector' | 'tin' | 'video' | 'stereomodel' | 'grid',
+    vector?: {
+        topology?: string,
+        geometry_type?: string,
+        number?: number,
+    }[],
+    grid?: {
+        axes?: { label?: string, number?: number, resolution?: number }[],
+        available_parameters?: boolean,
+        number_dimensions?: number,
+        cell_geometry?: { key: string | null, value: string | null },
+        rectified?: {
+            checkPointAvailability?: boolean,
+            checkPointDescription?: string,
+            cornerPoints?: string,
+            pointInPixel?: { key: string | null, value: string | null },
+        },
+        referenced?: {
+            orientationParameterAvailability?: boolean,
+            controlPointAvaliability?: boolean,
+            parameters?: string,
+        },
     },
-    idf: string,
-    modified: Date,
-    capabilities_url: string[],
-    refering?: any,
-    refering_service_uuid?: string[],
-    additional_html_1: string,
-    t04_search: any,
-    t0110_avail_format: any,
-    t011_obj_geo: any,
-    t011_obj_geo_keyc: any,
-    t011_obj_geo_symc: any,
-    t011_obj_geo_scale: any,
-    t011_obj_geo_spatial_rep: any,
-    t011_obj_geo_vector: any,
-    t011_obj_geo_supplinfo: any,
-    t011_obj_serv: any,
-    t011_obj_serv_version: any,
-    t011_obj_serv_op_connpoint: any,
-    t011_obj_serv_op_depends: any,
-    t011_obj_serv_op_para: any,
-    t011_obj_serv_operation: any,
-    t011_obj_serv_op_platform: any,
-    t011_obj_topic_cat: any,
-    t012_obj_adr: any[],
-    t0113_dataset_reference: any,
-    t017_url_ref: any[],
-    t021_communication: any[],
-    object_use: {
-        terms_of_use_value: string[],
-    }
-    object_use_constraint: {
-        license_key?: string | string[],
-        license_value: string | string[],
-    },
-    object_access: {
-        restriction_key: string[],
-        restriction_value: string[],
-        terms_of_use: string,
-    },
-    object_reference?: any[],
-    is_hvd: boolean,
-    spatial_system: {
-        referencesystem_value: string[],
-    },
-    sort_hash: string
-}
+};

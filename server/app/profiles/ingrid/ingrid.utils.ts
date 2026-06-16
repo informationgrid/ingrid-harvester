@@ -27,7 +27,7 @@ import type { IndexDocument } from '../../model/index.document.js';
 const UUID_NAMESPACE = 'b5d8aadf-d03f-452a-8d91-3a6a7f3b1203';
 
 export function createEsId(document: IndexDocument): string {
-    return document.uuid;
+    return document.id;
     // return generateWfsUuid(document.extras.metadata.source.source_base, document., document.t01_object.obj_id);
 }
 

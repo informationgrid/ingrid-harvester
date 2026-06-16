@@ -152,6 +152,9 @@
             "type": "text",
             "index": false
         },
+        "fulltext": {
+            "type": "text"
+        },
         "modified": {
             "type": "date",
             "store": true

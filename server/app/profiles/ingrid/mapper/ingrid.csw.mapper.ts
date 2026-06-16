@@ -28,6 +28,7 @@ import type { Distribution } from "../../../model/distribution.js";
 import * as GeoJsonUtils from "../../../utils/geojson.utils.js";
 import * as XpathUtils from "../../../utils/xpath.utils.js";
 import { ingridMapper } from "./ingrid.mapper.js";
+import type {IngridConformanceResult, IngridDataQuality, IngridLicense, IngridReference, IngridSpatialRepresentation} from "../model/index.document.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -145,6 +146,91 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         idf += renamedDom.toString();
         idf += "\n  </body>\n</html>\n";
         return idf;
+    }
+
+    getIso(): string {
+        return this.baseMapper.record.toString();
+    }
+
+    getSpatialRepresentation(): IngridSpatialRepresentation[] {
+        const nodes = CswMapper.select('./gmd:spatialRepresentationInfo/*', this.baseMapper.record);
+        if (!nodes?.length) return undefined;
+
+        const parseBool = (val: string | undefined) => val != null ? val === 'true' : undefined;
+        const parseNum  = (val: string | undefined) => { const n = Number(val); return isNaN(n) || val == null ? undefined : n; };
+
+        const result: IngridSpatialRepresentation[] = [];
+        for (const node of nodes) {
+            const name = node.localName;
+            if (name === 'MD_VectorSpatialRepresentation') {
+                const topology = this.text('./gmd:topologyLevel/gmd:MD_TopologyLevelCode/@codeListValue', node);
+                const vector = CswMapper.select('./gmd:geometricObjects/gmd:MD_GeometricObjects', node)?.map(go => ({
+                    topology,
+                    geometry_type: this.text('./gmd:geometricObjectType/gmd:MD_GeometricObjectTypeCode/@codeListValue', go) ?? undefined,
+                    number: parseNum(this.text('./gmd:geometricObjectCount/gco:Integer', go)),
+                }));
+                result.push({ type: 'vector', vector: vector?.length ? vector : undefined });
+            } else if (name === 'MD_GridSpatialRepresentation' || name === 'MD_Georectified' || name === 'MD_Georeferenceable') {
+                const axes = CswMapper.select('./gmd:axisDimensionProperties/gmd:MD_Dimension', node)?.map(dim => ({
+                    label: this.text('./gmd:dimensionName/gmd:MD_DimensionNameTypeCode/@codeListValue', dim) ?? undefined,
+                    number: parseNum(this.text('./gmd:dimensionSize/gco:Integer', dim)),
+                    resolution: parseNum(this.text('./gmd:resolution/gco:Length', dim)),
+                }));
+                const cellCode = this.text('./gmd:cellGeometry/gmd:MD_CellGeometryCode/@codeListValue', node);
+                const grid: IngridSpatialRepresentation['grid'] = {
+                    axes: axes?.length ? axes : undefined,
+                    number_dimensions: parseNum(this.text('./gmd:numberOfDimensions/gco:Integer', node)),
+                    cell_geometry: cellCode ? { key: this.transformToIgcDomainId(cellCode, '509'), value: cellCode } : undefined,
+                };
+                if (name === 'MD_Georectified') {
+                    const pointInPixel = this.text('./gmd:pointInPixel/gmd:MD_PixelOrientationCode', node);
+                    grid.rectified = {
+                        checkPointAvailability: parseBool(this.text('./gmd:checkPointAvailability/gco:Boolean', node)),
+                        checkPointDescription: this.text('./gmd:checkPointDescription/gco:CharacterString', node) ?? undefined,
+                        cornerPoints: this.text('./gmd:cornerPoints//gml:pos', node) ?? undefined,
+                        pointInPixel: pointInPixel ? { key: this.transformToIgcDomainId(pointInPixel, '2100'), value: pointInPixel } : undefined,
+                    };
+                } else if (name === 'MD_Georeferenceable') {
+                    grid.available_parameters = parseBool(this.text('./gmd:transformationParameterAvailability/gco:Boolean', node));
+                    grid.referenced = {
+                        orientationParameterAvailability: parseBool(this.text('./gmd:orientationParameterAvailability/gco:Boolean', node)),
+                        controlPointAvaliability: parseBool(this.text('./gmd:controlPointAvaliability/gco:Boolean', node)),
+                        parameters: this.text('./gmd:parameterCitation/gmd:CI_Citation/gmd:title/gco:CharacterString', node) ?? undefined,
+                    };
+                }
+                result.push({ type: 'grid', grid });
+            }
+        }
+        return result.length ? result : undefined;
+    }
+
+    getSpecificUsage(): string {
+        return this.text("./gmd:MD_DataIdentification/gmd:resourceSpecificUsage/gmd:MD_Usage/gmd:specificUsage/gco:CharacterString", this.baseMapper.idInfo);
+    }
+
+    getOrderInfo(): string {
+        return this.text("./gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributionOrderProcess/gmd:MD_StandardOrderProcess/gmd:orderingInstructions/gco:CharacterString", this.baseMapper.record);
+    }
+
+    getPurpose(): string {
+        return this.text("./gmd:MD_DataIdentification/gmd:purpose/gco:CharacterString", this.baseMapper.idInfo);
+    }
+
+    getDatasourceIdentifier(): string {
+        return this.text("./gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString", this.baseMapper.idInfo);
+    }
+
+    getParentIdentifier(): string {
+        return this.text("./gmd:parentIdentifier/gco:CharacterString", this.baseMapper.record);
+    }
+
+    getReferences(): IngridReference[] {
+        const capabilitiesUrls = this.getCapabilitiesURL();
+        return capabilitiesUrls?.length ? capabilitiesUrls?.map(url => ({
+            internal: false,
+            url,
+            type: { key: '3600', value: 'Gekoppelte Daten' }
+        })) : undefined;
     }
 
     getCapabilitiesURL(): string[] {
@@ -485,6 +571,102 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             extractEntries("./gmd:contactInfo/gmd:CI_Contact/gmd:onlineResource/gmd:CI_OnlineResource/gmd:linkage/gmd:URL", "URL");
         });
         return results;
+    }
+
+    getLicenses(): IngridLicense[] {
+        const licenses: IngridLicense[] = [];
+
+        const objectUse = this.getObjectUse();
+        if (objectUse?.terms_of_use_value?.length) {
+            licenses.push({
+                type: 'useLimitations',
+                items: objectUse.terms_of_use_value.map(v => ({ key: null, value: v }))
+            });
+        }
+
+        const objectUseConstraint = this.getObjectUseConstraint();
+        if (objectUseConstraint?.license_value?.length) {
+            licenses.push({
+                type: 'useConstraints',
+                items: objectUseConstraint.license_value.map(v => ({ key: null, value: v }))
+            });
+        }
+
+        const objectAccess = this.getObjectAccess();
+        if (objectAccess?.restriction_value?.length) {
+            licenses.push({
+                type: 'accessConstraints',
+                items: objectAccess.restriction_value.map((v, i) => ({
+                    key: objectAccess.restriction_key?.[i] ?? null,
+                    value: v
+                }))
+            });
+        }
+
+        return licenses.length ? licenses : undefined;
+    }
+
+    getConformanceResult(): IngridConformanceResult[] {
+        const nodes = CswMapper.select(
+            './gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report//gmd:DQ_ConformanceResult',
+            this.baseMapper.record
+        );
+        if (!nodes?.length) return undefined;
+        return nodes.map(node => {
+            const passVal = this.text('./gmd:pass/gco:Boolean', node);
+            const specTitle = this.text('./gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString', node);
+            return {
+                pass: passVal === 'true' ? 'conformant' : passVal === 'false' ? 'not-conformant' : 'not-evaluated',
+                specification: specTitle ? { key: null, value: specTitle } : undefined,
+                publicationDate: this.text('./gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date', node) ?? undefined,
+                explanation: this.text('./gmd:explanation/gco:CharacterString', node) ?? undefined,
+            };
+        });
+    }
+
+    getDataQuality(): IngridDataQuality {
+        const dqNode = CswMapper.select('./gmd:dataQualityInfo/gmd:DQ_DataQuality', this.baseMapper.record, true);
+        if (!dqNode) return undefined;
+
+        const parseNum = (val: string | undefined) => { const n = Number(val); return isNaN(n) || val == null ? undefined : n; };
+
+        const qualityTypeMap: Record<string, IngridDataQuality['qualities'][number]['type']> = {
+            'DQ_CompletenessCommission':              'completenessComission',
+            'DQ_ConceptualConsistency':               'conceptualConsistency',
+            'DQ_DomainConsistency':                   'domainConsistency',
+            'DQ_FormatConsistency':                   'formatConsistency',
+            'DQ_TopologicalConsistency':              'topologicalConsistency',
+            'DQ_TemporalConsistency':                 'temporalConsistency',
+            'DQ_ThematicClassificationCorrectness':   'thematicClassificationCorrectness',
+            'DQ_NonQuantitativeAttributeAccuracy':    'nonQuantitativeAttributeAccuracy',
+            'DQ_QuantitativeAttributeAccuracy':       'quantitativeAttributeAccuracy',
+            'DQ_RelativeInternalPositionalAccuracy':  'relativeInternalPositionalAccuracy',
+        };
+
+        const completenessOmission = parseNum(this.text(
+            './gmd:report/gmd:DQ_CompletenessOmission/gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record', dqNode
+        ));
+        const horizontal = parseNum(this.text(
+            './gmd:report/gmd:DQ_AbsoluteExternalPositionalAccuracy/gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record', dqNode
+        ));
+        const vertical = parseNum(this.text(
+            './gmd:report/gmd:DQ_RelativeInternalPositionalAccuracy[gmd:measureDescription/gco:CharacterString="vertical"]/gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record', dqNode
+        ));
+        const reportNodes = CswMapper.select('./gmd:report/*', dqNode);
+        const qualities = reportNodes
+            ?.filter(node => node.localName in qualityTypeMap)
+            .map(node => ({
+                type: qualityTypeMap[node.localName],
+                measure_type: { key: null as string | null, value: this.text('./gmd:nameOfMeasure/gco:CharacterString', node) ?? null },
+                value: parseNum(this.text('./gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record', node)),
+                parameter: this.text('./gmd:measureDescription/gco:CharacterString', node) ?? undefined,
+            }));
+
+        const result: IngridDataQuality = {};
+        if (completenessOmission != null) result.completenessOmission = completenessOmission;
+        if (horizontal != null || vertical != null) result.positionalAccuracy = { horizontal, vertical };
+        if (qualities?.length) result.qualities = qualities;
+        return Object.keys(result).length ? result : undefined;
     }
 
     getObjectUse() {

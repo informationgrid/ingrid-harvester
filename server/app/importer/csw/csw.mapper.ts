@@ -34,7 +34,7 @@ import { namespaces } from '../../importer/namespaces.js';
 import type { Agent, Contact, Organization, Person } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
-import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
+import type { IndexDocument, IndexDocumentMetadata, MetadataSource } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
 import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
 import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
@@ -95,11 +95,24 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
 
     async createIndexDocument(): Promise<IndexDocument> {
         return {
-            uuid: this.getGeneratedId(),
-            extras: {
-                metadata: this.getHarvestingMetadata()
-            }
+            id: this.getGeneratedId(),
+            schema_version: undefined,
+            metadata: { ...this.getBaseMetadata(), data_type: this.settings.type } as IndexDocumentMetadata,
+            title: this.getTitle(),
         }
+    }
+
+    protected getBaseMetadata(): Omit<IndexDocumentMetadata, 'data_type'> {
+        return {
+            created: null,
+            modified: this.getModifiedDate()?.toISOString() ?? null,
+            issued: this.getIssued()?.toISOString() ?? null,
+            partner: this.settings.partner?.split(',').map(p => p.trim())[0],
+            provider: this.settings.provider?.split(',').map(p => p.trim())[0],
+            datasource: this.settings.dataSourceName
+                ? { id: this.settings.dataSourceName, name: this.settings.dataSourceName }
+                : undefined,
+        };
     }
 
     // _getResourceIdentifier() {
