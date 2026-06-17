@@ -27,8 +27,13 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
 
 export class Configuration {
-  constructor(public contextPath: string, public url?: string, public version?: string, public passportEnabled?: boolean, public keycloakEnabled?: boolean) {
-  }
+  constructor(
+    public contextPath: string,
+    public url?: string,
+    public version?: string,
+    public passportEnabled?: boolean,
+    public keycloakEnabled?: boolean
+  ) {}
 }
 
 @Injectable({
@@ -37,7 +42,7 @@ export class Configuration {
 export class ConfigService {
 
   config: Configuration;
-  config$ = new BehaviorSubject({});
+  config$ = new BehaviorSubject<Partial<Configuration>>({});
 
   constructor(private http: HttpClient) {
   }

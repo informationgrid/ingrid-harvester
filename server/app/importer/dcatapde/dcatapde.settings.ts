@@ -25,10 +25,10 @@ import type { ImporterCapabilities, ImporterSettings } from '../importer.setting
 import { defaultImporterSettings } from '../importer.settings.js';
 
 export type DcatapdeSettings = {
-    filterTags?: string[],
-    filterThemes?: string[],
-    providerPrefix?: string,
-    dcatProviderField?: DCATProviderField,
+    filterTags?: string[],                 // skip records whose keywords don't include at least one of these tags; UI-configurable
+    filterThemes?: string[],               // skip records whose DCAT themes don't include at least one of these (matched by URI fragment); UI-configurable
+    providerPrefix?: string,               // Deprecated? prefix prepended to provider names; backend-only
+    dcatProviderField?: DCATProviderField, // Deprecated? which DCAT agent field to use as provider; backend-only
 } & ImporterSettings;
 
 export type DCATProviderField = 'contactPoint' | 'creator' | 'originator' | 'maintainer' | 'publisher';

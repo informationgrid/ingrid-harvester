@@ -24,63 +24,26 @@
 import type { ImporterCapabilities, ImporterSettings } from '../importer.settings.js';
 import { defaultImporterSettings } from '../importer.settings.js';
 
-/**
- * GENESIS-specific configuration, isolated under `typeConfig` to keep
- * protocol-specific settings separate from the shared ImporterSettings.
- *
- * Authentication: either provide username + password, or an apiToken
- * (which will be used as the password with the fixed username 'Gast').
- */
 export type GenesisTypeConfig = {
-    /** GENESIS login username */
-    username?: string;
-    /** GENESIS login password */
-    password?: string;
-    /**
-     * Alternative: API token used as the password.
-     * When set, the fixed username 'Gast' is used.
-     */
-    apiToken?: string;
-    /** Delay in milliseconds between consecutive API calls to avoid rate limiting. Default: 500 */
-    requestDelayMs: number;
-    /**
-     * API `selection` patterns (may contain wildcards, e.g. "11*") passed to
-     * /catalogue/statistics. One request is made per entry.
-     */
-    statisticCodes: string[];
-    /**
-     * Publisher/contact metadata for DCAT-AP.de output.
-     * Maps to dct:publisher, dcat:contactPoint, vcard:fn, foaf:name, vcard:hasEmail.
-     */
+    username?: string;             // GENESIS login username; UI-configurable
+    password?: string;             // GENESIS login password; UI-configurable
+    apiToken?: string;             // alternative to username/password: used as password with fixed username 'Gast'; UI-configurable
+    requestDelayMs: number;        // delay in milliseconds between consecutive API calls to avoid rate limiting (default: 500); UI-configurable
+    statisticCodes: string[];      // API selection patterns (wildcards allowed, e.g. '11*') passed to /catalogue/statistics; UI-configurable
     publisher?: {
-        /** Organization name */
-        name: string;
-        /** Contact email URI, e.g. "mailto:info@destatis.de" */
-        email?: string;
+        name: string;              // organization name (dct:publisher, foaf:name, vcard:fn); UI-configurable
+        email?: string;            // contact email URI, e.g. 'mailto:info@destatis.de' (vcard:hasEmail); UI-configurable
     };
-    /** EU Data Theme URI — maps to dcat:theme */
-    theme?: string;
-    /** License URI — maps to dct:license, e.g. "http://dcat-ap.de/def/licenses/dl-by-de/2.0" */
-    licenseUrl?: string;
-    /** Contributor registry URI — maps to dcatde:contributorID */
-    contributorId?: string;
-    /** Spatial coverage URI — maps to dct:spatial, e.g. a Geo-URI for a federal state */
-    spatialUri?: string;
-    /**
-     * URL template for the statistic landing page. Use `{code}` as placeholder for the statistic code.
-     * e.g. "https://genesis.sachsen-anhalt.de/genesis/online?operation=statistic&code={code}"
-     * Maps to dcat:landingPage.
-     */
-    statisticUrlTemplate?: string;
-    /**
-     * URL template for table online resource. Use `{code}` as placeholder for the table code.
-     * e.g. "https://genesis.sachsen-anhalt.de/genesis/online?operation=table&code={code}"
-     */
-    tableUrlTemplate?: string;
+    theme?: string;                // EU Data Theme URI (dcat:theme); UI-configurable
+    licenseUrl?: string;           // license URI (dct:license); UI-configurable
+    contributorId?: string;        // contributor registry URI (dcatde:contributorID); UI-configurable
+    spatialUri?: string;           // spatial coverage URI (dct:spatial); UI-configurable
+    statisticUrlTemplate?: string; // URL template for statistic landing page; use {code} as placeholder (dcat:landingPage); UI-configurable
+    tableUrlTemplate?: string;     // URL template for table online resource; use {code} as placeholder; UI-configurable
 };
 
 export type GenesisSettings = {
-    typeConfig: GenesisTypeConfig;
+    typeConfig: GenesisTypeConfig; // GENESIS-specific configuration (auth, statistic codes, publisher metadata); UI-configurable
 } & ImporterSettings;
 
 export const genesisDefaults: GenesisSettings = {

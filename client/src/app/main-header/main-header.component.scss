@@ -60,8 +60,57 @@ mat-toolbar h1 {
   border-radius: 4px;
 }
 
-[matIconButton] {
+[matIconButton]:not(.info-menu-btn) {
   display: none;
+}
+
+.info-menu-btn {
+  height: 32px;
+  width: 32px;
+  background-color: variables.$ige-background;
+  color: variables.$ige-primary;
+  margin-left: 12px;
+
+  &[aria-expanded="true"] {
+    background-color: variables.$ige-primary;
+    color: #ffffff;
+
+    &:hover {
+      background-color: color.adjust(variables.$ige-primary, $lightness: 8%);
+    }
+
+    ::ng-deep path {
+      fill: #ffffff;
+    }
+  }
+}
+
+::ng-deep .info-popup-menu {
+  max-width: none !important;
+  margin-top: 8px;
+
+  > div {
+    padding: 0 !important;
+    overflow: hidden;
+  }
+
+  .user-popup-header {
+    color: #ffffff;
+    background-color: variables.$ige-primary;
+    padding: 20px;
+  }
+
+  mat-card-title {
+    font-weight: 400;
+    font-size: 24px;
+  }
+
+  .versioninfo {
+    color: variables.$ige-hint-color;
+    font-size: 14px;
+    line-height: 18px;
+    padding: 16px;
+  }
 }
 
 @media screen and (max-width: 640px) {
@@ -77,7 +126,7 @@ mat-toolbar h1 {
     display: none;
   }
 
-  [matIconButton] {
+  [matIconButton]:not(.info-menu-btn) {
     display: block;
   }
 }

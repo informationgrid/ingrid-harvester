@@ -20,20 +20,20 @@
  * limitations under the Licence.
  * ==================================================
  */
+import { Context, Middleware } from "@tsed/common";
+import log4js from "log4js";
 
-import { enableProdMode, provideZoneChangeDetection } from "@angular/core";
-import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
+const log = log4js.getLogger("http");
 
-import { AppModule } from "./app/app.module";
-import { environment } from "./environments/environment";
+@Middleware()
+export class LogMiddleware {
+    use(@Context() ctx: Context) {
+        const { request, response } = ctx;
+        const start = Date.now();
 
-if (environment.production) {
-  enableProdMode();
+        response.getRes().on("finish", () => {
+            const duration = Date.now() - start;
+            log.info(`${request.getReq().method} ${request.getReq().url} ${response.getRes().statusCode} - ${duration}ms`);
+        });
+    }
 }
-
-const bootstrap = () =>
-  platformBrowserDynamic().bootstrapModule(AppModule, {
-    applicationProviders: [provideZoneChangeDetection()],
-  });
-
-bootstrap().catch((err) => console.log(err));

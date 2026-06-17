@@ -108,4 +108,16 @@ export class ZdmWfsMapper extends ingridWfsMapper {
     getIssued(): Date {
         return this.baseMapper.getIssued();
     }
+
+    // important for FeatureType/Feature merging
+    getGeneratedId(): string {
+        if (this.baseMapper.isFeatureType()) {
+            // for FeatureType, create a UUID
+            return super.getGeneratedId();
+        }
+        else {
+            // for Features, use the gml:id
+            return this.baseMapper.getGeneratedId();
+        }
+    }
 }

@@ -38,6 +38,7 @@ cp ${WORKSPACE}/rpm/%{ingrid_unit_name} %{buildroot}%{systemd_dir}
 %defattr(0644,ingrid,ingrid,0755)
 %attr(0755,ingrid,ingrid) %{install_root}
 %attr(0644,root,root) %{ingrid_service}
+%config(noreplace) %{install_root}/config-catalogs.json
 %config(noreplace) %{install_root}/config.json
 %config(noreplace) %{install_root}/config-general.json
 %config(noreplace) %{install_root}/server-config.json

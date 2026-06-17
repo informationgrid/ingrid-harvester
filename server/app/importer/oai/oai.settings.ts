@@ -25,11 +25,11 @@ import type { ImporterCapabilities, ImporterSettings } from '../importer.setting
 import { defaultImporterSettings } from '../importer.settings.js';
 
 export type OaiSettings = {
-    metadataPrefix?: string,
-    set?: string,
-    from?: Date,
-    until?: Date,
-    eitherKeywords: string[]
+    metadataPrefix?: string,     // OAI-PMH metadata format identifier (e.g. 'iso19139', 'oai_dc'); determines parser class and XPath expressions; UI-configurable
+    set?: string,                // OAI-PMH set identifier for selective harvesting; passed as query parameter in ListRecords; UI-configurable
+    from?: Date,                 // OAI-PMH lower date bound (ISO format); only harvest records modified on or after this date; UI-configurable
+    until?: Date,                // OAI-PMH upper date bound (ISO format); only harvest records modified on or before this date; UI-configurable
+    eitherKeywords: string[]     // record must match at least one of these keywords to be included; UI-configurable
 } & ImporterSettings;
 
 export const oaiDefaults: OaiSettings = {

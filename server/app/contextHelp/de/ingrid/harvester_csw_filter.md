@@ -14,7 +14,7 @@ Liste von IDs, die explizit ausgeschlossen werden sollen.
 
 **Beispiel:** `e2ed7da0-007a-11e0-be74-0000779eba3a`
 
-# Nicht ausgeschlossene IDs
+# Nicht auszuschließende IDs
 
 Liste von IDs, die trotz genereller Ausschlüsse berücksichtigt werden sollen.
 

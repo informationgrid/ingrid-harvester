@@ -101,7 +101,7 @@ export class SummaryService {
                     let mode = summary.summary.isIncremental ? 'incr' : 'full';
                     if (harvester?.cron?.[mode]?.active) {
                         let cronJob = new CronJob(harvester.cron[mode].pattern, () => {}, null, false);
-                        summary.nextExecution = cronJob.nextDate().toDate();
+                        summary.nextExecution = cronJob.nextDate().toJSDate();
                     } else {
                         summary.nextExecution = null;
                     }

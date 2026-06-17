@@ -35,6 +35,7 @@ import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
 import { Mapper } from '../mapper.js';
+import type { FeatureInfo, FeatureTypeInfo } from './wfs.importer.js';
 import type { WfsSettings } from './wfs.settings.js';
 
 export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<IndexDocument> {
@@ -50,7 +51,7 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
 
     select: XPathNodeSelect;
 
-    constructor(settings: WfsSettings, featureOrFeatureType, harvestTime, summary: Summary, generalInfo) {
+    constructor(settings: WfsSettings, featureOrFeatureType, harvestTime, summary: Summary, generalInfo: FeatureTypeInfo | FeatureInfo) {
         super(settings, summary);
         this.featureOrFeatureType = featureOrFeatureType;
         this.featureTypeDescription = generalInfo['featureTypeDescription'];
@@ -62,15 +63,16 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
             themes: null,
             ...generalInfo
         };
-        this.select = (...args: any[]) => {
-            try {
-                return generalInfo['select'](...args);
-            }
-            catch {
-                // quietly swallow select errors (esp. namespace errors where we are too lazy to handle e.g. XPLAN and FIS separately)
-                return undefined;
-            }
-        };
+        this.select = generalInfo.select;
+        // this.select = (...args: any[]) => {
+        //     try {
+        //         return generalInfo.select(...args);
+        //     }
+        //     catch {
+        //         // quietly swallow select errors (esp. namespace errors where we are too lazy to handle e.g. XPLAN and FIS separately)
+        //         return undefined;
+        //     }
+        // };
         let paths = this.isFeatureType() ? ['./wfs:Name'] : ['./@gml:id', './*/@gml:id'];
         for (let path of paths) {
             this.gmlId = this.getTextContent(path);
@@ -139,9 +141,14 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
         return this.gmlId;
     }
 
-    // TODO:check
     getMetadataSource(): MetadataSource {
-        let wfsLink = `${this.settings.sourceURL}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.settings.version}&outputFormat=application/xml&featureId=${this.gmlId}`;
+        let wfsLink;
+        if (this.isFeatureType()) {
+            wfsLink = `${this.settings.sourceURL}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.settings.version}&typeName=${this.getTypename()}`;
+        }
+        else {
+            wfsLink = `${this.settings.sourceURL}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.settings.version}&featureId=${this.gmlId}`;
+        }
         return {
             source_base: this.settings.sourceURL,
             raw_data_source: wfsLink,

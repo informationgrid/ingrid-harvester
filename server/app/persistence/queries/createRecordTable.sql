@@ -21,3 +21,6 @@ CREATE TABLE IF NOT EXISTS public.record (
 
 CREATE INDEX IF NOT EXISTS record_identifier_idx
 ON public.record (identifier);
+
+CREATE INDEX IF NOT EXISTS record_dataset_typename_idx
+ON public.record ((dataset->>'typename'));

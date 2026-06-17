@@ -23,13 +23,12 @@
 
 import type { ElasticsearchConfiguration } from '@shared/general-config.settings.js';
 import type { Index } from '@shared/index.model.js';
-import { Client } from 'elasticsearch8';
+import { Client, events } from 'elasticsearch8';
 import log4js from 'log4js';
 import type { Summary } from '../model/summary.js';
 import type { IndexSettings } from './elastic.setting.js';
 import type { BulkResponse, EsOperation } from './elastic.utils.js';
 import { ElasticsearchUtils } from './elastic.utils.js';
-import { events } from "@elastic/transport/lib/Diagnostic.js";
 
 const log = log4js.getLogger(import.meta.filename);
 

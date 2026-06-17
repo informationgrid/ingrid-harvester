@@ -27,7 +27,7 @@ import {Component, inject, AfterViewInit} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MonitoringUrlcheckDetailComponent } from './monitoring-urlcheck-detail/monitoring-urlcheck-detail.component';
-import { Observable } from 'rxjs';
+import { Observable, lastValueFrom } from 'rxjs';
 import { AuthenticationService } from '../../security/authentication.service';
 
 @Component({
@@ -56,7 +56,7 @@ export class MonitoringUrlCheckComponent implements AfterViewInit {
 
   public async draw_chart() {
     if (!this.chartUrlCheck) {
-      this.getHarvesterHistory(6).toPromise().then((data) => {
+      lastValueFrom(this.getHarvesterHistory(6)).then((data) => {
         this.chartUrlCheck = urlCheckChart('chart_urlcheck', data.history)
       });
     } else {

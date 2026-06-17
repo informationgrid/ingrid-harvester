@@ -64,6 +64,8 @@ export class JobsUtils {
             numErrors: s.numErrors + (s.errors?.length ?? 0),
             numSkipped: s.skippedDocs?.length ?? 0,
             errors: s.errors ?? [],
+            warnings: s.warnings?.map(w => w.join(' ')) ?? [],
+            skippedDocs: s.skippedDocs ?? [],
         }));
 
         try {

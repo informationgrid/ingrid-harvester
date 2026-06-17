@@ -24,8 +24,8 @@
 import { defaultImporterSettings, type ImporterCapabilities, type ImporterSettings } from '../importer.settings.js';
 
 export type JsonSettings = {
-    idProperty: string,
-    additionalSettings: Record<string, string>
+    idProperty: string,          // property key used to extract the record identifier from each JSON object; UI-configurable
+    additionalSettings: Record<string, string> // Deprecated? key-value pairs for additional config; defined but not used in mapper; UI-configurable
 } & ImporterSettings;
 
 export const jsonDefaults: JsonSettings = {

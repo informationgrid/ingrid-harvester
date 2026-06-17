@@ -27,7 +27,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MonitoringIndexCheckDetailComponent } from './monitoring-indexcheck-detail/monitoring-indexcheck-detail.component';
-import { Observable } from 'rxjs';
+import { Observable, lastValueFrom } from 'rxjs';
 import { AuthenticationService } from '../../security/authentication.service';
 
 @Component({
@@ -69,7 +69,7 @@ export class MonitoringIndexCheckComponent implements OnInit {
   public async draw_chart() {
     let dialog = this.dialog;
     if (!this.chartIndexCheck) {
-      this.getHarvesterHistory(6).toPromise().then((data) => {
+      lastValueFrom(this.getHarvesterHistory(6)).then((data) => {
         this.chartIndexCheck = indexCheckChart('chart_indexcheck', data.history)
       });
     } else {

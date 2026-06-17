@@ -21,19 +21,33 @@
  * ==================================================
  */
 
-import { enableProdMode, provideZoneChangeDetection } from "@angular/core";
-import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
+import { Controller, Get } from '@tsed/common';
+import { ContentType } from '@tsed/schema';
+import { execSync } from 'child_process';
+import pkg from '../../package.json' with { type: 'json' };
 
-import { AppModule } from "./app/app.module";
-import { environment } from "./environments/environment";
+@Controller('/api/version')
+export class VersionCtrl {
 
-if (environment.production) {
-  enableProdMode();
+    @Get('/')
+    @ContentType('application/json')
+    getVersion(): VersionInfo {
+        let commitId: string;
+        try {
+            commitId = process.env.GIT_COMMIT ?? execSync('git rev-parse HEAD').toString().trim();
+        } catch {
+            commitId = 'unknown';
+        }
+        return {
+            version: process.env.VERSION ?? pkg.version,
+            buildDate: process.env.BUILD_DATE ?? new Date().toISOString(),
+            commitId,
+        };
+    }
 }
 
-const bootstrap = () =>
-  platformBrowserDynamic().bootstrapModule(AppModule, {
-    applicationProviders: [provideZoneChangeDetection()],
-  });
-
-bootstrap().catch((err) => console.log(err));
+type VersionInfo = {
+    version: string;
+    buildDate: string;
+    commitId: string;
+}

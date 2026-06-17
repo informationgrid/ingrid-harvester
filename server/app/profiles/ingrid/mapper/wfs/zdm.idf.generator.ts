@@ -178,6 +178,9 @@ export class ZdmIdfGenerator extends IdfGenerator {
 
             let height = this.baseMapper.isFeatureType() ? 280 : 160;
 
+            // sanitize name for use in HTML element id
+            name = name.replace(/[^a-zA-Z0-9_-]/g, '_');
+
             addHtml = '<div id="map_' + name + '" style="height: '+ height + 'px;"></div>' +
             ' <script>' + 
             'var map_' + name + ' = addLeafletMapWithId(\'map_' + name + '\', getOSMLayer(\'\'), [ ' + BBOX + ' ], null , 10);';

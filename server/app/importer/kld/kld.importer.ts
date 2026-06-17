@@ -82,6 +82,7 @@ export class KldImporter extends Importer<KldSettings> {
                 this.minimumUpdateDate = new Date(lastSummary.lastExecution);
             } else {
                 log.warn(`Changing type of harvest to "full" because no previous harvest was found for harvester with id ${this.settings.id}`);
+                this.summary.warnings.push([`Harvester ${this.settings.id}`, 'No previous harvesting found, switching to full harvest']);
                 this.isIncremental = false;
             }
         }

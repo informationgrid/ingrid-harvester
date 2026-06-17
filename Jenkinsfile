@@ -25,7 +25,7 @@ pipeline {
                     }
                     echo "VERSION: ${env.VERSION}"
 
-                    dockerImage = docker.build(registry + ":" + env.VERSION, "--pull .")
+                    dockerImage = docker.build(registry + ":" + env.VERSION, "--build-arg VERSION=${env.VERSION} --build-arg GIT_COMMIT=${env.GIT_COMMIT} --pull .")
 
                     if (shouldBuildDockerImage()) {
                         dockerImage.push()
