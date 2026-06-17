@@ -56,10 +56,10 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
 
     /**
      * Gather all metadata from configured aliases that are used for InGrid-wide deduplication.
-     * 
-     * @param transactionHandle 
-     * @param settings 
-     * @param observer 
+     *
+     * @param transactionHandle
+     * @param settings
+     * @param observer
      */
     async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         await super.prepareImport(transactionHandle, settings, observer);
@@ -107,10 +107,10 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
 
     /**
      * Update ingrid meta index.
-     * 
-     * @param transactionHandle 
+     *
+     * @param transactionHandle
      * @param importerSettings
-     * @param observer 
+     * @param observer
      */
     async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         const iPlugClass = `de.ingrid.iplug.${importerSettings.type.toLowerCase()}.dsc.${camelize(importerSettings.type)}.DscSearchPlug`;
@@ -172,7 +172,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         }
 
         // resolve CSW coupling
-        if (isCsw(document) && 'capabilities_url' in document) {
+        if (isCsw(document)) {
             for (let [id, service] of bucket.operatingServices) {
                 this.resolveCoupling(document as IngridIndexDocument, service);
             }
@@ -182,7 +182,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         let deleteDocument = document.extras.metadata.deleted != null;
         bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.extras.metadata.deleted != null);
         if (deleteDocument) {
-            return [{ operation: 'delete', _index: this.settings.settings.index, _id: document.uuid }];
+            return [{ operation: 'delete', _index: this.settings.settings.index, _id: document.id }];
         }
 
         // harvester deduplication
@@ -211,7 +211,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         //         return box;
         //     }
         // }
-        if (this.externalUuids.has(document.uuid)) {
+        if (this.externalUuids.has(document.id)) {
             box.push({ operation: 'delete', _index: this.settings.settings.index, _id: createEsId(document) });
             return box;
         }
@@ -243,7 +243,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         const indices = hits.hits.map(hit => hit._source.linkedIndex);
         return indices;
     }
-    
+
     private prioritizeAndFilter(bucket: Bucket<IndexDocument>): {
         document: IndexDocument,
         duplicates: Map<string | number, IndexDocument>
@@ -302,72 +302,10 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         if (!additionalDoc) {
             return;
         }
-
-        if (additionalDoc.capabilities_url) {
-            document.capabilities_url ??= [];
-            document.capabilities_url.push(...additionalDoc.capabilities_url);
-        }
-        document.idf = this.addCrossReference(document.idf, additionalDoc);
-        if (additionalDoc.hierarchylevel == 'service') {
-            // add service information to document (dataset)
-            document.refering ??= { object_reference: [] };
-            document.refering.object_reference ??= [];
-            document.refering.object_reference.push(this.createObjRef(additionalDoc, "3600"));
-            document.refering_service_uuid ??= [];
-            document.refering_service_uuid.push(additionalDoc.uuid+"@@"+additionalDoc.title+"@@"+additionalDoc.capabilities_url+"@@"+document.t011_obj_geo.datasource_uuid);
-        }
-        else {
-            // add dataset information to document (service)
-            document.object_reference ??= [];
-            document.object_reference.push(this.createObjRef(additionalDoc, "3345"));
-            if (!document.object_reference.some(obj_ref => obj_ref.special_ref == "3600")) {
-                document.object_reference.push(this.createObjRef(additionalDoc, "3600", true));
-            }
-        }
-    }
-
-    private addCrossReference(idf: string, additionalDoc: IngridIndexDocument): string {
-        let direction = additionalDoc.hierarchylevel == 'service' ? 'IN' : 'OUT';
-        // let objectType = additionalDoc.hierarchylevel == 'service' ? 3 : 1;
-        let crossReference = escapeIdf`
-<idf:crossReference direction="${direction}" orig-uuid="${additionalDoc.uuid}" uuid="${additionalDoc.uuid}">
-    <idf:objectName>${additionalDoc.title}</idf:objectName>
-    <idf:attachedToField entry-id="3600" list-id="2000">Gekoppelte Daten</idf:attachedToField>
-    <idf:objectType>${additionalDoc.t01_object.obj_class}</idf:objectType>
-    <idf:description>${additionalDoc.summary}</idf:description>`;
-        if (additionalDoc.hierarchylevel == 'service') {
-            let idx = additionalDoc.t011_obj_serv_operation?.findIndex(op => op.name?.toLowerCase() == 'getcapabilities');
-            crossReference += escapeIdf`
-    <idf:serviceType>${additionalDoc.t011_obj_serv?.type ?? ""}</idf:serviceType>
-    <idf:serviceVersion>${additionalDoc.t011_obj_serv_version?.version_value ?? ""}</idf:serviceVersion>
-    <idf:serviceOperation>${additionalDoc.t011_obj_serv_operation?.[idx]?.name ?? ""}</idf:serviceOperation>
-    <idf:serviceUrl>${additionalDoc.t011_obj_serv_op_connpoint?.[idx]?.connect_point ?? ""}</idf:serviceUrl>`;
-        }
-        let addHtml = Array.isArray(additionalDoc.additional_html_1) ? additionalDoc.additional_html_1[0] : additionalDoc.additional_html_1;
-        let browseGraphic = addHtml?.match(/<img src=["'](.*?)["'].*/)?.[1];
-        if (browseGraphic) {
-            crossReference += escapeIdf`
-    <idf:graphicOverview>${browseGraphic}</idf:graphicOverview>`
-        }
-        else {
-            crossReference += `
-    <idf:graphicOverview/>`
-        }
-        crossReference += `
-</idf:crossReference>`;
-        return idf.replace('</idf:idfMdMetadata>', `${crossReference}\n</idf:idfMdMetadata>`);
-    }
-
-    private createObjRef(doc: IngridIndexDocument, special_ref: string, skeletonOnly: boolean = false) {
-        return {
-            obj_uuid: doc.uuid,
-            obj_to_uuid: doc.uuid,
-            obj_name: skeletonOnly ? "" : doc.title ?? "",
-            obj_class: skeletonOnly ? "" : doc.hierarchylevel == 'service' ? "3" : "1",
-            special_name: skeletonOnly ? "" : "Gekoppelte Daten",
-            special_ref: special_ref,
-            type: skeletonOnly ? "" : doc.t011_obj_serv?.type ?? "",
-            version: skeletonOnly ? "" : doc.t011_obj_serv_version?.version_value ?? ""
+        if (additionalDoc.ingrid?.references?.length) {
+            document.ingrid ??= {};
+            document.ingrid.references ??= [];
+            document.ingrid.references.push(...additionalDoc.ingrid.references);
         }
     }
 
@@ -376,10 +314,10 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         let features = [];
         for (let [id, featureDocument] of duplicates) {
             if ((featureDocument as any).is_feature_type === false) {
-                features.push(featureDocument.idf);
+                features.push(featureDocument.exports.iso);
             }
         }
-        document.idf = document.idf.replace('<h2>Features:</h2>', '<h2>Features:</h2>\n' + features.join('\n'));
+        document.exports.iso = document.exports.iso.replace('<h2>Features:</h2>', '<h2>Features:</h2>\n' + features.join('\n'));
     }
 }
 
