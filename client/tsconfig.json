@@ -12,23 +12,12 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2022",
-      "dom"
-    ],
+    "typeRoots": ["node_modules/@types"],
     "paths": {
-      "@shared/*": [
-        "../shared/*"
-      ],
-      "tslib": [
-        "node_modules/tslib"
-      ]
+      "@shared/*": ["../shared/*"],
+      "tslib": ["node_modules/tslib"]
     },
     "useDefineForClassFields": false
   },
-  "exclude": [
-  ]
+  "exclude": []
 }
