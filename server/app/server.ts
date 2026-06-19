@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { $log, Configuration, PlatformApplication, PlatformConfiguration } from '@tsed/common';
+import { $log, Configuration, PlatformApplication, PlatformConfiguration, type BeforeRoutesInit, type OnInit, type OnReady } from '@tsed/common';
 import { Inject } from '@tsed/di';
 import { PlatformAcceptMimesMiddleware } from '@tsed/platform-accept-mimes';
 import bodyParser from 'body-parser';
@@ -81,6 +81,9 @@ if (isProduction) {
 
 const baseURL = process.env.BASE_URL ?? '/';
 
+// TODO a) instead of overwriting internal Before and On interfaces, use hooks: https://tsed.dev/docs/hooks.html#subscribe-to-a-hook
+// TODO b) instead of using a custom LogMiddleware, use {PlatformLogMiddleware} from "@tsed/platform-log-middleware"
+
 @Configuration({
     rootDir,
     httpPort: serverConfig.httpPort,
@@ -105,7 +108,7 @@ const baseURL = process.env.BASE_URL ?? '/';
         LogMiddleware,
     ],
 })
-export class Server {
+export class Server implements BeforeRoutesInit, OnInit, OnReady {
 
     @Configuration()
     settings: PlatformConfiguration;
@@ -114,7 +117,7 @@ export class Server {
                 @Inject(KeycloakService) protected keycloakService: KeycloakService) {
     }
 
-    public $beforeInit(): void | Promise<any> {
+    async $onInit(): Promise<any> {
         // on startup make sure ENV variables - if set - replace existing configuration vars
         ConfigService.adoptEnvs();
     }
@@ -123,12 +126,10 @@ export class Server {
      * This method let you configure the express middleware required by your application to works.
      * @returns {Server}
      */
-    public $beforeRoutesInit(): void | Promise<any> {
-
+    async $beforeRoutesInit(): Promise<any> {
         // on startup make sure the configuration has IDs for each harvester
         ConfigService.fixIDs();
-
-      this.app
+        this.app
             .use(PlatformAcceptMimesMiddleware)
             .use(cookieParser())
             .use(compress({}))
@@ -155,19 +156,13 @@ export class Server {
                 // })
             }))
             .use(this.keycloakService.getKeycloakInstance().middleware());
-
-        return null;
     }
 
-    async $onReady() {
+    async $onReady(): Promise<any> {
         log.info('Setting up profile');
         const profile = ProfileFactoryLoader.get();
         await profile.init();
         log.info('Server initialized');
-    }
-
-    $onServerInitError(error): any {
-        log.error('Server encounter an error: ', error);
     }
 }
 
