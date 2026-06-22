@@ -23,6 +23,7 @@
 
 export const namespaces = {
     ADMS: 'http://www.w3.org/ns/adms#',
+    APISO: 'http://www.opengis.net/cat/csw/apiso/1.0',
     CSW: 'http://www.opengis.net/cat/csw/2.0.2',
     DC: 'http://purl.org/dc/elements/1.1/',
     DCAT: 'http://www.w3.org/ns/dcat#',

@@ -145,12 +145,12 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
 
         // Build a filter that matches the catalog keyword
         const deleteXml = `<?xml version="1.0" encoding="UTF-8"?>
-<csw:Transaction xmlns:csw="${namespaces.CSW}" xmlns:ogc="${namespaces.OGC}" service="CSW" version="2.0.2">
+<csw:Transaction xmlns:csw="${namespaces.CSW}" xmlns:ogc="${namespaces.OGC}" xmlns:apiso="${namespaces.APISO}" service="CSW" version="2.0.2">
     <csw:Delete typeName="gmd:MD_Metadata">
         <csw:Constraint version="1.1.0">
             <ogc:Filter>
                 <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
-                    <ogc:PropertyName>subject</ogc:PropertyName>
+                    <ogc:PropertyName>apiso:Subject</ogc:PropertyName>
                     <ogc:Literal>%catalog:${this.settings.id}%</ogc:Literal>
                 </ogc:PropertyIsLike>
             </ogc:Filter>
@@ -306,6 +306,7 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         return `<?xml version="1.0" encoding="UTF-8"?>
 <csw:Transaction xmlns:csw="${namespaces.CSW}"
                  xmlns:ogc="${namespaces.OGC}"
+                 xmlns:apiso="${namespaces.APISO}"
                  service="CSW"
                  version="2.0.2">
     <csw:Delete typeName="gmd:MD_Metadata">
@@ -313,12 +314,12 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
             <ogc:Filter>
                 <ogc:And>
                     <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
-                        <ogc:PropertyName>subject</ogc:PropertyName>
+                        <ogc:PropertyName>apiso:Subject</ogc:PropertyName>
                         <ogc:Literal>%source:${datasourceId}%</ogc:Literal>
                     </ogc:PropertyIsLike>
                     <ogc:Not>
                         <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
-                            <ogc:PropertyName>subject</ogc:PropertyName>
+                            <ogc:PropertyName>apiso:Subject</ogc:PropertyName>
                             <ogc:Literal>%transaction:${excludeTimestamp}%</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Not>
