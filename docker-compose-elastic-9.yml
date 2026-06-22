@@ -91,11 +91,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - harvester-network
 
   pycsw:
     image: geopython/pycsw:latest
-    ports:
-      - "8000:8000"
+    container_name: pycsw
+#    ports:
+#      - "8000:8000"
     volumes:
       - ./docker-dev/pycsw.yml:/etc/pycsw/pycsw.yml
     depends_on:
@@ -103,6 +106,8 @@ services:
         condition: service_healthy
     environment:
       - PYCSW_CONFIG=/etc/pycsw/pycsw.yml
+    networks:
+      - harvester-network
 
   harvester:
     build:
@@ -134,8 +139,8 @@ services:
     ports:
       - "8090:80"
     volumes:
-      - ./apache/proxy.conf:/usr/local/apache2/conf/conf.d/proxy.conf:ro
-      - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./docker-dev/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./docker-dev/apache/.htpasswd:/usr/local/apache2/conf/.htpasswd
     networks:
       - harvester-network
 
