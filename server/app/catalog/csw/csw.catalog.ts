@@ -71,7 +71,7 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
 
     async processBucket(bucket: Bucket<CswDataset>, importerSettings: ImporterSettings): Promise<CswCatalogOperation[]> {
         const { document: record } = this.prioritizeAndFilter(bucket);
-        const enrichedXml = this.addTraceability(record.dataset, this.transactionTimestamp, importerSettings.id);
+        const enrichedXml = this.addTraceability(record.dataset, this.transactionTimestamp, importerSettings.id, importerSettings.partner, importerSettings.provider);
         return [{
             uuid: record.uuid,
             serializedXml: enrichedXml,
@@ -244,7 +244,7 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
      * to the MD_Metadata XML. Implements the abstract addTraceability from Catalog.
      * sourceId is ImporterSettings.id — identifies which harvest source produced the record.
      */
-    addTraceability(record: string, transactionTimestamp: string, datasourceId: number): string {
+    addTraceability(record: string, transactionTimestamp: string, datasourceId: number, organisation?: string, sub_organisation?: string): string {
         const originalXml = record;
         const doc = this.domParser.parseFromString(originalXml, 'application/xml');
 
@@ -258,7 +258,13 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         </gmd:keyword>
         <gmd:keyword>
             <gco:CharacterString>catalog:${this.settings.id}</gco:CharacterString>
-        </gmd:keyword>
+        </gmd:keyword>${organisation ? `
+        <gmd:keyword>
+            <gco:CharacterString>organisation:${organisation.replace(/[ ,]/g, '_')}</gco:CharacterString>
+        </gmd:keyword>` : ''}${sub_organisation ? `
+        <gmd:keyword>
+            <gco:CharacterString>sub_organisation:${sub_organisation.replace(/[ ,]/g, '_')}</gco:CharacterString>
+        </gmd:keyword>` : ''}
     </gmd:MD_Keywords>
 </gmd:descriptiveKeywords>`;
 
