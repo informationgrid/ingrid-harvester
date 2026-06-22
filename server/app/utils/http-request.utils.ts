@@ -160,7 +160,7 @@ export class RequestDelegate {
      * - User-Agent: Ingrid Harvester. node-fetch
      * - Content-Type: application/xml
      */
-    static cswRequestHeaders(): HeadersInit {
+    static cswRequestHeaders(): Record<string, string> {
         return {
             'User-Agent': 'Ingrid Harvester. node-fetch',
             'Content-Type': 'application/xml'

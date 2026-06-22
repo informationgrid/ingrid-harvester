@@ -285,10 +285,15 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
      * POST a CSW Transaction XML to the target endpoint.
      */
     private async postTransaction(targetUrl: string, transactionXml: string): Promise<string> {
+        const headers = RequestDelegate.cswRequestHeaders();
+        const { hasPassword, user, password } = this.settings.settings;
+        if (hasPassword && user && password) {
+            headers['Authorization'] = 'Basic ' + Buffer.from(`${user}:${password}`).toString('base64');
+        }
         return RequestDelegate.doRequest({
             uri: targetUrl,
             method: 'POST',
-            headers: RequestDelegate.cswRequestHeaders(),
+            headers,
             body: transactionXml,
         });
     }
