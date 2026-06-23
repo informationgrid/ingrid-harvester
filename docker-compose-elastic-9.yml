@@ -79,7 +79,7 @@ services:
   pycsw-db:
     image: postgis/postgis:15-3.3
     ports:
-      - "5432:5432"
+      - "5435:5432"
     environment:
       POSTGRES_DB: pycsw
       POSTGRES_USER: pycsw
@@ -100,7 +100,8 @@ services:
 #    ports:
 #      - "8000:8000"
     volumes:
-      - ./docker-dev/pycsw.yml:/etc/pycsw/pycsw.yml
+      - ./docker-dev/pycsw/pycsw.yml:/etc/pycsw/pycsw.yml
+      - ./docker-dev/pycsw/traceability-filter.xsl:/etc/pycsw/traceability-filter.xsl
     depends_on:
       pycsw-db:
         condition: service_healthy
@@ -137,7 +138,7 @@ services:
     image: httpd:2.4
     container_name: apache
     ports:
-      - "8090:80"
+      - "8070:80"
     volumes:
       - ./docker-dev/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
       - ./docker-dev/apache/.htpasswd:/usr/local/apache2/conf/.htpasswd

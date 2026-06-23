@@ -21,6 +21,7 @@ manager:
 metadata:
   identification:
     title: My CSW Catalog
+    description: Transactional CSW Service
     abstract: Transactional CSW Service
     keywords:
       - catalog
@@ -35,9 +36,15 @@ metadata:
   contact:
     name: Admin
     email: admin@example.com
+    url: http://localhost:8000
   inspire:
     enabled: false
 
 repository:
   database: postgresql://pycsw:pycsw_secret@pycsw-db/pycsw
   table: records
+
+xslt:
+  - input_os: http://www.isotc211.org/2005/gmd
+    output_os: http://www.isotc211.org/2005/gmd
+    transform: /etc/pycsw/traceability-filter.xsl
