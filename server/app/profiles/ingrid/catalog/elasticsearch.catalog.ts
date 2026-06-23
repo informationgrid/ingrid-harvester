@@ -113,9 +113,31 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
      * @param observer 
      */
     async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+        const esSettings = this.settings.settings;
+        const index = (esSettings.prefix ?? '') + esSettings.index;
         const iPlugClass = `de.ingrid.iplug.${importerSettings.type.toLowerCase()}.dsc.${camelize(importerSettings.type)}.DscSearchPlug`;
-        const meta = await this.ingridMetaEsUtils.search(INGRID_META_INDEX,
-            {
+        let entry = {
+            "plugId": importerSettings.iPlugId,
+            "indexId": index,
+            "iPlugName": APPLICATION_NAME,
+            "lastIndexed": new Date().toISOString(),
+            "linkedIndex": index,
+            "plugdescription": {
+                "dataSourceName": importerSettings.dataSourceName,
+                "provider": importerSettings.provider?.split(",")?.map(p => p.trim()),
+                "dataType": importerSettings.datatype?.split(",")?.map(d => d.trim()),
+                "partner": importerSettings.partner?.split(",")?.map(p => p.trim()),
+                "ranking": [
+                    "score"
+                ],
+                "iPlugClass": iPlugClass,
+                "fields": [],
+                "proxyServiceUrl": importerSettings.iPlugId,
+                "useRemoteElasticsearch": true
+            },
+            "active": true
+        }
+        const meta = await this.ingridMetaEsUtils.search(INGRID_META_INDEX, {
                 "query": {
                     "term": {
                         "plugId": {
@@ -125,40 +147,13 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
                 }
             }, false);
         if (meta.hits?.total?.value > 0) {
-            let entry = meta.hits?.hits[0]._source;
-
-            entry.lastIndexed = new Date().toISOString();
-            entry.plugdescription.dataSourceName = importerSettings.dataSourceName;
-            entry.plugdescription.provider = importerSettings.provider?.split(",")?.map(p => p.trim());
-            entry.plugdescription.dataType = importerSettings.datatype?.split(",")?.map(d => d.trim());
-            entry.plugdescription.partner = importerSettings.partner?.split(",")?.map(p => p.trim());
-
+            entry = {
+                ...meta.hits?.hits[0]._source,
+                ...entry
+            }
             await this.ingridMetaEsUtils.update(INGRID_META_INDEX, meta.hits?.hits[0]._id, entry, false);
         }
         else {
-            const esSettings = this.settings.settings;
-            let index = (esSettings.prefix ?? '') + esSettings.index;
-            let entry = {
-                "plugId": importerSettings.iPlugId,
-                "indexId": index,
-                "iPlugName": APPLICATION_NAME,
-                "lastIndexed": new Date().toISOString(),
-                "linkedIndex": index,
-                "plugdescription": {
-                    "dataSourceName": importerSettings.dataSourceName,
-                    "provider": importerSettings.provider?.split(",")?.map(p => p.trim()),
-                    "dataType": importerSettings.datatype?.split(",")?.map(d => d.trim()),
-                    "partner": importerSettings.partner?.split(",")?.map(p => p.trim()),
-                    "ranking": [
-                        "score"
-                    ],
-                    "iPlugClass": iPlugClass,
-                    "fields": [],
-                    "proxyServiceUrl": importerSettings.iPlugId,
-                    "useRemoteElasticsearch": true
-                },
-                "active": true
-            }
             await this.ingridMetaEsUtils.index(INGRID_META_INDEX, entry, false);
         }
     }
