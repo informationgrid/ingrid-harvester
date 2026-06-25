@@ -102,6 +102,7 @@ services:
     volumes:
       - ./docker-dev/pycsw/pycsw.yml:/etc/pycsw/pycsw.yml
       - ./docker-dev/pycsw/traceability-filter.xsl:/etc/pycsw/traceability-filter.xsl
+      - ./docker-dev/pycsw/templates:/etc/pycsw/templates
     depends_on:
       pycsw-db:
         condition: service_healthy

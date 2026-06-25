@@ -5,6 +5,8 @@ server:
   language: en-US
   maxrecords: 10
   pretty_print: true
+  templates:
+    path: /etc/pycsw/templates
 
 logging:
   level: DEBUG
