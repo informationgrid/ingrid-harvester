@@ -26,6 +26,9 @@ import { Controller, Get, Req } from '@tsed/common';
 import { KeycloakService } from '../services/keycloak/KeycloakService.js';
 import { UsersService } from '../services/users/UsersService.js';
 import { Unauthorized } from '@tsed/exceptions';
+import log4js from "log4js";
+
+const log = log4js.getLogger(import.meta.filename);
 
 @Controller('/auth')
 export class AuthCtrl {
@@ -45,10 +48,10 @@ export class AuthCtrl {
             const user: any = request.user;
             if (user) {
                 const { password, ...userInfo } = user;
-                return { 
-                    ...userInfo, 
+                return {
+                    ...userInfo,
                     roles: user.roles || ['admin'], // Default to admin for passport users if roles not set
-                    authMethod: 'local' 
+                    authMethod: 'local'
                 };
             }
         }
@@ -72,19 +75,22 @@ export class AuthCtrl {
 
             if (user) {
                 const { password, ...userInfo } = user;
-                return { 
-                    ...userInfo, 
-                    roles, 
-                    authMethod: 'keycloak' 
+                return {
+                    ...userInfo,
+                    roles,
+                    authMethod: 'keycloak'
                 };
             }
-            return { 
-                username, 
-                roles, 
-                authMethod: 'keycloak' 
+            return {
+                username,
+                roles,
+                authMethod: 'keycloak'
             };
         }
 
+        log.debug('No authentication cookie found');
+        log.debug('Session', request.session);
+        log.debug('Cookies', request.cookies);
         throw new Unauthorized('User not authenticated');
     }
 }
