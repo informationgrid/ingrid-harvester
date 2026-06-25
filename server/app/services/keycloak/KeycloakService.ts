@@ -1,7 +1,6 @@
 import {Service} from "@tsed/di";
 import {MemoryStore} from "express-session";
 import {$log} from "@tsed/logger";
-import type {Token} from "keycloak-connect";
 import KeycloakConnect from "keycloak-connect";
 
 export interface kAuthRequest extends Express.Request {

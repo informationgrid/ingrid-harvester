@@ -130,7 +130,8 @@ export class Server implements BeforeRoutesInit, OnInit, OnReady {
     async $beforeRoutesInit(): Promise<any> {
         // on startup make sure the configuration has IDs for each harvester
         ConfigService.fixIDs();
-        this.app
+      let cookieConfig = ConfigService.getGeneralSettings().session.cookie;
+      this.app
             .use(PlatformAcceptMimesMiddleware)
             .use(cookieParser())
             .use(compress({}))
@@ -147,9 +148,9 @@ export class Server implements BeforeRoutesInit, OnInit, OnReady {
                 maxAge: 36000,
                 cookie: {
                     path: createRelativePath(baseURL),
-                    httpOnly: true,
-                    secure: false,
-                    maxAge: null
+                    httpOnly: cookieConfig.httpOnly,
+                    secure: cookieConfig.secure,
+                    maxAge: cookieConfig.maxAge
                 },
                 store: this.keycloakService.getMemoryStore()
                 // store: new MemoryStore({

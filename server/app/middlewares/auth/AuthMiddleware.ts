@@ -43,7 +43,7 @@ export class AuthMiddleware implements MiddlewareMethods {
     }
 
     // 1. Try to recover token from session
-    if (request.session && request.session['keycloak-token']) {
+    /*if (request.session && request.session['keycloak-token']) {
       try {
         let tokenData = request.session['keycloak-token'];
         if (typeof tokenData === 'string' && tokenData.startsWith('{')) {
