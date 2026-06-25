@@ -23,6 +23,7 @@
 
 import { $log, Configuration, PlatformApplication, PlatformConfiguration, type BeforeRoutesInit, type OnInit, type OnReady } from '@tsed/common';
 import { Inject } from '@tsed/di';
+import { JsonLayout } from '@tsed/logger/layouts/JsonLayout.js';
 import { PlatformAcceptMimesMiddleware } from '@tsed/platform-accept-mimes';
 import bodyParser from 'body-parser';
 import compress from 'compression';
@@ -31,15 +32,15 @@ import session from 'express-session';
 import log4js from 'log4js';
 import methodOverride from 'method-override';
 import * as path from 'path';
+import log4jsDevConfig from '../log4js-dev.json' with { type: 'json' };
+import log4jsConfig from '../log4js.json' with { type: 'json' };
 import serverConfig from '../server-config.json' with { type: 'json' };
 import { LogMiddleware } from './middlewares/LogMiddleware.js';
 import { ProfileFactoryLoader } from './profiles/profile.factory.loader.js';
 import { ConfigService } from './services/config/ConfigService.js';
 import { KeycloakService } from './services/keycloak/KeycloakService.js';
-import { jsonLayout } from './utils/log4js.json.layout.js';
 import { configure as harvestJobConfigure } from './utils/harvest-log-appender.js';
-import log4jsConfig from '../log4js.json' with { type: 'json' };
-import log4jsDevConfig from '../log4js-dev.json' with { type: 'json' };
+import { jsonLayout } from './utils/log4js.json.layout.js';
 
 const rootDir = import.meta.dirname;
 
@@ -67,14 +68,14 @@ if (isProduction) {
         type: "stdout",
         levels: ["info", "debug"],
         layout: {
-            type: "json"
+            type: JsonLayout
         }
     });
     $log.appenders.set("stderr", {
         levels: ["trace", "fatal", "error", "warn"],
         type: "stderr",
         layout: {
-            type: "json"
+            type: JsonLayout
         }
     });
 }
