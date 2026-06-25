@@ -53,7 +53,7 @@ export class AuthMiddleware implements MiddlewareMethods {
       } catch (e) {
         console.error('Error parsing token from session:', e);
       }
-    }
+    }*/
 
     // 2. Check if keycloak-connect already authenticated the request
     let grant = ctx.getRequest().kauth?.grant;
