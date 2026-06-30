@@ -268,16 +268,15 @@ export class RequestDelegate {
         config.signal = AbortSignal.timeout(config.timeout ?? DEFAULT_TIMEOUT_MS);
         config.timeout = null;
         config.compress = false;
-        let response = fetch(fullURL, config);
 
         if (config.resolveWithFullResponse) {
-            return response;
+            return fetch(fullURL, config);
         }
 
         let resolvedResponse: Response;
-        do {
+        while (true) {
             try {
-                resolvedResponse = await response;
+                resolvedResponse = await fetch(fullURL, config);
                 break;
             }
             catch (e) {
@@ -286,13 +285,12 @@ export class RequestDelegate {
                     retries -= 1;
                     log.info(`Retrying request for ${fullURL} (waiting ${waitMilliSeconds}ms)`);
                     await RequestDelegate.sleep(waitMilliSeconds);
-                    response = fetch(fullURL, config);
                 }
                 else {
                     throw e;
                 }
             }
-        } while (retries > 0);
+        }
 
         if (config.json) {
             return resolvedResponse.json();
