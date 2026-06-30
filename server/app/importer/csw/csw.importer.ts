@@ -319,6 +319,9 @@ export class CswImporter extends Importer<CswSettings> {
                 // }
             }
             let serviceType = service.format?.[0].toUpperCase();
+            if (!service?.operates_on) {
+                return;
+            }
             switch (serviceType) {
                 case 'WFS':
                     for (let identifier of service.operates_on) {
