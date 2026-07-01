@@ -30,6 +30,9 @@ import { HttpsProxyAgent } from 'https-proxy-agent';
 
 const log = log4js.getLogger('requests');
 
+const DEFAULT_NUM_RETRIES = 3;
+const DEFAULT_WAIT_MS = 1000;
+
 /**
  * HTTP parameters configuration for CSW harvesters.
  */
@@ -232,7 +235,7 @@ export class RequestDelegate {
      * @param retries how often the request should be retried if it fails (default: 1)
      * @param waitMilliSeconds wait time between retries in milliseconds (default: 500)
      */
-    async doRequest(retries: number = 1, waitMilliSeconds: number = 500): Promise<any> {
+    async doRequest(retries: number = DEFAULT_NUM_RETRIES, waitMilliSeconds: number = DEFAULT_WAIT_MS): Promise<any> {
         return RequestDelegate.doRequest(this.config, retries, waitMilliSeconds);
     }
 
@@ -243,7 +246,7 @@ export class RequestDelegate {
      * @param retries how often the request should be retried if it fails (default: 1)
      * @param waitMilliSeconds wait time between retries in milliseconds (default: 500)
      */
-    static async doRequest(config: RequestOptions, retries: number = 1, waitMilliSeconds: number = 500): Promise<any> {
+    static async doRequest(config: RequestOptions, retries: number = DEFAULT_NUM_RETRIES, waitMilliSeconds: number = DEFAULT_WAIT_MS): Promise<any> {
         log.debug('Requesting: ' + config.uri);
         if (config.proxy) {
             let proxyAgent = new HttpsProxyAgent(config.proxy);
