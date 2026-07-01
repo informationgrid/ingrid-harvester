@@ -71,7 +71,8 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
 
     async processBucket(bucket: Bucket<CswDataset>, importerSettings: ImporterSettings): Promise<CswCatalogOperation[]> {
         const { document: record } = this.prioritizeAndFilter(bucket);
-        const enrichedXml = this.addTraceability(record.dataset, this.transactionTimestamp, importerSettings.id, importerSettings.partner, importerSettings.provider);
+        const additionalKeywords = this.getAdditionalKeywords(importerSettings);
+        const enrichedXml = this.addTraceability(record.dataset, this.transactionTimestamp, importerSettings.id, additionalKeywords);
         return [{
             uuid: record.uuid,
             serializedXml: enrichedXml,
@@ -240,31 +241,36 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
     }
 
     /**
-     * Add transaction timestamp and source ID as ISO 19139 descriptiveKeywords
-     * to the MD_Metadata XML. Implements the abstract addTraceability from Catalog.
+     * Hook for profile-specific catalogs to contribute additional traceability keywords
+     * (e.g. organisation, sub_organisation) beyond the base transaction/source/catalog ones.
+     * Base implementation adds none.
+     */
+    protected getAdditionalKeywords(importerSettings: ImporterSettings): string[] {
+        return [];
+    }
+
+    /**
+     * Add transaction timestamp, source ID and catalog ID (plus any additionalKeywords
+     * contributed by profile-specific subclasses) as ISO 19139 descriptiveKeywords
+     * to the MD_Metadata XML.
      * sourceId is ImporterSettings.id — identifies which harvest source produced the record.
      */
-    addTraceability(record: string, transactionTimestamp: string, datasourceId: number, organisation?: string, sub_organisation?: string): string {
+    addTraceability(record: string, transactionTimestamp: string, datasourceId: number, additionalKeywords: string[] = []): string {
         const originalXml = record;
         const doc = this.domParser.parseFromString(originalXml, 'application/xml');
 
+        const keywords = [
+            `transaction:${transactionTimestamp}`,
+            `source:${datasourceId}`,
+            `catalog:${this.settings.id}`,
+            ...additionalKeywords
+        ];
+
         const keywordsBlock = `<gmd:descriptiveKeywords xmlns:gmd="${namespaces.GMD}" xmlns:gco="${namespaces.GCO}">
     <gmd:MD_Keywords>
-        <gmd:keyword>
-            <gco:CharacterString>transaction:${transactionTimestamp}</gco:CharacterString>
-        </gmd:keyword>
-        <gmd:keyword>
-            <gco:CharacterString>source:${datasourceId}</gco:CharacterString>
-        </gmd:keyword>
-        <gmd:keyword>
-            <gco:CharacterString>catalog:${this.settings.id}</gco:CharacterString>
-        </gmd:keyword>${organisation ? `
-        <gmd:keyword>
-            <gco:CharacterString>organisation:${organisation.replace(/[ ,]/g, '_')}</gco:CharacterString>
-        </gmd:keyword>` : ''}${sub_organisation ? `
-        <gmd:keyword>
-            <gco:CharacterString>sub_organisation:${sub_organisation.replace(/[ ,]/g, '_')}</gco:CharacterString>
-        </gmd:keyword>` : ''}
+        ${keywords.map(keyword => `<gmd:keyword>
+            <gco:CharacterString>${keyword}</gco:CharacterString>
+        </gmd:keyword>`).join('\n        ')}
     </gmd:MD_Keywords>
 </gmd:descriptiveKeywords>`;
 
