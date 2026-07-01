@@ -263,7 +263,16 @@ export class RequestDelegate {
             });
         }
         let fullURL = RequestDelegate.getFullURL(config);
-        log.debug(`Requesting: ${fullURL} (retries: ${retries}, wait: ${waitMilliSeconds}ms)`);
+        if (log.isDebugEnabled()) {
+            let addInfo = '';
+            if (config.body) {
+                addInfo = ` [${config.body}]`;
+            }
+            if (config.qs) {
+                addInfo += ` [${config.qs}}]`;
+            }
+            log.debug(`Requesting: ${fullURL}${addInfo} (retries: ${retries}, wait: ${waitMilliSeconds}ms)`);
+        }
         // set timeout for fetch
         // this is a workaround - we want to use `signal`, but cannot give it directly as it starts running as soon as
         // it is declared. `timeout` (which is deprecated) works different (worse). So we just take the timeout value
