@@ -33,7 +33,7 @@ export class LogMiddleware {
 
         response.getRes().on("finish", () => {
             const duration = Date.now() - start;
-            log.info(`${request.getReq().method} ${request.getReq().url} ${response.getRes().statusCode} - ${duration}ms`);
+            log.debug(`${request.getReq().method} ${request.getReq().url} ${response.getRes().statusCode} - ${duration}ms`);
         });
     }
 }
