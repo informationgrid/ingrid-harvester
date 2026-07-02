@@ -1,4 +1,16 @@
 
+## 8.4.0 (02.07.2026)
+
+### Features
+
+* Einführung der Filtering nach Partner, Anbieter und Datenquelle (#9155)
+
+### Bugfixes
+
+* Timeouts beim Harvesten einer CSW-Datenquelle werden nicht geloggt/führen nicht zum Abbruch (#9225)
+* ingrid_meta wird fehlerhafterweise nicht vollständig aktualisiert (#9223)
+* [WFS] Informationen werden vermischt, wenn Anzahl paralleler Abfragen > 1 (#9056)
+    
 ## 8.3.0 (17.04.2026)
 
 ### Features
