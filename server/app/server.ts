@@ -21,9 +21,8 @@
  * ==================================================
  */
 
-import { $log, Configuration, PlatformApplication, PlatformConfiguration, type BeforeRoutesInit, type OnInit, type OnReady } from '@tsed/common';
+import { Configuration, PlatformApplication, PlatformConfiguration, $log as tsedLogger, type BeforeRoutesInit, type OnInit, type OnReady } from '@tsed/common';
 import { Inject } from '@tsed/di';
-import { JsonLayout } from '@tsed/logger/layouts/JsonLayout.js';
 import { PlatformAcceptMimesMiddleware } from '@tsed/platform-accept-mimes';
 import bodyParser from 'body-parser';
 import compress from 'compression';
@@ -39,6 +38,7 @@ import { LogMiddleware } from './middlewares/LogMiddleware.js';
 import { ProfileFactoryLoader } from './profiles/profile.factory.loader.js';
 import { ConfigService } from './services/config/ConfigService.js';
 import { KeycloakService } from './services/keycloak/KeycloakService.js';
+import './utils/tsed.log4js.forwarder.js';
 import { configure as harvestJobConfigure } from './utils/harvest-log-appender.js';
 import { jsonLayout } from './utils/log4js.json.layout.js';
 
@@ -63,22 +63,12 @@ log4js.configure({
         },
     },
 });
-if (isProduction) {
-    $log.appenders.set("stdout", {
-        type: "stdout",
-        levels: ["info", "debug"],
-        layout: {
-            type: JsonLayout
-        }
-    });
-    $log.appenders.set("stderr", {
-        levels: ["trace", "fatal", "error", "warn"],
-        type: "stderr",
-        layout: {
-            type: JsonLayout
-        }
-    });
-}
+// re-route the ts.ed logger through log4js
+tsedLogger.appenders.clear();
+tsedLogger.appenders.set("log4js-forwarder", {
+    type: "log4js",
+    levels: ["trace", "debug", "info", "warn", "error", "fatal"],
+});
 
 const baseURL = process.env.BASE_URL ?? '/';
 
@@ -102,8 +92,7 @@ const baseURL = process.env.BASE_URL ?? '/';
     },
     logger: {
         ignoreUrlPatterns: ['/rest/*'],
-        disableRoutesSummary: isProduction,
-        // level: "warn"
+        disableRoutesSummary: isProduction
     },
     middlewares: [
         LogMiddleware,
