@@ -53,7 +53,10 @@ log4js.configure({
     ...baseLog4jsConfig,
     appenders: {
         ...baseLog4jsConfig.appenders,
-        harvestJob: { type: { configure: harvestJobConfigure } },
+        harvestJob: {
+            type: { configure: harvestJobConfigure },
+            layout: baseLog4jsConfig.appenders.appLog.layout
+        },
     },
     categories: {
         ...baseLog4jsConfig.categories,
