@@ -64,9 +64,16 @@ export abstract class ElasticsearchCatalog extends Catalog<IndexDocument, Elasti
     async importIntoCatalog(operations: EsOperation[]) {
         let validOps = operations;
         if (operations?.length && this.schema) {
+            const schemaId = (this.schema as any).$id;
             validOps = [];
             for (const op of operations) {
                 if (op.document && ['index', 'create', 'update'].includes(op.operation)) {
+                    // strip internal harvesting metadata - not part of the index format
+                    delete op.document.extras;
+                    // $schema documents the JSON schema used for validation, determined by the mapping selected for this catalog
+                    if (schemaId) {
+                        op.document.$schema = schemaId;
+                    }
                     const errors = validateDocument(op.document, this.schema);
                     if (errors.length) {
                         const msg = `Schema validation failed for ${op._id}: ${errors.join('; ')}`;

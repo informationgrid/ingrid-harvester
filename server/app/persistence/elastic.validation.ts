@@ -35,5 +35,12 @@ export function validateDocument(document: any, schema: object): string[] {
     }
     const validate = compiledSchemas.get(schema);
     if (validate(document)) return [];
-    return validate.errors.map(e => `${e.instancePath} ${e.message}`);
+    return validate.errors.map(e => {
+        let msg = `${e.instancePath || '/'} ${e.message}`;
+        // params carry the specifics, e.g. the offending property name or the allowed enum values
+        if (e.params && Object.keys(e.params).length) {
+            msg += ` ${JSON.stringify(e.params)}`;
+        }
+        return msg;
+    });
 }

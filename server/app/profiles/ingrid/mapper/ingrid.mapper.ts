@@ -30,13 +30,13 @@ import type { GenesisMapper } from "../../../importer/genesis/genesis.mapper.js"
 import type { ToElasticMapper } from '../../../importer/to.elastic.mapper.js';
 import type { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
 import type { DocumentFactory } from "../../../model/index.document.factory.js";
-import type { IndexContact, IndexKeyword, IndexSpatial, IndexTemporal } from '../../../model/index.document.js';
+import type { IndexContact, IndexKeyword, IndexReference, IndexSpatial, IndexTemporal } from '../../../model/index.document.js';
 import type {
     IngridConformanceResult,
     IngridDataQuality,
+    IngridDocumentType,
     IngridIndexDocument,
     IngridLicense,
-    IngridReference,
     IngridSpatialRepresentation,
     IngridSpecific
 } from "../model/index.document.js";
@@ -68,9 +68,11 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
         let result: IngridIndexDocument = {
             ...this.getCustomEntries(),
             id: this.getGeneratedId(),
+            $schema: undefined, // set by the target catalog from the selected JSON schema's $id
             schema_version: '8.4.0', // TODO: align with app release version
             metadata: {
                 data_type: 'INGRID',
+                document_type: this.getDocumentType(),
                 created: null,  // TODO: populate from source record
                 modified: this.getModifiedDate()?.toISOString() ?? null,
                 partner: this.baseMapper.settings.partner?.split(',').map(p => p.trim())[0],
@@ -87,6 +89,7 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
             spatials: this.getSpatials(),
             temporal: this.getTemporal(),
             keywords: this.getKeywords(),
+            references: this.getReferences(),
             exports: null,
             ingrid: this.getIngrid(),
             fulltext: null,  // assigned after
@@ -116,7 +119,6 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
     getIngrid(): IngridSpecific {
         return {
             alternate_title: this.getAlternateTitle()?.[0],
-            references: this.getReferences(),
             licenses: this.getLicenses(),
             parent_identifier: this.getParentIdentifier(),
             datasource_identifier: this.getDatasourceIdentifier(),
@@ -126,7 +128,16 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
             conformance_result: this.getConformanceResult(),
             order_info: this.getOrderInfo(),
             data_quality: this.getDataQuality(),
+            character_set: this.getCharacterSet(),
         };
+    }
+
+    getDocumentType(): IngridDocumentType {
+        return undefined;
+    }
+
+    getCharacterSet(): { key: string | null, value: string | null } {
+        return undefined;
     }
 
     getSpatialRepresentation(): IngridSpatialRepresentation[] {
@@ -153,7 +164,7 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
         return undefined;
     }
 
-    getReferences(): IngridReference[] {
+    getReferences(): IndexReference[] {
         return undefined;
     }
 

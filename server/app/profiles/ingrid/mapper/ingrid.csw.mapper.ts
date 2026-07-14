@@ -28,7 +28,8 @@ import type { Distribution } from "../../../model/distribution.js";
 import * as GeoJsonUtils from "../../../utils/geojson.utils.js";
 import * as XpathUtils from "../../../utils/xpath.utils.js";
 import { ingridMapper } from "./ingrid.mapper.js";
-import type {IngridConformanceResult, IngridDataQuality, IngridLicense, IngridReference, IngridSpatialRepresentation} from "../model/index.document.js";
+import type { IndexReference } from "../../../model/index.document.js";
+import type {IngridConformanceResult, IngridDataQuality, IngridDocumentType, IngridLicense, IngridSpatialRepresentation} from "../model/index.document.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -224,13 +225,37 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return this.text("./gmd:parentIdentifier/gco:CharacterString", this.baseMapper.record);
     }
 
-    getReferences(): IngridReference[] {
+    getReferences(): IndexReference[] {
         const capabilitiesUrls = this.getCapabilitiesURL();
         return capabilitiesUrls?.length ? capabilitiesUrls?.map(url => ({
             internal: false,
             url,
             type: { key: '3600', value: 'Gekoppelte Daten' }
         })) : undefined;
+    }
+
+    getDocumentType(): IngridDocumentType {
+        let hierarchyLevel = this.getHierarchyLevel()?.toLowerCase();
+        if (hierarchyLevel == 'service') {
+            return 'InGridGeoService';
+        }
+        if (hierarchyLevel == 'application') {
+            return 'InGridInformationSystem';
+        }
+        if (hierarchyLevel == 'nongeographicdataset') {
+            switch (this.baseMapper.getHierarchyLevelName()) {
+                case 'job': return 'InGridSpecialisedTask';
+                case 'document': return 'InGridPublication';
+                case 'project': return 'InGridProject';
+                case 'database': return 'InGridDataCollection';
+            }
+        }
+        return 'InGridGeoDataset';
+    }
+
+    getCharacterSet(): { key: string | null, value: string | null } {
+        const characterSet = this.text('./gmd:MD_DataIdentification/gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue', this.baseMapper.idInfo);
+        return characterSet ? { key: this.transformToIgcDomainId(characterSet, '510'), value: characterSet } : undefined;
     }
 
     getCapabilitiesURL(): string[] {

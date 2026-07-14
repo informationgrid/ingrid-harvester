@@ -4,339 +4,513 @@
         "enabled": true
     },
     "properties": {
-        "uuid": {
-            "type": "keyword",
-            "store": true
+        "id": {
+            "type": "keyword"
         },
-        "iPlugId": {
-            "type": "keyword",
-            "store": true
+        "$schema": {
+            "type": "keyword"
         },
-        "partner": {
-            "type": "keyword",
-            "store": true
+        "schema_version": {
+            "type": "keyword"
         },
-        "provider": {
-            "type": "keyword",
-            "store": true
+        "sort_uuid": {
+            "type": "keyword"
         },
-        "datatype": {
-            "type": "keyword",
-            "store": true
-        },
-        "dataSourceName": {
-            "type": "keyword",
-            "store": true
-        },
-        "collection.name": {
-            "type": "keyword",
-            "store": true
-        },
-        "t01_object.mod_time": {
-            "type": "keyword",
-            "store": true
-        },
-        "t01_object.obj_id": {
-            "type": "keyword",
-            "store": true
-        },
-        "t01_object.obj_class": {
-            "type": "keyword",
-            "store": true
-        },
-        "t01_object.org_obj_id": {
-            "type": "keyword",
-            "store": true
-        },
-        "hierarchylevel": {
-            "type": "keyword",
-            "store": true
-        },
-        "alternatetitle": {
-            "type": "keyword",
-            "store": true
-        },
-        "t02_address.administrative_area_value": {
-            "type": "keyword",
-            "store": true
-        },
-        "t02_address.identificationinfo_administrative_area_value": {
-            "type": "keyword",
-            "store": true
-        },
-        "boost": {
-            "type": "float",
-            "store": true,
-            "null_value": 0.0
+        "metadata": {
+            "properties": {
+                "data_type": {
+                    "type": "keyword"
+                },
+                "document_type": {
+                    "type": "keyword"
+                },
+                "created": {
+                    "type": "date"
+                },
+                "modified": {
+                    "type": "date"
+                },
+                "issued": {
+                    "type": "date"
+                },
+                "partner": {
+                    "type": "keyword"
+                },
+                "provider": {
+                    "type": "keyword"
+                },
+                "language": {
+                    "properties": {
+                        "key": {
+                            "type": "keyword"
+                        },
+                        "value": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "datasource": {
+                    "properties": {
+                        "id": {
+                            "type": "keyword"
+                        },
+                        "name": {
+                            "type": "keyword"
+                        }
+                    }
+                }
+            }
         },
         "title": {
             "type": "text",
             "analyzer": "german",
             "store": true,
             "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                },
                 "ngram": {
-                    "type":  "text",
+                    "type": "text",
                     "analyzer": "ngram",
                     "search_analyzer": "german"
                 },
                 "edge_ngram": {
-                    "type":  "text",
+                    "type": "text",
                     "analyzer": "edge_ngram",
                     "search_analyzer": "german"
                 }
             }
         },
-        "summary": {
+        "description": {
             "type": "text",
-            "analyzer": "german",
-            "store": true,
-            "fields": {
-                "ngram": {
-                    "type":  "text",
-                    "analyzer": "ngram",
-                    "search_analyzer": "german"
-                },
-                "edge_ngram": {
-                    "type":  "text",
-                    "analyzer": "edge_ngram",
-                    "search_analyzer": "german"
-                }
-            }
+            "analyzer": "german"
         },
-        "content": {
-            "type": "text",
-            "analyzer": "german",
-            "store": true,
-            "fields": {
-                "ngram": {
-                    "type":  "text",
-                    "analyzer": "ngram",
-                    "search_analyzer": "german"
-                },
-                "edge_ngram": {
-                    "type":  "text",
-                    "analyzer": "edge_ngram",
-                    "search_analyzer": "german"
-                }
-            }
-        },
-        "location": {
-            "type": "keyword",
-            "store": true
-        },
-        "x1": {
-            "type": "double",
-            "store": true
-        },
-        "x2": {
-            "type": "double",
-            "store": true
-        },
-        "y1": {
-            "type": "double",
-            "store": true
-        },
-        "y2": {
-            "type": "double",
-            "store": true
-        },
-        "spatial": {
-            "type": "nested",
-            "properties": {
-                "geometries": {
-                    "type": "geo_shape"
-                }
-            }
-        },
-        "idf": {
-            "type": "text",
-            "index": false
-        },
-        "fulltext": {
-            "type": "text"
-        },
-        "modified": {
-            "type": "date",
-            "store": true
-        },
-        "t011_obj_serv_op_connpoint.connect_point": {
-            "type": "keyword",
-            "store": true
-        },
-        "capabilities_url": {
-            "type": "keyword",
-            "store": true
-        },
-        "additional_html_1": {
-            "type": "text",
-            "store": true
-        },
-        "t04_search.searchterm": {
-            "type": "keyword",
-            "store": true
-        },
-        "t011_obj_geo.keyc_incl_w_dataset": {
-            "type": "keyword",
-            "store": true
-        },
-        "t011_obj_serv.type": {
-            "type": "text",
-            "store": true
-        },
-        "t011_obj_serv.type_key": {
-            "type": "keyword",
-            "store": true
-        },
-        "t011_obj_serv_version.version_value": {
-            "type": "keyword",
-            "store": true
-        },
-        "t011_obj_serv_op_para.optional": {
-            "type": "keyword",
-            "store": true
-        },
-        "t011_obj_serv_op_para.repeatability": {
-            "type": "keyword",
-            "store": true
-        },
-        "t017_url_ref.url_link": {
-            "type": "keyword",
-            "store": true
-        },
-        "t017_url_ref.content": {
-            "type": "keyword",
-            "store": true
-        },
-        "t017_url_ref.special_ref": {
-            "type": "keyword",
-            "store": true
-        },
-        "object_reference.obj_to_uuid": {
+        "language": {
             "type": "keyword"
         },
-        "object_reference.obj_uuid": {
-            "type": "keyword",
-            "store": true
-        },
-        "object_reference.obj_name": {
-            "type": "keyword",
-            "store": true
-        },
-        "object_reference.obj_class": {
-            "type": "keyword",
-            "store": true
-        },
-        "object_reference.type": {
-            "type": "keyword",
-            "store": true
-        },
-        "object_reference.version": {
-            "type": "keyword",
-            "store": true
-        },
-        "refering.object_reference.obj_uuid": {
-            "type": "keyword",
-            "store": true
-        },
-        "refering.object_reference.obj_name": {
-            "type": "keyword",
-            "store": true
-        },
-        "refering.object_reference.obj_class": {
-            "type": "keyword",
-            "store": true
-        },
-        "refering.object_reference.type": {
-            "type": "keyword",
-            "store": true
-        },
-        "refering.object_reference.version": {
-            "type": "keyword",
-            "store": true
-        },
-        "t01_object.time_type": {
-            "type": "keyword",
-            "store": true
-        },
-        "t0": {
-            "type": "keyword",
-            "store": true
-        },
-        "t1": {
-            "type": "keyword",
-            "store": true
-        },
-        "t2": {
-            "type": "keyword",
-            "store": true
-        },
-        "object_use_constraint.license_key": {
-            "type": "keyword",
-            "store": true
-        },
-        "object_use_constraint.license_value": {
-            "type": "keyword",
-            "store": true
-        },
-        "is_hvd": {
-          "type": "keyword",
-          "store": true
-        },
-        "sort_hash": {
-            "type": "keyword"
-        },
-        "distributions": {
-            "type": "object",
+        "contacts": {
             "properties": {
-                "license": {
-                    "type": "object",
-                    "properties": {
-                        "name": {
+                "role": {
+                    "type": "keyword"
+                },
+                "name": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
                             "type": "keyword",
-                            "store": true
-                        },
-                        "attribution_by_text": {
-                            "type": "text",
-                            "store": true
-                        },
-                        "url": {
-                            "type": "text",
-                            "store": true
+                            "ignore_above": 256
                         }
                     }
                 },
-                "languages": {
-                    "type": "keyword",
-                    "store": true
+                "communications": {
+                    "properties": {
+                        "type": {
+                            "type": "keyword"
+                        },
+                        "value": {
+                            "type": "keyword"
+                        }
+                    }
                 },
-                "access_url": {
+                "street": {
                     "type": "text",
-                    "store": true
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
                 },
-                "format": {
-                    "type": "keyword",
-                    "store": true
+                "code": {
+                    "type": "keyword"
                 },
-                "description": {
+                "pocode": {
+                    "type": "keyword"
+                },
+                "pobox": {
+                    "type": "keyword"
+                },
+                "locality": {
                     "type": "text",
-                    "copy_to": [
-                        "content"
-                    ]
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
                 },
-                "modified": {
-                    "type": "text",
-                    "store": true
+                "country": {
+                    "type": "keyword"
                 },
-                "availability": {
+                "administrative_area": {
                     "type": "text",
-                    "store": true
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                }
+            }
+        },
+        "spatials": {
+            "properties": {
+                "name": {
+                    "type": "keyword"
+                },
+                "geometry": {
+                    "type": "geo_shape"
+                },
+                "bbox": {
+                    "type": "float"
+                },
+                "wkt": {
+                    "type": "text",
+                    "index": false
+                },
+                "toponym": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "administrative": {
+                    "properties": {
+                        "state": {
+                            "type": "keyword"
+                        },
+                        "regional_key": {
+                            "type": "keyword"
+                        }
+                    }
+                }
+            }
+        },
+        "temporal": {
+            "properties": {
+                "data_temporal": {
+                    "properties": {
+                        "date": {
+                            "type": "date"
+                        },
+                        "date_range": {
+                            "type": "date_range"
+                        },
+                        "date_text": {
+                            "type": "keyword"
+                        },
+                        "date_type": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "status": {
+                    "properties": {
+                        "key": {
+                            "type": "keyword"
+                        },
+                        "value": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "maintenance_frequency": {
+                    "properties": {
+                        "key": {
+                            "type": "keyword"
+                        },
+                        "value": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "user_defined_maintenance_frequency_in_sec": {
+                    "type": "keyword"
+                }
+            }
+        },
+        "keywords": {
+            "properties": {
+                "term": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "id": {
+                    "type": "keyword"
+                },
+                "source": {
+                    "type": "keyword"
+                }
+            }
+        },
+        "references": {
+            "properties": {
+                "internal": {
+                    "type": "boolean"
+                },
+                "url": {
+                    "type": "keyword"
+                },
+                "uuid_ref": {
+                    "type": "keyword"
+                },
+                "type": {
+                    "properties": {
+                        "key": {
+                            "type": "keyword"
+                        },
+                        "value": {
+                            "type": "keyword"
+                        }
+                    }
                 },
                 "title": {
                     "type": "text",
-                    "copy_to": [
-                        "content"
-                    ],
-                    "store": true
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "explanation": {
+                    "type": "text"
+                }
+            }
+        },
+        "fulltext": {
+            "type": "text",
+            "analyzer": "german",
+            "fields": {
+                "ngram": {
+                    "type": "text",
+                    "analyzer": "ngram",
+                    "search_analyzer": "german"
+                },
+                "edge_ngram": {
+                    "type": "text",
+                    "analyzer": "edge_ngram",
+                    "search_analyzer": "german"
+                }
+            }
+        },
+        "exports": {
+            "type": "object",
+            "enabled": false
+        },
+        "ingrid": {
+            "properties": {
+                "alternate_title": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "licenses": {
+                    "properties": {
+                        "type": {
+                            "type": "keyword"
+                        },
+                        "items": {
+                            "properties": {
+                                "key": {
+                                    "type": "keyword"
+                                },
+                                "value": {
+                                    "type": "keyword"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parent_identifier": {
+                    "type": "keyword"
+                },
+                "datasource_identifier": {
+                    "type": "keyword"
+                },
+                "spatial_representation": {
+                    "properties": {
+                        "type": {
+                            "type": "keyword"
+                        },
+                        "vector": {
+                            "properties": {
+                                "topology": {
+                                    "type": "keyword"
+                                },
+                                "geometry_type": {
+                                    "type": "keyword"
+                                },
+                                "number": {
+                                    "type": "integer"
+                                }
+                            }
+                        },
+                        "grid": {
+                            "properties": {
+                                "axes": {
+                                    "properties": {
+                                        "label": {
+                                            "type": "keyword"
+                                        },
+                                        "number": {
+                                            "type": "integer"
+                                        },
+                                        "resolution": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "available_parameters": {
+                                    "type": "boolean"
+                                },
+                                "number_dimensions": {
+                                    "type": "integer"
+                                },
+                                "cell_geometry": {
+                                    "properties": {
+                                        "key": {
+                                            "type": "keyword"
+                                        },
+                                        "value": {
+                                            "type": "keyword"
+                                        }
+                                    }
+                                },
+                                "rectified": {
+                                    "properties": {
+                                        "checkPointAvailability": {
+                                            "type": "boolean"
+                                        },
+                                        "checkPointDescription": {
+                                            "type": "text"
+                                        },
+                                        "cornerPoints": {
+                                            "type": "keyword"
+                                        },
+                                        "pointInPixel": {
+                                            "properties": {
+                                                "key": {
+                                                    "type": "keyword"
+                                                },
+                                                "value": {
+                                                    "type": "keyword"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "referenced": {
+                                    "properties": {
+                                        "orientationParameterAvailability": {
+                                            "type": "boolean"
+                                        },
+                                        "controlPointAvaliability": {
+                                            "type": "boolean"
+                                        },
+                                        "parameters": {
+                                            "type": "text"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "specific_usage": {
+                    "type": "text"
+                },
+                "purpose": {
+                    "type": "text"
+                },
+                "conformance_result": {
+                    "properties": {
+                        "pass": {
+                            "type": "keyword"
+                        },
+                        "specification": {
+                            "properties": {
+                                "key": {
+                                    "type": "keyword"
+                                },
+                                "value": {
+                                    "type": "keyword"
+                                }
+                            }
+                        },
+                        "publicationDate": {
+                            "type": "keyword"
+                        },
+                        "explanation": {
+                            "type": "text"
+                        }
+                    }
+                },
+                "order_info": {
+                    "type": "text"
+                },
+                "data_quality": {
+                    "properties": {
+                        "completenessOmission": {
+                            "type": "float"
+                        },
+                        "positionalAccuracy": {
+                            "properties": {
+                                "horizontal": {
+                                    "type": "float"
+                                },
+                                "vertical": {
+                                    "type": "float"
+                                }
+                            }
+                        },
+                        "qualities": {
+                            "properties": {
+                                "type": {
+                                    "type": "keyword"
+                                },
+                                "measure_type": {
+                                    "properties": {
+                                        "key": {
+                                            "type": "keyword"
+                                        },
+                                        "value": {
+                                            "type": "keyword"
+                                        }
+                                    }
+                                },
+                                "value": {
+                                    "type": "float"
+                                },
+                                "parameter": {
+                                    "type": "text"
+                                }
+                            }
+                        }
+                    }
+                },
+                "character_set": {
+                    "properties": {
+                        "key": {
+                            "type": "keyword"
+                        },
+                        "value": {
+                            "type": "keyword"
+                        }
+                    }
                 }
             }
         }

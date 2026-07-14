@@ -302,10 +302,9 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         if (!additionalDoc) {
             return;
         }
-        if (additionalDoc.ingrid?.references?.length) {
-            document.ingrid ??= {};
-            document.ingrid.references ??= [];
-            document.ingrid.references.push(...additionalDoc.ingrid.references);
+        if (additionalDoc.references?.length) {
+            document.references ??= [];
+            document.references.push(...additionalDoc.references);
         }
     }
 

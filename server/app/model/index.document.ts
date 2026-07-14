@@ -29,7 +29,8 @@ import type { Geometry, Point } from 'geojson';
 
 export type IndexDocument = {
     id: string,
-    schema_version: string, // TODO: align with app release version
+    $schema: string,
+    schema_version?: string, // TODO: align schema version. Maybe not needed since $schema is required
     metadata: IndexDocumentMetadata,
     title: string,
     sort_uuid?: string,
@@ -39,6 +40,7 @@ export type IndexDocument = {
     spatials?: IndexSpatial[],
     temporal?: IndexTemporal,
     keywords?: IndexKeyword[],
+    references?: IndexReference[],
     fulltext?: string[],
     exports?: { [key: string]: string },
 
@@ -50,6 +52,7 @@ export type IndexDocument = {
 
 export type IndexDocumentMetadata = {
     data_type: string,
+    document_type?: string,
     created: string | null,     // ISO 8601
     modified: string | null,    // ISO 8601
     issued?: string | null,     // ISO 8601
@@ -92,8 +95,17 @@ export type IndexTemporal = {
 };
 
 export type IndexTemporalItem = {
-    date_type: 'created' | 'last_updated' | 'first_published',
-} & ({ date: string } | { date_range: { start?: string, end?: string } } | { date_text: string });
+    date_type?: 'created' | 'last_updated' | 'first_published',
+} & ({ date: string } | { date_range: { gte?: string, lte?: string } } | { date_text: string });
+
+export type IndexReference = {
+    internal?: boolean,
+    url?: string,        // required by schema when internal !== true
+    uuid_ref?: string,   // required by schema when internal === true
+    type?: { key: string | null, value: string | null },
+    title?: string,
+    explanation?: string,
+};
 
 // ---------------------------------------------------------------------------
 // Legacy types — kept for non-ingrid profiles (LVR etc.) during migration

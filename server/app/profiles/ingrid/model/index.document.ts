@@ -23,8 +23,12 @@
 
 import type { IndexDocument, IndexDocumentMetadata, IndexTemporal } from '../../../model/index.document.js';
 
+export type IngridDocumentType = 'InGridGeoDataset' | 'InGridDataCollection' | 'InGridGeoService'
+    | 'InGridInformationSystem' | 'InGridPublication' | 'InGridProject'
+    | 'InGridSpecialisedTask';
+
 export type IngridIndexDocument = IndexDocument & {
-    metadata: IndexDocumentMetadata & { data_type: 'INGRID' },
+    metadata: IndexDocumentMetadata & { data_type: 'INGRID', document_type?: IngridDocumentType },
     temporal?: IngridTemporal,
     exports?: { iso?: string },
     ingrid?: IngridSpecific,
@@ -32,13 +36,6 @@ export type IngridIndexDocument = IndexDocument & {
 
 export type IngridSpecific = {
     alternate_title?: string,
-    metadata?: {
-        type?: 'InGridGeoDataset' | 'InGridDataCollection' | 'InGridGeoService'
-               | 'InGridInformationSystem' | 'InGridPublication' | 'InGridProject'
-               | 'InGridSpecialisedTask',
-        character_set?: { key: string | null, value: string | null }, // deprecated
-    },
-    references?: IngridReference[],
     licenses?: IngridLicense[],
     parent_identifier?: string,
     datasource_identifier?: string,
@@ -48,21 +45,13 @@ export type IngridSpecific = {
     conformance_result?: IngridConformanceResult[],
     order_info?: string,
     data_quality?: IngridDataQuality,
+    character_set?: { key: string | null, value: string | null },
 };
 
 export type IngridTemporal = IndexTemporal & {
     status?: { key: string | null, value: string | null },
     maintenance_frequency?: { key: string | null, value: string | null },
     user_defined_maintenance_frequency_in_sec?: string,
-};
-
-export type IngridReference = {
-    internal?: boolean,
-    url?: string,
-    uuidRef?: string,
-    type?: { key: string | null, value: string | null },
-    title?: string,
-    explanation?: string,
 };
 
 export type IngridLicense = {
