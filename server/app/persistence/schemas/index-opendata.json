@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.com/schemas/1.0.0/dcat.yaml",
-  "title": "Schema for InGrid Index 'OpenData'",
+  "$id": "https://schema.ingrid-oss.eu/index/draft/schema/index-opendata.json",
+  "title": "InGrid Index - OpenData",
   "type": "object",
   "allOf": [
     {
@@ -11,10 +11,17 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "The ID of the Dataset. The ID **must** be unique in the index.\n",
+          "description": "Die ID des Datensatzes. Die ID **muss** eindeutig im Index sein.",
           "examples": [
             "Für UMWELTNAVI <oid>-<part> i.e. 'nlwkn-dsk-4922-21000-0'",
             "For InGrid Editor i.e. 'd43dad1f-a19f-4043-bca4-447cf5e7cabb'"
+          ]
+        },
+        "$schema": {
+          "type": "string",
+          "description": "Enthält die URL des JSON-Schemas, das für die Validierung verwendet wird.",
+          "examples": [
+            "https://example.com/schemas/order/v2.1.0/schema.json"
           ]
         },
         "schema_version": {
@@ -37,6 +44,14 @@
                 "UmweltNAVI Datensatz ['UMWELTNAVI']",
                 "InGrid Datensatz ['INGRID']",
                 "UVP Datensatz ['UVP']"
+              ]
+            },
+            "document_type": {
+              "type": "string",
+              "description": "Beschreibt den genauen Typ des Metadatensatzes. Dies kann als Unterkategorie Wird im Profil definiert.",
+              "examples": [
+                "InGridGeoDataset",
+                "InGridGeoService"
               ]
             },
             "created": {
@@ -73,7 +88,7 @@
             },
             "partner": {
               "type": "string",
-              "description": "Der Partner der Datenquelle als Kürzel. Siehe auch Codeliste 110.\n",
+              "description": "Der Partner der Datenquelle als Kürzel.\n",
               "examples": [
                 "bb",
                 "st"
@@ -81,7 +96,7 @@
             },
             "provider": {
               "type": "string",
-              "description": "Der Anbieter der Datenquelle als Kürzel. Siehe auch Codeliste 111.\n",
+              "description": "Der Anbieter der Datenquelle.",
               "examples": [
                 "ni_gll",
                 "bw_mj"
@@ -89,7 +104,7 @@
             },
             "language": {
               "title": "language",
-              "description": "Enthält die Sprache des Metadatensatzes. Hier wird die Codeliste 99999999 verwendet.",
+              "description": "Enthält die Sprache des Metadatensatzes.",
               "additionalProperties": false,
               "properties": {
                 "key": {
@@ -126,7 +141,7 @@
           ]
         },
         "sort_uuid": {
-          "description": "Sortier-UUID für die Sortierung von Datensätzen, die bei einer leeren Suche durchmischt angezeigt werden sollen.",
+          "description": "Sortier-UUID für die Sortierung von Datensätzen, die bei einer leeren Suche durchmischt angezeigt werden sollen. Außerdem wird hiermit gewährt, dass die Reihenfolge der Datensätze beim Paging erhalten bleibt. Hier wird eine UUID verwendet, die über alle Indizes einmalig sein sollte.",
           "type": "string"
         },
         "title": {
@@ -331,19 +346,19 @@
                   "date": {
                     "type": "string",
                     "format": "date-time",
-                    "description": "Datum der Messreihe"
+                    "description": "Datum des Ereignisses"
                   },
                   "date_range": {
                     "type": "object",
                     "title": "Zeitabschnitt",
-                    "description": "Zeitabschnitt der Messreihe",
+                    "description": "Zeitabschnitt des Ereignis. Diese Angabe ist optimiert für die Verwendung in Elasticsearch, welches den Typ \"date_range\" unterstützt und optimiert abgefragt werden kann.",
                     "properties": {
-                      "start": {
+                      "gte": {
                         "type": "string",
                         "format": "date-time",
                         "description": "Startdatum der Zeitangabe"
                       },
-                      "end": {
+                      "lte": {
                         "type": "string",
                         "format": "date-time",
                         "description": "Enddatum der Zeitangabe"
@@ -383,9 +398,6 @@
                       "date_text"
                     ]
                   }
-                ],
-                "required": [
-                  "date_type"
                 ]
               }
             }
@@ -424,6 +436,79 @@
             ]
           }
         },
+        "references": {
+          "type": "array",
+          "description": "Enthält Verweise zu externen Ressourcen oder Downloads, die mit dem Datensatz verbunden sind. Hier können auch URLs zu getCapabilities-Anfragen angegeben werden.",
+          "items": {
+            "type": "object",
+            "title": "item",
+            "if": {
+              "properties": {
+                "internal": {
+                  "const": true
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "uuid_ref"
+              ]
+            },
+            "else": {
+              "required": [
+                "url"
+              ]
+            },
+            "properties": {
+              "internal": {
+                "type": "boolean",
+                "description": "Gibt an, ob es sich um einen internen oder externen Verweis handelt."
+              },
+              "url": {
+                "$comment": "Sollten url und uuidRef vereint werden? Wodurch die Logik vereinfacht wird?",
+                "type": "string",
+                "description": "Die URL zur externen Ressource oder Download."
+              },
+              "uuid_ref": {
+                "type": "string",
+                "description": "Die UUID des internen Datensatzes."
+              },
+              "type": {
+                "type": "object",
+                "title": "type",
+                "description": "Gibt den Typ der externen Ressource oder Download an.",
+                "examples": [
+                  "3600 - Gekoppelte Daten",
+                  "5304 - Bestellung",
+                  "3535 - Schlüsselkatalog"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "key": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "value": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              },
+              "title": {
+                "type": "string",
+                "description": "Ein Titel der externen Ressource oder Download."
+              },
+              "explanation": {
+                "type": "string",
+                "description": "Eine Beschreibung der externen Ressource oder Download."
+              }
+            }
+          }
+        },
         "fulltext": {
           "type": "array",
           "description": "Für Full Text Suche. Signifikanz von genauen Treffern kann hier geboostet werden. Entsprechende Felder sollten mit copy_to-Operation in Elasticsearch kopiert werden.",
@@ -439,7 +524,7 @@
       },
       "required": [
         "id",
-        "schema_version",
+        "$schema",
         "metadata",
         "title"
       ],
@@ -573,6 +658,14 @@
                 "UVP Datensatz ['UVP']"
               ]
             },
+            "document_type": {
+              "type": "string",
+              "description": "Beschreibt den genauen Typ des Metadatensatzes. Dies kann als Unterkategorie Wird im Profil definiert.",
+              "examples": [
+                "InGridGeoDataset",
+                "InGridGeoService"
+              ]
+            },
             "created": {
               "type": [
                 "string",
@@ -607,7 +700,7 @@
             },
             "partner": {
               "type": "string",
-              "description": "Der Partner der Datenquelle als Kürzel. Siehe auch Codeliste 110.\n",
+              "description": "Der Partner der Datenquelle als Kürzel.\n",
               "examples": [
                 "bb",
                 "st"
@@ -615,7 +708,7 @@
             },
             "provider": {
               "type": "string",
-              "description": "Der Anbieter der Datenquelle als Kürzel. Siehe auch Codeliste 111.\n",
+              "description": "Der Anbieter der Datenquelle.",
               "examples": [
                 "ni_gll",
                 "bw_mj"
@@ -623,7 +716,7 @@
             },
             "language": {
               "title": "language",
-              "description": "Enthält die Sprache des Metadatensatzes. Hier wird die Codeliste 99999999 verwendet.",
+              "description": "Enthält die Sprache des Metadatensatzes.",
               "additionalProperties": false,
               "properties": {
                 "key": {
@@ -658,6 +751,57 @@
             "created",
             "modified"
           ]
+        },
+        "ReferenceItem": {
+          "type": "object",
+          "properties": {
+            "internal": {
+              "type": "boolean",
+              "description": "Gibt an, ob es sich um einen internen oder externen Verweis handelt."
+            },
+            "url": {
+              "$comment": "Sollten url und uuidRef vereint werden? Wodurch die Logik vereinfacht wird?",
+              "type": "string",
+              "description": "Die URL zur externen Ressource oder Download."
+            },
+            "uuid_ref": {
+              "type": "string",
+              "description": "Die UUID des internen Datensatzes."
+            },
+            "type": {
+              "type": "object",
+              "title": "type",
+              "description": "Gibt den Typ der externen Ressource oder Download an.",
+              "examples": [
+                "3600 - Gekoppelte Daten",
+                "5304 - Bestellung",
+                "3535 - Schlüsselkatalog"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "key": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            },
+            "title": {
+              "type": "string",
+              "description": "Ein Titel der externen Ressource oder Download."
+            },
+            "explanation": {
+              "type": "string",
+              "description": "Eine Beschreibung der externen Ressource oder Download."
+            }
+          }
         }
       }
     },
@@ -665,6 +809,15 @@
       "type": "object",
       "title": "OpenData",
       "properties": {
+        "exports": {
+          "unevaluatedProperties": false,
+          "properties": {
+            "rdf": {
+              "type": "string",
+              "description": "Enthält das vollständige RDF-Dokument im XML-Format."
+            }
+          }
+        },
         "dcat": {
           "type": "object",
           "properties": {
@@ -717,10 +870,6 @@
         },
         "political_geocoding_level_uri": {
           "type": "string"
-        },
-        "rdf": {
-          "type": "string",
-          "description": "Enthält das vollständige RDF-Dokument im XML-Format."
         }
       }
     }
