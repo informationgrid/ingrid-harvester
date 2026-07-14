@@ -103,14 +103,21 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
     }
 
     protected getFulltext(resultObj: object): string[] {
-        const values = [];
+        const values: string[] = [];
         const traverse = obj => {
             if (obj == null) return;
-            if (typeof obj !== 'object') {
+            if (typeof obj === 'string') {
                 values.push(obj);
                 return;
             }
-            Object.values(obj).forEach(traverse);
+            // numbers (e.g. scales, counts) can be useful search terms; booleans are just noise
+            if (typeof obj === 'number') {
+                values.push(String(obj));
+                return;
+            }
+            if (typeof obj === 'object') {
+                Object.values(obj).forEach(traverse);
+            }
         };
         traverse(resultObj);
         return values;
