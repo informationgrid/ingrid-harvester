@@ -43,17 +43,6 @@ export class ingridCkanMapper extends ingridMapper<CkanMapper> {
             collection: {
                 name: this.baseMapper.settings.dataSourceName,
             },
-            extras: {
-                metadata: {
-                    harvested: this.baseMapper.getHarvestingDate(),
-                    harvesting_errors: null, // get errors after all operations been done
-                    issued: null,
-                    is_valid: null, // check validity before persisting to ES
-                    modified: null,
-                    source: this.baseMapper.getMetadataSource(),
-                    merged_from: []
-                }
-            },
             sort_hash: this.getSortHash(),
             content: null, // assigned after
             rdf: null, // assigned after,

@@ -22,6 +22,7 @@
  */
 
 import type { Distribution } from './distribution.js';
+import type { HarvestingMetadata } from './harvesting.metadata.js';
 import type { IndexDocument } from './index.document.js';
 
 export interface Entity {
@@ -36,8 +37,10 @@ export interface RecordEntity extends Entity {
     collection_id?: number,  // TODO keep for diplanung, null value by default
     /* IDs of the catalogs for which this dataset was harvested */
     catalog_ids: number[],
+    /* internal harvesting bookkeeping; persisted in its own column, never part of the dataset */
+    harvest_metadata?: HarvestingMetadata,
     /* elasticsearch document */
-    dataset: IndexDocument, // TODO rename to dataset_elastic, make optional - 
+    dataset: IndexDocument, // TODO rename to dataset_elastic, make optional -
     /* CSW XML document */
     dataset_csw?: any,
     /* DCAT-AP.DE XML document */

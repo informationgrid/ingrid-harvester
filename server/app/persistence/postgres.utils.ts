@@ -29,6 +29,7 @@ import type { Observer } from "rxjs";
 import type { CatalogColumnType } from '../catalog/catalog.factory.js';
 import type { Distribution } from '../model/distribution.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
+import type { HarvestingMetadata } from '../model/harvesting.metadata.js';
 import type { ImportLogMessage } from '../model/import.result.js';
 import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
@@ -44,8 +45,20 @@ const log = log4js.getLogger(import.meta.filename);
  */
 export interface Bucket<T> {
     anchor_id: string | number,
-    duplicates: Map<string | number, T>,
+    duplicates: Map<string | number, BucketDocument<T>>,
     operatingServices: Map<string | number, Distribution>
+}
+
+/**
+ * A document within a bucket, carrying the per-record metadata (DB columns and
+ * harvesting bookkeeping) alongside the document instead of inside it.
+ */
+export interface BucketDocument<T> {
+    document: T,
+    issued?: Date,
+    modified?: Date,
+    deleted?: Date,
+    harvest?: HarvestingMetadata,
 }
 
 export class PostgresUtils extends DatabaseUtils {
@@ -79,29 +92,17 @@ export class PostgresUtils extends DatabaseUtils {
         await this.beginTransaction();
         await this.transactionClient.query(this.queries.createCollectionTable);
         await this.transactionClient.query(this.queries.createRecordTable);
+        // migration for existing installations created before the column was introduced
+        await this.transactionClient.query('ALTER TABLE public.record ADD COLUMN IF NOT EXISTS harvest_metadata JSONB');
         await this.transactionClient.query(this.queries.createCouplingTable);
         await this.commitTransaction();
-    }
-
-    async getStoredData(ids: string[]): Promise<any[]> {
-        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getStoredData, [ids]);
-        let dates = [];
-        for (let row of result.rows) {
-            dates.push({
-                id: row.extras.generated_id,
-                issued: row.extras.metadata.issued,
-                modified: row.extras.metadata.modified,
-                dataset_modified: row.modified
-            });
-        }
-        return dates;
     }
 
     async getDatasetIdentifiers(source: string): Promise<string[]> {
         // TODO
         // let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getIdentifiers, [source]);
         // let result: pg.QueryResult<any> = await this.transactionClient.query("SELECT * from public.record WHERE source = $1", [source]);
-        let result: pg.QueryResult<any> = await PostgresUtils.pool.query("SELECT identifier from public.record WHERE source = $1 and dataset->'extras'->>'hierarchy_level'!='service'", [source]);
+        let result: pg.QueryResult<any> = await PostgresUtils.pool.query("SELECT identifier from public.record WHERE source = $1 and harvest_metadata->>'hierarchy_level' IS DISTINCT FROM 'service'", [source]);
         if (result.rowCount == 0) {
             return [];
         }
@@ -119,14 +120,6 @@ export class PostgresUtils extends DatabaseUtils {
         }
         return result.rows;
     }
-
-    // async getDatasetsWithOriginalDocument(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'original_document'>[]> {
-    //     let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getDatasetsBySourceWithOriginal, [source]);
-    //     if (result.rowCount == 0) {
-    //         return [];
-    //     }
-    //     return result.rows;
-    // }
 
     // async getDcatapdeDatasetsBySource(source: string): Promise<Pick<RecordEntity, 'id' | 'identifier' | 'dataset_dcatapde'>[]> {
     //     let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getDcatapdeDatasetsBySource, [source]);
@@ -214,12 +207,17 @@ export class PostgresUtils extends DatabaseUtils {
                     }
                     currentBucket = {
                         anchor_id: row.anchor_id,
-                        duplicates: new Map<string | number, T>(),
+                        duplicates: new Map<string | number, BucketDocument<T>>(),
                         operatingServices: new Map<string | number, Distribution>()
                     };
                 }
                 if (datasetColumn != 'dataset') {
-                    currentBucket.duplicates.set(row.id, { uuid: row.identifier, dataset: row.dataset, modified: row.modified } as any);
+                    currentBucket.duplicates.set(row.id, {
+                        document: { uuid: row.identifier, dataset: row.dataset, modified: row.modified } as any,
+                        modified: row.modified,
+                        deleted: row.deleted,
+                        harvest: row.harvest_metadata
+                    });
                 }
                 else {
                     // add service/additional distribution to current bucket
@@ -228,19 +226,15 @@ export class PostgresUtils extends DatabaseUtils {
                     }
                     // add index document to current bucket
                     else {
-                        // ensure `extras` structure exists in dataset
-                        row.dataset.extras ??= {};
-                        row.dataset.extras.metadata ??= {};
-                        row.dataset.extras.metadata.source ??= {};
-                        // set metadata information
-                        row.dataset.extras.metadata.issued = row.issued;
-                        row.dataset.extras.metadata.modified = row.modified;
-                        row.dataset.extras.metadata.deleted = row.deleted;
-                        // // TODO move - diplanung specific
-                        // row.dataset.extras.metadata.source.source_type = this.getSourceType(row.dataset, row.source);
-                        // // TODO move - diplanung specific
-                        // row.dataset.catalog = catalogs[row.catalog_id];
-                        currentBucket.duplicates.set(row.id, row.dataset);
+                        // legacy rows may still contain internal harvesting metadata inside the dataset
+                        delete row.dataset.extras;
+                        currentBucket.duplicates.set(row.id, {
+                            document: row.dataset,
+                            issued: row.issued,
+                            modified: row.modified,
+                            deleted: row.deleted,
+                            harvest: row.harvest_metadata
+                        });
                     }
                 }
             }
@@ -256,33 +250,6 @@ export class PostgresUtils extends DatabaseUtils {
         const stopDate = Date.now();
         log.info(`Processed ${numDatasets} datasets and ${numBuckets} buckets`);
         log.info(`Time for PG -> ES push: ${Math.floor((stopDate - startDate)/1000)}s`);
-    }
-
-    /**
-     * Infer source type from source URL.
-     *
-     * @param source
-     * @returns
-     */
-    // TODO move - diplanung specific
-    private getSourceType(dataset: IndexDocument, source: string) {
-        source = source.toLowerCase()
-        if (source.includes('cockpitpro')) {
-            return 'cockpitpro';
-        }
-        if (source.includes('cockpit')) {
-            return 'cockpit';
-        }
-        if (source.includes('beteiligung')) {
-            return 'beteiligungsdb';
-        }
-        if (source.includes('csw')) {
-            return 'csw';
-        }
-        if (source.includes('wfs')) {
-            return 'wfs';
-        }
-        return dataset.extras?.metadata?.source?.source_type ?? source;
     }
 
     /**
@@ -349,11 +316,12 @@ export class PostgresUtils extends DatabaseUtils {
                 entityMap[uid] = entity;
             }
             else {
-                if (entity.dataset.extras.metadata.modified > entityMap[uid].dataset.extras.metadata.modified) {
+                if (entity.harvest_metadata?.modified > entityMap[uid].harvest_metadata?.modified) {
                     entityMap[uid].dataset = entity.dataset;
+                    entityMap[uid].harvest_metadata = entity.harvest_metadata;
                 }
                 else {
-                    entityMap[uid] = { ...entity, dataset: entityMap[uid].dataset };
+                    entityMap[uid] = { ...entity, dataset: entityMap[uid].dataset, harvest_metadata: entityMap[uid].harvest_metadata };
                 }
             }
         });

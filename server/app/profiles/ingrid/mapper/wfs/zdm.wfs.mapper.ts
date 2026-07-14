@@ -22,7 +22,7 @@
  */
 
 import type { Geometry } from 'geojson';
-import type { MetadataSource } from '../../../../model/index.document.js';
+import type { MetadataSource } from '../../../../model/harvesting.metadata.js';
 import * as GeojsonUtils from '../../../../utils/geojson.utils.js';
 import { ingridWfsMapper } from '../ingrid.wfs.mapper.js';
 import { ZdmIdfGenerator } from './zdm.idf.generator.js';

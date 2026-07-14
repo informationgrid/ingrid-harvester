@@ -131,7 +131,8 @@ export class JsonImporter extends Importer<JsonSettings> {
                         identifier: id,
                         source: this.settings.sourceURL,
                         catalog_ids: this.settings.catalogIds,
-                        dataset: doc,
+                        harvest_metadata: mapper.getHarvestingMetadata(),
+                    dataset: doc,
                         original_document: mapper.getHarvestedData()
                     };
                     promises.push(this.database.addEntityToBulk(entity));

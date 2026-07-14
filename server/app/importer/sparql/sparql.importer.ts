@@ -160,6 +160,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
                     identifier: uuid,
                     source: this.settings.sourceURL,
                     catalog_ids: this.settings.catalogIds,
+                    harvest_metadata: mapper.getHarvestingMetadata(),
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };

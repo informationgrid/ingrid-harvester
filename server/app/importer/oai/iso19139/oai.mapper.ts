@@ -32,7 +32,7 @@ import { DCAT_CATEGORY_URL, dcatThemeUriFromKeyword } from '../../dcatapde/dcata
 import type { Agent, Contact, Organization, Person } from '../../../model/agent.js';
 import type { DateRange } from '../../../model/dateRange.js';
 import type { Distribution } from '../../../model/distribution.js';
-import type { MetadataSource } from '../../../model/index.document.js';
+import type { MetadataSource } from '../../../model/harvesting.metadata.js';
 import type { Summary } from '../../../model/summary.js';
 import { DcatPeriodicityUtils } from '../../../utils/dcat.periodicity.utils.js';
 import type { RequestOptions } from '../../../utils/http-request.utils.js';

@@ -21,25 +21,30 @@
  * ==================================================
  */
 
-import { v5 as uuidv5 } from 'uuid';
-import type { IndexDocument } from '../../model/index.document.js';
+/**
+ * Internal harvesting bookkeeping for a record.
+ *
+ * This is NOT part of the index document format. It is persisted in the
+ * `record.harvest_metadata` column and carried alongside the document
+ * (see `BucketDocument`) during catalog processing.
+ */
+export type HarvestingMetadata = {
+    harvested?: Date,
+    harvesting_errors?: string[],   // get errors after all operations been done
+    issued: Date,
+    is_changed?: boolean,   // has been changed from its original version by the harvesting process
+    is_valid?: boolean,     // checks validity after all operations been done
+    modified: Date,
+    quality_notes?: string[],
+    source: MetadataSource,
+    hierarchy_level?: string,   // only set for CSW records; used to distinguish datasets from services
+    deleted?: Date
+};
 
-const UUID_NAMESPACE = 'b5d8aadf-d03f-452a-8d91-3a6a7f3b1203';
-
-export function createEsId(document: IndexDocument): string {
-    return document.id;
-}
-
-export function generateWfsUuid(source_base: string, typename: string, obj_id: string) {
-    let uniqueStr = [ensureNoEndSlash(source_base), typename, obj_id].join('/');
-    return uuidv5(uniqueStr, UUID_NAMESPACE);
-}
-
-export function generateUuid(strings: string[]) {
-    let uniqueStr = strings.join('/');
-    return uuidv5(uniqueStr, UUID_NAMESPACE);
-}
-
-export function ensureNoEndSlash(s: string): string {
-    return s.replace(/\/$/g, '');
-}
+export type MetadataSource = {
+    source_base: string,
+    source_type: string,
+    raw_data_source?: string,
+    portal_link?: string,
+    attribution?: string
+};

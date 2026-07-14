@@ -1,12 +1,13 @@
 /*
  * Bulk insert of new records, update on conflict
  */
-INSERT INTO public.record (identifier, source, collection_id, catalog_ids, dataset, dataset_csw, dataset_dcatapde, original_document)
+INSERT INTO public.record (identifier, source, collection_id, catalog_ids, harvest_metadata, dataset, dataset_csw, dataset_dcatapde, original_document)
 SELECT
     identifier,
     source,
     collection_id,
     catalog_ids,
+    harvest_metadata,
     dataset,
     dataset_csw,
     dataset_dcatapde,
@@ -16,26 +17,10 @@ ON CONFLICT
 ON CONSTRAINT record_full_identifier
 DO UPDATE SET
     catalog_ids = EXCLUDED.catalog_ids,
+    harvest_metadata = COALESCE(EXCLUDED.harvest_metadata, record.harvest_metadata),
     dataset = EXCLUDED.dataset,
     dataset_csw = EXCLUDED.dataset_csw,
     dataset_dcatapde = EXCLUDED.dataset_dcatapde,
     original_document = COALESCE(EXCLUDED.original_document, record.original_document),
     last_modified = NOW(),
     deleted_on = NULL
--- WHERE (
---     record.dataset->'extras'->'metadata'->'modified' IS NULL
---     OR EXCLUDED.dataset->'extras'->'metadata'->'modified' > record.dataset->'extras'->'metadata'->'modified'
--- )
--- WHERE
---     (
---         EXCLUDED.dataset->'modified' IS NOT NULL
---         AND record.dataset->'modified' IS NULL
---     )
---     OR EXCLUDED.dataset->'modified' > record.dataset->'modified'
--- ) OR (
---     (
---         EXCLUDED.dataset->'extras'->'metadata'->'modified' IS NOT NULL
---         AND record.dataset->'extras'->'metadata'->'modified' IS NULL
---     )
---     OR EXCLUDED.dataset->'extras'->'metadata'->'modified' > record.dataset->'extras'->'metadata'->'modified'
--- )

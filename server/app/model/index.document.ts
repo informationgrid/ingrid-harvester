@@ -43,11 +43,6 @@ export type IndexDocument = {
     references?: IndexReference[],
     fulltext?: string[],
     exports?: { [key: string]: string },
-
-    // TODO cleanup: we should not need extras.metadata
-    extras?: {
-        metadata: HarvestingMetadata
-    },
 };
 
 export type IndexDocumentMetadata = {
@@ -110,27 +105,6 @@ export type IndexReference = {
 // ---------------------------------------------------------------------------
 // Legacy types — kept for non-ingrid profiles (LVR etc.) during migration
 // ---------------------------------------------------------------------------
-
-export type HarvestingMetadata = {
-    harvested?: Date,
-    harvesting_errors?: string[],   // get errors after all operations been done
-    issued: Date,
-    is_changed?: boolean,   // has been changed from its original version by the harvesting process
-    is_valid?: boolean,     // checks validity after all operations been done
-    modified: Date,
-    quality_notes?: string[],
-    source: MetadataSource,
-    merged_from: string[],
-    deleted?: Date
-};
-
-export type MetadataSource = {
-    source_base: string,
-    source_type: string,
-    raw_data_source?: string,
-    portal_link?: string,
-    attribution?: string
-};
 
 export type GeometryInformation = {
     geometry: Geometry,

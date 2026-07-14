@@ -23,7 +23,7 @@
 
 import type { Geometry } from 'geojson';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
-import type { MetadataSource } from '../../../model/index.document.js';
+import type { MetadataSource } from '../../../model/harvesting.metadata.js';
 import * as GeojsonUtils from '../../../utils/geojson.utils.js';
 import * as MiscUtils from '../../../utils/misc.utils.js';
 import { IdfGenerator } from '../idf.generator.js';

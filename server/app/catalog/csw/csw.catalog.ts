@@ -29,7 +29,7 @@ import type { ImporterSettings } from "../../importer/importer.settings.js";
 import { namespaces } from "../../importer/namespaces.js";
 import type { ImportLogMessage } from "../../model/import.result.js";
 import type { Summary } from "../../model/summary.js";
-import type { Bucket } from '../../persistence/postgres.utils.js';
+import type { Bucket, BucketDocument } from '../../persistence/postgres.utils.js';
 import { RequestDelegate } from "../../utils/http-request.utils.js";
 import { getDomParser } from "../../utils/misc.utils.js";
 import { Catalog, type CatalogOperation } from '../catalog.factory.js';
@@ -380,7 +380,8 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         let main: { id: string | number, document: CswDataset } | null = null;
         const duplicates = new Map<string | number, CswDataset>();
 
-        for (const [id, document] of bucket.duplicates) {
+        for (const [id, entry] of bucket.duplicates) {
+            const document = entry.document;
             if (main === null) {
                 main = { id, document };
             } else if (document.modified && (!main.document.modified || document.modified > main.document.modified)) {

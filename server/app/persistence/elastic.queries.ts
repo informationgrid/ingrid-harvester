@@ -23,14 +23,6 @@
 
 export interface ElasticQueries {
 
-    findSameTitle(): any;
-
-    findSameAlternateTitle(): any;
-
-    findSameOperatesOn(): any;
-
-    findSameIdTitleUrls(id, generatedId, urls, title): any;
-
     findHistory(baseIndex: string): any;
 
     findHistories(): any;

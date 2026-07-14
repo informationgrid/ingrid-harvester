@@ -1,17 +1,11 @@
 [
   {
-    "priority": 5,
     "type": "CSW",
     "maxRecords": 200,
     "startPosition": 1,
     "catalogIds": [
       1
     ],
-    "customCode": null,
-    "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
@@ -27,6 +21,12 @@
     "httpMethod": "POST",
     "resultType": "results",
     "simplifyTolerance": 0,
+    "priority": 5,
+    "customCode": null,
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
     "id": 18,
     "description": "geoportal.de",
     "defaultAttribution": null,
@@ -52,18 +52,12 @@
     "boost": null
   },
   {
-    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
     "catalogIds": [
       1
     ],
-    "customCode": null,
-    "defaultDCATCategory": null,
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
@@ -79,6 +73,12 @@
     "httpMethod": "POST",
     "resultType": "results",
     "simplifyTolerance": 0,
+    "priority": null,
+    "customCode": null,
+    "defaultDCATCategory": null,
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
     "id": 19,
     "description": "nokis.niedersachsen.de",
     "iPlugId": "nokis",
@@ -90,7 +90,7 @@
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "pluPlanState": null,
-    "recordFilter": "<ogc:Filter>\n\t<ogc:PropertyIsEqualTo>\n\t\t<ogc:PropertyName>identifier</ogc:PropertyName>\n\t\t<ogc:Literal>8ab590a216f7f05f01185fd222071e45</ogc:Literal>\n\t</ogc:PropertyIsEqualTo>\n</ogc:Filter>",
+    "recordFilter": "",
     "cron": {
       "full": {
         "pattern": "0 1 * * *",
@@ -103,17 +103,26 @@
     }
   },
   {
-    "id": 25,
     "type": "GENESIS",
-    "description": "GENESIS Online – Statistisches Landesamt Sachsen-Anhalt",
-
+    "maxRecords": 100,
+    "startPosition": 1,
+    "catalogIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "maxConcurrent": 1,
+    "skipUrlCheckOnHarvest": false,
+    "timeout": 60000,
     "sourceURL": "https://genesis.sachsen-anhalt.de/webservice/rest/2020",
-
     "typeConfig": {
+      "requestDelayMs": 500,
+      "statisticCodes": [],
       "username": "GAST",
       "password": "GAST",
-      "requestDelayMs": 500,
-      "tableSelections": ["111*"],
+      "tableSelections": [
+        "111*"
+      ],
       "downloadUrlTemplate": "https://genesis.sachsen-anhalt.de/.../{code}.csv",
       "publisher": {
         "name": "Statistisches Landesamt Sachsen-Anhalt",
@@ -123,27 +132,17 @@
       "licenseUrl": "http://dcat-ap.de/def/licenses/dl-by-de/2.0",
       "contributorId": "http://dcat-ap.de/def/contributors/genesisLsa"
     },
-
-    "catalogIds": [],
-
+    "id": 25,
+    "description": "GENESIS Online – Statistisches Landesamt Sachsen-Anhalt",
     "iPlugId": "/ingrid-group:genesis-lsa",
     "partner": "la",
     "provider": "lsa",
     "datatype": "research",
     "dataSourceName": "GENESIS Online Sachsen-Anhalt",
     "boost": null,
-
-    "maxConcurrent": 1,
-    "timeout": 60000,
-    "rejectUnauthorizedSSL": true,
-
     "blacklistedIds": [],
     "whitelistedIds": [],
     "customCode": null,
-    "rules": {
-      "containsDocumentsWithData": null
-    },
-
     "disable": true,
     "cron": {
       "full": {
@@ -157,17 +156,26 @@
     }
   },
   {
-    "id": 26,
     "type": "GENESIS",
-    "description": "GENESIS DESTATIS – Statistisches Bundesamt",
-
+    "maxRecords": 100,
+    "startPosition": 1,
+    "catalogIds": [],
+    "rejectUnauthorizedSSL": true,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+    "maxConcurrent": 1,
+    "skipUrlCheckOnHarvest": false,
+    "timeout": 60000,
     "sourceURL": "https://www-genesis.destatis.de/genesisWS/rest/2020",
-
     "typeConfig": {
+      "requestDelayMs": 500,
+      "statisticCodes": [],
       "username": "GAST",
       "password": "GAST",
-      "requestDelayMs": 500,
-      "tableSelections": ["111*"],
+      "tableSelections": [
+        "111*"
+      ],
       "downloadUrlTemplate": "https://www-genesis.destatis.de/genesis-old/downloads/00/tables/{code}_00.csv",
       "publisher": {
         "name": "Statistisches Bundesamt",
@@ -177,27 +185,17 @@
       "licenseUrl": "http://dcat-ap.de/def/licenses/dl-by-de/2.0",
       "contributorId": "http://dcat-ap.de/def/contributors/genesisDestatis"
     },
-
-    "catalogIds": [],
-
+    "id": 26,
+    "description": "GENESIS DESTATIS – Statistisches Bundesamt",
     "iPlugId": "/ingrid-group:genesis-lsa",
     "partner": "la",
     "provider": "lsa",
     "datatype": "research",
     "dataSourceName": "GENESIS Online Sachsen-Anhalt",
     "boost": null,
-
-    "maxConcurrent": 1,
-    "timeout": 60000,
-    "rejectUnauthorizedSSL": true,
-
     "blacklistedIds": [],
     "whitelistedIds": [],
     "customCode": null,
-    "rules": {
-      "containsDocumentsWithData": null
-    },
-
     "disable": true,
     "cron": {
       "full": {

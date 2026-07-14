@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS public.record (
     source VARCHAR(255) NOT NULL,
     collection_id INTEGER,
     catalog_ids VARCHAR(255)[],
+    harvest_metadata JSONB,
     dataset JSONB,
     dataset_csw TEXT,
     dataset_dcatapde TEXT,

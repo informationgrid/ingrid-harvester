@@ -29,7 +29,7 @@ import type { ImportLogMessage } from '../../../model/import.result.js';
 import type { IndexDocument } from '../../../model/index.document.js';
 import { ElasticsearchFactory } from '../../../persistence/elastic.factory.js';
 import type { EsOperation } from '../../../persistence/elastic.utils.js';
-import type { Bucket } from '../../../persistence/postgres.utils.js';
+import type { Bucket, BucketDocument } from '../../../persistence/postgres.utils.js';
 import { ConfigService } from '../../../services/config/ConfigService.js';
 import { camelize, escapeXml } from '../../../utils/misc.utils.js';
 import { ProfileFactoryLoader } from '../../profile.factory.loader.js';
@@ -166,21 +166,22 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
     async processBucket(bucket: Bucket<IndexDocument>, importerSettings: ImporterSettings): Promise<EsOperation[]> {
         let box: EsOperation[] = [];
         // find primary document
-        let { document, duplicates } = this.prioritizeAndFilter(bucket);
-        if (!document) {
+        let { entry, duplicates } = this.prioritizeAndFilter(bucket);
+        if (!entry?.document) {
             return null;
         }
+        let document = entry.document;
 
         // resolve CSW coupling
-        if (isCsw(document)) {
+        if (isCsw(entry)) {
             for (let [id, service] of bucket.operatingServices) {
                 this.resolveCoupling(document as IngridIndexDocument, service);
             }
         }
 
         // shortcut - if all documents in the bucket should be deleted, delete the document from ES
-        let deleteDocument = document.extras.metadata.deleted != null;
-        bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.extras.metadata.deleted != null);
+        let deleteDocument = entry.deleted != null;
+        bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.deleted != null);
         if (deleteDocument) {
             return [{ operation: 'delete', _index: this.settings.settings.index, _id: document.id }];
         }
@@ -188,10 +189,9 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         // harvester deduplication
         for (let [id, duplicate] of duplicates) {
             let old_id = createEsId(document);
-            let duplicate_id = createEsId(duplicate);
-            document = this.deduplicate(document, duplicate);
+            let duplicate_id = createEsId(duplicate.document);
+            document = this.deduplicate(document, duplicate.document);
             let document_id = createEsId(document);
-            document.extras.metadata.merged_from.push(duplicate_id);
             // remove dataset with old_id if it differs from the newly created id
             if (old_id != document_id) {
                 box.push({ operation: 'delete', _index: this.settings.settings.index, _id: old_id });
@@ -207,7 +207,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         // if (externalDocument) {
         //     // do not add document to index if it exists from another source, or from the same source but newer
         //     // in this case, directly return the box without adding the _index operation
-        //     if (externalDocument.application != 'harvester' || externalDocument.modified >= document.extras.metadata.modified) {
+        //     if (externalDocument.application != 'harvester' || externalDocument.modified >= entry.modified) {
         //         return box;
         //     }
         // }
@@ -217,8 +217,8 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         }
 
         // handle WFS
-        if (isWfs(document)) {
-            this.createIdfForWfs(document as IngridIndexDocument, duplicates as Map<string | number, IngridIndexDocument>);
+        if (isWfs(entry)) {
+            this.createIdfForWfs(document as IngridIndexDocument, duplicates);
         }
 
         box.push({ operation: 'index', _index: this.settings.settings.index, _id: createEsId(document), document });
@@ -245,46 +245,46 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
     }
 
     private prioritizeAndFilter(bucket: Bucket<IndexDocument>): {
-        document: IndexDocument,
-        duplicates: Map<string | number, IndexDocument>
+        entry: BucketDocument<IndexDocument>,
+        duplicates: Map<string | number, BucketDocument<IndexDocument>>
     } {
-        let mainDocument: IndexDocument;
-        let duplicates: Map<string | number, IndexDocument> = new Map<string | number, IndexDocument>();
+        let mainEntry: BucketDocument<IndexDocument>;
+        let duplicates: Map<string | number, BucketDocument<IndexDocument>> = new Map<string | number, BucketDocument<IndexDocument>>();
 
         // Special case for WFS: if bucket contains ONLY WFS documents and there is a feature type document,
         // it should be the main document.
         let allWfs = true;
         let featureTypeDocId: string | number = null;
 
-        for (let [id, document] of bucket.duplicates) {
-            if (!isWfs(document)) {
+        for (let [id, entry] of bucket.duplicates) {
+            if (!isWfs(entry)) {
                 allWfs = false;
             }
-            if ((document as any).is_feature_type === true) {
+            if ((entry.document as any).is_feature_type === true) {
                 featureTypeDocId = id;
             }
         }
 
         if (allWfs && featureTypeDocId !== null) {
-            mainDocument = bucket.duplicates.get(featureTypeDocId);
-            for (let [id, document] of bucket.duplicates) {
+            mainEntry = bucket.duplicates.get(featureTypeDocId);
+            for (let [id, entry] of bucket.duplicates) {
                 if (id !== featureTypeDocId) {
-                    duplicates.set(id, document);
+                    duplicates.set(id, entry);
                 }
             }
         }
         else {
-            for (let [id, document] of bucket.duplicates) {
-                if (mainDocument == null) {
-                    mainDocument = document;
+            for (let [id, entry] of bucket.duplicates) {
+                if (mainEntry == null) {
+                    mainEntry = entry;
                 }
                 else {
-                    duplicates.set(id, document);
+                    duplicates.set(id, entry);
                 }
             }
         }
 
-        return { document: mainDocument, duplicates };
+        return { entry: mainEntry, duplicates };
     }
 
     /**
@@ -308,10 +308,11 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         }
     }
 
-    private createIdfForWfs(document: IngridIndexDocument, duplicates: Map<string | number, IngridIndexDocument>) {
+    private createIdfForWfs(document: IngridIndexDocument, duplicates: Map<string | number, BucketDocument<IndexDocument>>) {
         // create idf
         let features = [];
-        for (let [id, featureDocument] of duplicates) {
+        for (let [id, entry] of duplicates) {
+            let featureDocument = entry.document as IngridIndexDocument;
             if ((featureDocument as any).is_feature_type === false) {
                 features.push(featureDocument.exports.iso);
             }
@@ -320,12 +321,12 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
     }
 }
 
-function isCsw(document: IndexDocument): boolean {
-    return document.extras?.metadata?.source?.source_type === 'csw';
+function isCsw(entry: BucketDocument<IndexDocument>): boolean {
+    return entry.harvest?.source?.source_type === 'csw';
 }
 
-function isWfs(document: IndexDocument): boolean {
-    return document.extras?.metadata?.source?.source_type === 'wfs';
+function isWfs(entry: BucketDocument<IndexDocument>): boolean {
+    return entry.harvest?.source?.source_type === 'wfs';
 }
 
 function escapeIdf(literals: TemplateStringsArray, ...substitutions: any[]) {

@@ -28,6 +28,7 @@ import type { Observer } from 'rxjs';
 import { namespaces } from '../../importer/namespaces.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { CouplingEntity, RecordEntity } from '../../model/entity.js';
+import type { HarvestingMetadata } from '../../model/harvesting.metadata.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import type { BulkResponse } from '../../persistence/elastic.utils.js';
@@ -60,6 +61,9 @@ export class CswImporter extends Importer<CswSettings> {
     private numIndexDocs = 0;
 
     private generalInfo: object = {};
+
+    // identifier -> harvesting metadata of the current harvest, for profile-specific post-processing (see updateRecords)
+    protected harvestMetadataByIdentifier = new Map<string, HarvestingMetadata>();
 
     constructor(settings: CswSettings) {
         super(settings);
@@ -481,10 +485,13 @@ export class CswImporter extends Importer<CswSettings> {
                     identifier: uuid,
                     source: this.settings.sourceURL,
                     catalog_ids: this.settings.catalogIds,
+                    harvest_metadata: mapper.getHarvestingMetadata(),
                     dataset: doc,
                     dataset_csw: mapper.getHarvestedData(),
                     original_document: mapper.getHarvestedData()
                 };
+                // keep the harvesting metadata available for profile-specific post-processing (see updateRecords)
+                this.harvestMetadataByIdentifier.set(uuid, entity.harvest_metadata);
                 promises.push(this.database.addEntityToBulk(entity));
             } else {
                 this.summary.skippedDocs.push(uuid);

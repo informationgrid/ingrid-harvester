@@ -23,7 +23,7 @@
 
 import type { ImporterSettings } from './importer.settings.js';
 import type { Logger } from 'log4js';
-import type { HarvestingMetadata, MetadataSource } from '../model/index.document.js';
+import type { HarvestingMetadata, MetadataSource } from '../model/harvesting.metadata.js';
 import type { Summary } from '../model/summary.js';
 
 /**
@@ -70,11 +70,16 @@ export abstract class Mapper<S extends ImporterSettings> {
             issued: this.getIssued(),
             is_changed: this.changed,
             is_valid: this.valid,
-            merged_from: [],
             modified: this.getModified(),
             quality_notes: this.harvestingNotes,
             source: this.getMetadataSource(),
+            hierarchy_level: this.getHierarchyLevel(),
         };
+    }
+
+    // only meaningful for CSW records; used to distinguish datasets from services
+    getHierarchyLevel(): string {
+        return undefined;
     }
 
     // TODO make abstract, implement in mappers

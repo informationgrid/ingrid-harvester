@@ -23,7 +23,8 @@
 
 import log4js from 'log4js';
 import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
-import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
+import type { IndexDocument } from '../../model/index.document.js';
+import type { MetadataSource } from '../../model/harvesting.metadata.js';
 import type { Summary } from '../../model/summary.js';
 import { Mapper } from '../mapper.js';
 import type { JsonSettings } from './json.settings.js';
@@ -49,9 +50,6 @@ export class JsonMapper extends Mapper<JsonSettings> implements ToElasticMapper<
     async createIndexDocument(): Promise<IndexDocument> {
         return {
             uuid: this.getGeneratedId(),
-            extras: {
-                metadata: this.getHarvestingMetadata(),
-            }
         };
     }
 

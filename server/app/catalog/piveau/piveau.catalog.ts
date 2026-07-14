@@ -27,7 +27,7 @@ import type { Observer } from "rxjs";
 import type { ImporterSettings } from "../../importer/importer.settings.js";
 import type { ImportLogMessage } from "../../model/import.result.js";
 import type { Summary } from "../../model/summary.js";
-import type { Bucket } from '../../persistence/postgres.utils.js';
+import type { Bucket, BucketDocument } from '../../persistence/postgres.utils.js';
 import { RequestDelegate } from "../../utils/http-request.utils.js";
 import { Catalog, type CatalogOperation } from '../catalog.factory.js';
 
@@ -213,12 +213,12 @@ export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings,
         let mainDocument: PiveauDataset;
         let duplicates: Map<string | number, PiveauDataset> = new Map<string | number, PiveauDataset>();
 
-        for (let [id, document] of bucket.duplicates) {
+        for (let [id, entry] of bucket.duplicates) {
             if (mainDocument == null) {
-                mainDocument = document;
+                mainDocument = entry.document;
             }
             else {
-                duplicates.set(id, document);
+                duplicates.set(id, entry.document);
             }
         }
 

@@ -5,6 +5,7 @@ SELECT
     identifier AS identifier,
     source AS source,
     {{DATASET_COLUMN}} AS dataset,
+    harvest_metadata AS harvest_metadata,
     collection_id AS catalog_id,
     null AS service_type,
     created_on AS issued,

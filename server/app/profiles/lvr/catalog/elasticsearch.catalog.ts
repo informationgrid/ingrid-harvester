@@ -24,7 +24,7 @@
 import { ElasticsearchCatalog } from '../../../catalog/elasticsearch/elasticsearch.catalog.js';
 import type { ImporterSettings } from '../../../importer/importer.settings.js';
 import type { EsOperation } from '../../../persistence/elastic.utils.js';
-import type { Bucket } from '../../../persistence/postgres.utils.js';
+import type { Bucket, BucketDocument } from '../../../persistence/postgres.utils.js';
 import { createEsId } from '../lvr.utils.js';
 import type { LvrIndexDocument } from '../model/index.document.js';
 
@@ -35,11 +35,12 @@ export class LvrElasticsearchCatalog extends ElasticsearchCatalog {
         let box: EsOperation[] = [];
 
         // find primary document
-        let { document, duplicates } = this.prioritizeAndFilter(bucket);
+        let { entry, duplicates } = this.prioritizeAndFilter(bucket);
+        let document = entry.document;
 
         // shortcut - if all documents in the bucket should be deleted, delete the document from ES
-        let deleteDocument = document.extras.metadata.deleted != null;
-        bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.extras.metadata.deleted != null);
+        let deleteDocument = entry.deleted != null;
+        bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.deleted != null);
         if (deleteDocument) {
             return [{ operation: 'delete', _id: createEsId(document) }];
         }
@@ -47,10 +48,9 @@ export class LvrElasticsearchCatalog extends ElasticsearchCatalog {
         // deduplication
         for (let [id, duplicate] of duplicates) {
             let old_id = createEsId(document);
-            let duplicate_id = createEsId(duplicate);
-            document = this.deduplicate(document, duplicate);
+            let duplicate_id = createEsId(duplicate.document);
+            document = this.deduplicate(document, duplicate.document);
             let document_id = createEsId(document);
-            document.extras.metadata.merged_from.push(duplicate_id);
             // remove dataset with old_id if it differs from the newly created id
             if (old_id != document_id) {
                 box.push({ operation: 'delete', _id: old_id });
@@ -65,35 +65,35 @@ export class LvrElasticsearchCatalog extends ElasticsearchCatalog {
         return box;
     }
 
-    private prioritizeAndFilter(bucket: Bucket<LvrIndexDocument>): { 
-        document: LvrIndexDocument, 
-        duplicates: Map<string | number, LvrIndexDocument>
+    private prioritizeAndFilter(bucket: Bucket<LvrIndexDocument>): {
+        entry: BucketDocument<LvrIndexDocument>,
+        duplicates: Map<string | number, BucketDocument<LvrIndexDocument>>
     } {
         // initialize records map
-        let records: Map<string, Map<string | number, LvrIndexDocument>> = new Map<string, Map<string | number, LvrIndexDocument>>();
-        for (let [id, document] of bucket.duplicates) {
-            let sourceType = document.extras.metadata.source.source_type;
+        let records: Map<string, Map<string | number, BucketDocument<LvrIndexDocument>>> = new Map<string, Map<string | number, BucketDocument<LvrIndexDocument>>>();
+        for (let [id, entry] of bucket.duplicates) {
+            let sourceType = entry.harvest?.source?.source_type;
             let sourceMap = records.get(sourceType);
             if (sourceMap == null) {
-                sourceMap = new Map<string | number, LvrIndexDocument>();
+                sourceMap = new Map<string | number, BucketDocument<LvrIndexDocument>>();
                 records.set(sourceType, sourceMap);
             }
-            sourceMap.set(id, document);
+            sourceMap.set(id, entry);
         }
 
-        let mainDocument: LvrIndexDocument;
-        let duplicates: Map<string | number, LvrIndexDocument> = new Map<string | number, LvrIndexDocument>();
+        let mainEntry: BucketDocument<LvrIndexDocument>;
+        let duplicates: Map<string | number, BucketDocument<LvrIndexDocument>> = new Map<string | number, BucketDocument<LvrIndexDocument>>();
 
-        for (let [id, document] of bucket.duplicates) {
-            if (mainDocument == null) {
-                mainDocument = document;
+        for (let [id, entry] of bucket.duplicates) {
+            if (mainEntry == null) {
+                mainEntry = entry;
             }
             else {
-                duplicates.set(id, document);
+                duplicates.set(id, entry);
             }
         }
 
-        return { document: mainDocument, duplicates };
+        return { entry: mainEntry, duplicates };
     }
 
     private deduplicate(document: LvrIndexDocument, duplicate: LvrIndexDocument): LvrIndexDocument {

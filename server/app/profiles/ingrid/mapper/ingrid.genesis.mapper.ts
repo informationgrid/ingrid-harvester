@@ -49,17 +49,6 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             t01_object: {
                 obj_id: this.getGeneratedId(),
             },
-            extras: {
-                metadata: {
-                    harvested: this.baseMapper.getHarvestingDate(),
-                    harvesting_errors: null,
-                    issued: null,
-                    is_valid: null,
-                    modified: null,
-                    source: this.baseMapper.getMetadataSource(),
-                    merged_from: [],
-                },
-            },
             spatial: null,
             // temporal: [this.baseMapper.getTemporal()].filter(Boolean),
             temporal: {

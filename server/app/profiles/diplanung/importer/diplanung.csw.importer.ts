@@ -27,6 +27,7 @@ import { CswImporter } from '../../../importer/csw/csw.importer.js';
 import type { PluPlanType } from '../../../model/dcatApPlu.model.js';
 import type { Distribution } from '../../../model/distribution.js';
 import type { RecordEntity } from '../../../model/entity.js';
+import type { HarvestingMetadata } from '../../../model/harvesting.metadata.js';
 import * as MiscUtils from '../../../utils/misc.utils.js';
 import { generateXplanWmsDistributions } from '../diplanung.utils.js';
 import type { DiplanungIndexDocument } from '../model/index.document.js';
@@ -48,31 +49,30 @@ export class DiplanungCswImporter extends CswImporter {
         for (let doc of documents) {
             promises.push(() => new Promise(async (resolve, reject) => {
                 let updateDoc: Partial<DiplanungIndexDocument> = {};
+                // continue the harvesting metadata of the current harvest for this record
+                let harvestMetadata: HarvestingMetadata = structuredClone(this.harvestMetadataByIdentifier.get(doc.identifier)) ?? {} as HarvestingMetadata;
                 let docIsUpdated = false;
 
                 // update WMS distributions with layer names
                 let updatedDistributions = await this.updateDistributions(doc.distributions, doc.plan_type as PluPlanType);
                 if (updatedDistributions?.length > 0) {
                     updateDoc.distributions = updatedDistributions;
-                    updateDoc.extras = MiscUtils.merge(structuredClone(doc.extras), updateDoc.extras);
-                    updateQuality(updateDoc, 'WMS layer names have been added to a distribution', null, true);
+                    updateQuality(harvestMetadata, 'WMS layer names have been added to a distribution', null, true);
                     docIsUpdated = true;
                 }
 
                 // // purposely simplistic heuristic: is centroid inside bbox for Germany?
                 // if (!GeoJsonUtils.within(doc.centroid, GeoJsonUtils.BBOX_GERMANY)) {
-                //     // copy and/or create relevant metadata structure
-                //     updateDoc.extras = MiscUtils.merge(structuredClone(doc.extras), updateDoc.extras);
                 //     // if not, try to swap lat and lon
                 //     let flippedBbox = GeoJsonUtils.flip<Geometry>(doc.bounding_box);
                 //     if (GeoJsonUtils.within(flippedBbox, GeoJsonUtils.BBOX_GERMANY)) {
                 //         updateDoc.spatial = GeoJsonUtils.flip<Geometry>(doc.spatial);
                 //         updateDoc.bounding_box = flippedBbox;
                 //         updateDoc.centroid = GeoJsonUtils.flip<Point>(doc.centroid);
-                //         updateQuality(updateDoc, 'Swapped lat and lon', null, true);
+                //         updateQuality(harvestMetadata, 'Swapped lat and lon', null, true);
                 //     }
                 //     else {
-                //         updateQuality(updateDoc, 'Centroid not within Germany', false, null);
+                //         updateQuality(harvestMetadata, 'Centroid not within Germany', false, null);
                 //     }
                 //     docIsUpdated = true;
                 // }
@@ -81,12 +81,13 @@ export class DiplanungCswImporter extends CswImporter {
                     // TODO find an efficient postgres way to only send the update instead of the full document
                     // keywords: jsonb_set, json_agg, SQL/JSON Path Language, postgres14+
                     let mergedDocument: DiplanungIndexDocument = MiscUtils.merge(doc, updateDoc);
-                    mergedDocument.extras.metadata.modified = new Date();
+                    harvestMetadata.modified = new Date();
                     let entity: RecordEntity = {
                         identifier: doc.identifier,
-                        source: doc.extras.metadata.source.source_base,
+                        source: harvestMetadata.source?.source_base ?? this.settings.sourceURL,
                         collection_id: null, // TODO set default catalog for diplanung from ENV VAR
                         catalog_ids: this.settings.catalogIds,
+                        harvest_metadata: harvestMetadata,
                         dataset: mergedDocument,
                         original_document: undefined
                     };
@@ -254,20 +255,20 @@ function generateWmsDistribution(distribution: Distribution, planType: PluPlanTy
     return null;
 }
 
-function updateQuality(document: Partial<DiplanungIndexDocument>, qNote: string, isValid: boolean, isChanged: boolean) {
+function updateQuality(harvestMetadata: HarvestingMetadata, qNote: string, isValid: boolean, isChanged: boolean) {
     // add quality notes if given
     if (qNote) {
-        if (!document.extras.metadata.quality_notes) {
-            document.extras.metadata.quality_notes = [];
+        if (!harvestMetadata.quality_notes) {
+            harvestMetadata.quality_notes = [];
         }
-        document.extras.metadata.quality_notes.push(qNote);
+        harvestMetadata.quality_notes.push(qNote);
     }
     // set isValid flag if given
     if (isValid != null) {
-        document.extras.metadata.is_valid = isValid;
+        harvestMetadata.is_valid = isValid;
     }
     // set isChanged flag if given
     if (isChanged != null) {
-        document.extras.metadata.is_changed = isChanged;
+        harvestMetadata.is_changed = isChanged;
     }
 }

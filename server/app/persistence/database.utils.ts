@@ -77,8 +77,6 @@ export abstract class DatabaseUtils {
 
     abstract streamBuckets<T extends CatalogColumnType>(source: string, datasetColumn: string, observer: Observer<ImportLogMessage>, summary: Summary, query?: string): AsyncGenerator<Bucket<T>>;
 
-    abstract getStoredData(ids: string[]): Promise<any[]>;
-
     abstract getDatasetIdentifiers(source: string): Promise<string[]>;
 
     /**

@@ -72,7 +72,4 @@ export type DiplanungIndexDocument = IndexDocument & {
     spatial_text: string,
     // additional information and metadata
     catalog: Catalog,
-    extras: {
-        hierarchy_level: string
-    }
 };

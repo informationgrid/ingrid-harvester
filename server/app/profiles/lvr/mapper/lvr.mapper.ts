@@ -89,23 +89,11 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
                 licenses: this.getLicense(),
                 vector: this.getVector(),
                 source: await this.getSource()
-            },
-            extras: {
-                metadata: {
-                    issued: this.getIssued(),
-                    modified: this.getModified(),
-                    source: this.baseMapper.getMetadataSource(),
-                    merged_from: []
-                }
             }
         };
 
-        result.extras.metadata.merged_from.push(createEsId(result));
-        result.extras.metadata.harvesting_errors = this.baseMapper.getHarvestingErrors();
-        // result.extras.metadata.is_valid = mapper.isValid(result);
         // let qualityNotes = mapper.getQualityNotes();
         // if (qualityNotes?.length > 0) {
-        //     result.extras.metadata['quality_notes'] = qualityNotes;
         // }
         this.baseMapper.executeCustomCode(result);
 

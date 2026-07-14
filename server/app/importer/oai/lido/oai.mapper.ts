@@ -26,7 +26,7 @@
  */
 import log4js from 'log4js';
 import * as xpath from 'xpath';
-import type { MetadataSource } from '../../../model/index.document.js';
+import type { MetadataSource } from '../../../model/harvesting.metadata.js';
 import type { Summary } from '../../../model/summary.js';
 import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import { normalizeDateTime } from '../../../utils/misc.utils.js';

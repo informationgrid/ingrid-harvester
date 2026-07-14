@@ -14,6 +14,7 @@
         secondary.identifier AS identifier,
         secondary.source AS source,
         secondary.{{DATASET_COLUMN}} AS dataset,
+        secondary.harvest_metadata AS harvest_metadata,
         secondary.collection_id AS catalog_id,
         null AS service_type,
         secondary.created_on AS issued,
@@ -31,7 +32,7 @@
         )
     WHERE
         anchor.source = $1
-        AND anchor.dataset->'extras'->>'hierarchy_level' IS DISTINCT FROM 'service'
+        AND anchor.harvest_metadata->>'hierarchy_level' IS DISTINCT FROM 'service'
 )
 UNION
 -- get all services for the datasets of a given source
@@ -64,6 +65,7 @@ UNION
         service.id AS id,
         service.source AS source,
         service.{{DATASET_COLUMN}} AS dataset,
+        service.harvest_metadata AS harvest_metadata,
         true AS is_service,
         service.created_on AS issued,
         service.last_modified AS modified
@@ -80,14 +82,14 @@ UNION
             AND (anchor.source != secondary.source OR anchor.id = secondary.id)
         WHERE
             anchor.source = $1
-            AND anchor.dataset->'extras'->>'hierarchy_level' IS DISTINCT FROM 'service'
+            AND anchor.harvest_metadata->>'hierarchy_level' IS DISTINCT FROM 'service'
     ) AS ds
     ON
         ds.identifier = ANY(service.operates_on)
         AND ds.source = service.source
     WHERE
         ds.source = $1
-        AND service.dataset->'extras'->>'hierarchy_level' = 'service'
+        AND service.harvest_metadata->>'hierarchy_level' = 'service'
 )
 */
 ORDER BY anchor_id

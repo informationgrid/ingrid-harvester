@@ -25,7 +25,7 @@ import { ElasticsearchCatalog } from '../../../catalog/elasticsearch/elasticsear
 import type { ImporterSettings } from '../../../importer/importer.settings.js';
 import type { Distribution } from '../../../model/distribution.js';
 import type { EsOperation } from '../../../persistence/elastic.utils.js';
-import type { Bucket } from '../../../persistence/postgres.utils.js';
+import type { Bucket, BucketDocument } from '../../../persistence/postgres.utils.js';
 import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import * as MiscUtils from '../../../utils/misc.utils.js';
 import { createEsId } from '../diplanung.utils.js';
@@ -52,11 +52,12 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog {
     public async processBucket(bucket: Bucket<DiplanungIndexDocument>, importerSettings: ImporterSettings): Promise<EsOperation[]> {
         let box: EsOperation[] = [];
         // find primary document
-        let { document, duplicates } = this.prioritizeAndFilter(bucket);
+        let { entry, duplicates } = this.prioritizeAndFilter(bucket);
+        let document = entry.document;
 
         // shortcut - if all documents in the bucket should be deleted, delete the document from ES
-        let deleteDocument = document.extras.metadata.deleted != null;
-        bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.extras.metadata.deleted != null);
+        let deleteDocument = entry.deleted != null;
+        bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.deleted != null);
         if (deleteDocument) {
             return [{ operation: 'delete', _id: createEsId(document) }];
         }
@@ -68,11 +69,9 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog {
         // deduplication
         for (let [id, duplicate] of duplicates) {
             let old_id = createEsId(document);
-            let duplicate_id = createEsId(duplicate);
-            document = this.deduplicate(document, duplicate);
+            let duplicate_id = createEsId(duplicate.document);
+            document = this.deduplicate(entry, duplicate, document);
             let document_id = createEsId(document);
-            document.extras.metadata.merged_from ??= [];
-            document.extras.metadata.merged_from.push(duplicate_id);
             // remove dataset with old_id if it differs from the newly created id
             if (old_id != document_id) {
                 box.push({ operation: 'delete', _id: old_id });
@@ -82,41 +81,42 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog {
                 box.push({ operation: 'delete', _id: duplicate_id });
             }
         }
-        document = this.sanitize(document);
-        document = MiscUtils.merge(document, { extras: { transformed_data: { dcat_ap_plu: DcatApPluDocumentFactory.create(document) } } });
+        document = this.sanitize(entry, document);
+        // note: the transformed export used to live in `extras.transformed_data`; it moved to the document root
+        document = MiscUtils.merge(document, { transformed_data: { dcat_ap_plu: DcatApPluDocumentFactory.create(document) } });
         box.push({ operation: 'index', _id: createEsId(document), document });
         return box;
     }
 
-    private prioritizeAndFilter(bucket: Bucket<DiplanungIndexDocument>): { 
-        document: DiplanungIndexDocument, 
-        duplicates: Map<string | number, DiplanungIndexDocument>
+    private prioritizeAndFilter(bucket: Bucket<DiplanungIndexDocument>): {
+        entry: BucketDocument<DiplanungIndexDocument>,
+        duplicates: Map<string | number, BucketDocument<DiplanungIndexDocument>>
     } {
         // initialize records map
-        let records: Map<string, Map<string | number, DiplanungIndexDocument>> = new Map<string, Map<string | number, DiplanungIndexDocument>>();
-        for (let [id, document] of bucket.duplicates) {
-            let sourceType = document.extras.metadata.source.source_type;
+        let records: Map<string, Map<string | number, BucketDocument<DiplanungIndexDocument>>> = new Map<string, Map<string | number, BucketDocument<DiplanungIndexDocument>>>();
+        for (let [id, entry] of bucket.duplicates) {
+            let sourceType = entry.harvest?.source?.source_type;
             let sourceMap = records.get(sourceType);
             if (sourceMap == null) {
-                sourceMap = new Map<string | number, DiplanungIndexDocument>();
+                sourceMap = new Map<string | number, BucketDocument<DiplanungIndexDocument>>();
                 records.set(sourceType, sourceMap);
             }
-            sourceMap.set(id, document);
+            sourceMap.set(id, entry);
         }
 
-        let mainDocument: DiplanungIndexDocument;
-        let duplicates: Map<string | number, DiplanungIndexDocument> = new Map<string | number, DiplanungIndexDocument>();
+        let mainEntry: BucketDocument<DiplanungIndexDocument>;
+        let duplicates: Map<string | number, BucketDocument<DiplanungIndexDocument>> = new Map<string | number, BucketDocument<DiplanungIndexDocument>>();
         // prio 1: handle cockpitpro - all other sources are discarded
         if (records.has("cockpitpro")) {
-            for (let [id, document] of records.get("cockpitpro")) {
-                mainDocument = document;
+            for (let [id, entry] of records.get("cockpitpro")) {
+                mainEntry = entry;
                 break;
             }
         }
         // prio 2: handle cockpit - only keep beteiligungsdb source as duplicate
         else if (records.has("cockpit")) {
-            for (let [id, document] of records.get("cockpit")) {
-                mainDocument = document;
+            for (let [id, entry] of records.get("cockpit")) {
+                mainEntry = entry;
                 break;
             }
             if (records.has("beteiligungsdb")) {
@@ -125,18 +125,18 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog {
         }
         // prio 3: handle beteiligungsdb - all other sources are discarded
         else if (records.has("beteiligungsdb")) {
-            for (let [id, document] of records.get("beteiligungsdb")) {
-                mainDocument = document;
+            for (let [id, entry] of records.get("beteiligungsdb")) {
+                mainEntry = entry;
                 break;
             }
         }
         // prio 4: handle csw - only keep wfs sources as duplicates
         else if (records.has("csw")) {
-            for (let [id, document] of records.get("csw")) {
-                mainDocument = document;
+            for (let [id, entry] of records.get("csw")) {
+                mainEntry = entry;
                 // TODO remove or perpetuate : hack for stage/prod
-                if (HACK_ON) {
-                    mainDocument.extras.metadata.is_valid = false;
+                if (HACK_ON && mainEntry.harvest) {
+                    mainEntry.harvest.is_valid = false;
                 }
                 break;
             }
@@ -146,28 +146,28 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog {
         }
         // prio 5: handle wfs - only keep other wfs sources as duplicates
         else if (records.has("wfs")) {
-            for (let [id, document] of records.get("wfs")) {
-                if (mainDocument == null) {
-                    mainDocument = document;
+            for (let [id, entry] of records.get("wfs")) {
+                if (mainEntry == null) {
+                    mainEntry = entry;
                 }
                 else {
-                    duplicates.set(id, document);
+                    duplicates.set(id, entry);
                 }
             }
         }
-        // prio 6: handle all other cases - 
+        // prio 6: handle all other cases -
         else {
-            for (let [id, document] of bucket.duplicates) {
-                if (mainDocument == null) {
-                    mainDocument = document;
+            for (let [id, entry] of bucket.duplicates) {
+                if (mainEntry == null) {
+                    mainEntry = entry;
                 }
                 else {
-                    duplicates.set(id, document);
+                    duplicates.set(id, entry);
                 }
             }
         }
 
-        return { document: mainDocument, duplicates };
+        return { entry: mainEntry, duplicates };
     }
 
     /**
@@ -230,13 +230,13 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog {
      * @param duplicate 
      * @returns the augmented dataset
      */
-    private deduplicate(document: DiplanungIndexDocument, duplicate: DiplanungIndexDocument): DiplanungIndexDocument {
-        // log.warn(`Merging ${duplicate.identifier} (${duplicate.extras.metadata.source.source_base}) into ${document.identifier} (${document.extras.metadata.source.source_base})`);
-        switch (document.extras.metadata.source.source_type) {
+    private deduplicate(entry: BucketDocument<DiplanungIndexDocument>, duplicateEntry: BucketDocument<DiplanungIndexDocument>, document: DiplanungIndexDocument): DiplanungIndexDocument {
+        const duplicate = duplicateEntry.document;
+        switch (entry.harvest?.source?.source_type) {
             case 'cockpitpro':
                 return document;
             case 'cockpit':
-                if (duplicate.extras.metadata.source.source_type == 'beteiligungsdb') {
+                if (duplicateEntry.harvest?.source?.source_type == 'beteiligungsdb') {
                     return { ...document, process_steps: duplicate.process_steps };
                 }
                 else {
@@ -261,9 +261,9 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog {
                 // TODO remove or perpetuate : hack for stage/prod
                 // only set the CSW document to valid, if it has a WFS duplicate that is also valid
                 // default for CSW has been set to false in `diplanung.csw.mapper`
-                if (HACK_ON) {
-                    if (duplicate.extras.metadata.source.source_base.toLowerCase().includes("wfs")) {
-                        updatedDocument.extras.metadata.is_valid = duplicate.extras.metadata.is_valid;
+                if (HACK_ON && entry.harvest) {
+                    if (duplicateEntry.harvest?.source?.source_base?.toLowerCase().includes("wfs")) {
+                        entry.harvest.is_valid = duplicateEntry.harvest.is_valid;
                     }
                 }
                 return updatedDocument;
@@ -274,26 +274,27 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog {
         // return MiscUtils.merge(document, updatedFields);
     }
 
-    private sanitize(document: DiplanungIndexDocument): DiplanungIndexDocument {
+    private sanitize(entry: BucketDocument<DiplanungIndexDocument>, document: DiplanungIndexDocument): DiplanungIndexDocument {
+        entry.harvest ??= {} as any;
         // check spatial
         let sanitizedSpatial = GeoJsonUtils.sanitize(document.spatial);
         if (!sanitizedSpatial) {
-            document.extras.metadata.is_valid = false;
-            document.extras.metadata.quality_notes ??= [];
-            document.distributions?.forEach(distribution => 
-                document.extras.metadata.quality_notes.push(...(distribution.errors ?? [])));
-            document.extras.metadata.quality_notes.push('No valid geometry');
+            entry.harvest.is_valid = false;
+            entry.harvest.quality_notes ??= [];
+            document.distributions?.forEach(distribution =>
+                entry.harvest.quality_notes.push(...(distribution.errors ?? [])));
+            entry.harvest.quality_notes.push('No valid geometry');
             return document;
         }
         else if (document.spatial != sanitizedSpatial) {
             document.spatial = sanitizedSpatial;
-            document.extras.metadata.quality_notes ??= [];
-            document.extras.metadata.quality_notes.push('Geometry has been flipped');
+            entry.harvest.quality_notes ??= [];
+            entry.harvest.quality_notes.push('Geometry has been flipped');
         }
         if (!document.centroid) {
             document.centroid = GeoJsonUtils.getCentroid(sanitizedSpatial);
-            document.extras.metadata.quality_notes ??= [];
-            document.extras.metadata.quality_notes.push('Centroid has been created');
+            entry.harvest.quality_notes ??= [];
+            entry.harvest.quality_notes.push('Centroid has been created');
         }
         return document;
     }
