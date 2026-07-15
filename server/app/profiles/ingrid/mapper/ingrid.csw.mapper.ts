@@ -28,8 +28,8 @@ import type { Distribution } from "../../../model/distribution.js";
 import * as GeoJsonUtils from "../../../utils/geojson.utils.js";
 import * as XpathUtils from "../../../utils/xpath.utils.js";
 import { ingridMapper } from "./ingrid.mapper.js";
-import type { IndexReference } from "../../../model/index.document.js";
-import type {IngridConformanceResult, IngridDataQuality, IngridDocumentType, IngridLicense, IngridSpatialRepresentation} from "../model/index.document.js";
+import type { IndexReference, IndexTemporalItem } from "../../../model/index.document.js";
+import type {IngridConformanceResult, IngridDataQuality, IngridDocumentType, IngridLicense, IngridSpatialRepresentation, IngridTemporal} from "../model/index.document.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -256,6 +256,33 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     getCharacterSet(): { key: string | null, value: string | null } {
         const characterSet = this.text('./gmd:MD_DataIdentification/gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue', this.baseMapper.idInfo);
         return characterSet ? { key: this.transformToIgcDomainId(characterSet, '510'), value: characterSet } : undefined;
+    }
+
+    getTemporal(): IngridTemporal {
+        const dateRanges = this.baseMapper.getTemporal();
+        const data_temporal: IndexTemporalItem[] = dateRanges?.length ? dateRanges.map(range => ({
+            date_range: {
+                gte: range.gte?.toISOString(),
+                lte: range.lte?.toISOString(),
+            }
+        })) : undefined;
+        const status = this.getStatus();
+        const maintenance_frequency = this.getMaintenanceFrequency();
+
+        if (!data_temporal?.length && !status && !maintenance_frequency) {
+            return undefined;
+        }
+        return { data_temporal, status, maintenance_frequency };
+    }
+
+    private getStatus(): { key: string | null, value: string | null } {
+        const status = this.text('./gmd:MD_DataIdentification/gmd:status/gmd:MD_ProgressCode/@codeListValue', this.baseMapper.idInfo);
+        return status ? { key: this.transformToIgcDomainId(status, '523'), value: status } : undefined;
+    }
+
+    private getMaintenanceFrequency(): { key: string | null, value: string | null } {
+        const frequency = this.text('./gmd:MD_DataIdentification/gmd:resourceMaintenance/gmd:MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode/@codeListValue', this.baseMapper.idInfo);
+        return frequency ? { key: this.transformToIgcDomainId(frequency, '518'), value: frequency } : undefined;
     }
 
     getCapabilitiesURL(): string[] {
