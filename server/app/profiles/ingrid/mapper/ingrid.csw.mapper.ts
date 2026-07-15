@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import bboxPolygon from '@turf/bbox-polygon';
 import type { Geometry } from 'geojson';
 import log4js from 'log4js';
 import { CswMapper } from "../../../importer/csw/csw.mapper.js";
@@ -28,7 +29,7 @@ import type { Distribution } from "../../../model/distribution.js";
 import * as GeoJsonUtils from "../../../utils/geojson.utils.js";
 import * as XpathUtils from "../../../utils/xpath.utils.js";
 import { ingridMapper } from "./ingrid.mapper.js";
-import type { IndexReference, IndexTemporalItem } from "../../../model/index.document.js";
+import type { IndexContact, IndexKeyword, IndexReference, IndexSpatial, IndexTemporalItem } from "../../../model/index.document.js";
 import type {IngridConformanceResult, IngridDataQuality, IngridDocumentType, IngridLicense, IngridSpatialRepresentation, IngridTemporal} from "../model/index.document.js";
 
 const log = log4js.getLogger(import.meta.filename);
@@ -226,12 +227,44 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getReferences(): IndexReference[] {
-        const capabilitiesUrls = this.getCapabilitiesURL();
-        return capabilitiesUrls?.length ? capabilitiesUrls?.map(url => ({
-            internal: false,
-            url,
-            type: { key: '3600', value: 'Gekoppelte Daten' }
-        })) : undefined;
+        const references: IndexReference[] = [];
+        const seenUrls = new Set<string>();
+
+        this.getCapabilitiesURL()?.forEach(url => {
+            if (seenUrls.has(url)) return;
+            seenUrls.add(url);
+            references.push({ internal: false, url, type: { key: '3600', value: 'Gekoppelte Daten' } });
+        });
+
+        const onlineResources = CswMapper.select('./gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource', this.baseMapper.record);
+        onlineResources?.forEach(onlineResource => {
+            const url = this.text('./gmd:linkage/gmd:URL', onlineResource);
+            if (!url || seenUrls.has(url)) return;
+            seenUrls.add(url);
+            const functionCode = this.text('./gmd:function/gmd:CI_OnLineFunctionCode/@codeListValue', onlineResource);
+            references.push({
+                internal: false,
+                url,
+                title: this.text('./gmd:name/gco:CharacterString', onlineResource) ?? undefined,
+                explanation: this.text('./gmd:description/gco:CharacterString', onlineResource) ?? undefined,
+                type: functionCode ? { key: this.transformToIgcDomainId(functionCode, '2000'), value: functionCode } : undefined,
+            });
+        });
+
+        const mdBrowseGraphics = CswMapper.select('.//gmd:graphicOverview/gmd:MD_BrowseGraphic', this.baseMapper.idInfo);
+        mdBrowseGraphics?.forEach(mdBrowseGraphic => {
+            const url = this.text('./gmd:fileName/gco:CharacterString', mdBrowseGraphic);
+            if (!url || seenUrls.has(url)) return;
+            seenUrls.add(url);
+            references.push({
+                internal: false,
+                url,
+                explanation: this.text('./gmd:fileDescription/gco:CharacterString', mdBrowseGraphic) ?? undefined,
+                type: { key: null, value: 'previewGraphic' },
+            });
+        });
+
+        return references.length ? references : undefined;
     }
 
     getDocumentType(): IngridDocumentType {
@@ -258,21 +291,155 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return characterSet ? { key: this.transformToIgcDomainId(characterSet, '510'), value: characterSet } : undefined;
     }
 
+    // language of the described dataset (root document field, distinct from the metadata record's own language)
+    getLanguage(): string {
+        return this.transformGeneric(this.text('./*/gmd:language/gco:CharacterString', this.baseMapper.idInfo), { deu: 'de', ger: 'de', eng: 'en' }, 'de');
+    }
+
+    // language of the metadata record itself
+    getMetadataLanguage(): string {
+        return this.baseMapper.getLanguage();
+    }
+
+    getSpatials(): IndexSpatial[] {
+        const geometry = this.baseMapper.getSpatial();
+        const toponym = this.getToponyms();
+        const bbox = geometry ? this.getBoundingBox(geometry) : undefined;
+        if (!bbox && !toponym?.length) {
+            return undefined;
+        }
+        const spatial: IndexSpatial = {};
+        if (bbox) {
+            spatial.bbox = bbox;
+            // build a standard GeoJSON polygon from the bbox, since `baseMapper.getSpatial()` may
+            // return the non-standard "Envelope" type (used for plain bounding boxes), which is
+            // neither understood by GeoJSON tooling nor part of the schema's geometry.type enum
+            spatial.geometry = bboxPolygon(bbox as [number, number, number, number]).geometry;
+        }
+        if (toponym?.length) {
+            spatial.toponym = toponym;
+        }
+        return [spatial];
+    }
+
+    // derive a plain [minX, minY, maxX, maxY] bbox by walking the geometry's coordinate arrays directly,
+    // instead of relying on GeoJSON-type-aware tooling that only recognizes standard geometry types
+    // (`baseMapper.getSpatial()` can return the non-standard "Envelope" type for plain bounding boxes)
+    private getBoundingBox(geometry: any): number[] {
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        const visit = (coords: any) => {
+            if (typeof coords?.[0] === 'number') {
+                const [x, y] = coords;
+                if (x < minX) minX = x;
+                if (x > maxX) maxX = x;
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+            }
+            else {
+                coords?.forEach(visit);
+            }
+        };
+        if (geometry.type === 'GeometryCollection') {
+            geometry.geometries?.forEach((g: any) => visit(g.coordinates));
+        }
+        else {
+            visit(geometry.coordinates);
+        }
+        return isFinite(minX) && isFinite(minY) && isFinite(maxX) && isFinite(maxY) ? [minX, minY, maxX, maxY] : undefined;
+    }
+
+    private getToponyms(): string[] {
+        const nodes = CswMapper.select('(./srv:SV_ServiceIdentification/srv:extent|./gmd:MD_DataIdentification/gmd:extent)/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', this.baseMapper.idInfo);
+        const toponyms = nodes?.map(node => node.textContent?.trim()).filter(Boolean);
+        return toponyms?.length ? toponyms : undefined;
+    }
+
+    async getContacts(): Promise<IndexContact[]> {
+        const contactPoints = await this.baseMapper.getContactPoints();
+        if (!contactPoints?.length) {
+            return undefined;
+        }
+        return contactPoints.map(cp => {
+            const communications: IndexContact['communications'] = [];
+            if (cp.hasEmail) communications.push({ type: 'email', value: cp.hasEmail });
+            if (cp.hasTelephone) communications.push({ type: 'phone', value: cp.hasTelephone });
+            if (cp.hasURL) communications.push({ type: 'website', value: cp.hasURL });
+            return {
+                role: cp.role,
+                name: cp.fn,
+                communications: communications.length ? communications : undefined,
+                street: cp.hasStreetAddress,
+                code: cp.hasPostalCode,
+                locality: cp.hasLocality,
+                country: cp.hasCountryName,
+                administrative_area: cp.hasRegion,
+            };
+        });
+    }
+
+    getKeywords(): IndexKeyword[] {
+        const keywords: IndexKeyword[] = [];
+        const seenTerms = new Set<string>();
+        const addKeywords = (xpath: string, source: string) => {
+            CswMapper.select(xpath, this.baseMapper.idInfo)?.forEach(node => {
+                const term = node.textContent?.trim();
+                if (term && !seenTerms.has(term)) {
+                    seenTerms.add(term);
+                    keywords.push({ term, source });
+                }
+            });
+        };
+        // check for INSPIRE themes
+        addKeywords(".//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='GEMET - INSPIRE themes, version 1.0']/gmd:keyword/gco:CharacterString", 'inspire');
+        // check for GEMET keywords
+        addKeywords(".//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='GEMET - Concepts, version 2.1']/gmd:keyword/gco:CharacterString", 'gemet');
+        // check for UMTHES keywords
+        addKeywords(".//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='UMTHES Thesaurus']/gmd:keyword/gco:CharacterString", 'umthes');
+        // remaining, unclassified keywords
+        addKeywords(".//gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString", 'frei');
+        // ISO topic categories
+        addKeywords('./gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode', 'iso_topic');
+        return keywords.length ? keywords : undefined;
+    }
+
     getTemporal(): IngridTemporal {
+        const data_temporal: IndexTemporalItem[] = [];
         const dateRanges = this.baseMapper.getTemporal();
-        const data_temporal: IndexTemporalItem[] = dateRanges?.length ? dateRanges.map(range => ({
+        dateRanges?.forEach(range => data_temporal.push({
             date_range: {
                 gte: range.gte?.toISOString(),
                 lte: range.lte?.toISOString(),
             }
-        })) : undefined;
+        }));
+        this.getCitationDates()?.forEach(item => data_temporal.push(item));
+
         const status = this.getStatus();
         const maintenance_frequency = this.getMaintenanceFrequency();
 
-        if (!data_temporal?.length && !status && !maintenance_frequency) {
+        if (!data_temporal.length && !status && !maintenance_frequency) {
             return undefined;
         }
-        return { data_temporal, status, maintenance_frequency };
+        return { data_temporal: data_temporal.length ? data_temporal : undefined, status, maintenance_frequency };
+    }
+
+    // citation dates (creation/publication/revision) mapped onto the InGrid Index date_type enum
+    private getCitationDates(): IndexTemporalItem[] {
+        const dateTypeMap: Record<string, 'created' | 'last_updated' | 'first_published'> = {
+            creation: 'created',
+            revision: 'last_updated',
+            publication: 'first_published',
+        };
+        const dateNodes = CswMapper.select('./gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date', this.baseMapper.idInfo);
+        return dateNodes?.map(dateNode => {
+            const dateText = this.text('./gmd:date/gco:Date|./gmd:date/gco:DateTime', dateNode);
+            const date = dateText ? new Date(dateText) : undefined;
+            if (!date || isNaN(date.getTime())) {
+                return undefined;
+            }
+            const isoDateType = this.text('./gmd:dateType/gmd:CI_DateTypeCode/@codeListValue', dateNode);
+            const date_type = dateTypeMap[isoDateType];
+            return date_type ? { date: date.toISOString(), date_type } : { date: date.toISOString() };
+        }).filter(Boolean);
     }
 
     private getStatus(): { key: string | null, value: string | null } {

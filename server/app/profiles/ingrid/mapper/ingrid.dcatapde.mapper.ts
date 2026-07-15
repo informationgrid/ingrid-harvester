@@ -57,7 +57,7 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implement
             dcat: {
                 landingPage: this.baseMapper.getLandingPage()
             },
-            contacts: this.getContacts(),
+            contacts: await this.getContacts(),
             keywords: this.getKeywords(),
             legal_basis: this.baseMapper.getLegalBasis(),
             distributions: await this.getDistributions(),
@@ -109,7 +109,7 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implement
         return result;
     }
 
-    getContacts() {
+    async getContacts() {
         return [
             ...this.baseMapper.getPublisher().map(contact => {return {role: this.getRoleId("publisher"), ...contact}}),
             ...this.baseMapper.getCreator().map(contact => {return {role: this.getRoleId("creator"), ...contact}}),

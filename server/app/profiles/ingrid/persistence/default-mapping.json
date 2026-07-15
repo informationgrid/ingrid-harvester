@@ -40,14 +40,7 @@
                     "type": "keyword"
                 },
                 "language": {
-                    "properties": {
-                        "key": {
-                            "type": "keyword"
-                        },
-                        "value": {
-                            "type": "keyword"
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "datasource": {
                     "properties": {

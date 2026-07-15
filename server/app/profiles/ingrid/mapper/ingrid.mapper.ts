@@ -77,6 +77,7 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
                 modified: this.getModifiedDate()?.toISOString() ?? null,
                 partner: this.baseMapper.settings.partner?.split(',').map(p => p.trim())[0],
                 provider: this.baseMapper.settings.provider?.split(',').map(p => p.trim())[0],
+                language: this.getMetadataLanguage(),
                 datasource: {
                     id: this.baseMapper.settings.dataSourceName,
                     name: this.baseMapper.settings.dataSourceName,
@@ -85,7 +86,8 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
             title: this.getTitle(),
             sort_uuid: this.getSortUuid(),
             description: this.getDescription(),
-            contacts: this.getContacts(),
+            language: this.getLanguage(),
+            contacts: await this.getContacts(),
             spatials: this.getSpatials(),
             temporal: this.getTemporal(),
             keywords: this.getKeywords(),
@@ -241,7 +243,16 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
         return crypto.createHash('sha1').update(this.getTitle(), 'binary').digest('hex');
     }
 
-    getContacts(): IndexContact[] {
+    // root-level language of the described dataset (as opposed to metadata.language, the language of the metadata record itself)
+    getLanguage(): string {
+        return undefined;
+    }
+
+    getMetadataLanguage(): string {
+        return undefined;
+    }
+
+    async getContacts(): Promise<IndexContact[]> {
         return undefined;
     }
 

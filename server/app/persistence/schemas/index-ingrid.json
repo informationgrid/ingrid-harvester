@@ -105,23 +105,8 @@
               ]
             },
             "language": {
-              "title": "language",
-              "description": "Enthält die Sprache des Metadatensatzes.",
-              "additionalProperties": false,
-              "properties": {
-                "key": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "value": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                }
-              }
+              "type": "string",
+              "description": "Enthält die Sprache des Metadatensatzes."
             },
             "datasource": {
               "properties": {
@@ -717,23 +702,8 @@
               ]
             },
             "language": {
-              "title": "language",
-              "description": "Enthält die Sprache des Metadatensatzes.",
-              "additionalProperties": false,
-              "properties": {
-                "key": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "value": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                }
-              }
+              "type": "string",
+              "description": "Enthält die Sprache des Metadatensatzes."
             },
             "datasource": {
               "properties": {
@@ -885,23 +855,8 @@
                   ]
                 },
                 "language": {
-                  "title": "language",
-                  "description": "Enthält die Sprache des Metadatensatzes.",
-                  "additionalProperties": false,
-                  "properties": {
-                    "key": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "value": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    }
-                  }
+                  "type": "string",
+                  "description": "Enthält die Sprache des Metadatensatzes."
                 },
                 "datasource": {
                   "properties": {
@@ -1544,23 +1499,8 @@
                   ]
                 },
                 "language": {
-                  "title": "language",
-                  "description": "Enthält die Sprache des Metadatensatzes.",
-                  "additionalProperties": false,
-                  "properties": {
-                    "key": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "value": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    }
-                  }
+                  "type": "string",
+                  "description": "Enthält die Sprache des Metadatensatzes."
                 },
                 "datasource": {
                   "properties": {
