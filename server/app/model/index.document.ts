@@ -30,7 +30,7 @@ import type { Geometry, Point } from 'geojson';
 export type IndexDocument = {
     id: string,
     $schema: string,
-    schema_version?: string, // TODO: align schema version. Maybe not needed since $schema is required
+    schema_version?: string, // TODO: Will be removed from index schema in future
     metadata: IndexDocumentMetadata,
     title: string,
     sort_uuid?: string,

@@ -69,7 +69,7 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
             ...this.getCustomEntries(),
             id: this.getGeneratedId(),
             $schema: undefined, // set by the target catalog from the selected JSON schema's $id
-            schema_version: '8.4.0', // TODO: align with app release version
+            schema_version: undefined, // TODO: Will be removed from index schema in future
             metadata: {
                 data_type: 'INGRID',
                 document_type: this.getDocumentType(),
