@@ -304,8 +304,12 @@
             }
         },
         "exports": {
-            "type": "object",
-            "enabled": false
+            "properties": {
+                "iso": {
+                    "type": "text",
+                    "index": false
+                }
+            }
         },
         "ingrid": {
             "properties": {
