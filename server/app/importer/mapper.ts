@@ -24,6 +24,7 @@
 import type { ImporterSettings } from './importer.settings.js';
 import type { Logger } from 'log4js';
 import type { HarvestingMetadata, MetadataSource } from '../model/harvesting.metadata.js';
+import type { IndexDocumentMetadata } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
 
 /**
@@ -94,6 +95,28 @@ export abstract class Mapper<S extends ImporterSettings> {
 
     getDeleted(): Date {
         return null;
+    }
+
+    /**
+     * Base fields for IndexDocumentMetadata, shared across all formats.
+     * `data_type` is deliberately left out, since it is profile-specific.
+     */
+    protected getBaseMetadata(): Omit<IndexDocumentMetadata, 'data_type'> {
+        return {
+            created: null,
+            modified: this.getModifiedDate()?.toISOString() ?? null,
+            issued: this.getIssued()?.toISOString() ?? null,
+            partner: this.settings.partner?.split(',').map(p => p.trim())[0],
+            provider: this.settings.provider?.split(',').map(p => p.trim())[0],
+            datasource: this.settings.dataSourceName
+                ? { id: this.settings.dataSourceName, name: this.settings.dataSourceName }
+                : undefined,
+        };
+    }
+
+    // TODO make abstract, implement in mappers - the date the described record was last modified
+    getModifiedDate(): Date {
+        return undefined;
     }
 
     abstract getMetadataSource(): MetadataSource;

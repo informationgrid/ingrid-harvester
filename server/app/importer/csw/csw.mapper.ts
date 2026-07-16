@@ -104,19 +104,6 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
         }
     }
 
-    protected getBaseMetadata(): Omit<IndexDocumentMetadata, 'data_type'> {
-        return {
-            created: null,
-            modified: this.getModifiedDate()?.toISOString() ?? null,
-            issued: this.getIssued()?.toISOString() ?? null,
-            partner: this.settings.partner?.split(',').map(p => p.trim())[0],
-            provider: this.settings.provider?.split(',').map(p => p.trim())[0],
-            datasource: this.settings.dataSourceName
-                ? { id: this.settings.dataSourceName, name: this.settings.dataSourceName }
-                : undefined,
-        };
-    }
-
     // _getResourceIdentifier() {
     //     return CswMapper.select('./gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString', this.idInfo, true)?.textContent;
     // }

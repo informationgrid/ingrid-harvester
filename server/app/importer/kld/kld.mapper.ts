@@ -29,7 +29,7 @@ import type { Geometry } from 'geojson';
 import log4js from 'log4js';
 import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
 import type { Contact, Organization, Person } from '../../model/agent.js';
-import type { IndexDocument } from '../../model/index.document.js';
+import type { IndexDocument, IndexDocumentMetadata } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
 import type { LvrDateRange, Media, Relation } from '../../profiles/lvr/model/index.document.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
@@ -55,7 +55,11 @@ export class KldMapper extends Mapper<KldSettings> implements ToElasticMapper<In
 
     async createIndexDocument(): Promise<IndexDocument> {
         return {
-            uuid: this.getGeneratedId(),
+            id: this.getGeneratedId(),
+            $schema: undefined, // set by the target catalog from the selected JSON schema's $id
+            schema_version: undefined,
+            metadata: { ...this.getBaseMetadata(), data_type: this.settings.type } as IndexDocumentMetadata,
+            title: this.getTitle(),
         };
     }
 

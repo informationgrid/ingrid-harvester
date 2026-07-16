@@ -34,7 +34,7 @@ import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
 import type { Organization, Person } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
-import type { IndexDocument } from '../../model/index.document.js';
+import type { IndexDocument, IndexDocumentMetadata } from '../../model/index.document.js';
 import type { MetadataSource } from '../../model/harvesting.metadata.js';
 import dayjs from '../../utils/dayjs.js';
 import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
@@ -94,7 +94,11 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
 
     async createIndexDocument(): Promise<IndexDocument> {
         return {
-            uuid: this.getGeneratedId(),
+            id: this.getGeneratedId(),
+            $schema: undefined, // set by the target catalog from the selected JSON schema's $id
+            schema_version: undefined,
+            metadata: { ...this.getBaseMetadata(), data_type: this.settings.type } as IndexDocumentMetadata,
+            title: this.getTitle(),
         };
     }
 

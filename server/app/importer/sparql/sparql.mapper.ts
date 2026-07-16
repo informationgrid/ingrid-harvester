@@ -31,7 +31,7 @@ import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
 import type { Person } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
-import type { IndexDocument } from '../../model/index.document.js';
+import type { IndexDocument, IndexDocumentMetadata } from '../../model/index.document.js';
 import type { MetadataSource } from '../../model/harvesting.metadata.js';
 import type { Summary } from '../../model/summary.js';
 import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
@@ -71,7 +71,11 @@ export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMap
 
     async createIndexDocument(): Promise<IndexDocument> {
         return {
-            uuid: this.getGeneratedId(),
+            id: this.getGeneratedId(),
+            $schema: undefined, // set by the target catalog from the selected JSON schema's $id
+            schema_version: undefined,
+            metadata: { ...this.getBaseMetadata(), data_type: this.settings.type } as IndexDocumentMetadata,
+            title: this.getTitle(),
         };
     }
 

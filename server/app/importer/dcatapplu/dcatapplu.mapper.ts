@@ -35,7 +35,7 @@ import type { DateRange } from '../../model/dateRange.js';
 import type { Catalog, ProcessStep } from '../../model/dcatApPlu.model.js';
 import { PluDocType, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, PluProcessStepType } from '../../model/dcatApPlu.model.js';
 import type { Distribution } from '../../model/distribution.js';
-import type { IndexDocument } from '../../model/index.document.js';
+import type { IndexDocument, IndexDocumentMetadata } from '../../model/index.document.js';
 import type { MetadataSource } from '../../model/harvesting.metadata.js';
 import type { Summary } from '../../model/summary.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
@@ -103,7 +103,11 @@ export class DcatappluMapper extends Mapper<DcatappluSettings> implements ToElas
 
     async createIndexDocument(): Promise<IndexDocument> {
         return {
-            uuid: this.getGeneratedId(),
+            id: this.getGeneratedId(),
+            $schema: undefined, // set by the target catalog from the selected JSON schema's $id
+            schema_version: undefined,
+            metadata: { ...this.getBaseMetadata(), data_type: this.settings.type } as IndexDocumentMetadata,
+            title: this.getTitle(),
         };
     }
 
