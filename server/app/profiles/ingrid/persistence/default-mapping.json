@@ -5,7 +5,10 @@
     },
     "properties": {
         "id": {
-            "type": "keyword"
+            "type": "keyword",
+            "copy_to": [
+                "fulltext"
+            ]
         },
         "$schema": {
             "type": "keyword"
@@ -73,11 +76,17 @@
                     "analyzer": "edge_ngram",
                     "search_analyzer": "german"
                 }
-            }
+            },
+            "copy_to": [
+                "fulltext"
+            ]
         },
         "description": {
             "type": "text",
-            "analyzer": "german"
+            "analyzer": "german",
+            "copy_to": [
+                "fulltext"
+            ]
         },
         "language": {
             "type": "keyword"
@@ -94,7 +103,10 @@
                             "type": "keyword",
                             "ignore_above": 256
                         }
-                    }
+                    },
+                    "copy_to": [
+                        "fulltext"
+                    ]
                 },
                 "communications": {
                     "properties": {
@@ -131,7 +143,10 @@
                             "type": "keyword",
                             "ignore_above": 256
                         }
-                    }
+                    },
+                    "copy_to": [
+                        "fulltext"
+                    ]
                 },
                 "country": {
                     "type": "keyword"
@@ -143,7 +158,10 @@
                             "type": "keyword",
                             "ignore_above": 256
                         }
-                    }
+                    },
+                    "copy_to": [
+                        "fulltext"
+                    ]
                 }
             }
         },
@@ -169,7 +187,10 @@
                             "type": "keyword",
                             "ignore_above": 256
                         }
-                    }
+                    },
+                    "copy_to": [
+                        "fulltext"
+                    ]
                 },
                 "administrative": {
                     "properties": {
@@ -235,7 +256,10 @@
                             "type": "keyword",
                             "ignore_above": 256
                         }
-                    }
+                    },
+                    "copy_to": [
+                        "fulltext"
+                    ]
                 },
                 "id": {
                     "type": "keyword"
@@ -273,10 +297,16 @@
                             "type": "keyword",
                             "ignore_above": 256
                         }
-                    }
+                    },
+                    "copy_to": [
+                        "fulltext"
+                    ]
                 },
                 "explanation": {
-                    "type": "text"
+                    "type": "text",
+                    "copy_to": [
+                        "fulltext"
+                    ]
                 }
             }
         },
@@ -313,7 +343,10 @@
                             "type": "keyword",
                             "ignore_above": 256
                         }
-                    }
+                    },
+                    "copy_to": [
+                        "fulltext"
+                    ]
                 },
                 "licenses": {
                     "properties": {
@@ -428,10 +461,16 @@
                     }
                 },
                 "specific_usage": {
-                    "type": "text"
+                    "type": "text",
+                    "copy_to": [
+                        "fulltext"
+                    ]
                 },
                 "purpose": {
-                    "type": "text"
+                    "type": "text",
+                    "copy_to": [
+                        "fulltext"
+                    ]
                 },
                 "conformance_result": {
                     "properties": {
@@ -452,12 +491,18 @@
                             "type": "keyword"
                         },
                         "explanation": {
-                            "type": "text"
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
                         }
                     }
                 },
                 "order_info": {
-                    "type": "text"
+                    "type": "text",
+                    "copy_to": [
+                        "fulltext"
+                    ]
                 },
                 "data_quality": {
                     "properties": {
