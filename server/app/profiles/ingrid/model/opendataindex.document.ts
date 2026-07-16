@@ -21,33 +21,42 @@
  * ==================================================
  */
 
-import type { IndexDocument } from '../../../model/index.document.js';
-import type { IngridMetadata } from "./ingrid.metadata.js";
+import type { IndexDocument, IndexDocumentMetadata } from '../../../model/index.document.js';
+import type { IngridDocumentType } from './index.document.js';
 
-export type IngridOpendataIndexDocument = IndexDocument & IngridMetadata & {
-    id: string,
-    uuid: string,
-    collection: {
-        name: string
+// ---------------------------------------------------------------------------
+// OpenData/DCAT document — produced by the CKAN/DCAT-AP.de/Genesis mappers
+// ---------------------------------------------------------------------------
+
+export type IngridOpendataIndexDocument = IndexDocument & {
+    metadata: IndexDocumentMetadata & { data_type: string, document_type?: IngridDocumentType },
+} & IngridOpendataFields;
+
+export type IngridOpendataFields = {
+    exports?: { rdf?: string },
+    dcat?: { landing_page?: string },
+    legal_basis?: string,
+    distributions?: IngridOpendataDistribution[],
+    political_geocoding_level_uri?: string,
+    // legacy IDF fields, not part of index-opendata.json, kept for IDF export / catalog display
+    uuid?: string,
+    collection?: { name: string },
+    t01_object?: any,
+    modified?: Date,
+    sort_hash?: string,
+};
+
+export type IngridOpendataDistribution = {
+    format?: string,
+    access_url?: string,
+    modified?: string,
+    title?: string,
+    description?: string,
+    license?: {
+        url?: string,
+        name?: string,
+        attribution_by_text?: string,
+        languages?: string[],
     },
-    t01_object: any,
-    title: string,
-    content: string[],
-    rdf: string,
-    modified: Date,
-    description: string,
-    dcat: {
-        landingPage: string
-    },
-    contacts: any[],
-    keywords: any[],
-    legal_basis: string
-    distributions: any[],
-    political_geocoding_level_uri: string,
-    spatial: any,
-    temporal: {
-        "accrual_periodicity": string,
-        "accrual_periodicity_key": string,
-    },
-    sort_hash: string
-}
+    availability?: string,
+};

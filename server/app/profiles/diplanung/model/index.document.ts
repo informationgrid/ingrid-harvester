@@ -27,7 +27,8 @@ import type { Distribution } from '../../../model/distribution.js';
 import type { IndexDocument } from '../../../model/index.document.js';
 import type { Organization, Person } from '../../../model/agent.js';
 
-export type DiplanungIndexDocument = IndexDocument & {
+export type DiplanungIndexDocument = {
+    uuid: string,
     // mandatory
     contact_point: {
         fn: string,

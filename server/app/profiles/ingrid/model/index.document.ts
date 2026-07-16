@@ -27,8 +27,15 @@ export type IngridDocumentType = 'InGridGeoDataset' | 'InGridDataCollection' | '
     | 'InGridInformationSystem' | 'InGridPublication' | 'InGridProject'
     | 'InGridSpecialisedTask';
 
+// ---------------------------------------------------------------------------
+// InGrid/ISO document — produced by the CSW/WFS mappers
+// ---------------------------------------------------------------------------
+
 export type IngridIndexDocument = IndexDocument & {
-    metadata: IndexDocumentMetadata & { data_type: 'INGRID', document_type?: IngridDocumentType },
+    metadata: IndexDocumentMetadata & { data_type: string, document_type?: IngridDocumentType },
+} & IngridFields;
+
+export type IngridFields = {
     temporal?: IngridTemporal,
     exports?: { iso?: string },
     ingrid?: IngridSpecific,

@@ -25,7 +25,6 @@ import bboxPolygon from '@turf/bbox-polygon';
 import type { Geometry } from 'geojson';
 import log4js from 'log4js';
 import { CswMapper } from "../../../importer/csw/csw.mapper.js";
-import type { Distribution } from "../../../model/distribution.js";
 import * as GeoJsonUtils from "../../../utils/geojson.utils.js";
 import * as XpathUtils from "../../../utils/xpath.utils.js";
 import { ingridMapper } from "./ingrid.mapper.js";
@@ -947,29 +946,6 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         if (result?.length > 1) return result;
         if (result?.length == 1) return result[0]
         return undefined;
-    }
-
-    async getDistributions(): Promise<Distribution[]> {
-        let distributions = await this.baseMapper.getDistributions();
-        return distributions?.filter(distribution => distribution.accessURL);
-/*
-
-        let result = []
-
-        let operationNodes = CswMapper.select("./srv:SV_ServiceIdentification/srv:containsOperations/srv:SV_OperationMetadata", this.baseMapper.idInfo);
-
-        for (let operationNode of operationNodes){
-            let operationName = this.text("./srv:operationName/gco:CharacterString", operationNode);
-            let operationServiceUrl = this.text("./srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL", operationNode);
-            if(operationName?.toLowerCase() === 'getcapabilities') {
-                result.push({
-                    accessUrl : operationServiceUrl
-                })
-            }
-        }
-
-        return result
- */
     }
 
     private text(path: string, node: Element) {

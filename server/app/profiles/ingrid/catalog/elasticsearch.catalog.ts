@@ -28,6 +28,7 @@ import type { ImporterSettings } from '../../../importer/importer.settings.js';
 import type { ImportLogMessage } from '../../../model/import.result.js';
 import type { IndexDocument } from '../../../model/index.document.js';
 import { ElasticsearchFactory } from '../../../persistence/elastic.factory.js';
+import { validateDocument } from '../../../persistence/elastic.validation.js';
 import type { EsOperation } from '../../../persistence/elastic.utils.js';
 import type { Bucket, BucketDocument } from '../../../persistence/postgres.utils.js';
 import { ConfigService } from '../../../services/config/ConfigService.js';
@@ -43,6 +44,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
 
     // private deduplicationMetadata: Map<string, DeduplicationMetadata>;
     private externalUuids: Set<string>;
+    private schema: object | null = null;
 
     /**
      * This ElasticUtils instance connects to the Elasticsearch cluster configured for the InGrid-wide metadata index,
@@ -63,6 +65,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
      */
     async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         await super.prepareImport(transactionHandle, settings, observer);
+        this.schema = ProfileFactoryLoader.get().getIndexSchema(this.settings.settings.mappingFile);
         // this.deduplicationMetadata = new Map<string, DeduplicationMetadata>();
         this.externalUuids = new Set<string>();
 
@@ -103,6 +106,31 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
             return ProfileFactoryLoader.get().getPostgresQueries().getModifiedBuckets('zdm');
         }
         return super.getBucketQuery(importerSettings);
+    }
+
+    async importIntoCatalog(operations: EsOperation[]) {
+        let validOps = operations;
+        if (operations?.length && this.schema) {
+            const schemaId = (this.schema as any).$id;
+            validOps = [];
+            for (const op of operations) {
+                if (op.document && ['index', 'create', 'update'].includes(op.operation)) {
+                    // $schema documents the JSON schema used for validation, determined by the mapping selected for this catalog
+                    if (schemaId) {
+                        op.document.$schema = schemaId;
+                    }
+                    const errors = validateDocument(op.document, this.schema);
+                    if (errors.length) {
+                        const msg = `Schema validation failed for ${op._id}: ${errors.join('; ')}`;
+                        log.error(msg);
+                        this.summary.errors.push({ type: 'app', error: msg });
+                        continue;
+                    }
+                }
+                validOps.push(op);
+            }
+        }
+        await super.importIntoCatalog(validOps);
     }
 
     /**

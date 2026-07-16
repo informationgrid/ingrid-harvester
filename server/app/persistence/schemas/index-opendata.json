@@ -103,23 +103,8 @@
               ]
             },
             "language": {
-              "title": "language",
-              "description": "Enthält die Sprache des Metadatensatzes.",
-              "additionalProperties": false,
-              "properties": {
-                "key": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "value": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                }
-              }
+              "type": "string",
+              "description": "Enthält die Sprache des Metadatensatzes."
             },
             "datasource": {
               "properties": {
@@ -715,23 +700,8 @@
               ]
             },
             "language": {
-              "title": "language",
-              "description": "Enthält die Sprache des Metadatensatzes.",
-              "additionalProperties": false,
-              "properties": {
-                "key": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "value": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                }
-              }
+              "type": "string",
+              "description": "Enthält die Sprache des Metadatensatzes."
             },
             "datasource": {
               "properties": {
@@ -847,19 +817,21 @@
               "type": "string"
             },
             "license": {
-              "url": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "attribution_by_text": {
-                "type": "string"
-              },
-              "languages": {
-                "type": "array",
-                "items": {
+              "properties": {
+                "url": {
                   "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "attribution_by_text": {
+                  "type": "string"
+                },
+                "languages": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 }
               }
             },

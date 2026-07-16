@@ -38,7 +38,6 @@ import type { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
 import type { WfsSettings } from '../../importer/wfs/wfs.settings.js';
 import { WfsProfile } from '../../importer/wfs/wfs.settings.js';
 import type { DocumentFactory } from '../../model/index.document.factory.js';
-import type { IndexDocument } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
 import type { DatabaseUtils } from '../../persistence/database.utils.js';
 import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
@@ -50,10 +49,11 @@ import { ingridCswMapper } from './mapper/ingrid.csw.mapper.js';
 import { ingridDcatapdeMapper } from "./mapper/ingrid.dcatapde.mapper.js";
 import { ingridGenesisMapper } from "./mapper/ingrid.genesis.mapper.js";
 import type { ingridMapperType } from './mapper/ingrid.mapper.js';
+import type { IngridIndexDocument } from './model/index.document.js';
+import type { IngridOpendataIndexDocument } from './model/opendataindex.document.js';
 import { ingridWfsMapper } from './mapper/ingrid.wfs.mapper.js';
 import { PegelonlineWfsMapper } from './mapper/wfs/pegelonline.wfs.mapper.js';
 import { ZdmWfsMapper } from './mapper/wfs/zdm.wfs.mapper.js';
-import type { IngridMetadata } from './model/ingrid.metadata.js';
 import { ElasticQueries } from './persistence/elastic.queries.js';
 import mappings from './persistence/ingrid-meta-mapping.json' with { type: 'json' };
 import settings from './persistence/ingrid-meta-settings.json' with { type: 'json' };
@@ -126,7 +126,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
         return importer;
     }
 
-    getDocumentFactory(mapper: ingridMapperType): DocumentFactory<IndexDocument & IngridMetadata> {
+    getDocumentFactory(mapper: ingridMapperType): DocumentFactory<IngridIndexDocument | IngridOpendataIndexDocument> {
         switch (mapper.constructor.name) {
             case 'CswMapper': return new ingridCswMapper(mapper as CswMapper);
             case 'CkanMapper': return new ingridCkanMapper(mapper as CkanMapper);

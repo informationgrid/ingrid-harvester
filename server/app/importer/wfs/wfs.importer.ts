@@ -218,7 +218,7 @@ export class WfsImporter extends Importer<WfsSettings> {
         let doc: IndexDocument = await documentFactory.createIndexDocument();
         if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
             let entity: RecordEntity = {
-                identifier: doc.uuid,
+                identifier: doc.id,
                 source: this.settings.sourceURL,
                 catalog_ids: this.settings.catalogIds,
                 harvest_metadata: mapper.getHarvestingMetadata(),
@@ -303,7 +303,7 @@ export class WfsImporter extends Importer<WfsSettings> {
 
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
-                    identifier: doc.uuid,
+                    identifier: doc.id,
                     source: this.settings.sourceURL,
                     catalog_ids: this.settings.catalogIds,
                     harvest_metadata: mapper.getHarvestingMetadata(),

@@ -23,61 +23,52 @@
 
 import log4js from 'log4js';
 import { DcatapdeMapper } from "../../../importer/dcatapde/dcatapde.mapper.js";
-import type { ToElasticMapper } from '../../../importer/to.elastic.mapper.js';
-import type { DateRange } from "../../../model/dateRange.js";
-import type { IndexDocument } from '../../../model/index.document.js';
-import type { IngridMetadata } from '../model/ingrid.metadata.js';
-import type { IngridOpendataIndexDocument } from "../model/opendataindex.document.js";
+import type { IndexContact, IndexSpatial } from '../../../model/index.document.js';
+import type { IngridOpendataDistribution } from "../model/opendataindex.document.js";
 import { ingridMapper } from './ingrid.mapper.js';
-import type {Distribution} from "../../../model/distribution.js";
-import {Codelist} from "../utils/codelist.js";
+import { Codelist } from "../utils/codelist.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
-export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implements ToElasticMapper<IngridOpendataIndexDocument> {
+export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> {
 
-    async createIndexDocument(): Promise<IngridOpendataIndexDocument> {
-        let result: IngridOpendataIndexDocument = {
-            ...this.getIngridMetadata(this.baseMapper.settings),
-            metadata: this.getMetaMetadata(),
-            id: this.getGeneratedId(),
+    protected getDefaultDocumentKind(): 'ingrid' | 'opendata' {
+        return 'opendata';
+    }
+
+    getCustomEntries(): object {
+        return {
             uuid: this.getGeneratedId(),
+            collection: { name: this.baseMapper.settings.dataSourceName },
+            t01_object: { obj_id: this.getGeneratedId() },
             modified: this.getModifiedDate(),
-            collection: {
-                name: this.baseMapper.settings.dataSourceName,
-            },
-            sort_hash: this.getSortHash(),
-            content: null, // assigned after
-            rdf: null, // assigned after,
-            t01_object: {
-                obj_id: this.getGeneratedId()
-            },
-            title: this.getTitle(),
-            description: this.baseMapper.getDescription(),
-            dcat: {
-                landingPage: this.baseMapper.getLandingPage()
-            },
-            contacts: await this.getContacts(),
-            keywords: this.getKeywords(),
-            legal_basis: this.baseMapper.getLegalBasis(),
-            distributions: await this.getDistributions(),
-            political_geocoding_level_uri: this.baseMapper.getPoliticalGeocodingLevelURI(),
-            spatial: {
-                geometries: [this.baseMapper.getSpatial()]
-            },
-            // temporal: this.getTemporal(),
-            temporal: {
-                "accrual_periodicity": "",
-                "accrual_periodicity_key": ""
-            }
+            sort_hash: this.getSortUuid(),
         };
-        result.content = this.getContent(result);
-        // add "rdf" at the end, so it does not get included in the "content" array
-        result.rdf = "<?xml version='1.0' encoding='UTF-8'?><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">" + this.getHarvestedData() + "</rdf:RDF>";
+    }
 
-        this.executeCustomCode(result);
+    getDescription(): string {
+        return this.baseMapper.getDescription();
+    }
 
-        return result;
+    async getRdf(): Promise<string> {
+        return "<?xml version='1.0' encoding='UTF-8'?><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">" + this.getHarvestedData() + "</rdf:RDF>";
+    }
+
+    getDcat(): { landing_page?: string } {
+        return { landing_page: this.baseMapper.getLandingPage() };
+    }
+
+    getLegalBasis(): string {
+        return this.baseMapper.getLegalBasis();
+    }
+
+    getPoliticalGeocodingLevelUri(): string {
+        return this.baseMapper.getPoliticalGeocodingLevelURI();
+    }
+
+    getSpatials(): IndexSpatial[] {
+        const geometry = this.baseMapper.getSpatial();
+        return geometry ? [{ geometry }] : undefined;
     }
 
     getKeywords() {
@@ -109,34 +100,37 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> implement
         return result;
     }
 
-    async getContacts() {
+    async getContacts(): Promise<IndexContact[]> {
+        const toContact = (role: string) => (agent: { name: string, homepage?: string, mbox?: string }): IndexContact => {
+            const communications: IndexContact['communications'] = [];
+            if (agent.mbox) communications.push({ type: 'email', value: agent.mbox });
+            if (agent.homepage) communications.push({ type: 'website', value: agent.homepage });
+            return {
+                role,
+                name: agent.name,
+                communications: communications.length ? communications : undefined,
+            };
+        };
         return [
-            ...this.baseMapper.getPublisher().map(contact => {return {role: this.getRoleId("publisher"), ...contact}}),
-            ...this.baseMapper.getCreator().map(contact => {return {role: this.getRoleId("creator"), ...contact}}),
-            ...this.baseMapper.getMaintainer().map(contact => {return {role: this.getRoleId("maintainer"), ...contact}}),
-            ...this.baseMapper.getOriginator().map(contact => {return {role: this.getRoleId("originator"), ...contact}}),
-            ];
-    }
-
-    getTemporal(): DateRange[] {
-        return this.baseMapper.getTemporal();
+            ...this.baseMapper.getPublisher().map(toContact('publisher')),
+            ...this.baseMapper.getCreator().map(toContact('creator')),
+            ...this.baseMapper.getMaintainer().map(toContact('maintainer')),
+            ...this.baseMapper.getOriginator().map(toContact('originator')),
+        ];
     }
 
     getIDF() {
         return null;
     }
 
-    getRoleId(role: string){
-        switch (role) {
-            case "publisher": return 10;
-            case "creator": return 11;
-            case "maintainer": return  2;
-            case "originator": return 6;
-        }
-        return role;
-    }
-
-    async getDistributions(): Promise<Distribution[]> {
-        return await this.baseMapper.getDistributions();
+    async getDistributions(): Promise<IngridOpendataDistribution[]> {
+        const distributions = await this.baseMapper.getDistributions();
+        return distributions?.map(d => ({
+            format: d.format?.[0],
+            access_url: d.accessURL ?? d.access_url,
+            modified: d.modified?.toISOString(),
+            title: d.title,
+            description: d.description,
+        }));
     }
 }

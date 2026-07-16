@@ -27,47 +27,62 @@ import { GenesisMapper } from '../../../importer/genesis/genesis.mapper.js';
 import { namespaces } from '../../../importer/namespaces.js';
 import { UrlUtils } from '../../../utils/url.utils.js';
 import { ensureNoEndSlash, generateUuid } from "../ingrid.utils.js";
-import type { IngridOpendataIndexDocument } from '../model/opendataindex.document.js';
+import type { IndexContact } from '../../../model/index.document.js';
+import type { IngridOpendataDistribution } from '../model/opendataindex.document.js';
 import { ingridMapper } from './ingrid.mapper.js';
 
 export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
 
     private _dcatapdeDoc: string | undefined;
 
-    async createIndexDocument(): Promise<IngridOpendataIndexDocument> {
-        let result: IngridOpendataIndexDocument = {
-            ...this.getIngridMetadata(this.baseMapper.settings),
-            metadata: this.getMetaMetadata(),
-            id: this.baseMapper.getCode(),
-            uuid: this.getGeneratedId(),
-            title: this.getTitle(),
-            description: this.baseMapper.getDescription(),
+    protected getDefaultDocumentKind(): 'ingrid' | 'opendata' {
+        return 'opendata';
+    }
+
+    getCustomEntries(): object {
+        return {
+            uuid: this.baseMapper.getGeneratedId(),
+            collection: { name: this.baseMapper.settings.dataSourceName },
+            t01_object: { obj_id: this.baseMapper.getGeneratedId() },
             modified: this.getModifiedDate(),
-            collection: {
-                name: this.baseMapper.settings.dataSourceName,
-            },
-            t01_object: {
-                obj_id: this.getGeneratedId(),
-            },
-            spatial: null,
-            // temporal: [this.baseMapper.getTemporal()].filter(Boolean),
-            temporal: {
-                "accrual_periodicity": "",
-                "accrual_periodicity_key": ""
-            },
-            contacts: this.baseMapper.getContact(),
-            keywords: this.getKeywords(),
-            distributions: this.baseMapper.getDistributions(),
-            dcat: { landingPage: this.baseMapper.getLandingPageUrl() },
-            legal_basis: null,
-            political_geocoding_level_uri: this.baseMapper.getSpatialUri(),
-            rdf: this.createDcatapdeDocument(),
-            sort_hash: this.getSortHash(),
-            content: null,
+            sort_hash: this.getSortUuid(),
         };
-        result.content = [...new Set(this.getContent(result))];
-        this.executeCustomCode(result);
-        return result;
+    }
+
+    // the document id is the plain table code, as opposed to `uuid` (a hash of partner+code)
+    getGeneratedId(): string {
+        return this.baseMapper.getCode();
+    }
+
+    getDescription(): string {
+        return this.baseMapper.getDescription();
+    }
+
+    async getRdf(): Promise<string> {
+        return this.createDcatapdeDocument();
+    }
+
+    getDcat(): { landing_page?: string } {
+        return { landing_page: this.baseMapper.getLandingPageUrl() };
+    }
+
+    getPoliticalGeocodingLevelUri(): string {
+        return this.baseMapper.getSpatialUri();
+    }
+
+    async getContacts(): Promise<IndexContact[]> {
+        return this.baseMapper.getContact().map(c => ({ role: 'publisher', name: c.name }));
+    }
+
+    async getDistributions(): Promise<IngridOpendataDistribution[]> {
+        const distributions = this.baseMapper.getDistributions();
+        return distributions?.map(d => ({
+            format: d.format?.[0],
+            access_url: d.accessURL ?? d.access_url,
+            modified: d.modified?.toISOString(),
+            title: d.title,
+            description: d.description,
+        }));
     }
 
     createDcatapdeDocument(): string {
@@ -83,7 +98,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         if (!keywords.some(term => term.toLowerCase() === 'opendata')) {
             keywords.push('opendata');
         }
-        return keywords.map(term => ({ id: null, term, source: 'FREE' }));
+        return keywords.map(term => ({ term, source: 'FREE' }));
     }
 
     private getAccrualPeriodicityUri(): string | undefined {

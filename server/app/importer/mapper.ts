@@ -101,7 +101,7 @@ export abstract class Mapper<S extends ImporterSettings> {
      * Base fields for IndexDocumentMetadata, shared across all formats.
      * `data_type` is deliberately left out, since it is profile-specific.
      */
-    protected getBaseMetadata(): Omit<IndexDocumentMetadata, 'data_type'> {
+    getBaseMetadata(): Omit<IndexDocumentMetadata, 'data_type'> {
         return {
             created: null,
             modified: this.getModifiedDate()?.toISOString() ?? null,

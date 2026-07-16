@@ -21,58 +21,38 @@
  * ==================================================
  */
 
+import turfBbox from '@turf/bbox';
 import log4js from 'log4js';
 import { CkanMapper } from "../../../importer/ckan/ckan.mapper.js";
-import type { DateRange } from "../../../model/dateRange.js";
-import type { IngridOpendataIndexDocument } from "../model/opendataindex.document.js";
+import type { IndexContact, IndexSpatial } from "../../../model/index.document.js";
+import type { IngridOpendataDistribution } from "../model/opendataindex.document.js";
 import { ingridMapper } from './ingrid.mapper.js';
-import {Codelist} from "../utils/codelist.js";
-import type {Distribution} from "../../../model/distribution.js";
+import { Codelist } from "../utils/codelist.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
 export class ingridCkanMapper extends ingridMapper<CkanMapper> {
 
-    async createIndexDocument(): Promise<IngridOpendataIndexDocument> {
-        let result: IngridOpendataIndexDocument = {
-            ...this.getIngridMetadata(this.baseMapper.settings),
-            metadata: this.getMetaMetadata(),
-            id: this.getGeneratedId(),
+    protected getDefaultDocumentKind(): 'ingrid' | 'opendata' {
+        return 'opendata';
+    }
+
+    getCustomEntries(): object {
+        return {
             uuid: this.getGeneratedId(),
+            collection: { name: this.baseMapper.settings.dataSourceName },
+            t01_object: { obj_id: this.getGeneratedId() },
             modified: this.getModifiedDate(),
-            collection: {
-                name: this.baseMapper.settings.dataSourceName,
-            },
-            sort_hash: this.getSortHash(),
-            content: null, // assigned after
-            rdf: null, // assigned after,
-            t01_object: {
-                obj_id: this.getGeneratedId()
-            },
-            title: this.getTitle(),
-            description: this.baseMapper.getDescription(),
-            dcat: {
-                landingPage: null,//this.getLandingPage()
-            },
-            contacts: this.getContacts(),
-            keywords: this.getKeywords(),
-            legal_basis: null,//this.getLegalBasis(),
-            distributions: await this.getDistributions(),
-            political_geocoding_level_uri: null,//this.getPoliticalGeocodingLevelURI(),
-            spatial: this.getSpatial(),
-            // temporal: this.getTemporal(),
-            temporal: {
-                "accrual_periodicity": "",
-                "accrual_periodicity_key": ""
-            }
+            sort_hash: this.getSortUuid(),
         };
-        result.content = this.getContent(result);
-        // add "rdf" at the end, so it does not get included in the "content" array
-        result.rdf = await this.baseMapper.getDcatapde();
+    }
 
-        this.executeCustomCode(result);
+    getDescription(): string {
+        return this.baseMapper.getDescription();
+    }
 
-        return result;
+    async getRdf(): Promise<string> {
+        return this.baseMapper.getDcatapde();
     }
 
     getKeywords() {
@@ -108,7 +88,6 @@ export class ingridCkanMapper extends ingridMapper<CkanMapper> {
         if (!result.some(keyword => keyword.term.toLowerCase() === 'opendata')) {
             result.push({
                 term: 'opendata',
-                id: null,
                 source: 'FREE'
             });
         }
@@ -116,34 +95,41 @@ export class ingridCkanMapper extends ingridMapper<CkanMapper> {
         return result;
     }
 
-    getContacts() {
+    async getContacts(): Promise<IndexContact[]> {
+        const toContact = (role: string) => (agent: { name: string, homepage?: string, mbox?: string }): IndexContact => {
+            const communications: IndexContact['communications'] = [];
+            if (agent.mbox) communications.push({ type: 'email', value: agent.mbox });
+            if (agent.homepage) communications.push({ type: 'website', value: agent.homepage });
+            return {
+                role,
+                name: agent.name,
+                communications: communications.length ? communications : undefined,
+            };
+        };
         return [
-            ...this.baseMapper.getPublisher().map(contact => {return {role: this.getRoleId("publisher"), ...contact}}),
-            ...this.baseMapper.getCreator().map(contact => {return {role: this.getRoleId("creator"), ...contact}}),
-            ...this.baseMapper.getMaintainer().map(contact => {return {role: this.getRoleId("maintainer"), ...contact}}),
-            ...this.baseMapper.getOriginator().map(contact => {return {role: this.getRoleId("originator"), ...contact}}),
+            ...this.baseMapper.getPublisher().map(toContact('publisher')),
+            ...this.baseMapper.getCreator().map(toContact('creator')),
+            ...this.baseMapper.getMaintainer().map(toContact('maintainer')),
+            ...this.baseMapper.getOriginator().map(toContact('originator')),
         ];
     }
 
-    getRoleId(role: string){
-        switch (role) {
-            case "publisher": return 10;
-            case "creator": return 11;
-            case "maintainer": return  2;
-            case "originator": return 6;
+    getSpatials(): IndexSpatial[] {
+        const geometry = this.baseMapper.getSpatial();
+        if (!geometry) {
+            return undefined;
         }
-        return role;
+        return [{ geometry, bbox: turfBbox(geometry) }];
     }
 
-    getSpatial(): any {
-        return {geometries: [this.baseMapper.getSpatial()]};
-    }
-
-    getTemporal(): DateRange[] {
-        return this.baseMapper.getTemporal();
-    }
-
-    async getDistributions(): Promise<Distribution[]> {
-        return await this.baseMapper.getDistributions();
+    async getDistributions(): Promise<IngridOpendataDistribution[]> {
+        const distributions = await this.baseMapper.getDistributions();
+        return distributions?.map(d => ({
+            format: d.format?.[0],
+            access_url: d.accessURL ?? d.access_url,
+            modified: d.modified?.toISOString(),
+            title: d.title,
+            description: d.description,
+        }));
     }
 }

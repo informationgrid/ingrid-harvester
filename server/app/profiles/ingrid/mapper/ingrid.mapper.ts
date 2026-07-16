@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import type { ElasticsearchCatalogSettings } from '@shared/catalog.js';
 import * as crypto from "crypto";
 import log4js from 'log4js';
 import type { CkanMapper } from "../../../importer/ckan/ckan.mapper.js";
@@ -30,7 +31,15 @@ import type { GenesisMapper } from "../../../importer/genesis/genesis.mapper.js"
 import type { ToElasticMapper } from '../../../importer/to.elastic.mapper.js';
 import type { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
 import type { DocumentFactory } from "../../../model/index.document.factory.js";
-import type { IndexContact, IndexKeyword, IndexReference, IndexSpatial, IndexTemporal } from '../../../model/index.document.js';
+import type {
+    IndexContact,
+    IndexKeyword,
+    IndexReference,
+    IndexSpatial,
+    IndexTemporal
+} from '../../../model/index.document.js';
+import { CatalogService } from '../../../services/catalog/CatalogService.js';
+import { ProfileFactoryLoader } from '../../profile.factory.loader.js';
 import type {
     IngridConformanceResult,
     IngridDataQuality,
@@ -40,11 +49,13 @@ import type {
     IngridSpatialRepresentation,
     IngridSpecific
 } from "../model/index.document.js";
+import type { IngridOpendataDistribution, IngridOpendataIndexDocument } from "../model/opendataindex.document.js";
 import { Codelist } from "../utils/codelist.js";
 
 export type ingridMapperType = CswMapper | CkanMapper | DcatapdeMapper | WfsMapper | GenesisMapper;
 
-export abstract class ingridMapper<M extends ingridMapperType> implements DocumentFactory<IngridIndexDocument>, ToElasticMapper<IngridIndexDocument> {
+export abstract class ingridMapper<M extends ingridMapperType>
+    implements DocumentFactory<IngridIndexDocument | IngridOpendataIndexDocument>, ToElasticMapper<IngridIndexDocument | IngridOpendataIndexDocument> {
 
     readonly baseMapper: M;
 
@@ -64,8 +75,50 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
         return null;
     }
 
-    async createIndexDocument(): Promise<IngridIndexDocument> {
-        let result: IngridIndexDocument = {
+    // 'ingrid' produces an IngridIndexDocument, 'opendata' an IngridOpendataIndexDocument.
+    // Resolved from the target catalogs' configured Elastic mapping (see resolveMappingHint());
+    // falls back to `getDefaultDocumentKind()` when that can't be resolved (e.g. dry runs, no
+    // catalogs assigned, or catalogs with mixed mappings).
+    getDocumentKind(): 'ingrid' | 'opendata' {
+        return this.resolveMappingHint() ?? this.getDefaultDocumentKind();
+    }
+
+    // looks up which of getAvailableIndexMappings()'s schemaNames applies to this mapper's target
+    // catalogs (this.baseMapper.settings.catalogIds), so a mapper capable of producing more than
+    // one document shape (most notably CSW) knows which one to build. Returns undefined if none
+    // of the catalogs are Elasticsearch catalogs, or if they resolve to more than one distinct
+    // mapping (mixed InGrid/OpenData catalogs for the same import job).
+    private resolveMappingHint(): 'ingrid' | 'opendata' | undefined {
+        const schemaNames = new Set<string>();
+        for (const catalogId of this.baseMapper.settings.catalogIds ?? []) {
+            const catalogSettings = CatalogService.getCatalogSettings(catalogId) as Partial<ElasticsearchCatalogSettings>;
+            const mappingFile = catalogSettings?.settings?.mappingFile;
+            if (!mappingFile) continue;
+            const schemaName = ProfileFactoryLoader.get().getAvailableIndexMappings().find(o => o.value === mappingFile)?.schemaName;
+            if (schemaName === 'ingrid' || schemaName === 'opendata') {
+                schemaNames.add(schemaName);
+            }
+        }
+        if (schemaNames.size === 1) {
+            return [...schemaNames][0] as 'ingrid' | 'opendata';
+        }
+        if (schemaNames.size > 1) {
+            this._log.warn(`Catalogs [${this.baseMapper.settings.catalogIds}] use mixed Elastic mappings (${[...schemaNames].join(', ')}); falling back to this mapper's default document kind.`);
+        }
+        return undefined;
+    }
+
+    // the document kind a mapper subclass produces when no catalog-derived hint is available —
+    // 'ingrid' for CSW/WFS-sourced data, 'opendata' for CKAN/DCAT-AP.de/Genesis-sourced data,
+    // since only the source format determines which fields can meaningfully be populated by
+    // default (e.g. a CSW source has no real DCAT `distributions`, a CKAN source has no real ISO
+    // `exports.iso`).
+    protected getDefaultDocumentKind(): 'ingrid' | 'opendata' {
+        return 'ingrid';
+    }
+
+    async createIndexDocument(): Promise<IngridIndexDocument | IngridOpendataIndexDocument> {
+        const common = {
             ...this.getCustomEntries(),
             id: this.getGeneratedId(),
             $schema: undefined, // set by the target catalog from the selected JSON schema's $id
@@ -92,9 +145,26 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
             temporal: this.getTemporal(),
             keywords: this.getKeywords(),
             references: this.getReferences(),
-            exports: this.getExports(),
-            ingrid: this.getIngrid(),
         };
+
+        let result: IngridIndexDocument | IngridOpendataIndexDocument;
+        if (this.getDocumentKind() === 'opendata') {
+            result = {
+                ...common,
+                exports: { rdf: await this.getRdf() },
+                dcat: this.getDcat(),
+                legal_basis: this.getLegalBasis(),
+                distributions: await this.getDistributions(),
+                political_geocoding_level_uri: this.getPoliticalGeocodingLevelUri(),
+            };
+        }
+        else {
+            result = {
+                ...common,
+                exports: { iso: this.getIso() },
+                ingrid: this.getIngrid(),
+            };
+        }
 
         this.executeCustomCode(result);
         return result;
@@ -243,11 +313,27 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
         return undefined;
     }
 
-    getExports(): { iso?: string } {
-        return { iso: this.getIso() };
+    getIso(): string {
+        return undefined;
     }
 
-    getIso(): string {
+    async getRdf(): Promise<string> {
+        return undefined;
+    }
+
+    getDcat(): { landing_page?: string } {
+        return undefined;
+    }
+
+    getLegalBasis(): string {
+        return undefined;
+    }
+
+    async getDistributions(): Promise<IngridOpendataDistribution[]> {
+        return undefined;
+    }
+
+    getPoliticalGeocodingLevelUri(): string {
         return undefined;
     }
 
