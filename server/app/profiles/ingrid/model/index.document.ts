@@ -32,7 +32,7 @@ export type IngridDocumentType = 'InGridGeoDataset' | 'InGridDataCollection' | '
 // ---------------------------------------------------------------------------
 
 export type IngridIndexDocument = IndexDocument & {
-    metadata: IndexDocumentMetadata & { data_type: string, document_type?: IngridDocumentType },
+    metadata: IndexDocumentMetadata & { data_type: 'INGRID' | 'UMWELTNAVI', document_type?: IngridDocumentType },
 } & IngridFields;
 
 export type IngridFields = {

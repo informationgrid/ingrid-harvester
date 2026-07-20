@@ -124,7 +124,7 @@ export abstract class ingridMapper<M extends ingridMapperType>
             $schema: undefined, // set by the target catalog from the selected JSON schema's $id
             schema_version: undefined, // TODO: Will be removed from index schema in future
             metadata: {
-                data_type: 'INGRID',
+                data_type: 'INGRID' as const,
                 document_type: this.getDocumentType(),
                 created: null,  // TODO: populate from source record
                 modified: this.getModifiedDate()?.toISOString() ?? null,

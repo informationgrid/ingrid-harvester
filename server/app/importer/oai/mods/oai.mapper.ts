@@ -26,7 +26,8 @@
  */
 import log4js from 'log4js';
 import * as xpath from 'xpath';
-import type { GeometryInformation, Temporal } from '../../../model/index.document.js';
+import type { GeometryInformation } from '../../../model/index.document.js';
+import type { Temporal } from '../../../model/ingrid.index.document.js';
 import type { MetadataSource } from '../../../model/harvesting.metadata.js';
 import type { Keyword } from '../../../model/ingrid.index.document.js';
 import type { Summary } from '../../../model/summary.js';

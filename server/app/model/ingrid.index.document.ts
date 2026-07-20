@@ -33,15 +33,17 @@ export type IngridIndexDocument = {
     temporal: {
         modified: Date,
         issued: Date,
-        data_temporal?: {
-            date_range: DateRange,
-            date_type?: string
-        }
+        data_temporal?: Temporal
     },
     keywords?: Keyword[],
     fulltext: string,
     sort_uuid: string,
     metadata: Metadata
+};
+
+export type Temporal = {
+    date_range: DateRange,
+    date_type?: string
 };
 
 export type Spatial = {

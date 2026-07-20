@@ -23,7 +23,8 @@
 
 import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import { convertBBCode } from '../lvr.utils.js';
-import type { GeometryInformation, Temporal } from '../../../model/index.document.js';
+import type { GeometryInformation } from '../../../model/index.document.js';
+import type { Temporal } from '../../../model/ingrid.index.document.js';
 import type { Keyword } from '../../../model/ingrid.index.document.js';
 import type { KldMapper } from '../../../importer/kld/kld.mapper.js';
 import type { License } from '@shared/license.model.js';

@@ -22,7 +22,8 @@
  */
 
 import * as MiscUtils from '../../../utils/misc.utils.js';
-import type { GeometryInformation, Temporal } from '../../../model/index.document.js';
+import type { GeometryInformation } from '../../../model/index.document.js';
+import type { Temporal } from '../../../model/ingrid.index.document.js';
 import type { JsonMapper } from '../../../importer/json/json.mapper.js';
 import type { Keyword } from '../../../model/ingrid.index.document.js';
 import type { License } from '@shared/license.model.js';

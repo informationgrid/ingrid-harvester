@@ -24,7 +24,8 @@
 import type { License } from '@shared/license.model.js';
 import type { Link } from '../../../importer/oai/lido/lido.model.js';
 import { OaiMapper } from '../../../importer/oai/lido/oai.mapper.js';
-import type { GeometryInformation, Temporal } from '../../../model/index.document.js';
+import type { GeometryInformation } from '../../../model/index.document.js';
+import type { Temporal } from '../../../model/ingrid.index.document.js';
 import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import type { Keyword } from '../../../model/ingrid.index.document.js';
 import { LvrMapper } from './lvr.mapper.js';

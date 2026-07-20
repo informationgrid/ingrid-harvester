@@ -24,7 +24,8 @@
 import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import { createEsId } from '../lvr.utils.js';
 import { v5 as uuidv5 } from 'uuid';
-import type { GeometryInformation, Temporal } from '../../../model/index.document.js';
+import type { GeometryInformation } from '../../../model/index.document.js';
+import type { Temporal } from '../../../model/ingrid.index.document.js';
 import type { DocumentFactory } from '../../../model/index.document.factory.js';
 import type { IngridIndexDocument, Keyword, Spatial } from '../../../model/ingrid.index.document.js';
 import type { JsonMapper } from '../../../importer/json/json.mapper.js';
@@ -79,7 +80,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
 
         let result: LvrIndexDocument = {
             ...ingridDocument,
-            uuid: this.getUrlSafeIdentifier(),
+            id: this.getUrlSafeIdentifier(),
             lvr: {
                 identifier: this.getIdentifier(),
                 genres: this.getGenres(),
