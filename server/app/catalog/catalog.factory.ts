@@ -33,6 +33,7 @@ import type { DatabaseUtils } from '../persistence/database.utils.js';
 import type { Bucket } from '../persistence/postgres.utils.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from '../services/config/ConfigService.js';
+import type { DiplanungIndexDocument } from '../profiles/diplanung/model/index.document.js';
 import type { CswDataset } from './csw/csw.catalog.js';
 import type { PiveauDataset } from './piveau/piveau.catalog.js';
 
@@ -42,7 +43,7 @@ export interface CatalogFactory {
     getCatalog(catalogId: number, summary: Summary): Promise<Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>>;
 }
 
-export type CatalogColumnType = CswDataset | IndexDocument | PiveauDataset;
+export type CatalogColumnType = CswDataset | IndexDocument | PiveauDataset | DiplanungIndexDocument;
 
 export interface CatalogOperation {
     // TODO

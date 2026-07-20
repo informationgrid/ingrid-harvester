@@ -50,7 +50,7 @@ const log = log4js.getLogger(import.meta.filename);
 
 export type DiplanungSettings = CswSettings | DcatappluSettings | WfsSettings;
 
-export class DiplanungFactory extends ProfileFactory<DiplanungSettings> {
+export class DiplanungFactory extends ProfileFactory<DiplanungSettings, DiplanungIndexDocument> {
 
     dateReplacer = (key: string, value: any): any => {
         // when used as a JSON.stringify callback, `this` refers to the to-be-stringified object

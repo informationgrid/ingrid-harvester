@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import type { IndexDocument } from './index.document.js';
+import type { CatalogColumnType } from '../catalog/catalog.factory.js';
 
-export abstract class DocumentFactory<T extends IndexDocument> {
+export abstract class DocumentFactory<T extends CatalogColumnType> {
 
     abstract createCswIsoDocument(): string;
 

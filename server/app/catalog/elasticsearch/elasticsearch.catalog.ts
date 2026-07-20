@@ -30,9 +30,9 @@ import type { Summary } from '../../model/summary.js';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import type { ElasticsearchUtils, EsOperation } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
-import { Catalog } from '../catalog.factory.js';
+import { Catalog, type CatalogColumnType } from '../catalog.factory.js';
 
-export abstract class ElasticsearchCatalog extends Catalog<IndexDocument, ElasticsearchCatalogSettings, EsOperation> {
+export abstract class ElasticsearchCatalog<C extends CatalogColumnType = IndexDocument> extends Catalog<C, ElasticsearchCatalogSettings, EsOperation> {
 
     protected readonly elastic: ElasticsearchUtils;
 

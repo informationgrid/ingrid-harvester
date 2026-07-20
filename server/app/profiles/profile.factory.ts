@@ -53,7 +53,7 @@ import { ConfigService } from '../services/config/ConfigService.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
-export abstract class ProfileFactory<T extends ImporterSettings> implements ImporterFactory<T>,
+export abstract class ProfileFactory<T extends ImporterSettings, TDoc extends CatalogColumnType = IndexDocument> implements ImporterFactory<T>,
 // MapperFactory<T>,
 CatalogFactory {
 
@@ -140,7 +140,7 @@ CatalogFactory {
 
     abstract getImporter(settings: T): Promise<Importer<T>>;
 
-    abstract getDocumentFactory(mapper: Mapper<ImporterSettings>): DocumentFactory<IndexDocument>;
+    abstract getDocumentFactory(mapper: Mapper<ImporterSettings>): DocumentFactory<TDoc>;
 
     abstract getCatalog(catalogId: number, summary: Summary): Promise<Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>>;
 

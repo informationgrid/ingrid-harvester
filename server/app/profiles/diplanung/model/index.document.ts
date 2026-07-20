@@ -24,7 +24,6 @@
 import type { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model.js';
 import type { DateRange } from '../../../model/dateRange.js';
 import type { Distribution } from '../../../model/distribution.js';
-import type { IndexDocument } from '../../../model/index.document.js';
 import type { Organization, Person } from '../../../model/agent.js';
 
 export type DiplanungIndexDocument = {

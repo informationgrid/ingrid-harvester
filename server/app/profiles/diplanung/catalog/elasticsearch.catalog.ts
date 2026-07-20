@@ -47,7 +47,7 @@ const overwriteFields = [
 // b) remove this var and the code it depends on after it's not needed anymore
 const HACK_ON = true;
 
-export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog {
+export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog<DiplanungIndexDocument> {
 
     public async processBucket(bucket: Bucket<DiplanungIndexDocument>, importerSettings: ImporterSettings): Promise<EsOperation[]> {
         let box: EsOperation[] = [];

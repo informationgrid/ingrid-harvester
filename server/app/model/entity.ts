@@ -24,6 +24,7 @@
 import type { Distribution } from './distribution.js';
 import type { HarvestingMetadata } from './harvesting.metadata.js';
 import type { IndexDocument } from './index.document.js';
+import type { DiplanungIndexDocument } from '../profiles/diplanung/model/index.document.js';
 
 export interface Entity {
     id?: string     // optional because it is usually set by the DB automatically at the time of insertion
@@ -40,7 +41,7 @@ export interface RecordEntity extends Entity {
     /* internal harvesting bookkeeping; persisted in its own column, never part of the dataset */
     harvest_metadata?: HarvestingMetadata,
     /* elasticsearch document */
-    dataset: IndexDocument, // TODO rename to dataset_elastic, make optional -
+    dataset: IndexDocument | DiplanungIndexDocument, // TODO rename to dataset_elastic, make optional -
     /* CSW XML document */
     dataset_csw?: any,
     /* DCAT-AP.DE XML document */
