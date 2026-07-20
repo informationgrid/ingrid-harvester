@@ -81,6 +81,11 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
         let result: LvrIndexDocument = {
             ...ingridDocument,
             id: this.getUrlSafeIdentifier(),
+            $schema: undefined, // no validation path for LVR yet
+            metadata: ingridDocument.metadata as unknown as LvrIndexDocument['metadata'],
+            temporal: ingridDocument.temporal as unknown as LvrIndexDocument['temporal'],
+            fulltext: ingridDocument.fulltext as unknown as LvrIndexDocument['fulltext'],
+            keywords: ingridDocument.keywords as unknown as LvrIndexDocument['keywords'],
             lvr: {
                 identifier: this.getIdentifier(),
                 genres: this.getGenres(),
