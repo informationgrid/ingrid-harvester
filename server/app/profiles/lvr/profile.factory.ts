@@ -64,12 +64,12 @@ export class LvrFactory extends ProfileFactory<LvrSettings> {
 
     getDocumentFactory(mapper: JsonMapper | KldMapper | OaiLidoMapper | OaiModsMapper): DocumentFactory<LvrIndexDocument> {
         switch (mapper.constructor.name) {
-            case 'JsonMapper': return new LvrClickRheinMapper(<JsonMapper>mapper);
-            case 'KldMapper': return new LvrKldMapper(<KldMapper>mapper);
+            case 'JsonMapper': return new LvrClickRheinMapper(mapper as JsonMapper);
+            case 'KldMapper': return new LvrKldMapper(mapper as KldMapper);
             case 'OaiMapper':
                 switch ((mapper.settings as OaiSettings).metadataPrefix?.toLowerCase()) {
-                    case 'lido': return new LvrOaiLidoMapper(<OaiLidoMapper>mapper);
-                    case 'mods': return new LvrOaiModsMapper(<OaiModsMapper>mapper);
+                    case 'lido': return new LvrOaiLidoMapper(mapper as OaiLidoMapper);
+                    case 'mods': return new LvrOaiModsMapper(mapper as OaiModsMapper);
                     default: throw new Error('Profile LVR only supports `mods` and `lido` prefixes for OAI-PMH harvester');
                 }
         }

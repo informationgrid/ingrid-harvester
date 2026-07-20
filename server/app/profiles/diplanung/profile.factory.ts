@@ -72,14 +72,14 @@ export class DiplanungFactory extends ProfileFactory<DiplanungSettings, Diplanun
 
     getDocumentFactory(mapper: CswMapper | DcatappluMapper | WfsMapper): DocumentFactory<DiplanungIndexDocument> {
         switch (mapper.constructor.name) {
-            case 'CswMapper': return new DiplanungCswMapper(<CswMapper>mapper);
-            case 'DcatappluMapper': return new DiplanungDcatappluMapper(<DcatappluMapper>mapper);
+            case 'CswMapper': return new DiplanungCswMapper(mapper as CswMapper);
+            case 'DcatappluMapper': return new DiplanungDcatappluMapper(mapper as DcatappluMapper);
             case 'WfsMapper': {
                 switch (mapper.settings.type) {
-                    case 'WFS.FIS': return new FisWfsMapper(<WfsMapper>mapper);
-                    case 'WFS.MS': return new MsWfsMapper(<WfsMapper>mapper);
-                    case 'WFS.XPLAN.SYN': return new XplanSynWfsMapper(<WfsMapper>mapper);
-                    case 'WFS.XPLAN': return new XplanWfsMapper(<WfsMapper>mapper);
+                    case 'WFS.FIS': return new FisWfsMapper(mapper as WfsMapper);
+                    case 'WFS.MS': return new MsWfsMapper(mapper as WfsMapper);
+                    case 'WFS.XPLAN.SYN': return new XplanSynWfsMapper(mapper as WfsMapper);
+                    case 'WFS.XPLAN': return new XplanWfsMapper(mapper as WfsMapper);
                 }
             }
         }
