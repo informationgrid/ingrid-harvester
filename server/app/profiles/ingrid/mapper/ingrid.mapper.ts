@@ -284,6 +284,11 @@ export abstract class ingridMapper<M extends ingridMapperType>
         return undefined;
     }
 
+    getOrganisation() {
+        let organisation = this.transformToIgcDomainId(this.baseMapper.settings.provider, "111");
+        return organisation;
+    }
+
     getSortUuid(): string {
         return crypto.createHash('sha1').update(this.getTitle(), 'binary').digest('hex');
     }

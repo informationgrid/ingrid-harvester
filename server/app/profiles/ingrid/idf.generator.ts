@@ -24,17 +24,17 @@
 import type { DOMParser } from '@xmldom/xmldom';
 import type { WfsMapper } from '../../importer/wfs/wfs.mapper.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
-import type { ingridMapper } from './mapper/ingrid.mapper.js';
+import type { ingridWfsMapper } from './mapper/ingrid.wfs.mapper.js';
 
 export class IdfGenerator {
 
-    protected mapper: ingridMapper<WfsMapper>;
+    protected mapper: ingridWfsMapper;
     protected baseMapper: WfsMapper;
 
     protected document: Document;
     protected domParser: DOMParser = MiscUtils.getDomParser();
-    
-    constructor(profileMapper: ingridMapper<WfsMapper>) {
+
+    constructor(profileMapper: ingridWfsMapper) {
         this.mapper = profileMapper;
         this.baseMapper = profileMapper.baseMapper;
         let idfBody = '<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.portalu.de/IDF/1.0"><head/><body/></html>';
