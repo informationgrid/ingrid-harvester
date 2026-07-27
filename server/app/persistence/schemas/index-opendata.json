@@ -24,15 +24,6 @@
             "https://example.com/schemas/order/v2.1.0/schema.json"
           ]
         },
-        "schema_version": {
-          "type": "string",
-          "description": "Die Version des Schemas des Indexes. \nDie Version richtet sich nach der Versionierung des InGrid Releases. \nSemantic Versioning soll verwendet werden.\nZusätzlich kann eine Schema- Release-Nummer verwendet werden, z.B. 1.0.0-1\n",
-          "examples": [
-            "1.0.0",
-            "1.1.0-1",
-            "1.2.0-1"
-          ]
-        },
         "metadata": {
           "description": "Enthält Metadaten über den Datensatz. Dies kann das Erstellungs- oder Änderungsdatum sein, oder aus welcher Quelle der Datensatz stammt.",
           "type": "object",
@@ -103,8 +94,23 @@
               ]
             },
             "language": {
-              "type": "string",
-              "description": "Enthält die Sprache des Metadatensatzes."
+              "title": "language",
+              "description": "Enthält die Sprache des Metadatensatzes.",
+              "additionalProperties": false,
+              "properties": {
+                "key": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
             },
             "datasource": {
               "properties": {
@@ -227,6 +233,7 @@
                   },
                   "coordinates": {
                     "type": "array",
+                    "description": "Koordinaten des Geometrieelements",
                     "items": {
                       "type": "array",
                       "minItems": 4,
@@ -237,18 +244,14 @@
                           "type": "number"
                         }
                       }
-                    },
-                    "description": "Koordinaten des Geometrieelements",
-                    "examples": [
-                      "..."
-                    ]
+                    }
                   }
                 }
               },
               "bbox": {
                 "type": "array",
                 "title": "Bounding Box",
-                "description": "Umschließende BBOX der Geometrie",
+                "description": "Umschließende BBOX der Geometrie. Die Reihenfolge der Koordinaten ist `[min Longitude west, min Latitude south, max Longitude east, max Latitude north]`.",
                 "items": {
                   "type": "number",
                   "minimum": -180,
@@ -317,6 +320,17 @@
             ]
           },
           "$comment": "Ehemaliges Indexfeld: layer"
+        },
+        "crs": {
+          "type": "array",
+          "title": "Referenzsystem",
+          "description": "Koordinatenreferenzsystem(e) des Datensatzes.",
+          "items": {
+            "type": "string",
+            "examples": [
+              "EPSG:25832"
+            ]
+          }
         },
         "temporal": {
           "description": "Gültigkeitsdatumsbereich der beschriebenen Daten",
@@ -427,36 +441,10 @@
           "items": {
             "type": "object",
             "title": "item",
-            "if": {
-              "properties": {
-                "internal": {
-                  "const": true
-                }
-              }
-            },
-            "then": {
-              "required": [
-                "uuid_ref"
-              ]
-            },
-            "else": {
-              "required": [
-                "url"
-              ]
-            },
             "properties": {
-              "internal": {
-                "type": "boolean",
-                "description": "Gibt an, ob es sich um einen internen oder externen Verweis handelt."
-              },
               "url": {
-                "$comment": "Sollten url und uuidRef vereint werden? Wodurch die Logik vereinfacht wird?",
                 "type": "string",
                 "description": "Die URL zur externen Ressource oder Download."
-              },
-              "uuid_ref": {
-                "type": "string",
-                "description": "Die UUID des internen Datensatzes."
               },
               "type": {
                 "type": "object",
@@ -542,6 +530,7 @@
                 },
                 "coordinates": {
                   "type": "array",
+                  "description": "Koordinaten des Geometrieelements",
                   "items": {
                     "type": "array",
                     "minItems": 4,
@@ -552,18 +541,14 @@
                         "type": "number"
                       }
                     }
-                  },
-                  "description": "Koordinaten des Geometrieelements",
-                  "examples": [
-                    "..."
-                  ]
+                  }
                 }
               }
             },
             "bbox": {
               "type": "array",
               "title": "Bounding Box",
-              "description": "Umschließende BBOX der Geometrie",
+              "description": "Umschließende BBOX der Geometrie. Die Reihenfolge der Koordinaten ist `[min Longitude west, min Latitude south, max Longitude east, max Latitude north]`.",
               "items": {
                 "type": "number",
                 "minimum": -180,
@@ -700,8 +685,23 @@
               ]
             },
             "language": {
-              "type": "string",
-              "description": "Enthält die Sprache des Metadatensatzes."
+              "title": "language",
+              "description": "Enthält die Sprache des Metadatensatzes.",
+              "additionalProperties": false,
+              "properties": {
+                "key": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "value": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
             },
             "datasource": {
               "properties": {
@@ -725,18 +725,9 @@
         "ReferenceItem": {
           "type": "object",
           "properties": {
-            "internal": {
-              "type": "boolean",
-              "description": "Gibt an, ob es sich um einen internen oder externen Verweis handelt."
-            },
             "url": {
-              "$comment": "Sollten url und uuidRef vereint werden? Wodurch die Logik vereinfacht wird?",
               "type": "string",
               "description": "Die URL zur externen Ressource oder Download."
-            },
-            "uuid_ref": {
-              "type": "string",
-              "description": "Die UUID des internen Datensatzes."
             },
             "type": {
               "type": "object",
@@ -817,21 +808,19 @@
               "type": "string"
             },
             "license": {
-              "properties": {
-                "url": {
+              "url": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "attribution_by_text": {
+                "type": "string"
+              },
+              "languages": {
+                "type": "array",
+                "items": {
                   "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "attribution_by_text": {
-                  "type": "string"
-                },
-                "languages": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
                 }
               }
             },
