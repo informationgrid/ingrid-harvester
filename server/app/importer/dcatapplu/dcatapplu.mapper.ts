@@ -105,7 +105,6 @@ export class DcatappluMapper extends Mapper<DcatappluSettings> implements ToElas
         return {
             id: this.getGeneratedId(),
             $schema: undefined, // set by the target catalog from the selected JSON schema's $id
-            schema_version: undefined,
             metadata: { ...this.getBaseMetadata(), data_type: this.settings.type } as IndexDocumentMetadata,
             title: this.getTitle(),
         };

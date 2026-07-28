@@ -13,9 +13,6 @@
         "$schema": {
             "type": "keyword"
         },
-        "schema_version": {
-            "type": "keyword"
-        },
         "sort_uuid": {
             "type": "keyword"
         },
@@ -43,7 +40,14 @@
                     "type": "keyword"
                 },
                 "language": {
-                    "type": "keyword"
+                    "properties": {
+                        "key": {
+                            "type": "keyword"
+                        },
+                        "value": {
+                            "type": "keyword"
+                        }
+                    }
                 },
                 "datasource": {
                     "properties": {
@@ -248,13 +252,7 @@
         },
         "references": {
             "properties": {
-                "internal": {
-                    "type": "boolean"
-                },
                 "url": {
-                    "type": "keyword"
-                },
-                "uuid_ref": {
                     "type": "keyword"
                 },
                 "type": {

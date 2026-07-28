@@ -899,8 +899,17 @@
                   "description": "Beschreibt den Typ des Metadatensatzes."
                 },
                 "language": {
-                  "type": "string",
-                  "description": "Enthält die Sprache des Metadatensatzes. Hier wird die Codeliste 99999999 verwendet."
+                  "title": "language",
+                  "description": "Enthält die Sprache des Metadatensatzes. Hier wird die Codeliste 99999999 verwendet.",
+                  "additionalProperties": false,
+                  "properties": {
+                    "key": {
+                      "type": ["string", "null"]
+                    },
+                    "value": {
+                      "type": ["string", "null"]
+                    }
+                  }
                 },
                 "partner": {
                   "type": "string",
@@ -1825,8 +1834,17 @@
                   "description": "Beschreibt den Typ des Metadatensatzes."
                 },
                 "language": {
-                  "type": "string",
-                  "description": "Enthält die Sprache des Metadatensatzes. Hier wird die Codeliste 99999999 verwendet."
+                  "title": "language",
+                  "description": "Enthält die Sprache des Metadatensatzes. Hier wird die Codeliste 99999999 verwendet.",
+                  "additionalProperties": false,
+                  "properties": {
+                    "key": {
+                      "type": ["string", "null"]
+                    },
+                    "value": {
+                      "type": ["string", "null"]
+                    }
+                  }
                 },
                 "partner": {
                   "type": "string",

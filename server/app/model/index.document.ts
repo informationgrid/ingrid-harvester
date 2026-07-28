@@ -30,7 +30,6 @@ import type { Geometry, Point } from 'geojson';
 export type IndexDocument = {
     id: string,
     $schema: string,
-    schema_version?: string, // TODO: Will be removed from index schema in future
     metadata: IndexDocumentMetadata,
     title: string,
     sort_uuid?: string,
@@ -53,7 +52,7 @@ export type IndexDocumentMetadata = {
     issued?: string | null,     // ISO 8601
     partner?: string,
     provider?: string,
-    language?: string,
+    language?: { key: string | null, value: string | null },
     datasource?: { id: string, name: string },
 };
 
@@ -94,9 +93,7 @@ export type IndexTemporalItem = {
 } & ({ date: string } | { date_range: { gte?: string, lte?: string } } | { date_text: string });
 
 export type IndexReference = {
-    internal?: boolean,
-    url?: string,        // required by schema when internal !== true
-    uuid_ref?: string,   // required by schema when internal === true
+    url?: string,
     type?: { key: string | null, value: string | null },
     title?: string,
     explanation?: string,

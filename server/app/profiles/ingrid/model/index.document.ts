@@ -39,6 +39,7 @@ export type IngridFields = {
     temporal?: IngridTemporal,
     exports?: { iso?: string },
     ingrid?: IngridSpecific,
+    crs?: string[],
 };
 
 export type IngridSpecific = {
@@ -53,6 +54,40 @@ export type IngridSpecific = {
     order_info?: string,
     data_quality?: IngridDataQuality,
     character_set?: { key: string | null, value: string | null },
+    spatialResolutionScale?: { scale?: number, resolution_ground?: number, resolution_scan?: number },
+    cross_references?: {
+        uuid?: string,
+        name?: string,
+        document_type?: string,
+        description?: string,
+        reference_type?: string,
+        direction?: 'IN' | 'OUT',
+    }[],
+    lineage?: { statement?: string, source?: string, process_step?: string },
+    processStepDescription?: string[],
+    symbolCatalogue?: { title?: string, date?: string, version?: string }[],
+    codeListReference?: { title?: string, date?: string, version?: string }[],
+    attributeDescription?: string[],
+    spatial?: {
+        description?: string,
+        vertical_extent?: {
+            minimum?: number,
+            maximum?: number,
+            unit?: { key: string | null, value: string | null },
+            vdatum?: { key: string | null, value: string | null },
+        },
+    },
+    service?: {
+        type?: string,
+        classifications?: string[],
+        versions?: string[],
+        operations?: { name?: string, description?: string, access_url?: string }[],
+        environmentDescription?: string,
+        serviceHistory?: string,
+        additionalInformation?: string,
+        hasAccessConstraints?: boolean,
+        doi?: { identifier?: string, generalResourceType?: string, resourceType?: string },
+    },
 };
 
 export type IngridTemporal = IndexTemporal & {

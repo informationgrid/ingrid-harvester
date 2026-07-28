@@ -808,19 +808,22 @@
               "type": "string"
             },
             "license": {
-              "url": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "attribution_by_text": {
-                "type": "string"
-              },
-              "languages": {
-                "type": "array",
-                "items": {
+              "type": "object",
+              "properties": {
+                "url": {
                   "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "attribution_by_text": {
+                  "type": "string"
+                },
+                "languages": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 }
               }
             },

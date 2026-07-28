@@ -122,7 +122,6 @@ export abstract class ingridMapper<M extends ingridMapperType>
             ...this.getCustomEntries(),
             id: this.getGeneratedId(),
             $schema: undefined, // set by the target catalog from the selected JSON schema's $id
-            schema_version: undefined, // TODO: Will be removed from index schema in future
             metadata: {
                 data_type: 'INGRID' as const,
                 document_type: this.getDocumentType(),
@@ -163,6 +162,7 @@ export abstract class ingridMapper<M extends ingridMapperType>
                 ...common,
                 exports: { iso: this.getIso() },
                 ingrid: this.getIngrid(),
+                crs: this.getCrs(),
             };
         }
 
@@ -183,7 +183,58 @@ export abstract class ingridMapper<M extends ingridMapperType>
             order_info: this.getOrderInfo(),
             data_quality: this.getDataQuality(),
             character_set: this.getCharacterSet(),
+            spatialResolutionScale: this.getSpatialResolutionScale(),
+            cross_references: this.getCrossReferences(),
+            lineage: this.getLineage(),
+            processStepDescription: this.getProcessStepDescription(),
+            symbolCatalogue: this.getSymbolCatalogue(),
+            codeListReference: this.getCodeListReference(),
+            attributeDescription: this.getAttributeDescription(),
+            spatial: this.getIngridSpatial(),
+            service: this.getService(),
         };
+    }
+
+    getCrs(): string[] {
+        return undefined;
+    }
+
+    getSpatialResolutionScale(): IngridSpecific['spatialResolutionScale'] {
+        return undefined;
+    }
+
+    // TODO: no confirmed ISO source element found for this field yet
+    getCrossReferences(): IngridSpecific['cross_references'] {
+        return undefined;
+    }
+
+    getLineage(): IngridSpecific['lineage'] {
+        return undefined;
+    }
+
+    getProcessStepDescription(): string[] {
+        return undefined;
+    }
+
+    getSymbolCatalogue(): IngridSpecific['symbolCatalogue'] {
+        return undefined;
+    }
+
+    getCodeListReference(): IngridSpecific['codeListReference'] {
+        return undefined;
+    }
+
+    // TODO: no confirmed ISO source element found for this field yet
+    getAttributeDescription(): string[] {
+        return undefined;
+    }
+
+    getIngridSpatial(): IngridSpecific['spatial'] {
+        return undefined;
+    }
+
+    getService(): IngridSpecific['service'] {
+        return undefined;
     }
 
     getDocumentType(): IngridDocumentType {
@@ -298,7 +349,7 @@ export abstract class ingridMapper<M extends ingridMapperType>
         return undefined;
     }
 
-    getMetadataLanguage(): string {
+    getMetadataLanguage(): { key: string | null, value: string | null } {
         return undefined;
     }
 
