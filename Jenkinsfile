@@ -4,7 +4,7 @@ pipeline {
     triggers{ cron( getCronParams() ) }
 
     environment {
-        registry = "docker-registry.wemove.com/ingrid-harvester"
+        registry = "registry.opencode.de/informationgrid/ingrid-harvester"
     }
 
     options {
