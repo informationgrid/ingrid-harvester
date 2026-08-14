@@ -25,9 +25,10 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { ConfigService } from '../services/config/ConfigService.js';
 import { harvestLogContext } from './harvest-log-context.js';
+import type { Config, LayoutsParam } from 'log4js';
 
-export function configure(config: any, layouts: any) {
-    const layout = layouts.basicLayout;
+export function configure(config: Config, layouts: LayoutsParam) {
+    const layout = config.layout ? layouts.layout(config.layout.type, config.layout) : layouts.basicLayout;
     return (loggingEvent: any) => {
         const ctx = harvestLogContext.getStore();
         if (!ctx) return;

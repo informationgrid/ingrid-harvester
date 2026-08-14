@@ -20,20 +20,27 @@
  * limitations under the Licence.
  * ==================================================
  */
-import { Context, Middleware } from "@tsed/common";
+
+import { Appender, BaseAppender, type LogEvent } from "@tsed/logger";
 import log4js from "log4js";
 
-const log = log4js.getLogger("http");
+/**
+ * Ts.ED logger appender that forwards log events to log4js.
+ * This allows for consistent log formatting.
+ */
+@Appender({ name: "log4js" })
+export class Log4jsAppender extends BaseAppender {
+    write(event: LogEvent): void {
+        const logger = log4js.getLogger("TSED");
 
-@Middleware()
-export class LogMiddleware {
-    use(@Context() ctx: Context) {
-        const { request, response } = ctx;
-        const start = Date.now();
+        const level = event.level?.toString()?.toLowerCase?.()
+            ?? event.level?.levelStr?.toLowerCase?.()
+            ?? "info";
 
-        response.getRes().on("finish", () => {
-            const duration = Date.now() - start;
-            log.debug(`${request.getReq().method} ${request.getReq().url} ${response.getRes().statusCode} - ${duration}ms`);
-        });
+        const data = Array.isArray(event.data)
+            ? event.data
+            : [event.data];
+
+        logger.log(level, ...data.filter((item) => item != null));
     }
 }

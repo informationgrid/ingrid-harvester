@@ -108,7 +108,9 @@ export class CswImporter extends Importer<CswSettings> {
                     // only change the record filter (i.e. do an incremental harvest) if a previous run exists
                     let lastHarvestingDate = new SummaryService().get(this.settings.id)?.lastExecution;
                     if (lastHarvestingDate) {
-                        let lastModifiedFilter = `<ogc:PropertyIsGreaterThanOrEqualTo><ogc:PropertyName>Modified</ogc:PropertyName><ogc:Literal>${new Date(lastHarvestingDate).toISOString()}</ogc:Literal></ogc:PropertyIsGreaterThanOrEqualTo>`;
+                        let isoLastHarvestingDate = new Date(lastHarvestingDate).toISOString();
+                        log.info(`Setting incremental filter to >= ${isoLastHarvestingDate}`);
+                        let lastModifiedFilter = `<ogc:PropertyIsGreaterThanOrEqualTo><ogc:PropertyName>Modified</ogc:PropertyName><ogc:Literal>${isoLastHarvestingDate}</ogc:Literal></ogc:PropertyIsGreaterThanOrEqualTo>`;
                         this.settings.recordFilter = this.appendFilter(lastModifiedFilter);
                     }
                     else {
