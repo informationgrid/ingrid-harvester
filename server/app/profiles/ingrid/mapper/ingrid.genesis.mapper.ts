@@ -60,7 +60,9 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
                     merged_from: [],
                 },
             },
-            spatial: null,
+            spatial: {
+                geometries: this.getSpatial()
+            },
             // temporal: [this.baseMapper.getTemporal()].filter(Boolean),
             temporal: {
                 "accrual_periodicity": "",
@@ -95,6 +97,10 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             keywords.push('opendata');
         }
         return keywords.map(term => ({ id: null, term, source: 'FREE' }));
+    }
+
+    getSpatial(): any  {
+        return this.baseMapper.wktToGeoJson(this.baseMapper.settings.typeConfig.spatialWkt);
     }
 
     private getAccrualPeriodicityUri(): string | undefined {

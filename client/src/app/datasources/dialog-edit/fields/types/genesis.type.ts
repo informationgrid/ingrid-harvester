@@ -192,6 +192,17 @@ export abstract class GenesisType {
                     ],
                   },
                   {
+                    fieldGroupClassName: "ingrid-row",
+                    fieldGroup: [
+                      {
+                        key: "spatialWkt",
+                        type: "input",
+                        className: "ingrid-col-10",
+                        props: { label: "Begrenzungspolygon als WKT" },
+                      },
+                    ],
+                  },
+                  {
                     key: "publisher",
                     fieldGroup: [
                       {

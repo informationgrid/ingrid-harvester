@@ -356,28 +356,6 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
         return undefined;
     }
 
-    wktToGeoJson(wkt: string):any{
-        try {
-            var coordsPos = wkt.indexOf("(");
-            var type = wkt.substring(0, coordsPos).trim();
-            if(type.lastIndexOf(' ') > -1){
-                type = type.substring(type.lastIndexOf(' ')).trim();
-            }
-            type = type.toLowerCase();
-            var coords = wkt.substring(coordsPos).trim();
-            coords = coords.replace(/\(/g, "[").replace(/\)/g, "]");
-            coords = coords.replace(/\[(\s*[-0-9][^\]]*\,[^\]]*[0-9]\s*)\]/g, "[[$1]]");
-            coords = coords.replace(/([0-9])\s*\,\s*([-0-9])/g, "$1], [$2");
-            coords = coords.replace(/([0-9])\s+([-0-9])/g, "$1, $2");
-            return {
-                'type': type,
-                'coordinates': JSON.parse(coords)
-            };
-        } catch(e) {
-            this.summary.errors.push({ type: 'app', error: "Can't parse WKT: "+e.message });
-        }
-    }
-
     getSpatialText(): string {
         let prefLabel = DcatapdeMapper.select('./dct:spatial/dct:Location/skos:prefLabel', this.record, true);
         if(prefLabel){
