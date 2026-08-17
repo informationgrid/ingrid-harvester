@@ -91,7 +91,7 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
             t01_object: this.getT01_object(),
             t2: this.getT2(),
             hierarchylevel: this.getHierarchyLevel(),
-            alternatetitle: this.getAlternateTitle()?.[0],
+            alternatetitle: this.getAlternateTitle(),
             t02_address: this.getAddress(),
             title: this.getTitle(),
             summary: this.getDescription(),
