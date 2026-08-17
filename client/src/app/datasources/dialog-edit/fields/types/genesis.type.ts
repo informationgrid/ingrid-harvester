@@ -198,7 +198,7 @@ export abstract class GenesisType {
                         key: "spatialWkt",
                         type: "input",
                         className: "ingrid-col-10",
-                        props: { label: "Begrenzungspolygon als WKT" },
+                        props: { label: "Begrenzungspolygon als WKT in CRS84" },
                       },
                     ],
                   },

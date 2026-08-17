@@ -43,6 +43,10 @@ const GEOJSON_TYPE_NAMES: Record<string, string> = {
     geometrycollection: 'GeometryCollection',
 };
 
+// spatialWkt coordinates are longitude/latitude (WGS84), i.e. CRS84; GeoSPARQL wktLiteral defaults to
+// CRS84 when the CRS prefix is omitted, but DCAT-AP.de recommends stating it explicitly
+const CRS84 = 'http://www.opengis.net/def/crs/OGC/1.3/CRS84';
+
 export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
 
     private _dcatapdeDoc: string | undefined;
@@ -292,7 +296,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             const addWktLiteral = (parent: Element, tag: string, wkt: string) => {
                 const el = doc.createElement(tag);
                 el.setAttribute('rdf:datatype', namespaces.GEOSPARQL + 'wktLiteral');
-                el.textContent = wkt;
+                el.textContent = `<${CRS84}> ${wkt}`;
                 parent.appendChild(el);
             };
             const locationEl = doc.createElement('dct:Location');
