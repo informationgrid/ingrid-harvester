@@ -25,10 +25,23 @@ import { DOMImplementation } from '@xmldom/xmldom';
 import { DCAT_FILE_TYPE_URL, DCAT_LANGUAGE_URL, ISO_639_1_TO_3 } from '../../../importer/dcatapde/dcatapde.utils.js';
 import { GenesisMapper } from '../../../importer/genesis/genesis.mapper.js';
 import { namespaces } from '../../../importer/namespaces.js';
+import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import { UrlUtils } from '../../../utils/url.utils.js';
 import { ensureNoEndSlash, generateUuid } from "../ingrid.utils.js";
 import type { IngridOpendataIndexDocument } from '../model/opendataindex.document.js';
 import { ingridMapper } from './ingrid.mapper.js';
+
+// baseMapper.wktToGeoJson() returns lowercase GeoJSON type names (fine for Elasticsearch's geo_shape
+// mapping), but Turf (used below for bbox/centroid) requires the canonical GeoJSON casing
+const GEOJSON_TYPE_NAMES: Record<string, string> = {
+    point: 'Point',
+    linestring: 'LineString',
+    polygon: 'Polygon',
+    multipoint: 'MultiPoint',
+    multilinestring: 'MultiLineString',
+    multipolygon: 'MultiPolygon',
+    geometrycollection: 'GeometryCollection',
+};
 
 export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
 
@@ -136,6 +149,8 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         rdfRoot.setAttribute('xmlns:dcatde', namespaces.DCATDE);
         rdfRoot.setAttribute('xmlns:foaf', namespaces.FOAF);
         rdfRoot.setAttribute('xmlns:vcard', namespaces.VCARD);
+        rdfRoot.setAttribute('xmlns:locn', namespaces.LOCN);
+        rdfRoot.setAttribute('xmlns:geo', namespaces.GEOSPARQL);
 
         const dataset = doc.createElement('dcat:Dataset');
         rdfRoot.appendChild(dataset);
@@ -268,6 +283,32 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             const spatialEl = doc.createElement('dct:spatial');
             spatialEl.setAttribute('rdf:resource', spatialUri);
             dataset.appendChild(spatialEl);
+        }
+
+        const spatialWkt = this.baseMapper.settings.typeConfig?.spatialWkt;
+        const rawGeometry = spatialWkt ? this.baseMapper.wktToGeoJson(spatialWkt) : undefined;
+        const geometry = rawGeometry ? { ...rawGeometry, type: GEOJSON_TYPE_NAMES[rawGeometry.type] ?? rawGeometry.type } : undefined;
+        if (geometry) {
+            const addWktLiteral = (parent: Element, tag: string, wkt: string) => {
+                const el = doc.createElement(tag);
+                el.setAttribute('rdf:datatype', namespaces.GEOSPARQL + 'wktLiteral');
+                el.textContent = wkt;
+                parent.appendChild(el);
+            };
+            const locationEl = doc.createElement('dct:Location');
+            // spatialWkt is already WKT text, use it as-is for locn:geometry
+            addWktLiteral(locationEl, 'locn:geometry', spatialWkt);
+            const bboxWkt = GeoJsonUtils.toWkt(GeoJsonUtils.getBbox(geometry));
+            if (bboxWkt) {
+                addWktLiteral(locationEl, 'dcat:bbox', bboxWkt);
+            }
+            const centroidWkt = GeoJsonUtils.toWkt(GeoJsonUtils.getCentroid(geometry));
+            if (centroidWkt) {
+                addWktLiteral(locationEl, 'dcat:centroid', centroidWkt);
+            }
+            const geoSpatialEl = doc.createElement('dct:spatial');
+            geoSpatialEl.appendChild(locationEl);
+            dataset.appendChild(geoSpatialEl);
         }
 
         const landingPageUrl = this.baseMapper.getLandingPageUrl();

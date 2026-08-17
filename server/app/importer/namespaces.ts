@@ -32,6 +32,7 @@ export const namespaces = {
     DCT: 'http://purl.org/dc/terms/',
     FOAF: 'http://xmlns.com/foaf/0.1/',
     GCO: 'http://www.isotc211.org/2005/gco',
+    GEOSPARQL: 'http://www.opengis.net/ont/geosparql#',
     GMD: 'http://www.isotc211.org/2005/gmd',
     GML: 'http://www.opengis.net/gml',
     GML_3_2: 'http://www.opengis.net/gml/3.2',
