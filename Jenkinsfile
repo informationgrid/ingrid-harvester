@@ -99,7 +99,7 @@ pipeline {
                 echo 'Generating Software Bill of Materials (SBOM)'
 
                 script {
-                    def imageToScan = "docker-registry.wemove.com/ingrid-harvester:${env.VERSION}"
+                    def imageToScan = "registry.opencode.de/informationgrid/ingrid-harvester:${env.VERSION}"
                     def sbomFilename = "ingrid-harvester-${determineVersion()}-sbom.json"
 
                     sh """
