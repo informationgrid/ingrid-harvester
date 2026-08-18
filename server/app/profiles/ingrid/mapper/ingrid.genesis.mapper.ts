@@ -77,9 +77,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
                     merged_from: [],
                 },
             },
-            spatial: {
-                geometries: this.getSpatial()
-            },
+            spatial: null, // assigned after
             // temporal: [this.baseMapper.getTemporal()].filter(Boolean),
             temporal: {
                 "accrual_periodicity": "",
@@ -91,12 +89,15 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             dcat: { landingPage: this.baseMapper.getLandingPageUrl() },
             legal_basis: null,
             political_geocoding_level_uri: this.baseMapper.getSpatialUri(),
-            rdf: this.createDcatapdeDocument(),
+            rdf: null, // assigned after
             sort_hash: this.getSortHash(),
             content: null,
         };
         result.content = [...new Set(this.getContent(result))];
-        this.executeCustomCode(result);
+        result.rdf = this.createDcatapdeDocument();
+        result.spatial = { geometries: this.getSpatial() };
+
+            this.executeCustomCode(result);
         return result;
     }
 
