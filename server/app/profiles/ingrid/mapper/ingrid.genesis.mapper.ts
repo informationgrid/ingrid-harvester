@@ -25,10 +25,27 @@ import { DOMImplementation } from '@xmldom/xmldom';
 import { DCAT_FILE_TYPE_URL, DCAT_LANGUAGE_URL, ISO_639_1_TO_3 } from '../../../importer/dcatapde/dcatapde.utils.js';
 import { GenesisMapper } from '../../../importer/genesis/genesis.mapper.js';
 import { namespaces } from '../../../importer/namespaces.js';
+import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import { UrlUtils } from '../../../utils/url.utils.js';
 import { ensureNoEndSlash, generateUuid } from "../ingrid.utils.js";
 import type { IngridOpendataIndexDocument } from '../model/opendataindex.document.js';
 import { ingridMapper } from './ingrid.mapper.js';
+
+// baseMapper.wktToGeoJson() returns lowercase GeoJSON type names (fine for Elasticsearch's geo_shape
+// mapping), but Turf (used below for bbox/centroid) requires the canonical GeoJSON casing
+const GEOJSON_TYPE_NAMES: Record<string, string> = {
+    point: 'Point',
+    linestring: 'LineString',
+    polygon: 'Polygon',
+    multipoint: 'MultiPoint',
+    multilinestring: 'MultiLineString',
+    multipolygon: 'MultiPolygon',
+    geometrycollection: 'GeometryCollection',
+};
+
+// spatialWkt coordinates are longitude/latitude (WGS84), i.e. CRS84; GeoSPARQL wktLiteral defaults to
+// CRS84 when the CRS prefix is omitted, but DCAT-AP.de recommends stating it explicitly
+const CRS84 = 'http://www.opengis.net/def/crs/OGC/1.3/CRS84';
 
 export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
 
@@ -60,7 +77,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
                     merged_from: [],
                 },
             },
-            spatial: null,
+            spatial: null, // assigned after
             // temporal: [this.baseMapper.getTemporal()].filter(Boolean),
             temporal: {
                 "accrual_periodicity": "",
@@ -72,12 +89,15 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             dcat: { landingPage: this.baseMapper.getLandingPageUrl() },
             legal_basis: null,
             political_geocoding_level_uri: this.baseMapper.getSpatialUri(),
-            rdf: this.createDcatapdeDocument(),
+            rdf: null, // assigned after
             sort_hash: this.getSortHash(),
             content: null,
         };
         result.content = [...new Set(this.getContent(result))];
-        this.executeCustomCode(result);
+        result.rdf = this.createDcatapdeDocument();
+        result.spatial = { geometries: this.getSpatial() };
+
+            this.executeCustomCode(result);
         return result;
     }
 
@@ -90,11 +110,18 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
 
     getKeywords(): any[] {
         const keywords = this.baseMapper.getKeywords() ?? [];
-        // explicitly add "opendata" keyword if not already present
-        if (!keywords.some(term => term.toLowerCase() === 'opendata')) {
-            keywords.push('opendata');
+        // append configured keywords, then "opendata", each only if not already present
+        const configuredKeywords = this.baseMapper.settings.typeConfig.keywords ?? [];
+        for (const keyword of [...configuredKeywords, 'opendata']) {
+            if (!keywords.some(term => term.toLowerCase() === keyword.toLowerCase())) {
+                keywords.push(keyword);
+            }
         }
         return keywords.map(term => ({ id: null, term, source: 'FREE' }));
+    }
+
+    getSpatial(): any  {
+        return this.baseMapper.wktToGeoJson(this.baseMapper.settings.typeConfig.spatialWkt);
     }
 
     private getAccrualPeriodicityUri(): string | undefined {
@@ -130,6 +157,8 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         rdfRoot.setAttribute('xmlns:dcatde', namespaces.DCATDE);
         rdfRoot.setAttribute('xmlns:foaf', namespaces.FOAF);
         rdfRoot.setAttribute('xmlns:vcard', namespaces.VCARD);
+        rdfRoot.setAttribute('xmlns:locn', namespaces.LOCN);
+        rdfRoot.setAttribute('xmlns:geo', namespaces.GEOSPARQL);
 
         const dataset = doc.createElement('dcat:Dataset');
         rdfRoot.appendChild(dataset);
@@ -262,6 +291,32 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             const spatialEl = doc.createElement('dct:spatial');
             spatialEl.setAttribute('rdf:resource', spatialUri);
             dataset.appendChild(spatialEl);
+        }
+
+        const spatialWkt = this.baseMapper.settings.typeConfig?.spatialWkt;
+        const rawGeometry = spatialWkt ? this.baseMapper.wktToGeoJson(spatialWkt) : undefined;
+        const geometry = rawGeometry ? { ...rawGeometry, type: GEOJSON_TYPE_NAMES[rawGeometry.type] ?? rawGeometry.type } : undefined;
+        if (geometry) {
+            const addWktLiteral = (parent: Element, tag: string, wkt: string) => {
+                const el = doc.createElement(tag);
+                el.setAttribute('rdf:datatype', namespaces.GEOSPARQL + 'wktLiteral');
+                el.textContent = `<${CRS84}> ${wkt}`;
+                parent.appendChild(el);
+            };
+            const locationEl = doc.createElement('dct:Location');
+            // spatialWkt is already WKT text, use it as-is for locn:geometry
+            addWktLiteral(locationEl, 'locn:geometry', spatialWkt);
+            const bboxWkt = GeoJsonUtils.toWkt(GeoJsonUtils.getBbox(geometry));
+            if (bboxWkt) {
+                addWktLiteral(locationEl, 'dcat:bbox', bboxWkt);
+            }
+            const centroidWkt = GeoJsonUtils.toWkt(GeoJsonUtils.getCentroid(geometry));
+            if (centroidWkt) {
+                addWktLiteral(locationEl, 'dcat:centroid', centroidWkt);
+            }
+            const geoSpatialEl = doc.createElement('dct:spatial');
+            geoSpatialEl.appendChild(locationEl);
+            dataset.appendChild(geoSpatialEl);
         }
 
         const landingPageUrl = this.baseMapper.getLandingPageUrl();
