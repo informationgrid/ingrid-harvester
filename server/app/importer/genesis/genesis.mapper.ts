@@ -96,13 +96,14 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
         const from = this.record?.Object?.Time?.From;
         const to = this.record?.Object?.Time?.To;
         if (!from && !to) return undefined;
+        const context = { endpoint: '/metadata/statistic', code: this.getCode() };
         return {
-            gte: from ? this.parseTemporalBound(from, false) : undefined,
-            lte: to   ? this.parseTemporalBound(to,   true)  : undefined,
+            gte: from ? this.parseTemporalBound(from, false, context) : undefined,
+            lte: to   ? this.parseTemporalBound(to,   true, context)  : undefined,
         };
     }
 
-    private parseTemporalBound(value: string, isEnd: boolean): Date | undefined {
+    private parseTemporalBound(value: string, isEnd: boolean, context: { endpoint: string; code: string }): Date | undefined {
         const year = dayjs(value, 'YYYY', true);
         if (year.isValid()) {
             const y = year.year();
@@ -110,7 +111,8 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
         }
         const date = dayjs(value, 'DD.MM.YYYY', true);
         if (date.isValid()) return date.toDate();
-        this.log.warn(`getTemporal: unrecognised date format "${value}"`);
+
+        this.log.warn(`getTemporal: unrecognised date format "${value}" for code ${context.code} [${this.settings.sourceURL}${context.endpoint}]`);
         return undefined;
     }
 
@@ -185,16 +187,19 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
         if (!template) return [];
         return (this.record?.Tables ?? [])
             .filter(table => table?.Object?.Code)
-            .map(table => (<Distribution>{
-                access_url: template.replace('{code}', table.Object.Code),
-                format: ['text/html'],
-                title: table.Object.Content ?? '',
-                modified: table.Object.Updated ? this.parseGenesisDate(table.Object.Updated) : undefined,
-                temporal: (table.Object.Time?.From || table.Object.Time?.To) ? {
-                    gte: table.Object.Time?.From ? this.parseTemporalBound(table.Object.Time.From, false) : undefined,
-                    lte: table.Object.Time?.To   ? this.parseTemporalBound(table.Object.Time.To,   true)  : undefined,
-                } : undefined,
-            }));
+            .map(table => {
+                const context = { endpoint: '/metadata/table', code: table.Object.Code };
+                return <Distribution>{
+                    access_url: template.replace('{code}', table.Object.Code),
+                    format: ['text/html'],
+                    title: table.Object.Content ?? '',
+                    modified: table.Object.Updated ? this.parseGenesisDate(table.Object.Updated) : undefined,
+                    temporal: (table.Object.Time?.From || table.Object.Time?.To) ? {
+                        gte: table.Object.Time?.From ? this.parseTemporalBound(table.Object.Time.From, false, context) : undefined,
+                        lte: table.Object.Time?.To   ? this.parseTemporalBound(table.Object.Time.To,   true, context)  : undefined,
+                    } : undefined,
+                };
+            });
     }
 
     private collectContent(node: any, result: Set<string>): void {
