@@ -112,8 +112,33 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
         const date = dayjs(value, 'DD.MM.YYYY', true);
         if (date.isValid()) return date.toDate();
 
+        const splitYearRange = this.parseSplitYearRange(value, isEnd);
+        if (splitYearRange) return splitYearRange;
+
         this.log.warn(`getTemporal: unrecognised date format "${value}" for code ${context.code} [${this.settings.sourceURL}${context.endpoint}]`);
         return undefined;
+    }
+
+    /**
+     * Parses a split fiscal/reporting year like "2007/08" (meaning 2007/2008): the "From" bound
+     * uses the first (full) year, the "To" bound uses the second, two-digit year expanded into
+     * the same century as the first year (e.g. "08" -> 2008).
+     */
+    private parseSplitYearRange(value: string, isEnd: boolean): Date | undefined {
+        const match = value.match(/^(\d{4})\/(\d{2})$/);
+        if (!match) return undefined;
+
+        const fromYear = parseInt(match[1], 10);
+        if (!isEnd) {
+            return new Date(fromYear, 0, 1);
+        }
+
+        const century = Math.floor(fromYear / 100) * 100;
+        let toYear = century + parseInt(match[2], 10);
+        if (toYear <= fromYear) {
+            toYear += 100;
+        }
+        return new Date(toYear, 11, 31);
     }
 
     getKeywords(): string[] {
