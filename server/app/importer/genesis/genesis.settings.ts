@@ -41,6 +41,7 @@ export type GenesisTypeConfig = {
     spatialWkt?: string;
     statisticUrlTemplate?: string; // URL template for statistic landing page; use {code} as placeholder (dcat:landingPage); UI-configurable
     tableUrlTemplate?: string;     // URL template for table online resource; use {code} as placeholder; UI-configurable
+    keywords?: string[];           // additional keywords appended to every harvested dataset (dcat:keyword); UI-configurable
 };
 
 export type GenesisSettings = {

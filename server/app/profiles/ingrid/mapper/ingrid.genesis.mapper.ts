@@ -109,9 +109,12 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
 
     getKeywords(): any[] {
         const keywords = this.baseMapper.getKeywords() ?? [];
-        // explicitly add "opendata" keyword if not already present
-        if (!keywords.some(term => term.toLowerCase() === 'opendata')) {
-            keywords.push('opendata');
+        // append configured keywords, then "opendata", each only if not already present
+        const configuredKeywords = this.baseMapper.settings.typeConfig.keywords ?? [];
+        for (const keyword of [...configuredKeywords, 'opendata']) {
+            if (!keywords.some(term => term.toLowerCase() === keyword.toLowerCase())) {
+                keywords.push(keyword);
+            }
         }
         return keywords.map(term => ({ id: null, term, source: 'FREE' }));
     }

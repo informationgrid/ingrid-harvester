@@ -224,6 +224,11 @@ export abstract class GenesisType {
                       },
                     ],
                   },
+                  {
+                    key: "keywords",
+                    type: "chip",
+                    props: { label: "Keywords" },
+                  },
                 ],
               },
             ],
