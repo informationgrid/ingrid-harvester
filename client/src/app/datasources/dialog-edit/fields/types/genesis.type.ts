@@ -143,7 +143,10 @@ export abstract class GenesisType {
                         key: "tableUrlTemplate",
                         type: "input",
                         className: "ingrid-col-10",
-                        props: { label: "Tabellen-URL-Vorlage (Distribution)" },
+                        props: {
+                          label: "Tabellen-URL-Vorlage (Distribution)",
+                          required: true,
+                        },
                       },
                     ],
                   },
