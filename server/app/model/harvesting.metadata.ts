@@ -29,8 +29,6 @@
  * (see `BucketDocument`) during catalog processing.
  */
 export type HarvestingMetadata = {
-    harvested?: Date,
-    harvesting_errors?: string[],   // get errors after all operations been done
     source: MetadataSource,
     hierarchy_level?: string,   // only set for CSW records; used to distinguish datasets from services
 };

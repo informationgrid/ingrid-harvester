@@ -65,8 +65,6 @@ export abstract class Mapper<S extends ImporterSettings> {
     // public abstract getHarvestingMetadata(): HarvestingMetadata;
     public getHarvestingMetadata(): HarvestingMetadata {
         return {
-            harvested: this.getHarvestingDate(),
-            harvesting_errors: this.errors,
             source: this.getMetadataSource(),
             hierarchy_level: this.getHierarchyLevel(),
         };
