@@ -187,17 +187,9 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
     }
 
     getMetadataSource(): MetadataSource {
-        // Metadata
-        // The harvest source
-        let rawSource = this.settings.sourceURL + '/api/3/action/package_show?id=' + this.source.name;
-        let portalSource = this.settings.sourceURL + '/dataset/' + this.source.name;
-
         return {
             source_base: this.settings.sourceURL,
-            raw_data_source: rawSource,
             source_type: 'ckan',
-            portal_link: portalSource,
-            attribution: this.settings.defaultAttribution
         };
     }
 

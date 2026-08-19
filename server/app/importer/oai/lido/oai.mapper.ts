@@ -261,10 +261,8 @@ export class OaiMapper extends Mapper<OaiSettings> {
     }
 
     getMetadataSource(): MetadataSource {
-        let link = `${this.settings.sourceURL}?verb=GetRecord&metadataPrefix=${this.settings.metadataPrefix}&identifier=${this.getId()}`;
         return {
             source_base: this.settings.sourceURL,
-            raw_data_source: link,
             source_type: this.settings.metadataPrefix
         };
     }

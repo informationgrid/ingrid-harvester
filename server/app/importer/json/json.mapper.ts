@@ -64,7 +64,6 @@ export class JsonMapper extends Mapper<JsonSettings> implements ToElasticMapper<
     getMetadataSource(): MetadataSource {
         return {
             source_base: this.settings.sourceURL,
-            raw_data_source: this.settings.sourceURL,
             source_type: 'json'
         };
     }

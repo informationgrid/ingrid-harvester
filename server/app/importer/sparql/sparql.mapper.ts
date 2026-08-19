@@ -178,14 +178,9 @@ export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMap
     }
 
     getMetadataSource(): MetadataSource {
-        let dcatLink; //=  DcatMapper.select('.//dct:creator', this.record);
-        let portalLink = this.record.source_link.value;
         return {
             source_base: this.settings.sourceURL,
-            raw_data_source: dcatLink,
             source_type: 'sparql',
-            portal_link: portalLink,
-            attribution: this.settings.defaultAttribution
         };
     }
 

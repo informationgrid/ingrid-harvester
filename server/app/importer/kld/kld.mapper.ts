@@ -132,13 +132,9 @@ export class KldMapper extends Mapper<KldSettings> implements ToElasticMapper<In
     }
 
     getMetadataSource() {
-        let link = `${this.settings.sourceURL}Objekt/${this.id}`;
         return {
             source_base: this.settings.sourceURL,
-            raw_data_source: link,
             source_type: 'kld',
-            portal_link: this.settings.defaultAttributionLink,
-            attribution: this.settings.defaultAttribution
         };
     }
 

@@ -68,7 +68,6 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
         return {
             source_base: this.settings.sourceURL,
             source_type: 'GENESIS',
-            raw_data_source: this.settings.sourceURL,
         };
     }
 

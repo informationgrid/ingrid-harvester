@@ -507,14 +507,9 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
     }
 
     getMetadataSource(): MetadataSource {
-        let gmdEncoded = encodeURIComponent(namespaces.GMD);
-        let cswLink = `${this.settings.sourceURL}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=${gmdEncoded}&Id=${this.uuid}`;
         return {
             source_base: this.settings.sourceURL,
-            raw_data_source: cswLink,
             source_type: 'csw',
-            portal_link: this.settings.defaultAttributionLink,
-            attribution: this.settings.defaultAttribution
         };
     }
 
