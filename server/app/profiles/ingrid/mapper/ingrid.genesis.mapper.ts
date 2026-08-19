@@ -22,6 +22,7 @@
  */
 
 import { DOMImplementation } from '@xmldom/xmldom';
+import type { Geometry } from 'geojson';
 import { DCAT_FILE_TYPE_URL, DCAT_LANGUAGE_URL, ISO_639_1_TO_3 } from '../../../importer/dcatapde/dcatapde.utils.js';
 import { GenesisMapper } from '../../../importer/genesis/genesis.mapper.js';
 import { namespaces } from '../../../importer/namespaces.js';
@@ -120,8 +121,16 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         return keywords.map(term => ({ id: null, term, source: 'FREE' }));
     }
 
-    getSpatial(): any  {
-        return this.baseMapper.wktToGeoJson(this.baseMapper.settings.typeConfig.spatialWkt);
+    getSpatial(): Geometry[] {
+        const spatialWkt = this.baseMapper.settings.typeConfig?.spatialWkt;
+        const geometry = spatialWkt ? this.normalizeGeometryType(this.baseMapper.wktToGeoJson(spatialWkt)) : undefined;
+        return geometry ? [geometry] : [];
+    }
+
+    // baseMapper.wktToGeoJson() returns lowercase GeoJSON type names (fine for Elasticsearch's
+    // geo_shape mapping in some configs, but not the canonical casing this index and Turf expect)
+    private normalizeGeometryType(geometry: any): any {
+        return geometry ? { ...geometry, type: GEOJSON_TYPE_NAMES[geometry.type] ?? geometry.type } : undefined;
     }
 
     private getAccrualPeriodicityUri(): string | undefined {
@@ -294,8 +303,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         }
 
         const spatialWkt = this.baseMapper.settings.typeConfig?.spatialWkt;
-        const rawGeometry = spatialWkt ? this.baseMapper.wktToGeoJson(spatialWkt) : undefined;
-        const geometry = rawGeometry ? { ...rawGeometry, type: GEOJSON_TYPE_NAMES[rawGeometry.type] ?? rawGeometry.type } : undefined;
+        const geometry = spatialWkt ? this.normalizeGeometryType(this.baseMapper.wktToGeoJson(spatialWkt)) : undefined;
         if (geometry) {
             const addWktLiteral = (parent: Element, tag: string, wkt: string) => {
                 const el = doc.createElement(tag);
