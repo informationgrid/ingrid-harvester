@@ -31,6 +31,7 @@ import { Mapper } from '../mapper.js';
 import type { GenesisSettings } from './genesis.settings.js';
 import { generateUuid } from "../../profiles/ingrid/ingrid.utils.js";
 import dayjs from '../../utils/dayjs.js';
+import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
 
 /**
  * Base mapper for GENESIS Online REST API records.
@@ -210,6 +211,7 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
     getDistributions(): Distribution[] {
         const template = this.settings.typeConfig.tableUrlTemplate;
         if (!template) return [];
+        const license = this.getDistributionLicense();
         return (this.record?.Tables ?? [])
             .filter(table => table?.Object?.Code)
             .map(table => {
@@ -223,8 +225,16 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
                         gte: table.Object.Time?.From ? this.parseTemporalBound(table.Object.Time.From, false, context) : undefined,
                         lte: table.Object.Time?.To   ? this.parseTemporalBound(table.Object.Time.To,   true, context)  : undefined,
                     } : undefined,
+                    license,
                 };
             });
+    }
+
+    private getDistributionLicense(): Distribution['license'] {
+        const licenseUrl = this.settings.typeConfig.licenseUrl;
+        if (!licenseUrl) return undefined;
+        const license = DcatLicensesUtils.get(licenseUrl);
+        return license ? { name: license.title, url: license.url } : { url: licenseUrl };
     }
 
     private collectContent(node: any, result: Set<string>): void {

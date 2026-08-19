@@ -41,4 +41,9 @@ export interface Distribution {
     operates_on?: string[];
     isSynthetic?: boolean;
     errors?: string[];
+    license?: {
+        name?: string;
+        url?: string;
+        attribution_by_text?: string;
+    };
 }
