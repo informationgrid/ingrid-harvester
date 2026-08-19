@@ -307,6 +307,14 @@ export class PostgresUtils extends DatabaseUtils {
         return (entities[0] as CouplingEntity).service_id != null;
     }
 
+    // DiplanungIndexDocument carries `modified` as a top-level Date, while IndexDocument (used by
+    // every other profile) carries it as an ISO string under `metadata.modified` - normalize both
+    // to a Date so they can be compared regardless of which shape `dataset` is.
+    private static getDatasetModified(dataset: RecordEntity['dataset']): Date {
+        const modified = 'metadata' in dataset ? dataset.metadata?.modified : dataset.modified;
+        return modified ? new Date(modified) : undefined;
+    }
+
     private mergeRecordEntities(entities: RecordEntity[]): RecordEntity[] {
         let entityMap: Map<string, RecordEntity> = new Map();
         entities.forEach(entity => {
@@ -316,7 +324,7 @@ export class PostgresUtils extends DatabaseUtils {
                 entityMap[uid] = entity;
             }
             else {
-                if (entity.harvest_metadata?.modified > entityMap[uid].harvest_metadata?.modified) {
+                if (PostgresUtils.getDatasetModified(entity.dataset) > PostgresUtils.getDatasetModified(entityMap[uid].dataset)) {
                     entityMap[uid].dataset = entity.dataset;
                     entityMap[uid].harvest_metadata = entity.harvest_metadata;
                 }
