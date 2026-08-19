@@ -28,11 +28,11 @@ import chaiExclude from 'chai-exclude';
 import deepEqualInAnyOrder from 'deep-equal-in-any-order';
 import fs from 'fs';
 import sinon from 'sinon';
-import { CswImporter } from '../../app/importer/csw/csw.importer.js';
-import type { CswSettings } from "../../app/importer/csw/csw.settings.js";
+import type { CswSettings } from '../../app/importer/csw/csw.settings.js';
 import { Summary } from '../../app/model/summary.js';
 import { ElasticsearchFactory } from '../../app/persistence/elastic.factory.js';
 import { PostgresUtils } from '../../app/persistence/postgres.utils.js';
+import { ProfileFactoryLoader } from '../../app/profiles/profile.factory.loader.js';
 import { CatalogService } from '../../app/services/catalog/CatalogService.js';
 import { ConfigService } from '../../app/services/config/ConfigService.js';
 import { RequestDelegate } from '../../app/utils/http-request.utils.js';
@@ -122,7 +122,7 @@ describe('Ingrid Integration Test (CSW-to-ES)', function () {
         const settings: CswSettings = {
             id: 1,
             dataSourceName: 'Harvester',
-            type: 'csw',
+            type: 'CSW',
             sourceURL: 'https://gdk.gdi-de.org/gdi-de/srv/eng/csw',
             catalogIds: [1],
             iPlugId: 'geoportal',
@@ -138,7 +138,7 @@ describe('Ingrid Integration Test (CSW-to-ES)', function () {
             simplifyTolerance: 0,
             timeout: 0,
         };
-        const importer = new CswImporter(settings);
+        const importer = await ProfileFactoryLoader.get().getImporter(settings);
 
         // run importer (CSW harvesting -> DB upsert -> ES index)
         await new Promise<void>((resolve, reject) => {
