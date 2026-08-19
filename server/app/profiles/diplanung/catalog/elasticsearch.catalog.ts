@@ -42,11 +42,6 @@ const overwriteFields = [
     'maintainers'
 ];
 
-// TODO ooh this is ugly. Will we a) need this regularly, or b) is this a one-time thing?
-// a) move var into ENV var
-// b) remove this var and the code it depends on after it's not needed anymore
-const HACK_ON = true;
-
 export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog<DiplanungIndexDocument> {
 
     public async processBucket(bucket: Bucket<DiplanungIndexDocument>, importerSettings: ImporterSettings): Promise<EsOperation[]> {
@@ -81,7 +76,7 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog<Diplanun
                 box.push({ operation: 'delete', _id: duplicate_id });
             }
         }
-        document = this.sanitize(entry, document);
+        document = this.sanitize(document);
         // note: the transformed export used to live in `extras.transformed_data`; it moved to the document root
         document = MiscUtils.merge(document, { transformed_data: { dcat_ap_plu: DcatApPluDocumentFactory.create(document) } });
         box.push({ operation: 'index', _id: createEsId(document), document });
@@ -134,10 +129,6 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog<Diplanun
         else if (records.has("csw")) {
             for (let [id, entry] of records.get("csw")) {
                 mainEntry = entry;
-                // TODO remove or perpetuate : hack for stage/prod
-                if (HACK_ON && mainEntry.harvest) {
-                    mainEntry.harvest.is_valid = false;
-                }
                 break;
             }
             if (records.get("wfs")) {
@@ -258,14 +249,6 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog<Diplanun
                     updatedFields.maintainers = duplicate.maintainers;
                 }
                 let updatedDocument = { ...document, ...updatedFields };
-                // TODO remove or perpetuate : hack for stage/prod
-                // only set the CSW document to valid, if it has a WFS duplicate that is also valid
-                // default for CSW has been set to false in `diplanung.csw.mapper`
-                if (HACK_ON && entry.harvest) {
-                    if (duplicateEntry.harvest?.source?.source_base?.toLowerCase().includes("wfs")) {
-                        entry.harvest.is_valid = duplicateEntry.harvest.is_valid;
-                    }
-                }
                 return updatedDocument;
             default:
                 return document;
@@ -274,27 +257,17 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog<Diplanun
         // return MiscUtils.merge(document, updatedFields);
     }
 
-    private sanitize(entry: BucketDocument<DiplanungIndexDocument>, document: DiplanungIndexDocument): DiplanungIndexDocument {
-        entry.harvest ??= {} as any;
+    private sanitize(document: DiplanungIndexDocument): DiplanungIndexDocument {
         // check spatial
         let sanitizedSpatial = GeoJsonUtils.sanitize(document.spatial);
         if (!sanitizedSpatial) {
-            entry.harvest.is_valid = false;
-            entry.harvest.quality_notes ??= [];
-            document.distributions?.forEach(distribution =>
-                entry.harvest.quality_notes.push(...(distribution.errors ?? [])));
-            entry.harvest.quality_notes.push('No valid geometry');
             return document;
         }
         else if (document.spatial != sanitizedSpatial) {
             document.spatial = sanitizedSpatial;
-            entry.harvest.quality_notes ??= [];
-            entry.harvest.quality_notes.push('Geometry has been flipped');
         }
         if (!document.centroid) {
             document.centroid = GeoJsonUtils.getCentroid(sanitizedSpatial);
-            entry.harvest.quality_notes ??= [];
-            entry.harvest.quality_notes.push('Centroid has been created');
         }
         return document;
     }

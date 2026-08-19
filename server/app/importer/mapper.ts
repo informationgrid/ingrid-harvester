@@ -67,9 +67,6 @@ export abstract class Mapper<S extends ImporterSettings> {
         return {
             harvested: this.getHarvestingDate(),
             harvesting_errors: this.errors,
-            is_changed: this.changed,
-            is_valid: this.valid,
-            quality_notes: this.harvestingNotes,
             source: this.getMetadataSource(),
             hierarchy_level: this.getHierarchyLevel(),
         };

@@ -57,7 +57,6 @@ export class DiplanungCswImporter extends CswImporter {
                 let updatedDistributions = await this.updateDistributions(doc.distributions, doc.plan_type as PluPlanType);
                 if (updatedDistributions?.length > 0) {
                     updateDoc.distributions = updatedDistributions;
-                    updateQuality(harvestMetadata, 'WMS layer names have been added to a distribution', null, true);
                     docIsUpdated = true;
                 }
 
@@ -253,22 +252,4 @@ function generateWmsDistribution(distribution: Distribution, planType: PluPlanTy
         return generateXplanWmsDistributions(stateAbbrev, planName, planType);
     } 
     return null;
-}
-
-function updateQuality(harvestMetadata: HarvestingMetadata, qNote: string, isValid: boolean, isChanged: boolean) {
-    // add quality notes if given
-    if (qNote) {
-        if (!harvestMetadata.quality_notes) {
-            harvestMetadata.quality_notes = [];
-        }
-        harvestMetadata.quality_notes.push(qNote);
-    }
-    // set isValid flag if given
-    if (isValid != null) {
-        harvestMetadata.is_valid = isValid;
-    }
-    // set isChanged flag if given
-    if (isChanged != null) {
-        harvestMetadata.is_changed = isChanged;
-    }
 }

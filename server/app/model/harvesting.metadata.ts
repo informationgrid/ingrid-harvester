@@ -31,9 +31,6 @@
 export type HarvestingMetadata = {
     harvested?: Date,
     harvesting_errors?: string[],   // get errors after all operations been done
-    is_changed?: boolean,   // has been changed from its original version by the harvesting process
-    is_valid?: boolean,     // checks validity after all operations been done
-    quality_notes?: string[],
     source: MetadataSource,
     hierarchy_level?: string,   // only set for CSW records; used to distinguish datasets from services
 };
