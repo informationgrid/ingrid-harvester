@@ -23,7 +23,12 @@
 
 import { DOMImplementation } from '@xmldom/xmldom';
 import type { Geometry } from 'geojson';
-import { DCAT_FILE_TYPE_URL, DCAT_LANGUAGE_URL, ISO_639_1_TO_3 } from '../../../importer/dcatapde/dcatapde.utils.js';
+import {
+    DCAT_FILE_TYPE_URL,
+    DCAT_LANGUAGE_URL,
+    ISO_639_1_TO_3,
+    prettyPrintXml
+} from '../../../importer/dcatapde/dcatapde.utils.js';
 import { GenesisMapper } from '../../../importer/genesis/genesis.mapper.js';
 import { namespaces } from '../../../importer/namespaces.js';
 import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
@@ -334,7 +339,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             dataset.appendChild(landingPageEl);
         }
 
-        // return '<?xml version="1.0" encoding="utf-8"?>\n' + prettyPrintXml(doc.toString());
-        return '<?xml version="1.0" encoding="utf-8"?>\n' + doc.toString();
+        return '<?xml version="1.0" encoding="utf-8"?>\n' + prettyPrintXml(doc.toString());
+        // return '<?xml version="1.0" encoding="utf-8"?>\n' + doc.toString();
     }
 }
