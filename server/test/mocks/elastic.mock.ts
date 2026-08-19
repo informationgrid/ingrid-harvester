@@ -26,8 +26,8 @@ import sinon from 'sinon';
 /**
  * Sets up a mock Elasticsearch utility object with spies to verify operations.
  */
-export function setupElasticMock() {
-    const mock: any = {
+export function setupElasticMock(): any {
+    return {
         addDocToBulk: sinon.stub().resolves({ queued: true }),
         addOperationChunksToBulk: sinon.stub().resolves({ queued: true }),
         sendBulkOperations: sinon.stub().resolves({ queued: false }),
@@ -49,6 +49,4 @@ export function setupElasticMock() {
         listAliases: sinon.stub().resolves([]),
         deleteIndex: sinon.stub().resolves(),
     };
-
-    return mock;
 }

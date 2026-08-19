@@ -2,6 +2,6 @@
   "extensions": ["ts"],
   "node-option": [
     "experimental-specifier-resolution=node",
-    "loader=@swc-node/register/esm"
+    "import=@swc-node/register/esm-register"
   ]
 }

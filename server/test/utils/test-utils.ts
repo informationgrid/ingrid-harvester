@@ -21,71 +21,118 @@
  * ==================================================
  */
 
-import * as chai from "chai";
+import { DOMParser } from '@xmldom/xmldom';
+import * as chai from 'chai';
+import { expect } from 'chai';
+import chaiExclude from 'chai-exclude';
+import deepEqualInAnyOrder from 'deep-equal-in-any-order';
+import type { IngridIndexDocument } from '../../app/profiles/ingrid/model/index.document.js';
 
-export class TestUtils {
+chai.use(chaiExclude);
+chai.use(deepEqualInAnyOrder);
 
-    /**
-     * Compare two objects where the expected must be a part of the actual object. So it's not
-     * necessary to have all fields present and be checked.
-     * Deep nested objects cannot be easily compared. So we have to compare parts unfortunately.
-     * @param actual is the generated document
-     * @param expected is the document we expect to be generated
-     * @param extraChecks
-     */
-    static compareDocuments(actual: any, expected: any, extraChecks?: (actual, expected) => void) {
-        actual = JSON.parse(JSON.stringify(actual));
+// shadow DOM Node because it is not available in nodejs at runtime
+const Node = {
+    ELEMENT_NODE: 1,
+    ATTRIBUTE_NODE: 2,
+    TEXT_NODE: 3,
+    CDATA_SECTION_NODE: 4,
+    ENTITY_REFERENCE_NODE: 5,
+    ENTITY_NODE: 6,
+    PROCESSING_INSTRUCTION_NODE: 7,
+    COMMENT_NODE: 8,
+    DOCUMENT_NODE: 9,
+    DOCUMENT_TYPE_NODE: 10,
+    DOCUMENT_FRAGMENT_NODE: 11
+};
 
-        // console.log("Actual doc", JSON.stringify(actual, null, 2));
+/**
+ * Compares two elasticsearch documents, ignoring certain properties and handling unordered arrays.
+ */
+export function compareEsDocuments(actual: IngridIndexDocument, expected: IngridIndexDocument) {
+    const excludedProperties = ['extras', 'idf', 'refering', 'refering_service_uuid'];
+    // compare ES document without date properties, idf, and specific array properties
+    expect(actual).excluding(excludedProperties).to.deep.equal(expected);
+    // compare unordered arrays separately
+    expect(actual.refering?.object_reference).to.deep.equalInAnyOrder(expected.refering?.object_reference);
+    expect(actual.refering_service_uuid).to.deep.equalInAnyOrder(expected.refering_service_uuid);
+    // compare IDF separately (necessary because of formatting discrepancies)
+    if (actual.idf || expected.idf) {
+        expectXmlEqual(actual.idf, expected.idf);
+    }
+}
 
-        if (extraChecks) {
-            extraChecks(actual, expected);
-        }
+/**
+ * Asserts two XML strings are structurally equal using xmldom.
+ */
+export function expectXmlEqual(actualXml: string, expectedXml: string) {
+    const parser = new DOMParser();
+    const docA = parser.parseFromString(actualXml, 'text/xml');
+    const docB = parser.parseFromString(expectedXml, 'text/xml');
 
-        if (expected.extras) {
+    const isEqual = areXmlNodesEqual(docA.documentElement, docB.documentElement);
+    expect(isEqual, 'XML structures are not equivalent').to.be.true;
+}
 
-            // check extras display_contact
-            if (expected.extras.display_contact) {
-                debugger;
-                chai.expect(actual.extras.display_contact).to.eql(expected.extras.display_contact);
-                delete expected.extras.display_contact;
-            }
-
-            // check issued date to be set and exclude from further comparison
-            chai.expect(actual.extras.metadata.issued).not.to.be.null.and.empty;
-            chai.expect(actual.extras.metadata.modified).not.to.be.null.and.empty;
-            if (expected.extras.metadata) {
-                delete expected.extras.metadata.issued;
-                delete expected.extras.metadata.modified;
-                delete expected.extras.metadata.harvested;
-
-                // check extras metadata
-                chai.assert.deepInclude(actual.extras.metadata, expected.extras.metadata);
-                chai.expect(actual.extras.metadata.modified).not.to.be.null.and.empty;
-
-                // check extras without metadata
-                delete expected.extras.metadata;
-            }
-
-            delete expected.extras.harvested_data;
-
-            chai.expect(actual.extras.temporal_end).not.to.be.null;
-            delete expected.extras.temporal_end;
-            chai.assert.deepInclude(actual.extras, expected.extras);
-
-            // check doc without extras
-            delete expected.extras;
-        }
-
-        // modification date can change, but must be set
-        chai.expect(actual.modified).not.to.be.null.and.empty;
-        delete expected.modified;
-        chai.assert.deepInclude(actual, expected);
+/**
+ * Recursively compares two DOM nodes, ignoring whitespace and sibling element order.
+ */
+function areXmlNodesEqual(a: Node, b: Node): boolean {
+    // Text / CDATA / Comment comparison (ignore whitespace differences)
+    if (a.nodeType === Node.TEXT_NODE || a.nodeType === Node.CDATA_SECTION_NODE) {
+        return a.nodeValue?.trim() === b.nodeValue?.trim();
     }
 
-    static prepareStoredData(repeat: number, data: any): any[] {
-        let storedData = [];
-        for (let i = 0; i < repeat; i++) storedData.push(data);
-        return storedData;
+    // Node type & name check
+    if (a.nodeType !== b.nodeType || a.nodeName !== b.nodeName) {
+        return false;
     }
+
+    // compare attributes
+    if (a.nodeType === Node.ELEMENT_NODE) {
+        const elemA = a as Element;
+        const elemB = b as Element;
+
+        if (elemA.attributes.length !== elemB.attributes.length) {
+            return false;
+        }
+
+        for (let i = 0; i < elemA.attributes.length; i++) {
+            const attr = elemA.attributes.item(i)!;
+            if (elemB.getAttribute(attr.name) !== attr.value) {
+                return false;
+            }
+        }
+    }
+
+    // extract meaningful child nodes (ignore empty/whitespace text nodes)
+    const getMeaningfulChildren = (node: Node) =>
+        Array.from(node.childNodes || []).filter((child) => {
+            if (child.nodeType === Node.TEXT_NODE) {
+                return child.nodeValue?.trim().length! > 0;
+            }
+            return true; // keep elements, CDATA, etc.
+        });
+
+    // compare children (unordered matching for elements, ordered for text)
+    const childrenA = getMeaningfulChildren(a);
+    const childrenB = getMeaningfulChildren(b);
+    if (childrenA.length !== childrenB.length) {
+        return false;
+    }
+    const remainingB = [...childrenB];
+    for (const childA of childrenA) {
+        const matchIndex = remainingB.findIndex((childB) => areXmlNodesEqual(childA, childB));
+        if (matchIndex === -1) {
+            return false;
+        }
+        remainingB.splice(matchIndex, 1); // remove matched node
+    }
+    return true;
+}
+
+export function prepareStoredData(repeat: number, data: any): any[] {
+    let storedData = [];
+    for (let i = 0; i < repeat; i++) storedData.push(data);
+    return storedData;
 }
