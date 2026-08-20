@@ -53,7 +53,7 @@ export type IndexDocumentMetadata = {
     partner?: string,
     provider?: string,
     language?: { key: string | null, value: string | null },
-    datasource?: { id: string, name: string },
+    datasource?: { id: string, name: string, type?: string },
 };
 
 export type IndexContact = {

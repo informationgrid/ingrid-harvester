@@ -133,6 +133,7 @@ export abstract class ingridMapper<M extends ingridMapperType>
                 datasource: {
                     id: this.baseMapper.settings.dataSourceName,
                     name: this.baseMapper.settings.dataSourceName,
+                    type: this.baseMapper.getMetadataSource().source_type,
                 }
             },
             title: this.getTitle(),

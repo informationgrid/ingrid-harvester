@@ -350,11 +350,11 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
 }
 
 function isCsw(entry: BucketDocument<IndexDocument>): boolean {
-    return entry.harvest?.source?.source_type === 'csw';
+    return entry.document.metadata.datasource?.type === 'csw';
 }
 
 function isWfs(entry: BucketDocument<IndexDocument>): boolean {
-    return entry.harvest?.source?.source_type === 'wfs';
+    return entry.document.metadata.datasource?.type === 'wfs';
 }
 
 function escapeIdf(literals: TemplateStringsArray, ...substitutions: any[]) {
