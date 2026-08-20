@@ -27,11 +27,9 @@
 import log4js from 'log4js';
 import * as xpath from 'xpath';
 import type { GeometryInformation } from '../../../model/index.document.js';
-import type { Temporal } from '../../../model/ingrid.index.document.js';
 import type { MetadataSource } from '../../../model/harvesting.metadata.js';
-import type { Keyword } from '../../../model/ingrid.index.document.js';
 import type { Summary } from '../../../model/summary.js';
-import type { Media, MediaType, Person, Relation } from '../../../profiles/lvr/model/index.document.js';
+import type { Keyword, Media, MediaType, Person, Relation, Temporal } from '../../../profiles/lvr/model/index.document.js';
 import * as MiscUtils from '../../../utils/misc.utils.js';
 import type { XPathElementSelect } from '../../../utils/xpath.utils.js';
 import { Mapper } from '../../mapper.js';

@@ -21,12 +21,60 @@
  * ==================================================
  */
 
+import type { DateRange } from '../../../model/dateRange.js';
 import type { Dimensions } from '../../../model/dimensions.js';
 import type { IndexDocument } from '../../../model/index.document.js';
-import type { IngridIndexDocument } from '../../../model/ingrid.index.document.js';
+import type { MetadataSource } from '../../../model/harvesting.metadata.js';
 import type { License } from '@shared/license.model.js';
+import type { Geometry, Point } from 'geojson';
 
-export type LvrIndexDocument = IngridIndexDocument & IndexDocument & {
+export type LvrBaseDocument = {
+    id: string,
+    schema_version: string,
+    title: string,
+    description?: string,
+    spatial?: Spatial,
+    temporal: {
+        modified: Date,
+        issued: Date,
+        data_temporal?: Temporal
+    },
+    keywords?: Keyword[],
+    fulltext: string,
+    sort_uuid: string,
+    metadata: Metadata
+};
+
+export type Temporal = {
+    date_range: DateRange,
+    date_type?: string
+};
+
+export type Spatial = {
+    geometry?: Geometry,
+    bbox?: Geometry,
+    centroid?: Point,
+    inside_point?: Point,
+    location_points?: Point,
+    outline?: Geometry,
+    title?: string
+};
+
+export type Keyword = {
+    term: string,
+    id?: string,
+    source?: string
+}
+
+export type Metadata = {
+    issued?: Date,
+    created?: Date,
+    modified?: Date,
+    source?: MetadataSource,
+    merged_from?: string[],
+};
+
+export type LvrIndexDocument = LvrBaseDocument & IndexDocument & {
     lvr: {
         identifier: string,
         // title: string[],

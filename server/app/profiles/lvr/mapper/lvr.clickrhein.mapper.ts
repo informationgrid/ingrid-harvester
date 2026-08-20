@@ -23,12 +23,10 @@
 
 import * as MiscUtils from '../../../utils/misc.utils.js';
 import type { GeometryInformation } from '../../../model/index.document.js';
-import type { Temporal } from '../../../model/ingrid.index.document.js';
 import type { JsonMapper } from '../../../importer/json/json.mapper.js';
-import type { Keyword } from '../../../model/ingrid.index.document.js';
 import type { License } from '@shared/license.model.js';
 import { LvrMapper } from './lvr.mapper.js';
-import type { Media, Person, Relation, Source } from '../model/index.document.js';
+import type { Keyword, Media, Person, Relation, Source, Temporal } from '../model/index.document.js';
 import { UrlUtils } from '../../../utils/url.utils.js';
 
 export class LvrClickRheinMapper extends LvrMapper<JsonMapper> {

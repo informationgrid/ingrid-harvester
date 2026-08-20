@@ -25,13 +25,11 @@ import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import { createEsId } from '../lvr.utils.js';
 import { v5 as uuidv5 } from 'uuid';
 import type { GeometryInformation } from '../../../model/index.document.js';
-import type { Temporal } from '../../../model/ingrid.index.document.js';
 import type { DocumentFactory } from '../../../model/index.document.factory.js';
-import type { IngridIndexDocument, Keyword, Spatial } from '../../../model/ingrid.index.document.js';
 import type { JsonMapper } from '../../../importer/json/json.mapper.js';
 import type { KldMapper } from '../../../importer/kld/kld.mapper.js';
 import type { License } from '@shared/license.model.js';
-import type { LvrIndexDocument, Media, Person, Relation, Source } from '../model/index.document.js';
+import type { Keyword, LvrBaseDocument, LvrIndexDocument, Media, Person, Relation, Source, Spatial, Temporal } from '../model/index.document.js';
 import type { OaiMapper as OaiLidoMapper } from '../../../importer/oai/lido/oai.mapper.js';
 import type { OaiMapper as OaiModsMapper } from '../../../importer/oai/mods/oai.mapper.js';
 
@@ -57,7 +55,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
         // ignore empty date ranges
         const temporals = this.getTemporal()?.filter((t: Temporal) => t.date_range.gte || t.date_range.lte);
 
-        let ingridDocument: IngridIndexDocument = {
+        let ingridDocument: LvrBaseDocument = {
             id: this.getUrlSafeIdentifier(),
             sort_uuid: this.getGeneratedUUID(),
             schema_version: '0.0.2-SNAPSHOT',

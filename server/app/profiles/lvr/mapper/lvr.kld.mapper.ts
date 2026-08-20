@@ -24,12 +24,10 @@
 import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import { convertBBCode } from '../lvr.utils.js';
 import type { GeometryInformation } from '../../../model/index.document.js';
-import type { Temporal } from '../../../model/ingrid.index.document.js';
-import type { Keyword } from '../../../model/ingrid.index.document.js';
 import type { KldMapper } from '../../../importer/kld/kld.mapper.js';
 import type { License } from '@shared/license.model.js';
 import { LvrMapper } from './lvr.mapper.js';
-import type { LvrDateRange, Media, Person, Relation, Source } from '../model/index.document.js';
+import type { Keyword, LvrDateRange, Media, Person, Relation, Source, Temporal } from '../model/index.document.js';
 
 export class LvrKldMapper extends LvrMapper<KldMapper> {
 
