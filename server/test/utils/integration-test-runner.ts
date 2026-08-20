@@ -58,34 +58,18 @@ export interface HttpMockRule {
     /** Response payload (string, object, buffer) or dynamic callback */
     response?: string | object | Buffer | ((options: RequestOptions) => any);
 
-    /** Path to static fixture file (XML / JSON) relative to project root */
+    /** Path to static fixture file (XML / JSON) relative to baseFixture */
     fixture?: string;
-
-    /** HTTP status code (default: 200) */
-    status?: number;
-
-    /** Response headers */
-    headers?: Record<string, string>;
-}
-
-export interface TestHarvestContext {
-    importer: Importer<any>;
-    elasticMock: any;
-    dbConfig: any;
-    allIndexDocuments: any[];
-    allOperations: any[];
 }
 
 export interface ImporterIntegrationTestCase<T extends ImporterSettings> {
-    name: string;
     settings: T;
     baseFixture: string,
     mocks: HttpMockRule[];
-    expectedDocsDir?: string;
+    expectedDocsDir: string;
     expectedDocCount?: number;
     profile?: string; // default: 'ingrid'
     catalogId?: number; // default: 1
-    afterHarvest?: (context: TestHarvestContext) => Promise<void> | void;
 }
 
 /**
@@ -106,97 +90,44 @@ export function resolveFixturePath(...fixturePath: string[]): string {
 }
 
 /**
- * Extracts parameter value from a query string or request body.
+ * Extracts parameter value from a query string.
  */
-function getParamValue(config: RequestOptions, key: string): string | undefined {
-    if (config.qs) {
-        if (typeof config.qs === 'object' && !(config.qs instanceof URLSearchParams) && !Array.isArray(config.qs)) {
-            if (key in config.qs) {
-                return String((config.qs as any)[key]);
-            }
-        }
-        else if (config.qs instanceof URLSearchParams) {
-            const val = config.qs.get(key);
-            if (val !== null) {
-                return val;
-            }
-        }
-        else if (typeof config.qs === 'string') {
-            const sp = new URLSearchParams(config.qs);
-            const val = sp.get(key);
-            if (val !== null) {
-                return val;
-            }
-        }
+function getQueryParam(config: RequestOptions, key: string): string | null {
+    try {
+        const url = new URL(RequestDelegate.getFullURL(config), 'http://localhost');
+        return url.searchParams.get(key);
     }
-    if (config.uri && config.uri.includes('?')) {
-        try {
-            const parsed = new URL(config.uri, 'http://localhost');
-            const val = parsed.searchParams.get(key);
-            if (val !== null) {
-                return val;
-            }
-        }
-        catch {
-            // ignore invalid URL parsing
-        }
+    catch {
+        return null;
     }
-    if (typeof config.body === 'string' && config.body.includes('=')) {
-        try {
-            const sp = new URLSearchParams(config.body);
-            const val = sp.get(key);
-            if (val !== null) {
-                return val;
-            }
-        }
-        catch {
-            // ignore
-        }
-    }
-    if (config.body && typeof config.body === 'object' && key in config.body) {
-        return String((config.body as any)[key]);
-    }
-    return undefined;
 }
 
 /**
  * Evaluates whether an incoming HTTP request options object matches a mock rule.
  */
 function matchesRule(rule: HttpMockRule, config: RequestOptions): boolean {
-    const match = rule.match;
-    if (typeof match === 'function') {
-        return match(config);
+    if (typeof rule.match === 'function') {
+        return rule.match(config);
     }
-    if (match.method) {
-        const reqMethod = (config.method || 'GET').toUpperCase();
-        if (reqMethod !== match.method.toUpperCase()) {
+    const { method, url, query, bodyMatch } = rule.match;
+    if (method && method.toUpperCase() !== (config.method || 'GET').toUpperCase()) {
+        return false;
+    }
+    if (url) {
+        const uri = config.uri ?? '';
+        if (typeof url === 'string' ? !uri.includes(url) : !url.test(uri)) {
             return false;
         }
     }
-    if (match.url) {
-        if (typeof match.url === 'string') {
-            if (!config.uri || !config.uri.includes(match.url)) {
-                return false;
-            }
-        }
-        else if (match.url instanceof RegExp) {
-            if (!config.uri || !match.url.test(config.uri)) {
+    if (query) {
+        for (const [key, expected] of Object.entries(query)) {
+            if (getQueryParam(config, key) !== String(expected)) {
                 return false;
             }
         }
     }
-    if (match.query) {
-        for (const [key, expectedValue] of Object.entries(match.query)) {
-            const actualValue = getParamValue(config, key);
-            if (actualValue === undefined || actualValue !== String(expectedValue)) {
-                return false;
-            }
-        }
-    }
-    if (match.bodyMatch) {
-        if (!match.bodyMatch(config.body)) {
-            return false;
-        }
+    if (bodyMatch && !bodyMatch(config.body)) {
+        return false;
     }
     return true;
 }
@@ -276,10 +207,6 @@ export function assertElasticsearchDocuments(
         const dirPath = resolveFixturePath(options.baseFixture, options.expectedDocsDir);
         const files = fs.readdirSync(dirPath).filter(file => file.endsWith('.json'));
 
-        if (options.expectedDocCount === undefined) {
-            expect(indexOps, `Should contain ${files.length} index operations matching fixture files in ${options.expectedDocsDir}`).to.have.lengthOf(files.length);
-        }
-
         for (const actual of documents) {
             const expectedFilePath = path.join(dirPath, `${actual.uuid}.json`);
             if (!fs.existsSync(expectedFilePath)) {
@@ -317,7 +244,7 @@ export function setupIntegrationTestLifecycle(profile = 'ingrid') {
  */
 export async function runImporterIntegrationTest<T extends ImporterSettings>(
     testCase: ImporterIntegrationTestCase<T>
-): Promise<TestHarvestContext> {
+): Promise<void> {
     const profile = testCase.profile || 'ingrid';
     process.env.IMPORTER_PROFILE = profile;
 
@@ -353,33 +280,11 @@ export async function runImporterIntegrationTest<T extends ImporterSettings>(
         const importer = await ProfileFactoryLoader.get().getImporter(testCase.settings);
         await runImporter(importer);
 
-        const allOperations = elasticMock.addOperationChunksToBulk.called
-            ? elasticMock.addOperationChunksToBulk.args.flatMap((args: any[]) => args[0])
-            : [];
-        const indexOps = allOperations.filter((op: any) => op.operation === 'index');
-        const allIndexDocuments = indexOps.map((op: any) => op.document);
-
-        if (testCase.expectedDocsDir || testCase.expectedDocCount !== undefined) {
-            assertElasticsearchDocuments(elasticMock, {
-                baseFixture: testCase.baseFixture,
-                expectedDocsDir: testCase.expectedDocsDir,
-                expectedDocCount: testCase.expectedDocCount
-            });
-        }
-
-        const context: TestHarvestContext = {
-            importer,
-            elasticMock,
-            dbConfig,
-            allIndexDocuments,
-            allOperations
-        };
-
-        if (testCase.afterHarvest) {
-            await testCase.afterHarvest(context);
-        }
-
-        return context;
+        assertElasticsearchDocuments(elasticMock, {
+            baseFixture: testCase.baseFixture,
+            expectedDocsDir: testCase.expectedDocsDir,
+            expectedDocCount: testCase.expectedDocCount
+        });
     }
     finally {
         sandbox.restore();

@@ -66,10 +66,9 @@ describe('Ingrid Integration Tests', function () {
         expectedDocsDir: 'elasticsearch'
     } satisfies Partial<ImporterIntegrationTestCase<any>>;
 
-    it('should harvest records from CSW and push them to ES', async () => {
+    it('should harvest records from CSW and push them to ES (GDI-DE)', async () => {
         await runImporterIntegrationTest({
             ...cswTestcase,
-            name: 'CSW to ES (GDI-DE)',
             settings: cswGdideConfig as CswSettings,
             baseFixture: 'test/data/csw/gdide'
         });
