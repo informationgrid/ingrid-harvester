@@ -51,6 +51,8 @@ export class LvrElasticsearchCatalog extends ElasticsearchCatalog {
             let duplicate_id = createEsId(duplicate.document);
             document = this.deduplicate(document, duplicate.document);
             let document_id = createEsId(document);
+            document.metadata.merged_from ??= [];
+            document.metadata.merged_from.push(duplicate_id);
             // remove dataset with old_id if it differs from the newly created id
             if (old_id != document_id) {
                 box.push({ operation: 'delete', _id: old_id });
@@ -72,7 +74,7 @@ export class LvrElasticsearchCatalog extends ElasticsearchCatalog {
         // initialize records map
         let records: Map<string, Map<string | number, BucketDocument<LvrIndexDocument>>> = new Map<string, Map<string | number, BucketDocument<LvrIndexDocument>>>();
         for (let [id, entry] of bucket.duplicates) {
-            let sourceType = entry.harvest?.source?.source_type;
+            let sourceType = entry.document.metadata?.source?.source_type;
             let sourceMap = records.get(sourceType);
             if (sourceMap == null) {
                 sourceMap = new Map<string | number, BucketDocument<LvrIndexDocument>>();

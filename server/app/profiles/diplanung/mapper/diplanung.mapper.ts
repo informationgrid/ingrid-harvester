@@ -98,7 +98,13 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
             distributions: await this.getDistributions(),
             issued: this.getIssued(),
             modified: this.getModifiedDate(),
-            extras: { hierarchy_level: this.getHierarchyLevel() },
+            extras: {
+                hierarchy_level: this.getHierarchyLevel(),
+                metadata: {
+                    source: this.baseMapper.getMetadataSource(),
+                    merged_from: [],
+                },
+            },
         };
 
         // let qualityNotes = mapper.getQualityNotes();

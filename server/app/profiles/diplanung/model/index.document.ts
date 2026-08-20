@@ -24,6 +24,7 @@
 import type { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model.js';
 import type { DateRange } from '../../../model/dateRange.js';
 import type { Distribution } from '../../../model/distribution.js';
+import type { MetadataSource } from '../../../model/harvesting.metadata.js';
 import type { Organization, Person } from '../../../model/agent.js';
 
 export type DiplanungIndexDocument = {
@@ -64,6 +65,13 @@ export type DiplanungIndexDocument = {
     modified: Date,
     extras?: {
         hierarchy_level?: string,   // ISO 19139 codelist value (e.g. 'dataset', 'series', 'service'); only set for CSW-sourced records
+        metadata?: {
+            source?: MetadataSource,
+            is_valid?: boolean,
+            quality_notes?: string[],
+            merged_from?: string[],
+            is_changed?: boolean,
+        },
     },
     relation: string,
     notification: string,

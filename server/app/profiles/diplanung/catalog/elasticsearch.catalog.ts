@@ -67,6 +67,8 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog<Diplanun
             let duplicate_id = createEsId(duplicate.document);
             document = this.deduplicate(entry, duplicate, document);
             let document_id = createEsId(document);
+            document.extras.metadata.merged_from ??= [];
+            document.extras.metadata.merged_from.push(duplicate_id);
             // remove dataset with old_id if it differs from the newly created id
             if (old_id != document_id) {
                 box.push({ operation: 'delete', _id: old_id });
@@ -90,7 +92,7 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog<Diplanun
         // initialize records map
         let records: Map<string, Map<string | number, BucketDocument<DiplanungIndexDocument>>> = new Map<string, Map<string | number, BucketDocument<DiplanungIndexDocument>>>();
         for (let [id, entry] of bucket.duplicates) {
-            let sourceType = entry.harvest?.source?.source_type;
+            let sourceType = entry.document.extras?.metadata?.source?.source_type;
             let sourceMap = records.get(sourceType);
             if (sourceMap == null) {
                 sourceMap = new Map<string | number, BucketDocument<DiplanungIndexDocument>>();
@@ -129,6 +131,10 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog<Diplanun
         else if (records.has("csw")) {
             for (let [id, entry] of records.get("csw")) {
                 mainEntry = entry;
+                // TODO remove or perpetuate : hack for stage/prod
+                if (mainEntry.document.extras?.metadata) {
+                    mainEntry.document.extras.metadata.is_valid = false;
+                }
                 break;
             }
             if (records.get("wfs")) {
@@ -223,11 +229,11 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog<Diplanun
      */
     private deduplicate(entry: BucketDocument<DiplanungIndexDocument>, duplicateEntry: BucketDocument<DiplanungIndexDocument>, document: DiplanungIndexDocument): DiplanungIndexDocument {
         const duplicate = duplicateEntry.document;
-        switch (entry.harvest?.source?.source_type) {
+        switch (document.extras?.metadata?.source?.source_type) {
             case 'cockpitpro':
                 return document;
             case 'cockpit':
-                if (duplicateEntry.harvest?.source?.source_type == 'beteiligungsdb') {
+                if (duplicate.extras?.metadata?.source?.source_type == 'beteiligungsdb') {
                     return { ...document, process_steps: duplicate.process_steps };
                 }
                 else {
@@ -249,6 +255,12 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog<Diplanun
                     updatedFields.maintainers = duplicate.maintainers;
                 }
                 let updatedDocument = { ...document, ...updatedFields };
+                // TODO remove or perpetuate : hack for stage/prod
+                // only set the CSW document to valid, if it has a WFS duplicate that is also valid
+                // default for CSW has been set to false in `diplanung.csw.mapper`
+                if (duplicate.extras?.metadata?.source?.source_type === 'wfs') {
+                    updatedDocument.extras.metadata.is_valid = duplicate.extras?.metadata?.is_valid;
+                }
                 return updatedDocument;
             default:
                 return document;
@@ -261,13 +273,22 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog<Diplanun
         // check spatial
         let sanitizedSpatial = GeoJsonUtils.sanitize(document.spatial);
         if (!sanitizedSpatial) {
+            document.extras.metadata.is_valid = false;
+            document.extras.metadata.quality_notes ??= [];
+            document.distributions?.forEach(distribution =>
+                document.extras.metadata.quality_notes.push(...(distribution.errors ?? [])));
+            document.extras.metadata.quality_notes.push('No valid geometry');
             return document;
         }
         else if (document.spatial != sanitizedSpatial) {
             document.spatial = sanitizedSpatial;
+            document.extras.metadata.quality_notes ??= [];
+            document.extras.metadata.quality_notes.push('Geometry has been flipped');
         }
         if (!document.centroid) {
             document.centroid = GeoJsonUtils.getCentroid(sanitizedSpatial);
+            document.extras.metadata.quality_notes ??= [];
+            document.extras.metadata.quality_notes.push('Centroid has been created');
         }
         return document;
     }

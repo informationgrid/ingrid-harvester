@@ -22,6 +22,7 @@
  */
 
 import type { DateRange } from './dateRange.js';
+import type { MetadataSource } from './harvesting.metadata.js';
 import type { Geometry, Point } from 'geojson';
 
 export type IngridIndexDocument = {
@@ -66,7 +67,6 @@ export type Metadata = {
     issued?: Date,
     created?: Date,
     modified?: Date,
-    source?: {
-
-    }
+    source?: MetadataSource,
+    merged_from?: string[],
 };
