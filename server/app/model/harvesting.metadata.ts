@@ -24,15 +24,9 @@
 /**
  * Internal harvesting bookkeeping for a record.
  *
- * This is NOT part of the index document format. It is persisted in the
- * `record.harvest_metadata` column and carried alongside the document
- * (see `BucketDocument`) during catalog processing.
+ * No longer carries any fields — both `source_type` and `hierarchy_level`
+ * turned out to be write-only (nothing reads them back out of
+ * `harvest_metadata`). Kept as an empty placeholder until the write path
+ * itself is removed and this file is deleted (separate, later step).
  */
-export type HarvestingMetadata = {
-    source: MetadataSource,
-    hierarchy_level?: string,   // only set for CSW records; used to distinguish datasets from services
-};
-
-export type MetadataSource = {
-    source_type: string,
-};
+export type HarvestingMetadata = {};

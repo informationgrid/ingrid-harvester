@@ -29,7 +29,6 @@ import type { Contact, Organization, Person } from '../../model/agent.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { IndexDocument, IndexDocumentMetadata } from '../../model/index.document.js';
-import type { MetadataSource } from '../../model/harvesting.metadata.js';
 import type { Summary } from '../../model/summary.js';
 import * as GeoJsonUtils from '../../utils/geojson.utils.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
@@ -142,10 +141,8 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
         return this.gmlId;
     }
 
-    getMetadataSource(): MetadataSource {
-        return {
-            source_type: 'wfs',
-        };
+    getMetadataSourceType(): string {
+        return 'wfs';
     }
 
     getIssued(): Date {

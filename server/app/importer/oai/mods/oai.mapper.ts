@@ -27,7 +27,6 @@
 import log4js from 'log4js';
 import * as xpath from 'xpath';
 import type { GeometryInformation } from '../../../model/index.document.js';
-import type { MetadataSource } from '../../../model/harvesting.metadata.js';
 import type { Summary } from '../../../model/summary.js';
 import type { Keyword, Media, MediaType, Person, Relation, Temporal } from '../../../profiles/lvr/model/index.document.js';
 import * as MiscUtils from '../../../utils/misc.utils.js';
@@ -198,9 +197,7 @@ export class OaiMapper extends Mapper<OaiSettings> {
         return MiscUtils.normalizeDateTime(OaiMapper.select('./*[local-name()="datestamp"]', this.header, true)?.textContent);
     }
 
-    getMetadataSource(): MetadataSource {
-        return {
-            source_type: this.settings.metadataPrefix
-        };
+    getMetadataSourceType(): string {
+        return this.settings.metadataPrefix;
     }
 }

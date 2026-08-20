@@ -131,10 +131,8 @@ export class KldMapper extends Mapper<KldSettings> implements ToElasticMapper<In
         };
     }
 
-    getMetadataSource() {
-        return {
-            source_type: 'kld',
-        };
+    getMetadataSourceType(): string {
+        return 'kld';
     }
 
     getIssued(): Date {

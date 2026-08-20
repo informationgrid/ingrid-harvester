@@ -26,7 +26,6 @@
  */
 import log4js from 'log4js';
 import * as xpath from 'xpath';
-import type { MetadataSource } from '../../../model/harvesting.metadata.js';
 import type { Summary } from '../../../model/summary.js';
 import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import { normalizeDateTime } from '../../../utils/misc.utils.js';
@@ -260,9 +259,7 @@ export class OaiMapper extends Mapper<OaiSettings> {
         return null;
     }
 
-    getMetadataSource(): MetadataSource {
-        return {
-            source_type: this.settings.metadataPrefix
-        };
+    getMetadataSourceType(): string {
+        return this.settings.metadataPrefix;
     }
 }

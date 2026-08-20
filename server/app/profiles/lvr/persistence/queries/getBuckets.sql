@@ -32,7 +32,6 @@
         )
     WHERE
         anchor.source = $1
-        AND anchor.harvest_metadata->>'hierarchy_level' IS DISTINCT FROM 'service'
 )
 UNION
 -- get all services for the datasets of a given source

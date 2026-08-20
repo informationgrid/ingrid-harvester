@@ -101,7 +101,7 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
             extras: {
                 hierarchy_level: this.getHierarchyLevel(),
                 metadata: {
-                    source: this.baseMapper.getMetadataSource(),
+                    source_type: this.baseMapper.getMetadataSourceType(),
                     merged_from: [],
                 },
             },

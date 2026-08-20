@@ -23,7 +23,6 @@
 
 import type { Geometry } from 'geojson';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
-import type { MetadataSource } from '../../../model/harvesting.metadata.js';
 import * as GeojsonUtils from '../../../utils/geojson.utils.js';
 import * as MiscUtils from '../../../utils/misc.utils.js';
 import { IdfGenerator } from '../idf.generator.js';
@@ -143,8 +142,8 @@ export class ingridWfsMapper extends ingridMapper<WfsMapper> {
         return existingUuid ?? generatedUuid;
     }
 
-    getMetadataSource(): MetadataSource {
-        return this.baseMapper.getMetadataSource();
+    getMetadataSourceType(): string {
+        return this.baseMapper.getMetadataSourceType();
     }
 
     getIssued(): Date {

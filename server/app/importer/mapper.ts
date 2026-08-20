@@ -23,7 +23,7 @@
 
 import type { ImporterSettings } from './importer.settings.js';
 import type { Logger } from 'log4js';
-import type { HarvestingMetadata, MetadataSource } from '../model/harvesting.metadata.js';
+import type { HarvestingMetadata } from '../model/harvesting.metadata.js';
 import type { IndexDocumentMetadata } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
 
@@ -64,10 +64,7 @@ export abstract class Mapper<S extends ImporterSettings> {
      */
     // public abstract getHarvestingMetadata(): HarvestingMetadata;
     public getHarvestingMetadata(): HarvestingMetadata {
-        return {
-            source: this.getMetadataSource(),
-            hierarchy_level: this.getHierarchyLevel(),
-        };
+        return {};
     }
 
     // only meaningful for CSW records; used to distinguish datasets from services
@@ -107,7 +104,7 @@ export abstract class Mapper<S extends ImporterSettings> {
         return undefined;
     }
 
-    abstract getMetadataSource(): MetadataSource;
+    abstract getMetadataSourceType(): string;
 
     abstract getHarvestedData(): string;
 

@@ -24,7 +24,6 @@
 import type { DateRange } from '../../../model/dateRange.js';
 import type { Dimensions } from '../../../model/dimensions.js';
 import type { IndexDocument } from '../../../model/index.document.js';
-import type { MetadataSource } from '../../../model/harvesting.metadata.js';
 import type { License } from '@shared/license.model.js';
 import type { Geometry, Point } from 'geojson';
 
@@ -70,7 +69,7 @@ export type Metadata = {
     issued?: Date,
     created?: Date,
     modified?: Date,
-    source?: MetadataSource,
+    source_type?: string,
     merged_from?: string[],
 };
 

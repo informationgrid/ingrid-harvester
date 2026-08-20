@@ -34,7 +34,6 @@ import type { Contact, Person } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { IndexDocument, IndexDocumentMetadata } from '../../model/index.document.js';
-import type { MetadataSource } from '../../model/harvesting.metadata.js';
 import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
 import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
@@ -328,10 +327,8 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
         return keywords;
     }
 
-    getMetadataSource(): MetadataSource {
-        return {
-            source_type: 'dcat',
-        };
+    getMetadataSourceType(): string {
+        return 'dcat';
     }
 
     getModifiedDate() {

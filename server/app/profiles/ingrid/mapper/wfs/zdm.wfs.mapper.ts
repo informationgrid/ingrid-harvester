@@ -22,7 +22,6 @@
  */
 
 import type { Geometry } from 'geojson';
-import type { MetadataSource } from '../../../../model/harvesting.metadata.js';
 import * as GeojsonUtils from '../../../../utils/geojson.utils.js';
 import { ingridWfsMapper } from '../ingrid.wfs.mapper.js';
 import { ZdmIdfGenerator } from './zdm.idf.generator.js';
@@ -101,8 +100,8 @@ export class ZdmWfsMapper extends ingridWfsMapper {
         return this.baseMapper.getModifiedDate()
     }
 
-    getMetadataSource(): MetadataSource {
-        return this.baseMapper.getMetadataSource();
+    getMetadataSourceType(): string {
+        return this.baseMapper.getMetadataSourceType();
     }
 
     getIssued(): Date {

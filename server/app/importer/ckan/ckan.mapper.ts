@@ -35,7 +35,6 @@ import type { Organization, Person } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { IndexDocument, IndexDocumentMetadata } from '../../model/index.document.js';
-import type { MetadataSource } from '../../model/harvesting.metadata.js';
 import dayjs from '../../utils/dayjs.js';
 import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
 import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
@@ -186,10 +185,8 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         return this.source.id;
     }
 
-    getMetadataSource(): MetadataSource {
-        return {
-            source_type: 'ckan',
-        };
+    getMetadataSourceType(): string {
+        return 'ckan';
     }
 
     getModifiedDate() {

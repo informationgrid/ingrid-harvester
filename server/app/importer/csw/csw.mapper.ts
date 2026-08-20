@@ -35,7 +35,6 @@ import type { Agent, Contact, Organization, Person } from '../../model/agent.js'
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { IndexDocument, IndexDocumentMetadata } from '../../model/index.document.js';
-import type { MetadataSource } from '../../model/harvesting.metadata.js';
 import type { Summary } from '../../model/summary.js';
 import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
 import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
@@ -506,10 +505,8 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
         return keywords;
     }
 
-    getMetadataSource(): MetadataSource {
-        return {
-            source_type: 'csw',
-        };
+    getMetadataSourceType(): string {
+        return 'csw';
     }
 
     getModifiedDate(): Date {

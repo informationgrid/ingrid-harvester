@@ -72,7 +72,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
             metadata: {
                 issued: this.getIssued(),
                 modified: this.getModified(),
-                source: this.baseMapper.getMetadataSource(),
+                source_type: this.baseMapper.getMetadataSourceType(),
                 merged_from: []
             }
         };

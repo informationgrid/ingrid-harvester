@@ -25,7 +25,6 @@ import type { Logger } from 'log4js';
 import log4js from 'log4js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
-import type { MetadataSource } from '../../model/harvesting.metadata.js';
 import type { Summary } from '../../model/summary.js';
 import { Mapper } from '../mapper.js';
 import type { GenesisSettings } from './genesis.settings.js';
@@ -64,10 +63,8 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
         return this.harvestTime;
     }
 
-    getMetadataSource(): MetadataSource {
-        return {
-            source_type: 'GENESIS',
-        };
+    getMetadataSourceType(): string {
+        return 'GENESIS';
     }
 
     getTitle(): string {

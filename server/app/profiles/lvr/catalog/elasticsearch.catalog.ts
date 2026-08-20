@@ -74,7 +74,7 @@ export class LvrElasticsearchCatalog extends ElasticsearchCatalog {
         // initialize records map
         let records: Map<string, Map<string | number, BucketDocument<LvrIndexDocument>>> = new Map<string, Map<string | number, BucketDocument<LvrIndexDocument>>>();
         for (let [id, entry] of bucket.duplicates) {
-            let sourceType = entry.document.metadata?.source?.source_type;
+            let sourceType = entry.document.metadata?.source_type;
             let sourceMap = records.get(sourceType);
             if (sourceMap == null) {
                 sourceMap = new Map<string | number, BucketDocument<LvrIndexDocument>>();
