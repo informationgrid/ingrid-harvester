@@ -22,7 +22,6 @@
  */
 
 import type { Distribution } from './distribution.js';
-import type { HarvestingMetadata } from './harvesting.metadata.js';
 import type { IndexDocument } from './index.document.js';
 import type { DiplanungIndexDocument } from '../profiles/diplanung/model/index.document.js';
 
@@ -38,8 +37,6 @@ export interface RecordEntity extends Entity {
     collection_id?: number,  // TODO keep for diplanung, null value by default
     /* IDs of the catalogs for which this dataset was harvested */
     catalog_ids: number[],
-    /* internal harvesting bookkeeping; persisted in its own column, never part of the dataset */
-    harvest_metadata?: HarvestingMetadata,
     /* elasticsearch document */
     dataset: IndexDocument | DiplanungIndexDocument, // TODO rename to dataset_elastic, make optional -
     /* CSW XML document */

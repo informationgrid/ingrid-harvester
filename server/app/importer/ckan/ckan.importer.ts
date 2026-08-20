@@ -24,7 +24,6 @@
 import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import type { RecordEntity } from '../../model/entity.js';
-import type { HarvestingMetadata } from '../../model/harvesting.metadata.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
@@ -97,7 +96,7 @@ export class CkanImporter extends Importer<CkanSettings> {
                 return;
             }
 
-            return await this.indexDocument(doc, dcatapdeDoc, mapper.getHarvestedData(), data.source.id, mapper.getHarvestingMetadata());
+            return await this.indexDocument(doc, dcatapdeDoc, mapper.getHarvestedData(), data.source.id);
 
         } catch (e) {
             log.error('Error: ' + e);
@@ -108,13 +107,12 @@ export class CkanImporter extends Importer<CkanSettings> {
         // For Profile specific Handling
     }
 
-    private async indexDocument(doc, dcatapdeDoc, harvestedData, sourceID, harvestMetadata: HarvestingMetadata) {
+    private async indexDocument(doc, dcatapdeDoc, harvestedData, sourceID) {
         if (!this.settings.dryRun) {
             let entity: RecordEntity = {
                 identifier: sourceID,
                 source: this.settings.sourceURL,
                 catalog_ids: this.settings.catalogIds,
-                harvest_metadata: harvestMetadata,
                 dataset: doc,
                 dataset_dcatapde: dcatapdeDoc,
                 original_document: harvestedData

@@ -79,7 +79,7 @@ export class JsonImporter extends Importer<JsonSettings> {
         if (numReturned) {
             log.debug(`Received ${numReturned} records from ${this.settings.sourceURL}`);
             await this.extractRecords(response, harvestTime);
-            
+
             let processingTime = Math.floor((Date.now() - harvestTime.getTime()) / 1000);
             log.info(`Finished processing ${numReturned} records in ${processingTime} seconds`);
         }
@@ -131,8 +131,7 @@ export class JsonImporter extends Importer<JsonSettings> {
                         identifier: id,
                         source: this.settings.sourceURL,
                         catalog_ids: this.settings.catalogIds,
-                        harvest_metadata: mapper.getHarvestingMetadata(),
-                    dataset: doc,
+                        dataset: doc,
                         original_document: mapper.getHarvestedData()
                     };
                     promises.push(this.database.addEntityToBulk(entity));

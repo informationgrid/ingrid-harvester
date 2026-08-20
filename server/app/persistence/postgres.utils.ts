@@ -29,7 +29,6 @@ import type { Observer } from "rxjs";
 import type { CatalogColumnType } from '../catalog/catalog.factory.js';
 import type { Distribution } from '../model/distribution.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
-import type { HarvestingMetadata } from '../model/harvesting.metadata.js';
 import type { ImportLogMessage } from '../model/import.result.js';
 import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
@@ -50,15 +49,14 @@ export interface Bucket<T> {
 }
 
 /**
- * A document within a bucket, carrying the per-record metadata (DB columns and
- * harvesting bookkeeping) alongside the document instead of inside it.
+ * A document within a bucket, carrying the per-record metadata (DB columns)
+ * alongside the document instead of inside it.
  */
 export interface BucketDocument<T> {
     document: T,
     issued?: Date,
     modified?: Date,
     deleted?: Date,
-    harvest?: HarvestingMetadata,
 }
 
 export class PostgresUtils extends DatabaseUtils {
@@ -213,7 +211,6 @@ export class PostgresUtils extends DatabaseUtils {
                         document: { uuid: row.identifier, dataset: row.dataset, modified: row.modified } as any,
                         modified: row.modified,
                         deleted: row.deleted,
-                        harvest: row.harvest_metadata
                     });
                 }
                 else {
@@ -223,14 +220,11 @@ export class PostgresUtils extends DatabaseUtils {
                     }
                     // add index document to current bucket
                     else {
-                        // legacy rows may still contain internal harvesting metadata inside the dataset
-                        delete row.dataset.extras;
                         currentBucket.duplicates.set(row.id, {
                             document: row.dataset,
                             issued: row.issued,
                             modified: row.modified,
                             deleted: row.deleted,
-                            harvest: row.harvest_metadata
                         });
                     }
                 }
@@ -323,10 +317,9 @@ export class PostgresUtils extends DatabaseUtils {
             else {
                 if (PostgresUtils.getDatasetModified(entity.dataset) > PostgresUtils.getDatasetModified(entityMap[uid].dataset)) {
                     entityMap[uid].dataset = entity.dataset;
-                    entityMap[uid].harvest_metadata = entity.harvest_metadata;
                 }
                 else {
-                    entityMap[uid] = { ...entity, dataset: entityMap[uid].dataset, harvest_metadata: entityMap[uid].harvest_metadata };
+                    entityMap[uid] = { ...entity, dataset: entityMap[uid].dataset };
                 }
             }
         });

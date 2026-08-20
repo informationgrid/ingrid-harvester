@@ -221,7 +221,6 @@ export class WfsImporter extends Importer<WfsSettings> {
                 identifier: doc.id,
                 source: this.settings.sourceURL,
                 catalog_ids: this.settings.catalogIds,
-                harvest_metadata: mapper.getHarvestingMetadata(),
                 dataset: doc,
                 original_document: mapper.getHarvestedData()
             };
@@ -306,7 +305,6 @@ export class WfsImporter extends Importer<WfsSettings> {
                     identifier: doc.id,
                     source: this.settings.sourceURL,
                     catalog_ids: this.settings.catalogIds,
-                    harvest_metadata: mapper.getHarvestingMetadata(),
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };

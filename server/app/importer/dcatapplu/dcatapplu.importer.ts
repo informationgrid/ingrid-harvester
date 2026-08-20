@@ -221,8 +221,7 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
                         identifier: uuid,
                         source: this.settings.sourceURL,
                         catalog_ids: this.settings.catalogIds,
-                        harvest_metadata: mapper.getHarvestingMetadata(),
-                    dataset: doc,
+                        dataset: doc,
                         original_document: mapper.getHarvestedData()
                     };
                     promises.push(this.database.addEntityToBulk(entity));

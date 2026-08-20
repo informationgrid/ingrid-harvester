@@ -481,7 +481,6 @@ export class CswImporter extends Importer<CswSettings> {
                     identifier: uuid,
                     source: this.settings.sourceURL,
                     catalog_ids: this.settings.catalogIds,
-                    harvest_metadata: mapper.getHarvestingMetadata(),
                     dataset: doc,
                     dataset_csw: mapper.getHarvestedData(),
                     original_document: mapper.getHarvestedData()

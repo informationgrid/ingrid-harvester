@@ -14,7 +14,6 @@
         secondary.identifier AS identifier,
         secondary.source AS source,
         secondary.{{DATASET_COLUMN}} AS dataset,
-        secondary.harvest_metadata AS harvest_metadata,
         secondary.collection_id AS catalog_id,
         null AS service_type,
         secondary.created_on AS issued,

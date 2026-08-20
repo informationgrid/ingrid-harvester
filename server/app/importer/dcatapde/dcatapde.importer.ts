@@ -179,7 +179,6 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                     identifier: uuid,
                     source: this.settings.sourceURL,
                     catalog_ids: this.settings.catalogIds,
-                    harvest_metadata: mapper.getHarvestingMetadata(),
                     dataset: doc,
                     dataset_dcatapde: dcatapdeDoc,
                     original_document: mapper.getHarvestedData()
