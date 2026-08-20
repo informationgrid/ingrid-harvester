@@ -66,7 +66,6 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
 
     getMetadataSource(): MetadataSource {
         return {
-            source_base: this.settings.sourceURL,
             source_type: 'GENESIS',
         };
     }

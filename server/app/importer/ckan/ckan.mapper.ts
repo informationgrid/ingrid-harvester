@@ -188,7 +188,6 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
 
     getMetadataSource(): MetadataSource {
         return {
-            source_base: this.settings.sourceURL,
             source_type: 'ckan',
         };
     }

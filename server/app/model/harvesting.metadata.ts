@@ -34,6 +34,5 @@ export type HarvestingMetadata = {
 };
 
 export type MetadataSource = {
-    source_base: string,
     source_type: string,
 };

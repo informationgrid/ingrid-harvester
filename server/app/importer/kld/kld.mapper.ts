@@ -133,7 +133,6 @@ export class KldMapper extends Mapper<KldSettings> implements ToElasticMapper<In
 
     getMetadataSource() {
         return {
-            source_base: this.settings.sourceURL,
             source_type: 'kld',
         };
     }

@@ -63,7 +63,7 @@ export class PegelonlineWfsMapper extends ingridWfsMapper {
 
     getGeneratedId(): string {
         if (this.baseMapper.isFeatureType()) {
-            return generateWfsUuid(this.getMetadataSource().source_base, this.baseMapper.getTypename(), '');
+            return generateWfsUuid(this.baseMapper.settings.sourceURL, this.baseMapper.getTypename(), '');
         }
         else {
             return this.baseMapper.getTextContent('./gk:station_ud');

@@ -161,7 +161,7 @@ export class ZdmIdfGenerator extends IdfGenerator {
         }
         else {
             let mapLink = '';
-            let serviceURL = encodeURIComponent(`${this.mapper.getMetadataSource().source_base}?SERVICE=WFS&VERSION=${this.baseMapper.settings.version}&`);
+            let serviceURL = encodeURIComponent(`${this.baseMapper.settings.sourceURL}?SERVICE=WFS&VERSION=${this.baseMapper.settings.version}&`);
             mapLink += '/DE/dienste/karte?layers=WFS%7C%7C' + encodeURIComponent(title.replaceAll(',','')) + '%7C%7C' + serviceURL + '%7C%7C' + this.baseMapper.getTypename();
             mapLink += '%7C%7C' + title;
 

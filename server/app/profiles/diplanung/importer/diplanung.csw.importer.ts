@@ -83,7 +83,7 @@ export class DiplanungCswImporter extends CswImporter {
                     mergedDocument.modified = new Date();
                     let entity: RecordEntity = {
                         identifier: doc.identifier,
-                        source: harvestMetadata.source?.source_base ?? this.settings.sourceURL,
+                        source: this.settings.sourceURL,
                         collection_id: null, // TODO set default catalog for diplanung from ENV VAR
                         catalog_ids: this.settings.catalogIds,
                         harvest_metadata: harvestMetadata,

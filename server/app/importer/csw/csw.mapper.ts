@@ -508,7 +508,6 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
 
     getMetadataSource(): MetadataSource {
         return {
-            source_base: this.settings.sourceURL,
             source_type: 'csw',
         };
     }

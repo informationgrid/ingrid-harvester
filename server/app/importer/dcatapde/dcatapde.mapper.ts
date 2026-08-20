@@ -330,7 +330,6 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
 
     getMetadataSource(): MetadataSource {
         return {
-            source_base: this.settings.sourceURL,
             source_type: 'dcat',
         };
     }

@@ -419,7 +419,6 @@ export class OaiMapper extends Mapper<OaiSettings> {
 
     getMetadataSource(): MetadataSource {
         return {
-            source_base: this.settings.sourceURL,
             source_type: 'oai_iso19139',
         };
     }

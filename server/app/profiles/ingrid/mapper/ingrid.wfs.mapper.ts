@@ -139,7 +139,7 @@ export class ingridWfsMapper extends ingridMapper<WfsMapper> {
     getGeneratedId(): string {
         let customEntries = this.getCustomEntries();
         let existingUuid = customEntries["uuid"];
-        let generatedUuid = generateWfsUuid(this.getMetadataSource().source_base, this.baseMapper.getTypename(), this.baseMapper.gmlId);
+        let generatedUuid = generateWfsUuid(this.baseMapper.settings.sourceURL, this.baseMapper.getTypename(), this.baseMapper.gmlId);
         return existingUuid ?? generatedUuid;
     }
 

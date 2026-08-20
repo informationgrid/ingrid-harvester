@@ -209,7 +209,7 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
      */
     async getSource(): Promise<Source> {
         const getSourceId = () => {
-            switch (this.baseMapper.getMetadataSource().source_base) {
+            switch (this.baseMapper.settings.sourceURL) {
                 case 'https://oamh-lvr.digicult-verbund.de/cv/sprache_lvr_13tHztt9gZr':
                     return 'digiCULT (Sprache)';
                 case 'https://oamh-lvr.digicult-verbund.de/cv/hgrojzOf7tF53kH0a0j':

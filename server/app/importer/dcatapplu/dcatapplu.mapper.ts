@@ -376,7 +376,6 @@ export class DcatappluMapper extends Mapper<DcatappluSettings> implements ToElas
 
     getMetadataSource(): MetadataSource {
         return {
-            source_base: this.settings.sourceURL,
             source_type: 'dcatapplu',
         };
     }

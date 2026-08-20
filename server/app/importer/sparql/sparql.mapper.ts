@@ -179,7 +179,6 @@ export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMap
 
     getMetadataSource(): MetadataSource {
         return {
-            source_base: this.settings.sourceURL,
             source_type: 'sparql',
         };
     }
