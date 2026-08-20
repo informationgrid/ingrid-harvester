@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS public.record (
     identifier VARCHAR(255) NOT NULL,
     source VARCHAR(255) NOT NULL,
     collection_id INTEGER,
-    harvest_metadata JSONB,
     dataset JSONB,
     original_document TEXT,
     created_on TIMESTAMP(3) with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
