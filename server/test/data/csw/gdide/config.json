@@ -1,0 +1,19 @@
+{
+  "id": 1,
+  "dataSourceName": "Harvester",
+  "type": "CSW",
+  "sourceURL": "https://gdk.gdi-de.org/gdi-de/srv/eng/csw",
+  "catalogIds": [1],
+  "iPlugId": "geoportal",
+  "partner": "bund",
+  "provider": "bu_bkg",
+  "datatype": "default,dsc_csw,csw,metadata,IDF_1.0",
+  "eitherKeywords": [],
+  "harvestingMode": null,
+  "httpMethod": "POST",
+  "maxConcurrent": 1,
+  "maxServices": 1,
+  "resolveOgcDistributions": false,
+  "simplifyTolerance": 0,
+  "timeout": 0
+}
