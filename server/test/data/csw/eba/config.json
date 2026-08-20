@@ -1,0 +1,19 @@
+{
+  "id": 1,
+  "dataSourceName": "Harvester",
+  "type": "CSW",
+  "sourceURL": "https://geoinformation.eisenbahn-bundesamt.de/geonetwork/srv/ger/csw",
+  "catalogIds": [1],
+  "iPlugId": "eba",
+  "partner": "bund",
+  "provider": "eba",
+  "datatype": "default,dsc_csw,csw,metadata,IDF_1.0",
+  "eitherKeywords": [],
+  "harvestingMode": null,
+  "httpMethod": "GET",
+  "maxConcurrent": 1,
+  "maxServices": 1,
+  "resolveOgcDistributions": false,
+  "simplifyTolerance": 0,
+  "timeout": 0
+}

@@ -1,0 +1,637 @@
+{
+  "capabilities_url": [
+    "https://geoinformation.eisenbahn-bundesamt.de/wms/flut_2021?service=WMS&version=1.3.0&request=GetCapabilities"
+  ],
+  "collection": {
+    "name": "Harvester"
+  },
+  "content": [
+    "eba",
+    "bund",
+    "eba",
+    "default",
+    "dsc_csw",
+    "csw",
+    "metadata",
+    "IDF_1.0",
+    "Harvester",
+    "false",
+    "3110b7f0-5a6e-468d-8230-895d021c3785",
+    "Harvester",
+    "service",
+    "https://geoinformation.eisenbahn-bundesamt.de/geonetwork/srv/ger/csw",
+    "https://geoinformation.eisenbahn-bundesamt.de/geonetwork/srv/ger/csw?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=3110b7f0-5a6e-468d-8230-895d021c3785",
+    "csw",
+    "https://geoinformation.eisenbahn-bundesamt.de/wms/flut_2021",
+    "WMS",
+    "WMS GetCapabilities request providing machine readable service metadata",
+    "fee82268-9d8c-4134-8123-9f9a8f728306",
+    "http://geoportal.eisenbahn-bundesamt.de",
+    "http://geoportal.eisenbahn-bundesamt.de",
+    "Link zum Geodatenviewer",
+    "WWW",
+    "http://www.eba.bund.de/DE/Themen/Laerm_an_Schienenwegen/laerm_an_schienenwegen_node.html",
+    "http://www.eba.bund.de/DE/Themen/Laerm_an_Schienenwegen/laerm_an_schienenwegen_node.html",
+    "Weitere Informationen zum Inhalt der beschriebenen Daten",
+    "PNG",
+    "3110b7f0-5a6e-468d-8230-895d021c3785",
+    "3110b7f0-5a6e-468d-8230-895d021c3785",
+    "3",
+    "de",
+    "4",
+    "ISO19119",
+    "2005/PDAM 1",
+    "de",
+    "5105",
+    "900001",
+    "service",
+    "Eisenbahn-Bundesamt",
+    "Heinemannstr. 6",
+    "D-53175",
+    "Bonn",
+    "Nordrhein-Westfalen",
+    "Deutschland",
+    "Eisenbahn-Bundesamt",
+    "(WMS) Beeinträchtigung Flut 2021",
+    "Darstellung der von der Flutkatastrophe im Sommer 2021 dauerhaft oder vorübergehend im Betrieb beeinträchtigten Strecken. Erhoben im Rahmen der Umgebungslärmkartierung Runde 4",
+    "000000000000",
+    "",
+    "5.87",
+    "15.04",
+    "47.27",
+    "55.06",
+    "Polygon",
+    5.87,
+    55.06,
+    5.87,
+    47.27,
+    15.04,
+    47.27,
+    15.04,
+    55.06,
+    5.87,
+    55.06,
+    5.87,
+    47.27,
+    15.04,
+    55.06,
+    "https://geoinformation.eisenbahn-bundesamt.de/wms/flut_2021?service=WMS&version=1.3.0&request=GetCapabilities",
+    "Bahnlärm",
+    "T",
+    "Behörde",
+    "T",
+    "Eisenbahn",
+    "T",
+    "Eisenbahngeräusch",
+    "T",
+    "Eisenbahnlärm",
+    "T",
+    "Eisenbahnnetz",
+    "T",
+    "Eisenbahnstrecke",
+    "T",
+    "EU-Umgebungslärmrichtlinie",
+    "T",
+    "Geräuschbelastung durch Schienenverkehr",
+    "T",
+    "Güterwagenlärm",
+    "T",
+    "Lärm",
+    "T",
+    "Lärmaktionsplan",
+    "T",
+    "Lärmaktionsplanung",
+    "T",
+    "Lärmbelästigung durch Schienenverkehr",
+    "T",
+    "Lärmbelastung durch Schienenverkehr",
+    "T",
+    "Lärmemissionen durch den Schienenverkehr",
+    "T",
+    "Lärmkarte",
+    "T",
+    "Lärmkartierung",
+    "T",
+    "Öffentliche Verwaltung",
+    "T",
+    "Schienengüterverkehrslärm",
+    "T",
+    "Schall",
+    "T",
+    "Schiene",
+    "T",
+    "Schienenlärm",
+    "T",
+    "Schienenverkehrslärm",
+    "T",
+    "Zuglärm",
+    "T",
+    "Umgebungslärm",
+    "T",
+    "(WMS) Beeinträchtigung Flut 2021",
+    "F",
+    "Beeinträchtigung Flut 2021",
+    "F",
+    "EBA",
+    "F",
+    "Eisenbahn-Bundesamt",
+    "F",
+    "LAP",
+    "F",
+    "Runde4",
+    "F",
+    "Schienenverkehrsnetz",
+    "F",
+    "Umgebungslärmkartierung",
+    "F",
+    "Umgebungslärmrichtlinie",
+    "F",
+    "HUMAN ACTIVITIES AND PRODUCTS, EFFECTS ON THE ENVIRONMENT",
+    "F",
+    "opendata",
+    "F",
+    "mobilithek_category_BAHN",
+    "F",
+    "infoMapAccessService",
+    "F",
+    "png",
+    "?",
+    "http://registry.gdi-de.org/id/de.bund.eba/3110b7f0-5a6e-468d-8230-895d021c3785",
+    "http://www.opengis.net/def/crs/EPSG/0/25832",
+    false,
+    false,
+    "view",
+    "OGC:WMS 1.3.0",
+    "https://geoinformation.eisenbahn-bundesamt.de/wms/flut_2021?service=WMS&version=1.3.0&request=GetCapabilities",
+    "GetCapabilities",
+    "WebServices",
+    "0",
+    "7",
+    "0",
+    "7",
+    "http://geoportal.eisenbahn-bundesamt.de",
+    "Link zum Geodatenviewer",
+    "",
+    "5302",
+    "http://www.eba.bund.de/DE/Themen/Laerm_an_Schienenwegen/laerm_an_schienenwegen_node.html",
+    "Weitere Informationen zum Inhalt der beschriebenen Daten",
+    "",
+    "5302",
+    "https://geoinformation.eisenbahn-bundesamt.de/wms/flut_2021?service=WMS&version=1.3.0&request=GetCapabilities",
+    "WMS GetCapabilities request providing machine readable service metadata",
+    "",
+    "5302",
+    "Telefon",
+    "+49 228 9826-0",
+    "Email",
+    "Ref53@eba.bund.de",
+    "URL",
+    "www.eba.bund.de",
+    "Telefon",
+    "+49 228 9826-0",
+    "Email",
+    "Ref53@eba.bund.de",
+    "URL",
+    "www.eba.bund.de",
+    "Nutzungsbedingungen: Die Daten sind urheberrechtlich geschützt. Der Datensatz wird entgeltfrei mit der Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0) zur Verfügung gestellt. Der Quellenvermerk ist zu beachten. Quellenvermerk: © Eisenbahn-Bundesamt (www.eba.bund.de/). Diese Karten finden Sie unter www.eba.bund.de/kartendienst",
+    "{\"id\":\"dl-by-de/2.0\",\"name\":\"Datenlizenz Deutschland Namensnennung 2.0\",\"url\":\"http://www.govdata.de/dl-de/by-2-0\",\"quelle\":\"Eisenbahn-Bundesamt\"}",
+    false,
+    "http://www.opengis.net/def/crs/EPSG/0/25832",
+    "84b9b3e40d9800b4463a7de5ab6105c75ac7e8d7"
+  ],
+  "dataSourceName": "Harvester",
+  "datatype": [
+    "default",
+    "dsc_csw",
+    "csw",
+    "metadata",
+    "IDF_1.0"
+  ],
+  "distributions": [
+    {
+      "title": "WMS GetCapabilities request providing machine readable service metadata",
+      "format": [
+        "WMS"
+      ],
+      "accessURL": "https://geoinformation.eisenbahn-bundesamt.de/wms/flut_2021",
+      "operates_on": [
+        "fee82268-9d8c-4134-8123-9f9a8f728306"
+      ]
+    },
+    {
+      "title": "Link zum Geodatenviewer",
+      "format": [
+        "WWW"
+      ],
+      "accessURL": "http://geoportal.eisenbahn-bundesamt.de",
+      "access_url": "http://geoportal.eisenbahn-bundesamt.de"
+    },
+    {
+      "title": "Weitere Informationen zum Inhalt der beschriebenen Daten",
+      "format": [
+        "PNG"
+      ],
+      "accessURL": "http://www.eba.bund.de/DE/Themen/Laerm_an_Schienenwegen/laerm_an_schienenwegen_node.html",
+      "access_url": "http://www.eba.bund.de/DE/Themen/Laerm_an_Schienenwegen/laerm_an_schienenwegen_node.html"
+    }
+  ],
+  "extras": {
+    "hierarchy_level": "service",
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-08-20T09:38:57.607Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-04-10T12:19:49.196Z",
+      "merged_from": [],
+      "modified": "2026-08-20T09:38:54.504Z",
+      "source": {
+        "raw_data_source": "https://geoinformation.eisenbahn-bundesamt.de/geonetwork/srv/ger/csw?request=GetCapabilities&SERVICE=CSW&VERSION=2.0.2?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=3110b7f0-5a6e-468d-8230-895d021c3785",
+        "source_base": "https://geoinformation.eisenbahn-bundesamt.de/geonetwork/srv/ger/csw?request=GetCapabilities&SERVICE=CSW&VERSION=2.0.2",
+        "source_type": "csw"
+      }
+    }
+  },
+  "hierarchylevel": "service",
+  "iPlugId": "eba",
+  "idf": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.portalu.de/IDF/1.0\">\n  <head/>\n  <body>\n<idf:idfMdMetadata xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:gmx=\"http://www.isotc211.org/2005/gmx\" xmlns:srv=\"http://www.isotc211.org/2005/srv\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:geonet=\"http://www.fao.org/geonetwork\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.isotc211.org/2005/gmd http://schemas.opengis.net/geonetwork/2.0.2/profiles/apiso/1.0.0/apiso.xsd\" xmlns:idf=\"http://www.portalu.de/IDF/1.0\">\n      <gmd:fileIdentifier>\n        <gco:CharacterString>3110b7f0-5a6e-468d-8230-895d021c3785</gco:CharacterString>\n      </gmd:fileIdentifier>\n      <gmd:language>\n        <gmd:LanguageCode codeList=\"http://www.loc.gov/standards/iso639-2/\" codeListValue=\"ger\"/>\n      </gmd:language>\n      <gmd:characterSet>\n        <gmd:MD_CharacterSetCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode\" codeListValue=\"utf8\"/>\n      </gmd:characterSet>\n      <gmd:hierarchyLevel>\n        <gmd:MD_ScopeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode\" codeListValue=\"service\"/>\n      </gmd:hierarchyLevel>\n      <gmd:hierarchyLevelName>\n        <gco:CharacterString>Darstellungsdienste</gco:CharacterString>\n      </gmd:hierarchyLevelName>\n      <gmd:contact>\n        <idf:idfResponsibleParty>\n          <gmd:organisationName>\n            <gco:CharacterString>Eisenbahn-Bundesamt</gco:CharacterString>\n          </gmd:organisationName>\n          <gmd:contactInfo>\n            <gmd:CI_Contact>\n              <gmd:phone>\n                <gmd:CI_Telephone>\n                  <gmd:voice>\n                    <gco:CharacterString>+49 228 9826-0</gco:CharacterString>\n                  </gmd:voice>\n                </gmd:CI_Telephone>\n              </gmd:phone>\n              <gmd:address>\n                <gmd:CI_Address>\n                  <gmd:deliveryPoint>\n                    <gco:CharacterString>Heinemannstr. 6</gco:CharacterString>\n                  </gmd:deliveryPoint>\n                  <gmd:city>\n                    <gco:CharacterString>Bonn</gco:CharacterString>\n                  </gmd:city>\n                  <gmd:administrativeArea>\n                    <gco:CharacterString>Nordrhein-Westfalen</gco:CharacterString>\n                  </gmd:administrativeArea>\n                  <gmd:postalCode>\n                    <gco:CharacterString>D-53175</gco:CharacterString>\n                  </gmd:postalCode>\n                  <gmd:country>\n                    <gco:CharacterString>Deutschland</gco:CharacterString>\n                  </gmd:country>\n                  <gmd:electronicMailAddress>\n                    <gco:CharacterString>Ref53@eba.bund.de</gco:CharacterString>\n                  </gmd:electronicMailAddress>\n                </gmd:CI_Address>\n              </gmd:address>\n              <gmd:onlineResource>\n                <gmd:CI_OnlineResource>\n                  <gmd:linkage>\n                    <gmd:URL>www.eba.bund.de</gmd:URL>\n                  </gmd:linkage>\n                </gmd:CI_OnlineResource>\n              </gmd:onlineResource>\n            </gmd:CI_Contact>\n          </gmd:contactInfo>\n          <gmd:role>\n            <gmd:CI_RoleCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode\" codeListValue=\"pointOfContact\"/>\n          </gmd:role>\n        </idf:idfResponsibleParty>\n      </gmd:contact>\n      <gmd:dateStamp>\n        <gco:Date>2025-03-12</gco:Date>\n      </gmd:dateStamp>\n      <gmd:metadataStandardName>\n        <gco:CharacterString>ISO19119</gco:CharacterString>\n      </gmd:metadataStandardName>\n      <gmd:metadataStandardVersion>\n        <gco:CharacterString>2005/PDAM 1</gco:CharacterString>\n      </gmd:metadataStandardVersion>\n      <gmd:referenceSystemInfo>\n        <gmd:MD_ReferenceSystem>\n          <gmd:referenceSystemIdentifier>\n            <gmd:RS_Identifier>\n              <gmd:code>\n                <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/25832</gco:CharacterString>\n              </gmd:code>\n              <!-- <gmd:codeSpace> -->\n              <!-- <gco:CharacterString>urn:ogc:def:crs:EPSG</gco:CharacterString> -->\n              <!-- </gmd:codeSpace> -->\n              <gmd:version>\n                <gco:CharacterString>6.11.2</gco:CharacterString>\n              </gmd:version>\n            </gmd:RS_Identifier>\n          </gmd:referenceSystemIdentifier>\n        </gmd:MD_ReferenceSystem>\n      </gmd:referenceSystemInfo>\n      <gmd:identificationInfo>\n        <srv:SV_ServiceIdentification>\n          <gmd:citation>\n            <gmd:CI_Citation>\n              <gmd:title>\n                <gco:CharacterString>(WMS) Beeinträchtigung Flut 2021</gco:CharacterString>\n              </gmd:title>\n              <gmd:date>\n                <gmd:CI_Date>\n                  <gmd:date>\n                    <gco:Date>2025-03-12</gco:Date>\n                  </gmd:date>\n                  <gmd:dateType>\n                    <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"creation\"/>\n                  </gmd:dateType>\n                </gmd:CI_Date>\n              </gmd:date>\n              <gmd:date>\n                <gmd:CI_Date>\n                  <gmd:date>\n                    <gco:Date>2025-03-12</gco:Date>\n                  </gmd:date>\n                  <gmd:dateType>\n                    <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\"/>\n                  </gmd:dateType>\n                </gmd:CI_Date>\n              </gmd:date>\n              <gmd:date>\n                <gmd:CI_Date>\n                  <gmd:date>\n                    <gco:Date>2025-03-12</gco:Date>\n                  </gmd:date>\n                  <gmd:dateType>\n                    <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"revision\"/>\n                  </gmd:dateType>\n                </gmd:CI_Date>\n              </gmd:date>\n              <gmd:identifier>\n                <gmd:MD_Identifier>\n                  <gmd:code>\n                    <gco:CharacterString>http://registry.gdi-de.org/id/de.bund.eba/3110b7f0-5a6e-468d-8230-895d021c3785</gco:CharacterString>\n                  </gmd:code>\n                </gmd:MD_Identifier>\n              </gmd:identifier>\n            </gmd:CI_Citation>\n          </gmd:citation>\n          <gmd:abstract>\n            <gco:CharacterString>Darstellung der von der Flutkatastrophe im Sommer 2021 dauerhaft oder vorübergehend im Betrieb beeinträchtigten Strecken. Erhoben im Rahmen der Umgebungslärmkartierung Runde 4</gco:CharacterString>\n          </gmd:abstract>\n          <gmd:pointOfContact>\n            <idf:idfResponsibleParty>\n              <gmd:organisationName>\n                <gco:CharacterString>Eisenbahn-Bundesamt</gco:CharacterString>\n              </gmd:organisationName>\n              <gmd:contactInfo>\n                <gmd:CI_Contact>\n                  <gmd:phone>\n                    <gmd:CI_Telephone>\n                      <gmd:voice>\n                        <gco:CharacterString>+49 228 9826-0</gco:CharacterString>\n                      </gmd:voice>\n                    </gmd:CI_Telephone>\n                  </gmd:phone>\n                  <gmd:address>\n                    <gmd:CI_Address>\n                      <gmd:electronicMailAddress>\n                        <gco:CharacterString>Ref53@eba.bund.de</gco:CharacterString>\n                      </gmd:electronicMailAddress>\n                    </gmd:CI_Address>\n                  </gmd:address>\n                  <gmd:onlineResource>\n                    <gmd:CI_OnlineResource>\n                      <gmd:linkage>\n                        <gmd:URL>www.eba.bund.de</gmd:URL>\n                      </gmd:linkage>\n                    </gmd:CI_OnlineResource>\n                  </gmd:onlineResource>\n                </gmd:CI_Contact>\n              </gmd:contactInfo>\n              <gmd:role>\n                <gmd:CI_RoleCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode\" codeListValue=\"pointOfContact\"/>\n              </gmd:role>\n            </idf:idfResponsibleParty>\n          </gmd:pointOfContact>\n          <gmd:graphicOverview>\n            <gmd:MD_BrowseGraphic>\n              <gmd:fileName>\n                <gco:CharacterString/>\n              </gmd:fileName>\n            </gmd:MD_BrowseGraphic>\n          </gmd:graphicOverview>\n          <gmd:descriptiveKeywords>\n            <gmd:MD_Keywords>\n              <gmd:keyword>\n                <gco:CharacterString>(WMS) Beeinträchtigung Flut 2021</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Beeinträchtigung Flut 2021</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>EBA</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Eisenbahn-Bundesamt</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>LAP</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Runde4</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Schienenverkehrsnetz</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Umgebungslärmkartierung</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Umgebungslärmrichtlinie</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:thesaurusName>\n                <gmd:CI_Citation>\n                  <gmd:title>\n                    <gco:CharacterString>Freitext</gco:CharacterString>\n                  </gmd:title>\n                  <gmd:date>\n                    <gmd:CI_Date>\n                      <gmd:date>\n                        <gco:Date>2014-11-26</gco:Date>\n                      </gmd:date>\n                      <gmd:dateType>\n                        <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\"/>\n                      </gmd:dateType>\n                    </gmd:CI_Date>\n                  </gmd:date>\n                </gmd:CI_Citation>\n              </gmd:thesaurusName>\n            </gmd:MD_Keywords>\n          </gmd:descriptiveKeywords>\n          <gmd:descriptiveKeywords>\n            <gmd:MD_Keywords>\n              <gmd:keyword>\n                <gco:CharacterString>Bahnlärm</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Behörde</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Eisenbahn</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Eisenbahngeräusch</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Eisenbahnlärm</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Eisenbahnnetz</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Eisenbahnstrecke</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>EU-Umgebungslärmrichtlinie</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Geräuschbelastung durch Schienenverkehr</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Güterwagenlärm</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Lärm</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Lärmaktionsplan</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Lärmaktionsplanung</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Lärmbelästigung durch Schienenverkehr</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Lärmbelastung durch Schienenverkehr</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Lärmemissionen durch den Schienenverkehr</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Lärmkarte</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Lärmkartierung</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Öffentliche Verwaltung</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Schienengüterverkehrslärm</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Schall</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Schiene</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Schienenlärm</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Schienenverkehrslärm</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Zuglärm</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Umgebungslärm</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:type>\n                <gmd:MD_KeywordTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_KeywordTypeCode\" codeListValue=\"theme\"/>\n              </gmd:type>\n              <gmd:thesaurusName>\n                <gmd:CI_Citation>\n                  <gmd:title>\n                    <gco:CharacterString>UMTHES Thesaurus</gco:CharacterString>\n                  </gmd:title>\n                  <gmd:date>\n                    <gmd:CI_Date>\n                      <gmd:date>\n                        <gco:Date>2009-01-15</gco:Date>\n                      </gmd:date>\n                      <gmd:dateType>\n                        <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\"/>\n                      </gmd:dateType>\n                    </gmd:CI_Date>\n                  </gmd:date>\n                </gmd:CI_Citation>\n              </gmd:thesaurusName>\n            </gmd:MD_Keywords>\n          </gmd:descriptiveKeywords>\n          <gmd:descriptiveKeywords>\n            <gmd:MD_Keywords>\n              <gmd:keyword>\n                <gco:CharacterString>HUMAN ACTIVITIES AND PRODUCTS, EFFECTS ON THE ENVIRONMENT</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:thesaurusName>\n                <gmd:CI_Citation>\n                  <gmd:title>\n                    <gco:CharacterString>GEMET - Supergroups, version 2.4</gco:CharacterString>\n                  </gmd:title>\n                  <gmd:date>\n                    <gmd:CI_Date>\n                      <gmd:date>\n                        <gco:Date>2010-01-13</gco:Date>\n                      </gmd:date>\n                      <gmd:dateType>\n                        <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\"/>\n                      </gmd:dateType>\n                    </gmd:CI_Date>\n                  </gmd:date>\n                </gmd:CI_Citation>\n              </gmd:thesaurusName>\n            </gmd:MD_Keywords>\n          </gmd:descriptiveKeywords>\n          <gmd:descriptiveKeywords>\n            <gmd:MD_Keywords>\n              <gmd:keyword>\n                <gco:CharacterString>opendata</gco:CharacterString>\n              </gmd:keyword>\n            </gmd:MD_Keywords>\n          </gmd:descriptiveKeywords>\n          <gmd:descriptiveKeywords>\n            <gmd:MD_Keywords>\n              <gmd:keyword>\n                <gco:CharacterString>mobilithek_category_BAHN</gco:CharacterString>\n              </gmd:keyword>\n            </gmd:MD_Keywords>\n          </gmd:descriptiveKeywords>\n          <gmd:descriptiveKeywords>\n            <gmd:MD_Keywords>\n              <gmd:keyword>\n                <gco:CharacterString>infoMapAccessService</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:thesaurusName>\n                <gmd:CI_Citation>\n                  <gmd:title>\n                    <gco:CharacterString>ISO - 19119 geographic services taxonomy</gco:CharacterString>\n                  </gmd:title>\n                  <gmd:date>\n                    <gmd:CI_Date>\n                      <gmd:date>\n                        <gco:Date>2010-01-19</gco:Date>\n                      </gmd:date>\n                      <gmd:dateType>\n                        <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\"/>\n                      </gmd:dateType>\n                    </gmd:CI_Date>\n                  </gmd:date>\n                </gmd:CI_Citation>\n              </gmd:thesaurusName>\n            </gmd:MD_Keywords>\n          </gmd:descriptiveKeywords>\n          <gmd:resourceConstraints>\n            <gmd:MD_LegalConstraints>\n              <gmd:accessConstraints>\n                <gmd:MD_RestrictionCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode\" codeListValue=\"otherRestrictions\"/>\n              </gmd:accessConstraints>\n              <gmd:otherConstraints>\n                <gmx:Anchor xlink:href=\"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations\">Es gelten keine Zugriffsbeschränkungen</gmx:Anchor>\n              </gmd:otherConstraints>\n            </gmd:MD_LegalConstraints>\n          </gmd:resourceConstraints>\n          <gmd:resourceConstraints>\n            <gmd:MD_LegalConstraints>\n              <gmd:useConstraints>\n                <gmd:MD_RestrictionCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode\" codeListValue=\"otherRestrictions\"/>\n              </gmd:useConstraints>\n              <gmd:otherConstraints>\n                <gco:CharacterString>Nutzungsbedingungen: Die Daten sind urheberrechtlich geschützt. Der Datensatz wird entgeltfrei mit der Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0) zur Verfügung gestellt. Der Quellenvermerk ist zu beachten. Quellenvermerk: © Eisenbahn-Bundesamt (www.eba.bund.de/). Diese Karten finden Sie unter www.eba.bund.de/kartendienst</gco:CharacterString>\n              </gmd:otherConstraints>\n              <gmd:otherConstraints>\n                <gco:CharacterString>{\"id\":\"dl-by-de/2.0\",\"name\":\"Datenlizenz Deutschland Namensnennung 2.0\",\"url\":\"http://www.govdata.de/dl-de/by-2-0\",\"quelle\":\"Eisenbahn-Bundesamt\"}</gco:CharacterString>\n              </gmd:otherConstraints>\n            </gmd:MD_LegalConstraints>\n          </gmd:resourceConstraints>\n          <srv:serviceType>\n            <gco:LocalName codeSpace=\"http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType\">view</gco:LocalName>\n          </srv:serviceType>\n          <srv:serviceTypeVersion>\n            <gco:CharacterString>OGC:WMS 1.3.0</gco:CharacterString>\n          </srv:serviceTypeVersion>\n          <srv:extent>\n            <gmd:EX_Extent>\n              <gmd:geographicElement>\n                <gmd:EX_GeographicDescription>\n                  <gmd:extentTypeCode>\n                    <gco:Boolean>true</gco:Boolean>\n                  </gmd:extentTypeCode>\n                  <gmd:geographicIdentifier>\n                    <gmd:MD_Identifier>\n                      <gmd:code>\n                        <gco:CharacterString>000000000000</gco:CharacterString>\n                      </gmd:code>\n                    </gmd:MD_Identifier>\n                  </gmd:geographicIdentifier>\n                </gmd:EX_GeographicDescription>\n              </gmd:geographicElement>\n              <gmd:geographicElement>\n                <gmd:EX_GeographicBoundingBox>\n                  <gmd:westBoundLongitude>\n                    <gco:Decimal>5.87</gco:Decimal>\n                  </gmd:westBoundLongitude>\n                  <gmd:eastBoundLongitude>\n                    <gco:Decimal>15.04</gco:Decimal>\n                  </gmd:eastBoundLongitude>\n                  <gmd:southBoundLatitude>\n                    <gco:Decimal>47.27</gco:Decimal>\n                  </gmd:southBoundLatitude>\n                  <gmd:northBoundLatitude>\n                    <gco:Decimal>55.06</gco:Decimal>\n                  </gmd:northBoundLatitude>\n                </gmd:EX_GeographicBoundingBox>\n              </gmd:geographicElement>\n            </gmd:EX_Extent>\n          </srv:extent>\n          <srv:couplingType>\n            <srv:SV_CouplingType codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#SV_CouplingType\" codeListValue=\"tight\"/>\n          </srv:couplingType>\n          <srv:containsOperations>\n            <srv:SV_OperationMetadata>\n              <srv:operationName>\n                <gco:CharacterString>GetCapabilities</gco:CharacterString>\n              </srv:operationName>\n              <srv:DCP>\n                <srv:DCPList codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#DCPList\" codeListValue=\"WebServices\"/>\n              </srv:DCP>\n              <srv:connectPoint>\n                <gmd:CI_OnlineResource>\n                  <gmd:linkage>\n                    <gmd:URL>https://geoinformation.eisenbahn-bundesamt.de/wms/flut_2021?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities</gmd:URL>\n                  </gmd:linkage>\n                </gmd:CI_OnlineResource>\n              </srv:connectPoint>\n            </srv:SV_OperationMetadata>\n          </srv:containsOperations>\n          <srv:operatesOn uuidref=\"fee82268-9d8c-4134-8123-9f9a8f728306\" xlink:href=\"https://registry.gdi-de.org/id/de.bund.eba/fee82268-9d8c-4134-8123-9f9a8f728306\"/>\n        </srv:SV_ServiceIdentification>\n      </gmd:identificationInfo>\n      <gmd:distributionInfo>\n        <gmd:MD_Distribution>\n          <gmd:distributionFormat>\n            <gmd:MD_Format>\n              <gmd:name>\n                <gco:CharacterString>png</gco:CharacterString>\n              </gmd:name>\n              <gmd:version>\n                <gco:CharacterString>?</gco:CharacterString>\n              </gmd:version>\n            </gmd:MD_Format>\n          </gmd:distributionFormat>\n          <gmd:transferOptions>\n            <gmd:MD_DigitalTransferOptions>\n              <gmd:onLine>\n                <gmd:CI_OnlineResource>\n                  <gmd:linkage>\n                    <gmd:URL>http://geoportal.eisenbahn-bundesamt.de</gmd:URL>\n                  </gmd:linkage>\n                  <gmd:name>\n                    <gco:CharacterString>Link zum Geodatenviewer</gco:CharacterString>\n                  </gmd:name>\n                  <gmd:function>\n                    <gmd:CI_OnLineFunctionCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode\" codeListValue=\"information\"/>\n                  </gmd:function>\n                </gmd:CI_OnlineResource>\n              </gmd:onLine>\n              <gmd:onLine>\n                <gmd:CI_OnlineResource>\n                  <gmd:linkage>\n                    <gmd:URL>http://www.eba.bund.de/DE/Themen/Laerm_an_Schienenwegen/laerm_an_schienenwegen_node.html</gmd:URL>\n                  </gmd:linkage>\n                  <gmd:name>\n                    <gco:CharacterString>Weitere Informationen zum Inhalt der beschriebenen Daten</gco:CharacterString>\n                  </gmd:name>\n                  <gmd:function>\n                    <gmd:CI_OnLineFunctionCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode\" codeListValue=\"information\"/>\n                  </gmd:function>\n                </gmd:CI_OnlineResource>\n              </gmd:onLine>\n              <gmd:onLine>\n                <gmd:CI_OnlineResource>\n                  <gmd:linkage>\n                    <gmd:URL>https://geoinformation.eisenbahn-bundesamt.de/wms/flut_2021?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities</gmd:URL>\n                  </gmd:linkage>\n                  <gmd:protocol>\n                    <gco:CharacterString>OGC:WMS</gco:CharacterString>\n                  </gmd:protocol>\n                  <gmd:name>\n                    <gco:CharacterString>WMS GetCapabilities request providing machine readable service metadata</gco:CharacterString>\n                  </gmd:name>\n                  <gmd:function>\n                    <gmd:CI_OnLineFunctionCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode\" codeListValue=\"information\"/>\n                  </gmd:function>\n                </gmd:CI_OnlineResource>\n              </gmd:onLine>\n            </gmd:MD_DigitalTransferOptions>\n          </gmd:transferOptions>\n        </gmd:MD_Distribution>\n      </gmd:distributionInfo>\n      <gmd:dataQualityInfo>\n        <gmd:DQ_DataQuality>\n          <gmd:scope>\n            <gmd:DQ_Scope>\n              <gmd:level>\n                <gmd:MD_ScopeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode\" codeListValue=\"service\"/>\n              </gmd:level>\n              <gmd:levelDescription>\n                <gmd:MD_ScopeDescription>\n                  <gmd:other>\n                    <gco:CharacterString>Service</gco:CharacterString>\n                  </gmd:other>\n                </gmd:MD_ScopeDescription>\n              </gmd:levelDescription>\n            </gmd:DQ_Scope>\n          </gmd:scope>\n          <gmd:report>\n            <gmd:DQ_DomainConsistency>\n              <gmd:result>\n                <gmd:DQ_ConformanceResult>\n                  <gmd:specification>\n                    <gmd:CI_Citation>\n                      <gmd:title>\n                        <gco:CharacterString>VERORDNUNG (EG) Nr. 976/2009 DER KOMMISSION vom 19. Oktober 2009 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Netzdienste</gco:CharacterString>\n                      </gmd:title>\n                      <gmd:date>\n                        <gmd:CI_Date>\n                          <gmd:date>\n                            <gco:Date>2009-10-20</gco:Date>\n                          </gmd:date>\n                          <gmd:dateType>\n                            <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\"/>\n                          </gmd:dateType>\n                        </gmd:CI_Date>\n                      </gmd:date>\n                    </gmd:CI_Citation>\n                  </gmd:specification>\n                  <gmd:explanation>\n                    <gco:CharacterString>Der Dienst wurde mit dem EU-Validator überprüft.</gco:CharacterString>\n                  </gmd:explanation>\n                  <gmd:pass>\n                    <gco:Boolean>true</gco:Boolean>\n                  </gmd:pass>\n                </gmd:DQ_ConformanceResult>\n              </gmd:result>\n            </gmd:DQ_DomainConsistency>\n          </gmd:report>\n          <gmd:report>\n            <gmd:DQ_DomainConsistency>\n              <gmd:result>\n                <gmd:DQ_ConformanceResult>\n                  <gmd:specification>\n                    <gmd:CI_Citation>\n                      <gmd:title>\n                        <gco:CharacterString>INSPIRE Data Specification on Human Health and Safety - Technical Guidelines</gco:CharacterString>\n                      </gmd:title>\n                      <gmd:date>\n                        <gmd:CI_Date>\n                          <gmd:date>\n                            <gco:Date>2013-12-10</gco:Date>\n                          </gmd:date>\n                          <gmd:dateType>\n                            <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\"/>\n                          </gmd:dateType>\n                        </gmd:CI_Date>\n                      </gmd:date>\n                    </gmd:CI_Citation>\n                  </gmd:specification>\n                  <gmd:explanation>\n                    <gco:CharacterString>Der Dienst wurde mit dem EU-Validator überprüft.</gco:CharacterString>\n                  </gmd:explanation>\n                  <gmd:pass>\n                    <gco:Boolean>true</gco:Boolean>\n                  </gmd:pass>\n                </gmd:DQ_ConformanceResult>\n              </gmd:result>\n            </gmd:DQ_DomainConsistency>\n          </gmd:report>\n          <gmd:report>\n            <gmd:DQ_DomainConsistency>\n              <gmd:result>\n                <gmd:DQ_ConformanceResult>\n                  <gmd:specification>\n                    <gmd:CI_Citation>\n                      <gmd:title>\n                        <gco:CharacterString>INSPIRE Data Specification on Area Management/Restriction/Regulation Zones and Reporting Units – Technical Guidelines</gco:CharacterString>\n                      </gmd:title>\n                      <gmd:date>\n                        <gmd:CI_Date>\n                          <gmd:date>\n                            <gco:Date>2013-12-10</gco:Date>\n                          </gmd:date>\n                          <gmd:dateType>\n                            <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\"/>\n                          </gmd:dateType>\n                        </gmd:CI_Date>\n                      </gmd:date>\n                    </gmd:CI_Citation>\n                  </gmd:specification>\n                  <gmd:explanation>\n                    <gco:CharacterString>Der Dienst wurde mit dem EU-Validator überprüft.</gco:CharacterString>\n                  </gmd:explanation>\n                  <gmd:pass>\n                    <gco:Boolean>true</gco:Boolean>\n                  </gmd:pass>\n                </gmd:DQ_ConformanceResult>\n              </gmd:result>\n            </gmd:DQ_DomainConsistency>\n          </gmd:report>\n          <gmd:report>\n            <gmd:DQ_DomainConsistency>\n              <gmd:result>\n                <gmd:DQ_ConformanceResult>\n                  <gmd:specification>\n                    <gmd:CI_Citation>\n                      <gmd:title>\n                        <gco:CharacterString>Technical Guidance for the implementation of INSPIRE View Services</gco:CharacterString>\n                      </gmd:title>\n                      <gmd:date>\n                        <gmd:CI_Date>\n                          <gmd:date>\n                            <gco:Date>2013-04-04</gco:Date>\n                          </gmd:date>\n                          <gmd:dateType>\n                            <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\"/>\n                          </gmd:dateType>\n                        </gmd:CI_Date>\n                      </gmd:date>\n                    </gmd:CI_Citation>\n                  </gmd:specification>\n                  <gmd:explanation>\n                    <gco:CharacterString>Der Dienst wurde mit dem EU-Validator überprüft.</gco:CharacterString>\n                  </gmd:explanation>\n                  <gmd:pass>\n                    <gco:Boolean>true</gco:Boolean>\n                  </gmd:pass>\n                </gmd:DQ_ConformanceResult>\n              </gmd:result>\n            </gmd:DQ_DomainConsistency>\n          </gmd:report>\n          <gmd:report>\n            <gmd:DQ_DomainConsistency>\n              <gmd:result>\n                <gmd:DQ_ConformanceResult>\n                  <gmd:specification>\n                    <gmd:CI_Citation>\n                      <gmd:title>\n                        <gmx:Anchor xlink:href=\"http://data.europa.eu/eli/reg/2010/1089\">Commission Regulation (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</gmx:Anchor>\n                      </gmd:title>\n                      <gmd:date>\n                        <gmd:CI_Date>\n                          <gmd:date>\n                            <gco:Date>2014-12-31</gco:Date>\n                          </gmd:date>\n                          <gmd:dateType>\n                            <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\">publication</gmd:CI_DateTypeCode>\n                          </gmd:dateType>\n                        </gmd:CI_Date>\n                      </gmd:date>\n                    </gmd:CI_Citation>\n                  </gmd:specification>\n                  <gmd:explanation>\n                    <gco:CharacterString>The dataset is conformant with the INSPIRE implementig rules for the interoperability of spatial datasets and services.</gco:CharacterString>\n                  </gmd:explanation>\n                  <gmd:pass>\n                    <gco:Boolean>true</gco:Boolean>\n                  </gmd:pass>\n                </gmd:DQ_ConformanceResult>\n              </gmd:result>\n            </gmd:DQ_DomainConsistency>\n          </gmd:report>\n        </gmd:DQ_DataQuality>\n      </gmd:dataQualityInfo>\n    \n<idf:crossReference direction=\"OUT\" orig-uuid=\"fee82268-9d8c-4134-8123-9f9a8f728306\" uuid=\"fee82268-9d8c-4134-8123-9f9a8f728306\">\n    <idf:objectName>Beeinträchtigung Flut 2021</idf:objectName>\n    <idf:attachedToField entry-id=\"3600\" list-id=\"2000\">Gekoppelte Daten</idf:attachedToField>\n    <idf:objectType>1</idf:objectType>\n    <idf:description>Darstellung der von der Flutkatastrophe im Sommer 2021 dauerhaft oder vorübergehend im Betrieb beeinträchtigten Strecken. Erhoben im Rahmen der Umgebungslärmkartierung Runde 4</idf:description>\n    <idf:graphicOverview/>\n</idf:crossReference>\n</idf:idfMdMetadata>\n  </body>\n</html>\n",  "is_hvd": false,
+  "isfolder": "false",
+  "location": [
+    "000000000000",
+    ""
+  ],
+  "metadata": {
+    "created": null,
+    "modified": "2025-03-12T00:00:00.000Z"
+  },
+  "modified": "2025-03-12T00:00:00.000Z",
+  "object_access": {
+    "restriction_key": [],
+    "restriction_value": []
+  },
+  "object_reference": [
+    {
+      "obj_uuid": "fee82268-9d8c-4134-8123-9f9a8f728306",
+      "obj_to_uuid": "fee82268-9d8c-4134-8123-9f9a8f728306",
+      "obj_name": "Beeinträchtigung Flut 2021",
+      "obj_class": "1",
+      "special_name": "Gekoppelte Daten",
+      "special_ref": "3345",
+      "type": "",
+      "version": ""
+    },
+    {
+      "obj_uuid": "fee82268-9d8c-4134-8123-9f9a8f728306",
+      "obj_to_uuid": "fee82268-9d8c-4134-8123-9f9a8f728306",
+      "obj_name": "",
+      "obj_class": "",
+      "special_name": "",
+      "special_ref": "3600",
+      "type": "",
+      "version": ""
+    }
+  ],
+  "object_use_constraint": {
+    "license_value": [
+      "Nutzungsbedingungen: Die Daten sind urheberrechtlich geschützt. Der Datensatz wird entgeltfrei mit der Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0) zur Verfügung gestellt. Der Quellenvermerk ist zu beachten. Quellenvermerk: © Eisenbahn-Bundesamt (www.eba.bund.de/). Diese Karten finden Sie unter www.eba.bund.de/kartendienst",
+      "{\"id\":\"dl-by-de/2.0\",\"name\":\"Datenlizenz Deutschland Namensnennung 2.0\",\"url\":\"http://www.govdata.de/dl-de/by-2-0\",\"quelle\":\"Eisenbahn-Bundesamt\"}"
+    ]
+  },
+  "partner": [
+    "bund"
+  ],
+  "provider": [
+    "eba"
+  ],
+  "sort_hash": "84b9b3e40d9800b4463a7de5ab6105c75ac7e8d7",
+  "spatial": {
+    "geometries": [
+      {
+        "bbox": [
+          5.87,
+          47.27,
+          15.04,
+          55.06
+        ],
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.87,
+              55.06
+            ],
+            [
+              5.87,
+              47.27
+            ],
+            [
+              15.04,
+              47.27
+            ],
+            [
+              15.04,
+              55.06
+            ],
+            [
+              5.87,
+              55.06
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "spatial_system": {
+    "referencesystem_value": [
+      "http://www.opengis.net/def/crs/EPSG/0/25832"
+    ]
+  },
+  "summary": "Darstellung der von der Flutkatastrophe im Sommer 2021 dauerhaft oder vorübergehend im Betrieb beeinträchtigten Strecken. Erhoben im Rahmen der Umgebungslärmkartierung Runde 4",
+  "t0110_avail_format": {
+    "name": "png",
+    "version": "?"
+  },
+  "t0113_dataset_reference": [],
+  "t011_obj_geo": {
+    "datasource_uuid": "http://registry.gdi-de.org/id/de.bund.eba/3110b7f0-5a6e-468d-8230-895d021c3785",
+    "hierarchy_level": false,
+    "keyc_incl_w_dataset": false,
+    "referencesystem_id": [
+      "http://www.opengis.net/def/crs/EPSG/0/25832"
+    ]
+  },
+  "t011_obj_geo_keyc": [],
+  "t011_obj_geo_scale": [],
+  "t011_obj_geo_spatial_rep": {},
+  "t011_obj_geo_supplinfo": {},
+  "t011_obj_geo_symc": [],
+  "t011_obj_geo_vector": [],
+  "t011_obj_serv": {
+    "type": "view"
+  },
+  "t011_obj_serv_op_connpoint": [
+    {
+      "connect_point": "https://geoinformation.eisenbahn-bundesamt.de/wms/flut_2021?service=WMS&version=1.3.0&request=GetCapabilities"
+    }
+  ],
+  "t011_obj_serv_op_platform": [
+    {
+      "platform": "WebServices"
+    }
+  ],
+  "t011_obj_serv_operation": [
+    {
+      "name": "GetCapabilities"
+    }
+  ],
+  "t011_obj_serv_version": {
+    "version_value": "OGC:WMS 1.3.0"
+  },
+  "t011_obj_topic_cat": [],
+  "t012_obj_adr": [
+    {
+      "typ": "7",
+      "special_ref": "0"
+    },
+    {
+      "typ": "7",
+      "special_ref": "0"
+    }
+  ],
+  "t017_url_ref": [
+    {
+      "descr": "",
+      "content": "Link zum Geodatenviewer",
+      "url_link": "http://geoportal.eisenbahn-bundesamt.de",
+      "special_ref": "5302"
+    },
+    {
+      "descr": "",
+      "content": "Weitere Informationen zum Inhalt der beschriebenen Daten",
+      "url_link": "http://www.eba.bund.de/DE/Themen/Laerm_an_Schienenwegen/laerm_an_schienenwegen_node.html",
+      "special_ref": "5302"
+    },
+    {
+      "descr": "",
+      "content": "WMS GetCapabilities request providing machine readable service metadata",
+      "url_link": "https://geoinformation.eisenbahn-bundesamt.de/wms/flut_2021?service=WMS&version=1.3.0&request=GetCapabilities",
+      "special_ref": "5302"
+    }
+  ],
+  "t01_object": {
+    "data_language_code": "de",
+    "metadata_character_set": "4",
+    "metadata_language_code": "de",
+    "metadata_standard_name": "ISO19119",
+    "metadata_standard_version": "2005/PDAM 1",
+    "mod_time": "2025-03-12T00:00:00.000Z",
+    "obj_class": "3",
+    "obj_id": "3110b7f0-5a6e-468d-8230-895d021c3785",
+    "org_obj_id": "3110b7f0-5a6e-468d-8230-895d021c3785",
+    "time_status": "900001",
+    "vertical_extent_vdatum": "5105"
+  },
+  "t021_communication": [
+    {
+      "comm_type": "Telefon",
+      "comm_value": "+49 228 9826-0"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "Ref53@eba.bund.de"
+    },
+    {
+      "comm_type": "URL",
+      "comm_value": "www.eba.bund.de"
+    },
+    {
+      "comm_type": "Telefon",
+      "comm_value": "+49 228 9826-0"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "Ref53@eba.bund.de"
+    },
+    {
+      "comm_type": "URL",
+      "comm_value": "www.eba.bund.de"
+    }
+  ],
+  "t02_address": [
+    {
+      "city": "Bonn",
+      "street": "Heinemannstr. 6",
+      "postcode": "D-53175",
+      "institution": "Eisenbahn-Bundesamt",
+      "country_code": "Deutschland",
+      "administrative_area_value": "Nordrhein-Westfalen"
+    },
+    {
+      "institution": "Eisenbahn-Bundesamt"
+    }
+  ],
+  "t04_search": [
+    {
+      "type": "T",
+      "searchterm": "Bahnlärm"
+    },
+    {
+      "type": "T",
+      "searchterm": "Behörde"
+    },
+    {
+      "type": "T",
+      "searchterm": "Eisenbahn"
+    },
+    {
+      "type": "T",
+      "searchterm": "Eisenbahngeräusch"
+    },
+    {
+      "type": "T",
+      "searchterm": "Eisenbahnlärm"
+    },
+    {
+      "type": "T",
+      "searchterm": "Eisenbahnnetz"
+    },
+    {
+      "type": "T",
+      "searchterm": "Eisenbahnstrecke"
+    },
+    {
+      "type": "T",
+      "searchterm": "EU-Umgebungslärmrichtlinie"
+    },
+    {
+      "type": "T",
+      "searchterm": "Geräuschbelastung durch Schienenverkehr"
+    },
+    {
+      "type": "T",
+      "searchterm": "Güterwagenlärm"
+    },
+    {
+      "type": "T",
+      "searchterm": "Lärm"
+    },
+    {
+      "type": "T",
+      "searchterm": "Lärmaktionsplan"
+    },
+    {
+      "type": "T",
+      "searchterm": "Lärmaktionsplanung"
+    },
+    {
+      "type": "T",
+      "searchterm": "Lärmbelästigung durch Schienenverkehr"
+    },
+    {
+      "type": "T",
+      "searchterm": "Lärmbelastung durch Schienenverkehr"
+    },
+    {
+      "type": "T",
+      "searchterm": "Lärmemissionen durch den Schienenverkehr"
+    },
+    {
+      "type": "T",
+      "searchterm": "Lärmkarte"
+    },
+    {
+      "type": "T",
+      "searchterm": "Lärmkartierung"
+    },
+    {
+      "type": "T",
+      "searchterm": "Öffentliche Verwaltung"
+    },
+    {
+      "type": "T",
+      "searchterm": "Schienengüterverkehrslärm"
+    },
+    {
+      "type": "T",
+      "searchterm": "Schall"
+    },
+    {
+      "type": "T",
+      "searchterm": "Schiene"
+    },
+    {
+      "type": "T",
+      "searchterm": "Schienenlärm"
+    },
+    {
+      "type": "T",
+      "searchterm": "Schienenverkehrslärm"
+    },
+    {
+      "type": "T",
+      "searchterm": "Zuglärm"
+    },
+    {
+      "type": "T",
+      "searchterm": "Umgebungslärm"
+    },
+    {
+      "type": "F",
+      "searchterm": "(WMS) Beeinträchtigung Flut 2021"
+    },
+    {
+      "type": "F",
+      "searchterm": "Beeinträchtigung Flut 2021"
+    },
+    {
+      "type": "F",
+      "searchterm": "EBA"
+    },
+    {
+      "type": "F",
+      "searchterm": "Eisenbahn-Bundesamt"
+    },
+    {
+      "type": "F",
+      "searchterm": "LAP"
+    },
+    {
+      "type": "F",
+      "searchterm": "Runde4"
+    },
+    {
+      "type": "F",
+      "searchterm": "Schienenverkehrsnetz"
+    },
+    {
+      "type": "F",
+      "searchterm": "Umgebungslärmkartierung"
+    },
+    {
+      "type": "F",
+      "searchterm": "Umgebungslärmrichtlinie"
+    },
+    {
+      "type": "F",
+      "searchterm": "HUMAN ACTIVITIES AND PRODUCTS, EFFECTS ON THE ENVIRONMENT"
+    },
+    {
+      "type": "F",
+      "searchterm": "opendata"
+    },
+    {
+      "type": "F",
+      "searchterm": "mobilithek_category_BAHN"
+    },
+    {
+      "type": "F",
+      "searchterm": "infoMapAccessService"
+    }
+  ],
+  "title": "(WMS) Beeinträchtigung Flut 2021",
+  "uuid": "3110b7f0-5a6e-468d-8230-895d021c3785",
+  "x1": "5.87",
+  "x2": "15.04",
+  "y1": "47.27",
+  "y2": "55.06"
+}

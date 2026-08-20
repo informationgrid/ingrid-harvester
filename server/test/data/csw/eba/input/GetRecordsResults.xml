@@ -1,0 +1,2277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<csw:GetRecordsResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+    <csw:SearchStatus timestamp="2026-08-20T11:26:21.5638807Z"/>
+    <csw:SearchResults numberOfRecordsMatched="3" numberOfRecordsReturned="3" elementSet="full" nextRecord="0">
+        <gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:geonet="http://www.fao.org/geonetwork" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/geonetwork/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
+            <gmd:fileIdentifier>
+                <gco:CharacterString>6af062cb-a660-4278-9143-6b8a4c945545</gco:CharacterString>
+            </gmd:fileIdentifier>
+            <gmd:language>
+                <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger"/>
+            </gmd:language>
+            <gmd:characterSet>
+                <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8"/>
+            </gmd:characterSet>
+            <gmd:hierarchyLevel>
+                <gmd:MD_ScopeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode" codeListValue="service"/>
+            </gmd:hierarchyLevel>
+            <gmd:hierarchyLevelName>
+                <gco:CharacterString>Download-Dienste</gco:CharacterString>
+            </gmd:hierarchyLevelName>
+            <gmd:contact>
+                <gmd:CI_ResponsibleParty>
+                    <gmd:organisationName>
+                        <gco:CharacterString>Eisenbahn-Bundesamt</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                            <gmd:phone>
+                                <gmd:CI_Telephone>
+                                    <gmd:voice>
+                                        <gco:CharacterString>+49 228 9826-0</gco:CharacterString>
+                                    </gmd:voice>
+                                </gmd:CI_Telephone>
+                            </gmd:phone>
+                            <gmd:address>
+                                <gmd:CI_Address>
+                                    <gmd:deliveryPoint>
+                                        <gco:CharacterString>Heinemannstr. 6</gco:CharacterString>
+                                    </gmd:deliveryPoint>
+                                    <gmd:city>
+                                        <gco:CharacterString>Bonn</gco:CharacterString>
+                                    </gmd:city>
+                                    <gmd:administrativeArea>
+                                        <gco:CharacterString>Nordrhein-Westfalen</gco:CharacterString>
+                                    </gmd:administrativeArea>
+                                    <gmd:postalCode>
+                                        <gco:CharacterString>D-53175</gco:CharacterString>
+                                    </gmd:postalCode>
+                                    <gmd:country>
+                                        <gco:CharacterString>Deutschland</gco:CharacterString>
+                                    </gmd:country>
+                                    <gmd:electronicMailAddress>
+                                        <gco:CharacterString>Ref53@eba.bund.de</gco:CharacterString>
+                                    </gmd:electronicMailAddress>
+                                </gmd:CI_Address>
+                            </gmd:address>
+                            <gmd:onlineResource>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>http://www.eisenbahn-bundesamt.de/</gmd:URL>
+                                    </gmd:linkage>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onlineResource>
+                        </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role>
+                        <gmd:CI_RoleCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact"/>
+                    </gmd:role>
+                </gmd:CI_ResponsibleParty>
+            </gmd:contact>
+            <gmd:dateStamp>
+                <gco:Date>2025-10-01</gco:Date>
+            </gmd:dateStamp>
+            <gmd:metadataStandardName>
+                <gco:CharacterString>ISO19119</gco:CharacterString>
+            </gmd:metadataStandardName>
+            <gmd:metadataStandardVersion>
+                <gco:CharacterString>2005/PDAM 1</gco:CharacterString>
+            </gmd:metadataStandardVersion>
+            <gmd:referenceSystemInfo>
+                <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                        <gmd:RS_Identifier>
+                            <gmd:code>
+                                <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/25832</gco:CharacterString>
+                            </gmd:code>
+                            <!-- <gmd:codeSpace> -->
+                            <!-- <gco:CharacterString>urn:ogc:def:crs:EPSG</gco:CharacterString> -->
+                            <!-- </gmd:codeSpace> -->
+                            <gmd:version>
+                                <gco:CharacterString>6.11.2</gco:CharacterString>
+                            </gmd:version>
+                        </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                </gmd:MD_ReferenceSystem>
+            </gmd:referenceSystemInfo>
+            <gmd:identificationInfo>
+                <srv:SV_ServiceIdentification>
+                    <gmd:citation>
+                        <gmd:CI_Citation>
+                            <gmd:title>
+                                <gco:CharacterString>(WFS) Geoinformation Eisenbahn-Bundesamt</gco:CharacterString>
+                            </gmd:title>
+                            <gmd:date>
+                                <gmd:CI_Date>
+                                    <gmd:date>
+                                        <gco:Date>2025-03-12</gco:Date>
+                                    </gmd:date>
+                                    <gmd:dateType>
+                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation"/>
+                                    </gmd:dateType>
+                                </gmd:CI_Date>
+                            </gmd:date>
+                            <gmd:date>
+                                <gmd:CI_Date>
+                                    <gmd:date>
+                                        <gco:Date>2025-03-12</gco:Date>
+                                    </gmd:date>
+                                    <gmd:dateType>
+                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                    </gmd:dateType>
+                                </gmd:CI_Date>
+                            </gmd:date>
+                            <gmd:date>
+                                <gmd:CI_Date>
+                                    <gmd:date>
+                                        <gco:Date>2025-03-12</gco:Date>
+                                    </gmd:date>
+                                    <gmd:dateType>
+                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="revision"/>
+                                    </gmd:dateType>
+                                </gmd:CI_Date>
+                            </gmd:date>
+                            <gmd:identifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code>
+                                        <gco:CharacterString>http://registry.gdi-de.org/id/de.bund.eba/6af062cb-a660-4278-9143-6b8a4c945545</gco:CharacterString>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:identifier>
+                        </gmd:CI_Citation>
+                    </gmd:citation>
+                    <gmd:abstract>
+                        <gco:CharacterString>Geoinformationen des Eisenbahn-Bundesamtes. Weiterführende Informationen zu den jeweiligen Features befinden sich in den jeweiligen Metadaten zum Feature.</gco:CharacterString>
+                    </gmd:abstract>
+                    <gmd:pointOfContact>
+                        <gmd:CI_ResponsibleParty>
+                            <gmd:organisationName>
+                                <gco:CharacterString>Eisenbahn-Bundesamt</gco:CharacterString>
+                            </gmd:organisationName>
+                            <gmd:contactInfo>
+                                <gmd:CI_Contact>
+                                    <gmd:phone>
+                                        <gmd:CI_Telephone>
+                                            <gmd:voice>
+                                                <gco:CharacterString>+49 228 9826-0</gco:CharacterString>
+                                            </gmd:voice>
+                                        </gmd:CI_Telephone>
+                                    </gmd:phone>
+                                    <gmd:address>
+                                        <gmd:CI_Address>
+                                            <gmd:electronicMailAddress>
+                                                <gco:CharacterString>Ref53@eba.bund.de</gco:CharacterString>
+                                            </gmd:electronicMailAddress>
+                                        </gmd:CI_Address>
+                                    </gmd:address>
+                                    <gmd:onlineResource>
+                                        <gmd:CI_OnlineResource>
+                                            <gmd:linkage>
+                                                <gmd:URL>http://www.eisenbahn-bundesamt.de/</gmd:URL>
+                                            </gmd:linkage>
+                                        </gmd:CI_OnlineResource>
+                                    </gmd:onlineResource>
+                                </gmd:CI_Contact>
+                            </gmd:contactInfo>
+                            <gmd:role>
+                                <gmd:CI_RoleCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact"/>
+                            </gmd:role>
+                        </gmd:CI_ResponsibleParty>
+                    </gmd:pointOfContact>
+                    <gmd:graphicOverview>
+                        <gmd:MD_BrowseGraphic>
+                            <gmd:fileName>
+                                <gco:CharacterString/>
+                            </gmd:fileName>
+                        </gmd:MD_BrowseGraphic>
+                    </gmd:graphicOverview>
+                    <gmd:descriptiveKeywords>
+                        <gmd:MD_Keywords>
+                            <gmd:keyword>
+                                <gco:CharacterString>(WFS) Geoinformation Eisenbahn-Bundesamt</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Isophonenbaender</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Isophonenbaender (bundesweit)</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Verkehrsweg ULR</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Verkehrsweg (erweiterte Kartierung)</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Kartierungskorridor (ULR)</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Kartierungskorridor (erweiterte Kartierung)</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Schallschutzwand</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Gemeindestatistik ULR</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Ballungsraumstatistik ULR</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Beeintraechtigung Flut 2021</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Rangier und Umschlagbahnhof</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Beteiligung 100m-Raster</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmkennziffer (ULR)</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Gesundheitliche Auswirkung - HA HSD (ULR)</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>EBA</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Eisenbahn-Bundesamt</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>LAP</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Runde4</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Schienenverkehrsnetz</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Umgebungslärmkartierung</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Umgebungslärmrichtlinie</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:thesaurusName>
+                                <gmd:CI_Citation>
+                                    <gmd:title>
+                                        <gco:CharacterString>Freitext</gco:CharacterString>
+                                    </gmd:title>
+                                    <gmd:date>
+                                        <gmd:CI_Date>
+                                            <gmd:date>
+                                                <gco:Date>2014-11-26</gco:Date>
+                                            </gmd:date>
+                                            <gmd:dateType>
+                                                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                            </gmd:dateType>
+                                        </gmd:CI_Date>
+                                    </gmd:date>
+                                </gmd:CI_Citation>
+                            </gmd:thesaurusName>
+                        </gmd:MD_Keywords>
+                    </gmd:descriptiveKeywords>
+                    <gmd:descriptiveKeywords>
+                        <gmd:MD_Keywords>
+                            <gmd:keyword>
+                                <gco:CharacterString>Bahnlärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Behörde</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Eisenbahn</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Eisenbahngeräusch</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Eisenbahnlärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Eisenbahnnetz</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Eisenbahnstrecke</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>EU-Umgebungslärmrichtlinie</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Geräuschbelastung durch Schienenverkehr</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Güterwagenlärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmaktionsplan</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmaktionsplanung</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmbelästigung durch Schienenverkehr</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmbelastung durch Schienenverkehr</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmemissionen durch den Schienenverkehr</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmkarte</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmkartierung</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Öffentliche Verwaltung</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Schienengüterverkehrslärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Schall</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Schiene</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Schienenlärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Schienenverkehrslärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Zuglärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Umgebungslärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:type>
+                                <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme"/>
+                            </gmd:type>
+                            <gmd:thesaurusName>
+                                <gmd:CI_Citation>
+                                    <gmd:title>
+                                        <gco:CharacterString>UMTHES Thesaurus</gco:CharacterString>
+                                    </gmd:title>
+                                    <gmd:date>
+                                        <gmd:CI_Date>
+                                            <gmd:date>
+                                                <gco:Date>2009-01-15</gco:Date>
+                                            </gmd:date>
+                                            <gmd:dateType>
+                                                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                            </gmd:dateType>
+                                        </gmd:CI_Date>
+                                    </gmd:date>
+                                </gmd:CI_Citation>
+                            </gmd:thesaurusName>
+                        </gmd:MD_Keywords>
+                    </gmd:descriptiveKeywords>
+                    <gmd:descriptiveKeywords>
+                        <gmd:MD_Keywords>
+                            <gmd:keyword>
+                                <gco:CharacterString>Gesundheit und Sicherheit</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Bewirtschaftungsgebiete/Schutzgebiete/geregelte Gebiete und Berichterstattungseinheiten</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Verkehrsnetze</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:thesaurusName>
+                                <gmd:CI_Citation>
+                                    <gmd:title>
+                                        <gco:CharacterString>GEMET - INSPIRE themes, version 1.0</gco:CharacterString>
+                                    </gmd:title>
+                                    <gmd:date>
+                                        <gmd:CI_Date>
+                                            <gmd:date>
+                                                <gco:Date>2008-06-01</gco:Date>
+                                            </gmd:date>
+                                            <gmd:dateType>
+                                                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                            </gmd:dateType>
+                                        </gmd:CI_Date>
+                                    </gmd:date>
+                                </gmd:CI_Citation>
+                            </gmd:thesaurusName>
+                        </gmd:MD_Keywords>
+                    </gmd:descriptiveKeywords>
+                    <gmd:descriptiveKeywords>
+                        <gmd:MD_Keywords>
+                            <gmd:keyword>
+                                <gco:CharacterString>HUMAN ACTIVITIES AND PRODUCTS, EFFECTS ON THE ENVIRONMENT</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:thesaurusName>
+                                <gmd:CI_Citation>
+                                    <gmd:title>
+                                        <gco:CharacterString>GEMET - Supergroups, version 2.4</gco:CharacterString>
+                                    </gmd:title>
+                                    <gmd:date>
+                                        <gmd:CI_Date>
+                                            <gmd:date>
+                                                <gco:Date>2010-01-13</gco:Date>
+                                            </gmd:date>
+                                            <gmd:dateType>
+                                                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                            </gmd:dateType>
+                                        </gmd:CI_Date>
+                                    </gmd:date>
+                                </gmd:CI_Citation>
+                            </gmd:thesaurusName>
+                        </gmd:MD_Keywords>
+                    </gmd:descriptiveKeywords>
+                    <gmd:descriptiveKeywords>
+                        <gmd:MD_Keywords>
+                            <gmd:keyword>
+                                <gco:CharacterString>opendata</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>inspireidentifiziert</gco:CharacterString>
+                            </gmd:keyword>
+                        </gmd:MD_Keywords>
+                    </gmd:descriptiveKeywords>
+                    <gmd:descriptiveKeywords>
+                        <gmd:MD_Keywords>
+                            <gmd:keyword>
+                                <gco:CharacterString>mobilithek_category_BAHN</gco:CharacterString>
+                            </gmd:keyword>
+                        </gmd:MD_Keywords>
+                    </gmd:descriptiveKeywords>
+                    <gmd:descriptiveKeywords>
+                        <gmd:MD_Keywords>
+                            <gmd:keyword>
+                                <gco:CharacterString>infoFeatureAccessService</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:thesaurusName>
+                                <gmd:CI_Citation>
+                                    <gmd:title>
+                                        <gco:CharacterString>ISO - 19119 geographic services taxonomy</gco:CharacterString>
+                                    </gmd:title>
+                                    <gmd:date>
+                                        <gmd:CI_Date>
+                                            <gmd:date>
+                                                <gco:Date>2010-01-19</gco:Date>
+                                            </gmd:date>
+                                            <gmd:dateType>
+                                                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                            </gmd:dateType>
+                                        </gmd:CI_Date>
+                                    </gmd:date>
+                                </gmd:CI_Citation>
+                            </gmd:thesaurusName>
+                        </gmd:MD_Keywords>
+                    </gmd:descriptiveKeywords>
+                    <gmd:resourceConstraints>
+                        <gmd:MD_LegalConstraints>
+                            <gmd:accessConstraints>
+                                <gmd:MD_RestrictionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions"/>
+                            </gmd:accessConstraints>
+                            <gmd:otherConstraints>
+                                <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations">Es gelten keine Zugriffsbeschränkungen</gmx:Anchor>
+                            </gmd:otherConstraints>
+                        </gmd:MD_LegalConstraints>
+                    </gmd:resourceConstraints>
+                    <gmd:resourceConstraints>
+                        <gmd:MD_LegalConstraints>
+                            <gmd:useConstraints>
+                                <gmd:MD_RestrictionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions"/>
+                            </gmd:useConstraints>
+                            <gmd:otherConstraints>
+                                <gco:CharacterString>Nutzungsbedingungen: Die Daten sind urheberrechtlich geschützt. Der Datensatz wird entgeltfrei mit der Datenlizenz Deutschland – Namensnennung – Version 2.0 (http://www.govdata.de/dl-de/by-2-0) zur Verfügung gestellt. Der Quellenvermerk ist zu beachten. Quellenvermerk: © Eisenbahn-Bundesamt (www.eba.bund.de/). Diese Karten finden Sie unter www.eba.bund.de/kartendienst.</gco:CharacterString>
+                            </gmd:otherConstraints>
+                            <gmd:otherConstraints>
+                                <gco:CharacterString>{"id":"dl-by-de/2.0","name":"Datenlizenz Deutschland Namensnennung 2.0","url":"http://www.govdata.de/dl-de/by-2-0","quelle":"Eisenbahn-Bundesamt"}</gco:CharacterString>
+                            </gmd:otherConstraints>
+                        </gmd:MD_LegalConstraints>
+                    </gmd:resourceConstraints>
+                    <srv:serviceType>
+                        <gco:LocalName codeSpace="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType">download</gco:LocalName>
+                    </srv:serviceType>
+                    <srv:serviceTypeVersion>
+                        <gco:CharacterString>OGC:WFS 2.0.0</gco:CharacterString>
+                    </srv:serviceTypeVersion>
+                    <srv:extent>
+                        <gmd:EX_Extent>
+                            <gmd:geographicElement>
+                                <gmd:EX_GeographicDescription>
+                                    <gmd:extentTypeCode>
+                                        <gco:Boolean>true</gco:Boolean>
+                                    </gmd:extentTypeCode>
+                                    <gmd:geographicIdentifier>
+                                        <gmd:MD_Identifier>
+                                            <gmd:code>
+                                                <gco:CharacterString>000000000000</gco:CharacterString>
+                                            </gmd:code>
+                                        </gmd:MD_Identifier>
+                                    </gmd:geographicIdentifier>
+                                </gmd:EX_GeographicDescription>
+                            </gmd:geographicElement>
+                            <gmd:geographicElement>
+                                <gmd:EX_GeographicBoundingBox>
+                                    <gmd:westBoundLongitude>
+                                        <gco:Decimal>5.87</gco:Decimal>
+                                    </gmd:westBoundLongitude>
+                                    <gmd:eastBoundLongitude>
+                                        <gco:Decimal>15.04</gco:Decimal>
+                                    </gmd:eastBoundLongitude>
+                                    <gmd:southBoundLatitude>
+                                        <gco:Decimal>47.27</gco:Decimal>
+                                    </gmd:southBoundLatitude>
+                                    <gmd:northBoundLatitude>
+                                        <gco:Decimal>55.06</gco:Decimal>
+                                    </gmd:northBoundLatitude>
+                                </gmd:EX_GeographicBoundingBox>
+                            </gmd:geographicElement>
+                        </gmd:EX_Extent>
+                    </srv:extent>
+                    <srv:couplingType>
+                        <srv:SV_CouplingType codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#SV_CouplingType" codeListValue="tight"/>
+                    </srv:couplingType>
+                    <srv:containsOperations>
+                        <srv:SV_OperationMetadata>
+                            <srv:operationName>
+                                <gco:CharacterString>GetCapabilities</gco:CharacterString>
+                            </srv:operationName>
+                            <srv:DCP>
+                                <srv:DCPList codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#DCPList" codeListValue="WebServices"/>
+                            </srv:DCP>
+                            <srv:connectPoint>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>https://geoinformation.eisenbahn-bundesamt.de/wfs/eba/services/wfs?service=WFS&amp;version=2.0.0&amp;request=GetCapabilities</gmd:URL>
+                                    </gmd:linkage>
+                                </gmd:CI_OnlineResource>
+                            </srv:connectPoint>
+                        </srv:SV_OperationMetadata>
+                    </srv:containsOperations>
+                    <srv:operatesOn uuidref="423d5ff4-49bc-412a-a548-c713560aa7e9" xlink:href="http://registry.gdi-de.org/id/de.bund.eba/423d5ff4-49bc-412a-a548-c713560aa7e9"/>
+                    <srv:operatesOn uuidref="cb979ed0-a27e-4d11-b889-fb8b883a9630" xlink:href="http://registry.gdi-de.org/id/de.bund.eba/cb979ed0-a27e-4d11-b889-fb8b883a9630"/>
+                    <srv:operatesOn uuidref="b04b8a50-5eaa-4a23-a4d1-10f6bd120aad" xlink:href="http://registry.gdi-de.org/id/de.bund.eba/b04b8a50-5eaa-4a23-a4d1-10f6bd120aad"/>
+                    <srv:operatesOn uuidref="281769b6-4c99-4bc1-b8aa-59380fe8d3f7" xlink:href="http://registry.gdi-de.org/id/de.bund.eba/281769b6-4c99-4bc1-b8aa-59380fe8d3f7"/>
+                    <srv:operatesOn uuidref="558fcc35-50cf-418c-9b7b-4871846ef01a" xlink:href="http://registry.gdi-de.org/id/de.bund.eba/558fcc35-50cf-418c-9b7b-4871846ef01a"/>
+                    <srv:operatesOn uuidref="0ac106a1-77e8-4e22-863c-4d221eb4c87b" xlink:href="http://registry.gdi-de.org/id/de.bund.eba/0ac106a1-77e8-4e22-863c-4d221eb4c87b"/>
+                    <srv:operatesOn uuidref="147d057a-b3e9-4a5b-a2ed-f465013869dc" xlink:href="http://registry.gdi-de.org/id/de.bund.eba/147d057a-b3e9-4a5b-a2ed-f465013869dc"/>
+                    <srv:operatesOn uuidref="d0f75c5f-1428-4440-8a9e-63e2cc47f71e" xlink:href="http://registry.gdi-de.org/id/de.bund.eba/d0f75c5f-1428-4440-8a9e-63e2cc47f71e"/>
+                    <srv:operatesOn uuidref="dce2e345-9226-4d43-8422-832117e51aca" xlink:href="http://registry.gdi-de.org/id/de.bund.eba/dce2e345-9226-4d43-8422-832117e51aca"/>
+                    <srv:operatesOn uuidref="fee82268-9d8c-4134-8123-9f9a8f728306" xlink:href="http://registry.gdi-de.org/id/de.bund.eba/fee82268-9d8c-4134-8123-9f9a8f728306"/>
+                    <srv:operatesOn uuidref="9eecd340-2f57-4be2-8f80-46c22683abf1" xlink:href="http://registry.gdi-de.org/id/de.bund.eba/9eecd340-2f57-4be2-8f80-46c22683abf1"/>
+                    <srv:operatesOn uuidref="79f84359-4470-4165-93fa-bb6a3bc6a6cb" xlink:href="http://registry.gdi-de.org/id/de.bund.eba/79f84359-4470-4165-93fa-bb6a3bc6a6cb"/>
+                    <srv:operatesOn uuidref="86840b97-a413-4631-b3a9-f0cf7a651feb" xlink:href="http://registry.gdi-de.org/id/de.bund.eba/86840b97-a413-4631-b3a9-f0cf7a651feb"/>
+                    <srv:operatesOn uuidref="d435fa7d-2d58-43a4-9739-2b4b4d2c0e8e" xlink:href="http://registry.gdi-de.org/id/de.bund.eba/d435fa7d-2d58-43a4-9739-2b4b4d2c0e8e"/>
+                </srv:SV_ServiceIdentification>
+            </gmd:identificationInfo>
+            <gmd:distributionInfo>
+                <gmd:MD_Distribution>
+                    <gmd:distributionFormat>
+                        <gmd:MD_Format>
+                            <gmd:name>
+                                <gco:CharacterString>GML</gco:CharacterString>
+                            </gmd:name>
+                            <gmd:version>
+                                <gco:CharacterString>?</gco:CharacterString>
+                            </gmd:version>
+                        </gmd:MD_Format>
+                    </gmd:distributionFormat>
+                    <gmd:transferOptions>
+                        <gmd:MD_DigitalTransferOptions>
+                            <gmd:onLine>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>https://geoportal.eisenbahn-bundesamt.de</gmd:URL>
+                                    </gmd:linkage>
+                                    <gmd:name>
+                                        <gco:CharacterString>Link zum Geodatenviewer</gco:CharacterString>
+                                    </gmd:name>
+                                    <gmd:function>
+                                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information"/>
+                                    </gmd:function>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onLine>
+                            <gmd:onLine>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>https://www.eba.bund.de/DE/Themen/Laerm_an_Schienenwegen/laerm_an_schienenwegen_node.html</gmd:URL>
+                                    </gmd:linkage>
+                                    <gmd:name>
+                                        <gco:CharacterString>Weitere Informationen zum Inhalt der beschriebenen Daten</gco:CharacterString>
+                                    </gmd:name>
+                                    <gmd:function>
+                                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information"/>
+                                    </gmd:function>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onLine>
+                            <gmd:onLine>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>https://geoinformation.eisenbahn-bundesamt.de/daten/INSPIRE/EnvHealthDeterminantMeasure_NoiseContours_v5_23880947-58cc-4207-8d83-211e6bbe09e9_V2.zip</gmd:URL>
+                                    </gmd:linkage>
+                                    <gmd:applicationProfile>
+                                        <gco:CharacterString>GML</gco:CharacterString>
+                                    </gmd:applicationProfile>
+                                    <gmd:name>
+                                        <gco:CharacterString>GML Download INSPIRE Isophonen der Runde 4 ULR gesamt</gco:CharacterString>
+                                    </gmd:name>
+                                    <gmd:function>
+                                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download"/>
+                                    </gmd:function>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onLine>
+                            <gmd:onLine>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>https://geoinformation.eisenbahn-bundesamt.de/daten/INSPIRE/EnvHealthDeterminantMeasure_NoiseContours_v5_f9c86fc1-4e47-46f7-a905-c66ebed2c492_EDB.zip</gmd:URL>
+                                    </gmd:linkage>
+                                    <gmd:applicationProfile>
+                                        <gco:CharacterString>GML</gco:CharacterString>
+                                    </gmd:applicationProfile>
+                                    <gmd:name>
+                                        <gco:CharacterString>GML Download INSPIRE Isophonen der Runde 4 EDB gesamt (bundesweit)</gco:CharacterString>
+                                    </gmd:name>
+                                    <gmd:function>
+                                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download"/>
+                                    </gmd:function>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onLine>
+                            <gmd:onLine>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>https://geoinformation.eisenbahn-bundesamt.de/daten/INSPIRE/EnvHealthDeterminantMeasure_NoiseContours_v5_23880947-58cc-4207-8d83-211e6bbe09e9_V2_Gesamt.gpkg.zip</gmd:URL>
+                                    </gmd:linkage>
+                                    <gmd:applicationProfile>
+                                        <gco:CharacterString>GPKG</gco:CharacterString>
+                                    </gmd:applicationProfile>
+                                    <gmd:name>
+                                        <gco:CharacterString>GPKG Download INSPIRE Isophonen der Runde 4 ULR gesamt</gco:CharacterString>
+                                    </gmd:name>
+                                    <gmd:function>
+                                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download"/>
+                                    </gmd:function>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onLine>
+                            <gmd:onLine>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>https://geoinformation.eisenbahn-bundesamt.de/daten/INSPIRE/EnvHealthDeterminantMeasure_NoiseContours_v5_f9c86fc1-4e47-46f7-a905-c66ebed2c492_EDB_Gesamt.gpkg.zip</gmd:URL>
+                                    </gmd:linkage>
+                                    <gmd:applicationProfile>
+                                        <gco:CharacterString>GPKG</gco:CharacterString>
+                                    </gmd:applicationProfile>
+                                    <gmd:name>
+                                        <gco:CharacterString>GPKG Download INSPIRE Isophonen der Runde 4 EDB gesamt (bundesweit)</gco:CharacterString>
+                                    </gmd:name>
+                                    <gmd:function>
+                                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download"/>
+                                    </gmd:function>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onLine>
+                            <gmd:onLine>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>https://geoinformation.eisenbahn-bundesamt.de/daten/INSPIRE/RailwayLink_V5_c27f80ef-3783-4787-bf0b-9b0ce1032b93.zip</gmd:URL>
+                                    </gmd:linkage>
+                                    <gmd:applicationProfile>
+                                        <gco:CharacterString>GML</gco:CharacterString>
+                                    </gmd:applicationProfile>
+                                    <gmd:name>
+                                        <gco:CharacterString>GML Download INSPIRE Verkehrsweg der Runde 4</gco:CharacterString>
+                                    </gmd:name>
+                                    <gmd:function>
+                                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download"/>
+                                    </gmd:function>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onLine>
+                            <gmd:onLine>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>https://geoinformation.eisenbahn-bundesamt.de/daten/INSPIRE/RailwayLink_V5_99a48792-fbd0-471f-8b62-37e356f02f2c_EK.zip</gmd:URL>
+                                    </gmd:linkage>
+                                    <gmd:applicationProfile>
+                                        <gco:CharacterString>GML</gco:CharacterString>
+                                    </gmd:applicationProfile>
+                                    <gmd:name>
+                                        <gco:CharacterString>GML Download INSPIRE Verkehrsweg (erweitert) der Runde 4</gco:CharacterString>
+                                    </gmd:name>
+                                    <gmd:function>
+                                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download"/>
+                                    </gmd:function>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onLine>
+                            <gmd:onLine>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>https://geoinformation.eisenbahn-bundesamt.de/daten/Stylevorgaben_Isophonenbaender.pdf</gmd:URL>
+                                    </gmd:linkage>
+                                    <gmd:applicationProfile>
+                                        <gco:CharacterString>PDF</gco:CharacterString>
+                                    </gmd:applicationProfile>
+                                    <gmd:name>
+                                        <gco:CharacterString>Stylevorgaben und Datenbeschreibung Isophonenbaender</gco:CharacterString>
+                                    </gmd:name>
+                                    <gmd:function>
+                                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download"/>
+                                    </gmd:function>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onLine>
+                            <gmd:onLine>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>https://geoinformation.eisenbahn-bundesamt.de/wfs/eba/services/wfs?service=WFS&amp;request=GetCapabilities</gmd:URL>
+                                    </gmd:linkage>
+                                    <gmd:protocol>
+                                        <gmx:Anchor xlink:href="http://www.opengis.net/def/serviceType/ogc/wfs">OGC:WFS</gmx:Anchor>
+                                    </gmd:protocol>
+                                    <gmd:applicationProfile>
+                                        <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType/download">Download Service</gmx:Anchor>
+                                    </gmd:applicationProfile>
+                                    <gmd:name>
+                                        <gco:CharacterString>WFS GetCapabilities request providing machine readable service metadata</gco:CharacterString>
+                                    </gmd:name>
+                                    <gmd:function>
+                                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download"/>
+                                    </gmd:function>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onLine>
+                        </gmd:MD_DigitalTransferOptions>
+                    </gmd:transferOptions>
+                </gmd:MD_Distribution>
+            </gmd:distributionInfo>
+            <gmd:dataQualityInfo>
+                <gmd:DQ_DataQuality>
+                    <gmd:scope>
+                        <gmd:DQ_Scope>
+                            <gmd:level>
+                                <gmd:MD_ScopeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode" codeListValue="service"/>
+                            </gmd:level>
+                            <gmd:levelDescription>
+                                <gmd:MD_ScopeDescription>
+                                    <gmd:other>
+                                        <gco:CharacterString>Service</gco:CharacterString>
+                                    </gmd:other>
+                                </gmd:MD_ScopeDescription>
+                            </gmd:levelDescription>
+                        </gmd:DQ_Scope>
+                    </gmd:scope>
+                    <gmd:report>
+                        <gmd:DQ_DomainConsistency>
+                            <gmd:result>
+                                <gmd:DQ_ConformanceResult>
+                                    <gmd:specification>
+                                        <gmd:CI_Citation>
+                                            <gmd:title>
+                                                <gco:CharacterString>VERORDNUNG (EG) Nr. 976/2009 DER KOMMISSION vom 19. Oktober 2009 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Netzdienste</gco:CharacterString>
+                                            </gmd:title>
+                                            <gmd:date>
+                                                <gmd:CI_Date>
+                                                    <gmd:date>
+                                                        <gco:Date>2009-10-20</gco:Date>
+                                                    </gmd:date>
+                                                    <gmd:dateType>
+                                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                                    </gmd:dateType>
+                                                </gmd:CI_Date>
+                                            </gmd:date>
+                                        </gmd:CI_Citation>
+                                    </gmd:specification>
+                                    <gmd:explanation>
+                                        <gco:CharacterString>Der Dienst wurde mit dem EU-Validator überprüft.</gco:CharacterString>
+                                    </gmd:explanation>
+                                    <gmd:pass>
+                                        <gco:Boolean>true</gco:Boolean>
+                                    </gmd:pass>
+                                </gmd:DQ_ConformanceResult>
+                            </gmd:result>
+                        </gmd:DQ_DomainConsistency>
+                    </gmd:report>
+                    <gmd:report>
+                        <gmd:DQ_DomainConsistency>
+                            <gmd:result>
+                                <gmd:DQ_ConformanceResult>
+                                    <gmd:specification>
+                                        <gmd:CI_Citation>
+                                            <gmd:title>
+                                                <gco:CharacterString>INSPIRE Data Specification on Human Health and Safety - Technical Guidelines</gco:CharacterString>
+                                            </gmd:title>
+                                            <gmd:date>
+                                                <gmd:CI_Date>
+                                                    <gmd:date>
+                                                        <gco:Date>2013-12-10</gco:Date>
+                                                    </gmd:date>
+                                                    <gmd:dateType>
+                                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                                    </gmd:dateType>
+                                                </gmd:CI_Date>
+                                            </gmd:date>
+                                        </gmd:CI_Citation>
+                                    </gmd:specification>
+                                    <gmd:explanation>
+                                        <gco:CharacterString>Der Dienst wurde mit dem EU-Validator überprüft.</gco:CharacterString>
+                                    </gmd:explanation>
+                                    <gmd:pass>
+                                        <gco:Boolean>true</gco:Boolean>
+                                    </gmd:pass>
+                                </gmd:DQ_ConformanceResult>
+                            </gmd:result>
+                        </gmd:DQ_DomainConsistency>
+                    </gmd:report>
+                    <gmd:report>
+                        <gmd:DQ_DomainConsistency>
+                            <gmd:result>
+                                <gmd:DQ_ConformanceResult>
+                                    <gmd:specification>
+                                        <gmd:CI_Citation>
+                                            <gmd:title>
+                                                <gco:CharacterString>INSPIRE Data Specification on Area Management/Restriction/Regulation Zones and Reporting Units – Technical Guidelines</gco:CharacterString>
+                                            </gmd:title>
+                                            <gmd:date>
+                                                <gmd:CI_Date>
+                                                    <gmd:date>
+                                                        <gco:Date>2013-12-10</gco:Date>
+                                                    </gmd:date>
+                                                    <gmd:dateType>
+                                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                                    </gmd:dateType>
+                                                </gmd:CI_Date>
+                                            </gmd:date>
+                                        </gmd:CI_Citation>
+                                    </gmd:specification>
+                                    <gmd:explanation>
+                                        <gco:CharacterString>Der Dienst wurde mit dem EU-Validator überprüft.</gco:CharacterString>
+                                    </gmd:explanation>
+                                    <gmd:pass>
+                                        <gco:Boolean>true</gco:Boolean>
+                                    </gmd:pass>
+                                </gmd:DQ_ConformanceResult>
+                            </gmd:result>
+                        </gmd:DQ_DomainConsistency>
+                    </gmd:report>
+                    <gmd:report>
+                        <gmd:DQ_DomainConsistency>
+                            <gmd:result>
+                                <gmd:DQ_ConformanceResult>
+                                    <gmd:specification>
+                                        <gmd:CI_Citation>
+                                            <gmd:title>
+                                                <gco:CharacterString>Technical Guidance for the implementation of INSPIRE Download Services</gco:CharacterString>
+                                            </gmd:title>
+                                            <gmd:date>
+                                                <gmd:CI_Date>
+                                                    <gmd:date>
+                                                        <gco:Date>2013-04-04</gco:Date>
+                                                    </gmd:date>
+                                                    <gmd:dateType>
+                                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                                    </gmd:dateType>
+                                                </gmd:CI_Date>
+                                            </gmd:date>
+                                        </gmd:CI_Citation>
+                                    </gmd:specification>
+                                    <gmd:explanation>
+                                        <gco:CharacterString>Der Dienst wurde mit dem EU-Validator überprüft.</gco:CharacterString>
+                                    </gmd:explanation>
+                                    <gmd:pass>
+                                        <gco:Boolean>true</gco:Boolean>
+                                    </gmd:pass>
+                                </gmd:DQ_ConformanceResult>
+                            </gmd:result>
+                        </gmd:DQ_DomainConsistency>
+                    </gmd:report>
+                    <gmd:report>
+                        <gmd:DQ_DomainConsistency>
+                            <gmd:result>
+                                <gmd:DQ_ConformanceResult>
+                                    <gmd:specification>
+                                        <gmd:CI_Citation>
+                                            <gmd:title>
+                                                <gmx:Anchor xlink:href="http://data.europa.eu/eli/reg/2010/1089">Commission Regulation (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</gmx:Anchor>
+                                            </gmd:title>
+                                            <gmd:date>
+                                                <gmd:CI_Date>
+                                                    <gmd:date>
+                                                        <gco:Date>2014-12-31</gco:Date>
+                                                    </gmd:date>
+                                                    <gmd:dateType>
+                                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode>
+                                                    </gmd:dateType>
+                                                </gmd:CI_Date>
+                                            </gmd:date>
+                                        </gmd:CI_Citation>
+                                    </gmd:specification>
+                                    <gmd:explanation>
+                                        <gco:CharacterString>The dataset is conformant with the INSPIRE implementig rules for the interoperability of spatial datasets and services.</gco:CharacterString>
+                                    </gmd:explanation>
+                                    <gmd:pass>
+                                        <gco:Boolean>true</gco:Boolean>
+                                    </gmd:pass>
+                                </gmd:DQ_ConformanceResult>
+                            </gmd:result>
+                        </gmd:DQ_DomainConsistency>
+                    </gmd:report>
+                </gmd:DQ_DataQuality>
+            </gmd:dataQualityInfo>
+        </gmd:MD_Metadata>
+        <gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:geonet="http://www.fao.org/geonetwork" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/geonetwork/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
+            <gmd:fileIdentifier>
+                <gco:CharacterString>3110b7f0-5a6e-468d-8230-895d021c3785</gco:CharacterString>
+            </gmd:fileIdentifier>
+            <gmd:language>
+                <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger"/>
+            </gmd:language>
+            <gmd:characterSet>
+                <gmd:MD_CharacterSetCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8"/>
+            </gmd:characterSet>
+            <gmd:hierarchyLevel>
+                <gmd:MD_ScopeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode" codeListValue="service"/>
+            </gmd:hierarchyLevel>
+            <gmd:hierarchyLevelName>
+                <gco:CharacterString>Darstellungsdienste</gco:CharacterString>
+            </gmd:hierarchyLevelName>
+            <gmd:contact>
+                <gmd:CI_ResponsibleParty>
+                    <gmd:organisationName>
+                        <gco:CharacterString>Eisenbahn-Bundesamt</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                            <gmd:phone>
+                                <gmd:CI_Telephone>
+                                    <gmd:voice>
+                                        <gco:CharacterString>+49 228 9826-0</gco:CharacterString>
+                                    </gmd:voice>
+                                </gmd:CI_Telephone>
+                            </gmd:phone>
+                            <gmd:address>
+                                <gmd:CI_Address>
+                                    <gmd:deliveryPoint>
+                                        <gco:CharacterString>Heinemannstr. 6</gco:CharacterString>
+                                    </gmd:deliveryPoint>
+                                    <gmd:city>
+                                        <gco:CharacterString>Bonn</gco:CharacterString>
+                                    </gmd:city>
+                                    <gmd:administrativeArea>
+                                        <gco:CharacterString>Nordrhein-Westfalen</gco:CharacterString>
+                                    </gmd:administrativeArea>
+                                    <gmd:postalCode>
+                                        <gco:CharacterString>D-53175</gco:CharacterString>
+                                    </gmd:postalCode>
+                                    <gmd:country>
+                                        <gco:CharacterString>Deutschland</gco:CharacterString>
+                                    </gmd:country>
+                                    <gmd:electronicMailAddress>
+                                        <gco:CharacterString>Ref53@eba.bund.de</gco:CharacterString>
+                                    </gmd:electronicMailAddress>
+                                </gmd:CI_Address>
+                            </gmd:address>
+                            <gmd:onlineResource>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>www.eba.bund.de</gmd:URL>
+                                    </gmd:linkage>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onlineResource>
+                        </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role>
+                        <gmd:CI_RoleCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact"/>
+                    </gmd:role>
+                </gmd:CI_ResponsibleParty>
+            </gmd:contact>
+            <gmd:dateStamp>
+                <gco:Date>2025-03-12</gco:Date>
+            </gmd:dateStamp>
+            <gmd:metadataStandardName>
+                <gco:CharacterString>ISO19119</gco:CharacterString>
+            </gmd:metadataStandardName>
+            <gmd:metadataStandardVersion>
+                <gco:CharacterString>2005/PDAM 1</gco:CharacterString>
+            </gmd:metadataStandardVersion>
+            <gmd:referenceSystemInfo>
+                <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                        <gmd:RS_Identifier>
+                            <gmd:code>
+                                <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/25832</gco:CharacterString>
+                            </gmd:code>
+                            <!-- <gmd:codeSpace> -->
+                            <!-- <gco:CharacterString>urn:ogc:def:crs:EPSG</gco:CharacterString> -->
+                            <!-- </gmd:codeSpace> -->
+                            <gmd:version>
+                                <gco:CharacterString>6.11.2</gco:CharacterString>
+                            </gmd:version>
+                        </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                </gmd:MD_ReferenceSystem>
+            </gmd:referenceSystemInfo>
+            <gmd:identificationInfo>
+                <srv:SV_ServiceIdentification>
+                    <gmd:citation>
+                        <gmd:CI_Citation>
+                            <gmd:title>
+                                <gco:CharacterString>(WMS) Beeinträchtigung Flut 2021</gco:CharacterString>
+                            </gmd:title>
+                            <gmd:date>
+                                <gmd:CI_Date>
+                                    <gmd:date>
+                                        <gco:Date>2025-03-12</gco:Date>
+                                    </gmd:date>
+                                    <gmd:dateType>
+                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation"/>
+                                    </gmd:dateType>
+                                </gmd:CI_Date>
+                            </gmd:date>
+                            <gmd:date>
+                                <gmd:CI_Date>
+                                    <gmd:date>
+                                        <gco:Date>2025-03-12</gco:Date>
+                                    </gmd:date>
+                                    <gmd:dateType>
+                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                    </gmd:dateType>
+                                </gmd:CI_Date>
+                            </gmd:date>
+                            <gmd:date>
+                                <gmd:CI_Date>
+                                    <gmd:date>
+                                        <gco:Date>2025-03-12</gco:Date>
+                                    </gmd:date>
+                                    <gmd:dateType>
+                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="revision"/>
+                                    </gmd:dateType>
+                                </gmd:CI_Date>
+                            </gmd:date>
+                            <gmd:identifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code>
+                                        <gco:CharacterString>http://registry.gdi-de.org/id/de.bund.eba/3110b7f0-5a6e-468d-8230-895d021c3785</gco:CharacterString>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:identifier>
+                        </gmd:CI_Citation>
+                    </gmd:citation>
+                    <gmd:abstract>
+                        <gco:CharacterString>Darstellung der von der Flutkatastrophe im Sommer 2021 dauerhaft oder vorübergehend im Betrieb beeinträchtigten Strecken. Erhoben im Rahmen der Umgebungslärmkartierung Runde 4</gco:CharacterString>
+                    </gmd:abstract>
+                    <gmd:pointOfContact>
+                        <gmd:CI_ResponsibleParty>
+                            <gmd:organisationName>
+                                <gco:CharacterString>Eisenbahn-Bundesamt</gco:CharacterString>
+                            </gmd:organisationName>
+                            <gmd:contactInfo>
+                                <gmd:CI_Contact>
+                                    <gmd:phone>
+                                        <gmd:CI_Telephone>
+                                            <gmd:voice>
+                                                <gco:CharacterString>+49 228 9826-0</gco:CharacterString>
+                                            </gmd:voice>
+                                        </gmd:CI_Telephone>
+                                    </gmd:phone>
+                                    <gmd:address>
+                                        <gmd:CI_Address>
+                                            <gmd:electronicMailAddress>
+                                                <gco:CharacterString>Ref53@eba.bund.de</gco:CharacterString>
+                                            </gmd:electronicMailAddress>
+                                        </gmd:CI_Address>
+                                    </gmd:address>
+                                    <gmd:onlineResource>
+                                        <gmd:CI_OnlineResource>
+                                            <gmd:linkage>
+                                                <gmd:URL>www.eba.bund.de</gmd:URL>
+                                            </gmd:linkage>
+                                        </gmd:CI_OnlineResource>
+                                    </gmd:onlineResource>
+                                </gmd:CI_Contact>
+                            </gmd:contactInfo>
+                            <gmd:role>
+                                <gmd:CI_RoleCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact"/>
+                            </gmd:role>
+                        </gmd:CI_ResponsibleParty>
+                    </gmd:pointOfContact>
+                    <gmd:graphicOverview>
+                        <gmd:MD_BrowseGraphic>
+                            <gmd:fileName>
+                                <gco:CharacterString/>
+                            </gmd:fileName>
+                        </gmd:MD_BrowseGraphic>
+                    </gmd:graphicOverview>
+                    <gmd:descriptiveKeywords>
+                        <gmd:MD_Keywords>
+                            <gmd:keyword>
+                                <gco:CharacterString>(WMS) Beeinträchtigung Flut 2021</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Beeinträchtigung Flut 2021</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>EBA</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Eisenbahn-Bundesamt</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>LAP</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Runde4</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Schienenverkehrsnetz</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Umgebungslärmkartierung</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Umgebungslärmrichtlinie</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:thesaurusName>
+                                <gmd:CI_Citation>
+                                    <gmd:title>
+                                        <gco:CharacterString>Freitext</gco:CharacterString>
+                                    </gmd:title>
+                                    <gmd:date>
+                                        <gmd:CI_Date>
+                                            <gmd:date>
+                                                <gco:Date>2014-11-26</gco:Date>
+                                            </gmd:date>
+                                            <gmd:dateType>
+                                                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                            </gmd:dateType>
+                                        </gmd:CI_Date>
+                                    </gmd:date>
+                                </gmd:CI_Citation>
+                            </gmd:thesaurusName>
+                        </gmd:MD_Keywords>
+                    </gmd:descriptiveKeywords>
+                    <gmd:descriptiveKeywords>
+                        <gmd:MD_Keywords>
+                            <gmd:keyword>
+                                <gco:CharacterString>Bahnlärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Behörde</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Eisenbahn</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Eisenbahngeräusch</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Eisenbahnlärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Eisenbahnnetz</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Eisenbahnstrecke</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>EU-Umgebungslärmrichtlinie</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Geräuschbelastung durch Schienenverkehr</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Güterwagenlärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmaktionsplan</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmaktionsplanung</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmbelästigung durch Schienenverkehr</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmbelastung durch Schienenverkehr</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmemissionen durch den Schienenverkehr</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmkarte</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmkartierung</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Öffentliche Verwaltung</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Schienengüterverkehrslärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Schall</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Schiene</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Schienenlärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Schienenverkehrslärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Zuglärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Umgebungslärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:type>
+                                <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme"/>
+                            </gmd:type>
+                            <gmd:thesaurusName>
+                                <gmd:CI_Citation>
+                                    <gmd:title>
+                                        <gco:CharacterString>UMTHES Thesaurus</gco:CharacterString>
+                                    </gmd:title>
+                                    <gmd:date>
+                                        <gmd:CI_Date>
+                                            <gmd:date>
+                                                <gco:Date>2009-01-15</gco:Date>
+                                            </gmd:date>
+                                            <gmd:dateType>
+                                                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                            </gmd:dateType>
+                                        </gmd:CI_Date>
+                                    </gmd:date>
+                                </gmd:CI_Citation>
+                            </gmd:thesaurusName>
+                        </gmd:MD_Keywords>
+                    </gmd:descriptiveKeywords>
+                    <gmd:descriptiveKeywords>
+                        <gmd:MD_Keywords>
+                            <gmd:keyword>
+                                <gco:CharacterString>HUMAN ACTIVITIES AND PRODUCTS, EFFECTS ON THE ENVIRONMENT</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:thesaurusName>
+                                <gmd:CI_Citation>
+                                    <gmd:title>
+                                        <gco:CharacterString>GEMET - Supergroups, version 2.4</gco:CharacterString>
+                                    </gmd:title>
+                                    <gmd:date>
+                                        <gmd:CI_Date>
+                                            <gmd:date>
+                                                <gco:Date>2010-01-13</gco:Date>
+                                            </gmd:date>
+                                            <gmd:dateType>
+                                                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                            </gmd:dateType>
+                                        </gmd:CI_Date>
+                                    </gmd:date>
+                                </gmd:CI_Citation>
+                            </gmd:thesaurusName>
+                        </gmd:MD_Keywords>
+                    </gmd:descriptiveKeywords>
+                    <gmd:descriptiveKeywords>
+                        <gmd:MD_Keywords>
+                            <gmd:keyword>
+                                <gco:CharacterString>opendata</gco:CharacterString>
+                            </gmd:keyword>
+                        </gmd:MD_Keywords>
+                    </gmd:descriptiveKeywords>
+                    <gmd:descriptiveKeywords>
+                        <gmd:MD_Keywords>
+                            <gmd:keyword>
+                                <gco:CharacterString>mobilithek_category_BAHN</gco:CharacterString>
+                            </gmd:keyword>
+                        </gmd:MD_Keywords>
+                    </gmd:descriptiveKeywords>
+                    <gmd:descriptiveKeywords>
+                        <gmd:MD_Keywords>
+                            <gmd:keyword>
+                                <gco:CharacterString>infoMapAccessService</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:thesaurusName>
+                                <gmd:CI_Citation>
+                                    <gmd:title>
+                                        <gco:CharacterString>ISO - 19119 geographic services taxonomy</gco:CharacterString>
+                                    </gmd:title>
+                                    <gmd:date>
+                                        <gmd:CI_Date>
+                                            <gmd:date>
+                                                <gco:Date>2010-01-19</gco:Date>
+                                            </gmd:date>
+                                            <gmd:dateType>
+                                                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                            </gmd:dateType>
+                                        </gmd:CI_Date>
+                                    </gmd:date>
+                                </gmd:CI_Citation>
+                            </gmd:thesaurusName>
+                        </gmd:MD_Keywords>
+                    </gmd:descriptiveKeywords>
+                    <gmd:resourceConstraints>
+                        <gmd:MD_LegalConstraints>
+                            <gmd:accessConstraints>
+                                <gmd:MD_RestrictionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions"/>
+                            </gmd:accessConstraints>
+                            <gmd:otherConstraints>
+                                <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations">Es gelten keine Zugriffsbeschränkungen</gmx:Anchor>
+                            </gmd:otherConstraints>
+                        </gmd:MD_LegalConstraints>
+                    </gmd:resourceConstraints>
+                    <gmd:resourceConstraints>
+                        <gmd:MD_LegalConstraints>
+                            <gmd:useConstraints>
+                                <gmd:MD_RestrictionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions"/>
+                            </gmd:useConstraints>
+                            <gmd:otherConstraints>
+                                <gco:CharacterString>Nutzungsbedingungen: Die Daten sind urheberrechtlich geschützt. Der Datensatz wird entgeltfrei mit der Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0) zur Verfügung gestellt. Der Quellenvermerk ist zu beachten. Quellenvermerk: © Eisenbahn-Bundesamt (www.eba.bund.de/). Diese Karten finden Sie unter www.eba.bund.de/kartendienst</gco:CharacterString>
+                            </gmd:otherConstraints>
+                            <gmd:otherConstraints>
+                                <gco:CharacterString>{"id":"dl-by-de/2.0","name":"Datenlizenz Deutschland Namensnennung 2.0","url":"http://www.govdata.de/dl-de/by-2-0","quelle":"Eisenbahn-Bundesamt"}</gco:CharacterString>
+                            </gmd:otherConstraints>
+                        </gmd:MD_LegalConstraints>
+                    </gmd:resourceConstraints>
+                    <srv:serviceType>
+                        <gco:LocalName codeSpace="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType">view</gco:LocalName>
+                    </srv:serviceType>
+                    <srv:serviceTypeVersion>
+                        <gco:CharacterString>OGC:WMS 1.3.0</gco:CharacterString>
+                    </srv:serviceTypeVersion>
+                    <srv:extent>
+                        <gmd:EX_Extent>
+                            <gmd:geographicElement>
+                                <gmd:EX_GeographicDescription>
+                                    <gmd:extentTypeCode>
+                                        <gco:Boolean>true</gco:Boolean>
+                                    </gmd:extentTypeCode>
+                                    <gmd:geographicIdentifier>
+                                        <gmd:MD_Identifier>
+                                            <gmd:code>
+                                                <gco:CharacterString>000000000000</gco:CharacterString>
+                                            </gmd:code>
+                                        </gmd:MD_Identifier>
+                                    </gmd:geographicIdentifier>
+                                </gmd:EX_GeographicDescription>
+                            </gmd:geographicElement>
+                            <gmd:geographicElement>
+                                <gmd:EX_GeographicBoundingBox>
+                                    <gmd:westBoundLongitude>
+                                        <gco:Decimal>5.87</gco:Decimal>
+                                    </gmd:westBoundLongitude>
+                                    <gmd:eastBoundLongitude>
+                                        <gco:Decimal>15.04</gco:Decimal>
+                                    </gmd:eastBoundLongitude>
+                                    <gmd:southBoundLatitude>
+                                        <gco:Decimal>47.27</gco:Decimal>
+                                    </gmd:southBoundLatitude>
+                                    <gmd:northBoundLatitude>
+                                        <gco:Decimal>55.06</gco:Decimal>
+                                    </gmd:northBoundLatitude>
+                                </gmd:EX_GeographicBoundingBox>
+                            </gmd:geographicElement>
+                        </gmd:EX_Extent>
+                    </srv:extent>
+                    <srv:couplingType>
+                        <srv:SV_CouplingType codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#SV_CouplingType" codeListValue="tight"/>
+                    </srv:couplingType>
+                    <srv:containsOperations>
+                        <srv:SV_OperationMetadata>
+                            <srv:operationName>
+                                <gco:CharacterString>GetCapabilities</gco:CharacterString>
+                            </srv:operationName>
+                            <srv:DCP>
+                                <srv:DCPList codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#DCPList" codeListValue="WebServices"/>
+                            </srv:DCP>
+                            <srv:connectPoint>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>https://geoinformation.eisenbahn-bundesamt.de/wms/flut_2021?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities</gmd:URL>
+                                    </gmd:linkage>
+                                </gmd:CI_OnlineResource>
+                            </srv:connectPoint>
+                        </srv:SV_OperationMetadata>
+                    </srv:containsOperations>
+                    <srv:operatesOn uuidref="fee82268-9d8c-4134-8123-9f9a8f728306" xlink:href="https://registry.gdi-de.org/id/de.bund.eba/fee82268-9d8c-4134-8123-9f9a8f728306"/>
+                </srv:SV_ServiceIdentification>
+            </gmd:identificationInfo>
+            <gmd:distributionInfo>
+                <gmd:MD_Distribution>
+                    <gmd:distributionFormat>
+                        <gmd:MD_Format>
+                            <gmd:name>
+                                <gco:CharacterString>png</gco:CharacterString>
+                            </gmd:name>
+                            <gmd:version>
+                                <gco:CharacterString>?</gco:CharacterString>
+                            </gmd:version>
+                        </gmd:MD_Format>
+                    </gmd:distributionFormat>
+                    <gmd:transferOptions>
+                        <gmd:MD_DigitalTransferOptions>
+                            <gmd:onLine>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>http://geoportal.eisenbahn-bundesamt.de</gmd:URL>
+                                    </gmd:linkage>
+                                    <gmd:name>
+                                        <gco:CharacterString>Link zum Geodatenviewer</gco:CharacterString>
+                                    </gmd:name>
+                                    <gmd:function>
+                                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information"/>
+                                    </gmd:function>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onLine>
+                            <gmd:onLine>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>http://www.eba.bund.de/DE/Themen/Laerm_an_Schienenwegen/laerm_an_schienenwegen_node.html</gmd:URL>
+                                    </gmd:linkage>
+                                    <gmd:name>
+                                        <gco:CharacterString>Weitere Informationen zum Inhalt der beschriebenen Daten</gco:CharacterString>
+                                    </gmd:name>
+                                    <gmd:function>
+                                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information"/>
+                                    </gmd:function>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onLine>
+                            <gmd:onLine>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>https://geoinformation.eisenbahn-bundesamt.de/wms/flut_2021?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities</gmd:URL>
+                                    </gmd:linkage>
+                                    <gmd:protocol>
+                                        <gco:CharacterString>OGC:WMS</gco:CharacterString>
+                                    </gmd:protocol>
+                                    <gmd:name>
+                                        <gco:CharacterString>WMS GetCapabilities request providing machine readable service metadata</gco:CharacterString>
+                                    </gmd:name>
+                                    <gmd:function>
+                                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information"/>
+                                    </gmd:function>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onLine>
+                        </gmd:MD_DigitalTransferOptions>
+                    </gmd:transferOptions>
+                </gmd:MD_Distribution>
+            </gmd:distributionInfo>
+            <gmd:dataQualityInfo>
+                <gmd:DQ_DataQuality>
+                    <gmd:scope>
+                        <gmd:DQ_Scope>
+                            <gmd:level>
+                                <gmd:MD_ScopeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode" codeListValue="service"/>
+                            </gmd:level>
+                            <gmd:levelDescription>
+                                <gmd:MD_ScopeDescription>
+                                    <gmd:other>
+                                        <gco:CharacterString>Service</gco:CharacterString>
+                                    </gmd:other>
+                                </gmd:MD_ScopeDescription>
+                            </gmd:levelDescription>
+                        </gmd:DQ_Scope>
+                    </gmd:scope>
+                    <gmd:report>
+                        <gmd:DQ_DomainConsistency>
+                            <gmd:result>
+                                <gmd:DQ_ConformanceResult>
+                                    <gmd:specification>
+                                        <gmd:CI_Citation>
+                                            <gmd:title>
+                                                <gco:CharacterString>VERORDNUNG (EG) Nr. 976/2009 DER KOMMISSION vom 19. Oktober 2009 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Netzdienste</gco:CharacterString>
+                                            </gmd:title>
+                                            <gmd:date>
+                                                <gmd:CI_Date>
+                                                    <gmd:date>
+                                                        <gco:Date>2009-10-20</gco:Date>
+                                                    </gmd:date>
+                                                    <gmd:dateType>
+                                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                                    </gmd:dateType>
+                                                </gmd:CI_Date>
+                                            </gmd:date>
+                                        </gmd:CI_Citation>
+                                    </gmd:specification>
+                                    <gmd:explanation>
+                                        <gco:CharacterString>Der Dienst wurde mit dem EU-Validator überprüft.</gco:CharacterString>
+                                    </gmd:explanation>
+                                    <gmd:pass>
+                                        <gco:Boolean>true</gco:Boolean>
+                                    </gmd:pass>
+                                </gmd:DQ_ConformanceResult>
+                            </gmd:result>
+                        </gmd:DQ_DomainConsistency>
+                    </gmd:report>
+                    <gmd:report>
+                        <gmd:DQ_DomainConsistency>
+                            <gmd:result>
+                                <gmd:DQ_ConformanceResult>
+                                    <gmd:specification>
+                                        <gmd:CI_Citation>
+                                            <gmd:title>
+                                                <gco:CharacterString>INSPIRE Data Specification on Human Health and Safety - Technical Guidelines</gco:CharacterString>
+                                            </gmd:title>
+                                            <gmd:date>
+                                                <gmd:CI_Date>
+                                                    <gmd:date>
+                                                        <gco:Date>2013-12-10</gco:Date>
+                                                    </gmd:date>
+                                                    <gmd:dateType>
+                                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                                    </gmd:dateType>
+                                                </gmd:CI_Date>
+                                            </gmd:date>
+                                        </gmd:CI_Citation>
+                                    </gmd:specification>
+                                    <gmd:explanation>
+                                        <gco:CharacterString>Der Dienst wurde mit dem EU-Validator überprüft.</gco:CharacterString>
+                                    </gmd:explanation>
+                                    <gmd:pass>
+                                        <gco:Boolean>true</gco:Boolean>
+                                    </gmd:pass>
+                                </gmd:DQ_ConformanceResult>
+                            </gmd:result>
+                        </gmd:DQ_DomainConsistency>
+                    </gmd:report>
+                    <gmd:report>
+                        <gmd:DQ_DomainConsistency>
+                            <gmd:result>
+                                <gmd:DQ_ConformanceResult>
+                                    <gmd:specification>
+                                        <gmd:CI_Citation>
+                                            <gmd:title>
+                                                <gco:CharacterString>INSPIRE Data Specification on Area Management/Restriction/Regulation Zones and Reporting Units – Technical Guidelines</gco:CharacterString>
+                                            </gmd:title>
+                                            <gmd:date>
+                                                <gmd:CI_Date>
+                                                    <gmd:date>
+                                                        <gco:Date>2013-12-10</gco:Date>
+                                                    </gmd:date>
+                                                    <gmd:dateType>
+                                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                                    </gmd:dateType>
+                                                </gmd:CI_Date>
+                                            </gmd:date>
+                                        </gmd:CI_Citation>
+                                    </gmd:specification>
+                                    <gmd:explanation>
+                                        <gco:CharacterString>Der Dienst wurde mit dem EU-Validator überprüft.</gco:CharacterString>
+                                    </gmd:explanation>
+                                    <gmd:pass>
+                                        <gco:Boolean>true</gco:Boolean>
+                                    </gmd:pass>
+                                </gmd:DQ_ConformanceResult>
+                            </gmd:result>
+                        </gmd:DQ_DomainConsistency>
+                    </gmd:report>
+                    <gmd:report>
+                        <gmd:DQ_DomainConsistency>
+                            <gmd:result>
+                                <gmd:DQ_ConformanceResult>
+                                    <gmd:specification>
+                                        <gmd:CI_Citation>
+                                            <gmd:title>
+                                                <gco:CharacterString>Technical Guidance for the implementation of INSPIRE View Services</gco:CharacterString>
+                                            </gmd:title>
+                                            <gmd:date>
+                                                <gmd:CI_Date>
+                                                    <gmd:date>
+                                                        <gco:Date>2013-04-04</gco:Date>
+                                                    </gmd:date>
+                                                    <gmd:dateType>
+                                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                                    </gmd:dateType>
+                                                </gmd:CI_Date>
+                                            </gmd:date>
+                                        </gmd:CI_Citation>
+                                    </gmd:specification>
+                                    <gmd:explanation>
+                                        <gco:CharacterString>Der Dienst wurde mit dem EU-Validator überprüft.</gco:CharacterString>
+                                    </gmd:explanation>
+                                    <gmd:pass>
+                                        <gco:Boolean>true</gco:Boolean>
+                                    </gmd:pass>
+                                </gmd:DQ_ConformanceResult>
+                            </gmd:result>
+                        </gmd:DQ_DomainConsistency>
+                    </gmd:report>
+                    <gmd:report>
+                        <gmd:DQ_DomainConsistency>
+                            <gmd:result>
+                                <gmd:DQ_ConformanceResult>
+                                    <gmd:specification>
+                                        <gmd:CI_Citation>
+                                            <gmd:title>
+                                                <gmx:Anchor xlink:href="http://data.europa.eu/eli/reg/2010/1089">Commission Regulation (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</gmx:Anchor>
+                                            </gmd:title>
+                                            <gmd:date>
+                                                <gmd:CI_Date>
+                                                    <gmd:date>
+                                                        <gco:Date>2014-12-31</gco:Date>
+                                                    </gmd:date>
+                                                    <gmd:dateType>
+                                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode>
+                                                    </gmd:dateType>
+                                                </gmd:CI_Date>
+                                            </gmd:date>
+                                        </gmd:CI_Citation>
+                                    </gmd:specification>
+                                    <gmd:explanation>
+                                        <gco:CharacterString>The dataset is conformant with the INSPIRE implementig rules for the interoperability of spatial datasets and services.</gco:CharacterString>
+                                    </gmd:explanation>
+                                    <gmd:pass>
+                                        <gco:Boolean>true</gco:Boolean>
+                                    </gmd:pass>
+                                </gmd:DQ_ConformanceResult>
+                            </gmd:result>
+                        </gmd:DQ_DomainConsistency>
+                    </gmd:report>
+                </gmd:DQ_DataQuality>
+            </gmd:dataQualityInfo>
+        </gmd:MD_Metadata>
+        <gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:geonet="http://www.fao.org/geonetwork" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://schemas.opengis.net/geonetwork/2.0.2/profiles/apiso/1.0.0/apiso.xsd">
+            <gmd:fileIdentifier>
+                <gco:CharacterString>fee82268-9d8c-4134-8123-9f9a8f728306</gco:CharacterString>
+            </gmd:fileIdentifier>
+            <gmd:language>
+                <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger"/>
+            </gmd:language>
+            <gmd:characterSet>
+                <gmd:MD_CharacterSetCode codeSpace="ISOTC211/19115" codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode"/>
+            </gmd:characterSet>
+            <gmd:hierarchyLevel>
+                <gmd:MD_ScopeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset"/>
+            </gmd:hierarchyLevel>
+            <gmd:hierarchyLevelName>
+                <gco:CharacterString>dataset</gco:CharacterString>
+            </gmd:hierarchyLevelName>
+            <gmd:contact>
+                <gmd:CI_ResponsibleParty>
+                    <gmd:organisationName>
+                        <gco:CharacterString>Eisenbahn-Bundesamt</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                            <gmd:phone>
+                                <gmd:CI_Telephone>
+                                    <gmd:voice>
+                                        <gco:CharacterString>+49 228 9826-0</gco:CharacterString>
+                                    </gmd:voice>
+                                </gmd:CI_Telephone>
+                            </gmd:phone>
+                            <gmd:address>
+                                <gmd:CI_Address>
+                                    <gmd:deliveryPoint>
+                                        <gco:CharacterString>Heinemannstr. 6</gco:CharacterString>
+                                    </gmd:deliveryPoint>
+                                    <gmd:city>
+                                        <gco:CharacterString>Bonn</gco:CharacterString>
+                                    </gmd:city>
+                                    <gmd:administrativeArea>
+                                        <gco:CharacterString>Nordrhein-Westfalen</gco:CharacterString>
+                                    </gmd:administrativeArea>
+                                    <gmd:postalCode>
+                                        <gco:CharacterString>D-53175</gco:CharacterString>
+                                    </gmd:postalCode>
+                                    <gmd:country>
+                                        <gco:CharacterString>Deutschland</gco:CharacterString>
+                                    </gmd:country>
+                                    <gmd:electronicMailAddress>
+                                        <gco:CharacterString>Ref53@eba.bund.de</gco:CharacterString>
+                                    </gmd:electronicMailAddress>
+                                </gmd:CI_Address>
+                            </gmd:address>
+                            <gmd:onlineResource>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>https://www.eisenbahn-bundesamt.de</gmd:URL>
+                                    </gmd:linkage>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onlineResource>
+                        </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role>
+                        <gmd:CI_RoleCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact"/>
+                    </gmd:role>
+                </gmd:CI_ResponsibleParty>
+            </gmd:contact>
+            <gmd:dateStamp>
+                <gco:Date>2024-09-30</gco:Date>
+            </gmd:dateStamp>
+            <gmd:dataSetURI>
+                <gco:CharacterString>https://www.eisenbahn-bundesamt.de</gco:CharacterString>
+            </gmd:dataSetURI>
+            <gmd:referenceSystemInfo>
+                <gmd:MD_ReferenceSystem>
+                    <gmd:referenceSystemIdentifier>
+                        <gmd:RS_Identifier>
+                            <gmd:code>
+                                <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/25832</gco:CharacterString>
+                            </gmd:code>
+                            <gmd:version>
+                                <gco:CharacterString>6.11.2</gco:CharacterString>
+                            </gmd:version>
+                        </gmd:RS_Identifier>
+                    </gmd:referenceSystemIdentifier>
+                </gmd:MD_ReferenceSystem>
+            </gmd:referenceSystemInfo>
+            <gmd:identificationInfo>
+                <gmd:MD_DataIdentification>
+                    <gmd:citation>
+                        <gmd:CI_Citation>
+                            <gmd:title>
+                                <gco:CharacterString>Beeinträchtigung Flut 2021</gco:CharacterString>
+                            </gmd:title>
+                            <gmd:date>
+                                <gmd:CI_Date>
+                                    <gmd:date>
+                                        <gco:Date>2022-06-30</gco:Date>
+                                    </gmd:date>
+                                    <gmd:dateType>
+                                        <gmd:CI_DateTypeCode codeList="https://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation"/>
+                                    </gmd:dateType>
+                                </gmd:CI_Date>
+                            </gmd:date>
+                            <gmd:date>
+                                <gmd:CI_Date>
+                                    <gmd:date>
+                                        <gco:Date>2022-06-30</gco:Date>
+                                    </gmd:date>
+                                    <gmd:dateType>
+                                        <gmd:CI_DateTypeCode codeList="https://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                    </gmd:dateType>
+                                </gmd:CI_Date>
+                            </gmd:date>
+                            <gmd:date>
+                                <gmd:CI_Date>
+                                    <gmd:date>
+                                        <gco:Date>2022-06-30</gco:Date>
+                                    </gmd:date>
+                                    <gmd:dateType>
+                                        <gmd:CI_DateTypeCode codeList="https://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="revision"/>
+                                    </gmd:dateType>
+                                </gmd:CI_Date>
+                            </gmd:date>
+                            <gmd:identifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code>
+                                        <gco:CharacterString>https://registry.gdi-de.org/id/de.bund.eba/fee82268-9d8c-4134-8123-9f9a8f728306</gco:CharacterString>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:identifier>
+                        </gmd:CI_Citation>
+                    </gmd:citation>
+                    <gmd:abstract>
+                        <gco:CharacterString>Darstellung der von der Flutkatastrophe im Sommer 2021 dauerhaft oder vorübergehend im Betrieb beeinträchtigten Strecken. Erhoben im Rahmen der Umgebungslärmkartierung Runde 4</gco:CharacterString>
+                    </gmd:abstract>
+                    <gmd:pointOfContact>
+                        <gmd:CI_ResponsibleParty>
+                            <gmd:organisationName>
+                                <gco:CharacterString>Eisenbahn-Bundesamt</gco:CharacterString>
+                            </gmd:organisationName>
+                            <gmd:contactInfo>
+                                <gmd:CI_Contact>
+                                    <gmd:phone>
+                                        <gmd:CI_Telephone>
+                                            <gmd:voice>
+                                                <gco:CharacterString>+49 228 9826-0</gco:CharacterString>
+                                            </gmd:voice>
+                                        </gmd:CI_Telephone>
+                                    </gmd:phone>
+                                    <gmd:address>
+                                        <gmd:CI_Address>
+                                            <gmd:electronicMailAddress>
+                                                <gco:CharacterString>Ref53@eba.bund.de</gco:CharacterString>
+                                            </gmd:electronicMailAddress>
+                                        </gmd:CI_Address>
+                                    </gmd:address>
+                                    <gmd:onlineResource>
+                                        <gmd:CI_OnlineResource>
+                                            <gmd:linkage>
+                                                <gmd:URL>https://www.eisenbahn-bundesamt.de</gmd:URL>
+                                            </gmd:linkage>
+                                        </gmd:CI_OnlineResource>
+                                    </gmd:onlineResource>
+                                </gmd:CI_Contact>
+                            </gmd:contactInfo>
+                            <gmd:role>
+                                <gmd:CI_RoleCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact"/>
+                            </gmd:role>
+                        </gmd:CI_ResponsibleParty>
+                    </gmd:pointOfContact>
+                    <gmd:resourceFormat>
+                        <gmd:MD_Format>
+                            <gmd:name>
+                                <gco:CharacterString>nas</gco:CharacterString>
+                            </gmd:name>
+                            <gmd:version>
+                                <gco:CharacterString>?</gco:CharacterString>
+                            </gmd:version>
+                        </gmd:MD_Format>
+                    </gmd:resourceFormat>
+                    <gmd:descriptiveKeywords>
+                        <gmd:MD_Keywords>
+                            <gmd:keyword>
+                                <gco:CharacterString>Gesundheitswesen</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Schall</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Bahn</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Schallschutzbauwerke</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmschutzbauwerke</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmkartierung</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmaktionsplanung</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>LAP</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Umgebungslärmkartierung</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Schiene</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Runde4</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Eisenbahn-Bundesamt</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>EBA</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>EG-Umgebungslärmrichtlinie</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Umgebungslärmrichtlinie</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:thesaurusName>
+                                <gmd:CI_Citation>
+                                    <gmd:title>
+                                        <gco:CharacterString>Freitext</gco:CharacterString>
+                                    </gmd:title>
+                                    <gmd:date>
+                                        <gmd:CI_Date>
+                                            <gmd:date>
+                                                <gco:Date>2014-11-26</gco:Date>
+                                            </gmd:date>
+                                            <gmd:dateType>
+                                                <gmd:CI_DateTypeCode codeList="https://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                            </gmd:dateType>
+                                        </gmd:CI_Date>
+                                    </gmd:date>
+                                </gmd:CI_Citation>
+                            </gmd:thesaurusName>
+                        </gmd:MD_Keywords>
+                    </gmd:descriptiveKeywords>
+                    <gmd:descriptiveKeywords>
+                        <gmd:MD_Keywords>
+                            <gmd:keyword>
+                                <gco:CharacterString>Bahnlärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Eisenbahngeräusch</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Eisenbahnlärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Geräuschbelastung durch Schienenverkehr</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Güterwagenlärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmbelastung durch Schienenverkehr</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmbelästigung durch Schienenverkehr</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Öffentliche Verwaltung</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Behörde</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Lärmemissionen durch den Schienenverkehr</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Schienenverkehrslärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Schienengüterverkehrslärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Schienenlärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:keyword>
+                                <gco:CharacterString>Zuglärm</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:type>
+                                <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme"/>
+                            </gmd:type>
+                            <gmd:thesaurusName>
+                                <gmd:CI_Citation>
+                                    <gmd:title>
+                                        <gco:CharacterString>UMTHES Thesaurus</gco:CharacterString>
+                                    </gmd:title>
+                                    <gmd:date>
+                                        <gmd:CI_Date>
+                                            <gmd:date>
+                                                <gco:Date>2009-01-15</gco:Date>
+                                            </gmd:date>
+                                            <gmd:dateType>
+                                                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode>
+                                            </gmd:dateType>
+                                        </gmd:CI_Date>
+                                    </gmd:date>
+                                </gmd:CI_Citation>
+                            </gmd:thesaurusName>
+                        </gmd:MD_Keywords>
+                    </gmd:descriptiveKeywords>
+                    <gmd:descriptiveKeywords>
+                        <gmd:MD_Keywords>
+                            <gmd:keyword>
+                                <gco:CharacterString>HUMAN ACTIVITIES AND PRODUCTS, EFFECTS ON THE ENVIRONMENT</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:thesaurusName>
+                                <gmd:CI_Citation>
+                                    <gmd:title>
+                                        <gco:CharacterString>GEMET - Supergroups, version 2.4</gco:CharacterString>
+                                    </gmd:title>
+                                    <gmd:date>
+                                        <gmd:CI_Date>
+                                            <gmd:date>
+                                                <gco:Date>2010-01-13</gco:Date>
+                                            </gmd:date>
+                                            <gmd:dateType>
+                                                <gmd:CI_DateTypeCode codeList="https://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                            </gmd:dateType>
+                                        </gmd:CI_Date>
+                                    </gmd:date>
+                                </gmd:CI_Citation>
+                            </gmd:thesaurusName>
+                        </gmd:MD_Keywords>
+                    </gmd:descriptiveKeywords>
+                    <gmd:descriptiveKeywords>
+                        <gmd:MD_Keywords>
+                            <gmd:keyword>
+                                <gco:CharacterString>opendata</gco:CharacterString>
+                            </gmd:keyword>
+                        </gmd:MD_Keywords>
+                    </gmd:descriptiveKeywords>
+                    <gmd:descriptiveKeywords>
+                        <gmd:MD_Keywords>
+                            <gmd:keyword>
+                                <gco:CharacterString>mobilithek_category_BAHN</gco:CharacterString>
+                            </gmd:keyword>
+                        </gmd:MD_Keywords>
+                    </gmd:descriptiveKeywords>
+                    <gmd:descriptiveKeywords>
+                        <gmd:MD_Keywords>
+                            <gmd:keyword>
+                                <gco:CharacterString>National</gco:CharacterString>
+                            </gmd:keyword>
+                            <gmd:thesaurusName>
+                                <gmd:CI_Citation>
+                                    <gmd:title>
+                                        <gco:CharacterString>Spatial scope</gco:CharacterString>
+                                    </gmd:title>
+                                    <gmd:date>
+                                        <gmd:CI_Date>
+                                            <gmd:date>
+                                                <gco:Date>2019-05-22</gco:Date>
+                                            </gmd:date>
+                                            <gmd:dateType>
+                                                <gmd:CI_DateTypeCode codeList="https://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                            </gmd:dateType>
+                                        </gmd:CI_Date>
+                                    </gmd:date>
+                                </gmd:CI_Citation>
+                            </gmd:thesaurusName>
+                        </gmd:MD_Keywords>
+                    </gmd:descriptiveKeywords>
+                    <gmd:resourceConstraints>
+                        <gmd:MD_LegalConstraints>
+                            <gmd:accessConstraints>
+                                <gmd:MD_RestrictionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions"/>
+                            </gmd:accessConstraints>
+                            <gmd:otherConstraints>
+                                <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations">Es gelten keine Zugriffsbeschränkungen</gmx:Anchor>
+                            </gmd:otherConstraints>
+                        </gmd:MD_LegalConstraints>
+                    </gmd:resourceConstraints>
+                    <gmd:resourceConstraints>
+                        <gmd:MD_LegalConstraints>
+                            <gmd:useConstraints>
+                                <gmd:MD_RestrictionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions">otherRestrictions</gmd:MD_RestrictionCode>
+                            </gmd:useConstraints>
+                            <gmd:otherConstraints>
+                                <gco:CharacterString>Nutzungsbedingungen: Die Daten sind urheberrechtlich geschützt. Der Datensatz wird entgeltfrei mit der Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0) zur Verfügung gestellt. Der Quellenvermerk ist zu beachten. Quellenvermerk: © Eisenbahn-Bundesamt (www.eba.bund.de/). Diese Karten finden Sie unter www.eba.bund.de/kartendienst.</gco:CharacterString>
+                            </gmd:otherConstraints>
+                            <gmd:otherConstraints>
+                                <gco:CharacterString>{"id":"dl-by-de/2.0","name":"Datenlizenz Deutschland Namensnennung 2.0","url":"https://www.govdata.de/dl-de/by-2-0","quelle":"Eisenbahn-Bundesamt"}</gco:CharacterString>
+                            </gmd:otherConstraints>
+                        </gmd:MD_LegalConstraints>
+                    </gmd:resourceConstraints>
+                    <gmd:resourceConstraints>
+                        <gmd:MD_SecurityConstraints>
+                            <gmd:classification>
+                                <gmd:MD_ClassificationCode codeList="https://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ClassificationCode" codeListValue="unclassified"/>
+                            </gmd:classification>
+                        </gmd:MD_SecurityConstraints>
+                    </gmd:resourceConstraints>
+                    <gmd:spatialRepresentationType>
+                        <MD_SpatialRepresentationTypeCode xmlns="http://www.isotc211.org/2005/gmd" codeListValue="vector" codeList="https://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_SpatialRepresentationType"/>
+                    </gmd:spatialRepresentationType>
+                    <gmd:spatialResolution>
+                        <gmd:MD_Resolution>
+                            <gmd:distance>
+                                <gco:Distance uom="m">10</gco:Distance>
+                            </gmd:distance>
+                        </gmd:MD_Resolution>
+                    </gmd:spatialResolution>
+                    <gmd:language>
+                        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger"/>
+                    </gmd:language>
+                    <gmd:characterSet>
+                        <gmd:MD_CharacterSetCode codeSpace="ISOTC211/19115" codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode"/>
+                    </gmd:characterSet>
+                    <gmd:extent>
+                        <gmd:EX_Extent>
+                            <gmd:geographicElement>
+                                <gmd:EX_GeographicDescription>
+                                    <gmd:extentTypeCode>
+                                        <gco:Boolean>true</gco:Boolean>
+                                    </gmd:extentTypeCode>
+                                    <gmd:geographicIdentifier>
+                                        <gmd:MD_Identifier>
+                                            <gmd:code>
+                                                <gco:CharacterString>000000000000</gco:CharacterString>
+                                            </gmd:code>
+                                        </gmd:MD_Identifier>
+                                    </gmd:geographicIdentifier>
+                                </gmd:EX_GeographicDescription>
+                            </gmd:geographicElement>
+                            <gmd:geographicElement>
+                                <gmd:EX_GeographicBoundingBox>
+                                    <gmd:westBoundLongitude>
+                                        <gco:Decimal>5.87</gco:Decimal>
+                                    </gmd:westBoundLongitude>
+                                    <gmd:eastBoundLongitude>
+                                        <gco:Decimal>15.04</gco:Decimal>
+                                    </gmd:eastBoundLongitude>
+                                    <gmd:southBoundLatitude>
+                                        <gco:Decimal>47.27</gco:Decimal>
+                                    </gmd:southBoundLatitude>
+                                    <gmd:northBoundLatitude>
+                                        <gco:Decimal>55.06</gco:Decimal>
+                                    </gmd:northBoundLatitude>
+                                </gmd:EX_GeographicBoundingBox>
+                            </gmd:geographicElement>
+                        </gmd:EX_Extent>
+                    </gmd:extent>
+                </gmd:MD_DataIdentification>
+            </gmd:identificationInfo>
+            <gmd:distributionInfo>
+                <gmd:MD_Distribution>
+                    <gmd:distributionFormat>
+                        <gmd:MD_Format>
+                            <gmd:name>
+                                <gco:CharacterString>unknown</gco:CharacterString>
+                            </gmd:name>
+                            <gmd:version>
+                                <gco:CharacterString>unknown</gco:CharacterString>
+                            </gmd:version>
+                        </gmd:MD_Format>
+                    </gmd:distributionFormat>
+                    <gmd:transferOptions>
+                        <gmd:MD_DigitalTransferOptions>
+                            <gmd:onLine>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>https://geoportal.eisenbahn-bundesamt.de</gmd:URL>
+                                    </gmd:linkage>
+                                    <gmd:name>
+                                        <gco:CharacterString>Link zum Geodatenviewer</gco:CharacterString>
+                                    </gmd:name>
+                                    <gmd:function>
+                                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information"/>
+                                    </gmd:function>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onLine>
+                            <gmd:onLine>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>https://www.eba.bund.de/DE/Themen/Laerm_an_Schienenwegen/laerm_an_schienenwegen_node.html</gmd:URL>
+                                    </gmd:linkage>
+                                    <gmd:name>
+                                        <gco:CharacterString>Weitere Informationen zum Inhalt der beschriebenen Daten</gco:CharacterString>
+                                    </gmd:name>
+                                    <gmd:function>
+                                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information"/>
+                                    </gmd:function>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onLine>
+                            <gmd:onLine>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>https://geoinformation.eisenbahn-bundesamt.de/wms/flut_2021?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities</gmd:URL>
+                                    </gmd:linkage>
+                                    <gmd:protocol>
+                                        <gmx:Anchor xlink:href="http://www.opengis.net/def/serviceType/ogc/wms">OGC Web Map Service</gmx:Anchor>
+                                    </gmd:protocol>
+                                    <gmd:applicationProfile>
+                                        <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType/view">View Service</gmx:Anchor>
+                                    </gmd:applicationProfile>
+                                    <gmd:name>
+                                        <gco:CharacterString>INSPIRE WMS</gco:CharacterString>
+                                    </gmd:name>
+                                    <gmd:function>
+                                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information"/>
+                                    </gmd:function>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onLine>
+                            <gmd:onLine>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>https://geoinformation.eisenbahn-bundesamt.de/wmts/eba/WMTSCapabilities.xml</gmd:URL>
+                                    </gmd:linkage>
+                                    <gmd:protocol>
+                                        <gmx:Anchor xlink:href="http://www.opengis.net/def/serviceType/ogc/wmts">OGC Web Map Tile Service</gmx:Anchor>
+                                    </gmd:protocol>
+                                    <gmd:applicationProfile>
+                                        <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType/view">View Service</gmx:Anchor>
+                                    </gmd:applicationProfile>
+                                    <gmd:name>
+                                        <gco:CharacterString>INSPIRE WMTS</gco:CharacterString>
+                                    </gmd:name>
+                                    <gmd:function>
+                                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information"/>
+                                    </gmd:function>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onLine>
+                            <gmd:onLine>
+                                <gmd:CI_OnlineResource>
+                                    <gmd:linkage>
+                                        <gmd:URL>https://geoinformation.eisenbahn-bundesamt.de/wfs/eba/services/wfs?service=WFS&amp;request=GetCapabilities</gmd:URL>
+                                    </gmd:linkage>
+                                    <gmd:protocol>
+                                        <gmx:Anchor xlink:href="http://www.opengis.net/def/serviceType/ogc/wfs">OGC Web Feature Service</gmx:Anchor>
+                                    </gmd:protocol>
+                                    <gmd:applicationProfile>
+                                        <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType/download">Download Service</gmx:Anchor>
+                                    </gmd:applicationProfile>
+                                    <gmd:name>
+                                        <gco:CharacterString>INSPIRE Download Service (WFS)</gco:CharacterString>
+                                    </gmd:name>
+                                    <gmd:function>
+                                        <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="download"/>
+                                    </gmd:function>
+                                </gmd:CI_OnlineResource>
+                            </gmd:onLine>
+                        </gmd:MD_DigitalTransferOptions>
+                    </gmd:transferOptions>
+                </gmd:MD_Distribution>
+            </gmd:distributionInfo>
+            <gmd:dataQualityInfo>
+                <gmd:DQ_DataQuality>
+                    <gmd:scope>
+                        <gmd:DQ_Scope>
+                            <gmd:level>
+                                <gmd:MD_ScopeCode codeList="https://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset"/>
+                            </gmd:level>
+                        </gmd:DQ_Scope>
+                    </gmd:scope>
+                    <gmd:report>
+                        <gmd:DQ_DomainConsistency xsi:type="gmd:DQ_DomainConsistency_Type">
+                            <gmd:result>
+                                <gmd:DQ_ConformanceResult>
+                                    <gmd:specification>
+                                        <gmd:CI_Citation>
+                                            <gmd:title>
+                                                <gco:CharacterString>VERORDNUNG (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatensätzen und -diensten</gco:CharacterString>
+                                            </gmd:title>
+                                            <gmd:date>
+                                                <gmd:CI_Date>
+                                                    <gmd:date>
+                                                        <gco:Date>2010-12-08</gco:Date>
+                                                    </gmd:date>
+                                                    <gmd:dateType>
+                                                        <gmd:CI_DateTypeCode codeList="https://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                                    </gmd:dateType>
+                                                </gmd:CI_Date>
+                                            </gmd:date>
+                                        </gmd:CI_Citation>
+                                    </gmd:specification>
+                                    <gmd:explanation>
+                                        <gco:CharacterString>Die Daten wurden mit dem EU-Validator überprüft.</gco:CharacterString>
+                                    </gmd:explanation>
+                                    <gmd:pass>
+                                        <gco:Boolean>true</gco:Boolean>
+                                    </gmd:pass>
+                                </gmd:DQ_ConformanceResult>
+                            </gmd:result>
+                        </gmd:DQ_DomainConsistency>
+                    </gmd:report>
+                    <gmd:report>
+                        <gmd:DQ_DomainConsistency xsi:type="gmd:DQ_DomainConsistency_Type">
+                            <gmd:result>
+                                <gmd:DQ_ConformanceResult>
+                                    <gmd:specification>
+                                        <gmd:CI_Citation>
+                                            <gmd:title>
+                                                <gco:CharacterString>INSPIRE Data Specification on Human Health and Safety - Technical Guidelines</gco:CharacterString>
+                                            </gmd:title>
+                                            <gmd:date>
+                                                <gmd:CI_Date>
+                                                    <gmd:date>
+                                                        <gco:Date>2013-12-10</gco:Date>
+                                                    </gmd:date>
+                                                    <gmd:dateType>
+                                                        <gmd:CI_DateTypeCode codeList="https://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode>
+                                                    </gmd:dateType>
+                                                </gmd:CI_Date>
+                                            </gmd:date>
+                                        </gmd:CI_Citation>
+                                    </gmd:specification>
+                                    <gmd:explanation>
+                                        <gco:CharacterString/>
+                                    </gmd:explanation>
+                                    <gmd:pass>
+                                        <gco:Boolean>true</gco:Boolean>
+                                    </gmd:pass>
+                                </gmd:DQ_ConformanceResult>
+                            </gmd:result>
+                        </gmd:DQ_DomainConsistency>
+                    </gmd:report>
+                    <gmd:lineage>
+                        <gmd:LI_Lineage>
+                            <gmd:statement>
+                                <gco:CharacterString>Darstellung der von der Flutkatastrophe im Sommer 2021 dauerhaft oder vorübergehend im Betrieb beeinträchtigten Strecken. Erhoben im Rahmen der Umgebungslärmkartierung Runde 4.</gco:CharacterString>
+                            </gmd:statement>
+                        </gmd:LI_Lineage>
+                    </gmd:lineage>
+                </gmd:DQ_DataQuality>
+            </gmd:dataQualityInfo>
+        </gmd:MD_Metadata>
+    </csw:SearchResults>
+</csw:GetRecordsResponse>
