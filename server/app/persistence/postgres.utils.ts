@@ -90,8 +90,8 @@ export class PostgresUtils extends DatabaseUtils {
         await this.beginTransaction();
         await this.transactionClient.query(this.queries.createCollectionTable);
         await this.transactionClient.query(this.queries.createRecordTable);
-        // migration for existing installations created before the column was introduced
-        await this.transactionClient.query('ALTER TABLE public.record ADD COLUMN IF NOT EXISTS harvest_metadata JSONB');
+        // migration for existing installations that still carry the now-retired harvest_metadata column
+        await this.transactionClient.query('ALTER TABLE public.record DROP COLUMN IF EXISTS harvest_metadata');
         await this.transactionClient.query(this.queries.createCouplingTable);
         await this.commitTransaction();
     }
