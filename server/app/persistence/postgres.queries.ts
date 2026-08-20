@@ -51,6 +51,7 @@ export class PostgresQueries {
     readonly getIdentifiersByCatalog = this.readFile('getIdentifiersByCatalog');
     readonly getServices = this.readFile('getServices');
     readonly getBuckets = this.readFile('getBuckets');
+    readonly getDatasetIdentifiers = this.readFile('getDatasetIdentifiers');
 
     getModifiedBuckets(modifier: string): string {
         return this.readFile('getBuckets', modifier);

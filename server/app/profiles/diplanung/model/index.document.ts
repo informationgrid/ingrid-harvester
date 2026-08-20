@@ -62,6 +62,9 @@ export type DiplanungIndexDocument = {
     // optional
     issued: Date,
     modified: Date,
+    extras?: {
+        hierarchy_level?: string,   // ISO 19139 codelist value (e.g. 'dataset', 'series', 'service'); only set for CSW-sourced records
+    },
     relation: string,
     notification: string,
     procedure_import_date: Date,

@@ -99,10 +99,7 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async getDatasetIdentifiers(source: string): Promise<string[]> {
-        // TODO
-        // let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getIdentifiers, [source]);
-        // let result: pg.QueryResult<any> = await this.transactionClient.query("SELECT * from public.record WHERE source = $1", [source]);
-        let result: pg.QueryResult<any> = await PostgresUtils.pool.query("SELECT identifier from public.record WHERE source = $1 and harvest_metadata->>'hierarchy_level' IS DISTINCT FROM 'service'", [source]);
+        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getDatasetIdentifiers, [source]);
         if (result.rowCount == 0) {
             return [];
         }

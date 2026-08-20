@@ -238,6 +238,10 @@ export class DiplanungCswMapper extends DiplanungMapper<CswMapper> {
         return undefined;
     }
 
+    getHierarchyLevel(): string {
+        return this.baseMapper.getHierarchyLevel();
+    }
+
     getProcedureImportDate(): Date {
         return undefined;
     }

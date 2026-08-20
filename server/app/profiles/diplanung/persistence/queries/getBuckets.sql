@@ -35,7 +35,7 @@
         )
     WHERE
         anchor.source = $1
-        AND anchor.harvest_metadata->>'hierarchy_level' IS DISTINCT FROM 'service'
+        AND anchor.dataset->'extras'->>'hierarchy_level' IS DISTINCT FROM 'service'
 )
 UNION
 -- get all services for the datasets of a given source
@@ -85,14 +85,14 @@ UNION
             AND (anchor.source != secondary.source OR anchor.id = secondary.id)
         WHERE
             anchor.source = $1
-            AND anchor.harvest_metadata->>'hierarchy_level' IS DISTINCT FROM 'service'
+            AND anchor.dataset->'extras'->>'hierarchy_level' IS DISTINCT FROM 'service'
     ) AS ds
     ON
         ds.identifier = ANY(service.operates_on)
         AND ds.source = service.source
     WHERE
         ds.source = $1
-        AND service.harvest_metadata->>'hierarchy_level' = 'service'
+        AND service.dataset->'extras'->>'hierarchy_level' = 'service'
 )
 */
 ORDER BY anchor_id
