@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wfs:FeatureCollection xmlns:ms="http://mapserver.gis.umn.edu/mapserver" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://mapserver.gis.umn.edu/mapserver https://www.kuestendaten.de/DE/dynamisch/kuestendaten_ogc/bs?SERVICE=WFS&amp;VERSION=2.0.0&amp;REQUEST=DescribeFeatureType&amp;TYPENAME=ms:DeichverbandZustaendigkeitBeschriftung&amp;OUTPUTFORMAT=application%2Fgml%2Bxml%3B%20version%3D3.2 http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd" timeStamp="2026-08-20T15:30:56" numberMatched="10" numberReturned="10">
+    <wfs:boundedBy>
+        <gml:Envelope srsName="urn:ogc:def:crs:EPSG::25832">
+            <gml:lowerCorner>476867.486034 5915953.693803</gml:lowerCorner>
+            <gml:upperCorner>582295.640851 5969197.921131</gml:upperCorner>
+        </gml:Envelope>
+    </wfs:boundedBy>
+    <wfs:member>
+        <ms:DeichverbandZustaendigkeitBeschriftung gml:id="DeichverbandZustaendigkeitBeschriftung.Deichverband der 1.Meile Altes Land">
+            <gml:boundedBy>
+                <gml:Envelope srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:lowerCorner>534615.502482 5937961.473360</gml:lowerCorner>
+                    <gml:upperCorner>534615.502482 5937961.473360</gml:upperCorner>
+                </gml:Envelope>
+            </gml:boundedBy>
+            <ms:msGeometry>
+                <gml:Point gml:id="DeichverbandZustaendigkeitBeschriftung.Deichverband der 1.Meile Altes Land.1" srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:pos>534615.502482 5937961.473360</gml:pos>
+                </gml:Point>
+            </ms:msGeometry>
+        </ms:DeichverbandZustaendigkeitBeschriftung>
+    </wfs:member>
+    <wfs:member>
+        <ms:DeichverbandZustaendigkeitBeschriftung gml:id="DeichverbandZustaendigkeitBeschriftung.Harburger Deichverband">
+            <gml:boundedBy>
+                <gml:Envelope srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:lowerCorner>568894.217747 5921303.944056</gml:lowerCorner>
+                    <gml:upperCorner>568894.217747 5921303.944056</gml:upperCorner>
+                </gml:Envelope>
+            </gml:boundedBy>
+            <ms:msGeometry>
+                <gml:Point gml:id="DeichverbandZustaendigkeitBeschriftung.Harburger Deichverband.1" srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:pos>568894.217747 5921303.944056</gml:pos>
+                </gml:Point>
+            </ms:msGeometry>
+        </ms:DeichverbandZustaendigkeitBeschriftung>
+    </wfs:member>
+    <wfs:member>
+        <ms:DeichverbandZustaendigkeitBeschriftung gml:id="DeichverbandZustaendigkeitBeschriftung.Deichverband der 2. Meile Altes Land">
+            <gml:boundedBy>
+                <gml:Envelope srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:lowerCorner>544964.047566 5931934.202011</gml:lowerCorner>
+                    <gml:upperCorner>544964.047566 5931934.202011</gml:upperCorner>
+                </gml:Envelope>
+            </gml:boundedBy>
+            <ms:msGeometry>
+                <gml:Point gml:id="DeichverbandZustaendigkeitBeschriftung.Deichverband der 2. Meile Altes Land.1" srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:pos>544964.047566 5931934.202011</gml:pos>
+                </gml:Point>
+            </ms:msGeometry>
+        </ms:DeichverbandZustaendigkeitBeschriftung>
+    </wfs:member>
+    <wfs:member>
+        <ms:DeichverbandZustaendigkeitBeschriftung gml:id="DeichverbandZustaendigkeitBeschriftung.Deich- und Wasserverband Vogtei Neuland">
+            <gml:boundedBy>
+                <gml:Envelope srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:lowerCorner>572514.202843 5917206.416934</gml:lowerCorner>
+                    <gml:upperCorner>572514.202843 5917206.416934</gml:upperCorner>
+                </gml:Envelope>
+            </gml:boundedBy>
+            <ms:msGeometry>
+                <gml:Point gml:id="DeichverbandZustaendigkeitBeschriftung.Deich- und Wasserverband Vogtei Neuland.1" srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:pos>572514.202843 5917206.416934</gml:pos>
+                </gml:Point>
+            </ms:msGeometry>
+        </ms:DeichverbandZustaendigkeitBeschriftung>
+    </wfs:member>
+    <wfs:member>
+        <ms:DeichverbandZustaendigkeitBeschriftung gml:id="DeichverbandZustaendigkeitBeschriftung.Cuxhavener Deichverband">
+            <gml:boundedBy>
+                <gml:Envelope srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:lowerCorner>476867.486034 5969197.921131</gml:lowerCorner>
+                    <gml:upperCorner>476867.486034 5969197.921131</gml:upperCorner>
+                </gml:Envelope>
+            </gml:boundedBy>
+            <ms:msGeometry>
+                <gml:Point gml:id="DeichverbandZustaendigkeitBeschriftung.Cuxhavener Deichverband.1" srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:pos>476867.486034 5969197.921131</gml:pos>
+                </gml:Point>
+            </ms:msGeometry>
+        </ms:DeichverbandZustaendigkeitBeschriftung>
+    </wfs:member>
+    <wfs:member>
+        <ms:DeichverbandZustaendigkeitBeschriftung gml:id="DeichverbandZustaendigkeitBeschriftung.Ostedeichverband">
+            <gml:boundedBy>
+                <gml:Envelope srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:lowerCorner>498114.736573 5964698.038785</gml:lowerCorner>
+                    <gml:upperCorner>498114.736573 5964698.038785</gml:upperCorner>
+                </gml:Envelope>
+            </gml:boundedBy>
+            <ms:msGeometry>
+                <gml:Point gml:id="DeichverbandZustaendigkeitBeschriftung.Ostedeichverband.1" srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:pos>498114.736573 5964698.038785</gml:pos>
+                </gml:Point>
+            </ms:msGeometry>
+        </ms:DeichverbandZustaendigkeitBeschriftung>
+    </wfs:member>
+    <wfs:member>
+        <ms:DeichverbandZustaendigkeitBeschriftung gml:id="DeichverbandZustaendigkeitBeschriftung.Artlenburger Deichverband">
+            <gml:boundedBy>
+                <gml:Envelope srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:lowerCorner>582295.640851 5915953.693803</gml:lowerCorner>
+                    <gml:upperCorner>582295.640851 5915953.693803</gml:upperCorner>
+                </gml:Envelope>
+            </gml:boundedBy>
+            <ms:msGeometry>
+                <gml:Point gml:id="DeichverbandZustaendigkeitBeschriftung.Artlenburger Deichverband.1" srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:pos>582295.640851 5915953.693803</gml:pos>
+                </gml:Point>
+            </ms:msGeometry>
+        </ms:DeichverbandZustaendigkeitBeschriftung>
+    </wfs:member>
+    <wfs:member>
+        <ms:DeichverbandZustaendigkeitBeschriftung gml:id="DeichverbandZustaendigkeitBeschriftung.Deichverband Kehding-Oste">
+            <gml:boundedBy>
+                <gml:Envelope srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:lowerCorner>522783.437516 5955273.058703</gml:lowerCorner>
+                    <gml:upperCorner>522783.437516 5955273.058703</gml:upperCorner>
+                </gml:Envelope>
+            </gml:boundedBy>
+            <ms:msGeometry>
+                <gml:Point gml:id="DeichverbandZustaendigkeitBeschriftung.Deichverband Kehding-Oste.1" srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:pos>522783.437516 5955273.058703</gml:pos>
+                </gml:Point>
+            </ms:msGeometry>
+        </ms:DeichverbandZustaendigkeitBeschriftung>
+    </wfs:member>
+    <wfs:member>
+        <ms:DeichverbandZustaendigkeitBeschriftung gml:id="DeichverbandZustaendigkeitBeschriftung.Hadelner Deich- und Uferverband">
+            <gml:boundedBy>
+                <gml:Envelope srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:lowerCorner>487678.132056 5963988.047162</gml:lowerCorner>
+                    <gml:upperCorner>487678.132056 5963988.047162</gml:upperCorner>
+                </gml:Envelope>
+            </gml:boundedBy>
+            <ms:msGeometry>
+                <gml:Point gml:id="DeichverbandZustaendigkeitBeschriftung.Hadelner Deich- und Uferverband.1" srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:pos>487678.132056 5963988.047162</gml:pos>
+                </gml:Point>
+            </ms:msGeometry>
+        </ms:DeichverbandZustaendigkeitBeschriftung>
+    </wfs:member>
+    <wfs:member>
+        <ms:DeichverbandZustaendigkeitBeschriftung gml:id="DeichverbandZustaendigkeitBeschriftung.Deichverband Kehdingen-Oste">
+            <gml:boundedBy>
+                <gml:Envelope srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:lowerCorner>510728.242138 5967088.176756</gml:lowerCorner>
+                    <gml:upperCorner>510728.242138 5967088.176756</gml:upperCorner>
+                </gml:Envelope>
+            </gml:boundedBy>
+            <ms:msGeometry>
+                <gml:Point gml:id="DeichverbandZustaendigkeitBeschriftung.Deichverband Kehdingen-Oste.1" srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:pos>510728.242138 5967088.176756</gml:pos>
+                </gml:Point>
+            </ms:msGeometry>
+        </ms:DeichverbandZustaendigkeitBeschriftung>
+    </wfs:member>
+</wfs:FeatureCollection>

@@ -27,6 +27,7 @@ import { expect } from 'chai';
 import chaiExclude from 'chai-exclude';
 import deepEqualInAnyOrder from 'deep-equal-in-any-order';
 import fs from 'fs';
+import { Response } from 'node-fetch';
 import path from 'path';
 import sinon from 'sinon';
 import type { Importer } from '../../app/importer/importer.js';
@@ -55,11 +56,17 @@ export interface HttpMockRule {
         bodyMatch?: (body: any) => boolean;
     } | ((options: RequestOptions) => boolean);
 
-    /** Response payload (string, object, buffer) or dynamic callback */
-    response?: string | object | Buffer | ((options: RequestOptions) => any);
+    /** Response payload (string, object, buffer, Response) or dynamic callback */
+    response?: string | object | Buffer | Response | ((options: RequestOptions) => any);
 
     /** Path to static fixture file (XML / JSON) relative to baseFixture */
     fixture?: string;
+
+    /** HTTP status code (default: 200) */
+    status?: number;
+
+    /** Response headers */
+    headers?: Record<string, string>;
 }
 
 export interface ImporterIntegrationTestCase<T extends ImporterSettings> {
@@ -140,26 +147,59 @@ export function setupRequestMock(baseFixture: string, mocks: HttpMockRule[], san
     stub.callsFake(async (config: RequestOptions) => {
         for (const rule of mocks) {
             if (matchesRule(rule, config)) {
+                let payload: any;
                 if (typeof rule.response === 'function') {
-                    return await rule.response(config);
+                    payload = await rule.response(config);
                 }
-                if (rule.response !== undefined) {
-                    return rule.response;
+                else if (rule.response !== undefined) {
+                    payload = rule.response;
                 }
-                if (rule.fixture) {
+                else if (rule.fixture) {
                     const filePath = resolveFixturePath(baseFixture, rule.fixture);
-                    const content = fs.readFileSync(filePath, 'utf8');
-                    if (config.json || filePath.endsWith('.json')) {
-                        try {
-                            return JSON.parse(content);
+                    const stats = fs.statSync(filePath);
+                    if (stats.isDirectory()) {
+                        payload = '';
+                    }
+                    else {
+                        const content = fs.readFileSync(filePath, 'utf8');
+                        if (!config.resolveWithFullResponse && (config.json || filePath.endsWith('.json'))) {
+                            try {
+                                payload = JSON.parse(content);
+                            }
+                            catch {
+                                payload = content;
+                            }
                         }
-                        catch {
-                            return content;
+                        else {
+                            payload = content;
                         }
                     }
-                    return content;
                 }
-                return '';
+                else {
+                    payload = '';
+                }
+
+                if (config.resolveWithFullResponse) {
+                    if (payload instanceof Response) {
+                        return payload;
+                    }
+                    if (typeof payload === 'object' && !Buffer.isBuffer(payload) && payload !== null) {
+                        return new Response(JSON.stringify(payload), {
+                            status: rule.status ?? 200,
+                            headers: { 'content-type': 'application/json', ...rule.headers }
+                        });
+                    }
+                    return new Response(payload ?? '', {
+                        status: rule.status ?? 200,
+                        headers: rule.headers
+                    });
+                }
+
+                if (payload instanceof Response) {
+                    return config.json ? await payload.json() : await payload.text();
+                }
+
+                return payload;
             }
         }
         const errorDetails = JSON.stringify({
@@ -205,7 +245,6 @@ export function assertElasticsearchDocuments(
 
     if (options.expectedDocsDir) {
         const dirPath = resolveFixturePath(options.baseFixture, options.expectedDocsDir);
-        const files = fs.readdirSync(dirPath).filter(file => file.endsWith('.json'));
 
         for (const actual of documents) {
             const expectedFilePath = path.join(dirPath, `${actual.uuid}.json`);

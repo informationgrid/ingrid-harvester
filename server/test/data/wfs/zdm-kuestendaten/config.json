@@ -1,0 +1,27 @@
+{
+  "id": 1,
+  "dataSourceName": "Harvester",
+  "type": "WFS",
+  "sourceURL": "https://www.kuestendaten.de/DE/dynamisch/kuestendaten_ogc/bs",
+  "catalogIds": [1],
+  "iPlugId": "zdm_wfs_kuestendaten",
+  "partner": "Bund",
+  "provider": "BAW",
+  "datatype": "default,metadata,wfs,IDF_1.0,dsc_wfs",
+  "eitherKeywords": [],
+  "harvestingMode": null,
+  "httpMethod": "GET",
+  "maxConcurrent": 2,
+  "version": "2.0.0",
+  "memberElements": [
+    "gml:featureMember/*",
+    "wfs:member/*",
+    "gml:featureMembers/*"
+  ],
+  "wfsProfile": "zdm",
+  "requireGeometry": true,
+  "count": 0,
+  "featureLimit": 50,
+  "harvestTypes": true,
+  "timeout": 0
+}

@@ -54,3 +54,13 @@ export const cswTestcase = {
     ],
     expectedDocsDir: 'elasticsearch'
 } satisfies Partial<ImporterIntegrationTestCase<any>>;
+
+export const wfsTestcase = {
+    mocks: [
+        {
+            match: { query: { request: 'GetCapabilities' }},
+            fixture: 'input/GetCapabilities.xml'
+        }
+    ],
+    expectedDocsDir: 'elasticsearch'
+}
