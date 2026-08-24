@@ -350,7 +350,7 @@ export abstract class ingridMapper<M extends ingridMapperType>
         return undefined;
     }
 
-    getMetadataLanguage(): { key: string | null, value: string | null } {
+    getMetadataLanguage(): string {
         return undefined;
     }
 

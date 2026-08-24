@@ -393,9 +393,9 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     // language of the metadata record itself
-    getMetadataLanguage(): { key: string | null, value: string | null } {
+    getMetadataLanguage(): string {
         const language = this.baseMapper.getLanguage();
-        return language ? { key: this.transformToIgcDomainId(language, '99999999'), value: language } : undefined;
+        return language ? this.transformToIgcDomainId(language, '99999999') : undefined;
     }
 
     getSpatials(): IndexSpatial[] {
