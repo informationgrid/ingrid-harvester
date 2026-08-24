@@ -40,6 +40,7 @@ import type { Summary } from '../../model/summary.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import type { XPathElementSelect } from '../../utils/xpath.utils.js';
 import { Mapper } from '../mapper.js';
+import type { MetadataSource } from '../mapper.js';
 import type { DcatappluSettings } from './dcatapplu.settings.js';
 
 export class DcatappluMapper extends Mapper<DcatappluSettings> implements ToElasticMapper<IndexDocument> {
@@ -375,6 +376,18 @@ export class DcatappluMapper extends Mapper<DcatappluSettings> implements ToElas
 
     getMetadataSourceType(): string {
         return 'dcatapplu';
+    }
+
+    getMetadataSource(): MetadataSource {
+        let dcatLink; //=  DcatappluMapper.select('.//dct:creator', this.record);
+        let portalLink = this.record.getAttribute('rdf:about');
+        return {
+            source_base: this.settings.sourceURL,
+            raw_data_source: dcatLink,
+            source_type: 'dcatapplu',
+            portal_link: portalLink,
+            attribution: this.settings.defaultAttribution
+        };
     }
 
     getCatalog(): Catalog {

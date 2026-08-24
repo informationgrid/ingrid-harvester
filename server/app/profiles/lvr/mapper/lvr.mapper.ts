@@ -72,19 +72,12 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
             metadata: {
                 issued: this.getIssued(),
                 modified: this.getModified(),
-                source_type: this.baseMapper.getMetadataSourceType(),
-                merged_from: []
+                source: this.baseMapper.getMetadataSource()
             }
         };
 
         let result: LvrIndexDocument = {
             ...ingridDocument,
-            id: this.getUrlSafeIdentifier(),
-            $schema: undefined, // no validation path for LVR yet
-            metadata: ingridDocument.metadata as unknown as LvrIndexDocument['metadata'],
-            temporal: ingridDocument.temporal as unknown as LvrIndexDocument['temporal'],
-            fulltext: ingridDocument.fulltext as unknown as LvrIndexDocument['fulltext'],
-            keywords: ingridDocument.keywords as unknown as LvrIndexDocument['keywords'],
             lvr: {
                 identifier: this.getIdentifier(),
                 genres: this.getGenres(),
@@ -94,8 +87,18 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
                 licenses: this.getLicense(),
                 vector: this.getVector(),
                 source: await this.getSource()
+            },
+            extras: {
+                metadata: {
+                    issued: this.getIssued(),
+                    modified: this.getModified(),
+                    source: this.baseMapper.getMetadataSource(),
+                    merged_from: []
+                }
             }
         };
+
+        result.extras.metadata.merged_from.push(createEsId(result));
 
         // let qualityNotes = mapper.getQualityNotes();
         // if (qualityNotes?.length > 0) {

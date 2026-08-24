@@ -50,7 +50,7 @@ const log = log4js.getLogger(import.meta.filename);
 
 export type LvrSettings = JsonSettings | KldSettings | OaiSettings;
 
-export class LvrFactory extends ProfileFactory<LvrSettings> {
+export class LvrFactory extends ProfileFactory<LvrSettings, LvrIndexDocument> {
 
     dateReplacer = MiscUtils.dateReplacer;
 

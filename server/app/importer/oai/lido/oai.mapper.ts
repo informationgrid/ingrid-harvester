@@ -31,6 +31,7 @@ import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import { normalizeDateTime } from '../../../utils/misc.utils.js';
 import type { XPathElementSelect } from '../../../utils/xpath.utils.js';
 import { Mapper } from '../../mapper.js';
+import type { MetadataSource } from '../../mapper.js';
 import { oaiXPaths } from '../oai.paths.js';
 import type { OaiSettings } from '../oai.settings.js';
 import type { Event, Record, Relation, Repository, Resource, Subject } from './lido.model.js';
@@ -261,5 +262,14 @@ export class OaiMapper extends Mapper<OaiSettings> {
 
     getMetadataSourceType(): string {
         return this.settings.metadataPrefix;
+    }
+
+    getMetadataSource(): MetadataSource {
+        let link = `${this.settings.sourceURL}?verb=GetRecord&metadataPrefix=${this.settings.metadataPrefix}&identifier=${this.getId()}`;
+        return {
+            source_base: this.settings.sourceURL,
+            raw_data_source: link,
+            source_type: this.settings.metadataPrefix
+        };
     }
 }

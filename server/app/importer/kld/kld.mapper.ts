@@ -34,6 +34,7 @@ import type { Summary } from '../../model/summary.js';
 import type { LvrDateRange, Media, Relation } from '../../profiles/lvr/model/index.document.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { Mapper } from '../mapper.js';
+import type { MetadataSource } from '../mapper.js';
 import type { Document, ObjectResponse, RelatedObject } from './kld.api.js';
 import { getDocumentUrl, MediaType, RelationType } from './kld.api.js';
 import type { KldSettings } from './kld.settings.js';
@@ -133,6 +134,17 @@ export class KldMapper extends Mapper<KldSettings> implements ToElasticMapper<In
 
     getMetadataSourceType(): string {
         return 'kld';
+    }
+
+    getMetadataSource(): MetadataSource {
+        let link = `${this.settings.sourceURL}Objekt/${this.id}`;
+        return {
+            source_base: this.settings.sourceURL,
+            raw_data_source: link,
+            source_type: 'kld',
+            portal_link: this.settings.defaultAttributionLink,
+            attribution: this.settings.defaultAttribution
+        };
     }
 
     getIssued(): Date {

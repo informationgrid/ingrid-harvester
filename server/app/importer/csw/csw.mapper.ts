@@ -46,6 +46,7 @@ import * as ServiceUtils from '../../utils/service.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 import type { XPathElementSelect } from '../../utils/xpath.utils.js';
 import { Mapper } from '../mapper.js';
+import type { MetadataSource } from '../mapper.js';
 import type { ToElasticMapper } from '../to.elastic.mapper.js';
 import type { CswSettings } from './csw.settings.js';
 
@@ -507,6 +508,18 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
 
     getMetadataSourceType(): string {
         return 'csw';
+    }
+
+    getMetadataSource(): MetadataSource {
+        let gmdEncoded = encodeURIComponent(namespaces.GMD);
+        let cswLink = `${this.settings.sourceURL}?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=${gmdEncoded}&Id=${this.uuid}`;
+        return {
+            source_base: this.settings.sourceURL,
+            raw_data_source: cswLink,
+            source_type: 'csw',
+            portal_link: this.settings.defaultAttributionLink,
+            attribution: this.settings.defaultAttribution
+        };
     }
 
     getModifiedDate(): Date {

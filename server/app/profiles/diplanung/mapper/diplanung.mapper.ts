@@ -101,14 +101,23 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
             extras: {
                 hierarchy_level: this.getHierarchyLevel(),
                 metadata: {
-                    source_type: this.baseMapper.getMetadataSourceType(),
-                    merged_from: [],
-                },
+                    harvested: this.baseMapper.getHarvestingDate(),
+                    harvesting_errors: null, // get errors after all operations been done
+                    issued: null,
+                    is_valid: null, // check validity before persisting to ES
+                    modified: null,
+                    source: this.baseMapper.getMetadataSource(),
+                    merged_from: []
+                }
             },
         };
 
+        result.extras.metadata.merged_from.push(createEsId(result));
+        result.extras.metadata.harvesting_errors = this.baseMapper.getHarvestingErrors();
+        // result.extras.metadata.is_valid = mapper.isValid(result);
         // let qualityNotes = mapper.getQualityNotes();
         // if (qualityNotes?.length > 0) {
+        //     result.extras.metadata['quality_notes'] = qualityNotes;
         // }
         this.baseMapper.executeCustomCode(result);
 

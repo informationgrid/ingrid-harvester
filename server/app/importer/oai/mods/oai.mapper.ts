@@ -32,6 +32,7 @@ import type { Keyword, Media, MediaType, Person, Relation, Temporal } from '../.
 import * as MiscUtils from '../../../utils/misc.utils.js';
 import type { XPathElementSelect } from '../../../utils/xpath.utils.js';
 import { Mapper } from '../../mapper.js';
+import type { MetadataSource } from '../../mapper.js';
 import { oaiXPaths } from '../oai.paths.js';
 import type { OaiSettings } from '../oai.settings.js';
 
@@ -199,5 +200,14 @@ export class OaiMapper extends Mapper<OaiSettings> {
 
     getMetadataSourceType(): string {
         return this.settings.metadataPrefix;
+    }
+
+    getMetadataSource(): MetadataSource {
+        let link = `${this.settings.sourceURL}?verb=GetRecord&metadataPrefix=${this.settings.metadataPrefix}&identifier=oai:www.mycore.de:${this.getId()}`;
+        return {
+            source_base: this.settings.sourceURL,
+            raw_data_source: link,
+            source_type: this.settings.metadataPrefix
+        };
     }
 }

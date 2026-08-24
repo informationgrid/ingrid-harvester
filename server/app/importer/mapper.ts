@@ -26,6 +26,15 @@ import type { Logger } from 'log4js';
 import type { IndexDocumentMetadata } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
 
+// legacy metadata shape still consumed by the diplanung and lvr profiles
+export type MetadataSource = {
+    source_base: string,
+    source_type: string,
+    raw_data_source?: string,
+    portal_link?: string,
+    attribution?: string
+};
+
 /**
  * Base class for all mappers.
  * 
@@ -96,6 +105,12 @@ export abstract class Mapper<S extends ImporterSettings> {
     }
 
     abstract getMetadataSourceType(): string;
+
+    // legacy metadata shape still consumed by the diplanung and lvr profiles;
+    // not abstract so unrelated mappers aren't forced to implement it
+    getMetadataSource(): MetadataSource {
+        return undefined;
+    }
 
     abstract getHarvestedData(): string;
 

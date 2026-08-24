@@ -26,6 +26,7 @@ import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
 import type { IndexDocument, IndexDocumentMetadata } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
 import { Mapper } from '../mapper.js';
+import type { MetadataSource } from '../mapper.js';
 import type { JsonSettings } from './json.settings.js';
 
 export class JsonMapper extends Mapper<JsonSettings> implements ToElasticMapper<IndexDocument> {
@@ -62,6 +63,14 @@ export class JsonMapper extends Mapper<JsonSettings> implements ToElasticMapper<
 
     getMetadataSourceType(): string {
         return 'json';
+    }
+
+    getMetadataSource(): MetadataSource {
+        return {
+            source_base: this.settings.sourceURL,
+            raw_data_source: this.settings.sourceURL,
+            source_type: 'json'
+        };
     }
 
     getHarvestedData(): string {

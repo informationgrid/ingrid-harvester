@@ -23,7 +23,7 @@
 
 import type { DateRange } from '../../../model/dateRange.js';
 import type { Dimensions } from '../../../model/dimensions.js';
-import type { IndexDocument } from '../../../model/index.document.js';
+import type { MetadataSource } from '../../../importer/mapper.js';
 import type { License } from '@shared/license.model.js';
 import type { Geometry, Point } from 'geojson';
 
@@ -67,13 +67,20 @@ export type Keyword = {
 
 export type Metadata = {
     issued?: Date,
-    created?: Date,
     modified?: Date,
-    source_type?: string,
-    merged_from?: string[],
+    source?: MetadataSource,
 };
 
-export type LvrIndexDocument = LvrBaseDocument & IndexDocument & {
+export type LvrIndexDocument = LvrBaseDocument & {
+    extras?: {
+        metadata?: {
+            harvested?: Date,
+            issued?: Date,
+            modified?: Date,
+            source?: MetadataSource,
+            merged_from?: string[],
+        },
+    },
     lvr: {
         identifier: string,
         // title: string[],

@@ -35,6 +35,7 @@ import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
 import { Mapper } from '../mapper.js';
+import type { MetadataSource } from '../mapper.js';
 import type { FeatureInfo, FeatureTypeInfo } from './wfs.importer.js';
 import type { WfsSettings } from './wfs.settings.js';
 
@@ -143,6 +144,23 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
 
     getMetadataSourceType(): string {
         return 'wfs';
+    }
+
+    getMetadataSource(): MetadataSource {
+        let wfsLink;
+        if (this.isFeatureType()) {
+            wfsLink = `${this.settings.sourceURL}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.settings.version}&typeName=${this.getTypename()}`;
+        }
+        else {
+            wfsLink = `${this.settings.sourceURL}?REQUEST=GetFeature&SERVICE=WFS&VERSION=${this.settings.version}&featureId=${this.gmlId}`;
+        }
+        return {
+            source_base: this.settings.sourceURL,
+            raw_data_source: wfsLink,
+            source_type: 'wfs',
+            portal_link: this.settings.defaultAttributionLink,
+            attribution: this.settings.defaultAttribution
+        };
     }
 
     getIssued(): Date {

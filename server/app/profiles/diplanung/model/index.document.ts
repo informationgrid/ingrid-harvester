@@ -25,6 +25,7 @@ import type { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedur
 import type { DateRange } from '../../../model/dateRange.js';
 import type { Distribution } from '../../../model/distribution.js';
 import type { Organization, Person } from '../../../model/agent.js';
+import type { MetadataSource } from '../../../importer/mapper.js';
 
 export type DiplanungIndexDocument = {
     uuid: string,
@@ -65,11 +66,15 @@ export type DiplanungIndexDocument = {
     extras?: {
         hierarchy_level?: string,   // ISO 19139 codelist value (e.g. 'dataset', 'series', 'service'); only set for CSW-sourced records
         metadata?: {
-            source_type?: string,
-            is_valid?: boolean,
-            quality_notes?: string[],
+            harvested?: Date,
+            harvesting_errors?: string[],   // get errors after all operations been done
+            issued?: Date,
+            is_valid?: boolean,     // checks validity after all operations been done
+            modified?: Date,
+            source?: MetadataSource,
             merged_from?: string[],
-            is_changed?: boolean,
+            is_changed?: boolean,   // has been changed from its original version by the harvesting process
+            quality_notes?: string[],
         },
     },
     relation: string,
