@@ -56,6 +56,18 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         return ElasticsearchFactory.getElasticUtils(ConfigService.getGeneralSettings().elasticsearch, this.summary);
     }
 
+    private async ensureIngridMetaIndex(): Promise<void> {
+        const isPresent = await this.ingridMetaEsUtils.isIndexPresent(INGRID_META_INDEX);
+        if (typeof isPresent !== 'boolean') {
+            throw new Error(`Could not determine whether ${INGRID_META_INDEX} exists (elasticsearch not reachable?)`);
+        }
+        if (!isPresent) {
+            const mapping = ProfileFactoryLoader.get().getIndexMappings('ingrid-meta-mapping');
+            const settings = ProfileFactoryLoader.get().getIndexSettings('ingrid-meta-settings');
+            await this.ingridMetaEsUtils.prepareIndexWithName(INGRID_META_INDEX, mapping, settings);
+        }
+    }
+
     /**
      * Gather all metadata from configured aliases that are used for InGrid-wide deduplication.
      *
@@ -66,6 +78,8 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
     async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         await super.prepareImport(transactionHandle, settings, observer);
         this.schema = ProfileFactoryLoader.get().getIndexSchema(this.settings.settings.mappingFile);
+        // ensure the InGrid-wide metadata index exists before it is used below (and later in postImport())
+        await this.ensureIngridMetaIndex();
         // this.deduplicationMetadata = new Map<string, DeduplicationMetadata>();
         this.externalUuids = new Set<string>();
 
