@@ -71,9 +71,3 @@ export const wfsCapabilities: ImporterCapabilities = {
     isIncrementalSupported: false,
     supportedCatalogTypes: ['elasticsearch']
 };
-
-export const memberElements = {
-    [WfsProfile.default]: ["gml:featureMember/*", "wfs:member/*", "gml:featureMembers/*"],
-    [WfsProfile.pegelonline]: ["gml:featureMembers/gk:waterlevels"],
-    [WfsProfile.zdm]: ["gml:featureMember"]
-}
