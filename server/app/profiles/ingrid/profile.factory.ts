@@ -40,9 +40,7 @@ import { WfsProfile } from '../../importer/wfs/wfs.settings.js';
 import type { DocumentFactory } from '../../model/index.document.factory.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
-import type { DatabaseUtils } from '../../persistence/database.utils.js';
 import type { ElasticQueries as AbstractElasticQueries } from '../../persistence/elastic.queries.js';
-import type { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { CatalogService } from '../../services/catalog/CatalogService.js';
 import { ProfileFactory } from '../profile.factory.js';
 import { ingridCkanMapper } from './mapper/ingrid.ckan.mapper.js';
@@ -55,8 +53,6 @@ import { PegelonlineWfsMapper } from './mapper/wfs/pegelonline.wfs.mapper.js';
 import { ZdmWfsMapper } from './mapper/wfs/zdm.wfs.mapper.js';
 import type { IngridMetadata } from './model/ingrid.metadata.js';
 import { ElasticQueries } from './persistence/elastic.queries.js';
-import mappings from './persistence/ingrid-meta-mapping.json' with { type: 'json' };
-import settings from './persistence/ingrid-meta-settings.json' with { type: 'json' };
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -66,16 +62,6 @@ export const APPLICATION_NAME = 'Harvester';
 export type ingridSettings = CswSettings | WfsSettings | DcatapdeSettings | GenesisSettings;
 
 export class ingridFactory extends ProfileFactory<ingridSettings> {
-
-    async init(): Promise<{ database: DatabaseUtils, elastic: ElasticsearchUtils }> {
-        const { database, elastic } = await super.init();
-        // create ingrid_meta index
-        let isIngridMeta = await elastic.isIndexPresent(INGRID_META_INDEX);
-        if (!isIngridMeta) {
-            await elastic.prepareIndexWithName(INGRID_META_INDEX, mappings, settings as any);
-        }
-        return { database, elastic };
-    }
 
     protected getSupportedTypeNames(): ImporterType[] {
         return ["CSW", "CKAN", "DCATAPDE", "WFS", "GENESIS"];

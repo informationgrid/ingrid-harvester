@@ -54,15 +54,29 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         return ElasticsearchFactory.getElasticUtils(ConfigService.getGeneralSettings().elasticsearch, this.summary);
     }
 
+    private async ensureIngridMetaIndex(): Promise<void> {
+        const isPresent = await this.ingridMetaEsUtils.isIndexPresent(INGRID_META_INDEX);
+        if (typeof isPresent !== 'boolean') {
+            throw new Error(`Could not determine whether ${INGRID_META_INDEX} exists (elasticsearch not reachable?)`);
+        }
+        if (!isPresent) {
+            const mapping = ProfileFactoryLoader.get().getIndexMappings('ingrid-meta-mapping');
+            const settings = ProfileFactoryLoader.get().getIndexSettings('ingrid-meta-settings');
+            await this.ingridMetaEsUtils.prepareIndexWithName(INGRID_META_INDEX, mapping, settings);
+        }
+    }
+
     /**
      * Gather all metadata from configured aliases that are used for InGrid-wide deduplication.
-     * 
-     * @param transactionHandle 
-     * @param settings 
-     * @param observer 
+     *
+     * @param transactionHandle
+     * @param settings
+     * @param observer
      */
     async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         await super.prepareImport(transactionHandle, settings, observer);
+        // ensure the InGrid-wide metadata index exists before it is used below (and later in postImport())
+        await this.ensureIngridMetaIndex();
         // this.deduplicationMetadata = new Map<string, DeduplicationMetadata>();
         this.externalUuids = new Set<string>();
 
@@ -107,10 +121,10 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
 
     /**
      * Update ingrid meta index.
-     * 
-     * @param transactionHandle 
+     *
+     * @param transactionHandle
      * @param importerSettings
-     * @param observer 
+     * @param observer
      */
     async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         const esSettings = this.settings.settings;
@@ -238,7 +252,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         const indices = hits.hits.map(hit => hit._source.linkedIndex);
         return indices;
     }
-    
+
     private prioritizeAndFilter(bucket: Bucket<IndexDocument>): {
         document: IndexDocument,
         duplicates: Map<string | number, IndexDocument>
