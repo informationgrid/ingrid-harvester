@@ -423,17 +423,24 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
         return map[value] ?? defaultValue;
     }
 
+    private static readonly CONTENT_EXCLUDED_KEYS = new Set(['role', 'isfolder', 'boost']);
+
     protected getContent(resultObj) {
         const values = [];
-        const traverse = obj => {
-            if (obj == null) {
+        const traverse = (obj, key?: string) => {
+            if (obj == null || ingridMapper.CONTENT_EXCLUDED_KEYS.has(key)) {
                 return;
             }
             if (typeof obj !== 'object') {
                 values.push(obj);
                 return;
             }
-            Object.values(obj).forEach(traverse);
+            // keywords are {id, term, source} objects; only the term is actual full-text content
+            if (key === 'keywords' && Array.isArray(obj)) {
+                obj.forEach(keyword => traverse(keyword?.term));
+                return;
+            }
+            Object.entries(obj).forEach(([k, v]) => traverse(v, k));
         };
         traverse(resultObj);
         return values;

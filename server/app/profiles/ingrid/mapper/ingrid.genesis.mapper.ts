@@ -35,6 +35,7 @@ import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import { UrlUtils } from '../../../utils/url.utils.js';
 import { ensureNoEndSlash, generateUuid } from "../ingrid.utils.js";
 import type { IngridOpendataIndexDocument } from '../model/opendataindex.document.js';
+import { Codelist } from '../utils/codelist.js';
 import { ingridMapper } from './ingrid.mapper.js';
 
 // baseMapper.wktToGeoJson() returns lowercase GeoJSON type names (fine for Elasticsearch's geo_shape
@@ -114,7 +115,24 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         return this._dcatapdeDoc;
     }
 
-    getKeywords(): any[] {
+    private static themeKeywordCache = new Map<string, { id: string; term: string; source: string } | undefined>();
+
+    private getThemeKeyword(): { id: string; term: string; source: string } | undefined {
+        const theme = this.baseMapper.getTheme();
+        if (!theme) {
+            return undefined;
+        }
+        if (!ingridGenesisMapper.themeKeywordCache.has(theme)) {
+            const code = theme.substring(theme.lastIndexOf('/') + 1);
+            const themeEntry = Codelist.getInstance().getByData('6400', code);
+            ingridGenesisMapper.themeKeywordCache.set(theme, themeEntry
+                ? { id: themeEntry.id, term: themeEntry.value, source: 'THEMES' }
+                : undefined);
+        }
+        return ingridGenesisMapper.themeKeywordCache.get(theme);
+    }
+
+    private getFreeKeywords(): { id: null; term: string; source: 'FREE' }[] {
         const keywords = this.baseMapper.getKeywords() ?? [];
         // append configured keywords, then "opendata", each only if not already present
         const configuredKeywords = this.baseMapper.settings.typeConfig.keywords ?? [];
@@ -123,7 +141,16 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
                 keywords.push(keyword);
             }
         }
-        return keywords.map(term => ({ id: null, term, source: 'FREE' }));
+        return keywords.map(term => ({ id: null, term, source: 'FREE' as const }));
+    }
+
+    getKeywords(): any[] {
+        const result: any[] = this.getFreeKeywords();
+        const themeKeyword = this.getThemeKeyword();
+        if (themeKeyword && !result.some(r => r.id === themeKeyword.id && r.source === 'THEMES')) {
+            result.push(themeKeyword);
+        }
+        return result;
     }
 
     getSpatial(): Geometry[] {
@@ -211,7 +238,8 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             dataset.appendChild(period);
         }
 
-        for (const keyword of this.getKeywords()) {
+        // theme is added separately below as dcat:theme, so only free-text keywords go here
+        for (const keyword of this.getFreeKeywords()) {
             dataset.appendChild(doc.createElement('dcat:keyword')).textContent = keyword.term;
         }
 
