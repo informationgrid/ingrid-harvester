@@ -163,7 +163,7 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
 
     getContact() {
         const contacts = [];
-        if (this.getPublisher().name) {
+        if (this.getPublisher()?.name) {
             contacts.push({
                 name: this.getPublisher().name,
                 role: 10
