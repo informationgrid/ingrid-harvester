@@ -21,8 +21,8 @@
  * ==================================================
  */
 
+import turfBbox from '@turf/bbox';
 import { DOMImplementation } from '@xmldom/xmldom';
-import type { Geometry } from 'geojson';
 import {
     DCAT_FILE_TYPE_URL,
     DCAT_LANGUAGE_URL,
@@ -34,7 +34,7 @@ import { namespaces } from '../../../importer/namespaces.js';
 import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import { UrlUtils } from '../../../utils/url.utils.js';
 import { ensureNoEndSlash, generateUuid } from "../ingrid.utils.js";
-import type { IndexContact } from '../../../model/index.document.js';
+import type { IndexContact, IndexSpatial } from '../../../model/index.document.js';
 import type { IngridOpendataDistribution } from '../model/opendataindex.document.js';
 import { Codelist } from '../utils/codelist.js';
 import { ingridMapper } from './ingrid.mapper.js';
@@ -61,16 +61,6 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
 
     protected getDefaultDocumentKind(): 'ingrid' | 'opendata' {
         return 'opendata';
-    }
-
-    getCustomEntries(): object {
-        return {
-            uuid: this.baseMapper.getGeneratedId(),
-            collection: { name: this.baseMapper.settings.dataSourceName },
-            t01_object: { obj_id: this.baseMapper.getGeneratedId() },
-            modified: this.getModifiedDate(),
-            sort_hash: this.getSortUuid(),
-        };
     }
 
     // the document id is the plain table code, as opposed to `uuid` (a hash of partner+code)
@@ -134,7 +124,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         return ingridGenesisMapper.themeKeywordCache.get(theme);
     }
 
-    private getFreeKeywords(): { id: null; term: string; source: 'FREE' }[] {
+    private getFreeKeywords(): { term: string; source: 'FREE' }[] {
         const keywords = this.baseMapper.getKeywords() ?? [];
         // append configured keywords, then "opendata", each only if not already present
         const configuredKeywords = this.baseMapper.settings.typeConfig.keywords ?? [];
@@ -143,7 +133,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
                 keywords.push(keyword);
             }
         }
-        return keywords.map(term => ({ id: null, term, source: 'FREE' as const }));
+        return keywords.map(term => ({ term, source: 'FREE' as const }));
     }
 
     getKeywords(): any[] {
@@ -155,10 +145,10 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         return result;
     }
 
-    getSpatials(): Geometry[] {
+    getSpatials(): IndexSpatial[] {
         const spatialWkt = this.baseMapper.settings.typeConfig?.spatialWkt;
         const geometry = spatialWkt ? this.normalizeGeometryType(this.baseMapper.wktToGeoJson(spatialWkt)) : undefined;
-        return geometry ? [geometry] : [];
+        return geometry ? [{ geometry, bbox: turfBbox(geometry) }] : [];
     }
 
     // baseMapper.wktToGeoJson() returns lowercase GeoJSON type names (fine for Elasticsearch's

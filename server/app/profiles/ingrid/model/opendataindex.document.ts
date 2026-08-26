@@ -38,12 +38,6 @@ export type IngridOpendataFields = {
     legal_basis?: string,
     distributions?: IngridOpendataDistribution[],
     political_geocoding_level_uri?: string,
-    // legacy IDF fields, not part of index-opendata.json, kept for IDF export / catalog display
-    uuid?: string,
-    collection?: { name: string },
-    t01_object?: any,
-    modified?: Date,
-    sort_hash?: string,
 };
 
 export type IngridOpendataDistribution = {

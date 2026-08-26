@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import turfBbox from '@turf/bbox';
 import log4js from 'log4js';
 import { DcatapdeMapper } from "../../../importer/dcatapde/dcatapde.mapper.js";
 import type { IndexContact, IndexSpatial } from '../../../model/index.document.js';
@@ -34,16 +35,6 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> {
 
     protected getDefaultDocumentKind(): 'ingrid' | 'opendata' {
         return 'opendata';
-    }
-
-    getCustomEntries(): object {
-        return {
-            uuid: this.getGeneratedId(),
-            collection: { name: this.baseMapper.settings.dataSourceName },
-            t01_object: { obj_id: this.getGeneratedId() },
-            modified: this.getModifiedDate(),
-            sort_hash: this.getSortUuid(),
-        };
     }
 
     getDescription(): string {
@@ -68,7 +59,7 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> {
 
     getSpatials(): IndexSpatial[] {
         const geometry = this.baseMapper.getSpatial();
-        return geometry ? [{ geometry }] : undefined;
+        return geometry ? [{ geometry, bbox: turfBbox(geometry) }] : undefined;
     }
 
     getKeywords() {

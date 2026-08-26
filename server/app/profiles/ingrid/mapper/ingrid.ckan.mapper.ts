@@ -37,16 +37,6 @@ export class ingridCkanMapper extends ingridMapper<CkanMapper> {
         return 'opendata';
     }
 
-    getCustomEntries(): object {
-        return {
-            uuid: this.getGeneratedId(),
-            collection: { name: this.baseMapper.settings.dataSourceName },
-            t01_object: { obj_id: this.getGeneratedId() },
-            modified: this.getModifiedDate(),
-            sort_hash: this.getSortUuid(),
-        };
-    }
-
     getDescription(): string {
         return this.baseMapper.getDescription();
     }
