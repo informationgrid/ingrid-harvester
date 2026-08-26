@@ -33,6 +33,13 @@ export type GeneralSettings = {
     portalUrl?: string,
     urlCheck?: CronData,
     indexCheck?: CronData,
+    session: {
+      cookie: {
+        maxAge: number,
+        secure: boolean,
+        httpOnly: boolean
+      }
+    },
     sessionSecret: string,
     mail?: {
         enabled?: boolean,

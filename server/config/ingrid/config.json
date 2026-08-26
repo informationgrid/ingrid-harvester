@@ -1,11 +1,17 @@
 [
   {
+    "priority": 5,
     "type": "CSW",
     "maxRecords": 200,
     "startPosition": 1,
     "catalogIds": [
       1
     ],
+    "customCode": null,
+    "defaultDCATCategory": [],
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
@@ -21,12 +27,6 @@
     "httpMethod": "POST",
     "resultType": "results",
     "simplifyTolerance": 0,
-    "priority": 5,
-    "customCode": null,
-    "defaultDCATCategory": [],
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
     "id": 18,
     "description": "geoportal.de",
     "defaultAttribution": null,
@@ -52,12 +52,18 @@
     "boost": null
   },
   {
+    "priority": null,
     "type": "CSW",
     "maxRecords": 100,
     "startPosition": 1,
     "catalogIds": [
       1
     ],
+    "customCode": null,
+    "defaultDCATCategory": null,
+    "dateSourceFormats": [],
+    "blacklistedIds": [],
+    "whitelistedIds": [],
     "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
@@ -73,12 +79,6 @@
     "httpMethod": "POST",
     "resultType": "results",
     "simplifyTolerance": 0,
-    "priority": null,
-    "customCode": null,
-    "defaultDCATCategory": null,
-    "dateSourceFormats": [],
-    "blacklistedIds": [],
-    "whitelistedIds": [],
     "id": 19,
     "description": "nokis.niedersachsen.de",
     "iPlugId": "nokis",
@@ -90,7 +90,7 @@
     "defaultAttribution": null,
     "defaultAttributionLink": null,
     "pluPlanState": null,
-    "recordFilter": "",
+    "recordFilter": "<ogc:Filter>\n\t<ogc:PropertyIsEqualTo>\n\t\t<ogc:PropertyName>identifier</ogc:PropertyName>\n\t\t<ogc:Literal>8ab590a216f7f05f01185fd222071e45</ogc:Literal>\n\t</ogc:PropertyIsEqualTo>\n</ogc:Filter>",
     "cron": {
       "full": {
         "pattern": "0 1 * * *",
@@ -115,14 +115,14 @@
     "skipUrlCheckOnHarvest": false,
     "timeout": 60000,
     "sourceURL": "https://genesis.sachsen-anhalt.de/webservice/rest/2020",
+
     "typeConfig": {
       "requestDelayMs": 500,
-      "statisticCodes": [],
+      "statisticCodes": [
+        "22*"
+      ],
       "username": "GAST",
       "password": "GAST",
-      "tableSelections": [
-        "111*"
-      ],
       "downloadUrlTemplate": "https://genesis.sachsen-anhalt.de/.../{code}.csv",
       "publisher": {
         "name": "Statistisches Landesamt Sachsen-Anhalt",
@@ -130,11 +130,14 @@
       },
       "theme": "http://publications.europa.eu/resource/authority/data-theme/GOVE",
       "licenseUrl": "http://dcat-ap.de/def/licenses/dl-by-de/2.0",
-      "contributorId": "http://dcat-ap.de/def/contributors/genesisLsa"
+      "contributorId": "http://dcat-ap.de/def/contributors/genesisLsa",
+      "spatialWkt": "POLYGON((11.632508277893123 53.016410827636776, 11.688010215759562 53.00477981567377, 11.693689346313647 52.97496032714844, 11.853730201721191 52.94752883911144, 11.82853889465349 52.921730041503906, 11.846659660339299 52.90298080444353, 12.239520072937296 52.854591369628906, 12.26237869262718 52.79122161865246, 12.218799591064396 52.769401550293026, 12.204960823059082 52.710159301757926, 12.24106884002697 52.68381118774414, 12.245609283447322 52.62440872192394, 12.178129196167049 52.62139892578131, 12.189039230346964 52.56937026977539, 12.151088714599553 52.521560668945256, 12.194099426269474 52.52854156494146, 12.175079345703125 52.50278091430664, 12.205368995666447 52.49135208129883, 12.242839813232365 52.5206108093264, 12.33942985534668 52.47510147094738, 12.28273010253912 52.41271972656256, 12.312949180603027 52.401279449463175, 12.29343032836914 52.357040405273494, 12.317408561706713 52.341960906982706, 12.25396919250494 52.25008010864258, 12.301870346069336 52.21995162963867, 12.221308708190918 52.16529846191406, 12.280429840088061 52.101768493652344, 12.435828208923567 52.01491165161133, 12.490827560424748 52.0290412902832, 12.549958229064998 51.980232238769815, 12.68417930603033 52.00812149047857, 12.797579765319881 51.95854187011719, 12.858329772949446 51.96512985229492, 12.863180160522631 51.931758880615405, 12.972139358520621 51.93397140502941, 12.982969284057617 51.900531768799055, 13.055450439453068 51.89950942993164, 13.048269271850643 51.870010375976506, 13.163080215454045 51.87210083007807, 13.137908935546875 51.84654998779291, 13.198930740356388 51.71620941162115, 13.039240837097225 51.63716125488281, 13.016320228576717 51.667060852050724, 12.955019950866642 51.638359069824446, 12.842118263244629 51.68059158325201, 12.786640167236499 51.6444091796875, 12.696819305419922 51.660419464111385, 12.647199630737589 51.61677169799816, 12.248349189758585 51.566440582275504, 12.205350875854492 51.5300407409668, 12.210309982299805 51.485752105713175, 12.155740737915096 51.464221954345646, 12.202850341796989 51.423191070556925, 12.200760841369913 51.33118057250999, 12.158598899841252 51.320590972900334, 12.21623992919939 51.21699905395519, 12.185659408569279 51.18424224853521, 12.221497535705623 51.18386077880865, 12.208699226379508 51.14356994628912, 12.250238418579272 51.13209915161144, 12.231939315795955 51.1139297485351, 12.29712009429926 51.09484100341825, 12.260259628296069 51.04384994506836, 12.30772876739519 51.03596878051769, 12.234389305114746 50.94504928588867, 12.19341945648199 50.98212051391607, 12.019789695739746 50.97230148315441, 11.978389739990291 50.99827194213867, 11.990778923034725 51.01663208007824, 11.883781433105412 51.06132888793957, 11.763569831848315 51.04325103759771, 11.669088363647518 51.11370086669933, 11.471959114074707 51.109951019287166, 11.472960472106934 51.19165039062506, 11.365938186645792 51.22121047973644, 11.480478286743164 51.29914855957031, 11.4032497406007 51.343761444091854, 11.397780418396167 51.3845405578615, 11.326239585876408 51.41061019897472, 10.992289543151912 51.4169807434082, 11.010198593139648 51.4282608032226, 10.968518257141397 51.43177032470709, 10.9746608734132 51.480289459228686, 10.938948631286678 51.498771667480526, 10.951048851013127 51.5361785888673, 10.885531425476017 51.58076095581049, 10.93943023681652 51.59592056274437, 10.927610397338867 51.618339538574446, 10.70512962341337 51.643550872802734, 10.632180213928336 51.75741958618164, 10.577550888061637 51.78271102905285, 10.576871871948242 51.851169586181754, 10.655679702758732 51.90460968017584, 10.612678527832315 51.94221878051758, 10.655550003051758 51.960559844970874, 10.588009834289664 51.979869842529524, 10.569430351257381 52.01726150512718, 10.630780220031909 52.01285934448248, 10.691758155822754 52.052768707275504, 10.974808692932129 52.057250976562614, 10.949279785156307 52.10540008544922, 11.05053997039812 52.13394165039074, 11.068088531494084 52.16691970825195, 11.019989967346362 52.19678878784191, 11.091680526733626 52.22570037841808, 10.987579345703125 52.337001800537394, 11.078740119934139 52.373451232910384, 10.936208724975586 52.45901107788109, 10.94782829284668 52.49203109741222, 11.010089874267692 52.49187088012707, 10.934068679809627 52.565818786621094, 10.978019714355469 52.621829986572266, 10.921110153198413 52.60668182373047, 10.832089424133358 52.723411560058594, 10.795768737793253 52.72050857543968, 10.766200065612793 52.851242065429915, 10.942508697509822 52.85137939453125, 10.992259979248274 52.90634918212896, 11.041929244995174 52.913089752197436, 11.321439743041935 52.873699188232536, 11.507689476013184 52.939300537109375, 11.520859718322924 53.00244140625, 11.651300430297965 53.0311393737793, 11.632508277893123 53.016410827636776))",
+      "tableUrlTemplate": "https://genesis.sachsen-anhalt.de/genesis/online?operation=table&code={code}",
+      "statisticUrlTemplate": "https://genesis.sachsen-anhalt.de/genesis/online?operation=statistic&code={code}"
     },
     "id": 25,
     "description": "GENESIS Online – Statistisches Landesamt Sachsen-Anhalt",
-    "iPlugId": "/ingrid-group:genesis-lsa",
+    "iPlugId": "ingrid-groupgenesis-lsa",
     "partner": "la",
     "provider": "lsa",
     "datatype": "research",
@@ -156,26 +159,17 @@
     }
   },
   {
+    "id": 26,
     "type": "GENESIS",
-    "maxRecords": 100,
-    "startPosition": 1,
-    "catalogIds": [],
-    "rejectUnauthorizedSSL": true,
-    "rules": {
-      "containsDocumentsWithData": null
-    },
-    "maxConcurrent": 1,
-    "skipUrlCheckOnHarvest": false,
-    "timeout": 60000,
+    "description": "GENESIS DESTATIS – Statistisches Bundesamt",
+
     "sourceURL": "https://www-genesis.destatis.de/genesisWS/rest/2020",
+
     "typeConfig": {
-      "requestDelayMs": 500,
-      "statisticCodes": [],
       "username": "GAST",
       "password": "GAST",
-      "tableSelections": [
-        "111*"
-      ],
+      "requestDelayMs": 500,
+      "tableSelections": ["111*"],
       "downloadUrlTemplate": "https://www-genesis.destatis.de/genesis-old/downloads/00/tables/{code}_00.csv",
       "publisher": {
         "name": "Statistisches Bundesamt",
@@ -185,17 +179,27 @@
       "licenseUrl": "http://dcat-ap.de/def/licenses/dl-by-de/2.0",
       "contributorId": "http://dcat-ap.de/def/contributors/genesisDestatis"
     },
-    "id": 26,
-    "description": "GENESIS DESTATIS – Statistisches Bundesamt",
+
+    "catalogIds": [],
+
     "iPlugId": "/ingrid-group:genesis-lsa",
     "partner": "la",
     "provider": "lsa",
     "datatype": "research",
     "dataSourceName": "GENESIS Online Sachsen-Anhalt",
     "boost": null,
+
+    "maxConcurrent": 1,
+    "timeout": 60000,
+    "rejectUnauthorizedSSL": true,
+
     "blacklistedIds": [],
     "whitelistedIds": [],
     "customCode": null,
+    "rules": {
+      "containsDocumentsWithData": null
+    },
+
     "disable": true,
     "cron": {
       "full": {

@@ -38,8 +38,10 @@ export type GenesisTypeConfig = {
     licenseUrl?: string;           // license URI (dct:license); UI-configurable
     contributorId?: string;        // contributor registry URI (dcatde:contributorID); UI-configurable
     spatialUri?: string;           // spatial coverage URI (dct:spatial); UI-configurable
+    spatialWkt?: string;
     statisticUrlTemplate?: string; // URL template for statistic landing page; use {code} as placeholder (dcat:landingPage); UI-configurable
-    tableUrlTemplate?: string;     // URL template for table online resource; use {code} as placeholder; UI-configurable
+    tableUrlTemplate: string;      // URL template for table online resource; use {code} as placeholder (required: without it, no dcat:Distribution entries are produced); UI-configurable
+    keywords?: string[];           // additional keywords appended to every harvested dataset (dcat:keyword); UI-configurable
 };
 
 export type GenesisSettings = {
@@ -50,7 +52,8 @@ export const genesisDefaults: GenesisSettings = {
     ...defaultImporterSettings,
     typeConfig: {
         requestDelayMs: 500,
-        statisticCodes: []
+        statisticCodes: [],
+        tableUrlTemplate: null
     }
 };
 

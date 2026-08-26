@@ -38,4 +38,19 @@ export class IngridCswCatalog extends CswCatalog {
     async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         await super.postImport(transactionHandle, importerSettings, observer);
     }
+
+    protected getAdditionalKeywords(importerSettings: ImporterSettings): string[] {
+        const keywords: string[] = [];
+        for (const partner of importerSettings.partner?.split(',').map(p => p.trim()) ?? []) {
+            if (partner) {
+                keywords.push(`organisation:${partner}`);
+            }
+        }
+        for (const provider of importerSettings.provider?.split(',').map(p => p.trim()) ?? []) {
+            if (provider) {
+                keywords.push(`sub_organisation:${provider}`);
+            }
+        }
+        return keywords;
+    }
 }

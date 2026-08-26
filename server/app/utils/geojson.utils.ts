@@ -51,7 +51,7 @@ import type { AllGeoJSON } from '@turf/helpers';
 import rewind from '@turf/rewind';
 import simplify from '@turf/simplify';
 import deepEqual from "deep-equal";
-import type { Feature, FeatureCollection, Geometry, GeometryCollection, MultiLineString, MultiPoint, MultiPolygon, Point } from 'geojson';
+import type { Feature, FeatureCollection, Geometry, GeometryCollection, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon } from 'geojson';
 import proj4 from "proj4";
 import proj4jsMappings from '../../proj4.json' with { type: 'json' };
 import { firstElementChild } from './xpath.utils.js';
@@ -159,6 +159,23 @@ export function getCentroid(spatial: Geometry): Point {
             .forEach((geometry: Geometry) => geometry.type = 'LineString');
     }
     return centroid(modifiedSpatial)?.geometry;
+}
+
+export function toWkt(geometry: Geometry): string {
+    if (!geometry) {
+        return undefined;
+    }
+    switch (geometry.type) {
+        case 'Point':
+            return `POINT(${(<Point>geometry).coordinates.join(' ')})`;
+        case 'Polygon':
+            const rings = (<Polygon>geometry).coordinates
+                .map(ring => '(' + ring.map(pos => pos.join(' ')).join(', ') + ')')
+                .join(', ');
+            return `POLYGON(${rings})`;
+        default:
+            return undefined;
+    }
 }
 
 export function flatten(geometryCollection: GeometryCollection, tolerance: number): MultiLineString | MultiPoint | MultiPolygon | GeometryCollection {

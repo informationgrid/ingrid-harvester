@@ -143,7 +143,10 @@ export abstract class GenesisType {
                         key: "tableUrlTemplate",
                         type: "input",
                         className: "ingrid-col-10",
-                        props: { label: "Tabellen-URL-Vorlage (Distribution)" },
+                        props: {
+                          label: "Tabellen-URL-Vorlage (Distribution)",
+                          required: true,
+                        },
                       },
                     ],
                   },
@@ -192,6 +195,17 @@ export abstract class GenesisType {
                     ],
                   },
                   {
+                    fieldGroupClassName: "ingrid-row",
+                    fieldGroup: [
+                      {
+                        key: "spatialWkt",
+                        type: "input",
+                        className: "ingrid-col-10",
+                        props: { label: "Begrenzungspolygon als WKT in CRS84" },
+                      },
+                    ],
+                  },
+                  {
                     key: "publisher",
                     fieldGroup: [
                       {
@@ -212,6 +226,11 @@ export abstract class GenesisType {
                         ],
                       },
                     ],
+                  },
+                  {
+                    key: "keywords",
+                    type: "chip",
+                    props: { label: "Keywords" },
                   },
                 ],
               },

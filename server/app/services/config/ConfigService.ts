@@ -95,6 +95,13 @@ export class ConfigService {
             active: false,
             pattern: ''
         },
+        session: {
+          cookie: {
+            httpOnly: parseBooleanOrUndefined(process.env.COOKIE_HTTP_ONLY) ?? true,
+            secure: parseBooleanOrUndefined(process.env.COOKIE_SECURE) ?? true,
+            maxAge: parseIntOrUndefined(process.env.COOKIE_MAXAGE) ?? null
+          }
+        },
         sessionSecret: "mysecretkey",
         mail: {
             enabled: false,
@@ -251,7 +258,7 @@ export class ConfigService {
 
     /**
      * Update a harvester and write to file this.HARVESTER_CONFIG_FILE
-     * 
+     *
      * @param id
      * @param updatedHarvester
      */

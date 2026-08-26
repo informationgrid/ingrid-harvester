@@ -71,7 +71,8 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
 
     async processBucket(bucket: Bucket<CswDataset>, importerSettings: ImporterSettings): Promise<CswCatalogOperation[]> {
         const { document: record } = this.prioritizeAndFilter(bucket);
-        const enrichedXml = this.addTraceability(record.dataset, this.transactionTimestamp, importerSettings.id);
+        const additionalKeywords = this.getAdditionalKeywords(importerSettings);
+        const enrichedXml = this.addTraceability(record.dataset, this.transactionTimestamp, importerSettings.id, additionalKeywords);
         return [{
             uuid: record.uuid,
             serializedXml: enrichedXml,
@@ -145,12 +146,12 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
 
         // Build a filter that matches the catalog keyword
         const deleteXml = `<?xml version="1.0" encoding="UTF-8"?>
-<csw:Transaction xmlns:csw="${namespaces.CSW}" xmlns:ogc="${namespaces.OGC}" service="CSW" version="2.0.2">
+<csw:Transaction xmlns:csw="${namespaces.CSW}" xmlns:ogc="${namespaces.OGC}" xmlns:apiso="${namespaces.APISO}" service="CSW" version="2.0.2">
     <csw:Delete typeName="gmd:MD_Metadata">
         <csw:Constraint version="1.1.0">
             <ogc:Filter>
                 <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
-                    <ogc:PropertyName>subject</ogc:PropertyName>
+                    <ogc:PropertyName>apiso:Subject</ogc:PropertyName>
                     <ogc:Literal>%catalog:${this.settings.id}%</ogc:Literal>
                 </ogc:PropertyIsLike>
             </ogc:Filter>
@@ -240,25 +241,36 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
     }
 
     /**
-     * Add transaction timestamp and source ID as ISO 19139 descriptiveKeywords
-     * to the MD_Metadata XML. Implements the abstract addTraceability from Catalog.
+     * Hook for profile-specific catalogs to contribute additional traceability keywords
+     * (e.g. organisation, sub_organisation) beyond the base transaction/source/catalog ones.
+     * Base implementation adds none.
+     */
+    protected getAdditionalKeywords(importerSettings: ImporterSettings): string[] {
+        return [];
+    }
+
+    /**
+     * Add transaction timestamp, source ID and catalog ID (plus any additionalKeywords
+     * contributed by profile-specific subclasses) as ISO 19139 descriptiveKeywords
+     * to the MD_Metadata XML.
      * sourceId is ImporterSettings.id — identifies which harvest source produced the record.
      */
-    addTraceability(record: string, transactionTimestamp: string, datasourceId: number): string {
+    addTraceability(record: string, transactionTimestamp: string, datasourceId: number, additionalKeywords: string[] = []): string {
         const originalXml = record;
         const doc = this.domParser.parseFromString(originalXml, 'application/xml');
 
+        const keywords = [
+            `transaction:${transactionTimestamp}`,
+            `source:${datasourceId}`,
+            `catalog:${this.settings.id}`,
+            ...additionalKeywords
+        ];
+
         const keywordsBlock = `<gmd:descriptiveKeywords xmlns:gmd="${namespaces.GMD}" xmlns:gco="${namespaces.GCO}">
     <gmd:MD_Keywords>
-        <gmd:keyword>
-            <gco:CharacterString>transaction:${transactionTimestamp}</gco:CharacterString>
-        </gmd:keyword>
-        <gmd:keyword>
-            <gco:CharacterString>source:${datasourceId}</gco:CharacterString>
-        </gmd:keyword>
-        <gmd:keyword>
-            <gco:CharacterString>catalog:${this.settings.id}</gco:CharacterString>
-        </gmd:keyword>
+        ${keywords.map(keyword => `<gmd:keyword>
+            <gco:CharacterString>${keyword}</gco:CharacterString>
+        </gmd:keyword>`).join('\n        ')}
     </gmd:MD_Keywords>
 </gmd:descriptiveKeywords>`;
 
@@ -285,10 +297,15 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
      * POST a CSW Transaction XML to the target endpoint.
      */
     private async postTransaction(targetUrl: string, transactionXml: string): Promise<string> {
+        const headers = RequestDelegate.cswRequestHeaders();
+        const { hasPassword, user, password } = this.settings.settings;
+        if (hasPassword && user && password) {
+            headers['Authorization'] = 'Basic ' + Buffer.from(`${user}:${password}`).toString('base64');
+        }
         return RequestDelegate.doRequest({
             uri: targetUrl,
             method: 'POST',
-            headers: RequestDelegate.cswRequestHeaders(),
+            headers,
             body: transactionXml,
         });
     }
@@ -301,6 +318,7 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         return `<?xml version="1.0" encoding="UTF-8"?>
 <csw:Transaction xmlns:csw="${namespaces.CSW}"
                  xmlns:ogc="${namespaces.OGC}"
+                 xmlns:apiso="${namespaces.APISO}"
                  service="CSW"
                  version="2.0.2">
     <csw:Delete typeName="gmd:MD_Metadata">
@@ -308,12 +326,12 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
             <ogc:Filter>
                 <ogc:And>
                     <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
-                        <ogc:PropertyName>subject</ogc:PropertyName>
+                        <ogc:PropertyName>apiso:Subject</ogc:PropertyName>
                         <ogc:Literal>%source:${datasourceId}%</ogc:Literal>
                     </ogc:PropertyIsLike>
                     <ogc:Not>
                         <ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\\">
-                            <ogc:PropertyName>subject</ogc:PropertyName>
+                            <ogc:PropertyName>apiso:Subject</ogc:PropertyName>
                             <ogc:Literal>%transaction:${excludeTimestamp}%</ogc:Literal>
                         </ogc:PropertyIsLike>
                     </ogc:Not>

@@ -58,6 +58,10 @@ export class GenesisImporter extends Importer<GenesisSettings> {
 
     private totalRecords = 0;
     private numIndexDocs = 0;
+    // shared across the whole harvest run: caps the number of GENESIS requests in flight at
+    // any time to settings.maxConcurrent, regardless of which stage (statistics/tables/metadata)
+    // issues them, instead of each stage/statistic multiplying concurrency independently
+    private requestLimit: ReturnType<typeof pLimit>;
 
     constructor(settings: GenesisSettings) {
         super(settings);
@@ -70,6 +74,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
     protected async harvest(): Promise<number> {
         log.info(`Started requesting records`);
         this.numIndexDocs = 0;
+        this.requestLimit = pLimit(this.settings.maxConcurrent);
 
         const harvestTime = new Date();
         const statisticCodes = this.settings.typeConfig.statisticCodes;
@@ -77,14 +82,13 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         // Stage 1: collect all statistics across all selections
         const allStatistics: GenesisListEntry[] = [];
         this.observer.next(this.summary.msgImport(`Fetching statistics`));
-        const selectionLimit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(
-            statisticCodes.map(selection => selectionLimit(async () => {
+            statisticCodes.map(async selection => {
                 log.debug(`Fetching statistics for selection "${selection}"`);
                 try {
                     const statistics = await this.fetchStatisticList(selection);
                     if (statistics.length === 0) {
-                        log.warn(`Selection "${selection}": no statistics found`);
+                        log.warn(`Selection "${selection}": no statistics found [${this.endpointUrl('/catalogue/statistics')}]`);
                         this.summary.warnings.push([selection, 'No statistics found for this selection']);
                     } else {
                         log.info(`Selection "${selection}": ${statistics.length} statistics`);
@@ -92,19 +96,18 @@ export class GenesisImporter extends Importer<GenesisSettings> {
                     allStatistics.push(...statistics);
                     this.observer.next(this.summary.msgImport(`Selection "${selection}": ${statistics.length} statistics found`));
                 } catch (e) {
-                    log.warn(`Failed to fetch statistics for selection "${selection}": ${e.message}`);
+                    log.warn(`Failed to fetch statistics for selection "${selection}" [${this.endpointUrl('/catalogue/statistics')}]: ${e.message}`);
                     this.summary.warnings.push([selection, `Failed to fetch statistics: ${e.message}`]);
                     this.summary.numErrors++;
                 }
-            }))
+            })
         );
         this.totalRecords = allStatistics.length;
         log.info(`Total statistics to harvest: ${this.totalRecords}`);
 
         // Stage 2: process each statistic
-        const limit = pLimit(this.settings.maxConcurrent);
         await Promise.allSettled(
-            allStatistics.map(stat => limit(() => this.processStatistic(stat, harvestTime)))
+            allStatistics.map(stat => this.processStatistic(stat, harvestTime))
         );
 
         await this.database.sendBulkData();
@@ -145,8 +148,17 @@ export class GenesisImporter extends Importer<GenesisSettings> {
 
     private async processStatistic(entry: GenesisListEntry, harvestTime: Date): Promise<void> {
         this.summary.numDocs++;
-        this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+        try {
+            await this.processStatisticData(entry, harvestTime);
+        } finally {
+            // reported on completion (not on start) so progress advances as statistics actually
+            // finish, rather than jumping to the total almost immediately once every statistic
+            // has merely been kicked off
+            this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
+        }
+    }
 
+    private async processStatisticData(entry: GenesisListEntry, harvestTime: Date): Promise<void> {
         if (!this.filterUtils.isIdAllowed(entry.Code)) {
             this.summary.skippedDocs.push(entry.Code);
             return;
@@ -157,14 +169,14 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         try {
             statisticMetadata = await this.fetchStatisticMetadata(entry.Code);
         } catch (e) {
-            log.warn(`Failed to fetch statistic metadata for ${entry.Code}: ${e.message}`);
+            log.warn(`Failed to fetch statistic metadata for ${entry.Code} [${this.endpointUrl('/metadata/statistic')}]: ${e.message}`);
             this.summary.warnings.push([entry.Code, `Failed to fetch statistic metadata: ${e.message}`]);
             this.summary.skippedDocs.push(entry.Code);
             return;
         }
 
         if (!statisticMetadata?.Object) {
-            log.warn(`No metadata returned for statistic ${entry.Code}`);
+            log.warn(`No metadata returned for statistic ${entry.Code} [${this.endpointUrl('/metadata/statistic')}]`);
             this.summary.warnings.push([entry.Code, `No metadata returned`]);
             this.summary.skippedDocs.push(entry.Code);
             return;
@@ -175,12 +187,13 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         try {
             tableEntries = await this.fetchTableList(entry.Code);
         } catch (e) {
-            log.warn(`Failed to fetch table list for ${entry.Code}: ${e.message}`);
+            log.warn(`Failed to fetch table list for ${entry.Code} [${this.endpointUrl('/catalogue/tables')}]: ${e.message}`);
             this.summary.warnings.push([entry.Code, `Failed to fetch table list: ${e.message}`]);
             this.summary.skippedDocs.push(entry.Code);
             return;
         }
         const tables: any[] = [];
+        let completedTables = 0;
         await Promise.allSettled(
             tableEntries.map(async tableEntry => {
                 try {
@@ -189,8 +202,12 @@ export class GenesisImporter extends Importer<GenesisSettings> {
                         tables.push(tableMetadata);
                     }
                 } catch (e) {
-                    log.warn(`Failed to fetch table metadata for ${tableEntry.Code}: ${e.message}`);
+                    log.warn(`Failed to fetch table metadata for ${tableEntry.Code} [${this.endpointUrl('/metadata/table')}]: ${e.message}`);
                     this.summary.warnings.push([tableEntry.Code, `Failed to fetch table metadata: ${e.message}`]);
+                } finally {
+                    completedTables++;
+                    this.observer.next(this.summary.msgRunning(completedTables, tableEntries.length,
+                        `${this.numIndexDocs}/${this.totalRecords} Statistiken – Statistik ${entry.Code}: Tabellen werden geladen`));
                 }
             })
         );
@@ -242,6 +259,8 @@ export class GenesisImporter extends Importer<GenesisSettings> {
      *
      * The GENESIS API uses a 1-based `start` offset alongside `pagelength`.
      * Pagination continues as long as the returned list equals the page size.
+     * Pacing between requests (including between pages) is handled centrally
+     * by `doApiRequest`.
      */
     private async fetchAllPages(path: string, params: Record<string, string>): Promise<GenesisListEntry[]> {
         const pageLength = 2500;
@@ -263,7 +282,6 @@ export class GenesisImporter extends Importer<GenesisSettings> {
             }
 
             start += pageLength;
-            await this.sleep(this.settings.typeConfig.requestDelayMs);
         }
 
         return allItems;
@@ -276,15 +294,32 @@ export class GenesisImporter extends Importer<GenesisSettings> {
     /**
      * Performs a single authenticated API request to the GENESIS endpoint.
      *
+     * All requests are funneled through a single, shared concurrency limiter
+     * (`this.requestLimit`, sized by `settings.maxConcurrent`) and paced by
+     * `typeConfig.requestDelayMs` before being sent, so the number of requests in
+     * flight - and the rate at which new ones start - stays bounded and even across
+     * the whole harvest run, regardless of which stage (statistics/tables/metadata)
+     * or how many statistics are being processed at once.
+     *
      * Returns parsed JSON. Throws on authentication errors (Status 98/99).
-     * Returns null and logs a warning for "not found" (Status 104).
-     * Retries up to 2 times on network errors with a 1 second backoff.
+     * Returns null for "not found" (Status 104).
+     * Retries up to 2 times on network errors with a 1 second backoff (handled by
+     * RequestDelegate), and up to MAX_STATUS_ATTEMPTS times with a growing backoff
+     * when GENESIS returns a response without the expected Status (a sign that the
+     * request was dropped or throttled server-side rather than a real error).
      */
     protected async doApiRequest(path: string, params: Record<string, string> = {}): Promise<any> {
+        return this.requestLimit(() => this.performApiRequest(path, params));
+    }
+
+    private static readonly MAX_STATUS_ATTEMPTS = 3;
+
+    private async performApiRequest(path: string, params: Record<string, string> = {}): Promise<any> {
         const body = new URLSearchParams(params).toString();
+        const uri = this.endpointUrl(path);
         const config: RequestOptions = {
             method: 'POST',
-            uri: this.settings.sourceURL + path,
+            uri,
             json: true,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -296,27 +331,42 @@ export class GenesisImporter extends Importer<GenesisSettings> {
             timeout: this.settings.timeout,
         };
 
-        log.debug(`POST ${config.uri} [${body}]`);
+        for (let attempt = 1; attempt <= GenesisImporter.MAX_STATUS_ATTEMPTS; attempt++) {
+            await this.sleep(this.settings.typeConfig.requestDelayMs);
 
-        const response = await RequestDelegate.doRequest(config, 2, 1000);
+            log.debug(`POST ${path} [${uri}] ${body}`);
+            const response = await RequestDelegate.doRequest(config, 2, 1000);
 
-        const statusCode: number = response?.Status?.Code;
-        const statusContent: string = response?.Status?.Content;
+            const statusCode: number = response?.Status?.Code;
+            const statusContent: string = response?.Status?.Content;
 
-        if (statusCode === 98 || statusCode === 99) {
-            throw new Error(`GENESIS authentication failed (Status ${statusCode}): ${statusContent}`);
+            if (statusCode === 98 || statusCode === 99) {
+                throw new Error(`GENESIS authentication failed (Status ${statusCode}) for ${path} [${uri}]: ${statusContent}`);
+            }
+
+            if (statusCode === 104) {
+                log.debug(`GENESIS object not found (Status 104) for ${path} [${uri}]: ${statusContent}`);
+                return null;
+            }
+
+            if (statusCode === 0 || statusCode === 22) {
+                return response;
+            }
+
+            // missing/unexpected Status - likely a dropped or throttled response; retry with backoff
+            if (attempt < GenesisImporter.MAX_STATUS_ATTEMPTS) {
+                const backoffMs = this.settings.typeConfig.requestDelayMs * attempt;
+                log.warn(`Unexpected GENESIS status ${statusCode} for ${path} [${uri}]: ${statusContent}; Request Body: ${body} — retrying (attempt ${attempt + 1}/${GenesisImporter.MAX_STATUS_ATTEMPTS}) after ${backoffMs}ms`);
+                await this.sleep(backoffMs);
+            } else {
+                log.warn(`Unexpected GENESIS status ${statusCode} for ${path} [${uri}] after ${GenesisImporter.MAX_STATUS_ATTEMPTS} attempts: ${statusContent}; Request Body: ${body}`);
+                return response;
+            }
         }
+    }
 
-        if (statusCode === 104) {
-            log.debug(`GENESIS object not found at ${path} (Status 104): ${statusContent}`);
-            return null;
-        }
-
-        if (statusCode !== 0 && statusCode !== 22) {
-            log.warn(`Unexpected GENESIS status ${statusCode} for ${path}: ${statusContent}`);
-        }
-
-        return response;
+    private endpointUrl(path: string): string {
+        return this.settings.sourceURL + path;
     }
 
     protected buildAuthHeaders(): Record<string, string> {

@@ -173,7 +173,7 @@ export abstract class ingridMapper<M extends ingridMapperType>
 
     getIngrid(): IngridSpecific {
         return {
-            alternate_title: this.getAlternateTitle()?.[0],
+            alternate_title: this.getAlternateTitle(),
             licenses: this.getLicenses(),
             parent_identifier: this.getParentIdentifier(),
             datasource_identifier: this.getDatasourceIdentifier(),

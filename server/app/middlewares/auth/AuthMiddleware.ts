@@ -22,15 +22,16 @@
  */
 
 
-import {Context, Inject, Middleware, type MiddlewareMethods, Req} from "@tsed/common";
-import {KeycloakService} from "../../services/keycloak/KeycloakService.js";
-import {Unauthorized} from "@tsed/exceptions";
-import type {KeycloakAuthOptions} from "../../decorators/KeycloakAuthOptions.js";
+import { Context, Inject, Middleware, type MiddlewareMethods, Req } from "@tsed/common";
+import { Unauthorized } from "@tsed/exceptions";
+import type { KeycloakAuthOptions } from "../../decorators/KeycloakAuthOptions.js";
+import { KeycloakService } from "../../services/keycloak/KeycloakService.js";
 
 @Middleware()
 export class AuthMiddleware implements MiddlewareMethods {
-  @Inject()
-  protected keycloakService: KeycloakService;
+
+  constructor(@Inject(KeycloakService) protected keycloakService: KeycloakService) {
+  }
 
   public async use(@Req() request: Express.Request, @Context() ctx: Context) {
     const options: KeycloakAuthOptions = ctx.endpoint.store.get(AuthMiddleware) || {};
@@ -42,7 +43,7 @@ export class AuthMiddleware implements MiddlewareMethods {
     }
 
     // 1. Try to recover token from session
-    if (request.session && request.session['keycloak-token']) {
+    /*if (request.session && request.session['keycloak-token']) {
       try {
         let tokenData = request.session['keycloak-token'];
         if (typeof tokenData === 'string' && tokenData.startsWith('{')) {
@@ -52,7 +53,7 @@ export class AuthMiddleware implements MiddlewareMethods {
       } catch (e) {
         console.error('Error parsing token from session:', e);
       }
-    }
+    }*/
 
     // 2. Check if keycloak-connect already authenticated the request
     let grant = ctx.getRequest().kauth?.grant;

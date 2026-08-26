@@ -30,6 +30,7 @@ import { Mapper } from '../mapper.js';
 import type { GenesisSettings } from './genesis.settings.js';
 import { generateUuid } from "../../profiles/ingrid/ingrid.utils.js";
 import dayjs from '../../utils/dayjs.js';
+import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
 
 /**
  * Base mapper for GENESIS Online REST API records.
@@ -91,13 +92,14 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
         const from = this.record?.Object?.Time?.From;
         const to = this.record?.Object?.Time?.To;
         if (!from && !to) return undefined;
+        const context = { endpoint: '/metadata/statistic', code: this.getCode() };
         return {
-            gte: from ? this.parseTemporalBound(from, false) : undefined,
-            lte: to   ? this.parseTemporalBound(to,   true)  : undefined,
+            gte: from ? this.parseTemporalBound(from, false, context) : undefined,
+            lte: to   ? this.parseTemporalBound(to,   true, context)  : undefined,
         };
     }
 
-    private parseTemporalBound(value: string, isEnd: boolean): Date | undefined {
+    private parseTemporalBound(value: string, isEnd: boolean, context: { endpoint: string; code: string }): Date | undefined {
         const year = dayjs(value, 'YYYY', true);
         if (year.isValid()) {
             const y = year.year();
@@ -105,8 +107,34 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
         }
         const date = dayjs(value, 'DD.MM.YYYY', true);
         if (date.isValid()) return date.toDate();
-        this.log.warn(`getTemporal: unrecognised date format "${value}"`);
+
+        const splitYearRange = this.parseSplitYearRange(value, isEnd);
+        if (splitYearRange) return splitYearRange;
+
+        this.log.warn(`getTemporal: unrecognised date format "${value}" for code ${context.code} [${this.settings.sourceURL}${context.endpoint}]`);
         return undefined;
+    }
+
+    /**
+     * Parses a split fiscal/reporting year like "2007/08" (meaning 2007/2008): the "From" bound
+     * uses the first (full) year, the "To" bound uses the second, two-digit year expanded into
+     * the same century as the first year (e.g. "08" -> 2008).
+     */
+    private parseSplitYearRange(value: string, isEnd: boolean): Date | undefined {
+        const match = value.match(/^(\d{4})\/(\d{2})$/);
+        if (!match) return undefined;
+
+        const fromYear = parseInt(match[1], 10);
+        if (!isEnd) {
+            return new Date(fromYear, 0, 1);
+        }
+
+        const century = Math.floor(fromYear / 100) * 100;
+        let toYear = century + parseInt(match[2], 10);
+        if (toYear <= fromYear) {
+            toYear += 100;
+        }
+        return new Date(toYear, 11, 31);
     }
 
     getKeywords(): string[] {
@@ -178,18 +206,30 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
     getDistributions(): Distribution[] {
         const template = this.settings.typeConfig.tableUrlTemplate;
         if (!template) return [];
+        const license = this.getDistributionLicense();
         return (this.record?.Tables ?? [])
             .filter(table => table?.Object?.Code)
-            .map(table => (<Distribution>{
-                access_url: template.replace('{code}', table.Object.Code),
-                format: ['text/html'],
-                title: table.Object.Content ?? '',
-                modified: table.Object.Updated ? this.parseGenesisDate(table.Object.Updated) : undefined,
-                temporal: (table.Object.Time?.From || table.Object.Time?.To) ? {
-                    gte: table.Object.Time?.From ? this.parseTemporalBound(table.Object.Time.From, false) : undefined,
-                    lte: table.Object.Time?.To   ? this.parseTemporalBound(table.Object.Time.To,   true)  : undefined,
-                } : undefined,
-            }));
+            .map(table => {
+                const context = { endpoint: '/metadata/table', code: table.Object.Code };
+                return <Distribution>{
+                    access_url: template.replace('{code}', table.Object.Code),
+                    format: ['text/html'],
+                    title: table.Object.Content ?? '',
+                    modified: table.Object.Updated ? this.parseGenesisDate(table.Object.Updated) : undefined,
+                    temporal: (table.Object.Time?.From || table.Object.Time?.To) ? {
+                        gte: table.Object.Time?.From ? this.parseTemporalBound(table.Object.Time.From, false, context) : undefined,
+                        lte: table.Object.Time?.To   ? this.parseTemporalBound(table.Object.Time.To,   true, context)  : undefined,
+                    } : undefined,
+                    license,
+                };
+            });
+    }
+
+    private getDistributionLicense(): Distribution['license'] {
+        const licenseUrl = this.settings.typeConfig.licenseUrl;
+        if (!licenseUrl) return undefined;
+        const license = DcatLicensesUtils.get(licenseUrl);
+        return license ? { name: license.title, url: license.url } : { url: licenseUrl };
     }
 
     private collectContent(node: any, result: Set<string>): void {

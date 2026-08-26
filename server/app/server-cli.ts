@@ -22,15 +22,15 @@
  */
 
 import log4js from 'log4js';
+import process from 'node:process';
 import type { Observable } from 'rxjs';
-import { concat } from 'rxjs';
+import { concat, lastValueFrom } from 'rxjs';
+import type { ImportLogMessage } from './model/import.result.js';
+import type { Summary } from './model/summary.js';
+import { ProfileFactoryLoader } from './profiles/profile.factory.loader.js';
+import { ConfigService } from './services/config/ConfigService.js';
 import { jsonLayout } from './utils/log4js.json.layout.js';
 import { merge } from './utils/misc.utils.js';
-import { ConfigService } from './services/config/ConfigService.js';
-import type { ImportLogMessage } from './model/import.result.js';
-import { ProfileFactoryLoader} from './profiles/profile.factory.loader.js';
-import type { Summary } from './model/summary.js';
-import process from 'node:process'; 
 
 let config = ConfigService.getHarvesters(),
     configGeneral = ConfigService.getGeneralSettings(),

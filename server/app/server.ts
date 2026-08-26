@@ -21,65 +21,70 @@
  * ==================================================
  */
 
-import { $log, Configuration, PlatformAcceptMimesMiddleware, PlatformApplication, PlatformLogMiddleware } from '@tsed/common';
+import { Configuration, PlatformApplication, PlatformConfiguration, $log as tsedLogger, type BeforeRoutesInit, type OnInit, type OnReady } from '@tsed/common';
 import { Inject } from '@tsed/di';
+import { PlatformAcceptMimesMiddleware } from '@tsed/platform-accept-mimes';
+import bodyParser from 'body-parser';
+import compress from 'compression';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
 import log4js from 'log4js';
+import methodOverride from 'method-override';
 import * as path from 'path';
+import baseLog4jsConfig from '../log4js.json' with { type: 'json' };
+import serverConfig from '../server-config.json' with { type: 'json' };
+import { LogMiddleware } from './middlewares/LogMiddleware.js';
 import { ProfileFactoryLoader } from './profiles/profile.factory.loader.js';
 import { ConfigService } from './services/config/ConfigService.js';
-import { jsonLayout } from './utils/log4js.json.layout.js';
+import { KeycloakService } from './services/keycloak/KeycloakService.js';
 import { configure as harvestJobConfigure } from './utils/harvest-log-appender.js';
-import {KeycloakService} from "./services/keycloak/KeycloakService.js";
-import cookieParser from "cookie-parser";
-import bodyParser from "body-parser";
-import createMemoryStore from 'memorystore';
-import serverConfig from "../server-config.json" with { type: "json" };
-import log4jsConfig from '../log4js.json' with { type: 'json' };
-import log4jsDevConfig from '../log4js-dev.json' with { type: 'json' };
-import methodOverride from "method-override";
-import compress from "compression";
-import session from "express-session";
+import { jsonLayout } from './utils/log4js.json.layout.js';
+import { merge } from './utils/misc.utils.js';
+import './utils/tsed.log4js.forwarder.js';
 
 const rootDir = import.meta.dirname;
-const MemoryStore = createMemoryStore(session);
 
 const log = log4js.getLogger(import.meta.filename);
 
+// configure logging
 const isProduction = process.env.NODE_ENV == 'production';
 log4js.addLayout("json", jsonLayout);
-const baseLog4jsConfig: any = isProduction ? log4jsConfig : log4jsDevConfig;
-log4js.configure({
-    ...baseLog4jsConfig,
+const log4jsConfig: any[] = [baseLog4jsConfig];
+log4jsConfig.push({
     appenders: {
-        ...baseLog4jsConfig.appenders,
-        harvestJob: { type: { configure: harvestJobConfigure } },
-    },
-    categories: {
-        ...baseLog4jsConfig.categories,
-        default: {
-            ...baseLog4jsConfig.categories.default,
-            appenders: [...baseLog4jsConfig.categories.default.appenders, 'harvestJob'],
+        harvestJob: {
+            type: { configure: harvestJobConfigure },
+            layout: baseLog4jsConfig.appenders.appLog.layout
         },
     },
+    categories: {
+        default: {
+            appenders: [...baseLog4jsConfig.categories.default.appenders, 'harvestJob'],
+        },
+    }
 });
-if (isProduction) {
-    $log.appenders.set("stdout", {
-        type: "stdout",
-        levels: ["info", "debug"],
-        layout: {
-            type: "json"
-        }
-    });
-    $log.appenders.set("stderr", {
-        levels: ["trace", "fatal", "error", "warn"],
-        type: "stderr",
-        layout: {
-            type: "json"
-        }
+if (!isProduction) {
+    log4jsConfig.push({
+        appenders: {
+            console: {
+                layout: baseLog4jsConfig.appenders.appLog.layout,
+            },
+        },
     });
 }
+log4js.configure(merge(...log4jsConfig));
+
+// re-route the ts.ed logger through log4js
+tsedLogger.appenders.clear();
+tsedLogger.appenders.set("log4js-forwarder", {
+    type: "log4js",
+    levels: ["trace", "debug", "info", "warn", "error", "fatal"],
+});
 
 const baseURL = process.env.BASE_URL ?? '/';
+
+// TODO a) instead of overwriting internal Before and On interfaces, use hooks: https://tsed.dev/docs/hooks.html#subscribe-to-a-hook
+// TODO b) instead of using a custom LogMiddleware, use {PlatformLogMiddleware} from "@tsed/platform-log-middleware"
 
 @Configuration({
     rootDir,
@@ -98,23 +103,22 @@ const baseURL = process.env.BASE_URL ?? '/';
     },
     logger: {
         ignoreUrlPatterns: ['/rest/*'],
-        disableRoutesSummary: isProduction,
-        // level: "warn"
+        disableRoutesSummary: isProduction
     },
-    middlewares: [{ use: PlatformLogMiddleware, options: { logRequest: false } }]
+    middlewares: [
+        LogMiddleware,
+    ],
 })
-export class Server {
-
-    @Inject()
-    app: PlatformApplication;
-
-    @Inject()
-    protected keycloakService: KeycloakService;
+export class Server implements BeforeRoutesInit, OnInit, OnReady {
 
     @Configuration()
-    settings: Configuration;
+    settings: PlatformConfiguration;
 
-    public $beforeInit(): void | Promise<any> {
+    constructor(@Inject(PlatformApplication) public app: PlatformApplication,
+                @Inject(KeycloakService) protected keycloakService: KeycloakService) {
+    }
+
+    async $onInit(): Promise<any> {
         // on startup make sure ENV variables - if set - replace existing configuration vars
         ConfigService.adoptEnvs();
     }
@@ -123,11 +127,10 @@ export class Server {
      * This method let you configure the express middleware required by your application to works.
      * @returns {Server}
      */
-    public $beforeRoutesInit(): void | Promise<any> {
-
+    async $beforeRoutesInit(): Promise<any> {
         // on startup make sure the configuration has IDs for each harvester
         ConfigService.fixIDs();
-
+      let cookieConfig = ConfigService.getGeneralSettings().session.cookie;
       this.app
             .use(PlatformAcceptMimesMiddleware)
             .use(cookieParser())
@@ -145,9 +148,9 @@ export class Server {
                 maxAge: 36000,
                 cookie: {
                     path: createRelativePath(baseURL),
-                    httpOnly: true,
-                    secure: false,
-                    maxAge: null
+                    httpOnly: cookieConfig.httpOnly,
+                    secure: cookieConfig.secure,
+                    maxAge: cookieConfig.maxAge
                 },
                 store: this.keycloakService.getMemoryStore()
                 // store: new MemoryStore({
@@ -155,19 +158,13 @@ export class Server {
                 // })
             }))
             .use(this.keycloakService.getKeycloakInstance().middleware());
-
-        return null;
     }
 
-    async $onReady() {
+    async $onReady(): Promise<any> {
         log.info('Setting up profile');
         const profile = ProfileFactoryLoader.get();
         await profile.init();
         log.info('Server initialized');
-    }
-
-    $onServerInitError(error): any {
-        log.error('Server encounter an error: ', error);
     }
 }
 

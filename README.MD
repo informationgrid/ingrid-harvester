@@ -73,7 +73,7 @@ You may wish to run the server and the client outside of the docker container, f
   cd server
   npm run start-{profile}
   ```
-  where `{profile}` is one of `mcloud`, `diplanung`, `lvr`
+  where `{profile}` is one of `ingrid`, `diplanung`, `lvr`
 * Now you can access the harvester
     * via GUI: http://localhost:4200
     * via Elasticsearch API: http://localhost:9200

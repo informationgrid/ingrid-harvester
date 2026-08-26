@@ -54,6 +54,9 @@ export type CswCatalogSettings = CatalogSettings & {
   settings: {
     version: string,
     outputSchema: string,
+    hasPassword?: boolean,
+    user?: string,
+    password?: string,
   }
 }
 

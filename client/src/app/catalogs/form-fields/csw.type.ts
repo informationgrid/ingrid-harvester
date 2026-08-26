@@ -41,6 +41,34 @@ export default abstract class CswType {
                   required: true,
                 },
               },
+              {
+                key: "hasPassword",
+                type: "checkbox",
+                props: {
+                  label: "Passwort geschützt",
+                },
+              },
+              {
+                key: "user",
+                type: "input",
+                expressions: {
+                  hide: "!model.hasPassword",
+                },
+                props: {
+                  label: transloco.transform("catalogs.formLabel.user"),
+                },
+              },
+              {
+                key: "password",
+                type: "input",
+                expressions: {
+                  hide: "!model.hasPassword",
+                },
+                props: {
+                  label: transloco.transform("catalogs.formLabel.password"),
+                  description: transloco.transform("catalogs.formHint.password")
+                },
+              },
             ],
           },
         ],

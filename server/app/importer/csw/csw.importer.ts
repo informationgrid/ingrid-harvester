@@ -108,7 +108,9 @@ export class CswImporter extends Importer<CswSettings> {
                     // only change the record filter (i.e. do an incremental harvest) if a previous run exists
                     let lastHarvestingDate = new SummaryService().get(this.settings.id)?.lastExecution;
                     if (lastHarvestingDate) {
-                        let lastModifiedFilter = `<ogc:PropertyIsGreaterThanOrEqualTo><ogc:PropertyName>Modified</ogc:PropertyName><ogc:Literal>${new Date(lastHarvestingDate).toISOString()}</ogc:Literal></ogc:PropertyIsGreaterThanOrEqualTo>`;
+                        let isoLastHarvestingDate = new Date(lastHarvestingDate).toISOString();
+                        log.info(`Setting incremental filter to >= ${isoLastHarvestingDate}`);
+                        let lastModifiedFilter = `<ogc:PropertyIsGreaterThanOrEqualTo><ogc:PropertyName>Modified</ogc:PropertyName><ogc:Literal>${isoLastHarvestingDate}</ogc:Literal></ogc:PropertyIsGreaterThanOrEqualTo>`;
                         this.settings.recordFilter = this.appendFilter(lastModifiedFilter);
                     }
                     else {
@@ -181,8 +183,12 @@ export class CswImporter extends Importer<CswSettings> {
                 observer.next(this.summary.msgComplete());
             }
             catch (err) {
-                if (err.message) {
-                    this.summary.errors.push({ type: 'app', error: err.message });
+                let message = err?.message ?? String(err);
+                if (message) {
+                    if (message.includes('The user aborted a request.')) {
+                        message = 'A request to the server timed out. If this occurs frequently, try reducing the "maxRecords" setting.';
+                    }
+                    this.summary.errors.push({ type: 'app', error: message });
                 }
                 await this.database.rollbackTransaction();
                 let msg = this.summary.errors.find(e => e.type === 'app' || e.type === 'database')?.error;
@@ -240,7 +246,7 @@ export class CswImporter extends Importer<CswSettings> {
         }
         // 2) run in parallel
         const limit = pLimit(this.settings.maxConcurrent);
-        await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
+        await Promise.all(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
         log.info(`Finished requesting records`);
         // 3) persist leftovers
         await this.database.sendBulkData();
@@ -315,6 +321,9 @@ export class CswImporter extends Importer<CswSettings> {
                 // }
             }
             let serviceType = service.format?.[0].toUpperCase();
+            if (!service?.operates_on) {
+                return;
+            }
             switch (serviceType) {
                 case 'WFS':
                     for (let identifier of service.operates_on) {

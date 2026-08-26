@@ -30,6 +30,9 @@ import { HttpsProxyAgent } from 'https-proxy-agent';
 
 const log = log4js.getLogger('requests');
 
+const DEFAULT_NUM_RETRIES = 3;
+const DEFAULT_WAIT_MS = 1000;
+
 /**
  * HTTP parameters configuration for CSW harvesters.
  */
@@ -160,7 +163,7 @@ export class RequestDelegate {
      * - User-Agent: Ingrid Harvester. node-fetch
      * - Content-Type: application/xml
      */
-    static cswRequestHeaders(): HeadersInit {
+    static cswRequestHeaders(): Record<string, string> {
         return {
             'User-Agent': 'Ingrid Harvester. node-fetch',
             'Content-Type': 'application/xml'
@@ -229,21 +232,21 @@ export class RequestDelegate {
     /**
      * Performs the HTTP request and returns the result of this operation.
      *
-     * @param retry how often the request should be retried if it fails (default: 0)
-     * @param waitMilliSeconds wait time between retries in milliseconds (default: 0)
+     * @param retries how often the request should be retried if it fails (default: 1)
+     * @param waitMilliSeconds wait time between retries in milliseconds (default: 500)
      */
-    async doRequest(retry: number = 0, waitMilliSeconds: number = 0): Promise<any> {
-        return RequestDelegate.doRequest(this.config, retry, waitMilliSeconds);
+    async doRequest(retries: number = DEFAULT_NUM_RETRIES, waitMilliSeconds: number = DEFAULT_WAIT_MS): Promise<any> {
+        return RequestDelegate.doRequest(this.config, retries, waitMilliSeconds);
     }
 
     /**
      * Performs a HTTP request and returns the result of this operation.
      *
      * @param config the configuration to use when sending the request
-     * @param retry how often the request should be retried if it fails (default: 0)
-     * @param waitMilliSeconds wait time between retries in milliseconds (default: 0)
+     * @param retries how often the request should be retried if it fails (default: 1)
+     * @param waitMilliSeconds wait time between retries in milliseconds (default: 500)
      */
-    static async doRequest(config: RequestOptions, retry: number = 0, waitMilliSeconds: number = 0): Promise<any> {
+    static async doRequest(config: RequestOptions, retries: number = DEFAULT_NUM_RETRIES, waitMilliSeconds: number = DEFAULT_WAIT_MS): Promise<any> {
         log.debug('Requesting: ' + config.uri);
         if (config.proxy) {
             let proxyAgent = new HttpsProxyAgent(config.proxy);
@@ -260,6 +263,16 @@ export class RequestDelegate {
             });
         }
         let fullURL = RequestDelegate.getFullURL(config);
+        if (log.isDebugEnabled()) {
+            let addInfo = '';
+            if (config.body) {
+                addInfo = ` [${config.body}]`;
+            }
+            if (config.qs) {
+                addInfo += ` [${config.qs}}]`;
+            }
+            log.debug(`Requesting: ${fullURL}${addInfo} (retries: ${retries}, wait: ${waitMilliSeconds}ms)`);
+        }
         // set timeout for fetch
         // this is a workaround - we want to use `signal`, but cannot give it directly as it starts running as soon as
         // it is declared. `timeout` (which is deprecated) works different (worse). So we just take the timeout value
@@ -267,31 +280,29 @@ export class RequestDelegate {
         config.signal = AbortSignal.timeout(config.timeout ?? DEFAULT_TIMEOUT_MS);
         config.timeout = null;
         config.compress = false;
-        let response = fetch(fullURL, config);
 
         if (config.resolveWithFullResponse) {
-            return response;
+            return fetch(fullURL, config);
         }
 
         let resolvedResponse: Response;
-        do {
+        while (true) {
             try {
-                resolvedResponse = await response;
+                resolvedResponse = await fetch(fullURL, config);
                 break;
             }
             catch (e) {
                 // if a connection error occurs, retry
-                if (retry > 0) {
-                    retry -= 1;
+                if (retries > 0) {
+                    retries -= 1;
                     log.info(`Retrying request for ${fullURL} (waiting ${waitMilliSeconds}ms)`);
                     await RequestDelegate.sleep(waitMilliSeconds);
-                    response = fetch(fullURL, config);
                 }
                 else {
                     throw e;
                 }
             }
-        } while (retry > 0);
+        }
 
         if (config.json) {
             return resolvedResponse.json();

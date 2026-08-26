@@ -23,6 +23,7 @@
 
 export const namespaces = {
     ADMS: 'http://www.w3.org/ns/adms#',
+    APISO: 'http://www.opengis.net/cat/csw/apiso/1.0',
     CSW: 'http://www.opengis.net/cat/csw/2.0.2',
     DC: 'http://purl.org/dc/elements/1.1/',
     DCAT: 'http://www.w3.org/ns/dcat#',
@@ -31,6 +32,7 @@ export const namespaces = {
     DCT: 'http://purl.org/dc/terms/',
     FOAF: 'http://xmlns.com/foaf/0.1/',
     GCO: 'http://www.isotc211.org/2005/gco',
+    GEOSPARQL: 'http://www.opengis.net/ont/geosparql#',
     GMD: 'http://www.isotc211.org/2005/gmd',
     GML: 'http://www.opengis.net/gml',
     GML_3_2: 'http://www.opengis.net/gml/3.2',

@@ -22,14 +22,38 @@
  */
 
 import { DOMImplementation } from '@xmldom/xmldom';
-import { DCAT_FILE_TYPE_URL, DCAT_LANGUAGE_URL, ISO_639_1_TO_3 } from '../../../importer/dcatapde/dcatapde.utils.js';
+import type { Geometry } from 'geojson';
+import {
+    DCAT_FILE_TYPE_URL,
+    DCAT_LANGUAGE_URL,
+    ISO_639_1_TO_3,
+    prettyPrintXml
+} from '../../../importer/dcatapde/dcatapde.utils.js';
 import { GenesisMapper } from '../../../importer/genesis/genesis.mapper.js';
 import { namespaces } from '../../../importer/namespaces.js';
+import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import { UrlUtils } from '../../../utils/url.utils.js';
 import { ensureNoEndSlash, generateUuid } from "../ingrid.utils.js";
 import type { IndexContact } from '../../../model/index.document.js';
 import type { IngridOpendataDistribution } from '../model/opendataindex.document.js';
+import { Codelist } from '../utils/codelist.js';
 import { ingridMapper } from './ingrid.mapper.js';
+
+// baseMapper.wktToGeoJson() returns lowercase GeoJSON type names (fine for Elasticsearch's geo_shape
+// mapping), but Turf (used below for bbox/centroid) requires the canonical GeoJSON casing
+const GEOJSON_TYPE_NAMES: Record<string, string> = {
+    point: 'Point',
+    linestring: 'LineString',
+    polygon: 'Polygon',
+    multipoint: 'MultiPoint',
+    multilinestring: 'MultiLineString',
+    multipolygon: 'MultiPolygon',
+    geometrycollection: 'GeometryCollection',
+};
+
+// spatialWkt coordinates are longitude/latitude (WGS84), i.e. CRS84; GeoSPARQL wktLiteral defaults to
+// CRS84 when the CRS prefix is omitted, but DCAT-AP.de recommends stating it explicitly
+const CRS84 = 'http://www.opengis.net/def/crs/OGC/1.3/CRS84';
 
 export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
 
@@ -93,13 +117,54 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         return this._dcatapdeDoc;
     }
 
-    getKeywords(): any[] {
-        const keywords = this.baseMapper.getKeywords() ?? [];
-        // explicitly add "opendata" keyword if not already present
-        if (!keywords.some(term => term.toLowerCase() === 'opendata')) {
-            keywords.push('opendata');
+    private static themeKeywordCache = new Map<string, { id: string; term: string; source: string } | undefined>();
+
+    private getThemeKeyword(): { id: string; term: string; source: string } | undefined {
+        const theme = this.baseMapper.getTheme();
+        if (!theme) {
+            return undefined;
         }
-        return keywords.map(term => ({ term, source: 'FREE' }));
+        if (!ingridGenesisMapper.themeKeywordCache.has(theme)) {
+            const code = theme.substring(theme.lastIndexOf('/') + 1);
+            const themeEntry = Codelist.getInstance().getByData('6400', code);
+            ingridGenesisMapper.themeKeywordCache.set(theme, themeEntry
+                ? { id: themeEntry.id, term: themeEntry.value, source: 'THEMES' }
+                : undefined);
+        }
+        return ingridGenesisMapper.themeKeywordCache.get(theme);
+    }
+
+    private getFreeKeywords(): { id: null; term: string; source: 'FREE' }[] {
+        const keywords = this.baseMapper.getKeywords() ?? [];
+        // append configured keywords, then "opendata", each only if not already present
+        const configuredKeywords = this.baseMapper.settings.typeConfig.keywords ?? [];
+        for (const keyword of [...configuredKeywords, 'opendata']) {
+            if (!keywords.some(term => term.toLowerCase() === keyword.toLowerCase())) {
+                keywords.push(keyword);
+            }
+        }
+        return keywords.map(term => ({ id: null, term, source: 'FREE' as const }));
+    }
+
+    getKeywords(): any[] {
+        const result: any[] = this.getFreeKeywords();
+        const themeKeyword = this.getThemeKeyword();
+        if (themeKeyword && !result.some(r => r.id === themeKeyword.id && r.source === 'THEMES')) {
+            result.push(themeKeyword);
+        }
+        return result;
+    }
+
+    getSpatials(): Geometry[] {
+        const spatialWkt = this.baseMapper.settings.typeConfig?.spatialWkt;
+        const geometry = spatialWkt ? this.normalizeGeometryType(this.baseMapper.wktToGeoJson(spatialWkt)) : undefined;
+        return geometry ? [geometry] : [];
+    }
+
+    // baseMapper.wktToGeoJson() returns lowercase GeoJSON type names (fine for Elasticsearch's
+    // geo_shape mapping in some configs, but not the canonical casing this index and Turf expect)
+    private normalizeGeometryType(geometry: any): any {
+        return geometry ? { ...geometry, type: GEOJSON_TYPE_NAMES[geometry.type] ?? geometry.type } : undefined;
     }
 
     private getAccrualPeriodicityUri(): string | undefined {
@@ -135,6 +200,8 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         rdfRoot.setAttribute('xmlns:dcatde', namespaces.DCATDE);
         rdfRoot.setAttribute('xmlns:foaf', namespaces.FOAF);
         rdfRoot.setAttribute('xmlns:vcard', namespaces.VCARD);
+        rdfRoot.setAttribute('xmlns:locn', namespaces.LOCN);
+        rdfRoot.setAttribute('xmlns:geo', namespaces.GEOSPARQL);
 
         const dataset = doc.createElement('dcat:Dataset');
         rdfRoot.appendChild(dataset);
@@ -173,7 +240,8 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             dataset.appendChild(period);
         }
 
-        for (const keyword of this.getKeywords()) {
+        // theme is added separately below as dcat:theme, so only free-text keywords go here
+        for (const keyword of this.getFreeKeywords()) {
             dataset.appendChild(doc.createElement('dcat:keyword')).textContent = keyword.term;
         }
 
@@ -269,6 +337,31 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             dataset.appendChild(spatialEl);
         }
 
+        const spatialWkt = this.baseMapper.settings.typeConfig?.spatialWkt;
+        const geometry = spatialWkt ? this.normalizeGeometryType(this.baseMapper.wktToGeoJson(spatialWkt)) : undefined;
+        if (geometry) {
+            const addWktLiteral = (parent: Element, tag: string, wkt: string) => {
+                const el = doc.createElement(tag);
+                el.setAttribute('rdf:datatype', namespaces.GEOSPARQL + 'wktLiteral');
+                el.textContent = `<${CRS84}> ${wkt}`;
+                parent.appendChild(el);
+            };
+            const locationEl = doc.createElement('dct:Location');
+            // spatialWkt is already WKT text, use it as-is for locn:geometry
+            addWktLiteral(locationEl, 'locn:geometry', spatialWkt);
+            const bboxWkt = GeoJsonUtils.toWkt(GeoJsonUtils.getBbox(geometry));
+            if (bboxWkt) {
+                addWktLiteral(locationEl, 'dcat:bbox', bboxWkt);
+            }
+            const centroidWkt = GeoJsonUtils.toWkt(GeoJsonUtils.getCentroid(geometry));
+            if (centroidWkt) {
+                addWktLiteral(locationEl, 'dcat:centroid', centroidWkt);
+            }
+            const geoSpatialEl = doc.createElement('dct:spatial');
+            geoSpatialEl.appendChild(locationEl);
+            dataset.appendChild(geoSpatialEl);
+        }
+
         const landingPageUrl = this.baseMapper.getLandingPageUrl();
         if (landingPageUrl) {
             const landingPageEl = doc.createElement('dcat:landingPage');
@@ -276,7 +369,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             dataset.appendChild(landingPageEl);
         }
 
-        // return '<?xml version="1.0" encoding="utf-8"?>\n' + prettyPrintXml(doc.toString());
-        return '<?xml version="1.0" encoding="utf-8"?>\n' + doc.toString();
+        return '<?xml version="1.0" encoding="utf-8"?>\n' + prettyPrintXml(doc.toString());
+        // return '<?xml version="1.0" encoding="utf-8"?>\n' + doc.toString();
     }
 }

@@ -90,7 +90,7 @@ export class ScheduleService {
             if (schedulingIsActive) {
                 this.scheduleJob(id, mode, cron[mode].pattern, !configData.disable);
                 let cronJob = new CronJob(cron[mode].pattern, () => {}, null, false);
-                dates.push(cronJob.nextDate().toDate());
+                dates.push(cronJob.nextDate().toJSDate());
             } else {
                 this.stopJob(id, mode);
                 dates.push(null);
@@ -163,7 +163,7 @@ export class ScheduleService {
         if (schedulingIsActive) {
             this.scheduleUrlCheckJob(cron.pattern, true);
             let cronJob = new CronJob(cron.pattern, () => {}, null, false);
-            return cronJob.nextDate().toDate();
+            return cronJob.nextDate().toJSDate();
         } else {
             this.stopUrlCheckJob();
             return null;
@@ -230,7 +230,7 @@ export class ScheduleService {
         if (schedulingIsActive) {
             this.scheduleIndexCheckJob(cron.pattern, true);
             let cronJob = new CronJob(cron.pattern, () => {}, null, false);
-            return cronJob.nextDate().toDate();
+            return cronJob.nextDate().toJSDate();
         } else {
             this.stopIndexCheckJob();
             return null;
@@ -298,7 +298,7 @@ export class ScheduleService {
         if (schedulingIsActive) {
             this.scheduleIndexBackupJob(cron.cronPattern, true);
             let cronJob = new CronJob(cron.cronPattern, () => {}, null, false);
-            return cronJob.nextDate().toDate();
+            return cronJob.nextDate().toJSDate();
         } else {
             this.stopIndexBackupJob();
             return null;

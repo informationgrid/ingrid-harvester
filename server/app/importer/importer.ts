@@ -149,8 +149,12 @@ export abstract class Importer<S extends ImporterSettings> {
                 observer.next(completeMsg);
             }
             catch (err) {
-                if (err.message) {
-                    this.summary.errors.push({ type: 'app', error: err.message });
+                let message = err?.message ?? String(err);
+                if (message) {
+                    if (message.includes('The user aborted a request.')) {
+                        message = 'A request to the server timed out. If this occurs frequently, try reducing the "maxRecords" setting.';
+                    }
+                    this.summary.errors.push({ type: 'app', error: message });
                 }
                 await this.database.rollbackTransaction();
                 let msg = this.summary.errors.find(e => e.type === 'app' || e.type === 'database')?.error;
