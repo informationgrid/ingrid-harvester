@@ -1,0 +1,151 @@
+{
+  "additional_html_1": "https://sgx.geodatenzentrum.de/wms_topplus_open?VERSION=1.3.0&amp;REQUEST=GetMap&amp;CRS=EPSG:25832&amp;BBOX=448689.133171803,5908112.776817482,598253.7783341974,5998824.795060285&amp;LAYERS=web&amp;FORMAT=image/png&amp;STYLES=&amp;WIDTH=200&amp;HEIGHT=200",
+  "collection": {
+    "name": "Harvester"
+  },
+  "content": [
+    true,
+    "ms:Fahrrinne1999",
+    1,
+    "<iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CFahrrinne%20(1999)%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideelbe_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:Fahrrinne1999%2CWMS%7C%7CFahrrinne%20(1999)%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideelbe_ogc%2Fbs%3F%7C%7Cms:Fahrrinne1999%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"250\" frameborder=\"0\" style=\"border:0\"></iframe>",
+    "zdm_wfs",
+    "Bund",
+    "BAW",
+    "default",
+    "metadata",
+    "wfs",
+    "IDF_1.0",
+    "dsc_wfs",
+    "Harvester",
+    "false",
+    "9f22a4e2-466c-5b1d-8987-89814ae44834",
+    "Harvester",
+    "https://www.kuestendaten.de/DE/dynamisch/tideelbe_ogc/bs",
+    "https://www.kuestendaten.de/DE/dynamisch/tideelbe_ogc/bs?REQUEST=GetFeature&SERVICE=WFS&VERSION=2.0.0&typeName=ms:Fahrrinne1999",
+    "wfs",
+    "9f22a4e2-466c-5b1d-8987-89814ae44834",
+    "9f22a4e2-466c-5b1d-8987-89814ae44834",
+    "Fahrrinne (1999)",
+    "WebFeatureService (WFS) Küstendaten, FeatureType: ms:Fahrrinne1999<br>Dieser FeatureType umfasst <b>1</b> Feature(s).<br>Verlauf der Fahrrinne an der Unterelbe nach der Fahrrinnenanpassung 1999/2000 - Herausgeber: WSA Elbe-Nordsee - Beweissicherung Stand: Planfeststellung Fahrrinnenanpassung an der Unter- und Außenelbe 1999/2000 - Aktuelle Daten erhalten Sie ausschließlich über das nautische Büro des zuständigen Wasserstraßen- und Schifffahrtsamtes.<br>",
+    8.22971710656032,
+    10.5035995762961,
+    53.3197061130804,
+    54.1281513545163,
+    "Polygon",
+    8.22971710656032,
+    54.1281513545163,
+    8.22971710656032,
+    53.3197061130804,
+    10.5035995762961,
+    53.3197061130804,
+    10.5035995762961,
+    54.1281513545163,
+    8.22971710656032,
+    54.1281513545163,
+    8.22971710656032,
+    53.3197061130804,
+    10.5035995762961,
+    54.1281513545163,
+    "https://sgx.geodatenzentrum.de/wms_topplus_open?VERSION=1.3.0&amp;REQUEST=GetMap&amp;CRS=EPSG:25832&amp;BBOX=448689.133171803,5908112.776817482,598253.7783341974,5998824.795060285&amp;LAYERS=web&amp;FORMAT=image/png&amp;STYLES=&amp;WIDTH=200&amp;HEIGHT=200",
+    "6110d1682adc0a592e0c98bf0a8eb283e61d23a4"
+  ],
+  "dataSourceName": "Harvester",
+  "datatype": [
+    "default",
+    "metadata",
+    "wfs",
+    "IDF_1.0",
+    "dsc_wfs"
+  ],
+  "distributions": [
+    {
+      "title": null,
+      "format": null,
+      "access_url": null,
+      "operates_on": null
+    }
+  ],
+  "extras": {
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-08-27T08:29:09.294Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-08-27T08:29:09.039Z",
+      "merged_from": [
+        "Fahrrinne1999.0"
+      ],
+      "modified": null,
+      "source": {
+        "raw_data_source": "https://www.kuestendaten.de/DE/dynamisch/tideelbe_ogc/bs?REQUEST=GetFeature&SERVICE=WFS&VERSION=2.0.0&typeName=ms:Fahrrinne1999",
+        "source_base": "https://www.kuestendaten.de/DE/dynamisch/tideelbe_ogc/bs",
+        "source_type": "wfs"
+      }
+    }
+  },
+  "iPlugId": "zdm_wfs",
+  "idf": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><html xmlns=\"http://www.portalu.de/IDF/1.0\"><head/><body><h1>Fahrrinne (1999)</h1><p>WebFeatureService (WFS) Küstendaten, FeatureType: ms:Fahrrinne1999&lt;br&gt;Dieser FeatureType umfasst &lt;b&gt;1&lt;/b&gt; Feature(s).&lt;br&gt;Verlauf der Fahrrinne an der Unterelbe nach der Fahrrinnenanpassung 1999/2000 - Herausgeber: WSA Elbe-Nordsee - Beweissicherung Stand: Planfeststellung Fahrrinnenanpassung an der Unter- und Außenelbe 1999/2000 - Aktuelle Daten erhalten Sie ausschließlich über das nautische Büro des zuständigen Wasserstraßen- und Schifffahrtsamtes.&lt;br&gt;</p><h2>Ort:</h2><ul><li>Nord: 54.1281513545163</li><li>West: 8.22971710656032</li><li>Ost: 10.5035995762961</li><li>S&amp;uuml;d: 53.3197061130804</li></ul><div>&lt;iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CFahrrinne%20(1999)%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideelbe_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:Fahrrinne1999%2CWMS%7C%7CFahrrinne%20(1999)%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideelbe_ogc%2Fbs%3F%7C%7Cms:Fahrrinne1999%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"450\" frameborder=\"0\" style=\"border:0\"&gt;&lt;/iframe&gt;</div><br/><h2>Details:</h2><h4>Feature Attribute:</h4><ul><li>msGeometry</li><li>Id</li></ul><br/><h2>Features:</h2>\n<h4>Fahrrinne1999.0</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 5930442.020030, 465187.512332 / 5981173.856571, 562994.845932</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 5981173.856571</li><li>West: 465187.512332</li><li>Ost: 562994.845932</li><li>S&amp;uuml;d: 5930442.020030</li></ul>\n<div>&lt;div id=\"map_ms_Fahrrinne1999_0\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Fahrrinne1999_0 = addLeafletMapWithId('map_ms_Fahrrinne1999_0', getOSMLayer(''), [ [53.5217525214317,8.474911162238747],[53.97505983737496,9.960466292722234] ], null , 10);map_ms_Fahrrinne1999_0.addLayer(L.rectangle([ [53.5217525214317,8.474911162238747],[53.97505983737496,9.960466292722234] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Fahrrinne1999.0\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n</body></html>",
+  "is_feature_type": true,
+  "isfolder": "false",
+  "map_iframe": "<iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CFahrrinne%20(1999)%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideelbe_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:Fahrrinne1999%2CWMS%7C%7CFahrrinne%20(1999)%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideelbe_ogc%2Fbs%3F%7C%7Cms:Fahrrinne1999%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"250\" frameborder=\"0\" style=\"border:0\"></iframe>",
+  "metadata": {
+    "created": null
+  },
+  "number_of_features": 1,
+  "partner": [
+    "Bund"
+  ],
+  "provider": [
+    "BAW"
+  ],
+  "sort_hash": "6110d1682adc0a592e0c98bf0a8eb283e61d23a4",
+  "spatial": {
+    "geometries": [
+      {
+        "bbox": [
+          8.22971710656032,
+          53.3197061130804,
+          10.5035995762961,
+          54.1281513545163
+        ],
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              8.22971710656032,
+              54.1281513545163
+            ],
+            [
+              8.22971710656032,
+              53.3197061130804
+            ],
+            [
+              10.5035995762961,
+              53.3197061130804
+            ],
+            [
+              10.5035995762961,
+              54.1281513545163
+            ],
+            [
+              8.22971710656032,
+              54.1281513545163
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "summary": "WebFeatureService (WFS) Küstendaten, FeatureType: ms:Fahrrinne1999<br>Dieser FeatureType umfasst <b>1</b> Feature(s).<br>Verlauf der Fahrrinne an der Unterelbe nach der Fahrrinnenanpassung 1999/2000 - Herausgeber: WSA Elbe-Nordsee - Beweissicherung Stand: Planfeststellung Fahrrinnenanpassung an der Unter- und Außenelbe 1999/2000 - Aktuelle Daten erhalten Sie ausschließlich über das nautische Büro des zuständigen Wasserstraßen- und Schifffahrtsamtes.<br>",
+  "t01_object": {
+    "obj_id": "9f22a4e2-466c-5b1d-8987-89814ae44834",
+    "org_obj_id": "9f22a4e2-466c-5b1d-8987-89814ae44834"
+  },
+  "title": "Fahrrinne (1999)",
+  "typename": "ms:Fahrrinne1999",
+  "uuid": "9f22a4e2-466c-5b1d-8987-89814ae44834",
+  "x1": 8.22971710656032,
+  "x2": 10.5035995762961,
+  "y1": 53.3197061130804,
+  "y2": 54.1281513545163
+}

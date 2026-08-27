@@ -22,8 +22,15 @@
  */
 
 import type { WfsSettings } from '../../app/importer/wfs/wfs.settings.js';
+import * as MiscUtils from '../../app/utils/misc.utils.js';
 import wfsZdmKuestendaten from '../data/wfs/zdm-kuestendaten/config.json' with { type: 'json' };
-import { runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
+import wfsZdmNok from '../data/wfs/zdm-nok/config.json' with { type: 'json' };
+import wfsZdmNsk from '../data/wfs/zdm-nsk/config.json' with { type: 'json' };
+import wfsZdmOsk from '../data/wfs/zdm-osk/config.json' with { type: 'json' };
+import wfsZdmTideelbe from '../data/wfs/zdm-tideelbe/config.json' with { type: 'json' };
+import wfsZdmTideems from '../data/wfs/zdm-tideems/config.json' with { type: 'json' };
+import wfsZdmTideweser from '../data/wfs/zdm-tideweser/config.json' with { type: 'json' };
+import { type ImporterIntegrationTestCase, runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
 
 describe('WFS Integration Tests', function () {
     this.timeout(60000);
@@ -32,43 +39,94 @@ describe('WFS Integration Tests', function () {
 
     const wfsTestcase = {
         profile: 'ingrid',
-        mocks: [
-            {
-                match: { query: { request: 'GetCapabilities' }},
-                fixture: 'input/GetCapabilities.xml'
-            }
-        ],
         expectedDocsDir: 'elasticsearch'
-    };
+    } satisfies Partial<ImporterIntegrationTestCase<any>>;
 
-    it('should harvest records from WFS and push them to ES (ZDM Kuestendaten)', async () => {
+    it('ZDM kuestendaten', async () => {
         await runImporterIntegrationTest({
             ...wfsTestcase,
             settings: wfsZdmKuestendaten as WfsSettings,
             baseFixture: 'test/data/wfs/zdm-kuestendaten',
-            mocks: [
-                ...wfsTestcase.mocks,
-                {
-                    match: { query: { request: 'GetFeature', typename: 'ms:DeichverbandZustaendigkeitBeschriftung', resultType: 'hits' }},
-                    fixture: 'input/DeichverbandZustaendigkeitBeschriftung/GetFeature_hits.xml'
-                },
-                {
-                    match: { query: { request: 'DescribeFeatureType', typename: 'ms:DeichverbandZustaendigkeitBeschriftung' }},
-                    fixture: 'input/DeichverbandZustaendigkeitBeschriftung/DescribeFeatureType.xml'
-                },
-                {
-                    match: { query: { request: 'GetFeature', typename: 'ms:DeichverbandZustaendigkeitBeschriftung', resultType: 'results' }},
-                    fixture: 'input/DeichverbandZustaendigkeitBeschriftung/GetFeature.xml'
-                },
-                {
-                    match: { query: { request: 'GetFeature', typename: 'ms:ElbeFrKilometrierung', resultType: 'hits' }},
-                    fixture: 'input/ElbeFrKilometrierung/GetFeature_hits.xml'
-                },
-                {
-                    match: { query: { request: 'DescribeFeatureType', typename: 'ms:ElbeFrKilometrierung' }},
-                    fixture: 'input/ElbeFrKilometrierung/DescribeFeatureType.xml'
-                }
-            ]
+            mocks: createWfsMocks(wfsZdmKuestendaten)
+        });
+    });
+
+    it('ZDM nok', async () => {
+        await runImporterIntegrationTest({
+            ...wfsTestcase,
+            settings: wfsZdmNok as WfsSettings,
+            baseFixture: 'test/data/wfs/zdm-nok',
+            mocks: createWfsMocks(wfsZdmNok)
+        });
+    });
+
+    it('ZDM nsk', async () => {
+        await runImporterIntegrationTest({
+            ...wfsTestcase,
+            settings: wfsZdmNsk as WfsSettings,
+            baseFixture: 'test/data/wfs/zdm-nsk',
+            mocks: createWfsMocks(wfsZdmNsk)
+        });
+    });
+
+    it('ZDM osk', async () => {
+        await runImporterIntegrationTest({
+            ...wfsTestcase,
+            settings: wfsZdmOsk as WfsSettings,
+            baseFixture: 'test/data/wfs/zdm-osk',
+            mocks: createWfsMocks(wfsZdmOsk)
+        });
+    });
+
+    it('ZDM tideelbe', async () => {
+        await runImporterIntegrationTest({
+            ...wfsTestcase,
+            settings: wfsZdmTideelbe as WfsSettings,
+            baseFixture: 'test/data/wfs/zdm-tideelbe',
+            mocks: createWfsMocks(wfsZdmTideelbe)
+        });
+    });
+
+    it('ZDM tideems', async () => {
+        await runImporterIntegrationTest({
+            ...wfsTestcase,
+            settings: wfsZdmTideems as WfsSettings,
+            baseFixture: 'test/data/wfs/zdm-tideems',
+            mocks: createWfsMocks(wfsZdmTideems)
+        });
+    });
+
+    it('ZDM tideweser', async () => {
+        await runImporterIntegrationTest({
+            ...wfsTestcase,
+            settings: wfsZdmTideweser as WfsSettings,
+            baseFixture: 'test/data/wfs/zdm-tideweser',
+            mocks: createWfsMocks(wfsZdmTideweser)
         });
     });
 });
+
+function createWfsMocks(settings: { typename: string }): any[] {
+    const mocks = [];
+    mocks.push({
+        match: { query: { request: 'GetCapabilities' }},
+        fixture: 'input/GetCapabilities.xml'
+    });
+    const typenames = settings.typename.split(',');
+    for (const qualifiedTypename of typenames) {
+        const typename = MiscUtils.substringAfterLast(qualifiedTypename, ':');
+        mocks.push({
+            match: { query: { request: 'DescribeFeatureType', typename: qualifiedTypename }},
+            fixture: `input/${typename}/DescribeFeatureType.xml`
+        });
+        mocks.push({
+            match: { query: { request: 'GetFeature', typename: qualifiedTypename, resultType: 'hits' }},
+            fixture: `input/${typename}/GetFeature_hits.xml`
+        });
+        mocks.push({
+            match: { query: { request: 'GetFeature', typename: qualifiedTypename, resultType: 'results' }},
+            fixture: `input/${typename}/GetFeature.xml`
+        });
+    }
+    return mocks;
+}

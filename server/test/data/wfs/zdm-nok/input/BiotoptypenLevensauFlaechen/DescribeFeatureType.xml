@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://mapserver.gis.umn.edu/mapserver" xmlns:ms="http://mapserver.gis.umn.edu/mapserver" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml/3.2" elementFormDefault="qualified" version="0.1">
+    <import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
+    <element name="BiotoptypenLevensauFlaechen" type="ms:BiotoptypenLevensauFlaechenType" substitutionGroup="gml:AbstractFeature"/>
+    <complexType name="BiotoptypenLevensauFlaechenType">
+        <complexContent>
+            <extension base="gml:AbstractFeatureType">
+                <sequence>
+                    <element name="msGeometry" type="gml:GeometryPropertyType" minOccurs="0" maxOccurs="1"/>
+                    <element name="OBJEKT_ID" minOccurs="0" type="string"/>
+                    <element name="KUERZEL" minOccurs="0" type="string"/>
+                    <element name="BEMERKUNG" minOccurs="0" type="string"/>
+                    <element name="BIOTOPTYP2" minOccurs="0" type="string"/>
+                    <element name="BIOTOPTYP3" minOccurs="0" type="string"/>
+                    <element name="BIOTOPTYP4" minOccurs="0" type="string"/>
+                    <element name="DATUM" minOccurs="0" type="string"/>
+                    <element name="ZEITRAUM" minOccurs="0" type="string"/>
+                    <element name="BIOTOPWERT" minOccurs="0" type="string"/>
+                    <element name="MASSSTAB" minOccurs="0" type="string"/>
+                    <element name="SHAPE_AREA" minOccurs="0" type="string"/>
+                    <element name="RECHTSWERT" minOccurs="0" type="string"/>
+                    <element name="HOCHWERT" minOccurs="0" type="string"/>
+                    <element name="U_EINHEIT" minOccurs="0" type="string"/>
+                    <element name="H_EINHEIT" minOccurs="0" type="string"/>
+                    <element name="O_GRUPPE" minOccurs="0" type="string"/>
+                    <element name="FARBE" minOccurs="0" type="string"/>
+                    <element name="SCHUTZ" minOccurs="0" type="string"/>
+                    <element name="RL_STATUS" minOccurs="0" type="string"/>
+                    <element name="RL_CODE" minOccurs="0" type="string"/>
+                    <element name="RL_TEXT" minOccurs="0" type="string"/>
+                    <element name="SUCHFELD" minOccurs="0" type="string"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+</schema>
