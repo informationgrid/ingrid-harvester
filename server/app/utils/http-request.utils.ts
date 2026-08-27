@@ -313,6 +313,14 @@ export class RequestDelegate {
         }
 
         if (config.json) {
+            if (!resolvedResponse.ok) {
+                // a non-2xx response (e.g. a 502 from a proxy/gateway in front of the actual source) often
+                // isn't JSON at all - fail with a clear message instead of letting response.json() throw an
+                // opaque "invalid json response body ... reason: Unexpected token ..." parse error
+                const bodyText = await resolvedResponse.text().catch(() => '');
+                throw new Error(`Request to ${fullURL} failed with HTTP ${resolvedResponse.status} ${resolvedResponse.statusText}` +
+                    (bodyText ? `: ${MiscUtils.truncateErrorMessage(bodyText)}` : ''));
+            }
             return resolvedResponse.json();
         }
         else {
