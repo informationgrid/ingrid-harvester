@@ -276,19 +276,27 @@ export class RequestDelegate {
         // set timeout for fetch
         // this is a workaround - we want to use `signal`, but cannot give it directly as it starts running as soon as
         // it is declared. `timeout` (which is deprecated) works different (worse). So we just take the timeout value
-        // and create the signal here directly, then remove the timeout
-        config.signal = AbortSignal.timeout(config.timeout ?? DEFAULT_TIMEOUT_MS);
-        config.timeout = null;
-        config.compress = false;
+        // and create the signal here directly, then remove the timeout.
+        // Important: we do NOT mutate `config` itself here - `config` may be the same object reused across several
+        // requests (e.g. a paginated harvest reuses the same config, only changing `.uri` between pages), and
+        // overwriting `config.timeout`/`config.signal` in place would silently corrupt the timeout for every
+        // subsequent request using that object. We build a separate options object for the actual fetch call instead.
+        const timeoutMs = config.timeout ?? DEFAULT_TIMEOUT_MS;
+        const fetchConfig: RequestOptions = { ...config, timeout: undefined, compress: false };
 
         if (config.resolveWithFullResponse) {
-            return fetch(fullURL, config);
+            fetchConfig.signal = AbortSignal.timeout(timeoutMs);
+            return fetch(fullURL, fetchConfig);
         }
 
         let resolvedResponse: Response;
         while (true) {
             try {
-                resolvedResponse = await fetch(fullURL, config);
+                // create a fresh signal for every attempt - AbortSignal.timeout() starts counting down
+                // as soon as it's created, so reusing one across retries would leave it already aborted
+                // for every attempt after the first one times out, defeating the retry logic below
+                fetchConfig.signal = AbortSignal.timeout(timeoutMs);
+                resolvedResponse = await fetch(fullURL, fetchConfig);
                 break;
             }
             catch (e) {
