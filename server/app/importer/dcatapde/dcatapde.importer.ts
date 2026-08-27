@@ -69,7 +69,19 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
 
         while (true) {
             log.debug('Requesting next records');
-            let response = await requestDelegate.doRequest();
+            let response: string;
+            try {
+                response = await requestDelegate.doRequest();
+            }
+            catch (e) {
+                // doRequest() already retries transient failures internally; if it still failed,
+                // the source is unreachable/too slow beyond what retries can fix. Stop paging here
+                // and keep everything harvested so far instead of losing it to a full rollback.
+                const message = `Error while fetching DCAT Records from ${requestConfig.uri}: ${e.message ?? e}. Stopping harvest, keeping ${this.numIndexDocs} already harvested record(s).`;
+                log.error(message);
+                this.summary.warnings.push([message]);
+                break;
+            }
             let harvestTime = new Date();
 
             let responseDom = this.domParser.parseFromString(response);
