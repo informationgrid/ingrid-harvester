@@ -125,7 +125,7 @@ function createWfsMocks(settings: { typename: string }): any[] {
         });
         mocks.push({
             match: { query: { request: 'GetFeature', typename: qualifiedTypename, resultType: 'results' }},
-            fixture: `input/${typename}/GetFeature.xml`
+            fixture: `input/${typename}/GetFeature_results.xml`
         });
     }
     return mocks;
