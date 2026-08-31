@@ -1,0 +1,619 @@
+{
+  "collection": {
+    "name": "Harvester"
+  },
+  "contacts": [
+    {
+      "mbox": "geodienste@rostock.de",
+      "name": "Hanse- und Universitätsstadt Rostock",
+      "role": 11
+    }
+  ],
+  "content": [
+    "opendata-hro",
+    "mv",
+    "Rostock",
+    "metadata",
+    "Harvester",
+    "false",
+    "5f7ddbd5-84e0-4eaf-8e24-4484e46527fb",
+    "5f7ddbd5-84e0-4eaf-8e24-4484e46527fb",
+    "Harvester",
+    "https://www.opendata-hro.de/catalog.rdf",
+    "dcat",
+    "https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb",
+    "3d042196c1efe7077279cbd8c29aeba590c07874",
+    "5f7ddbd5-84e0-4eaf-8e24-4484e46527fb",
+    "Oberbürgermeisterwahl 2019",
+    "Ergebnisse nach Stadtbereichen, Standorte der Wahllokale sowie Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl)",
+    "https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb",
+    11,
+    "Hanse- und Universitätsstadt Rostock",
+    "geodienste@rostock.de",
+    "Kommunalverwaltung",
+    "",
+    "FREE",
+    "Politik",
+    "",
+    "FREE",
+    "Stadtverwaltung",
+    "",
+    "FREE",
+    "Statistik",
+    "",
+    "FREE",
+    "Statistische Daten",
+    "",
+    "FREE",
+    "Statistische Information",
+    "",
+    "FREE",
+    "Regierung und öffentlicher Sektor",
+    "10",
+    "THEMES",
+    "CSV",
+    "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.csv",
+    "Ergebnisse der Oberbürgermeisterwahl 2019",
+    "Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_bachmann (Anteil der gültigen Stimmen für die Einzelbewerberin Dr. Sybille Bachmann an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_braeuer (Anteil der gültigen Stimmen für den Einzelbewerber Matthias Bräuer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_flachsmeyer (Anteil der gültigen Stimmen für den Bewerber Uwe Flachsmeyer (BÜNDNIS 90/DIE GRÜNEN) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_mueller (Anteil der gültigen Stimmen für den Bewerber Dr. Chris Müller-von Wrycz Rekowski (SPD) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_reimer (Anteil der gültigen Stimmen für den Einzelbewerber Tom Reimer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_schulze (Anteil der gültigen Stimmen für den Einzelbewerber Edgar Schulze an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_zierau (Anteil der gültigen Stimmen für den Bewerber Dr. Dirk Zierau (UFR) an den gültigen Stimmen insgesamt (in %)), stichwahl_wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %) bei der Stichwahl), stichwahl_stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %) bei der Stichwahl) und stichwahl_stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %) bei der Stichwahl).",
+    1993,
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "XLSX",
+    "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.xlsx",
+    "Ergebnisse der Oberbürgermeisterwahl 2019",
+    "Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_bachmann (Anteil der gültigen Stimmen für die Einzelbewerberin Dr. Sybille Bachmann an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_braeuer (Anteil der gültigen Stimmen für den Einzelbewerber Matthias Bräuer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_flachsmeyer (Anteil der gültigen Stimmen für den Bewerber Uwe Flachsmeyer (BÜNDNIS 90/DIE GRÜNEN) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_mueller (Anteil der gültigen Stimmen für den Bewerber Dr. Chris Müller-von Wrycz Rekowski (SPD) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_reimer (Anteil der gültigen Stimmen für den Einzelbewerber Tom Reimer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_schulze (Anteil der gültigen Stimmen für den Einzelbewerber Edgar Schulze an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_zierau (Anteil der gültigen Stimmen für den Bewerber Dr. Dirk Zierau (UFR) an den gültigen Stimmen insgesamt (in %)), stichwahl_wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %) bei der Stichwahl), stichwahl_stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %) bei der Stichwahl) und stichwahl_stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %) bei der Stichwahl).",
+    5199,
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "JSON",
+    "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.json",
+    "Ergebnisse der Oberbürgermeisterwahl 2019",
+    "Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_bachmann (Anteil der gültigen Stimmen für die Einzelbewerberin Dr. Sybille Bachmann an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_braeuer (Anteil der gültigen Stimmen für den Einzelbewerber Matthias Bräuer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_flachsmeyer (Anteil der gültigen Stimmen für den Bewerber Uwe Flachsmeyer (BÜNDNIS 90/DIE GRÜNEN) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_mueller (Anteil der gültigen Stimmen für den Bewerber Dr. Chris Müller-von Wrycz Rekowski (SPD) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_reimer (Anteil der gültigen Stimmen für den Einzelbewerber Tom Reimer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_schulze (Anteil der gültigen Stimmen für den Einzelbewerber Edgar Schulze an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_zierau (Anteil der gültigen Stimmen für den Bewerber Dr. Dirk Zierau (UFR) an den gültigen Stimmen insgesamt (in %)), stichwahl_wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %) bei der Stichwahl), stichwahl_stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %) bei der Stichwahl) und stichwahl_stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %) bei der Stichwahl).",
+    14100,
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "CSV",
+    "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.csv",
+    "Wahllokale der Oberbürgermeisterwahl 2019",
+    "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
+    26256,
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "XLSX",
+    "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.xlsx",
+    "Wahllokale der Oberbürgermeisterwahl 2019",
+    "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
+    13078,
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "GEOJSON",
+    "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.json",
+    "Wahllokale der Oberbürgermeisterwahl 2019",
+    "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
+    64268,
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "KML",
+    "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.kml",
+    "Wahllokale der Oberbürgermeisterwahl 2019",
+    "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
+    110699,
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "GML",
+    "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.gml",
+    "Wahllokale der Oberbürgermeisterwahl 2019",
+    "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
+    150678,
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "CSV",
+    "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.csv",
+    "Wahlbezirke der Oberbürgermeisterwahl 2019",
+    "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+    22634,
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "XLSX",
+    "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.xlsx",
+    "Wahlbezirke der Oberbürgermeisterwahl 2019",
+    "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+    8563,
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "GEOJSON",
+    "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.json",
+    "Wahlbezirke der Oberbürgermeisterwahl 2019",
+    "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+    483772,
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "Shape",
+    "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.shp.zip",
+    "Wahlbezirke der Oberbürgermeisterwahl 2019",
+    "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+    162331,
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "KML",
+    "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.kml",
+    "Wahlbezirke der Oberbürgermeisterwahl 2019",
+    "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+    637286,
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "GML",
+    "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.gml",
+    "Wahlbezirke der Oberbürgermeisterwahl 2019",
+    "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+    683359,
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "https://geo.sv.rostock.de/geodienste/oberbuergermeisterwahl_2019/wms",
+    "Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock",
+    "Diese Karte umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit sowie die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "https://geo.sv.rostock.de/geodienste/oberbuergermeisterwahl_2019/wfs",
+    "Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock",
+    "Diese Daten umfassen die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit sowie die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "https://geo.sv.rostock.de/inspire/su-vector-mayorelections/view?service=WMS&version=1.3.0&request=GetCapabilities",
+    "Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock",
+    "Diese Karte umfasst die Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock.",
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "https://geo.sv.rostock.de/inspire/su-vector-mayorelections/download?service=WFS&version=2.0.0&request=GetCapabilities",
+    "Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock",
+    "Diese Daten umfassen die Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock mit Informationen zu Nummer.",
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "http://dcat-ap.de/def/politicalGeocoding/Level/administrativeDistrict",
+    "Polygon",
+    11.99143,
+    54.03856,
+    11.99143,
+    54.26196,
+    12.31306,
+    54.26196,
+    12.31306,
+    54.03856,
+    11.99143,
+    54.03856,
+    "",
+    ""
+  ],
+  "dataSourceName": "Harvester",
+  "datatype": [
+    "metadata"
+  ],
+  "dcat": {
+    "landingPage": "https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb"
+  },
+  "description": "Ergebnisse nach Stadtbereichen, Standorte der Wahllokale sowie Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl)",
+  "distributions": [
+    {
+      "title": "Ergebnisse der Oberbürgermeisterwahl 2019",
+      "format": [
+        "CSV"
+      ],
+      "issued": "2019-08-15T09:31:07.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "byteSize": 1993,
+      "modified": "2026-08-25T02:16:09.398Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.csv",
+      "description": "Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_bachmann (Anteil der gültigen Stimmen für die Einzelbewerberin Dr. Sybille Bachmann an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_braeuer (Anteil der gültigen Stimmen für den Einzelbewerber Matthias Bräuer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_flachsmeyer (Anteil der gültigen Stimmen für den Bewerber Uwe Flachsmeyer (BÜNDNIS 90/DIE GRÜNEN) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_mueller (Anteil der gültigen Stimmen für den Bewerber Dr. Chris Müller-von Wrycz Rekowski (SPD) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_reimer (Anteil der gültigen Stimmen für den Einzelbewerber Tom Reimer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_schulze (Anteil der gültigen Stimmen für den Einzelbewerber Edgar Schulze an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_zierau (Anteil der gültigen Stimmen für den Bewerber Dr. Dirk Zierau (UFR) an den gültigen Stimmen insgesamt (in %)), stichwahl_wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %) bei der Stichwahl), stichwahl_stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %) bei der Stichwahl) und stichwahl_stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %) bei der Stichwahl).",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Ergebnisse der Oberbürgermeisterwahl 2019",
+      "format": [
+        "XLSX"
+      ],
+      "issued": "2019-08-15T09:31:07.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "byteSize": 5199,
+      "modified": "2026-08-25T02:16:09.398Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.xlsx",
+      "description": "Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_bachmann (Anteil der gültigen Stimmen für die Einzelbewerberin Dr. Sybille Bachmann an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_braeuer (Anteil der gültigen Stimmen für den Einzelbewerber Matthias Bräuer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_flachsmeyer (Anteil der gültigen Stimmen für den Bewerber Uwe Flachsmeyer (BÜNDNIS 90/DIE GRÜNEN) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_mueller (Anteil der gültigen Stimmen für den Bewerber Dr. Chris Müller-von Wrycz Rekowski (SPD) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_reimer (Anteil der gültigen Stimmen für den Einzelbewerber Tom Reimer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_schulze (Anteil der gültigen Stimmen für den Einzelbewerber Edgar Schulze an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_zierau (Anteil der gültigen Stimmen für den Bewerber Dr. Dirk Zierau (UFR) an den gültigen Stimmen insgesamt (in %)), stichwahl_wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %) bei der Stichwahl), stichwahl_stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %) bei der Stichwahl) und stichwahl_stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %) bei der Stichwahl).",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Ergebnisse der Oberbürgermeisterwahl 2019",
+      "format": [
+        "JSON"
+      ],
+      "issued": "2019-08-15T09:31:07.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "byteSize": 14100,
+      "modified": "2026-08-25T02:16:09.398Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.json",
+      "description": "Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_bachmann (Anteil der gültigen Stimmen für die Einzelbewerberin Dr. Sybille Bachmann an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_braeuer (Anteil der gültigen Stimmen für den Einzelbewerber Matthias Bräuer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_flachsmeyer (Anteil der gültigen Stimmen für den Bewerber Uwe Flachsmeyer (BÜNDNIS 90/DIE GRÜNEN) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_mueller (Anteil der gültigen Stimmen für den Bewerber Dr. Chris Müller-von Wrycz Rekowski (SPD) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_reimer (Anteil der gültigen Stimmen für den Einzelbewerber Tom Reimer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_schulze (Anteil der gültigen Stimmen für den Einzelbewerber Edgar Schulze an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_zierau (Anteil der gültigen Stimmen für den Bewerber Dr. Dirk Zierau (UFR) an den gültigen Stimmen insgesamt (in %)), stichwahl_wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %) bei der Stichwahl), stichwahl_stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %) bei der Stichwahl) und stichwahl_stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %) bei der Stichwahl).",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Wahllokale der Oberbürgermeisterwahl 2019",
+      "format": [
+        "CSV"
+      ],
+      "issued": "2019-04-29T11:17:49.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "byteSize": 26256,
+      "modified": "2026-08-25T02:16:09.399Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.csv",
+      "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Wahllokale der Oberbürgermeisterwahl 2019",
+      "format": [
+        "XLSX"
+      ],
+      "issued": "2019-04-29T11:17:49.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "byteSize": 13078,
+      "modified": "2026-08-25T02:16:09.399Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.xlsx",
+      "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Wahllokale der Oberbürgermeisterwahl 2019",
+      "format": [
+        "GEOJSON"
+      ],
+      "issued": "2019-04-29T11:17:49.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "byteSize": 64268,
+      "modified": "2026-08-25T02:16:09.399Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.json",
+      "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Wahllokale der Oberbürgermeisterwahl 2019",
+      "format": [
+        "KML"
+      ],
+      "issued": "2019-04-29T11:17:49.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "byteSize": 110699,
+      "modified": "2026-08-25T02:16:09.399Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.kml",
+      "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Wahllokale der Oberbürgermeisterwahl 2019",
+      "format": [
+        "GML"
+      ],
+      "issued": "2019-04-29T11:17:49.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "byteSize": 150678,
+      "modified": "2026-08-25T02:16:09.399Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.gml",
+      "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Wahlbezirke der Oberbürgermeisterwahl 2019",
+      "format": [
+        "CSV"
+      ],
+      "issued": "2019-04-29T11:17:49.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "byteSize": 22634,
+      "modified": "2026-08-25T02:16:09.399Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.csv",
+      "description": "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Wahlbezirke der Oberbürgermeisterwahl 2019",
+      "format": [
+        "XLSX"
+      ],
+      "issued": "2019-04-29T11:17:49.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "byteSize": 8563,
+      "modified": "2026-08-25T02:16:09.399Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.xlsx",
+      "description": "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Wahlbezirke der Oberbürgermeisterwahl 2019",
+      "format": [
+        "GEOJSON"
+      ],
+      "issued": "2019-04-29T11:17:49.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "byteSize": 483772,
+      "modified": "2026-08-25T02:16:09.399Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.json",
+      "description": "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Wahlbezirke der Oberbürgermeisterwahl 2019",
+      "format": [
+        "Shape"
+      ],
+      "issued": "2019-04-29T11:17:49.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "byteSize": 162331,
+      "modified": "2026-08-25T02:16:09.399Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.shp.zip",
+      "description": "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Wahlbezirke der Oberbürgermeisterwahl 2019",
+      "format": [
+        "KML"
+      ],
+      "issued": "2019-04-29T11:17:49.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "byteSize": 637286,
+      "modified": "2026-08-25T02:16:09.399Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.kml",
+      "description": "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Wahlbezirke der Oberbürgermeisterwahl 2019",
+      "format": [
+        "GML"
+      ],
+      "issued": "2019-04-29T11:17:49.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "byteSize": 683359,
+      "modified": "2026-08-25T02:16:09.399Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.gml",
+      "description": "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock",
+      "format": [],
+      "issued": "2019-04-29T11:17:49.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "modified": "2026-08-25T02:16:09.399Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/geodienste/oberbuergermeisterwahl_2019/wms",
+      "description": "Diese Karte umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit sowie die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock",
+      "format": [],
+      "issued": "2019-04-29T11:17:49.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "modified": "2026-08-25T02:16:09.399Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/geodienste/oberbuergermeisterwahl_2019/wfs",
+      "description": "Diese Daten umfassen die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit sowie die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock",
+      "format": [],
+      "issued": "2022-05-31T09:05:16.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "modified": "2026-08-25T02:16:09.399Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/inspire/su-vector-mayorelections/view?service=WMS&version=1.3.0&request=GetCapabilities",
+      "description": "Diese Karte umfasst die Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock",
+      "format": [],
+      "issued": "2022-05-31T09:05:16.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "modified": "2026-08-25T02:16:09.399Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/inspire/su-vector-mayorelections/download?service=WFS&version=2.0.0&request=GetCapabilities",
+      "description": "Diese Daten umfassen die Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock mit Informationen zu Nummer.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    }
+  ],
+  "extras": {
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-08-27T14:12:25.945Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-08-27T14:12:25.761Z",
+      "merged_from": [],
+      "modified": null,
+      "source": {
+        "portal_link": "https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb",
+        "source_base": "https://www.opendata-hro.de/catalog.rdf",
+        "source_type": "dcat"
+      }
+    }
+  },
+  "iPlugId": "opendata-hro",
+  "id": "5f7ddbd5-84e0-4eaf-8e24-4484e46527fb",
+  "isfolder": "false",
+  "keywords": [
+    {
+      "id": "",
+      "term": "Kommunalverwaltung",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "Politik",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "Stadtverwaltung",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "Statistik",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "Statistische Daten",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "Statistische Information",
+      "source": "FREE"
+    },
+    {
+      "id": "10",
+      "term": "Regierung und öffentlicher Sektor",
+      "source": "THEMES"
+    }
+  ],
+  "metadata": {
+    "created": null,
+    "modified": "2026-08-25T02:16:09.395Z"
+  },
+  "modified": "2026-08-25T02:16:09.395Z",
+  "partner": [
+    "mv"
+  ],
+  "political_geocoding_level_uri": "http://dcat-ap.de/def/politicalGeocoding/Level/administrativeDistrict",
+  "provider": [
+    "Rostock"
+  ],
+  "rdf": "<?xml version='1.0' encoding='UTF-8'?><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"><dcat:Dataset xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" rdf:about=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb\" xmlns:dcat=\"http://www.w3.org/ns/dcat#\">\n    <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Oberbürgermeisterwahl 2019</dct:title>\n    <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Ergebnisse nach Stadtbereichen, Standorte der Wahllokale sowie Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl)</dct:description>\n    <dct:identifier xmlns:dct=\"http://purl.org/dc/terms/\">5f7ddbd5-84e0-4eaf-8e24-4484e46527fb</dct:identifier>\n    <dcat:keyword>Kommunalverwaltung</dcat:keyword>\n    <dcat:keyword>Politik</dcat:keyword>\n    <dcat:keyword>Stadtverwaltung</dcat:keyword>\n    <dcat:keyword>Statistik</dcat:keyword>\n    <dcat:keyword>Statistische Daten</dcat:keyword>\n    <dcat:keyword>Statistische Information</dcat:keyword>\n    <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2019-04-29T13:17:39.646415</dct:issued>\n    <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:09.395251</dct:modified>\n    <dcat:contactPoint>\n      <vcard:Organization rdf:nodeID=\"N0bd172aa2b9d49469835d2aea0127311\" xmlns:vcard=\"http://www.w3.org/2006/vcard/ns#\">\n        <vcard:fn>Hanse- und Universitätsstadt Rostock</vcard:fn>\n        <vcard:hasEmail rdf:resource=\"mailto:geodienste@rostock.de\"/>\n        <vcard:hasEmail rdf:resource=\"mailto:mailto:geodienste@rostock.de\"/>\n      </vcard:Organization>\n    </dcat:contactPoint>\n    <dct:publisher rdf:resource=\"https://www.opendata-hro.de/organization/b952e781-ab4c-456a-8e7a-2845f7efaf83\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n    <dct:spatial xmlns:dct=\"http://purl.org/dc/terms/\">\n      <dct:Location rdf:nodeID=\"N5bad50bf2fde4add87cd62127d0b05ae\">\n        <locn:geometry rdf:datatype=\"http://www.opengis.net/ont/geosparql#wktLiteral\" xmlns:locn=\"http://www.w3.org/ns/locn#\">POLYGON ((11.9914 54.0386, 11.9914 54.2620, 12.3131 54.2620, 12.3131 54.0386, 11.9914 54.0386))</locn:geometry>\n        <locn:geometry rdf:datatype=\"https://www.iana.org/assignments/media-types/application/vnd.geo+json\" xmlns:locn=\"http://www.w3.org/ns/locn#\">{\"type\":\"Polygon\", \"coordinates\":[[[11.99143, 54.03856], [11.99143, 54.26196], [12.31306, 54.26196], [12.31306, 54.03856], [11.99143, 54.03856]]]}</locn:geometry>\n      </dct:Location>\n    </dct:spatial>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/1b98725c-5d11-4ca8-93fe-2376c1c822c3\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Ergebnisse der Oberbürgermeisterwahl 2019</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_bachmann (Anteil der gültigen Stimmen für die Einzelbewerberin Dr. Sybille Bachmann an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_braeuer (Anteil der gültigen Stimmen für den Einzelbewerber Matthias Bräuer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_flachsmeyer (Anteil der gültigen Stimmen für den Bewerber Uwe Flachsmeyer (BÜNDNIS 90/DIE GRÜNEN) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_mueller (Anteil der gültigen Stimmen für den Bewerber Dr. Chris Müller-von Wrycz Rekowski (SPD) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_reimer (Anteil der gültigen Stimmen für den Einzelbewerber Tom Reimer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_schulze (Anteil der gültigen Stimmen für den Einzelbewerber Edgar Schulze an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_zierau (Anteil der gültigen Stimmen für den Bewerber Dr. Dirk Zierau (UFR) an den gültigen Stimmen insgesamt (in %)), stichwahl_wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %) bei der Stichwahl), stichwahl_stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %) bei der Stichwahl) und stichwahl_stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %) bei der Stichwahl).</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:mediaType rdf:resource=\"https://www.iana.org/assignments/media-types/text/csv\"/>\n        <dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/CSV\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.csv\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2019-08-15T11:31:07</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:09.398844</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:15:59</dct:modified>\n        <dcat:byteSize rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\">1993</dcat:byteSize>\n        <spdx:checksum xmlns:spdx=\"http://spdx.org/rdf/terms#\">\n          <spdx:Checksum rdf:nodeID=\"N4355f71e16bf4eb5a1a724f85791ff9b\">\n            <spdx:checksumValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#hexBinary\">6c02baad2f1ee2830e374268f54c7c4c6d213f373206183542691e892aee8e3d</spdx:checksumValue>\n            <spdx:algorithm rdf:resource=\"http://dcat-ap.de/def/hashAlgorithms/sha/256\"/>\n          </spdx:Checksum>\n        </spdx:checksum>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcat:downloadURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.csv\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/8bc33fa0-ded1-447c-9ab4-1166ac9128d6\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Ergebnisse der Oberbürgermeisterwahl 2019</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_bachmann (Anteil der gültigen Stimmen für die Einzelbewerberin Dr. Sybille Bachmann an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_braeuer (Anteil der gültigen Stimmen für den Einzelbewerber Matthias Bräuer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_flachsmeyer (Anteil der gültigen Stimmen für den Bewerber Uwe Flachsmeyer (BÜNDNIS 90/DIE GRÜNEN) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_mueller (Anteil der gültigen Stimmen für den Bewerber Dr. Chris Müller-von Wrycz Rekowski (SPD) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_reimer (Anteil der gültigen Stimmen für den Einzelbewerber Tom Reimer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_schulze (Anteil der gültigen Stimmen für den Einzelbewerber Edgar Schulze an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_zierau (Anteil der gültigen Stimmen für den Bewerber Dr. Dirk Zierau (UFR) an den gültigen Stimmen insgesamt (in %)), stichwahl_wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %) bei der Stichwahl), stichwahl_stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %) bei der Stichwahl) und stichwahl_stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %) bei der Stichwahl).</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:mediaType rdf:resource=\"https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\"/>\n        <dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/XLSX\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.xlsx\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2019-08-15T11:31:07</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:09.398919</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:00</dct:modified>\n        <dcat:byteSize rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\">5199</dcat:byteSize>\n        <spdx:checksum xmlns:spdx=\"http://spdx.org/rdf/terms#\">\n          <spdx:Checksum rdf:nodeID=\"N08ec5415117e4fad872eeebad4981575\">\n            <spdx:checksumValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#hexBinary\">e0a87df70b053350fc77acfb7f1de08257268eb03f20040d509d6e0fcd1d5f63</spdx:checksumValue>\n            <spdx:algorithm rdf:resource=\"http://dcat-ap.de/def/hashAlgorithms/sha/256\"/>\n          </spdx:Checksum>\n        </spdx:checksum>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcat:downloadURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.xlsx\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/b30c2500-b841-497d-aab9-e5ba2519cf45\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Ergebnisse der Oberbürgermeisterwahl 2019</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_bachmann (Anteil der gültigen Stimmen für die Einzelbewerberin Dr. Sybille Bachmann an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_braeuer (Anteil der gültigen Stimmen für den Einzelbewerber Matthias Bräuer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_flachsmeyer (Anteil der gültigen Stimmen für den Bewerber Uwe Flachsmeyer (BÜNDNIS 90/DIE GRÜNEN) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_mueller (Anteil der gültigen Stimmen für den Bewerber Dr. Chris Müller-von Wrycz Rekowski (SPD) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_reimer (Anteil der gültigen Stimmen für den Einzelbewerber Tom Reimer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_schulze (Anteil der gültigen Stimmen für den Einzelbewerber Edgar Schulze an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_zierau (Anteil der gültigen Stimmen für den Bewerber Dr. Dirk Zierau (UFR) an den gültigen Stimmen insgesamt (in %)), stichwahl_wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %) bei der Stichwahl), stichwahl_stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %) bei der Stichwahl) und stichwahl_stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %) bei der Stichwahl).</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:mediaType rdf:resource=\"https://www.iana.org/assignments/media-types/application/json\"/>\n        <dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/JSON\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.json\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2019-08-15T11:31:07</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:09.398972</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:00</dct:modified>\n        <dcat:byteSize rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\">14100</dcat:byteSize>\n        <spdx:checksum xmlns:spdx=\"http://spdx.org/rdf/terms#\">\n          <spdx:Checksum rdf:nodeID=\"N2c319b637d574442a14137640a01a90a\">\n            <spdx:checksumValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#hexBinary\">cf90e20e25e77e58bd1d6c25e4eaa44136488c6dec8b1c1cafa3752f11d270f6</spdx:checksumValue>\n            <spdx:algorithm rdf:resource=\"http://dcat-ap.de/def/hashAlgorithms/sha/256\"/>\n          </spdx:Checksum>\n        </spdx:checksum>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcat:downloadURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.json\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/29632614-147d-4218-9ce2-fd90bd84edfd\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Wahllokale der Oberbürgermeisterwahl 2019</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:mediaType rdf:resource=\"https://www.iana.org/assignments/media-types/text/csv\"/>\n        <dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/CSV\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.csv\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2019-04-29T13:17:49</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:09.399022</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:00</dct:modified>\n        <dcat:byteSize rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\">26256</dcat:byteSize>\n        <spdx:checksum xmlns:spdx=\"http://spdx.org/rdf/terms#\">\n          <spdx:Checksum rdf:nodeID=\"N02847377ae25463282f51b99b1b2b1c0\">\n            <spdx:checksumValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#hexBinary\">2e1f53f207d1983ff38dfa86b7e75f16e8c40968e036ad05e7c27a16d0359b8d</spdx:checksumValue>\n            <spdx:algorithm rdf:resource=\"http://dcat-ap.de/def/hashAlgorithms/sha/256\"/>\n          </spdx:Checksum>\n        </spdx:checksum>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcat:downloadURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.csv\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/b6361cb7-fa1d-462a-8a60-2a13f519c1fa\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Wahllokale der Oberbürgermeisterwahl 2019</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:mediaType rdf:resource=\"https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\"/>\n        <dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/XLSX\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.xlsx\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2019-04-29T13:17:49</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:09.399073</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:00</dct:modified>\n        <dcat:byteSize rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\">13078</dcat:byteSize>\n        <spdx:checksum xmlns:spdx=\"http://spdx.org/rdf/terms#\">\n          <spdx:Checksum rdf:nodeID=\"Nee8285f8094645868483b17fe82e337a\">\n            <spdx:checksumValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#hexBinary\">264a200c6ca326d0e8d598d7d3059d1c176694d46eea0135341434fe8b2437df</spdx:checksumValue>\n            <spdx:algorithm rdf:resource=\"http://dcat-ap.de/def/hashAlgorithms/sha/256\"/>\n          </spdx:Checksum>\n        </spdx:checksum>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcat:downloadURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.xlsx\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/3611f8b7-3c73-43db-b775-8e2e13940498\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Wahllokale der Oberbürgermeisterwahl 2019</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:mediaType rdf:resource=\"https://www.iana.org/assignments/media-types/application/geo+json\"/>\n        <dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/GEOJSON\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.json\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2019-04-29T13:17:49</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:09.399122</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:00</dct:modified>\n        <dcat:byteSize rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\">64268</dcat:byteSize>\n        <spdx:checksum xmlns:spdx=\"http://spdx.org/rdf/terms#\">\n          <spdx:Checksum rdf:nodeID=\"N3206b36219474266b20e383efcfb02ef\">\n            <spdx:checksumValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#hexBinary\">a64bac47eb71155b520fe29518d01c757a5958fd866ba96380e2eb279065ce5d</spdx:checksumValue>\n            <spdx:algorithm rdf:resource=\"http://dcat-ap.de/def/hashAlgorithms/sha/256\"/>\n          </spdx:Checksum>\n        </spdx:checksum>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcat:downloadURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.json\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/43f7d154-a4fd-4510-bcd9-40e967e6f81c\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Wahllokale der Oberbürgermeisterwahl 2019</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:mediaType rdf:resource=\"https://www.iana.org/assignments/media-types/application/vnd.google-earth.kml+xml\"/>\n        <dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/KML\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.kml\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2019-04-29T13:17:49</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:09.399171</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:01</dct:modified>\n        <dcat:byteSize rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\">110699</dcat:byteSize>\n        <spdx:checksum xmlns:spdx=\"http://spdx.org/rdf/terms#\">\n          <spdx:Checksum rdf:nodeID=\"Na7d9701a7c4a4497aafb3b2745edf607\">\n            <spdx:checksumValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#hexBinary\">8ae4f0267bacb975c180a9c553a6efeafc2e9e1067ccb9a7d3856060edd21339</spdx:checksumValue>\n            <spdx:algorithm rdf:resource=\"http://dcat-ap.de/def/hashAlgorithms/sha/256\"/>\n          </spdx:Checksum>\n        </spdx:checksum>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcat:downloadURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.kml\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/e123ff27-aca6-4b6e-9941-b2e60aff825d\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Wahllokale der Oberbürgermeisterwahl 2019</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:mediaType rdf:resource=\"https://www.iana.org/assignments/media-types/application/gml+xml\"/>\n        <dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/GML\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.gml\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2019-04-29T13:17:49</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:09.399219</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:01</dct:modified>\n        <dcat:byteSize rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\">150678</dcat:byteSize>\n        <spdx:checksum xmlns:spdx=\"http://spdx.org/rdf/terms#\">\n          <spdx:Checksum rdf:nodeID=\"N1a0e6d71867945fcbc0d458bdc07af84\">\n            <spdx:checksumValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#hexBinary\">0f5a31e04e6cbd53591423cf56680503003922b1fe1d64e20f9e36cc34b2b3c7</spdx:checksumValue>\n            <spdx:algorithm rdf:resource=\"http://dcat-ap.de/def/hashAlgorithms/sha/256\"/>\n          </spdx:Checksum>\n        </spdx:checksum>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcat:downloadURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.gml\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/020eb299-598f-482e-bfa0-2120394dd1d6\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Wahlbezirke der Oberbürgermeisterwahl 2019</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:mediaType rdf:resource=\"https://www.iana.org/assignments/media-types/text/csv\"/>\n        <dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/CSV\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.csv\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2019-04-29T13:17:49</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:09.399267</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:01</dct:modified>\n        <dcat:byteSize rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\">22634</dcat:byteSize>\n        <spdx:checksum xmlns:spdx=\"http://spdx.org/rdf/terms#\">\n          <spdx:Checksum rdf:nodeID=\"N392b21d29a414c92afff66a49d3b3840\">\n            <spdx:checksumValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#hexBinary\">66d3b174e461bffc8cf0b06a379718243c46e22a837dd74f2c0d0315d5e9b759</spdx:checksumValue>\n            <spdx:algorithm rdf:resource=\"http://dcat-ap.de/def/hashAlgorithms/sha/256\"/>\n          </spdx:Checksum>\n        </spdx:checksum>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcat:downloadURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.csv\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/28a22608-04c4-44ea-9c8a-1fa42fac9dd1\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Wahlbezirke der Oberbürgermeisterwahl 2019</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:mediaType rdf:resource=\"https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\"/>\n        <dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/XLSX\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.xlsx\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2019-04-29T13:17:49</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:09.399316</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:01</dct:modified>\n        <dcat:byteSize rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\">8563</dcat:byteSize>\n        <spdx:checksum xmlns:spdx=\"http://spdx.org/rdf/terms#\">\n          <spdx:Checksum rdf:nodeID=\"Nae5863591c7a431db1326915b118d5b9\">\n            <spdx:checksumValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#hexBinary\">38c4a729f340839d37daf2efcd0e16771635ce2ceff980cabf79fc25ef73d710</spdx:checksumValue>\n            <spdx:algorithm rdf:resource=\"http://dcat-ap.de/def/hashAlgorithms/sha/256\"/>\n          </spdx:Checksum>\n        </spdx:checksum>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcat:downloadURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.xlsx\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/5c402695-1cda-4b70-8222-c77789abca00\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Wahlbezirke der Oberbürgermeisterwahl 2019</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:mediaType rdf:resource=\"https://www.iana.org/assignments/media-types/application/geo+json\"/>\n        <dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/GEOJSON\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.json\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2019-04-29T13:17:49</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:09.399364</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:01</dct:modified>\n        <dcat:byteSize rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\">483772</dcat:byteSize>\n        <spdx:checksum xmlns:spdx=\"http://spdx.org/rdf/terms#\">\n          <spdx:Checksum rdf:nodeID=\"N4befd7550e2645d29581e593d1529135\">\n            <spdx:checksumValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#hexBinary\">10b8b282177382b8ef0971d17f9e919b5c62d86d64bbbc42d6533d34e35c7549</spdx:checksumValue>\n            <spdx:algorithm rdf:resource=\"http://dcat-ap.de/def/hashAlgorithms/sha/256\"/>\n          </spdx:Checksum>\n        </spdx:checksum>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcat:downloadURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.json\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/66b9d7fb-1e17-4ead-8ff2-5b4b7096909d\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Wahlbezirke der Oberbürgermeisterwahl 2019</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:mediaType rdf:resource=\"https://www.iana.org/assignments/media-types/application/zip\"/>\n        <dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/SHP\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.shp.zip\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2019-04-29T13:17:49</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:09.399413</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:01</dct:modified>\n        <dcat:byteSize rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\">162331</dcat:byteSize>\n        <spdx:checksum xmlns:spdx=\"http://spdx.org/rdf/terms#\">\n          <spdx:Checksum rdf:nodeID=\"N3aea9cbee1f1494db666d051dcefbf0d\">\n            <spdx:checksumValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#hexBinary\">1376b0b3b6d10f9d0d6e68e23063abf869f5100970a7cbcd018acb43f1ba1bfa</spdx:checksumValue>\n            <spdx:algorithm rdf:resource=\"http://dcat-ap.de/def/hashAlgorithms/sha/256\"/>\n          </spdx:Checksum>\n        </spdx:checksum>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcat:downloadURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.shp.zip\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/aeb46547-981b-47c1-94b2-a07863878ba0\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Wahlbezirke der Oberbürgermeisterwahl 2019</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:mediaType rdf:resource=\"https://www.iana.org/assignments/media-types/application/vnd.google-earth.kml+xml\"/>\n        <dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/KML\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.kml\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2019-04-29T13:17:49</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:09.399460</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:02</dct:modified>\n        <dcat:byteSize rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\">637286</dcat:byteSize>\n        <spdx:checksum xmlns:spdx=\"http://spdx.org/rdf/terms#\">\n          <spdx:Checksum rdf:nodeID=\"N3764cb7ac4b44994b0df54f413cb0a45\">\n            <spdx:checksumValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#hexBinary\">1ed127f552a7835e317e035353f810ec7c6f4ee6d44c30441fe7f4f1866741db</spdx:checksumValue>\n            <spdx:algorithm rdf:resource=\"http://dcat-ap.de/def/hashAlgorithms/sha/256\"/>\n          </spdx:Checksum>\n        </spdx:checksum>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcat:downloadURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.kml\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/8d1b7b6b-4f9a-4d2e-8d43-6413f60b1f6b\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Wahlbezirke der Oberbürgermeisterwahl 2019</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:mediaType rdf:resource=\"https://www.iana.org/assignments/media-types/application/gml+xml\"/>\n        <dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/GML\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.gml\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2019-04-29T13:17:49</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:09.399506</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:02</dct:modified>\n        <dcat:byteSize rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\">683359</dcat:byteSize>\n        <spdx:checksum xmlns:spdx=\"http://spdx.org/rdf/terms#\">\n          <spdx:Checksum rdf:nodeID=\"N82d33d2c3aab42f485b25ad561852864\">\n            <spdx:checksumValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#hexBinary\">8b2afbb1e84d03254e10461a66e61c93bd5c64a7dab8fdacb08315b2e19939ac</spdx:checksumValue>\n            <spdx:algorithm rdf:resource=\"http://dcat-ap.de/def/hashAlgorithms/sha/256\"/>\n          </spdx:Checksum>\n        </spdx:checksum>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcat:downloadURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.gml\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/61ebad3a-a82e-4d1b-943d-916a9b9864ab\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Diese Karte umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit sowie die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/geodienste/oberbuergermeisterwahl_2019/wms\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2019-04-29T13:17:49</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:09.399553</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:02</dct:modified>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/5c379268-36b6-4f8a-8bab-cad4c83e912c\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Diese Daten umfassen die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit sowie die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/geodienste/oberbuergermeisterwahl_2019/wfs\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2019-04-29T13:17:49</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:09.399600</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:02</dct:modified>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/8b04044c-55f7-463f-90ef-6fc2ae9a01ae\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Diese Karte umfasst die Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/inspire/su-vector-mayorelections/view?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2022-05-31T11:05:16</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:09.399649</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:02</dct:modified>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/d6045821-341e-4c00-b4ad-c593ad7be31f\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Diese Daten umfassen die Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock mit Informationen zu Nummer.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/inspire/su-vector-mayorelections/download?service=WFS&amp;version=2.0.0&amp;request=GetCapabilities\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2022-05-31T11:05:16</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:09.399696</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-25T04:16:02</dct:modified>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:landingPage rdf:resource=\"https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb\"/>\n    <dcat:theme rdf:resource=\"http://publications.europa.eu/resource/authority/data-theme/GOVE\"/>\n    <dcatde:contributorID rdf:resource=\"http://dcat-ap.de/def/contributors/openDataHRO\" xmlns:dcatde=\"http://dcat-ap.de/def/dcatde/\"/>\n    <dcatde:geocodingDescription xmlns:dcatde=\"http://dcat-ap.de/def/dcatde/\">Rostock</dcatde:geocodingDescription>\n    <dcatde:politicalGeocodingLevelURI rdf:resource=\"http://dcat-ap.de/def/politicalGeocoding/Level/administrativeDistrict\" xmlns:dcatde=\"http://dcat-ap.de/def/dcatde/\"/>\n    <dcatde:politicalGeocodingURI rdf:resource=\"http://dcat-ap.de/def/politicalGeocoding/regionalKey/130030000000\" xmlns:dcatde=\"http://dcat-ap.de/def/dcatde/\"/>\n    <dcatde:maintainer xmlns:dcatde=\"http://dcat-ap.de/def/dcatde/\">\n      <foaf:Organization rdf:nodeID=\"N77afc208364e4867aba8ac931183932a\" xmlns:foaf=\"http://xmlns.com/foaf/0.1/\">\n        <foaf:name>Hanse- und Universitätsstadt Rostock</foaf:name>\n        <foaf:mbox>geodienste@rostock.de</foaf:mbox>\n      </foaf:Organization>\n    </dcatde:maintainer>\n    <dct:accessRights rdf:resource=\"http://publications.europa.eu/resource/authority/access-right/PUBLIC\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n    <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n    <dct:creator xmlns:dct=\"http://purl.org/dc/terms/\">\n      <foaf:Organization rdf:nodeID=\"N086b98f3f35541ae86544adbcb0023f2\" xmlns:foaf=\"http://xmlns.com/foaf/0.1/\">\n        <foaf:name>Hanse- und Universitätsstadt Rostock</foaf:name>\n        <foaf:mbox>geodienste@rostock.de</foaf:mbox>\n      </foaf:Organization>\n    </dct:creator>\n    <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n    <dct:temporal xmlns:dct=\"http://purl.org/dc/terms/\">\n      <dct:PeriodOfTime rdf:nodeID=\"Ne791f66e28524ceb9e218eb336efb495\">\n        <dcat:startDate rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\">2019-05-26T00:00:00+02:00</dcat:startDate>\n        <dcat:endDate rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\">2019-05-27T00:00:00+02:00</dcat:endDate>\n      </dct:PeriodOfTime>\n    </dct:temporal>\n  </dcat:Dataset></rdf:RDF>",
+  "sort_hash": "3d042196c1efe7077279cbd8c29aeba590c07874",
+  "spatial": {
+    "geometries": [
+      {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              11.99143,
+              54.03856
+            ],
+            [
+              11.99143,
+              54.26196
+            ],
+            [
+              12.31306,
+              54.26196
+            ],
+            [
+              12.31306,
+              54.03856
+            ],
+            [
+              11.99143,
+              54.03856
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "t01_object": {
+    "obj_id": "5f7ddbd5-84e0-4eaf-8e24-4484e46527fb"
+  },
+  "temporal": {
+    "accrual_periodicity": "",
+    "accrual_periodicity_key": ""
+  },
+  "title": "Oberbürgermeisterwahl 2019",
+  "uuid": "5f7ddbd5-84e0-4eaf-8e24-4484e46527fb"
+}

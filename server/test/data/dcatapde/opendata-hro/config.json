@@ -1,0 +1,16 @@
+{
+  "id": 1,
+  "dataSourceName": "Harvester",
+  "type": "DCATAPDE",
+  "sourceURL": "https://www.opendata-hro.de/catalog.rdf",
+  "catalogIds": [1],
+  "iPlugId": "opendata-hro",
+  "partner": "mv",
+  "provider": "Rostock",
+  "datatype": "metadata",
+  "eitherKeywords": [],
+  "harvestingMode": null,
+  "httpMethod": "POST",
+  "maxConcurrent": 1,
+  "timeout": 0
+}
