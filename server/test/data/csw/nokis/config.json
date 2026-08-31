@@ -1,0 +1,19 @@
+{
+  "id": 1,
+  "dataSourceName": "Harvester",
+  "type": "CSW",
+  "sourceURL": "https://nokis.niedersachsen.de/NOKIS/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetCapabilitiesServant$GET",
+  "catalogIds": [1],
+  "iPlugId": "geoportal",
+  "partner": "ni",
+  "provider": "nokis",
+  "datatype": "default,dsc_csw,csw,metadata,IDF_1.0",
+  "eitherKeywords": [],
+  "harvestingMode": null,
+  "httpMethod": "POST",
+  "maxConcurrent": 1,
+  "maxServices": 1,
+  "resolveOgcDistributions": false,
+  "simplifyTolerance": 0,
+  "timeout": 0
+}

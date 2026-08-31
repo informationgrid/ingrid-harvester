@@ -24,6 +24,7 @@
 import type { CswSettings } from '../../app/importer/csw/csw.settings.js';
 import cswEbaConfig from '../data/csw/eba/config.json' with { type: 'json' };
 import cswGdideConfig from '../data/csw/gdi-de/config.json' with { type: 'json' };
+import cswNokisConfig from '../data/csw/nokis/config.json' with { type: 'json' };
 import { type ImporterIntegrationTestCase, runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
 
 describe('CSW Integration Tests', function () {
@@ -77,6 +78,14 @@ describe('CSW Integration Tests', function () {
             ...cswTestcase,
             settings: cswEbaConfig as CswSettings,
             baseFixture: 'test/data/csw/eba'
+        });
+    });
+
+    it('nokis', async () => {
+        await runImporterIntegrationTest({
+            ...cswTestcase,
+            settings: cswNokisConfig as CswSettings,
+            baseFixture: 'test/data/csw/nokis'
         });
     });
 });

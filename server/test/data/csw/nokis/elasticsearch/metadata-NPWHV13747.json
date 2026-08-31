@@ -1,0 +1,847 @@
+{
+  "additional_html_1": "<img src='https://mdi.niedersachsen.de/preview_browser_metadata/Eiderente_1991_Frühjahr.jpg' height='100' class='preview_image' alt='Die Vorschaugrafik zeigt die Gesamtausdehnung des Datensatzes. Der eigentliche Datenbestand besteht aus den in rot dargestellten Punkten.' title='Die Vorschaugrafik zeigt die Gesamtausdehnung des Datensatzes. Der eigentliche Datenbestand besteht aus den in rot dargestellten Punkten.' >",
+  "alternatetitle": [
+    "Eiderentenzählung Winter 1991 UIG"
+  ],
+  "capabilities_url": [],
+  "collection": {
+    "name": "Harvester"
+  },
+  "content": [
+    "geoportal",
+    "ni",
+    "nokis",
+    "default",
+    "dsc_csw",
+    "csw",
+    "metadata",
+    "IDF_1.0",
+    "Harvester",
+    "false",
+    "metadata-NPWHV13747",
+    "Harvester",
+    "dataset",
+    "https://nokis.niedersachsen.de/NOKIS/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetCapabilitiesServant$GET",
+    "https://nokis.niedersachsen.de/NOKIS/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetCapabilitiesServant$GET?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=metadata-NPWHV13747",
+    "csw",
+    "https://mdi.niedersachsen.de/geoserver/Eiderente/wms",
+    "https://mdi.niedersachsen.de/geoserver/Eiderente/wms?",
+    "WMS",
+    "https://mdi.niedersachsen.de/geoserver/Eiderente/wfs",
+    "https://mdi.niedersachsen.de/geoserver/Eiderente/wfs?Service=WFS&Version=2.0.0&Request=GetCapabilities",
+    "WFS",
+    "https://mdi.niedersachsen.de/geoserver/Eiderente/ows?outputformat=text%2Fxml%3B+subtype%3Dgml%2F3.2&typeName=Eiderente%3Aeider1991x01",
+    "https://mdi.niedersachsen.de/geoserver/Eiderente/ows?service=WFS&version=1.1.0&request=GetFeature&outputformat=text/xml;%20subtype=gml/3.2&typeName=Eiderente:eider1991x01",
+    "predefined ATOM",
+    "WFS",
+    "https://mdi.niedersachsen.de/geoserver/Eiderente/ows?outputFormat=SHAPE-ZIP&typeName=Eiderente%3Aeider1991x01",
+    "https://mdi.niedersachsen.de/geoserver/Eiderente/ows?service=WFS&version=1.1.0&request=GetFeature&outputFormat=SHAPE-ZIP&typeName=Eiderente:eider1991x01",
+    "predefined ATOM",
+    "WFS",
+    "https://www.nationalpark-wattenmeer.de/sites/default/files/media/pdf/eiderenten_1991.zip",
+    "https://www.nationalpark-wattenmeer.de/sites/default/files/media/pdf/eiderenten_1991.zip",
+    "Unbekannt",
+    "19910101010000000",
+    "metadata-NPWHV13747",
+    "metadata-NPWHV13747",
+    "1",
+    "Umweltmonitoring im Rahmen des Trilateral Monitoring and Assessment Program (TMAP) Environmental monitoring as part of the Trilateral Monitoring and Assessment Program (TMAP)",
+    "Eiderentenzählung Winter 1991 UIG",
+    "Erfassung der Eiderentenbestände als TMAP Parameter 7.4 (Monitoring of migratory birds)",
+    "de",
+    "4",
+    "ISO 19115:2003 NOKIS-Profile",
+    "1.0",
+    "de",
+    "5105",
+    "Die Daten sind Eigentum der Nationalparkverwaltung Niedersächsisches Wattenmeer",
+    "1",
+    "von",
+    "19910101010000000",
+    "19911231010000000",
+    "9",
+    "19911231010000000",
+    "dataset",
+    "Eiderentenzählung Winter 1991 UIG",
+    "Nationalparkverwaltung Niedersächsisches Wattenmeer",
+    "Gregor, Dr. Scheiffarth",
+    "Virchowstr. 1",
+    "26382",
+    "Wilhelmshaven",
+    "Niedersachsen",
+    "Germany",
+    "| Wattökologie | Forschungskoordination | Gastvögel | Harvarievorsorge |",
+    "Nationalparkverwaltung Niedersächsisches Wattenmeer",
+    "Gregor, Dr. Scheiffarth",
+    "Virchowstr. 1",
+    "26382",
+    "Wilhelmshaven",
+    "Niedersachsen",
+    "Germany",
+    "| Wattökologie | Forschungskoordination | Gastvögel | Harvarievorsorge |",
+    "Niedersachsen",
+    "Nationalparkverwaltung Niedersächsisches Wattenmeer",
+    "Meike Bremenkamp",
+    "Virchowstr. 1",
+    "26382",
+    "Wilhelmshaven",
+    "Niedersachsen",
+    "Germany",
+    "| Kartographie | GIS | Digitalisierung |Statistik | IT-Unterstützung |",
+    "Nationalparkverwaltung Niedersächsisches Wattenmeer",
+    "Gregor, Dr. Scheiffarth",
+    "Virchowstr. 1",
+    "26382",
+    "Wilhelmshaven",
+    "Niedersachsen",
+    "Germany",
+    "| Wattökologie | Forschungskoordination | Gastvögel | Harvarievorsorge |",
+    "Nationalparkverwaltung Niedersächsisches Wattenmeer",
+    "Michael Räder",
+    "Virchowstraße 1",
+    "26382",
+    "Wilhelmshaven",
+    "Germany",
+    "| Marine.Daten.Infrastruktur Deutschland (MDI-DE) | Bereitstellung von Geodaten | Datenmanagement für MSRL | Metadatenmanagement | INSPIRE |   ",
+    "Nationalparkverwaltung Niedersächsisches Wattenmeer",
+    "Michael Räder",
+    "Virchowstraße 1",
+    "26382",
+    "Wilhelmshaven",
+    "Germany",
+    "| Marine.Daten.Infrastruktur Deutschland (MDI-DE) | Bereitstellung von Geodaten | Datenmanagement für MSRL | Metadatenmanagement | INSPIRE |   ",
+    "Nationalparkverwaltung Niedersächsisches Wattenmeer",
+    "Michael Räder",
+    "Virchowstraße 1",
+    "26382",
+    "Wilhelmshaven",
+    "Germany",
+    "| Marine.Daten.Infrastruktur Deutschland (MDI-DE) | Bereitstellung von Geodaten | Datenmanagement für MSRL | Metadatenmanagement | INSPIRE |   ",
+    "[1991] Eiderentenbestandserfassung (Jan/Feb) Monitoring of migratory birds (Eiders) in the Wadden Sea of Lower Saxony in winter 1991",
+    "Erfassung des Eiderentenbestandes im Niedersächsischen Wattenmeer im Frühjahr 1991. Im Niedersächsischen Wattenmeer werden seit 1986 zweimal pro Jahr die Eiderentenbestände während einer Tide vom Flugzeug aus erfasst. Es handelt sich dabei um die Mauser- (Juli/August) und Überwinterungsbestände (Januar/Februar). Die Zählungen finden in Abstimmung mit Schleswig-Holstein statt. Die Daten sind Bestandteil des Trilateral Monitoring and Assessment Program (TMAP). Monitoring of migratory birds (Eiders) in the Wadden Sea of Lower Saxony in spring 1991. The population of migratory birds (Eiders) in Lower Saxony's Wadden Sea is biyearly determined by aerial flight since 1986. Counts are carried out in July/August during the moult and in January/February and are coordinated with Schleswig-Holstein. The data are part of the trilateral monitoring and assessment program (TMAP).",
+    "",
+    "6.6200000000",
+    "8.6500000000",
+    "53.4800000000",
+    "53.9700000000",
+    "Polygon",
+    6.62,
+    53.97,
+    6.62,
+    53.48,
+    8.65,
+    53.48,
+    8.65,
+    53.97,
+    6.62,
+    53.97,
+    6.62,
+    53.48,
+    8.65,
+    53.97,
+    "<img src='https://mdi.niedersachsen.de/preview_browser_metadata/Eiderente_1991_Frühjahr.jpg' height='100' class='preview_image' alt='Die Vorschaugrafik zeigt die Gesamtausdehnung des Datensatzes. Der eigentliche Datenbestand besteht aus den in rot dargestellten Punkten.' title='Die Vorschaugrafik zeigt die Gesamtausdehnung des Datensatzes. Der eigentliche Datenbestand besteht aus den in rot dargestellten Punkten.' >",
+    "Environmental monitoring facilities",
+    "I",
+    "Umweltüberwachung",
+    "I",
+    "Regional",
+    "F",
+    "Eiderente",
+    "F",
+    "Gastvogel",
+    "F",
+    "Somateria mollissima",
+    "F",
+    "eider duck",
+    "F",
+    "Eidereend",
+    "F",
+    "Ederfugl",
+    "F",
+    "Nationalpark Niedersächsisches Wattenmeer",
+    "F",
+    "Wadden Sea National Park of Lower Saxonye",
+    "F",
+    "Nordsee",
+    "F",
+    "Niedersächsisches Küstenmeer",
+    "F",
+    "Biologie",
+    "F",
+    "Fauna",
+    "F",
+    "Ornithologie",
+    "F",
+    "inspiregrundlage",
+    "F",
+    "INSPIRE",
+    "F",
+    "opendata",
+    "F",
+    "https://registry.gdi-de.org/id/de.ni.koop.mdini.csw/8a93fdbe1329eb6801132a38a5034d4b",
+    "http://www.opengis.net/def/crs/EPSG/0/31467",
+    false,
+    "1",
+    false,
+    "Zählflug bei Niedrigwasser. Zählung erfolgt durch Teams mit mehrjähriger Erfahrung bei niedriger Flughöhe.",
+    "Maßstab der Zählkarten 1:100000; die beobachteten Trupps der Eiderenten werden zu Punktdaten zusammengefasst und manuell in die Zählkarten übertragen.",
+    "Aufruf im Portal MDI.Niedersachsen",
+    "20171206010000000",
+    "100000",
+    "4",
+    "207",
+    "Maßstab der Zählkarten 1:100000; die beobachteten Trupps der Eiderenten werden zu Punktdaten zusammengefasst und manuell in die Zählkarten übertragen.",
+    "",
+    "2",
+    "14",
+    "7",
+    "17",
+    "0",
+    "7",
+    "0",
+    "7",
+    "0",
+    "7",
+    "0",
+    "7",
+    "0",
+    "7",
+    "0",
+    "7",
+    "0",
+    "7",
+    "19950801020000000",
+    "1",
+    "20110318010000000",
+    "2",
+    "20220318010000000",
+    "3",
+    "https://mdi.niedersachsen.de/geoserver/Eiderente/wms?",
+    "",
+    "GetCapabilities",
+    "5302",
+    "https://mdi.niedersachsen.de/geoserver/Eiderente/wms?Service=WMS&Version=1.3.0&Request=GetCapabilities",
+    "",
+    "WMS: GetCapabilities",
+    "5302",
+    "https://mdi.niedersachsen.de/geoserver/Eiderente/wfs?Service=WFS&Version=2.0.0&Request=GetCapabilities",
+    "",
+    "WFS: GetCapabilities (2.0.0)",
+    "5302",
+    "https://mdi.niedersachsen.de/geoserver/Eiderente/ows?service=WFS&version=1.1.0&request=GetFeature&outputformat=text/xml;%20subtype=gml/3.2&typeName=Eiderente:eider1991x01",
+    "predefined ATOM",
+    "WFS:GML 3.2   #EPSG:25832",
+    "9990",
+    "https://mdi.niedersachsen.de/geoserver/Eiderente/ows?service=WFS&version=1.1.0&request=GetFeature&outputFormat=SHAPE-ZIP&typeName=Eiderente:eider1991x01",
+    "predefined ATOM",
+    "WFS:GepacktesShape   #EPSG:25832",
+    "9990",
+    "https://www.nationalpark-wattenmeer.de/sites/default/files/media/pdf/eiderenten_1991.zip",
+    "",
+    "Original:GepacktesShape   #EPSG:31467",
+    "9990",
+    "Telefon",
+    "+49 4421 911-155",
+    "Email",
+    "Gregor.Scheiffarth@nlpvw.niedersachsen.de",
+    "URL",
+    "https://mdi.niedersachsen.de/images/NLPV_Mitarbeiter/GScheiffarth_500.png",
+    "Telefon",
+    "+49 4421 911-155",
+    "Email",
+    "Gregor.Scheiffarth@nlpvw.niedersachsen.de",
+    "URL",
+    "https://mdi.niedersachsen.de/images/NLPV_Mitarbeiter/GScheiffarth_500.png",
+    "Telefon",
+    "+49 4421 911-288",
+    "Email",
+    "Meike.Bremenkamp@nlpvw.niedersachsen.de",
+    "URL",
+    "https://mdi.niedersachsen.de/images/user_female_256px.png",
+    "Telefon",
+    "+49 4421 911-155",
+    "Email",
+    "Gregor.Scheiffarth@nlpvw.niedersachsen.de",
+    "URL",
+    "https://mdi.niedersachsen.de/images/NLPV_Mitarbeiter/GScheiffarth_500.png",
+    "Telefon",
+    "+49 4421 911-295",
+    "Email",
+    "Michael.Raeder@nlpvw.niedersachsen.de",
+    "URL",
+    "https://mdi.niedersachsen.de/images/NLPV_Mitarbeiter/MRaeder_02.jpg",
+    "Telefon",
+    "+49 4421 911-295",
+    "Email",
+    "Michael.Raeder@nlpvw.niedersachsen.de",
+    "URL",
+    "https://mdi.niedersachsen.de/images/NLPV_Mitarbeiter/MRaeder_02.jpg",
+    "Telefon",
+    "+49 4421 911-295",
+    "Email",
+    "Michael.Raeder@nlpvw.niedersachsen.de",
+    "URL",
+    "https://mdi.niedersachsen.de/images/NLPV_Mitarbeiter/MRaeder_02.jpg",
+    "{ \"id\": \"dl-de-by-2.0\", \"name\": \"Datenlizenz Deutschland – Namensnennung – Version 2.0\", \"url\": \"https://www.govdata.de/dl-de/by-2-0\", \"quelle\": \"Nationalparkverwaltung Niedersächsisches Wattenmeer\" }",
+    "Nutzungsbedingungen: Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0). Die Namensnennung lautet: Nationalparkverwaltung Niedersächsisches Wattenmeer",
+    "{ \"id\": \"dl-de-by-2.0\", \"name\": \"Datenlizenz Deutschland – Namensnennung – Version 2.0\", \"url\": \"https://www.govdata.de/dl-de/by-2-0\", \"quelle\": \"Nationalparkverwaltung Niedersächsisches Wattenmeer\" }",
+    "Nutzungsbedingungen: Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0). Die Namensnennung lautet: Nationalparkverwaltung Niedersächsisches Wattenmeer",
+    "-1",
+    "-1",
+    "{ \"id\": \"dl-de-by-2.0\", \"name\": \"Datenlizenz Deutschland – Namensnennung – Version 2.0\", \"url\": \"https://www.govdata.de/dl-de/by-2-0\", \"quelle\": \"Nationalparkverwaltung Niedersächsisches Wattenmeer\" }",
+    "Nutzungsbedingungen: Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0). Die Namensnennung lautet: Nationalparkverwaltung Niedersächsisches Wattenmeer",
+    "Nutzungsbedingungen: Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0). Die Namensnennung lautet: Nationalparkverwaltung Niedersächsisches Wattenmeer",
+    false,
+    "http://www.opengis.net/def/crs/EPSG/0/31467",
+    "6e3f191bdd4d4536704c07d0cbed5a07dd896690"
+  ],
+  "dataSourceName": "Harvester",
+  "datatype": [
+    "default",
+    "dsc_csw",
+    "csw",
+    "metadata",
+    "IDF_1.0"
+  ],
+  "distributions": [
+    {
+      "format": [
+        "WMS"
+      ],
+      "accessURL": "https://mdi.niedersachsen.de/geoserver/Eiderente/wms",
+      "access_url": "https://mdi.niedersachsen.de/geoserver/Eiderente/wms?"
+    },
+    {
+      "format": [
+        "WFS"
+      ],
+      "accessURL": "https://mdi.niedersachsen.de/geoserver/Eiderente/wfs",
+      "access_url": "https://mdi.niedersachsen.de/geoserver/Eiderente/wfs?Service=WFS&Version=2.0.0&Request=GetCapabilities"
+    },
+    {
+      "title": "predefined ATOM",
+      "format": [
+        "WFS"
+      ],
+      "accessURL": "https://mdi.niedersachsen.de/geoserver/Eiderente/ows?outputformat=text%2Fxml%3B+subtype%3Dgml%2F3.2&typeName=Eiderente%3Aeider1991x01",
+      "access_url": "https://mdi.niedersachsen.de/geoserver/Eiderente/ows?service=WFS&version=1.1.0&request=GetFeature&outputformat=text/xml;%20subtype=gml/3.2&typeName=Eiderente:eider1991x01"
+    },
+    {
+      "title": "predefined ATOM",
+      "format": [
+        "WFS"
+      ],
+      "accessURL": "https://mdi.niedersachsen.de/geoserver/Eiderente/ows?outputFormat=SHAPE-ZIP&typeName=Eiderente%3Aeider1991x01",
+      "access_url": "https://mdi.niedersachsen.de/geoserver/Eiderente/ows?service=WFS&version=1.1.0&request=GetFeature&outputFormat=SHAPE-ZIP&typeName=Eiderente:eider1991x01"
+    },
+    {
+      "format": [
+        "Unbekannt"
+      ],
+      "accessURL": "https://www.nationalpark-wattenmeer.de/sites/default/files/media/pdf/eiderenten_1991.zip",
+      "access_url": "https://www.nationalpark-wattenmeer.de/sites/default/files/media/pdf/eiderenten_1991.zip"
+    }
+  ],
+  "extras": {
+    "hierarchy_level": "dataset",
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-08-27T13:45:32.917Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-08-27T13:45:28.519Z",
+      "merged_from": [],
+      "modified": null,
+      "source": {
+        "raw_data_source": "https://nokis.niedersachsen.de/NOKIS/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetCapabilitiesServant$GET?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=metadata-NPWHV13747",
+        "source_base": "https://nokis.niedersachsen.de/NOKIS/servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetCapabilitiesServant$GET",
+        "source_type": "csw"
+      }
+    }
+  },
+  "hierarchylevel": "dataset",
+  "iPlugId": "geoportal",
+  "idf": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.portalu.de/IDF/1.0\">\n  <head/>\n  <body>\n<idf:idfMdMetadata xsi:schemaLocation=\"http://www.isotc211.org/2005/gmd http://schemas.opengis.net/iso/19139/20060504/gmd/gmd.xsd\" uuid=\"metadata-NPWHV13747\" xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:srv=\"http://www.isotc211.org/2005/srv\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:gfm=\"http://www.isotc211.org/2005/gfm\" xmlns:base=\"http://www.disy.de/preludio2/base\" xmlns:idf=\"http://www.portalu.de/IDF/1.0\">\n            <gmd:fileIdentifier xmlns:gmd=\"http://www.isotc211.org/2005/gmd\">\n                <gco:CharacterString>metadata-NPWHV13747</gco:CharacterString>\n            </gmd:fileIdentifier>\n            <gmd:language xmlns:gmd=\"http://www.isotc211.org/2005/gmd\">\n                <gmd:LanguageCode codeListValue=\"ger\" codeList=\"http://www.loc.gov/standards/iso639-2/\">ger</gmd:LanguageCode>\n            </gmd:language>\n            <gmd:characterSet xmlns:gmd=\"http://www.isotc211.org/2005/gmd\">\n                <gmd:MD_CharacterSetCode codeListValue=\"utf8\" codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode\">utf8</gmd:MD_CharacterSetCode>\n            </gmd:characterSet>\n            <gmd:hierarchyLevel xmlns:gmd=\"http://www.isotc211.org/2005/gmd\">\n                <gmd:MD_ScopeCode codeListValue=\"dataset\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode\">dataset</gmd:MD_ScopeCode>\n            </gmd:hierarchyLevel>\n            <gmd:hierarchyLevelName xmlns:gmd=\"http://www.isotc211.org/2005/gmd\">\n                <gco:CharacterString>Eiderente</gco:CharacterString>\n            </gmd:hierarchyLevelName>\n            <gmd:contact xmlns:gmd=\"http://www.isotc211.org/2005/gmd\">\n                <idf:idfResponsibleParty uuid=\"4666a8c4-73e2-431c-a3ee-00edfc48de97\">\n                    <gmd:individualName>\n                        <gco:CharacterString>Gregor, Dr. Scheiffarth</gco:CharacterString>\n                    </gmd:individualName>\n                    <gmd:organisationName>\n                        <gco:CharacterString>Nationalparkverwaltung Niedersächsisches Wattenmeer</gco:CharacterString>\n                    </gmd:organisationName>\n                    <gmd:positionName>\n                        <gco:CharacterString>| Wattökologie | Forschungskoordination | Gastvögel | Harvarievorsorge |</gco:CharacterString>\n                    </gmd:positionName>\n                    <gmd:contactInfo>\n                        <gmd:CI_Contact uuid=\"41ebf84f-4fda-41b1-81d4-4e2112542be6\">\n                            <gmd:phone>\n                                <gmd:CI_Telephone uuid=\"09926e40-4c42-4a61-acb5-317deebad6c5\">\n                                    <gmd:voice>\n                                        <gco:CharacterString>+49 4421 911-155</gco:CharacterString>\n                                    </gmd:voice>\n                                </gmd:CI_Telephone>\n                            </gmd:phone>\n                            <gmd:address>\n                                <gmd:CI_Address uuid=\"03993a41-006f-40da-b6e6-9b9dd8e122ee\">\n                                    <gmd:deliveryPoint>\n                                        <gco:CharacterString>Virchowstr. 1</gco:CharacterString>\n                                    </gmd:deliveryPoint>\n                                    <gmd:city>\n                                        <gco:CharacterString>Wilhelmshaven</gco:CharacterString>\n                                    </gmd:city>\n                                    <gmd:administrativeArea>\n                                        <gco:CharacterString>Niedersachsen</gco:CharacterString>\n                                    </gmd:administrativeArea>\n                                    <gmd:postalCode>\n                                        <gco:CharacterString>26382</gco:CharacterString>\n                                    </gmd:postalCode>\n                                    <gmd:country>\n                                        <gco:CharacterString>Germany</gco:CharacterString>\n                                    </gmd:country>\n                                    <gmd:electronicMailAddress>\n                                        <gco:CharacterString>Gregor.Scheiffarth@nlpvw.niedersachsen.de</gco:CharacterString>\n                                    </gmd:electronicMailAddress>\n                                </gmd:CI_Address>\n                            </gmd:address>\n                            <gmd:onlineResource>\n                                <gmd:CI_OnlineResource uuid=\"637a4f19-4dc0-429a-834b-6cd2b9157793\">\n                                    <gmd:linkage>\n                                        <gmd:URL>https://mdi.niedersachsen.de/images/NLPV_Mitarbeiter/GScheiffarth_500.png</gmd:URL>\n                                    </gmd:linkage>\n                                    <gmd:applicationProfile>\n                                        <gco:CharacterString>image/png</gco:CharacterString>\n                                    </gmd:applicationProfile>\n                                    <gmd:name>\n                                        <gco:CharacterString>Mitarbeiterbild</gco:CharacterString>\n                                    </gmd:name>\n                                    <gmd:description>\n                                        <gco:CharacterString>Hier ist ein Bild von Gregor Scheiffarth, Mitarbeiter der Nationalparkverwaltung Niedersächsisches Wattenmeer zu sehen.</gco:CharacterString>\n                                    </gmd:description>\n                                    <gmd:function>\n                                        <gmd:CI_OnLineFunctionCode codeListValue=\"information\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode\">information</gmd:CI_OnLineFunctionCode>\n                                    </gmd:function>\n                                </gmd:CI_OnlineResource>\n                            </gmd:onlineResource>\n                            <gmd:hoursOfService>\n                                <gco:CharacterString>Mo-Do: 9:00 - 12:00 Uhr, 14:00 Uhr - 15:30 Uhr &lt;br&gt;\n                                    Fr: 9:00 - 12:00 Uhr</gco:CharacterString>\n                            </gmd:hoursOfService>\n                            <gmd:contactInstructions>\n                                <gco:CharacterString>Biodiversität, Forschung, Monitoring</gco:CharacterString>\n                            </gmd:contactInstructions>\n                        </gmd:CI_Contact>\n                    </gmd:contactInfo>\n                    <gmd:role>\n                        <gmd:CI_RoleCode codeListValue=\"pointOfContact\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode\">pointOfContact</gmd:CI_RoleCode>\n                    </gmd:role>\n                </idf:idfResponsibleParty>\n            </gmd:contact>\n            <gmd:dateStamp xmlns:gmd=\"http://www.isotc211.org/2005/gmd\">\n                <gco:DateTime>2023-11-20T19:01:09+01:00</gco:DateTime>\n            </gmd:dateStamp>\n            <gmd:metadataStandardName xmlns:gmd=\"http://www.isotc211.org/2005/gmd\">\n                <gco:CharacterString>ISO 19115:2003 NOKIS-Profile</gco:CharacterString>\n            </gmd:metadataStandardName>\n            <gmd:metadataStandardVersion xmlns:gmd=\"http://www.isotc211.org/2005/gmd\">\n                <gco:CharacterString>1.0</gco:CharacterString>\n            </gmd:metadataStandardVersion>\n            <gmd:dataSetURI xmlns:gmd=\"http://www.isotc211.org/2005/gmd\">\n                <gco:CharacterString>file://M:\\Daten\\NLPV\\Eiderente\\Eiderentenzaehlung.gdb</gco:CharacterString>\n            </gmd:dataSetURI>\n            <gmd:spatialRepresentationInfo xmlns:gmd=\"http://www.isotc211.org/2005/gmd\">\n                <gmd:MD_VectorSpatialRepresentation uuid=\"8a93fdbe1329eb6801132a38a5034d75\">\n                    <gmd:topologyLevel>\n                        <gmd:MD_TopologyLevelCode codeListValue=\"geometryOnly\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#MD_TopologyLevelCode\">geometryOnly</gmd:MD_TopologyLevelCode>\n                    </gmd:topologyLevel>\n                    <gmd:geometricObjects>\n                        <gmd:MD_GeometricObjects uuid=\"8a93fdbe1329eb6801132a38a5034d76\">\n                            <gmd:geometricObjectType>\n                                <gmd:MD_GeometricObjectTypeCode codeListValue=\"point\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#MD_GeometricObjectTypeCode\">point</gmd:MD_GeometricObjectTypeCode>\n                            </gmd:geometricObjectType>\n                            <gmd:geometricObjectCount>\n                                <gco:Integer>207</gco:Integer>\n                            </gmd:geometricObjectCount>\n                        </gmd:MD_GeometricObjects>\n                    </gmd:geometricObjects>\n                </gmd:MD_VectorSpatialRepresentation>\n            </gmd:spatialRepresentationInfo>\n            <gmd:referenceSystemInfo xmlns:gmd=\"http://www.isotc211.org/2005/gmd\">\n                <gmd:MD_ReferenceSystem uuid=\"8a93fdbe1329eb6801132a38a5034d49\">\n                    <gmd:referenceSystemIdentifier>\n                        <gmd:RS_Identifier uuid=\"402832971bc02513011bc0481442082a\">\n                            <gmd:code>\n                                <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/31467</gco:CharacterString>\n                            </gmd:code>\n                            <gmd:codeSpace>\n                                <gco:CharacterString>EPSG</gco:CharacterString>\n                            </gmd:codeSpace>\n                            <gmd:version>\n                                <gco:CharacterString>4.17</gco:CharacterString>\n                            </gmd:version>\n                        </gmd:RS_Identifier>\n                    </gmd:referenceSystemIdentifier>\n                </gmd:MD_ReferenceSystem>\n            </gmd:referenceSystemInfo>\n            <gmd:identificationInfo xmlns:gmd=\"http://www.isotc211.org/2005/gmd\">\n                <gmd:MD_DataIdentification uuid=\"8a93fdbe1329eb6801132a38a5034d4b\">\n                    <gmd:citation>\n                        <gmd:CI_Citation uuid=\"ff8081812aad41ec012acdd7d95f038f\">\n                            <gmd:title>\n                                <gco:CharacterString>[1991] Eiderentenbestandserfassung (Jan/Feb) Monitoring of migratory birds (Eiders) in the Wadden Sea of Lower Saxony in winter 1991</gco:CharacterString>\n                            </gmd:title>\n                            <gmd:alternateTitle>\n                                <gco:CharacterString>Eiderentenzählung Winter 1991 UIG</gco:CharacterString>\n                            </gmd:alternateTitle>\n                            <gmd:date>\n                                <gmd:CI_Date uuid=\"8a93fdbe1329eb6801132a38a5034d51\">\n                                    <gmd:date>\n                                        <gco:Date>1995-08-01</gco:Date>\n                                    </gmd:date>\n                                    <gmd:dateType>\n                                        <gmd:CI_DateTypeCode codeListValue=\"creation\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode\">creation</gmd:CI_DateTypeCode>\n                                    </gmd:dateType>\n                                </gmd:CI_Date>\n                            </gmd:date>\n                            <gmd:date>\n                                <gmd:CI_Date uuid=\"d68a5bf7-6b5c-4a62-83dc-f050cab21574\">\n                                    <gmd:date>\n                                        <gco:Date>2011-03-18</gco:Date>\n                                    </gmd:date>\n                                    <gmd:dateType>\n                                        <gmd:CI_DateTypeCode codeListValue=\"publication\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode\">publication</gmd:CI_DateTypeCode>\n                                    </gmd:dateType>\n                                </gmd:CI_Date>\n                            </gmd:date>\n                            <gmd:date>\n                                <gmd:CI_Date uuid=\"2f13554e-46d1-4bfd-a885-ede9e48e723a\">\n                                    <gmd:date>\n                                        <gco:Date>2022-03-18</gco:Date>\n                                    </gmd:date>\n                                    <gmd:dateType>\n                                        <gmd:CI_DateTypeCode codeListValue=\"revision\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode\">revision</gmd:CI_DateTypeCode>\n                                    </gmd:dateType>\n                                </gmd:CI_Date>\n                            </gmd:date>\n                            <gmd:identifier>\n                                <gmd:MD_Identifier uuid=\"ff8081812aad41ec012acdd7d9b60390\">\n                                    <gmd:code>\n                                        <gco:CharacterString>https://registry.gdi-de.org/id/de.ni.koop.mdini.csw/8a93fdbe1329eb6801132a38a5034d4b</gco:CharacterString>\n                                    </gmd:code>\n                                </gmd:MD_Identifier>\n                            </gmd:identifier>\n                            <gmd:presentationForm>\n                                <gmd:CI_PresentationFormCode codeListValue=\"documentDigital\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_PresentationFormCode\">documentDigital</gmd:CI_PresentationFormCode>\n                            </gmd:presentationForm>\n                        </gmd:CI_Citation>\n                    </gmd:citation>\n                    <gmd:abstract>\n                        <gco:CharacterString>Erfassung des Eiderentenbestandes im Niedersächsischen Wattenmeer im Frühjahr 1991. Im Niedersächsischen Wattenmeer werden seit 1986 zweimal pro Jahr die Eiderentenbestände während einer Tide vom Flugzeug aus erfasst. Es handelt sich dabei um die Mauser- (Juli/August) und Überwinterungsbestände (Januar/Februar). Die Zählungen finden in Abstimmung mit Schleswig-Holstein statt. Die Daten sind Bestandteil des Trilateral Monitoring and Assessment Program (TMAP). Monitoring of migratory birds (Eiders) in the Wadden Sea of Lower Saxony in spring 1991. The population of migratory birds (Eiders) in Lower Saxony's Wadden Sea is biyearly determined by aerial flight since 1986. Counts are carried out in July/August during the moult and in January/February and are coordinated with Schleswig-Holstein. The data are part of the trilateral monitoring and assessment program (TMAP).</gco:CharacterString>\n                    </gmd:abstract>\n                    <gmd:purpose>\n                        <gco:CharacterString>Umweltmonitoring im Rahmen des Trilateral Monitoring and Assessment Program (TMAP) Environmental monitoring as part of the Trilateral Monitoring and Assessment Program (TMAP)</gco:CharacterString>\n                    </gmd:purpose>\n                    <gmd:status>\n                        <gmd:MD_ProgressCode codeListValue=\"completed\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#MD_ProgressCode\">completed</gmd:MD_ProgressCode>\n                    </gmd:status>\n                    <gmd:pointOfContact>\n                        <idf:idfResponsibleParty uuid=\"4666a8c4-73e2-431c-a3ee-00edfc48de97\">\n                            <gmd:individualName>\n                                <gco:CharacterString>Gregor, Dr. Scheiffarth</gco:CharacterString>\n                            </gmd:individualName>\n                            <gmd:organisationName>\n                                <gco:CharacterString>Nationalparkverwaltung Niedersächsisches Wattenmeer</gco:CharacterString>\n                            </gmd:organisationName>\n                            <gmd:positionName>\n                                <gco:CharacterString>| Wattökologie | Forschungskoordination | Gastvögel | Harvarievorsorge |</gco:CharacterString>\n                            </gmd:positionName>\n                            <gmd:contactInfo>\n                                <gmd:CI_Contact uuid=\"41ebf84f-4fda-41b1-81d4-4e2112542be6\">\n                                    <gmd:phone>\n                                        <gmd:CI_Telephone uuid=\"09926e40-4c42-4a61-acb5-317deebad6c5\">\n                                            <gmd:voice>\n                                                <gco:CharacterString>+49 4421 911-155</gco:CharacterString>\n                                            </gmd:voice>\n                                        </gmd:CI_Telephone>\n                                    </gmd:phone>\n                                    <gmd:address>\n                                        <gmd:CI_Address uuid=\"03993a41-006f-40da-b6e6-9b9dd8e122ee\">\n                                            <gmd:deliveryPoint>\n                                                <gco:CharacterString>Virchowstr. 1</gco:CharacterString>\n                                            </gmd:deliveryPoint>\n                                            <gmd:city>\n                                                <gco:CharacterString>Wilhelmshaven</gco:CharacterString>\n                                            </gmd:city>\n                                            <gmd:administrativeArea>\n                                                <gco:CharacterString>Niedersachsen</gco:CharacterString>\n                                            </gmd:administrativeArea>\n                                            <gmd:postalCode>\n                                                <gco:CharacterString>26382</gco:CharacterString>\n                                            </gmd:postalCode>\n                                            <gmd:country>\n                                                <gco:CharacterString>Germany</gco:CharacterString>\n                                            </gmd:country>\n                                            <gmd:electronicMailAddress>\n                                                <gco:CharacterString>Gregor.Scheiffarth@nlpvw.niedersachsen.de</gco:CharacterString>\n                                            </gmd:electronicMailAddress>\n                                        </gmd:CI_Address>\n                                    </gmd:address>\n                                    <gmd:onlineResource>\n                                        <gmd:CI_OnlineResource uuid=\"637a4f19-4dc0-429a-834b-6cd2b9157793\">\n                                            <gmd:linkage>\n                                                <gmd:URL>https://mdi.niedersachsen.de/images/NLPV_Mitarbeiter/GScheiffarth_500.png</gmd:URL>\n                                            </gmd:linkage>\n                                            <gmd:applicationProfile>\n                                                <gco:CharacterString>image/png</gco:CharacterString>\n                                            </gmd:applicationProfile>\n                                            <gmd:name>\n                                                <gco:CharacterString>Mitarbeiterbild</gco:CharacterString>\n                                            </gmd:name>\n                                            <gmd:description>\n                                                <gco:CharacterString>Hier ist ein Bild von Gregor Scheiffarth, Mitarbeiter der Nationalparkverwaltung Niedersächsisches Wattenmeer zu sehen.</gco:CharacterString>\n                                            </gmd:description>\n                                            <gmd:function>\n                                                <gmd:CI_OnLineFunctionCode codeListValue=\"information\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode\">information</gmd:CI_OnLineFunctionCode>\n                                            </gmd:function>\n                                        </gmd:CI_OnlineResource>\n                                    </gmd:onlineResource>\n                                    <gmd:hoursOfService>\n                                        <gco:CharacterString>Mo-Do: 9:00 - 12:00 Uhr, 14:00 Uhr - 15:30 Uhr &lt;br&gt;\n                                            Fr: 9:00 - 12:00 Uhr</gco:CharacterString>\n                                    </gmd:hoursOfService>\n                                    <gmd:contactInstructions>\n                                        <gco:CharacterString>Biodiversität, Forschung, Monitoring</gco:CharacterString>\n                                    </gmd:contactInstructions>\n                                </gmd:CI_Contact>\n                            </gmd:contactInfo>\n                            <gmd:role>\n                                <gmd:CI_RoleCode codeListValue=\"pointOfContact\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode\">pointOfContact</gmd:CI_RoleCode>\n                            </gmd:role>\n                        </idf:idfResponsibleParty>\n                    </gmd:pointOfContact>\n                    <gmd:resourceMaintenance>\n                        <gmd:MD_MaintenanceInformation uuid=\"8a93fdbe1329eb6801132a38a5034d55\">\n                            <gmd:maintenanceAndUpdateFrequency>\n                                <gmd:MD_MaintenanceFrequencyCode codeListValue=\"asNeeded\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#MD_MaintenanceFrequencyCode\">asNeeded</gmd:MD_MaintenanceFrequencyCode>\n                            </gmd:maintenanceAndUpdateFrequency>\n                            <gmd:contact>\n                                <idf:idfResponsibleParty uuid=\"5f52b86b-7f10-420f-a6a5-81d89c3ee343\">\n                                    <gmd:individualName>\n                                        <gco:CharacterString>Meike Bremenkamp</gco:CharacterString>\n                                    </gmd:individualName>\n                                    <gmd:organisationName>\n                                        <gco:CharacterString>Nationalparkverwaltung Niedersächsisches Wattenmeer</gco:CharacterString>\n                                    </gmd:organisationName>\n                                    <gmd:positionName>\n                                        <gco:CharacterString>| Kartographie | GIS | Digitalisierung |Statistik | IT-Unterstützung |</gco:CharacterString>\n                                    </gmd:positionName>\n                                    <gmd:contactInfo>\n                                        <gmd:CI_Contact uuid=\"eb4f8d85-e8b4-4409-9baa-01834b149e55\">\n                                            <gmd:phone>\n                                                <gmd:CI_Telephone uuid=\"b93ef529-6dd2-46c3-b173-55574750e818\">\n                                                    <gmd:voice>\n                                                        <gco:CharacterString>+49 4421 911-288</gco:CharacterString>\n                                                    </gmd:voice>\n                                                </gmd:CI_Telephone>\n                                            </gmd:phone>\n                                            <gmd:address>\n                                                <gmd:CI_Address uuid=\"d2701ca4-e5ed-4d9a-81cd-a8be603fd0e8\">\n                                                    <gmd:deliveryPoint>\n                                                        <gco:CharacterString>Virchowstr. 1</gco:CharacterString>\n                                                    </gmd:deliveryPoint>\n                                                    <gmd:city>\n                                                        <gco:CharacterString>Wilhelmshaven</gco:CharacterString>\n                                                    </gmd:city>\n                                                    <gmd:administrativeArea>\n                                                        <gco:CharacterString>Niedersachsen</gco:CharacterString>\n                                                    </gmd:administrativeArea>\n                                                    <gmd:postalCode>\n                                                        <gco:CharacterString>26382</gco:CharacterString>\n                                                    </gmd:postalCode>\n                                                    <gmd:country>\n                                                        <gco:CharacterString>Germany</gco:CharacterString>\n                                                    </gmd:country>\n                                                    <gmd:electronicMailAddress>\n                                                        <gco:CharacterString>Meike.Bremenkamp@nlpvw.niedersachsen.de</gco:CharacterString>\n                                                    </gmd:electronicMailAddress>\n                                                </gmd:CI_Address>\n                                            </gmd:address>\n                                            <gmd:onlineResource>\n                                                <gmd:CI_OnlineResource uuid=\"c0c781d0-4544-4d35-9780-f8d77f6d5332\">\n                                                    <gmd:linkage>\n                                                        <gmd:URL>https://mdi.niedersachsen.de/images/user_female_256px.png</gmd:URL>\n                                                    </gmd:linkage>\n                                                    <gmd:applicationProfile>\n                                                        <gco:CharacterString>image/png</gco:CharacterString>\n                                                    </gmd:applicationProfile>\n                                                    <gmd:name>\n                                                        <gco:CharacterString>Mitarbeiterbild</gco:CharacterString>\n                                                    </gmd:name>\n                                                    <gmd:description>\n                                                        <gco:CharacterString>Hier ist ein Bild von Meike Bremenkamp, Mitarbeiter:in der Nationalparkverwaltung Niedersächsisches Wattenmeer zu sehen.</gco:CharacterString>\n                                                    </gmd:description>\n                                                    <gmd:function>\n                                                        <gmd:CI_OnLineFunctionCode codeListValue=\"information\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode\">information</gmd:CI_OnLineFunctionCode>\n                                                    </gmd:function>\n                                                </gmd:CI_OnlineResource>\n                                            </gmd:onlineResource>\n                                            <gmd:hoursOfService>\n                                                <gco:CharacterString>Mo-Do: 9:00 - 12:00 Uhr, 14:00 Uhr - 15:30 Uhr &lt;br&gt;\n                                                    Fr: 9:00 - 12:00 Uhr</gco:CharacterString>\n                                            </gmd:hoursOfService>\n                                            <gmd:contactInstructions>\n                                                <gco:CharacterString>Naturschutz</gco:CharacterString>\n                                            </gmd:contactInstructions>\n                                        </gmd:CI_Contact>\n                                    </gmd:contactInfo>\n                                    <gmd:role>\n                                        <gmd:CI_RoleCode codeListValue=\"pointOfContact\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode\">pointOfContact</gmd:CI_RoleCode>\n                                    </gmd:role>\n                                </idf:idfResponsibleParty>\n                            </gmd:contact>\n                        </gmd:MD_MaintenanceInformation>\n                    </gmd:resourceMaintenance>\n                    <gmd:graphicOverview>\n                        <gmd:MD_BrowseGraphic uuid=\"8a93fdbe1329eb6801132a38a5034d67\">\n                            <gmd:fileName>\n                                <gco:CharacterString>https://mdi.niedersachsen.de/preview_browser_metadata/Eiderente_1991_Frühjahr.jpg</gco:CharacterString>\n                            </gmd:fileName>\n                            <gmd:fileDescription>\n                                <gco:CharacterString>Die Vorschaugrafik zeigt die Gesamtausdehnung des Datensatzes. Der eigentliche Datenbestand besteht aus den in rot dargestellten Punkten.</gco:CharacterString>\n                            </gmd:fileDescription>\n                        </gmd:MD_BrowseGraphic>\n                    </gmd:graphicOverview>\n                    <gmd:descriptiveKeywords>\n                        <gmd:MD_Keywords uuid=\"217327fd-e7dd-41cc-b1d8-2285aa1fa1db\">\n                            <gmd:keyword>\n                                <gco:CharacterString>Regional</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:type>\n                                <gmd:MD_KeywordTypeCode codeListValue=\"theme\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode\">theme</gmd:MD_KeywordTypeCode>\n                            </gmd:type>\n                            <gmd:thesaurusName>\n                                <gmd:CI_Citation uuid=\"5da0a74f-845d-48c2-bfa4-434138abd825\">\n                                    <gmd:title>\n                                        <gco:CharacterString>Spatial scope</gco:CharacterString>\n                                    </gmd:title>\n                                    <gmd:date>\n                                        <gmd:CI_Date uuid=\"e158bbdd-cabd-45b3-b41c-86149b111eb1\">\n                                            <gmd:date>\n                                                <gco:Date>2019-05-22</gco:Date>\n                                            </gmd:date>\n                                            <gmd:dateType>\n                                                <gmd:CI_DateTypeCode codeListValue=\"publication\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode\">publication</gmd:CI_DateTypeCode>\n                                            </gmd:dateType>\n                                        </gmd:CI_Date>\n                                    </gmd:date>\n                                </gmd:CI_Citation>\n                            </gmd:thesaurusName>\n                        </gmd:MD_Keywords>\n                    </gmd:descriptiveKeywords>\n                    <gmd:descriptiveKeywords>\n                        <gmd:MD_Keywords uuid=\"3aa9c78e-6ca8-4a5e-9bf6-7174ffe27214\">\n                            <gmd:keyword>\n                                <gco:CharacterString>Eiderente</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Gastvogel</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Somateria mollissima</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>eider duck</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Eidereend</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Ederfugl</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:type>\n                                <gmd:MD_KeywordTypeCode codeListValue=\"theme\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode\">theme</gmd:MD_KeywordTypeCode>\n                            </gmd:type>\n                        </gmd:MD_Keywords>\n                    </gmd:descriptiveKeywords>\n                    <gmd:descriptiveKeywords>\n                        <gmd:MD_Keywords uuid=\"91c607c3-ec0c-4e04-94ec-f340a4c614a7\">\n                            <gmd:keyword>\n                                <gco:CharacterString>Nationalpark Niedersächsisches Wattenmeer</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Wadden Sea National Park of Lower Saxonye</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Nordsee</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Niedersächsisches Küstenmeer</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:type>\n                                <gmd:MD_KeywordTypeCode codeListValue=\"place\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode\">place</gmd:MD_KeywordTypeCode>\n                            </gmd:type>\n                        </gmd:MD_Keywords>\n                    </gmd:descriptiveKeywords>\n                    <gmd:descriptiveKeywords>\n                        <gmd:MD_Keywords uuid=\"6525eea5-d599-4196-8d96-873dff70fc9b\">\n                            <gmd:keyword>\n                                <gco:CharacterString>Biologie</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Fauna</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Ornithologie</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:type>\n                                <gmd:MD_KeywordTypeCode codeListValue=\"discipline\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode\">discipline</gmd:MD_KeywordTypeCode>\n                            </gmd:type>\n                        </gmd:MD_Keywords>\n                    </gmd:descriptiveKeywords>\n                    <gmd:descriptiveKeywords>\n                        <gmd:MD_Keywords uuid=\"84e1b8aa-6e81-4fbc-aec6-da83700c2cd0\">\n                            <gmd:keyword>\n                                <gco:CharacterString>inspiregrundlage</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>INSPIRE</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>opendata</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:type>\n                                <gmd:MD_KeywordTypeCode codeListValue=\"theme\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode\">theme</gmd:MD_KeywordTypeCode>\n                            </gmd:type>\n                        </gmd:MD_Keywords>\n                    </gmd:descriptiveKeywords>\n                    <gmd:descriptiveKeywords>\n                        <gmd:MD_Keywords uuid=\"3abbb6f0-d729-4ddb-8b21-722e99b53821\">\n                            <gmd:keyword>\n                                <gco:CharacterString>Environmental monitoring facilities</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Umweltüberwachung</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:type>\n                                <gmd:MD_KeywordTypeCode codeListValue=\"theme\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode\">theme</gmd:MD_KeywordTypeCode>\n                            </gmd:type>\n                            <gmd:thesaurusName>\n                                <gmd:CI_Citation uuid=\"cc75c99a-dc2a-4407-99c6-359900872dd8\">\n                                    <gmd:title>\n                                        <gco:CharacterString>GEMET - INSPIRE themes, version 1.0</gco:CharacterString>\n                                    </gmd:title>\n                                    <gmd:date>\n                                        <gmd:CI_Date uuid=\"66261e22-f383-44e0-a255-d4ef86f2e4e7\">\n                                            <gmd:date>\n                                                <gco:Date>2013-02-11</gco:Date>\n                                            </gmd:date>\n                                            <gmd:dateType>\n                                                <gmd:CI_DateTypeCode codeListValue=\"creation\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode\">creation</gmd:CI_DateTypeCode>\n                                            </gmd:dateType>\n                                        </gmd:CI_Date>\n                                    </gmd:date>\n                                    <gmd:date>\n                                        <gmd:CI_Date uuid=\"68f4a692-e623-41e5-9ab2-465313c74422\">\n                                            <gmd:date>\n                                                <gco:Date>2013-02-11</gco:Date>\n                                            </gmd:date>\n                                            <gmd:dateType>\n                                                <gmd:CI_DateTypeCode codeListValue=\"publication\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode\">publication</gmd:CI_DateTypeCode>\n                                            </gmd:dateType>\n                                        </gmd:CI_Date>\n                                    </gmd:date>\n                                    <gmd:date>\n                                        <gmd:CI_Date uuid=\"3e4e85ab-717a-448a-bf90-150fd25187b4\">\n                                            <gmd:date>\n                                                <gco:Date>2013-07-02</gco:Date>\n                                            </gmd:date>\n                                            <gmd:dateType>\n                                                <gmd:CI_DateTypeCode codeListValue=\"revision\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode\">revision</gmd:CI_DateTypeCode>\n                                            </gmd:dateType>\n                                        </gmd:CI_Date>\n                                    </gmd:date>\n                                </gmd:CI_Citation>\n                            </gmd:thesaurusName>\n                        </gmd:MD_Keywords>\n                    </gmd:descriptiveKeywords>\n                    <gmd:resourceSpecificUsage>\n                        <gmd:MD_Usage uuid=\"8a93fdbe1329eb6801132a38a5034d68\">\n                            <gmd:specificUsage>\n                                <gco:CharacterString>Erfassung der Eiderentenbestände als TMAP Parameter 7.4 (Monitoring of migratory birds)</gco:CharacterString>\n                            </gmd:specificUsage>\n                            <gmd:userContactInfo>\n                                <idf:idfResponsibleParty uuid=\"4666a8c4-73e2-431c-a3ee-00edfc48de97\">\n                                    <gmd:individualName>\n                                        <gco:CharacterString>Gregor, Dr. Scheiffarth</gco:CharacterString>\n                                    </gmd:individualName>\n                                    <gmd:organisationName>\n                                        <gco:CharacterString>Nationalparkverwaltung Niedersächsisches Wattenmeer</gco:CharacterString>\n                                    </gmd:organisationName>\n                                    <gmd:positionName>\n                                        <gco:CharacterString>| Wattökologie | Forschungskoordination | Gastvögel | Harvarievorsorge |</gco:CharacterString>\n                                    </gmd:positionName>\n                                    <gmd:contactInfo>\n                                        <gmd:CI_Contact uuid=\"41ebf84f-4fda-41b1-81d4-4e2112542be6\">\n                                            <gmd:phone>\n                                                <gmd:CI_Telephone uuid=\"09926e40-4c42-4a61-acb5-317deebad6c5\">\n                                                    <gmd:voice>\n                                                        <gco:CharacterString>+49 4421 911-155</gco:CharacterString>\n                                                    </gmd:voice>\n                                                </gmd:CI_Telephone>\n                                            </gmd:phone>\n                                            <gmd:address>\n                                                <gmd:CI_Address uuid=\"03993a41-006f-40da-b6e6-9b9dd8e122ee\">\n                                                    <gmd:deliveryPoint>\n                                                        <gco:CharacterString>Virchowstr. 1</gco:CharacterString>\n                                                    </gmd:deliveryPoint>\n                                                    <gmd:city>\n                                                        <gco:CharacterString>Wilhelmshaven</gco:CharacterString>\n                                                    </gmd:city>\n                                                    <gmd:administrativeArea>\n                                                        <gco:CharacterString>Niedersachsen</gco:CharacterString>\n                                                    </gmd:administrativeArea>\n                                                    <gmd:postalCode>\n                                                        <gco:CharacterString>26382</gco:CharacterString>\n                                                    </gmd:postalCode>\n                                                    <gmd:country>\n                                                        <gco:CharacterString>Germany</gco:CharacterString>\n                                                    </gmd:country>\n                                                    <gmd:electronicMailAddress>\n                                                        <gco:CharacterString>Gregor.Scheiffarth@nlpvw.niedersachsen.de</gco:CharacterString>\n                                                    </gmd:electronicMailAddress>\n                                                </gmd:CI_Address>\n                                            </gmd:address>\n                                            <gmd:onlineResource>\n                                                <gmd:CI_OnlineResource uuid=\"637a4f19-4dc0-429a-834b-6cd2b9157793\">\n                                                    <gmd:linkage>\n                                                        <gmd:URL>https://mdi.niedersachsen.de/images/NLPV_Mitarbeiter/GScheiffarth_500.png</gmd:URL>\n                                                    </gmd:linkage>\n                                                    <gmd:applicationProfile>\n                                                        <gco:CharacterString>image/png</gco:CharacterString>\n                                                    </gmd:applicationProfile>\n                                                    <gmd:name>\n                                                        <gco:CharacterString>Mitarbeiterbild</gco:CharacterString>\n                                                    </gmd:name>\n                                                    <gmd:description>\n                                                        <gco:CharacterString>Hier ist ein Bild von Gregor Scheiffarth, Mitarbeiter der Nationalparkverwaltung Niedersächsisches Wattenmeer zu sehen.</gco:CharacterString>\n                                                    </gmd:description>\n                                                    <gmd:function>\n                                                        <gmd:CI_OnLineFunctionCode codeListValue=\"information\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode\">information</gmd:CI_OnLineFunctionCode>\n                                                    </gmd:function>\n                                                </gmd:CI_OnlineResource>\n                                            </gmd:onlineResource>\n                                            <gmd:hoursOfService>\n                                                <gco:CharacterString>Mo-Do: 9:00 - 12:00 Uhr, 14:00 Uhr - 15:30 Uhr &lt;br&gt;\n                                                    Fr: 9:00 - 12:00 Uhr</gco:CharacterString>\n                                            </gmd:hoursOfService>\n                                            <gmd:contactInstructions>\n                                                <gco:CharacterString>Biodiversität, Forschung, Monitoring</gco:CharacterString>\n                                            </gmd:contactInstructions>\n                                        </gmd:CI_Contact>\n                                    </gmd:contactInfo>\n                                    <gmd:role>\n                                        <gmd:CI_RoleCode codeListValue=\"pointOfContact\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode\">pointOfContact</gmd:CI_RoleCode>\n                                    </gmd:role>\n                                </idf:idfResponsibleParty>\n                            </gmd:userContactInfo>\n                        </gmd:MD_Usage>\n                    </gmd:resourceSpecificUsage>\n                    <gmd:resourceConstraints>\n                        <gmd:MD_LegalConstraints uuid=\"f646fb65-5995-4b9f-9f73-dfe3615a3145\">\n                            <gmd:useLimitation>\n                                <gco:CharacterString>Nutzungsbedingungen: Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0). Die Namensnennung lautet: Nationalparkverwaltung Niedersächsisches Wattenmeer</gco:CharacterString>\n                            </gmd:useLimitation>\n                            <gmd:accessConstraints>\n                                <gmd:MD_RestrictionCode codeListValue=\"otherRestrictions\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#MD_RestrictionCode\">otherRestrictions</gmd:MD_RestrictionCode>\n                            </gmd:accessConstraints>\n                            <gmd:accessConstraints>\n                                <gmd:MD_RestrictionCode codeListValue=\"license\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#MD_RestrictionCode\">license</gmd:MD_RestrictionCode>\n                            </gmd:accessConstraints>\n                            <gmd:useConstraints>\n                                <gmd:MD_RestrictionCode codeListValue=\"otherRestrictions\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#MD_RestrictionCode\">otherRestrictions</gmd:MD_RestrictionCode>\n                            </gmd:useConstraints>\n                            <gmd:useConstraints>\n                                <gmd:MD_RestrictionCode codeListValue=\"license\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#MD_RestrictionCode\">license</gmd:MD_RestrictionCode>\n                            </gmd:useConstraints>\n                            <gmd:otherConstraints>\n                                <gco:CharacterString>{ \"id\": \"dl-de-by-2.0\", \"name\": \"Datenlizenz Deutschland – Namensnennung – Version 2.0\", \"url\": \"https://www.govdata.de/dl-de/by-2-0\", \"quelle\": \"Nationalparkverwaltung Niedersächsisches Wattenmeer\" }</gco:CharacterString>\n                            </gmd:otherConstraints>\n                            <gmd:otherConstraints>\n                                <gco:CharacterString>Nutzungsbedingungen: Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0). Die Namensnennung lautet: Nationalparkverwaltung Niedersächsisches Wattenmeer</gco:CharacterString>\n                            </gmd:otherConstraints>\n                        </gmd:MD_LegalConstraints>\n                    </gmd:resourceConstraints>\n                    <gmd:spatialRepresentationType>\n                        <gmd:MD_SpatialRepresentationTypeCode codeListValue=\"vector\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#MD_SpatialRepresentationTypeCode\">vector</gmd:MD_SpatialRepresentationTypeCode>\n                    </gmd:spatialRepresentationType>\n                    <gmd:spatialResolution>\n                        <gmd:MD_Resolution>\n                            <gmd:equivalentScale>\n                                <gmd:MD_RepresentativeFraction uuid=\"8a93fdbe1329eb6801132a38a5034d6f\">\n                                    <gmd:denominator>\n                                        <gco:Integer>100000</gco:Integer>\n                                    </gmd:denominator>\n                                </gmd:MD_RepresentativeFraction>\n                            </gmd:equivalentScale>\n                        </gmd:MD_Resolution>\n                    </gmd:spatialResolution>\n                    <gmd:language>\n                        <gmd:LanguageCode codeListValue=\"ger\" codeList=\"http://www.loc.gov/standards/iso639-2/\">ger</gmd:LanguageCode>\n                    </gmd:language>\n                    <gmd:topicCategory>\n                        <gmd:MD_TopicCategoryCode>biota</gmd:MD_TopicCategoryCode>\n                    </gmd:topicCategory>\n                    <gmd:topicCategory>\n                        <gmd:MD_TopicCategoryCode>oceans</gmd:MD_TopicCategoryCode>\n                    </gmd:topicCategory>\n                    <gmd:topicCategory>\n                        <gmd:MD_TopicCategoryCode>environment</gmd:MD_TopicCategoryCode>\n                    </gmd:topicCategory>\n                    <gmd:topicCategory>\n                        <gmd:MD_TopicCategoryCode>structure</gmd:MD_TopicCategoryCode>\n                    </gmd:topicCategory>\n                    <gmd:extent>\n                        <gmd:EX_Extent uuid=\"8a93fdbe1329eb6801132a38a5034d6a\">\n                            <gmd:geographicElement>\n                                <gmd:EX_GeographicBoundingBox uuid=\"8a93fdbe1329eb6801132a38a5034d6b\">\n                                    <gmd:westBoundLongitude>\n                                        <gco:Decimal>6.6200000000</gco:Decimal>\n                                    </gmd:westBoundLongitude>\n                                    <gmd:eastBoundLongitude>\n                                        <gco:Decimal>8.6500000000</gco:Decimal>\n                                    </gmd:eastBoundLongitude>\n                                    <gmd:southBoundLatitude>\n                                        <gco:Decimal>53.4800000000</gco:Decimal>\n                                    </gmd:southBoundLatitude>\n                                    <gmd:northBoundLatitude>\n                                        <gco:Decimal>53.9700000000</gco:Decimal>\n                                    </gmd:northBoundLatitude>\n                                </gmd:EX_GeographicBoundingBox>\n                            </gmd:geographicElement>\n                            <gmd:temporalElement>\n                                <gmd:EX_TemporalExtent uuid=\"ac8da83f-bbce-4327-bf4e-b1a405aca098\">\n                                    <gmd:extent>\n                                        <gml:TimePeriod xmlns:gml=\"http://www.opengis.net/gml\" gml:id=\"w1618aaac12ac29ab2aaa\" frame=\"\">\n                                            <gml:beginPosition>1991-01-01T01:00:00+01:00</gml:beginPosition>\n                                            <gml:endPosition>1991-12-31T01:00:00+01:00</gml:endPosition>\n                                        </gml:TimePeriod>\n                                    </gmd:extent>\n                                </gmd:EX_TemporalExtent>\n                            </gmd:temporalElement>\n                        </gmd:EX_Extent>\n                    </gmd:extent>\n                </gmd:MD_DataIdentification>\n            </gmd:identificationInfo>\n            <gmd:distributionInfo xmlns:gmd=\"http://www.isotc211.org/2005/gmd\">\n                <gmd:MD_Distribution uuid=\"8a93fdbe1329eb6801132a38a5034d77\">\n                    <gmd:distributor>\n                        <gmd:MD_Distributor uuid=\"8a93fdbe1329eb6801132a38a4f44d3c\">\n                            <gmd:distributorContact>\n                                <idf:idfResponsibleParty uuid=\"8a9161e930dba2210130dba4342d0000\">\n                                    <gmd:individualName>\n                                        <gco:CharacterString>Michael Räder</gco:CharacterString>\n                                    </gmd:individualName>\n                                    <gmd:organisationName>\n                                        <gco:CharacterString>Nationalparkverwaltung Niedersächsisches Wattenmeer</gco:CharacterString>\n                                    </gmd:organisationName>\n                                    <gmd:positionName>\n                                        <gco:CharacterString>| Marine.Daten.Infrastruktur Deutschland (MDI-DE) | Bereitstellung von Geodaten | Datenmanagement für MSRL | Metadatenmanagement | INSPIRE |   </gco:CharacterString>\n                                    </gmd:positionName>\n                                    <gmd:contactInfo>\n                                        <gmd:CI_Contact uuid=\"8a9161e930dba2210130dba44c8d0001\">\n                                            <gmd:phone>\n                                                <gmd:CI_Telephone uuid=\"8a9161e930dba2210130dba44c900002\">\n                                                    <gmd:voice>\n                                                        <gco:CharacterString>+49 4421 911-295</gco:CharacterString>\n                                                    </gmd:voice>\n                                                </gmd:CI_Telephone>\n                                            </gmd:phone>\n                                            <gmd:address>\n                                                <gmd:CI_Address uuid=\"8a9161e930dba2210130dba44c9f0003\">\n                                                    <gmd:deliveryPoint>\n                                                        <gco:CharacterString>Virchowstraße 1</gco:CharacterString>\n                                                    </gmd:deliveryPoint>\n                                                    <gmd:city>\n                                                        <gco:CharacterString>Wilhelmshaven</gco:CharacterString>\n                                                    </gmd:city>\n                                                    <gmd:postalCode>\n                                                        <gco:CharacterString>26382</gco:CharacterString>\n                                                    </gmd:postalCode>\n                                                    <gmd:country>\n                                                        <gco:CharacterString>Germany</gco:CharacterString>\n                                                    </gmd:country>\n                                                    <gmd:electronicMailAddress>\n                                                        <gco:CharacterString>Michael.Raeder@nlpvw.niedersachsen.de</gco:CharacterString>\n                                                    </gmd:electronicMailAddress>\n                                                </gmd:CI_Address>\n                                            </gmd:address>\n                                            <gmd:onlineResource>\n                                                <gmd:CI_OnlineResource uuid=\"8a9161e930e0788c0130e0b6da3e0001\">\n                                                    <gmd:linkage>\n                                                        <gmd:URL>https://mdi.niedersachsen.de/images/NLPV_Mitarbeiter/MRaeder_02.jpg</gmd:URL>\n                                                    </gmd:linkage>\n                                                    <gmd:protocol>\n                                                        <gco:CharacterString>Protokoll</gco:CharacterString>\n                                                    </gmd:protocol>\n                                                    <gmd:applicationProfile>\n                                                        <gco:CharacterString>image/png</gco:CharacterString>\n                                                    </gmd:applicationProfile>\n                                                    <gmd:name>\n                                                        <gco:CharacterString>Mitarbeiterbild</gco:CharacterString>\n                                                    </gmd:name>\n                                                    <gmd:description>\n                                                        <gco:CharacterString>Hier ist ein Bild von Michael Räder, Mitarbeiter der Nationalparkverwaltung Niedersächsisches Wattenmeer zu sehen.</gco:CharacterString>\n                                                    </gmd:description>\n                                                    <gmd:function>\n                                                        <gmd:CI_OnLineFunctionCode codeListValue=\"information\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode\">information</gmd:CI_OnLineFunctionCode>\n                                                    </gmd:function>\n                                                </gmd:CI_OnlineResource>\n                                            </gmd:onlineResource>\n                                            <gmd:hoursOfService>\n                                                <gco:CharacterString>Mo-Do: 9:00 - 12:00 Uhr, 14:00 Uhr - 15:30 Uhr &lt;br&gt;\n                                                    Fr: 9:00 - 12:00 Uhr</gco:CharacterString>\n                                            </gmd:hoursOfService>\n                                            <gmd:contactInstructions>\n                                                <gco:CharacterString>Biodiversität, Forschung, Monitoring</gco:CharacterString>\n                                            </gmd:contactInstructions>\n                                        </gmd:CI_Contact>\n                                    </gmd:contactInfo>\n                                    <gmd:role>\n                                        <gmd:CI_RoleCode codeListValue=\"pointOfContact\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode\">pointOfContact</gmd:CI_RoleCode>\n                                    </gmd:role>\n                                </idf:idfResponsibleParty>\n                            </gmd:distributorContact>\n                            <gmd:distributionOrderProcess>\n                                <gmd:MD_StandardOrderProcess uuid=\"8a93fdbe1329eb6801132a38a5034d42\">\n                                    <gmd:fees>\n                                        <gco:CharacterString>Datenabgabe gemäß Umweltinformationsgesetz (UIG) und Niedersächsischer Allgemeiner Gebührenordnung (AllGO), OpenData nach Datenlizenz Deutschland Namensnennung</gco:CharacterString>\n                                    </gmd:fees>\n                                    <gmd:orderingInstructions>\n                                        <gco:CharacterString>Die Daten sind Eigentum der Nationalparkverwaltung Niedersächsisches Wattenmeer</gco:CharacterString>\n                                    </gmd:orderingInstructions>\n                                    <gmd:turnaround>\n                                        <gco:CharacterString>Daten sind über Webservices: WMS, WFS und INSPIRE Pre-defined ATOM Feeds direkt verfügbar.</gco:CharacterString>\n                                    </gmd:turnaround>\n                                </gmd:MD_StandardOrderProcess>\n                            </gmd:distributionOrderProcess>\n                            <gmd:distributorFormat>\n                                <gmd:MD_Format uuid=\"8a93fdbe1329eb6801132a38a5034d45\">\n                                    <gmd:name>\n                                        <gco:CharacterString>ArcView Shapefile (*.shp)</gco:CharacterString>\n                                    </gmd:name>\n                                    <gmd:version>\n                                        <gco:CharacterString>10.0</gco:CharacterString>\n                                    </gmd:version>\n                                </gmd:MD_Format>\n                            </gmd:distributorFormat>\n                            <gmd:distributorFormat>\n                                <gmd:MD_Format uuid=\"a66cb758-e2c0-4aa3-8cf3-9502a875b0fd\">\n                                    <gmd:name>\n                                        <gco:CharacterString>WMS</gco:CharacterString>\n                                    </gmd:name>\n                                    <gmd:version>\n                                        <gco:CharacterString>1.3.0\n                                            1.1.1</gco:CharacterString>\n                                    </gmd:version>\n                                    <gmd:specification>\n                                        <gco:CharacterString>OpenGIS Web Map Service (WMS) Implementation Specification</gco:CharacterString>\n                                    </gmd:specification>\n                                </gmd:MD_Format>\n                            </gmd:distributorFormat>\n                            <gmd:distributorFormat>\n                                <gmd:MD_Format uuid=\"f7b9d566-aa71-4e32-8a5a-369e6c21475e\">\n                                    <gmd:name>\n                                        <gco:CharacterString>WFS</gco:CharacterString>\n                                    </gmd:name>\n                                    <gmd:version>\n                                        <gco:CharacterString>2.0.0\n                                            1.1.0\n                                            1.0.0</gco:CharacterString>\n                                    </gmd:version>\n                                    <gmd:specification>\n                                        <gco:CharacterString>OpenGIS Web Feature Service (WFS) Implementation Specification</gco:CharacterString>\n                                    </gmd:specification>\n                                </gmd:MD_Format>\n                            </gmd:distributorFormat>\n                            <gmd:distributorFormat>\n                                <gmd:MD_Format uuid=\"35f4f2f7-a30a-44e2-bbba-143c8db8a17b\">\n                                    <gmd:name>\n                                        <gco:CharacterString>Atom Implementation of Pre-defined Dataset Download Service</gco:CharacterString>\n                                    </gmd:name>\n                                    <gmd:version>\n                                        <gco:CharacterString>1.0</gco:CharacterString>\n                                    </gmd:version>\n                                    <gmd:specification>\n                                        <gco:CharacterString>Technical Guidance for the implementation of INSPIRE Download Services</gco:CharacterString>\n                                    </gmd:specification>\n                                </gmd:MD_Format>\n                            </gmd:distributorFormat>\n                            <gmd:distributorTransferOptions>\n                                <gmd:MD_DigitalTransferOptions uuid=\"8a93fdbe1329eb6801132a38a5034d43\">\n                                    <gmd:unitsOfDistribution>\n                                        <gco:CharacterString>Die Daten werden als WMS, WFS, INSPIRE Atom &amp; als Shapedatei für die jeweilige Zählung abgegeben.</gco:CharacterString>\n                                    </gmd:unitsOfDistribution>\n                                    <gmd:transferSize>\n                                        <gco:Real>1.0</gco:Real>\n                                    </gmd:transferSize>\n                                    <gmd:offLine>\n                                        <gmd:MD_Medium uuid=\"8a93fdbe1329eb6801132a38a5034d44\">\n                                            <gmd:name>\n                                                <gmd:MD_MediumNameCode codeListValue=\"cdRom\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#MD_MediumNameCode\">cdRom</gmd:MD_MediumNameCode>\n                                            </gmd:name>\n                                        </gmd:MD_Medium>\n                                    </gmd:offLine>\n                                </gmd:MD_DigitalTransferOptions>\n                            </gmd:distributorTransferOptions>\n                        </gmd:MD_Distributor>\n                    </gmd:distributor>\n                    <gmd:transferOptions>\n                        <gmd:MD_DigitalTransferOptions uuid=\"d1598eb0-7afe-4441-aef3-6c747cd7c9a5\">\n                            <gmd:unitsOfDistribution>\n                                <gco:CharacterString>Die Daten werden als WMS, WFS, INSPIRE Atom &amp; als Shapedatei für die jeweilige Zählung abgegeben.</gco:CharacterString>\n                            </gmd:unitsOfDistribution>\n                            <gmd:transferSize>\n                                <gco:Real>1.0</gco:Real>\n                            </gmd:transferSize>\n                            <gmd:onLine>\n                                <gmd:CI_OnlineResource uuid=\"7234d94f-7142-4268-8deb-b8aaf835d406\">\n                                    <gmd:linkage>\n                                        <gmd:URL>https://mdi.niedersachsen.de/geoserver/Eiderente/wms?</gmd:URL>\n                                    </gmd:linkage>\n                                    <gmd:applicationProfile>\n                                        <gco:CharacterString>application/xml</gco:CharacterString>\n                                    </gmd:applicationProfile>\n                                    <gmd:description>\n                                        <gco:CharacterString>GetCapabilities</gco:CharacterString>\n                                    </gmd:description>\n                                    <gmd:function>\n                                        <gmd:CI_OnLineFunctionCode codeListValue=\"information\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode\">information</gmd:CI_OnLineFunctionCode>\n                                    </gmd:function>\n                                </gmd:CI_OnlineResource>\n                            </gmd:onLine>\n                            <gmd:onLine>\n                                <gmd:CI_OnlineResource uuid=\"42b60f30-06b2-4e15-b2e9-333207a18091\">\n                                    <gmd:linkage>\n                                        <gmd:URL>https://mdi.niedersachsen.de/geoserver/Eiderente/wms?Service=WMS&amp;Version=1.3.0&amp;Request=GetCapabilities</gmd:URL>\n                                    </gmd:linkage>\n                                    <gmd:applicationProfile>\n                                        <gco:CharacterString>application/xml</gco:CharacterString>\n                                    </gmd:applicationProfile>\n                                    <gmd:description>\n                                        <gco:CharacterString>WMS: GetCapabilities</gco:CharacterString>\n                                    </gmd:description>\n                                    <gmd:function>\n                                        <gmd:CI_OnLineFunctionCode codeListValue=\"information\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode\">information</gmd:CI_OnLineFunctionCode>\n                                    </gmd:function>\n                                </gmd:CI_OnlineResource>\n                            </gmd:onLine>\n                            <gmd:onLine>\n                                <gmd:CI_OnlineResource uuid=\"d76a567f-e659-45b3-8781-b956748afce1\">\n                                    <gmd:linkage>\n                                        <gmd:URL>https://mdi.niedersachsen.de/geoserver/Eiderente/wfs?Service=WFS&amp;Version=2.0.0&amp;Request=GetCapabilities</gmd:URL>\n                                    </gmd:linkage>\n                                    <gmd:applicationProfile>\n                                        <gco:CharacterString>application/xml</gco:CharacterString>\n                                    </gmd:applicationProfile>\n                                    <gmd:description>\n                                        <gco:CharacterString>WFS: GetCapabilities (2.0.0)</gco:CharacterString>\n                                    </gmd:description>\n                                    <gmd:function>\n                                        <gmd:CI_OnLineFunctionCode codeListValue=\"information\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode\">information</gmd:CI_OnLineFunctionCode>\n                                    </gmd:function>\n                                </gmd:CI_OnlineResource>\n                            </gmd:onLine>\n                            <gmd:onLine>\n                                <gmd:CI_OnlineResource uuid=\"54f7926c-8c11-49ca-8026-4921ee243702\">\n                                    <gmd:linkage>\n                                        <gmd:URL>https://mdi.niedersachsen.de/geoserver/Eiderente/ows?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;outputformat=text/xml;%20subtype=gml/3.2&amp;typeName=Eiderente:eider1991x01</gmd:URL>\n                                    </gmd:linkage>\n                                    <gmd:applicationProfile>\n                                        <gco:CharacterString>application/gml+xml</gco:CharacterString>\n                                    </gmd:applicationProfile>\n                                    <gmd:name>\n                                        <gco:CharacterString>predefined ATOM</gco:CharacterString>\n                                    </gmd:name>\n                                    <gmd:description>\n                                        <gco:CharacterString>WFS:GML 3.2   #EPSG:25832</gco:CharacterString>\n                                    </gmd:description>\n                                    <gmd:function>\n                                        <gmd:CI_OnLineFunctionCode codeListValue=\"download\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode\">download</gmd:CI_OnLineFunctionCode>\n                                    </gmd:function>\n                                </gmd:CI_OnlineResource>\n                            </gmd:onLine>\n                            <gmd:onLine>\n                                <gmd:CI_OnlineResource uuid=\"96b6d184-3b06-4949-a58d-7dc2a9f4f6c6\">\n                                    <gmd:linkage>\n                                        <gmd:URL>https://mdi.niedersachsen.de/geoserver/Eiderente/ows?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;outputFormat=SHAPE-ZIP&amp;typeName=Eiderente:eider1991x01</gmd:URL>\n                                    </gmd:linkage>\n                                    <gmd:applicationProfile>\n                                        <gco:CharacterString>application/x-shapefile</gco:CharacterString>\n                                    </gmd:applicationProfile>\n                                    <gmd:name>\n                                        <gco:CharacterString>predefined ATOM</gco:CharacterString>\n                                    </gmd:name>\n                                    <gmd:description>\n                                        <gco:CharacterString>WFS:GepacktesShape   #EPSG:25832</gco:CharacterString>\n                                    </gmd:description>\n                                    <gmd:function>\n                                        <gmd:CI_OnLineFunctionCode codeListValue=\"download\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode\">download</gmd:CI_OnLineFunctionCode>\n                                    </gmd:function>\n                                </gmd:CI_OnlineResource>\n                            </gmd:onLine>\n                            <gmd:onLine>\n                                <gmd:CI_OnlineResource uuid=\"a7ad18b1-2bf5-4aee-b296-8de9bdc21e2b\">\n                                    <gmd:linkage>\n                                        <gmd:URL>https://www.nationalpark-wattenmeer.de/sites/default/files/media/pdf/eiderenten_1991.zip</gmd:URL>\n                                    </gmd:linkage>\n                                    <gmd:applicationProfile>\n                                        <gco:CharacterString>application/x-shapefile</gco:CharacterString>\n                                    </gmd:applicationProfile>\n                                    <gmd:description>\n                                        <gco:CharacterString>Original:GepacktesShape   #EPSG:31467</gco:CharacterString>\n                                    </gmd:description>\n                                    <gmd:function>\n                                        <gmd:CI_OnLineFunctionCode codeListValue=\"download\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode\">download</gmd:CI_OnLineFunctionCode>\n                                    </gmd:function>\n                                </gmd:CI_OnlineResource>\n                            </gmd:onLine>\n                        </gmd:MD_DigitalTransferOptions>\n                    </gmd:transferOptions>\n                </gmd:MD_Distribution>\n            </gmd:distributionInfo>\n            <gmd:dataQualityInfo xmlns:gmd=\"http://www.isotc211.org/2005/gmd\">\n                <gmd:DQ_DataQuality uuid=\"8a93fdbe1329eb6801132a38a5034d71\">\n                    <gmd:scope>\n                        <gmd:DQ_Scope uuid=\"8a93fdbe1329eb6801132a38a5034d74\">\n                            <gmd:level>\n                                <gmd:MD_ScopeCode codeListValue=\"dataset\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode\">dataset</gmd:MD_ScopeCode>\n                            </gmd:level>\n                        </gmd:DQ_Scope>\n                    </gmd:scope>\n                    <gmd:report>\n                        <gmd:DQ_DomainConsistency uuid=\"0dffb47f-e67c-453e-a55b-e36ed38b5c42\">\n                            <gmd:evaluationMethodType>\n                                <gmd:DQ_EvaluationMethodTypeCode codeListValue=\"indirect\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#DQ_EvaluationMethodTypeCode\">indirect</gmd:DQ_EvaluationMethodTypeCode>\n                            </gmd:evaluationMethodType>\n                            <gmd:result>\n                                <gmd:DQ_ConformanceResult uuid=\"a7a0b950-4ffc-40c6-b4e6-755a928221aa\">\n                                    <gmd:specification>\n                                        <gmd:CI_Citation uuid=\"adb4293b-75d3-4bc7-8886-4eba797fcb9f\">\n                                            <gmd:title>\n                                                <gco:CharacterString>INSPIRE Data Specification on Environmental Monitoring Facilities - Technical Guidelines</gco:CharacterString>\n                                            </gmd:title>\n                                            <gmd:alternateTitle>\n                                                <gco:CharacterString>INSPIRE Annex III</gco:CharacterString>\n                                            </gmd:alternateTitle>\n                                            <gmd:date>\n                                                <gmd:CI_Date uuid=\"6fbc1a9e-3149-48cb-ad73-11922eee39be\">\n                                                    <gmd:date>\n                                                        <gco:Date>2013-10-12</gco:Date>\n                                                    </gmd:date>\n                                                    <gmd:dateType>\n                                                        <gmd:CI_DateTypeCode codeListValue=\"publication\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode\">publication</gmd:CI_DateTypeCode>\n                                                    </gmd:dateType>\n                                                </gmd:CI_Date>\n                                            </gmd:date>\n                                        </gmd:CI_Citation>\n                                    </gmd:specification>\n                                    <gmd:explanation>\n                                        <gco:CharacterString>Die Qualität der Daten entspricht nicht den Datenspezifikationen.</gco:CharacterString>\n                                    </gmd:explanation>\n                                    <gmd:pass>\n                                        <gco:Boolean>false</gco:Boolean>\n                                    </gmd:pass>\n                                </gmd:DQ_ConformanceResult>\n                            </gmd:result>\n                        </gmd:DQ_DomainConsistency>\n                    </gmd:report>\n                    <gmd:report>\n                        <gmd:DQ_DomainConsistency uuid=\"381727e3-3d10-4673-b354-7a9a33c90d1a\">\n                            <gmd:result>\n                                <gmd:DQ_ConformanceResult uuid=\"7909aa1c-26cd-4f51-91ac-f79c3b4039e0\">\n                                    <gmd:specification>\n                                        <gmd:CI_Citation uuid=\"89172c8b-3786-4cb2-a5c8-0f2bd9d80b26\">\n                                            <gmd:title>\n                                                <gco:CharacterString>VERORDNUNG (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatensätzen und -diensten</gco:CharacterString>\n                                            </gmd:title>\n                                            <gmd:alternateTitle>\n                                                <gco:CharacterString>INSPIRE: Umweltüberwachung</gco:CharacterString>\n                                            </gmd:alternateTitle>\n                                            <gmd:date>\n                                                <gmd:CI_Date uuid=\"c71d6f7d-b039-477d-a4c0-9ee1aa078d6d\">\n                                                    <gmd:date>\n                                                        <gco:Date>2010-12-08</gco:Date>\n                                                    </gmd:date>\n                                                    <gmd:dateType>\n                                                        <gmd:CI_DateTypeCode codeListValue=\"publication\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode\">publication</gmd:CI_DateTypeCode>\n                                                    </gmd:dateType>\n                                                </gmd:CI_Date>\n                                            </gmd:date>\n                                        </gmd:CI_Citation>\n                                    </gmd:specification>\n                                    <gmd:explanation>\n                                        <gco:CharacterString>Die Qualität der Daten entspricht nicht den Datenspezifikationen.</gco:CharacterString>\n                                    </gmd:explanation>\n                                    <gmd:pass>\n                                        <gco:Boolean>false</gco:Boolean>\n                                    </gmd:pass>\n                                </gmd:DQ_ConformanceResult>\n                            </gmd:result>\n                        </gmd:DQ_DomainConsistency>\n                    </gmd:report>\n                    <gmd:lineage>\n                        <gmd:LI_Lineage uuid=\"c1edc5d2-0956-41b8-affd-6e6dad5294b1\">\n                            <gmd:statement>\n                                <gco:CharacterString>Zählflug bei Niedrigwasser. Zählung erfolgt durch Teams mit mehrjähriger Erfahrung bei niedriger Flughöhe.</gco:CharacterString>\n                            </gmd:statement>\n                            <gmd:source>\n                                <gmd:LI_Source uuid=\"bb6a9f4b-7980-4aae-9666-eda48462ed65\">\n                                    <gmd:description>\n                                        <gco:CharacterString>Maßstab der Zählkarten 1:100000; die beobachteten Trupps der Eiderenten werden zu Punktdaten zusammengefasst und manuell in die Zählkarten übertragen.</gco:CharacterString>\n                                    </gmd:description>\n                                    <gmd:scaleDenominator>\n                                        <gmd:MD_RepresentativeFraction uuid=\"72e49eb7-b0de-4e75-89c7-3fb1470e798e\">\n                                            <gmd:denominator>\n                                                <gco:Integer>100000</gco:Integer>\n                                            </gmd:denominator>\n                                        </gmd:MD_RepresentativeFraction>\n                                    </gmd:scaleDenominator>\n                                </gmd:LI_Source>\n                            </gmd:source>\n                        </gmd:LI_Lineage>\n                    </gmd:lineage>\n                </gmd:DQ_DataQuality>\n            </gmd:dataQualityInfo>\n            <gmd:portrayalCatalogueInfo xmlns:gmd=\"http://www.isotc211.org/2005/gmd\">\n                <gmd:MD_PortrayalCatalogueReference uuid=\"9d5c9680-f260-4f91-8826-9938db7f43b6\">\n                    <gmd:portrayalCatalogueCitation>\n                        <gmd:CI_Citation uuid=\"474ee0a4-cfdb-4b9e-a6c8-0e4be5f55d8d\">\n                            <gmd:title>\n                                <gco:CharacterString>Aufruf im Portal MDI.Niedersachsen</gco:CharacterString>\n                            </gmd:title>\n                            <gmd:date>\n                                <gmd:CI_Date uuid=\"9cf9a05f-7818-4419-a7b9-26ed03e32615\">\n                                    <gmd:date>\n                                        <gco:Date>2017-12-06</gco:Date>\n                                    </gmd:date>\n                                    <gmd:dateType>\n                                        <gmd:CI_DateTypeCode codeListValue=\"creation\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode\">creation</gmd:CI_DateTypeCode>\n                                    </gmd:dateType>\n                                </gmd:CI_Date>\n                            </gmd:date>\n                            <gmd:date>\n                                <gmd:CI_Date uuid=\"3f6afd0b-2c4e-4434-98c4-4353bdfc8362\">\n                                    <gmd:date>\n                                        <gco:Date>2017-12-06</gco:Date>\n                                    </gmd:date>\n                                    <gmd:dateType>\n                                        <gmd:CI_DateTypeCode codeListValue=\"publication\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode\">publication</gmd:CI_DateTypeCode>\n                                    </gmd:dateType>\n                                </gmd:CI_Date>\n                            </gmd:date>\n                            <gmd:date>\n                                <gmd:CI_Date uuid=\"b64d54bc-1f93-4a33-b70a-78da7277c33c\">\n                                    <gmd:date>\n                                        <gco:Date>2017-12-06</gco:Date>\n                                    </gmd:date>\n                                    <gmd:dateType>\n                                        <gmd:CI_DateTypeCode codeListValue=\"revision\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode\">revision</gmd:CI_DateTypeCode>\n                                    </gmd:dateType>\n                                </gmd:CI_Date>\n                            </gmd:date>\n                            <gmd:citedResponsibleParty>\n                                <idf:idfResponsibleParty uuid=\"8a9161e930dba2210130dba4342d0000\">\n                                    <gmd:individualName>\n                                        <gco:CharacterString>Michael Räder</gco:CharacterString>\n                                    </gmd:individualName>\n                                    <gmd:organisationName>\n                                        <gco:CharacterString>Nationalparkverwaltung Niedersächsisches Wattenmeer</gco:CharacterString>\n                                    </gmd:organisationName>\n                                    <gmd:positionName>\n                                        <gco:CharacterString>| Marine.Daten.Infrastruktur Deutschland (MDI-DE) | Bereitstellung von Geodaten | Datenmanagement für MSRL | Metadatenmanagement | INSPIRE |   </gco:CharacterString>\n                                    </gmd:positionName>\n                                    <gmd:contactInfo>\n                                        <gmd:CI_Contact uuid=\"8a9161e930dba2210130dba44c8d0001\">\n                                            <gmd:phone>\n                                                <gmd:CI_Telephone uuid=\"8a9161e930dba2210130dba44c900002\">\n                                                    <gmd:voice>\n                                                        <gco:CharacterString>+49 4421 911-295</gco:CharacterString>\n                                                    </gmd:voice>\n                                                </gmd:CI_Telephone>\n                                            </gmd:phone>\n                                            <gmd:address>\n                                                <gmd:CI_Address uuid=\"8a9161e930dba2210130dba44c9f0003\">\n                                                    <gmd:deliveryPoint>\n                                                        <gco:CharacterString>Virchowstraße 1</gco:CharacterString>\n                                                    </gmd:deliveryPoint>\n                                                    <gmd:city>\n                                                        <gco:CharacterString>Wilhelmshaven</gco:CharacterString>\n                                                    </gmd:city>\n                                                    <gmd:postalCode>\n                                                        <gco:CharacterString>26382</gco:CharacterString>\n                                                    </gmd:postalCode>\n                                                    <gmd:country>\n                                                        <gco:CharacterString>Germany</gco:CharacterString>\n                                                    </gmd:country>\n                                                    <gmd:electronicMailAddress>\n                                                        <gco:CharacterString>Michael.Raeder@nlpvw.niedersachsen.de</gco:CharacterString>\n                                                    </gmd:electronicMailAddress>\n                                                </gmd:CI_Address>\n                                            </gmd:address>\n                                            <gmd:onlineResource>\n                                                <gmd:CI_OnlineResource uuid=\"8a9161e930e0788c0130e0b6da3e0001\">\n                                                    <gmd:linkage>\n                                                        <gmd:URL>https://mdi.niedersachsen.de/images/NLPV_Mitarbeiter/MRaeder_02.jpg</gmd:URL>\n                                                    </gmd:linkage>\n                                                    <gmd:protocol>\n                                                        <gco:CharacterString>Protokoll</gco:CharacterString>\n                                                    </gmd:protocol>\n                                                    <gmd:applicationProfile>\n                                                        <gco:CharacterString>image/png</gco:CharacterString>\n                                                    </gmd:applicationProfile>\n                                                    <gmd:name>\n                                                        <gco:CharacterString>Mitarbeiterbild</gco:CharacterString>\n                                                    </gmd:name>\n                                                    <gmd:description>\n                                                        <gco:CharacterString>Hier ist ein Bild von Michael Räder, Mitarbeiter der Nationalparkverwaltung Niedersächsisches Wattenmeer zu sehen.</gco:CharacterString>\n                                                    </gmd:description>\n                                                    <gmd:function>\n                                                        <gmd:CI_OnLineFunctionCode codeListValue=\"information\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode\">information</gmd:CI_OnLineFunctionCode>\n                                                    </gmd:function>\n                                                </gmd:CI_OnlineResource>\n                                            </gmd:onlineResource>\n                                            <gmd:hoursOfService>\n                                                <gco:CharacterString>Mo-Do: 9:00 - 12:00 Uhr, 14:00 Uhr - 15:30 Uhr &lt;br&gt;\n                                                    Fr: 9:00 - 12:00 Uhr</gco:CharacterString>\n                                            </gmd:hoursOfService>\n                                            <gmd:contactInstructions>\n                                                <gco:CharacterString>Biodiversität, Forschung, Monitoring</gco:CharacterString>\n                                            </gmd:contactInstructions>\n                                        </gmd:CI_Contact>\n                                    </gmd:contactInfo>\n                                    <gmd:role>\n                                        <gmd:CI_RoleCode codeListValue=\"pointOfContact\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode\">pointOfContact</gmd:CI_RoleCode>\n                                    </gmd:role>\n                                </idf:idfResponsibleParty>\n                            </gmd:citedResponsibleParty>\n                            <gmd:presentationForm>\n                                <gmd:CI_PresentationFormCode codeListValue=\"mapDigital\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_PresentationFormCode\">mapDigital</gmd:CI_PresentationFormCode>\n                            </gmd:presentationForm>\n                            <gmd:otherCitationDetails>\n                                <gco:CharacterString>https://mdi.niedersachsen.de/HeronKaDI/JAVA_SCRIPT/37_Portal/index.html?map_x=128280&amp;map_y=491595&amp;map_zoom=2&amp;map_visibility_Eiderente Winter 1991=true</gco:CharacterString>\n                            </gmd:otherCitationDetails>\n                        </gmd:CI_Citation>\n                    </gmd:portrayalCatalogueCitation>\n                </gmd:MD_PortrayalCatalogueReference>\n            </gmd:portrayalCatalogueInfo>\n            <gmd:metadataMaintenance xmlns:gmd=\"http://www.isotc211.org/2005/gmd\">\n                <gmd:MD_MaintenanceInformation uuid=\"8a93fdbe1329eb6801132a38a5034d86\">\n                    <gmd:maintenanceAndUpdateFrequency>\n                        <gmd:MD_MaintenanceFrequencyCode codeListValue=\"asNeeded\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#MD_MaintenanceFrequencyCode\">asNeeded</gmd:MD_MaintenanceFrequencyCode>\n                    </gmd:maintenanceAndUpdateFrequency>\n                    <gmd:contact>\n                        <idf:idfResponsibleParty uuid=\"8a9161e930dba2210130dba4342d0000\">\n                            <gmd:individualName>\n                                <gco:CharacterString>Michael Räder</gco:CharacterString>\n                            </gmd:individualName>\n                            <gmd:organisationName>\n                                <gco:CharacterString>Nationalparkverwaltung Niedersächsisches Wattenmeer</gco:CharacterString>\n                            </gmd:organisationName>\n                            <gmd:positionName>\n                                <gco:CharacterString>| Marine.Daten.Infrastruktur Deutschland (MDI-DE) | Bereitstellung von Geodaten | Datenmanagement für MSRL | Metadatenmanagement | INSPIRE |   </gco:CharacterString>\n                            </gmd:positionName>\n                            <gmd:contactInfo>\n                                <gmd:CI_Contact uuid=\"8a9161e930dba2210130dba44c8d0001\">\n                                    <gmd:phone>\n                                        <gmd:CI_Telephone uuid=\"8a9161e930dba2210130dba44c900002\">\n                                            <gmd:voice>\n                                                <gco:CharacterString>+49 4421 911-295</gco:CharacterString>\n                                            </gmd:voice>\n                                        </gmd:CI_Telephone>\n                                    </gmd:phone>\n                                    <gmd:address>\n                                        <gmd:CI_Address uuid=\"8a9161e930dba2210130dba44c9f0003\">\n                                            <gmd:deliveryPoint>\n                                                <gco:CharacterString>Virchowstraße 1</gco:CharacterString>\n                                            </gmd:deliveryPoint>\n                                            <gmd:city>\n                                                <gco:CharacterString>Wilhelmshaven</gco:CharacterString>\n                                            </gmd:city>\n                                            <gmd:postalCode>\n                                                <gco:CharacterString>26382</gco:CharacterString>\n                                            </gmd:postalCode>\n                                            <gmd:country>\n                                                <gco:CharacterString>Germany</gco:CharacterString>\n                                            </gmd:country>\n                                            <gmd:electronicMailAddress>\n                                                <gco:CharacterString>Michael.Raeder@nlpvw.niedersachsen.de</gco:CharacterString>\n                                            </gmd:electronicMailAddress>\n                                        </gmd:CI_Address>\n                                    </gmd:address>\n                                    <gmd:onlineResource>\n                                        <gmd:CI_OnlineResource uuid=\"8a9161e930e0788c0130e0b6da3e0001\">\n                                            <gmd:linkage>\n                                                <gmd:URL>https://mdi.niedersachsen.de/images/NLPV_Mitarbeiter/MRaeder_02.jpg</gmd:URL>\n                                            </gmd:linkage>\n                                            <gmd:protocol>\n                                                <gco:CharacterString>Protokoll</gco:CharacterString>\n                                            </gmd:protocol>\n                                            <gmd:applicationProfile>\n                                                <gco:CharacterString>image/png</gco:CharacterString>\n                                            </gmd:applicationProfile>\n                                            <gmd:name>\n                                                <gco:CharacterString>Mitarbeiterbild</gco:CharacterString>\n                                            </gmd:name>\n                                            <gmd:description>\n                                                <gco:CharacterString>Hier ist ein Bild von Michael Räder, Mitarbeiter der Nationalparkverwaltung Niedersächsisches Wattenmeer zu sehen.</gco:CharacterString>\n                                            </gmd:description>\n                                            <gmd:function>\n                                                <gmd:CI_OnLineFunctionCode codeListValue=\"information\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode\">information</gmd:CI_OnLineFunctionCode>\n                                            </gmd:function>\n                                        </gmd:CI_OnlineResource>\n                                    </gmd:onlineResource>\n                                    <gmd:hoursOfService>\n                                        <gco:CharacterString>Mo-Do: 9:00 - 12:00 Uhr, 14:00 Uhr - 15:30 Uhr &lt;br&gt;\n                                            Fr: 9:00 - 12:00 Uhr</gco:CharacterString>\n                                    </gmd:hoursOfService>\n                                    <gmd:contactInstructions>\n                                        <gco:CharacterString>Biodiversität, Forschung, Monitoring</gco:CharacterString>\n                                    </gmd:contactInstructions>\n                                </gmd:CI_Contact>\n                            </gmd:contactInfo>\n                            <gmd:role>\n                                <gmd:CI_RoleCode codeListValue=\"pointOfContact\" codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode\">pointOfContact</gmd:CI_RoleCode>\n                            </gmd:role>\n                        </idf:idfResponsibleParty>\n                    </gmd:contact>\n                </gmd:MD_MaintenanceInformation>\n            </gmd:metadataMaintenance>\n        </idf:idfMdMetadata>\n  </body>\n</html>\n",
+  "is_hvd": false,
+  "isfolder": "false",
+  "location": "",
+  "metadata": {
+    "created": null,
+    "modified": "2023-11-20T18:01:09.000Z"
+  },
+  "modified": "2023-11-20T18:01:09.000Z",
+  "object_access": {
+    "restriction_key": [
+      "-1",
+      "-1"
+    ],
+    "restriction_value": [
+      "{ \"id\": \"dl-de-by-2.0\", \"name\": \"Datenlizenz Deutschland – Namensnennung – Version 2.0\", \"url\": \"https://www.govdata.de/dl-de/by-2-0\", \"quelle\": \"Nationalparkverwaltung Niedersächsisches Wattenmeer\" }",
+      "Nutzungsbedingungen: Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0). Die Namensnennung lautet: Nationalparkverwaltung Niedersächsisches Wattenmeer"
+    ],
+    "terms_of_use": "Nutzungsbedingungen: Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0). Die Namensnennung lautet: Nationalparkverwaltung Niedersächsisches Wattenmeer"
+  },
+  "object_use": {
+    "terms_of_use_value": [
+      "{ \"id\": \"dl-de-by-2.0\", \"name\": \"Datenlizenz Deutschland – Namensnennung – Version 2.0\", \"url\": \"https://www.govdata.de/dl-de/by-2-0\", \"quelle\": \"Nationalparkverwaltung Niedersächsisches Wattenmeer\" }",
+      "Nutzungsbedingungen: Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0). Die Namensnennung lautet: Nationalparkverwaltung Niedersächsisches Wattenmeer"
+    ]
+  },
+  "object_use_constraint": {
+    "license_value": [
+      "{ \"id\": \"dl-de-by-2.0\", \"name\": \"Datenlizenz Deutschland – Namensnennung – Version 2.0\", \"url\": \"https://www.govdata.de/dl-de/by-2-0\", \"quelle\": \"Nationalparkverwaltung Niedersächsisches Wattenmeer\" }",
+      "Nutzungsbedingungen: Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0). Die Namensnennung lautet: Nationalparkverwaltung Niedersächsisches Wattenmeer"
+    ]
+  },
+  "partner": [
+    "ni"
+  ],
+  "provider": [
+    "nokis"
+  ],
+  "sort_hash": "6e3f191bdd4d4536704c07d0cbed5a07dd896690",
+  "spatial": {
+    "geometries": [
+      {
+        "bbox": [
+          6.62,
+          53.48,
+          8.65,
+          53.97
+        ],
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              6.62,
+              53.97
+            ],
+            [
+              6.62,
+              53.48
+            ],
+            [
+              8.65,
+              53.48
+            ],
+            [
+              8.65,
+              53.97
+            ],
+            [
+              6.62,
+              53.97
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "spatial_system": {
+    "referencesystem_value": [
+      "http://www.opengis.net/def/crs/EPSG/0/31467"
+    ]
+  },
+  "summary": "Erfassung des Eiderentenbestandes im Niedersächsischen Wattenmeer im Frühjahr 1991. Im Niedersächsischen Wattenmeer werden seit 1986 zweimal pro Jahr die Eiderentenbestände während einer Tide vom Flugzeug aus erfasst. Es handelt sich dabei um die Mauser- (Juli/August) und Überwinterungsbestände (Januar/Februar). Die Zählungen finden in Abstimmung mit Schleswig-Holstein statt. Die Daten sind Bestandteil des Trilateral Monitoring and Assessment Program (TMAP). Monitoring of migratory birds (Eiders) in the Wadden Sea of Lower Saxony in spring 1991. The population of migratory birds (Eiders) in Lower Saxony's Wadden Sea is biyearly determined by aerial flight since 1986. Counts are carried out in July/August during the moult and in January/February and are coordinated with Schleswig-Holstein. The data are part of the trilateral monitoring and assessment program (TMAP).",
+  "t0113_dataset_reference": [
+    {
+      "type": "1",
+      "reference_date": "19950801020000000"
+    },
+    {
+      "type": "2",
+      "reference_date": "20110318010000000"
+    },
+    {
+      "type": "3",
+      "reference_date": "20220318010000000"
+    }
+  ],
+  "t011_obj_geo": {
+    "data_base": "Maßstab der Zählkarten 1:100000; die beobachteten Trupps der Eiderenten werden zu Punktdaten zusammengefasst und manuell in die Zählkarten übertragen.",
+    "datasource_uuid": "https://registry.gdi-de.org/id/de.ni.koop.mdini.csw/8a93fdbe1329eb6801132a38a5034d4b",
+    "hierarchy_level": false,
+    "keyc_incl_w_dataset": false,
+    "referencesystem_id": [
+      "http://www.opengis.net/def/crs/EPSG/0/31467"
+    ],
+    "special_base": "Zählflug bei Niedrigwasser. Zählung erfolgt durch Teams mit mehrjähriger Erfahrung bei niedriger Flughöhe.",
+    "vector_topology_level": "1"
+  },
+  "t011_obj_geo_keyc": [],
+  "t011_obj_geo_scale": [
+    {
+      "scale": "100000"
+    }
+  ],
+  "t011_obj_geo_spatial_rep": {},
+  "t011_obj_geo_supplinfo": {},
+  "t011_obj_geo_symc": [
+    {
+      "symbol_cat": "Aufruf im Portal MDI.Niedersachsen",
+      "symbol_date": "20171206010000000"
+    }
+  ],
+  "t011_obj_geo_vector": [
+    {
+      "geometric_object_type": "4",
+      "geometric_object_count": "207"
+    }
+  ],
+  "t011_obj_serv": {
+    "base": "Maßstab der Zählkarten 1:100000; die beobachteten Trupps der Eiderenten werden zu Punktdaten zusammengefasst und manuell in die Zählkarten übertragen."
+  },
+  "t011_obj_serv_op_connpoint": [],
+  "t011_obj_serv_op_platform": [],
+  "t011_obj_serv_operation": [],
+  "t011_obj_serv_version": {
+    "version_value": ""
+  },
+  "t011_obj_topic_cat": [
+    {
+      "topic_category": "2"
+    },
+    {
+      "topic_category": "14"
+    },
+    {
+      "topic_category": "7"
+    },
+    {
+      "topic_category": "17"
+    }
+  ],
+  "t012_obj_adr": [
+    {
+      "typ": "7",
+      "special_ref": "0"
+    },
+    {
+      "typ": "7",
+      "special_ref": "0"
+    },
+    {
+      "typ": "7",
+      "special_ref": "0"
+    },
+    {
+      "typ": "7",
+      "special_ref": "0"
+    },
+    {
+      "typ": "7",
+      "special_ref": "0"
+    },
+    {
+      "typ": "7",
+      "special_ref": "0"
+    },
+    {
+      "typ": "7",
+      "special_ref": "0"
+    }
+  ],
+  "t017_url_ref": [
+    {
+      "descr": "GetCapabilities",
+      "content": "",
+      "url_link": "https://mdi.niedersachsen.de/geoserver/Eiderente/wms?",
+      "special_ref": "5302"
+    },
+    {
+      "descr": "WMS: GetCapabilities",
+      "content": "",
+      "url_link": "https://mdi.niedersachsen.de/geoserver/Eiderente/wms?Service=WMS&Version=1.3.0&Request=GetCapabilities",
+      "special_ref": "5302"
+    },
+    {
+      "descr": "WFS: GetCapabilities (2.0.0)",
+      "content": "",
+      "url_link": "https://mdi.niedersachsen.de/geoserver/Eiderente/wfs?Service=WFS&Version=2.0.0&Request=GetCapabilities",
+      "special_ref": "5302"
+    },
+    {
+      "descr": "WFS:GML 3.2   #EPSG:25832",
+      "content": "predefined ATOM",
+      "url_link": "https://mdi.niedersachsen.de/geoserver/Eiderente/ows?service=WFS&version=1.1.0&request=GetFeature&outputformat=text/xml;%20subtype=gml/3.2&typeName=Eiderente:eider1991x01",
+      "special_ref": "9990"
+    },
+    {
+      "descr": "WFS:GepacktesShape   #EPSG:25832",
+      "content": "predefined ATOM",
+      "url_link": "https://mdi.niedersachsen.de/geoserver/Eiderente/ows?service=WFS&version=1.1.0&request=GetFeature&outputFormat=SHAPE-ZIP&typeName=Eiderente:eider1991x01",
+      "special_ref": "9990"
+    },
+    {
+      "descr": "Original:GepacktesShape   #EPSG:31467",
+      "content": "",
+      "url_link": "https://www.nationalpark-wattenmeer.de/sites/default/files/media/pdf/eiderenten_1991.zip",
+      "special_ref": "9990"
+    }
+  ],
+  "t01_object": {
+    "data_language_code": "de",
+    "dataset_alternate_name": [
+      "Eiderentenzählung Winter 1991 UIG"
+    ],
+    "dataset_usage": "Erfassung der Eiderentenbestände als TMAP Parameter 7.4 (Monitoring of migratory birds)",
+    "info_note": "Umweltmonitoring im Rahmen des Trilateral Monitoring and Assessment Program (TMAP) Environmental monitoring as part of the Trilateral Monitoring and Assessment Program (TMAP)",
+    "metadata_character_set": "4",
+    "metadata_language_code": "de",
+    "metadata_standard_name": "ISO 19115:2003 NOKIS-Profile",
+    "metadata_standard_version": "1.0",
+    "mod_time": "2023-11-20T18:01:09.000Z",
+    "obj_class": "1",
+    "obj_id": "metadata-NPWHV13747",
+    "ordering_instructions": "Die Daten sind Eigentum der Nationalparkverwaltung Niedersächsisches Wattenmeer",
+    "org_obj_id": "metadata-NPWHV13747",
+    "time_from": "19910101010000000",
+    "time_period": "9",
+    "time_status": "1",
+    "time_to": "19911231010000000",
+    "time_type": "von",
+    "vertical_extent_vdatum": "5105"
+  },
+  "t021_communication": [
+    {
+      "comm_type": "Telefon",
+      "comm_value": "+49 4421 911-155"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "Gregor.Scheiffarth@nlpvw.niedersachsen.de"
+    },
+    {
+      "comm_type": "URL",
+      "comm_value": "https://mdi.niedersachsen.de/images/NLPV_Mitarbeiter/GScheiffarth_500.png"
+    },
+    {
+      "comm_type": "Telefon",
+      "comm_value": "+49 4421 911-155"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "Gregor.Scheiffarth@nlpvw.niedersachsen.de"
+    },
+    {
+      "comm_type": "URL",
+      "comm_value": "https://mdi.niedersachsen.de/images/NLPV_Mitarbeiter/GScheiffarth_500.png"
+    },
+    {
+      "comm_type": "Telefon",
+      "comm_value": "+49 4421 911-288"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "Meike.Bremenkamp@nlpvw.niedersachsen.de"
+    },
+    {
+      "comm_type": "URL",
+      "comm_value": "https://mdi.niedersachsen.de/images/user_female_256px.png"
+    },
+    {
+      "comm_type": "Telefon",
+      "comm_value": "+49 4421 911-155"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "Gregor.Scheiffarth@nlpvw.niedersachsen.de"
+    },
+    {
+      "comm_type": "URL",
+      "comm_value": "https://mdi.niedersachsen.de/images/NLPV_Mitarbeiter/GScheiffarth_500.png"
+    },
+    {
+      "comm_type": "Telefon",
+      "comm_value": "+49 4421 911-295"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "Michael.Raeder@nlpvw.niedersachsen.de"
+    },
+    {
+      "comm_type": "URL",
+      "comm_value": "https://mdi.niedersachsen.de/images/NLPV_Mitarbeiter/MRaeder_02.jpg"
+    },
+    {
+      "comm_type": "Telefon",
+      "comm_value": "+49 4421 911-295"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "Michael.Raeder@nlpvw.niedersachsen.de"
+    },
+    {
+      "comm_type": "URL",
+      "comm_value": "https://mdi.niedersachsen.de/images/NLPV_Mitarbeiter/MRaeder_02.jpg"
+    },
+    {
+      "comm_type": "Telefon",
+      "comm_value": "+49 4421 911-295"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "Michael.Raeder@nlpvw.niedersachsen.de"
+    },
+    {
+      "comm_type": "URL",
+      "comm_value": "https://mdi.niedersachsen.de/images/NLPV_Mitarbeiter/MRaeder_02.jpg"
+    }
+  ],
+  "t02_address": [
+    {
+      "job": "| Wattökologie | Forschungskoordination | Gastvögel | Harvarievorsorge |",
+      "city": "Wilhelmshaven",
+      "street": "Virchowstr. 1",
+      "lastname": "Gregor, Dr. Scheiffarth",
+      "postcode": "26382",
+      "institution": "Nationalparkverwaltung Niedersächsisches Wattenmeer",
+      "country_code": "Germany",
+      "administrative_area_value": "Niedersachsen"
+    },
+    {
+      "job": "| Wattökologie | Forschungskoordination | Gastvögel | Harvarievorsorge |",
+      "city": "Wilhelmshaven",
+      "street": "Virchowstr. 1",
+      "lastname": "Gregor, Dr. Scheiffarth",
+      "postcode": "26382",
+      "institution": "Nationalparkverwaltung Niedersächsisches Wattenmeer",
+      "country_code": "Germany",
+      "administrative_area_value": "Niedersachsen",
+      "identificationinfo_administrative_area_value": "Niedersachsen"
+    },
+    {
+      "job": "| Kartographie | GIS | Digitalisierung |Statistik | IT-Unterstützung |",
+      "city": "Wilhelmshaven",
+      "street": "Virchowstr. 1",
+      "lastname": "Meike Bremenkamp",
+      "postcode": "26382",
+      "institution": "Nationalparkverwaltung Niedersächsisches Wattenmeer",
+      "country_code": "Germany",
+      "administrative_area_value": "Niedersachsen"
+    },
+    {
+      "job": "| Wattökologie | Forschungskoordination | Gastvögel | Harvarievorsorge |",
+      "city": "Wilhelmshaven",
+      "street": "Virchowstr. 1",
+      "lastname": "Gregor, Dr. Scheiffarth",
+      "postcode": "26382",
+      "institution": "Nationalparkverwaltung Niedersächsisches Wattenmeer",
+      "country_code": "Germany",
+      "administrative_area_value": "Niedersachsen"
+    },
+    {
+      "job": "| Marine.Daten.Infrastruktur Deutschland (MDI-DE) | Bereitstellung von Geodaten | Datenmanagement für MSRL | Metadatenmanagement | INSPIRE |   ",
+      "city": "Wilhelmshaven",
+      "street": "Virchowstraße 1",
+      "lastname": "Michael Räder",
+      "postcode": "26382",
+      "institution": "Nationalparkverwaltung Niedersächsisches Wattenmeer",
+      "country_code": "Germany"
+    },
+    {
+      "job": "| Marine.Daten.Infrastruktur Deutschland (MDI-DE) | Bereitstellung von Geodaten | Datenmanagement für MSRL | Metadatenmanagement | INSPIRE |   ",
+      "city": "Wilhelmshaven",
+      "street": "Virchowstraße 1",
+      "lastname": "Michael Räder",
+      "postcode": "26382",
+      "institution": "Nationalparkverwaltung Niedersächsisches Wattenmeer",
+      "country_code": "Germany"
+    },
+    {
+      "job": "| Marine.Daten.Infrastruktur Deutschland (MDI-DE) | Bereitstellung von Geodaten | Datenmanagement für MSRL | Metadatenmanagement | INSPIRE |   ",
+      "city": "Wilhelmshaven",
+      "street": "Virchowstraße 1",
+      "lastname": "Michael Räder",
+      "postcode": "26382",
+      "institution": "Nationalparkverwaltung Niedersächsisches Wattenmeer",
+      "country_code": "Germany"
+    }
+  ],
+  "t04_search": [
+    {
+      "type": "I",
+      "searchterm": "Environmental monitoring facilities"
+    },
+    {
+      "type": "I",
+      "searchterm": "Umweltüberwachung"
+    },
+    {
+      "type": "F",
+      "searchterm": "Regional"
+    },
+    {
+      "type": "F",
+      "searchterm": "Eiderente"
+    },
+    {
+      "type": "F",
+      "searchterm": "Gastvogel"
+    },
+    {
+      "type": "F",
+      "searchterm": "Somateria mollissima"
+    },
+    {
+      "type": "F",
+      "searchterm": "eider duck"
+    },
+    {
+      "type": "F",
+      "searchterm": "Eidereend"
+    },
+    {
+      "type": "F",
+      "searchterm": "Ederfugl"
+    },
+    {
+      "type": "F",
+      "searchterm": "Nationalpark Niedersächsisches Wattenmeer"
+    },
+    {
+      "type": "F",
+      "searchterm": "Wadden Sea National Park of Lower Saxonye"
+    },
+    {
+      "type": "F",
+      "searchterm": "Nordsee"
+    },
+    {
+      "type": "F",
+      "searchterm": "Niedersächsisches Küstenmeer"
+    },
+    {
+      "type": "F",
+      "searchterm": "Biologie"
+    },
+    {
+      "type": "F",
+      "searchterm": "Fauna"
+    },
+    {
+      "type": "F",
+      "searchterm": "Ornithologie"
+    },
+    {
+      "type": "F",
+      "searchterm": "inspiregrundlage"
+    },
+    {
+      "type": "F",
+      "searchterm": "INSPIRE"
+    },
+    {
+      "type": "F",
+      "searchterm": "opendata"
+    }
+  ],
+  "t1": "19910101010000000",
+  "t2": "19911231010000000",
+  "title": "[1991] Eiderentenbestandserfassung (Jan/Feb) Monitoring of migratory birds (Eiders) in the Wadden Sea of Lower Saxony in winter 1991",
+  "uuid": "metadata-NPWHV13747",
+  "x1": "6.6200000000",
+  "x2": "8.6500000000",
+  "y1": "53.4800000000",
+  "y2": "53.9700000000"
+}

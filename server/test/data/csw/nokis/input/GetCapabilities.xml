@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Capabilities version="2.0.2" xmlns="http://www.opengis.net/cat/csw/2.0.2" xmlns:dct="http://purl.org/dc/terms/" xmlns:csw="http://www.opengis.net/cat/csw" xmlns:gml="http://www.opengis.net/gml" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:ogc="http://www.opengis.net/ogc" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gmd="http://www.isotc211.org/2005/gmd">
+    <ows:ServiceIdentification>
+        <ows:Title>NOKIS NLPV/NLWKN (Spezifikation: OGC CSW 2.0.2/AP ISO 1.0)</ows:Title>
+        <ows:Abstract>Hier sind alle öffentlichen Metadaten (19115/19119) aus den Metadatenkatalogen NOKIS:NLPV und NOKIS:NLWKN vereint, welche über die CSW Schnittstelle bereitgestellt werden.</ows:Abstract>
+        <ows:Keywords>
+            <ows:Keyword>CS-W</ows:Keyword>
+            <ows:Keyword>CSW</ows:Keyword>
+            <ows:Keyword>ISO19119</ows:Keyword>
+            <ows:Keyword>ISO19115</ows:Keyword>
+            <ows:Keyword>Catalog Service</ows:Keyword>
+            <ows:Type>theme</ows:Type>
+        </ows:Keywords>
+        <ows:ServiceType>CSW</ows:ServiceType>
+        <ows:ServiceTypeVersion>2.0.2</ows:ServiceTypeVersion>
+        <ows:Fees>Keine</ows:Fees>
+        <ows:AccessConstraints>Wir bitten um Rücksprache, wenn Sie Metadaten via CSW harvesten möchten.</ows:AccessConstraints>
+    </ows:ServiceIdentification>
+    <ows:ServiceProvider>
+        <ows:ProviderName>NOKIS NLPV/NLWKN</ows:ProviderName>
+        <ows:ProviderSite xlink:href="http://nokis.niedersachsen.de/NOKIS" xlink:type="simple"/>
+        <ows:ServiceContact>
+            <ows:IndividualName>Michael Räder</ows:IndividualName>
+            <ows:PositionName>technischer Ansprechpartner</ows:PositionName>
+            <ows:ContactInfo>
+                <ows:Phone>
+                    <ows:Voice>+49 (0)4421 911-295</ows:Voice>
+                    <ows:Facsimile>+49 (0)4421 911-280</ows:Facsimile>
+                </ows:Phone>
+                <ows:Address>
+                    <ows:DeliveryPoint>Virchowstr. 1</ows:DeliveryPoint>
+                    <ows:City>Wilhelmshaven</ows:City>
+                    <ows:AdministrativeArea>Niedersachsen</ows:AdministrativeArea>
+                    <ows:PostalCode>26382</ows:PostalCode>
+                    <ows:Country>Deutschland</ows:Country>
+                    <ows:ElectronicMailAddress>Michael.Raeder@nlpv-wattenmeer.niedersachsen.de</ows:ElectronicMailAddress>
+                </ows:Address>
+                <ows:OnlineResource xlink:href="mailto:Michael.Raeder@nlpv-wattenmeer.niedersachsen.de" xlink:type="simple"/>
+            </ows:ContactInfo>
+        </ows:ServiceContact>
+    </ows:ServiceProvider>
+    <ows:OperationsMetadata>
+        <ows:Operation name="Transaction">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Post xlink:href="https://nokis.niedersachsen.de/NOKIS//servants/de/disy/preludio2/service/cat/csw/v_2_0_2/Transaction$Post$SOAP" xlink:type="simple">
+                        <ows:Constraint name="PostEncoding">
+                            <ows:Value>SOAP</ows:Value>
+                        </ows:Constraint>
+                    </ows:Post>
+                    <ows:Post xlink:href="https://nokis.niedersachsen.de/NOKIS//servants/de/disy/preludio2/service/cat/csw/v_2_0_2/Transaction$Post$XML" xlink:type="simple">
+                        <ows:Constraint name="PostEncoding">
+                            <ows:Value>XML</ows:Value>
+                        </ows:Constraint>
+                    </ows:Post>
+                </ows:HTTP>
+            </ows:DCP>
+        </ows:Operation>
+        <ows:Operation name="GetCapabilities">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Post xlink:href="https://nokis.niedersachsen.de/NOKIS//servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetCapabilitiesServant$Post$XML" xlink:type="simple">
+                        <ows:Constraint name="PostEncoding">
+                            <ows:Value>XML</ows:Value>
+                        </ows:Constraint>
+                    </ows:Post>
+                    <ows:Get xlink:href="https://nokis.niedersachsen.de/NOKIS//servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetCapabilitiesServant$Get" xlink:type="simple"/>
+                    <ows:Post xlink:href="https://nokis.niedersachsen.de/NOKIS//servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetCapabilitiesServant$Post$SOAP" xlink:type="simple">
+                        <ows:Constraint name="PostEncoding">
+                            <ows:Value>SOAP</ows:Value>
+                        </ows:Constraint>
+                    </ows:Post>
+                </ows:HTTP>
+            </ows:DCP>
+        </ows:Operation>
+        <ows:Operation name="GetRecords">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Post xlink:href="https://nokis.niedersachsen.de/NOKIS//servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecords$Post$XML" xlink:type="simple">
+                        <ows:Constraint name="PostEncoding">
+                            <ows:Value>XML</ows:Value>
+                        </ows:Constraint>
+                    </ows:Post>
+                    <ows:Post xlink:href="https://nokis.niedersachsen.de/NOKIS//servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecords$Post$SOAP" xlink:type="simple">
+                        <ows:Constraint name="PostEncoding">
+                            <ows:Value>SOAP</ows:Value>
+                        </ows:Constraint>
+                    </ows:Post>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="outputFormat">
+                <ows:Value>application/xml</ows:Value>
+                <ows:Value>text/xml</ows:Value>
+            </ows:Parameter>
+            <ows:Parameter name="resultType">
+                <ows:Value>hits</ows:Value>
+                <ows:Value>results</ows:Value>
+                <ows:Value>validate</ows:Value>
+            </ows:Parameter>
+            <ows:Parameter name="ElementSetName">
+                <ows:Value>brief</ows:Value>
+                <ows:Value>summary</ows:Value>
+                <ows:Value>full</ows:Value>
+            </ows:Parameter>
+            <ows:Parameter name="CONSTRAINTLANGUAGE">
+                <ows:Value>Filter</ows:Value>
+            </ows:Parameter>
+            <ows:Parameter name="SupportedQueryables">
+                <ows:Value>Abstract</ows:Value>
+                <ows:Value>AnyText</ows:Value>
+                <ows:Value>BoundingBox</ows:Value>
+                <ows:Value>CreationDate</ows:Value>
+                <ows:Value>DC.language</ows:Value>
+                <ows:Value>Envelope</ows:Value>
+                <ows:Value>Format</ows:Value>
+                <ows:Value>FormatName</ows:Value>
+                <ows:Value>Identifier</ows:Value>
+                <ows:Value>MD_Metadata/identificationInfo/CSW_ServiceIdentification/operatesOn/MD_DataIdentification/citation/CI_Citation/date/CI_Date/date</ows:Value>
+                <ows:Value>MD_Metadata/identificationInfo/MD_DataIdentification/citation/CI_Citation/date/CI_Date/date</ows:Value>
+                <ows:Value>Modified</ows:Value>
+                <ows:Value>OrganisationName</ows:Value>
+                <ows:Value>PublicationDate</ows:Value>
+                <ows:Value>ResourceIdentifier</ows:Value>
+                <ows:Value>ResponsibleParty</ows:Value>
+                <ows:Value>RevisionDate</ows:Value>
+                <ows:Value>ServiceType</ows:Value>
+                <ows:Value>ServiceTypeVersion</ows:Value>
+                <ows:Value>SpatialRepresentationType</ows:Value>
+                <ows:Value>Status</ows:Value>
+                <ows:Value>Subject</ows:Value>
+                <ows:Value>TemporalExtent</ows:Value>
+                <ows:Value>Timestamp</ows:Value>
+                <ows:Value>Title</ows:Value>
+                <ows:Value>TopicCategory</ows:Value>
+                <ows:Value>Type</ows:Value>
+                <ows:Value>Wltype</ows:Value>
+                <ows:Value>abstract</ows:Value>
+                <ows:Value>acronym</ows:Value>
+                <ows:Value>all</ows:Value>
+                <ows:Value>apiso:Abstract</ows:Value>
+                <ows:Value>apiso:AnyText</ows:Value>
+                <ows:Value>apiso:CreationDate</ows:Value>
+                <ows:Value>apiso:Format</ows:Value>
+                <ows:Value>apiso:Modified</ows:Value>
+                <ows:Value>apiso:OrganisationName</ows:Value>
+                <ows:Value>apiso:PublicationDate</ows:Value>
+                <ows:Value>apiso:ResourceIdentifier</ows:Value>
+                <ows:Value>apiso:RevisionDate</ows:Value>
+                <ows:Value>apiso:ServiceType</ows:Value>
+                <ows:Value>apiso:ServiceTypeVersion</ows:Value>
+                <ows:Value>apiso:Subject</ows:Value>
+                <ows:Value>apiso:TempExtent_begin</ows:Value>
+                <ows:Value>apiso:TempExtent_end</ows:Value>
+                <ows:Value>apiso:TemporalExtent</ows:Value>
+                <ows:Value>apiso:Title</ows:Value>
+                <ows:Value>apiso:TopicCategory</ows:Value>
+                <ows:Value>apiso:Type</ows:Value>
+                <ows:Value>apiso:abstract</ows:Value>
+                <ows:Value>apiso:creationDate</ows:Value>
+                <ows:Value>apiso:format</ows:Value>
+                <ows:Value>apiso:modified</ows:Value>
+                <ows:Value>apiso:organisationName</ows:Value>
+                <ows:Value>apiso:publicationDate</ows:Value>
+                <ows:Value>apiso:resourceIdentifier</ows:Value>
+                <ows:Value>apiso:revisionDate</ows:Value>
+                <ows:Value>apiso:serviceType</ows:Value>
+                <ows:Value>apiso:serviceTypeVersion</ows:Value>
+                <ows:Value>apiso:subject</ows:Value>
+                <ows:Value>apiso:tempExtent_begin</ows:Value>
+                <ows:Value>apiso:tempExtent_end</ows:Value>
+                <ows:Value>apiso:temporalExtent</ows:Value>
+                <ows:Value>apiso:title</ows:Value>
+                <ows:Value>apiso:topicCategory</ows:Value>
+                <ows:Value>apiso:type</ows:Value>
+                <ows:Value>author</ows:Value>
+                <ows:Value>base:CreationDate</ows:Value>
+                <ows:Value>base:Date</ows:Value>
+                <ows:Value>base:OrganisationName</ows:Value>
+                <ows:Value>base:PublicationDate</ows:Value>
+                <ows:Value>base:ResourceIdentifier</ows:Value>
+                <ows:Value>base:RevisionDate</ows:Value>
+                <ows:Value>base:ServiceType</ows:Value>
+                <ows:Value>base:ServiceTypeVersion</ows:Value>
+                <ows:Value>base:SpatialRepresentationType</ows:Value>
+                <ows:Value>base:Status</ows:Value>
+                <ows:Value>base:Timestamp</ows:Value>
+                <ows:Value>base:TopicCategory</ows:Value>
+                <ows:Value>base:abstract</ows:Value>
+                <ows:Value>base:creationDate</ows:Value>
+                <ows:Value>base:date</ows:Value>
+                <ows:Value>base:descriptiveKeywords</ows:Value>
+                <ows:Value>base:format</ows:Value>
+                <ows:Value>base:formatName</ows:Value>
+                <ows:Value>base:groupName</ows:Value>
+                <ows:Value>base:hierarchyLevel</ows:Value>
+                <ows:Value>base:hierarchyLevelCode</ows:Value>
+                <ows:Value>base:organisationName</ows:Value>
+                <ows:Value>base:parentIdentifier</ows:Value>
+                <ows:Value>base:publicationDate</ows:Value>
+                <ows:Value>base:resourceIdentifier</ows:Value>
+                <ows:Value>base:revisionDate</ows:Value>
+                <ows:Value>base:serviceType</ows:Value>
+                <ows:Value>base:serviceTypeVersion</ows:Value>
+                <ows:Value>base:spatialRepresentationType</ows:Value>
+                <ows:Value>base:status</ows:Value>
+                <ows:Value>base:temporalExtent</ows:Value>
+                <ows:Value>base:timestamp</ows:Value>
+                <ows:Value>base:title</ows:Value>
+                <ows:Value>base:topicCategory</ows:Value>
+                <ows:Value>base:validity</ows:Value>
+                <ows:Value>dc:coverage</ows:Value>
+                <ows:Value>dc:language</ows:Value>
+                <ows:Value>de.disy.preludio2.base.MDKeywords.Keyword</ows:Value>
+                <ows:Value>format</ows:Value>
+                <ows:Value>formatName</ows:Value>
+                <ows:Value>gmd:Abstract</ows:Value>
+                <ows:Value>gmd:BoundingBox</ows:Value>
+                <ows:Value>gmd:CreationDate</ows:Value>
+                <ows:Value>gmd:Format</ows:Value>
+                <ows:Value>gmd:Identifier</ows:Value>
+                <ows:Value>gmd:Modified</ows:Value>
+                <ows:Value>gmd:OrganisationName</ows:Value>
+                <ows:Value>gmd:PublicationDate</ows:Value>
+                <ows:Value>gmd:ResourceIdentifier</ows:Value>
+                <ows:Value>gmd:RevisionDate</ows:Value>
+                <ows:Value>gmd:ServiceType</ows:Value>
+                <ows:Value>gmd:ServiceTypeVersion</ows:Value>
+                <ows:Value>gmd:Subject</ows:Value>
+                <ows:Value>gmd:TempExtent_begin</ows:Value>
+                <ows:Value>gmd:TempExtent_end</ows:Value>
+                <ows:Value>gmd:TemporalExtent</ows:Value>
+                <ows:Value>gmd:Title</ows:Value>
+                <ows:Value>gmd:TopicCategory</ows:Value>
+                <ows:Value>gmd:Type</ows:Value>
+                <ows:Value>gmd:abstract</ows:Value>
+                <ows:Value>gmd:creationDate</ows:Value>
+                <ows:Value>gmd:descriptiveKeywords</ows:Value>
+                <ows:Value>gmd:format</ows:Value>
+                <ows:Value>gmd:identifier</ows:Value>
+                <ows:Value>gmd:modified</ows:Value>
+                <ows:Value>gmd:organisationName</ows:Value>
+                <ows:Value>gmd:publicationDate</ows:Value>
+                <ows:Value>gmd:resourceIdentifier</ows:Value>
+                <ows:Value>gmd:revisionDate</ows:Value>
+                <ows:Value>gmd:serviceType</ows:Value>
+                <ows:Value>gmd:serviceTypeVersion</ows:Value>
+                <ows:Value>gmd:subject</ows:Value>
+                <ows:Value>gmd:tempExtent_begin</ows:Value>
+                <ows:Value>gmd:tempExtent_end</ows:Value>
+                <ows:Value>gmd:temporalExtent</ows:Value>
+                <ows:Value>gmd:title</ows:Value>
+                <ows:Value>gmd:topicCategory</ows:Value>
+                <ows:Value>gmd:type</ows:Value>
+                <ows:Value>ices:Classification</ows:Value>
+                <ows:Value>ices:Purpose</ows:Value>
+                <ows:Value>ices:TopicCategory</ows:Value>
+                <ows:Value>ices:Wltype</ows:Value>
+                <ows:Value>ices:classification</ows:Value>
+                <ows:Value>ices:purpose</ows:Value>
+                <ows:Value>ices:topicCategory</ows:Value>
+                <ows:Value>ices:wltype</ows:Value>
+                <ows:Value>identifier</ows:Value>
+                <ows:Value>isSubProject</ows:Value>
+                <ows:Value>iso:Abstract</ows:Value>
+                <ows:Value>iso:AnyText</ows:Value>
+                <ows:Value>iso:BoundingBox</ows:Value>
+                <ows:Value>iso:CreationDate</ows:Value>
+                <ows:Value>iso:Format</ows:Value>
+                <ows:Value>iso:Identifier</ows:Value>
+                <ows:Value>iso:Modified</ows:Value>
+                <ows:Value>iso:OrganisationName</ows:Value>
+                <ows:Value>iso:PublicationDate</ows:Value>
+                <ows:Value>iso:ResourceIdentifier</ows:Value>
+                <ows:Value>iso:RevisionDate</ows:Value>
+                <ows:Value>iso:ServiceType</ows:Value>
+                <ows:Value>iso:ServiceTypeVersion</ows:Value>
+                <ows:Value>iso:Subject</ows:Value>
+                <ows:Value>iso:TempExtent_begin</ows:Value>
+                <ows:Value>iso:TempExtent_end</ows:Value>
+                <ows:Value>iso:TemporalExtent</ows:Value>
+                <ows:Value>iso:Title</ows:Value>
+                <ows:Value>iso:TopicCategory</ows:Value>
+                <ows:Value>iso:Type</ows:Value>
+                <ows:Value>iso:abstract</ows:Value>
+                <ows:Value>iso:creationDate</ows:Value>
+                <ows:Value>iso:descriptiveKeywords</ows:Value>
+                <ows:Value>iso:format</ows:Value>
+                <ows:Value>iso:identifier</ows:Value>
+                <ows:Value>iso:modified</ows:Value>
+                <ows:Value>iso:organisationName</ows:Value>
+                <ows:Value>iso:publicationDate</ows:Value>
+                <ows:Value>iso:resourceIdentifier</ows:Value>
+                <ows:Value>iso:revisionDate</ows:Value>
+                <ows:Value>iso:serviceType</ows:Value>
+                <ows:Value>iso:serviceTypeVersion</ows:Value>
+                <ows:Value>iso:subject</ows:Value>
+                <ows:Value>iso:tempExtent_begin</ows:Value>
+                <ows:Value>iso:tempExtent_end</ows:Value>
+                <ows:Value>iso:temporalExtent</ows:Value>
+                <ows:Value>iso:title</ows:Value>
+                <ows:Value>iso:topicCategory</ows:Value>
+                <ows:Value>iso:type</ows:Value>
+                <ows:Value>isoap:Abstract</ows:Value>
+                <ows:Value>isoap:AnyText</ows:Value>
+                <ows:Value>isoap:BoundingBox</ows:Value>
+                <ows:Value>isoap:CreationDate</ows:Value>
+                <ows:Value>isoap:Format</ows:Value>
+                <ows:Value>isoap:Identifier</ows:Value>
+                <ows:Value>isoap:Modified</ows:Value>
+                <ows:Value>isoap:OrganisationName</ows:Value>
+                <ows:Value>isoap:PublicationDate</ows:Value>
+                <ows:Value>isoap:ResourceIdentifier</ows:Value>
+                <ows:Value>isoap:RevisionDate</ows:Value>
+                <ows:Value>isoap:ServiceType</ows:Value>
+                <ows:Value>isoap:ServiceTypeVersion</ows:Value>
+                <ows:Value>isoap:Subject</ows:Value>
+                <ows:Value>isoap:TempExtent_begin</ows:Value>
+                <ows:Value>isoap:TempExtent_end</ows:Value>
+                <ows:Value>isoap:TemporalExtent</ows:Value>
+                <ows:Value>isoap:Title</ows:Value>
+                <ows:Value>isoap:TopicCategory</ows:Value>
+                <ows:Value>isoap:Type</ows:Value>
+                <ows:Value>isoap:abstract</ows:Value>
+                <ows:Value>isoap:creationDate</ows:Value>
+                <ows:Value>isoap:format</ows:Value>
+                <ows:Value>isoap:identifier</ows:Value>
+                <ows:Value>isoap:modified</ows:Value>
+                <ows:Value>isoap:organisationName</ows:Value>
+                <ows:Value>isoap:publicationDate</ows:Value>
+                <ows:Value>isoap:resourceIdentifier</ows:Value>
+                <ows:Value>isoap:revisionDate</ows:Value>
+                <ows:Value>isoap:serviceType</ows:Value>
+                <ows:Value>isoap:serviceTypeVersion</ows:Value>
+                <ows:Value>isoap:subject</ows:Value>
+                <ows:Value>isoap:tempExtent_begin</ows:Value>
+                <ows:Value>isoap:tempExtent_end</ows:Value>
+                <ows:Value>isoap:temporalExtent</ows:Value>
+                <ows:Value>isoap:title</ows:Value>
+                <ows:Value>isoap:topicCategory</ows:Value>
+                <ows:Value>isoap:type</ows:Value>
+                <ows:Value>modified</ows:Value>
+                <ows:Value>nokis:Keyword</ows:Value>
+                <ows:Value>nokis:acronym</ows:Value>
+                <ows:Value>nokis:asciiDownloadService</ows:Value>
+                <ows:Value>nokis:author</ows:Value>
+                <ows:Value>nokis:depthSteps</ows:Value>
+                <ows:Value>nokis:downloadService</ows:Value>
+                <ows:Value>nokis:isSubProject</ows:Value>
+                <ows:Value>nokis:keyword</ows:Value>
+                <ows:Value>nokis:mapService</ows:Value>
+                <ows:Value>nokis:observedPropertyName</ows:Value>
+                <ows:Value>nokis:observedPropertyXmlDescription</ows:Value>
+                <ows:Value>nokis:parameter</ows:Value>
+                <ows:Value>nokis:parameterName</ows:Value>
+                <ows:Value>nokis:platformType</ows:Value>
+                <ows:Value>nokis:plotService</ows:Value>
+                <ows:Value>nokis:projectLead</ows:Value>
+                <ows:Value>nokis:projectPartner</ows:Value>
+                <ows:Value>nokis:sensorName</ows:Value>
+                <ows:Value>nokis:status</ows:Value>
+                <ows:Value>nokis:targetSystem</ows:Value>
+                <ows:Value>nokis:timeMapService</ows:Value>
+                <ows:Value>nokis:timeSteps</ows:Value>
+                <ows:Value>nokis:title</ows:Value>
+                <ows:Value>nokisKeyword</ows:Value>
+                <ows:Value>organisationName</ows:Value>
+                <ows:Value>projectLead</ows:Value>
+                <ows:Value>projectPartner</ows:Value>
+                <ows:Value>publicationDate</ows:Value>
+                <ows:Value>resourceIdentifier</ows:Value>
+                <ows:Value>revisionDate</ows:Value>
+                <ows:Value>serviceType</ows:Value>
+                <ows:Value>serviceTypeVersion</ows:Value>
+                <ows:Value>spatialRepresentationType</ows:Value>
+                <ows:Value>status</ows:Value>
+                <ows:Value>subject</ows:Value>
+                <ows:Value>timestamp</ows:Value>
+                <ows:Value>title</ows:Value>
+                <ows:Value>topicCategory</ows:Value>
+                <ows:Value>type</ows:Value>
+                <ows:Value>wltype</ows:Value>
+                <ows:Value>zmax</ows:Value>
+                <ows:Value>zmin</ows:Value>
+                <ows:Value>{http://purl.org/dc/elements/1.1/}coverage</ows:Value>
+                <ows:Value>{http://purl.org/dc/elements/1.1/}creator</ows:Value>
+                <ows:Value>{http://purl.org/dc/elements/1.1/}language</ows:Value>
+                <ows:Value>{http://purl.org/dc/elements/1.1/}modified</ows:Value>
+                <ows:Value>{http://purl.org/dc/elements/1.1/}title</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}abstract</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}contactTitle</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}creationDate</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}date</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}descriptiveKeywords</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}formatName</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}groupName</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}hierarchyLevel</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}hierarchyLevelCode</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}identifier</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}maximalVerticalExtent</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}minimalVerticalExtent</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}modified</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}organisationName</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}parentIdentifier</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}publicationDate</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}resourceIdentifier</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}revisionDate</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}serviceType</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}serviceTypeVersion</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}spatialRepresentationType</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}status</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}subject</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}temporalExtent</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}timestamp</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}title</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}topicCategory</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}type</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}validity</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}viewAbstract</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}viewDataSetURI</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}viewGraphicsOverview</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}viewHierarchyLevel</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}viewKeywords</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}viewSpatialRepresentation</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/base}viewTemporalExtent</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis/ices}ices:classification</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis/ices}ices:purpose</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis/ices}ices:topicCategory</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis/ices}ices:wltype</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}acronym</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}asciiDownloadService</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}author</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}depthSteps</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}downloadService</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}icesClassification</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}icesPurpose</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}icesTopicCategory</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}icesWLType</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}isSubProject</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}keyword</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}mapService</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}observedPropertyName</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}observedPropertyXmlDescription</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}parameter</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}parameterName</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}platformType</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}plotService</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}projectLead</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}projectPartner</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}sensorName</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}status</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}targetSystem</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}timeMapService</ows:Value>
+                <ows:Value>{http://www.disy.de/preludio2/nokis}timeSteps</ows:Value>
+                <ows:Value>{http://www.disy.net/cadenza/csw/schema}repositoryItemId</ows:Value>
+                <ows:Value>{http://www.opengis.net/cat/csw/apiso/1.0}TempExtent_begin</ows:Value>
+                <ows:Value>{http://www.opengis.net/cat/csw/apiso/1.0}TempExtent_end</ows:Value>
+            </ows:Parameter>
+            <ows:Parameter name="typeName">
+                <ows:Value>csw:Record</ows:Value>
+                <ows:Value>gmd:MD_Metadata</ows:Value>
+            </ows:Parameter>
+            <ows:Parameter name="outputSchema">
+                <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
+                <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
+                <ows:Value>http://www.disy.de/preludio2/nokis</ows:Value>
+            </ows:Parameter>
+        </ows:Operation>
+        <ows:Operation name="GetRecordById">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="https://nokis.niedersachsen.de/NOKIS//servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecordByIdServant$Get" xlink:type="simple"/>
+                    <ows:Post xlink:href="https://nokis.niedersachsen.de/NOKIS//servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecordById$Post$XML" xlink:type="simple">
+                        <ows:Constraint name="PostEncoding">
+                            <ows:Value>XML</ows:Value>
+                        </ows:Constraint>
+                    </ows:Post>
+                    <ows:Post xlink:href="https://nokis.niedersachsen.de/NOKIS//servants/de/disy/preludio2/service/cat/csw/v_2_0_2/GetRecordById$Post$SOAP" xlink:type="simple">
+                        <ows:Constraint name="PostEncoding">
+                            <ows:Value>SOAP</ows:Value>
+                        </ows:Constraint>
+                    </ows:Post>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="ElementSetName">
+                <ows:Value>brief</ows:Value>
+                <ows:Value>summary</ows:Value>
+                <ows:Value>full</ows:Value>
+            </ows:Parameter>
+            <ows:Parameter name="outputSchema">
+                <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
+                <ows:Value>http://www.opengis.net/cat/csw/2.0.2</ows:Value>
+                <ows:Value>http://www.disy.de/preludio2/nokis</ows:Value>
+            </ows:Parameter>
+        </ows:Operation>
+        <ows:Operation name="DescribeRecord">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Post xlink:href="https://nokis.niedersachsen.de/NOKIS//servants/de/disy/preludio2/service/cat/csw/v_2_0_2/DescribeRecord$Post$XML" xlink:type="simple">
+                        <ows:Constraint name="PostEncoding">
+                            <ows:Value>XML</ows:Value>
+                        </ows:Constraint>
+                    </ows:Post>
+                    <ows:Get xlink:href="https://nokis.niedersachsen.de/NOKIS//servants/de/disy/preludio2/service/cat/csw/v_2_0_2/DescribeRecordServant$Get" xlink:type="simple"/>
+                    <ows:Post xlink:href="https://nokis.niedersachsen.de/NOKIS//servants/de/disy/preludio2/service/cat/csw/v_2_0_2/DescribeRecord$Post$SOAP" xlink:type="simple">
+                        <ows:Constraint name="PostEncoding">
+                            <ows:Value>SOAP</ows:Value>
+                        </ows:Constraint>
+                    </ows:Post>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="outputFormat">
+                <ows:Value>application/xml</ows:Value>
+                <ows:Value>text/xml</ows:Value>
+            </ows:Parameter>
+            <ows:Parameter name="schemaLanguage">
+                <ows:Value>http://www.w3.org/XML/Schema</ows:Value>
+            </ows:Parameter>
+            <ows:Parameter name="typeName">
+                <ows:Value>base:CI_ResponsibleParty</ows:Value>
+                <ows:Value>base:MD_MetaData</ows:Value>
+                <ows:Value>nokis:NOKIS_Platform</ows:Value>
+                <ows:Value>nokis:PROJ_Project</ows:Value>
+                <ows:Value>srv:SV_ServiceIdentification</ows:Value>
+                <ows:Value>nokis:PUB_Publication</ows:Value>
+                <ows:Value>gmd:MD_Metadata</ows:Value>
+            </ows:Parameter>
+        </ows:Operation>
+        <ows:Constraint name="IsoProfiles">
+            <ows:Value>http://www.isotc211.org/2005/gmd</ows:Value>
+        </ows:Constraint>
+    </ows:OperationsMetadata>
+    <ogc:Filter_Capabilities>
+        <ogc:Spatial_Capabilities>
+            <ogc:GeometryOperands>
+                <ogc:GeometryOperand>gml:Envelope</ogc:GeometryOperand>
+            </ogc:GeometryOperands>
+            <ogc:SpatialOperators>
+                <ogc:SpatialOperator name="Intersects">
+                    <ogc:GeometryOperands>
+                        <ogc:GeometryOperand>gml:Envelope</ogc:GeometryOperand>
+                    </ogc:GeometryOperands>
+                </ogc:SpatialOperator>
+                <ogc:SpatialOperator name="Contains">
+                    <ogc:GeometryOperands>
+                        <ogc:GeometryOperand>gml:Envelope</ogc:GeometryOperand>
+                    </ogc:GeometryOperands>
+                </ogc:SpatialOperator>
+                <ogc:SpatialOperator name="Equals">
+                    <ogc:GeometryOperands>
+                        <ogc:GeometryOperand>gml:Envelope</ogc:GeometryOperand>
+                    </ogc:GeometryOperands>
+                </ogc:SpatialOperator>
+                <ogc:SpatialOperator name="Touches">
+                    <ogc:GeometryOperands>
+                        <ogc:GeometryOperand>gml:Envelope</ogc:GeometryOperand>
+                    </ogc:GeometryOperands>
+                </ogc:SpatialOperator>
+                <ogc:SpatialOperator name="Within">
+                    <ogc:GeometryOperands>
+                        <ogc:GeometryOperand>gml:Envelope</ogc:GeometryOperand>
+                    </ogc:GeometryOperands>
+                </ogc:SpatialOperator>
+                <ogc:SpatialOperator name="Overlaps">
+                    <ogc:GeometryOperands>
+                        <ogc:GeometryOperand>gml:Envelope</ogc:GeometryOperand>
+                    </ogc:GeometryOperands>
+                </ogc:SpatialOperator>
+                <ogc:SpatialOperator name="Disjoint">
+                    <ogc:GeometryOperands>
+                        <ogc:GeometryOperand>gml:Envelope</ogc:GeometryOperand>
+                    </ogc:GeometryOperands>
+                </ogc:SpatialOperator>
+                <ogc:SpatialOperator name="Crosses">
+                    <ogc:GeometryOperands>
+                        <ogc:GeometryOperand>gml:Envelope</ogc:GeometryOperand>
+                    </ogc:GeometryOperands>
+                </ogc:SpatialOperator>
+            </ogc:SpatialOperators>
+        </ogc:Spatial_Capabilities>
+        <ogc:Scalar_Capabilities>
+            <ogc:LogicalOperators/>
+            <ogc:ComparisonOperators>
+                <ogc:ComparisonOperator>GreaterThan</ogc:ComparisonOperator>
+                <ogc:ComparisonOperator>Like</ogc:ComparisonOperator>
+                <ogc:ComparisonOperator>NotEqualTo</ogc:ComparisonOperator>
+                <ogc:ComparisonOperator>GreaterThanEqualTo</ogc:ComparisonOperator>
+                <ogc:ComparisonOperator>LessThanEqualTo</ogc:ComparisonOperator>
+                <ogc:ComparisonOperator>LessThan</ogc:ComparisonOperator>
+                <ogc:ComparisonOperator>EqualTo</ogc:ComparisonOperator>
+            </ogc:ComparisonOperators>
+        </ogc:Scalar_Capabilities>
+        <ogc:Id_Capabilities>
+            <ogc:EID/>
+            <ogc:FID/>
+        </ogc:Id_Capabilities>
+    </ogc:Filter_Capabilities>
+</Capabilities>
