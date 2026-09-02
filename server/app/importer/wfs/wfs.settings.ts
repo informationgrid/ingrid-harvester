@@ -23,7 +23,7 @@
 
 import type { ImporterCapabilities, ImporterSettings } from '../importer.settings.js';
 import { defaultImporterSettings } from '../importer.settings.js';
-import type { Contact, Organization, Person } from '../../model/agent.js';
+import type { Agent, Contact } from '../../model/agent.js';
 import type { PluPlanState } from '../../model/dcatApPlu.model.js';
 
 export type WfsSettings = {
@@ -32,7 +32,7 @@ export type WfsSettings = {
     pluPlanState?: PluPlanState,        // planning status assigned to harvested records; UI-configurable (DiPlanung profile only)
     contactCswUrl?: string,             // CSW URL to fetch contact metadata for all features; UI-configurable (DiPlanung profile only)
     contactMetadata?: Contact,          // fallback contact when CSW lookup yields no result; UI-configurable (DiPlanung profile only)
-    maintainer?: Person | Organization; // fallback maintainer when CSW lookup yields no custodian; UI-configurable (DiPlanung profile only)
+    maintainer?: Agent;                 // fallback maintainer when CSW lookup yields no custodian; UI-configurable (DiPlanung profile only)
     count: number,                      // Deprecated? intended as paging count; not used in importer (maxRecords is used instead); backend-only
     resultType?: 'hits' | 'results',   // WFS request result mode; 'hits' = count only; set programmatically; backend-only
     typename?: string,                  // comma-separated WFS feature type names (with namespace prefix) to harvest; UI-configurable

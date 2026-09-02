@@ -31,7 +31,7 @@ import { marked } from 'marked';
 import { throwError } from 'rxjs';
 import mapping from "../../../mappings.json" with { type: "json" };
 import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
-import type { Organization, Person } from '../../model/agent.js';
+import type { Agent } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { IndexDocument, IndexDocumentMetadata } from '../../model/index.document.js';
@@ -193,8 +193,8 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         return this.handleDate(this.source.metadata_modified);
     }
 
-    getPublisher(): Organization[] {
-        let publisher: Organization;
+    getPublisher(): Agent[] {
+        let publisher: Agent;
         if (this.source.organization && this.source.organization.title) {
             let homepage = this.source.organization.description;
             let match = homepage.match(/]\(([^)]+)/); // Square bracket followed by text in parentheses
@@ -207,8 +207,8 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         return publisher ? [publisher] : [];
     }
 
-    public getMaintainer(): Person[] {
-        let maintainer: Person;
+    public getMaintainer(): Agent[] {
+        let maintainer: Agent;
         if (this.source.maintainer) {
             maintainer = {
                 name: this.settings.providerPrefix + this.source.maintainer.trim(),
@@ -219,8 +219,8 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         return maintainer ? [maintainer] : [];
     }
 
-    public getAuthor(): Person[] {
-        let author: Person;
+    public getAuthor(): Agent[] {
+        let author: Agent;
         if (this.source.author) {
             author = {
                 name: this.settings.providerPrefix + this.source.author.trim(),
@@ -438,8 +438,8 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         return dates;
     }
 
-    getCreator(): Person[] {
-        let creator: Person;
+    getCreator(): Agent[] {
+        let creator: Agent;
         if (this.source.author) {
             creator = {
                 name: this.source.author,
@@ -502,7 +502,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         return [];
     }
 
-    getOriginator(): Person[] {
+    getOriginator(): Agent[] {
         return [];
     }
 

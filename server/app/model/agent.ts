@@ -22,17 +22,10 @@
  */
 
 export interface Agent {
+    name: string;
     homepage?: string;
     mbox?: string;
     type?: string;
-}
-
-export interface Person extends Agent {
-    name: string;
-}
-
-export interface Organization extends Agent {
-    name: string;
 }
 
 export interface Contact {

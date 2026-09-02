@@ -30,7 +30,7 @@ import { throwError } from 'rxjs';
 import * as xpath from 'xpath';
 import { namespaces } from '../../importer/namespaces.js';
 import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
-import type { Contact, Person } from '../../model/agent.js';
+import type { Agent, Contact } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { IndexDocument, IndexDocumentMetadata } from '../../model/index.document.js';
@@ -493,7 +493,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
         return this.record.toString();
     }
 
-    getCreator(): Person[] {
+    getCreator(): Agent[] {
         let creators = [];
 
         let creatorNodes = DcatapdeMapper.select('./dct:creator', this.record);
@@ -516,7 +516,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
         return creators;
     }
 
-    getMaintainer(): Person[] {
+    getMaintainer(): Agent[] {
         let maintainers = [];
 
         let maintainerNodes = DcatapdeMapper.select('./dct:maintainer', this.record);
@@ -556,7 +556,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
         return undefined;
     }
 
-    getOriginator(): Person[] {
+    getOriginator(): Agent[] {
         let originators = [];
         let originatorNode = DcatapdeMapper.select('./dcatde:originator', this.record);
         for (let i = 0; i < originatorNode.length; i++) {

@@ -23,7 +23,7 @@
 
 import type { Catalog, ProcessStep } from '../../../model/dcatApPlu.model.js';
 import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType } from '../../../model/dcatApPlu.model.js';
-import type { Contact, Organization, Person } from '../../../model/agent.js';
+import type { Agent, Contact } from '../../../model/agent.js';
 import type { DateRange } from '../../../model/dateRange.js';
 import { DiplanungMapper } from './diplanung.mapper.js';
 import type { Distribution } from '../../../model/distribution.js';
@@ -120,15 +120,15 @@ export abstract class DiplanungWfsMapper extends DiplanungMapper<WfsMapper> {
         return this.baseMapper.getCatalog();
     }
 
-    async getPublisher(): Promise<Person[] | Organization[]> {
+    async getPublisher(): Promise<Agent[]> {
         return this.baseMapper.getPublisher();
     }
 
-    async getMaintainers(): Promise<Person[] | Organization[]> {
+    async getMaintainers(): Promise<Agent[]> {
         return this.baseMapper.getMaintainers();
     }
 
-    async getContributors(): Promise<Person[] | Organization[]> {
+    async getContributors(): Promise<Agent[]> {
         return this.baseMapper.getContributors();
     }
 

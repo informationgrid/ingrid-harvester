@@ -24,7 +24,7 @@
 import * as fs from 'fs';
 import { CswMapper } from '../../../importer/csw/csw.mapper.js';
 import { WfsImporter } from '../../../importer/wfs/wfs.importer.js';
-import type { Contact, Organization, Person } from '../../../model/agent.js';
+import type { Agent, Contact } from '../../../model/agent.js';
 import { RequestDelegate } from '../../../utils/http-request.utils.js';
 import { getProxyConfig } from '../../../utils/service.utils.js';
 import type { XPathNodeSelect } from '../../../utils/xpath.utils.js';
@@ -103,7 +103,7 @@ export class DiplanungWfsImporter extends WfsImporter {
         generalInfo['contactPoint'] = pointOfContact;
 
         // general maintainer
-        let maintainer: Person | Organization = { name: contacts.get('custodian')?.hasOrganizationName };
+        let maintainer: Agent = { name: contacts.get('custodian')?.hasOrganizationName };
         // fallbacks
         if (!maintainer.name?.trim()) {
             if (contacts.get('custodian')?.fn?.trim()) {

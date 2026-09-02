@@ -25,7 +25,7 @@ import type { Geometry, Point } from 'geojson';
 import log4js from 'log4js';
 import { throwError } from 'rxjs';
 import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
-import type { Contact, Organization, Person } from '../../model/agent.js';
+import type { Agent, Contact } from '../../model/agent.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { IndexDocument, IndexDocumentMetadata } from '../../model/index.document.js';
@@ -94,16 +94,16 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
         };
     }
 
-    async getPublisher(): Promise<Person[] | Organization[]> {
+    async getPublisher(): Promise<Agent[]> {
         // return [this.fetched.catalog.publisher];
         return null;
     }
 
-    async getMaintainers(): Promise<Person[] | Organization[]> {
+    async getMaintainers(): Promise<Agent[]> {
         return [this.fetched.maintainer];
     }
 
-    async getContributors(): Promise<Person[] | Organization[]> {
+    async getContributors(): Promise<Agent[]> {
         return undefined
     }
 

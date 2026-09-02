@@ -24,7 +24,7 @@
 import * as MiscUtils from '../../../utils/misc.utils.js';
 import type { Catalog, ProcessStep, Record } from '../../../model/dcatApPlu.model.js';
 import { ConfigService } from '../../../services/config/ConfigService.js';
-import type { Contact, Organization, Person } from '../../../model/agent.js';
+import type { Agent, Contact } from '../../../model/agent.js';
 import type { DateRange } from '../../../model/dateRange.js';
 import type { DiplanungIndexDocument } from './index.document.js';
 import type { Distribution } from '../../../model/distribution.js';
@@ -101,8 +101,8 @@ export class DcatApPluDocumentFactory {// no can do with TS: extends ExportDocum
                     </dct:Location>
                 </dct:spatial>
                 ${DcatApPluDocumentFactory.xmlFoafAgent('dct:publisher', document.publisher)}
-                ${optional((m: Person | Organization) => DcatApPluDocumentFactory.xmlFoafAgent('dcatde:maintainer', m), document.maintainers)}
-                ${optional((c: Person | Organization) => DcatApPluDocumentFactory.xmlFoafAgent('dct:contributor', c), document.contributors)}
+                ${optional((m: Agent) => DcatApPluDocumentFactory.xmlFoafAgent('dcatde:maintainer', m), document.maintainers)}
+                ${optional((c: Agent) => DcatApPluDocumentFactory.xmlFoafAgent('dct:contributor', c), document.contributors)}
                 ${optional(DcatApPluDocumentFactory.xmlDistribution, document.distributions)}
                 ${optional(DcatApPluDocumentFactory.xmlAdmsIdentifier, esc(document.adms_identifier))}
                 ${optional('dct:issued', dateAsIsoString(document.issued))}
@@ -146,8 +146,8 @@ export class DcatApPluDocumentFactory {// no can do with TS: extends ExportDocum
         </dcat:distribution>`;
     }
 
-    private static xmlFoafAgent(parent: string, agent: Person | Organization): string {
-        let name = (<Organization>agent)?.name ?? (<Person>agent)?.name;
+    private static xmlFoafAgent(parent: string, agent: Agent): string {
+        let name = agent?.name;
         return `<${parent}>
             <foaf:Agent>
                 <foaf:name>${esc(name)}</foaf:name>

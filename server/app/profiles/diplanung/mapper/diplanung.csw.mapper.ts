@@ -24,7 +24,7 @@
 import { uniqBy } from 'lodash-es';
 import type { Catalog, ProcessStep } from '../../../model/dcatApPlu.model.js';
 import { PluPlanState, PluPlanType, PluProcedureState, PluProcedureType } from '../../../model/dcatApPlu.model.js';
-import type { Contact, Organization, Person } from '../../../model/agent.js';
+import type { Agent, Contact } from '../../../model/agent.js';
 import { CswMapper } from '../../../importer/csw/csw.mapper.js';
 import type { DateRange } from '../../../model/dateRange.js';
 import { DiplanungMapper } from './diplanung.mapper.js';
@@ -207,16 +207,16 @@ export class DiplanungCswMapper extends DiplanungMapper<CswMapper> {
         return null;
     }
 
-    async getPublisher(): Promise<Person[] | Organization[]> {
+    async getPublisher(): Promise<Agent[]> {
         return this.baseMapper.getPublisher();
     }
 
-    async getMaintainers(): Promise<Person[] | Organization[]> {
+    async getMaintainers(): Promise<Agent[]> {
         let maintainers = await this.baseMapper.getMaintainers();
         return uniqBy(maintainers, JSON.stringify);
     }
 
-    async getContributors(): Promise<Person[] | Organization[]> {
+    async getContributors(): Promise<Agent[]> {
         return undefined;
     }
 

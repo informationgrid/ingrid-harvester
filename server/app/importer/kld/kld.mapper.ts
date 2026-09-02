@@ -28,7 +28,7 @@ import type { License } from '@shared/license.model.js';
 import type { Geometry } from 'geojson';
 import log4js from 'log4js';
 import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
-import type { Contact, Organization, Person } from '../../model/agent.js';
+import type { Agent, Contact } from '../../model/agent.js';
 import type { IndexDocument, IndexDocumentMetadata } from '../../model/index.document.js';
 import type { Summary } from '../../model/summary.js';
 import type { LvrDateRange, Media, Relation } from '../../profiles/lvr/model/index.document.js';
@@ -174,9 +174,9 @@ export class KldMapper extends Mapper<KldSettings> implements ToElasticMapper<In
         return new Promise((resolve) => resolve(contact));
     }
 
-    async getPublisher(): Promise<Person[] | Organization[]> {
+    async getPublisher(): Promise<Agent[]> {
         // TODO not used?
-        const publisher: Person = {
+        const publisher: Agent = {
             name: this.record.Datenherkunft?.Name,
         };
         return new Promise((resolve) => resolve([publisher]));

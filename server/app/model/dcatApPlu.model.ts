@@ -23,7 +23,7 @@
 
 import type { DateRange } from './dateRange.js';
 import type { Distribution } from './distribution.js';
-import type { Organization, Person } from './agent.js';
+import type { Agent } from './agent.js';
 
 export interface Catalog {
     description: string,
@@ -33,7 +33,7 @@ export interface Catalog {
     issued?: string,
     language?: string,
     modified?: string,
-    publisher: Person | Organization,
+    publisher: Agent,
     records?: Record[],
     themeTaxonomy?: string,
     title: string

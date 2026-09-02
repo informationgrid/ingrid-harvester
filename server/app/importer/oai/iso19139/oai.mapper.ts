@@ -29,7 +29,7 @@ import log4js from 'log4js';
 import { throwError } from 'rxjs';
 import * as xpath from 'xpath';
 import { DCAT_CATEGORY_URL, dcatThemeUriFromKeyword } from '../../dcatapde/dcatapde.utils.js';
-import type { Agent, Contact, Organization, Person } from '../../../model/agent.js';
+import type { Agent, Contact } from '../../../model/agent.js';
 import type { DateRange } from '../../../model/dateRange.js';
 import type { Distribution } from '../../../model/distribution.js';
 import type { Summary } from '../../../model/summary.js';
@@ -323,7 +323,7 @@ export class OaiMapper extends Mapper<OaiSettings> {
     async getDisplayContacts() {
 
         let contactPoint = await this.getContactPoint();
-        let displayContact: Person;
+        let displayContact: Agent;
 
         if (contactPoint) {
             let displayName;
@@ -636,7 +636,7 @@ export class OaiMapper extends Mapper<OaiSettings> {
         return this.record.toString();
     }
 
-    getCreator(): Person[] {
+    getCreator(): Agent[] {
         let creators = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
@@ -694,7 +694,7 @@ export class OaiMapper extends Mapper<OaiSettings> {
         return undefined;
     }
 
-    getOriginator(): Person[] {
+    getOriginator(): Agent[] {
         let originators: any[] = [];
         let queries = [
             './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
@@ -715,18 +715,14 @@ export class OaiMapper extends Mapper<OaiSettings> {
                     if (!name && !org) continue;
 
                     let originator: Agent = {
+                        name: name ? name.textContent : org.textContent,
                         homepage: url ? url.textContent : undefined,
                         mbox: email ? email.textContent : undefined
                     };
-                    if (name) {
-                        (<Person>originator).name = name.textContent
-                    } else {
-                        (<Organization>originator).name = org.textContent
-                    }
 
                     let alreadyPresent = originators.filter(other => {
-                        return other.name === (<Person>originator).name
-                            && other.organization === (<Organization>originator).name
+                        return other.name === originator.name
+                            && other.organization === originator.name
                             && other.mbox === originator.mbox
                             && other.homepage === originator.homepage;
                     }).length > 0;

@@ -25,7 +25,7 @@ import type { Geometry, Point } from 'geojson';
 import type { CswMapper } from '../../../importer/csw/csw.mapper.js';
 import type { DcatappluMapper } from '../../../importer/dcatapplu/dcatapplu.mapper.js';
 import type { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
-import type { Contact, Organization, Person } from '../../../model/agent.js';
+import type { Agent, Contact } from '../../../model/agent.js';
 import type { DateRange } from '../../../model/dateRange.js';
 import type { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model.js';
 import type { Distribution } from '../../../model/distribution.js';
@@ -168,11 +168,11 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
 
     abstract getCatalog(): Promise<Catalog>;
 
-    abstract getPublisher(): Promise<Person[] | Organization[]>;
+    abstract getPublisher(): Promise<Agent[]>;
 
-    abstract getMaintainers(): Promise<Person[] | Organization[]>;
+    abstract getMaintainers(): Promise<Agent[]>;
 
-    abstract getContributors(): Promise<Person[] | Organization[]>;
+    abstract getContributors(): Promise<Agent[]>;
 
     abstract getDistributions(): Promise<Distribution[]>;
 
@@ -234,15 +234,15 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
     //     return this.baseMapper.getSpatialText();
     // }
 
-    // getPublisher(): Promise<Person[] | Organization[]> {
+    // getPublisher(): Promise<Agent[]> {
     //     return this.baseMapper.getPublisher();
     // }
 
-    // getMaintainers(): Promise<Person[] | Organization[]> {
+    // getMaintainers(): Promise<Agent[]> {
     //     return this.baseMapper.getMaintainers();
     // }
 
-    // getContributors(): Promise<Person[] | Organization[]> {
+    // getContributors(): Promise<Agent[]> {
     //     return this.baseMapper.getContributors();
     // }
 

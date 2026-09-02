@@ -28,7 +28,7 @@ import type { License } from '@shared/license.model.js';
 import log4js from 'log4js';
 import { throwError } from 'rxjs';
 import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
-import type { Person } from '../../model/agent.js';
+import type { Agent } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { IndexDocument, IndexDocumentMetadata } from '../../model/index.document.js';
@@ -249,11 +249,11 @@ export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMap
         return JSON.stringify(this.record);
     }
 
-    getCreator(): Person[] {
+    getCreator(): Agent[] {
         return undefined;
     }
 
-    getMaintainer(): Person[] {
+    getMaintainer(): Agent[] {
         return undefined;
     }
 
@@ -273,7 +273,7 @@ export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMap
         return undefined;
     }
 
-    getOriginator(): Person[] {
+    getOriginator(): Agent[] {
         return undefined;
     }
 

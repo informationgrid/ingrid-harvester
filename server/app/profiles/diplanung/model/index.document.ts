@@ -24,7 +24,7 @@
 import type { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model.js';
 import type { DateRange } from '../../../model/dateRange.js';
 import type { Distribution } from '../../../model/distribution.js';
-import type { Organization, Person } from '../../../model/agent.js';
+import type { Agent } from '../../../model/agent.js';
 import type { MetadataSource } from '../../../importer/mapper.js';
 
 export type DiplanungIndexDocument = {
@@ -48,7 +48,7 @@ export type DiplanungIndexDocument = {
     title: string,
     plan_state: PluPlanState,
     procedure_state: PluProcedureState,
-    publisher: Person | Organization,
+    publisher: Agent,
     // recommended
     adms_identifier: string,
     plan_name: string,
@@ -81,8 +81,8 @@ export type DiplanungIndexDocument = {
     notification: string,
     procedure_import_date: Date,
     development_freeze_period: DateRange,
-    maintainers: Person[] | Organization[],
-    contributors: Person[] | Organization[],
+    maintainers: Agent[],
+    contributors: Agent[],
     centroid: any,
     spatial_text: string,
     // additional information and metadata

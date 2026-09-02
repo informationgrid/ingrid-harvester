@@ -31,7 +31,7 @@ import { throwError } from 'rxjs';
 import * as xpath from 'xpath';
 import { DCAT_CATEGORY_URL, DCAT_THEMES, dcatThemeUriFromKeyword } from '../dcatapde/dcatapde.utils.js';
 import { namespaces } from '../../importer/namespaces.js';
-import type { Agent, Contact, Organization, Person } from '../../model/agent.js';
+import type { Agent, Contact } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { IndexDocument, IndexDocumentMetadata } from '../../model/index.document.js';
@@ -255,7 +255,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
 
     }
 
-    async getPublisher(): Promise<Person[] | Organization[]> {
+    async getPublisher(): Promise<Agent[]> {
         let publishers = [];
         let otherContacts = [];
         // Look up contacts for the dataset first and then the metadata contact
@@ -308,7 +308,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
         }
     }
 
-    async getMaintainers(): Promise<Person[] | Organization[]> {
+    async getMaintainers(): Promise<Agent[]> {
         let maintainers = [];
         let otherContacts = [];
         // Look up contacts for the dataset first and then the metadata contact
@@ -413,7 +413,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
     async getDisplayContacts() {
 
         let contactPoint = await this.getContactPoint();
-        let displayContact: Person;
+        let displayContact: Agent;
 
         if (contactPoint) {
             let displayName;
@@ -919,7 +919,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
         return this.record.toString();
     }
 
-    getCreator(): Person[] {
+    getCreator(): Agent[] {
         let creators = [];
         // Look up contacts for the dataset first and then the metadata contact
         let queries = [
@@ -982,7 +982,7 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
         return undefined;
     }
 
-    getOriginator(): Person[] {
+    getOriginator(): Agent[] {
 
         let originators: any[] = [];
 
@@ -1005,18 +1005,14 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
                     if (!name && !org) continue;
 
                     let originator: Agent = {
+                        name: name ? name.textContent : org.textContent,
                         homepage: url ? url.textContent : undefined,
                         mbox: email ? email.textContent : undefined
                     };
-                    if (name) {
-                        (<Person>originator).name = name.textContent
-                    } else {
-                        (<Organization>originator).name = org.textContent
-                    }
 
                     let alreadyPresent = originators.filter(other => {
-                        return other.name === (<Person>originator).name
-                            && other.organization === (<Organization>originator).name
+                        return other.name === originator.name
+                            && other.organization === originator.name
                             && other.mbox === originator.mbox
                             && other.homepage === originator.homepage;
                     }).length > 0;
