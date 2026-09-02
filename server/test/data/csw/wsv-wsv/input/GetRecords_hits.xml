@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<csw:GetRecordsResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2">
+    <csw:SearchStatus timestamp="2026-09-02T07:35:10"/>
+    <csw:SearchResults elementSet="summary" nextRecord="0" numberOfRecordsMatched="2" numberOfRecordsReturned="2" outputSchema="http://www.isotc211.org/2005/gmd"/>
+</csw:GetRecordsResponse>

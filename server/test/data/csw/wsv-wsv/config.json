@@ -1,0 +1,30 @@
+{
+  "type": "CSW",
+  "maxRecords": 100,
+  "startPosition": 1,
+  "catalogIds": [
+    1
+  ],
+  "rejectUnauthorizedSSL": true,
+  "rules": {
+    "containsDocumentsWithData": false
+  },
+  "maxConcurrent": 2,
+  "skipUrlCheckOnHarvest": false,
+  "timeout": 60000,
+  "sourceURL": "https://via.bund.de/wsv/geokat/csw",
+  "maxServices": 30,
+  "resolveOgcDistributions": false,
+  "harvestingMode": "standard",
+  "eitherKeywords": [],
+  "httpMethod": "GET",
+  "resultType": "results",
+  "simplifyTolerance": 0,
+  "id": 5,
+  "description": "WSV-wsv",
+  "iPlugId": "wsv-geokat-csw",
+  "partner": "bund",
+  "provider": "wsv",
+  "dataSourceName": "wsv-geokat-csw",
+  "datatype": "csw,metadata"
+}

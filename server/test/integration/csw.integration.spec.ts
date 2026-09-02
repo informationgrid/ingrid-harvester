@@ -25,6 +25,9 @@ import type { CswSettings } from '../../app/importer/csw/csw.settings.js';
 import cswEbaConfig from '../data/csw/eba/config.json' with { type: 'json' };
 import cswGdideConfig from '../data/csw/gdi-de/config.json' with { type: 'json' };
 import cswNokisConfig from '../data/csw/nokis/config.json' with { type: 'json' };
+import cswWsvBfgConfig from '../data/csw/wsv-bfg/config.json' with { type: 'json' };
+import cswWsvBkgConfig from '../data/csw/wsv-bkg/config.json' with { type: 'json' };
+import cswWsvWsvConfig from '../data/csw/wsv-wsv/config.json' with { type: 'json' };
 import { type ImporterIntegrationTestCase, runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
 
 describe('CSW Integration Tests', function () {
@@ -86,6 +89,30 @@ describe('CSW Integration Tests', function () {
             ...cswTestcase,
             settings: cswNokisConfig as CswSettings,
             baseFixture: 'test/data/csw/nokis'
+        });
+    });
+
+    it('wsv-bfg', async () => {
+        await runImporterIntegrationTest({
+            ...cswTestcase,
+            settings: cswWsvBfgConfig as CswSettings,
+            baseFixture: 'test/data/csw/wsv-bfg'
+        });
+    });
+
+    it('wsv-bkg', async () => {
+        await runImporterIntegrationTest({
+            ...cswTestcase,
+            settings: cswWsvBkgConfig as CswSettings,
+            baseFixture: 'test/data/csw/wsv-bkg'
+        });
+    });
+
+    it('wsv-wsv', async () => {
+        await runImporterIntegrationTest({
+            ...cswTestcase,
+            settings: cswWsvWsvConfig as CswSettings,
+            baseFixture: 'test/data/csw/wsv-wsv'
         });
     });
 });

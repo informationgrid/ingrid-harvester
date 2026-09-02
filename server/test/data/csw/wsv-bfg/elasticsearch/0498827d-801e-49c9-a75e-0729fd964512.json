@@ -1,0 +1,489 @@
+{
+  "capabilities_url": [],
+  "collection": {
+    "name": "wsv-bfg-csw"
+  },
+  "content": [
+    "wsv-bfg-csw",
+    "bund",
+    "wsv",
+    "csw",
+    "metadata",
+    "wsv-bfg-csw",
+    "false",
+    "0498827d-801e-49c9-a75e-0729fd964512",
+    "wsv-bfg-csw",
+    "dataset",
+    "https://geoportal.bafg.de/csw/api",
+    "https://geoportal.bafg.de/csw/api?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=0498827d-801e-49c9-a75e-0729fd964512",
+    "csw",
+    "http://geoportal.bafg.de/dokumente/m2/produkte/owlk/Krahe_et_al_2010_BfG-Bericht_1682.pdf",
+    "http://geoportal.bafg.de/dokumente/m2/produkte/owlk/Krahe_et_al_2010_BfG-Bericht_1682.pdf",
+    "PDF",
+    "ftp://owlk:w13n4vi@ftp.kliwas.de",
+    "ftp://owlk:w13n4vi@ftp.kliwas.de",
+    "WWW",
+    "http://geoportal.bafg.de/dokumente/m2/produkte/owlk/Nutzungsbedingungen_oWLK_GCM_BfG.pdf",
+    "http://geoportal.bafg.de/dokumente/m2/produkte/owlk/Nutzungsbedingungen_oWLK_GCM_BfG.pdf",
+    "PDF",
+    "19500101010000000",
+    "0498827d-801e-49c9-a75e-0729fd964512",
+    "0498827d-801e-49c9-a75e-0729fd964512",
+    "1",
+    "de",
+    "4",
+    "ISO 19115",
+    "2003/Cor.1:2006",
+    "de",
+    "5105",
+    "1",
+    "von",
+    "19500101010000000",
+    "21001231010000000",
+    "21001231010000000",
+    "dataset",
+    "Bundesanstalt fuer Gewaesserkunde",
+    "Dr. Enno Nilson",
+    "Am Mainzer Tor 1",
+    "56068 ",
+    "Koblenz",
+    "M2",
+    "Germany",
+    "Bundesanstalt für Gewässerkunde",
+    "Peter Krahe",
+    "Am Mainzer Tor 1",
+    "56068",
+    "Koblenz",
+    "M2",
+    "Germany",
+    "M2",
+    "Bundesanstalt fuer Gewaesserkunde",
+    "Dr. Enno Nilson",
+    "Am Mainzer Tor 1",
+    "56068 ",
+    "Koblenz",
+    "M2",
+    "Germany",
+    "M2",
+    "Atmosphärische Zirkulationsindizes globaler Klimamodelle (Status: 2010) \"OWLK_GCM-plus\"",
+    "Dieser Datenbestand dient der Analyse atmosphärischer Zirkulationsbedingungen (Wetterlagen, NAO) im nordatlantisch-mitteleuropäischen Sektor wie sie von Reanalyse- und globalen Klimamodellen (Status: 2010) simuliert werden. Ausgewählt wurden solche Klimamodelläufe, die für Mitteleuropa oder Deutschland regionalisiert wurden. Mit dem Datenbestand kann einerseits die Eignung der verschiedenen Modelle zur Reproduktion der beobachteten Zirkulationsverhälnisse (1950-2000) geprüft werden. Andererseits können simulierte Änderungen (2001-2100) ausgewertet werden. Zusätzlich werden Temperatur -und Niederschlagsdaten bereitgestellt, mit denen die Wetterwirksamkeit der Wetterlagen je GCM bewertet werden kann.",
+    "",
+    "Europäisch-Nordatlantischer Sektor",
+    "-17.15",
+    "42.95",
+    "36.93",
+    "57.73",
+    "Polygon",
+    -17.15,
+    57.73,
+    -17.15,
+    36.93,
+    42.95000000000001,
+    36.93,
+    42.95000000000001,
+    57.73,
+    -17.15,
+    57.73,
+    -17.15,
+    36.93,
+    42.95000000000001,
+    57.73,
+    "GCM",
+    "F",
+    "Globale Klimamodelle",
+    "F",
+    "Zirkulation",
+    "F",
+    "NAO",
+    "F",
+    "oWLK",
+    "F",
+    "Klimawandel",
+    "F",
+    "Validierung",
+    "F",
+    "KLIWAS",
+    "F",
+    "kliwas_projekt401",
+    "F",
+    "4.01",
+    "F",
+    "401",
+    "F",
+    "http://dx.doi.org/10.5676/BfG-1682-2011",
+    false,
+    false,
+    "s. Dokumentation",
+    "",
+    "12",
+    "0",
+    "11",
+    "0",
+    "11",
+    "0",
+    "11",
+    "20101208010000000",
+    "1",
+    "20101208010000000",
+    "2",
+    "http://geoportal.bafg.de/dokumente/m2/produkte/owlk/Krahe_et_al_2010_BfG-Bericht_1682.pdf",
+    "",
+    "",
+    "5302",
+    "ftp://owlk:w13n4vi@ftp.kliwas.de",
+    "",
+    "",
+    "9990",
+    "http://geoportal.bafg.de/dokumente/m2/produkte/owlk/Nutzungsbedingungen_oWLK_GCM_BfG.pdf",
+    "",
+    "",
+    "5302",
+    "Telefon",
+    "++49 (0)261/1306-5325",
+    "Fax",
+    "++49 (0)261/1306-5280",
+    "Email",
+    "nilson@bafg.de ",
+    "Telefon",
+    "++49 (0)261/1306-5234",
+    "Fax",
+    "++49 (0)261/1306-5280",
+    "Email",
+    "krahe@bafg.de",
+    "Telefon",
+    "++49 (0)261/1306-5325",
+    "Fax",
+    "++49 (0)261/1306-5280",
+    "Email",
+    "nilson@bafg.de ",
+    "-1",
+    "keine Angaben",
+    "Die Nutzung der Daten ist frei unter der Bedingung der Nennung der Quelle: Krahe, P., Nilson, E., Gelhardt, U. & J. Lang (2010): Auswertungen ausgewählter globaler Klimamodelle hinsichtlich atmosphärischer Zirkulationsbedingungen im nordatlantisch-mitteleuropäischen Sektor. BfG-Bericht 1682. 38 S. DOI:http://dx.doi.org/10.5676/BfG-1682-2011",
+    false,
+    "6436f28bae56c78119ca0a24e7caef0e2567e1fc"
+  ],
+  "dataSourceName": "wsv-bfg-csw",
+  "datatype": [
+    "csw",
+    "metadata"
+  ],
+  "distributions": [
+    {
+      "format": [
+        "PDF"
+      ],
+      "accessURL": "http://geoportal.bafg.de/dokumente/m2/produkte/owlk/Krahe_et_al_2010_BfG-Bericht_1682.pdf",
+      "access_url": "http://geoportal.bafg.de/dokumente/m2/produkte/owlk/Krahe_et_al_2010_BfG-Bericht_1682.pdf"
+    },
+    {
+      "format": [
+        "WWW"
+      ],
+      "accessURL": "ftp://owlk:w13n4vi@ftp.kliwas.de",
+      "access_url": "ftp://owlk:w13n4vi@ftp.kliwas.de"
+    },
+    {
+      "format": [
+        "PDF"
+      ],
+      "accessURL": "http://geoportal.bafg.de/dokumente/m2/produkte/owlk/Nutzungsbedingungen_oWLK_GCM_BfG.pdf",
+      "access_url": "http://geoportal.bafg.de/dokumente/m2/produkte/owlk/Nutzungsbedingungen_oWLK_GCM_BfG.pdf"
+    }
+  ],
+  "extras": {
+    "hierarchy_level": "dataset",
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-09-02T08:28:47.146Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-09-02T08:28:46.952Z",
+      "merged_from": [],
+      "modified": null,
+      "source": {
+        "raw_data_source": "https://geoportal.bafg.de/csw/api?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=0498827d-801e-49c9-a75e-0729fd964512",
+        "source_base": "https://geoportal.bafg.de/csw/api",
+        "source_type": "csw"
+      }
+    }
+  },
+  "hierarchylevel": "dataset",
+  "iPlugId": "wsv-bfg-csw",
+  "idf": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.portalu.de/IDF/1.0\">\n  <head/>\n  <body>\n<idf:idfMdMetadata xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd http://www.isotc211.org/2005/gmd http://schemas.opengis.net/iso/19139/20070417/gmd/gmd.xsd http://www.isotc211.org/2005/gco http://schemas.opengis.net/iso/19139/20070417/gco/gco.xsd http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20070417/srv/1.0/srv.xsd http://www.isotc211.org/2005/gmx http://schemas.opengis.net/iso/19139/20070417/gmx/gmx.xsd\" xmlns:idf=\"http://www.portalu.de/IDF/1.0\">\n            <gmd:fileIdentifier>\n                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">0498827d-801e-49c9-a75e-0729fd964512</gco:CharacterString>\n            </gmd:fileIdentifier>\n            <gmd:language>\n                <LanguageCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://www.loc.gov/standards/iso639-2/\" codeListValue=\"ger\">ger</LanguageCode>\n            </gmd:language>\n            <gmd:characterSet>\n                <MD_CharacterSetCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_CharacterSetCode\" codeListValue=\"utf8\">utf8</MD_CharacterSetCode>\n            </gmd:characterSet>\n            <gmd:hierarchyLevel>\n                <MD_ScopeCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode\" codeListValue=\"dataset\">dataset</MD_ScopeCode>\n            </gmd:hierarchyLevel>\n            <gmd:hierarchyLevelName>\n                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">KLIWAS_P4.01</gco:CharacterString>\n            </gmd:hierarchyLevelName>\n            <gmd:hierarchyLevelName>\n                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Klimaforschung</gco:CharacterString>\n            </gmd:hierarchyLevelName>\n            <gmd:contact>\n                <idf:idfResponsibleParty>\n                    <gmd:individualName>\n                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Dr. Enno Nilson</gco:CharacterString>\n                    </gmd:individualName>\n                    <gmd:organisationName>\n                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Bundesanstalt fuer Gewaesserkunde</gco:CharacterString>\n                    </gmd:organisationName>\n                    <gmd:contactInfo>\n                        <gmd:CI_Contact>\n                            <gmd:phone>\n                                <gmd:CI_Telephone>\n                                    <gmd:voice>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">++49 (0)261/1306-5325</gco:CharacterString>\n                                    </gmd:voice>\n                                    <gmd:facsimile>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">++49 (0)261/1306-5280</gco:CharacterString>\n                                    </gmd:facsimile>\n                                </gmd:CI_Telephone>\n                            </gmd:phone>\n                            <gmd:address>\n                                <gmd:CI_Address>\n                                    <gmd:deliveryPoint>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Am Mainzer Tor 1</gco:CharacterString>\n                                    </gmd:deliveryPoint>\n                                    <gmd:city>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Koblenz</gco:CharacterString>\n                                    </gmd:city>\n                                    <gmd:administrativeArea>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">M2</gco:CharacterString>\n                                    </gmd:administrativeArea>\n                                    <gmd:postalCode>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">56068 </gco:CharacterString>\n                                    </gmd:postalCode>\n                                    <gmd:country>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Germany</gco:CharacterString>\n                                    </gmd:country>\n                                    <gmd:electronicMailAddress>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">nilson@bafg.de </gco:CharacterString>\n                                    </gmd:electronicMailAddress>\n                                </gmd:CI_Address>\n                            </gmd:address>\n                        </gmd:CI_Contact>\n                    </gmd:contactInfo>\n                    <gmd:role>\n                        <gmd:CI_RoleCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode\" codeListValue=\"author\">author</gmd:CI_RoleCode>\n                    </gmd:role>\n                </idf:idfResponsibleParty>\n            </gmd:contact>\n            <gmd:dateStamp>\n                <gco:Date xmlns:gco=\"http://www.isotc211.org/2005/gco\">2021-10-14</gco:Date>\n            </gmd:dateStamp>\n            <gmd:metadataStandardName>\n                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">ISO 19115</gco:CharacterString>\n            </gmd:metadataStandardName>\n            <gmd:metadataStandardVersion>\n                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">2003/Cor.1:2006</gco:CharacterString>\n            </gmd:metadataStandardVersion>\n            <gmd:identificationInfo xmlns:gco=\"http://www.isotc211.org/2005/gco\">\n                <gmd:MD_DataIdentification>\n                    <gmd:citation>\n                        <gmd:CI_Citation>\n                            <gmd:title>\n                                <gco:CharacterString>Atmosphärische Zirkulationsindizes globaler Klimamodelle (Status: 2010) \"OWLK_GCM-plus\"</gco:CharacterString>\n                            </gmd:title>\n                            <gmd:date>\n                                <gmd:CI_Date>\n                                    <gmd:date>\n                                        <gco:Date>2010-12-08</gco:Date>\n                                    </gmd:date>\n                                    <gmd:dateType>\n                                        <CI_DateTypeCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"creation\">creation</CI_DateTypeCode>\n                                    </gmd:dateType>\n                                </gmd:CI_Date>\n                            </gmd:date>\n                            <gmd:date>\n                                <gmd:CI_Date>\n                                    <gmd:date>\n                                        <gco:Date>2010-12-08</gco:Date>\n                                    </gmd:date>\n                                    <gmd:dateType>\n                                        <CI_DateTypeCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\">publication</CI_DateTypeCode>\n                                    </gmd:dateType>\n                                </gmd:CI_Date>\n                            </gmd:date>\n                            <gmd:identifier>\n                                <gmd:MD_Identifier>\n                                    <gmd:code>\n                                        <gco:CharacterString>http://dx.doi.org/10.5676/BfG-1682-2011</gco:CharacterString>\n                                    </gmd:code>\n                                </gmd:MD_Identifier>\n                            </gmd:identifier>\n                        </gmd:CI_Citation>\n                    </gmd:citation>\n                    <gmd:abstract>\n                        <gco:CharacterString>Dieser Datenbestand dient der Analyse atmosphärischer Zirkulationsbedingungen (Wetterlagen, NAO) im nordatlantisch-mitteleuropäischen Sektor wie sie von Reanalyse- und globalen Klimamodellen (Status: 2010) simuliert werden. Ausgewählt wurden solche Klimamodelläufe, die für Mitteleuropa oder Deutschland regionalisiert wurden. Mit dem Datenbestand kann einerseits die Eignung der verschiedenen Modelle zur Reproduktion der beobachteten Zirkulationsverhälnisse (1950-2000) geprüft werden. Andererseits können simulierte Änderungen (2001-2100) ausgewertet werden. Zusätzlich werden Temperatur -und Niederschlagsdaten bereitgestellt, mit denen die Wetterwirksamkeit der Wetterlagen je GCM bewertet werden kann.</gco:CharacterString>\n                    </gmd:abstract>\n                    <gmd:status>\n                        <MD_ProgressCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ProgressCode\" codeListValue=\"completed\">completed</MD_ProgressCode>\n                    </gmd:status>\n                    <gmd:pointOfContact>\n                        <idf:idfResponsibleParty>\n                            <gmd:individualName>\n                                <gco:CharacterString>Peter Krahe</gco:CharacterString>\n                            </gmd:individualName>\n                            <gmd:organisationName>\n                                <gco:CharacterString>Bundesanstalt für Gewässerkunde</gco:CharacterString>\n                            </gmd:organisationName>\n                            <gmd:contactInfo>\n                                <gmd:CI_Contact>\n                                    <gmd:phone>\n                                        <gmd:CI_Telephone>\n                                            <gmd:voice>\n                                                <gco:CharacterString>++49 (0)261/1306-5234</gco:CharacterString>\n                                            </gmd:voice>\n                                            <gmd:facsimile>\n                                                <gco:CharacterString>++49 (0)261/1306-5280</gco:CharacterString>\n                                            </gmd:facsimile>\n                                        </gmd:CI_Telephone>\n                                    </gmd:phone>\n                                    <gmd:address>\n                                        <gmd:CI_Address>\n                                            <gmd:deliveryPoint>\n                                                <gco:CharacterString>Am Mainzer Tor 1</gco:CharacterString>\n                                            </gmd:deliveryPoint>\n                                            <gmd:city>\n                                                <gco:CharacterString>Koblenz</gco:CharacterString>\n                                            </gmd:city>\n                                            <gmd:administrativeArea>\n                                                <gco:CharacterString>M2</gco:CharacterString>\n                                            </gmd:administrativeArea>\n                                            <gmd:postalCode>\n                                                <gco:CharacterString>56068</gco:CharacterString>\n                                            </gmd:postalCode>\n                                            <gmd:country>\n                                                <gco:CharacterString>Germany</gco:CharacterString>\n                                            </gmd:country>\n                                            <gmd:electronicMailAddress>\n                                                <gco:CharacterString>krahe@bafg.de</gco:CharacterString>\n                                            </gmd:electronicMailAddress>\n                                        </gmd:CI_Address>\n                                    </gmd:address>\n                                </gmd:CI_Contact>\n                            </gmd:contactInfo>\n                            <gmd:role>\n                                <gmd:CI_RoleCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode\" codeListValue=\"author\">author</gmd:CI_RoleCode>\n                            </gmd:role>\n                        </idf:idfResponsibleParty>\n                    </gmd:pointOfContact>\n                    <gmd:pointOfContact>\n                        <idf:idfResponsibleParty>\n                            <gmd:individualName>\n                                <gco:CharacterString>Dr. Enno Nilson</gco:CharacterString>\n                            </gmd:individualName>\n                            <gmd:organisationName>\n                                <gco:CharacterString>Bundesanstalt fuer Gewaesserkunde</gco:CharacterString>\n                            </gmd:organisationName>\n                            <gmd:contactInfo>\n                                <gmd:CI_Contact>\n                                    <gmd:phone>\n                                        <gmd:CI_Telephone>\n                                            <gmd:voice>\n                                                <gco:CharacterString>++49 (0)261/1306-5325</gco:CharacterString>\n                                            </gmd:voice>\n                                            <gmd:facsimile>\n                                                <gco:CharacterString>++49 (0)261/1306-5280</gco:CharacterString>\n                                            </gmd:facsimile>\n                                        </gmd:CI_Telephone>\n                                    </gmd:phone>\n                                    <gmd:address>\n                                        <gmd:CI_Address>\n                                            <gmd:deliveryPoint>\n                                                <gco:CharacterString>Am Mainzer Tor 1</gco:CharacterString>\n                                            </gmd:deliveryPoint>\n                                            <gmd:city>\n                                                <gco:CharacterString>Koblenz</gco:CharacterString>\n                                            </gmd:city>\n                                            <gmd:administrativeArea>\n                                                <gco:CharacterString>M2</gco:CharacterString>\n                                            </gmd:administrativeArea>\n                                            <gmd:postalCode>\n                                                <gco:CharacterString>56068 </gco:CharacterString>\n                                            </gmd:postalCode>\n                                            <gmd:country>\n                                                <gco:CharacterString>Germany</gco:CharacterString>\n                                            </gmd:country>\n                                            <gmd:electronicMailAddress>\n                                                <gco:CharacterString>nilson@bafg.de </gco:CharacterString>\n                                            </gmd:electronicMailAddress>\n                                        </gmd:CI_Address>\n                                    </gmd:address>\n                                </gmd:CI_Contact>\n                            </gmd:contactInfo>\n                            <gmd:role>\n                                <gmd:CI_RoleCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode\" codeListValue=\"author\">author</gmd:CI_RoleCode>\n                            </gmd:role>\n                        </idf:idfResponsibleParty>\n                    </gmd:pointOfContact>\n                    <gmd:descriptiveKeywords>\n                        <gmd:MD_Keywords>\n                            <gmd:keyword>\n                                <gco:CharacterString>GCM</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Globale Klimamodelle</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Zirkulation</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>NAO</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>oWLK</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Klimawandel</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Validierung</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>KLIWAS</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>kliwas_projekt401</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>4.01</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>401</gco:CharacterString>\n                            </gmd:keyword>\n                        </gmd:MD_Keywords>\n                    </gmd:descriptiveKeywords>\n                    <gmd:resourceConstraints xmlns:gmx=\"http://www.isotc211.org/2005/gmx\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n                        <gmd:MD_LegalConstraints>\n                            <gmd:useLimitation>\n                                <gco:CharacterString>Die Nutzung der Daten ist frei unter der Bedingung der Nennung der Quelle: Krahe, P., Nilson, E., Gelhardt, U. &amp; J. Lang (2010): Auswertungen ausgewählter globaler Klimamodelle hinsichtlich atmosphärischer Zirkulationsbedingungen im nordatlantisch-mitteleuropäischen Sektor. BfG-Bericht 1682. 38 S. DOI:http://dx.doi.org/10.5676/BfG-1682-2011</gco:CharacterString>\n                            </gmd:useLimitation>\n                        </gmd:MD_LegalConstraints>\n                    </gmd:resourceConstraints>\n                    <gmd:resourceConstraints xmlns:gmx=\"http://www.isotc211.org/2005/gmx\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n                        <gmd:MD_LegalConstraints>\n                            <gmd:accessConstraints>\n                                <MD_RestrictionCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode\" codeListValue=\"otherRestrictions\"/>\n                            </gmd:accessConstraints>\n                            <gmd:otherConstraints>\n                                <gco:CharacterString>keine Angaben</gco:CharacterString>\n                            </gmd:otherConstraints>\n                        </gmd:MD_LegalConstraints>\n                    </gmd:resourceConstraints>\n                    <gmd:spatialRepresentationType>\n                        <MD_SpatialRepresentationTypeCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_SpatialRepresentationTypeCode\" codeListValue=\"textTable\">textTable</MD_SpatialRepresentationTypeCode>\n                    </gmd:spatialRepresentationType>\n                    <gmd:language>\n                        <LanguageCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://www.loc.gov/standards/iso639-2/\" codeListValue=\"ger\">ger</LanguageCode>\n                    </gmd:language>\n                    <gmd:topicCategory>\n                        <gmd:MD_TopicCategoryCode>inlandWaters</gmd:MD_TopicCategoryCode>\n                    </gmd:topicCategory>\n                    <extent xmlns=\"http://www.isotc211.org/2005/gmd\">\n                        <gmd:EX_Extent>\n                            <gmd:geographicElement>\n                                <gmd:EX_GeographicBoundingBox>\n                                    <gmd:extentTypeCode>\n                                        <gco:Boolean>true</gco:Boolean>\n                                    </gmd:extentTypeCode>\n                                    <gmd:westBoundLongitude>\n                                        <gco:Decimal>-17.15</gco:Decimal>\n                                    </gmd:westBoundLongitude>\n                                    <gmd:eastBoundLongitude>\n                                        <gco:Decimal>42.95</gco:Decimal>\n                                    </gmd:eastBoundLongitude>\n                                    <gmd:southBoundLatitude>\n                                        <gco:Decimal>36.93</gco:Decimal>\n                                    </gmd:southBoundLatitude>\n                                    <gmd:northBoundLatitude>\n                                        <gco:Decimal>57.73</gco:Decimal>\n                                    </gmd:northBoundLatitude>\n                                </gmd:EX_GeographicBoundingBox>\n                            </gmd:geographicElement>\n                        </gmd:EX_Extent>\n                    </extent>\n                    <gmd:extent>\n                        <gmd:EX_Extent>\n                            <gmd:temporalElement>\n                                <gmd:EX_TemporalExtent>\n                                    <gmd:extent>\n                                        <gml:TimePeriod xmlns:gml=\"http://www.opengis.net/gml/3.2\" gml:id=\"w8320aaa\">\n                                            <gml:beginPosition>1950-01-01</gml:beginPosition>\n                                            <gml:endPosition>2100-12-31</gml:endPosition>\n                                        </gml:TimePeriod>\n                                    </gmd:extent>\n                                </gmd:EX_TemporalExtent>\n                            </gmd:temporalElement>\n                        </gmd:EX_Extent>\n                    </gmd:extent>\n                    <gmd:extent>\n                        <gmd:EX_Extent>\n                            <gmd:geographicElement>\n                                <gmd:EX_GeographicDescription>\n                                    <gmd:geographicIdentifier>\n                                        <gmd:MD_Identifier>\n                                            <gmd:code>\n                                                <gco:CharacterString>Europäisch-Nordatlantischer Sektor</gco:CharacterString>\n                                            </gmd:code>\n                                        </gmd:MD_Identifier>\n                                    </gmd:geographicIdentifier>\n                                </gmd:EX_GeographicDescription>\n                            </gmd:geographicElement>\n                        </gmd:EX_Extent>\n                    </gmd:extent>\n                </gmd:MD_DataIdentification>\n            </gmd:identificationInfo>\n            <gmd:distributionInfo xmlns:gco=\"http://www.isotc211.org/2005/gco\">\n                <gmd:MD_Distribution>\n                    <gmd:transferOptions>\n                        <gmd:MD_DigitalTransferOptions>\n                            <gmd:onLine>\n                                <gmd:CI_OnlineResource>\n                                    <gmd:linkage>\n                                        <gmd:URL>http://geoportal.bafg.de/dokumente/m2/produkte/owlk/Krahe_et_al_2010_BfG-Bericht_1682.pdf</gmd:URL>\n                                    </gmd:linkage>\n                                    <gmd:function>\n                                        <CI_OnLineFunctionCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode\" codeListValue=\"information\">information</CI_OnLineFunctionCode>\n                                    </gmd:function>\n                                </gmd:CI_OnlineResource>\n                            </gmd:onLine>\n                        </gmd:MD_DigitalTransferOptions>\n                    </gmd:transferOptions>\n                    <gmd:transferOptions>\n                        <gmd:MD_DigitalTransferOptions>\n                            <gmd:onLine>\n                                <gmd:CI_OnlineResource>\n                                    <gmd:linkage>\n                                        <gmd:URL>ftp://owlk:w13n4vi@ftp.kliwas.de</gmd:URL>\n                                    </gmd:linkage>\n                                    <gmd:function>\n                                        <CI_OnLineFunctionCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode\" codeListValue=\"download\">download</CI_OnLineFunctionCode>\n                                    </gmd:function>\n                                </gmd:CI_OnlineResource>\n                            </gmd:onLine>\n                        </gmd:MD_DigitalTransferOptions>\n                    </gmd:transferOptions>\n                    <gmd:transferOptions>\n                        <gmd:MD_DigitalTransferOptions>\n                            <gmd:onLine>\n                                <gmd:CI_OnlineResource>\n                                    <gmd:linkage>\n                                        <gmd:URL>http://geoportal.bafg.de/dokumente/m2/produkte/owlk/Nutzungsbedingungen_oWLK_GCM_BfG.pdf</gmd:URL>\n                                    </gmd:linkage>\n                                    <gmd:function>\n                                        <CI_OnLineFunctionCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode\" codeListValue=\"information\">information</CI_OnLineFunctionCode>\n                                    </gmd:function>\n                                </gmd:CI_OnlineResource>\n                            </gmd:onLine>\n                        </gmd:MD_DigitalTransferOptions>\n                    </gmd:transferOptions>\n                </gmd:MD_Distribution>\n            </gmd:distributionInfo>\n            <gmd:dataQualityInfo>\n                <gmd:DQ_DataQuality>\n                    <gmd:scope>\n                        <gmd:DQ_Scope>\n                            <gmd:level>\n                                <MD_ScopeCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode\" codeListValue=\"dataset\"/>\n                            </gmd:level>\n                            <gmd:levelDescription xmlns:gco=\"http://www.isotc211.org/2005/gco\" gco:nilReason=\"inapplicable\"/>\n                        </gmd:DQ_Scope>\n                    </gmd:scope>\n                    <gmd:lineage>\n                        <gmd:LI_Lineage>\n                            <gmd:statement>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">s. Dokumentation</gco:CharacterString>\n                            </gmd:statement>\n                        </gmd:LI_Lineage>\n                    </gmd:lineage>\n                </gmd:DQ_DataQuality>\n            </gmd:dataQualityInfo>\n        </idf:idfMdMetadata>\n  </body>\n</html>\n",
+  "is_hvd": false,
+  "isfolder": "false",
+  "location": [
+    "",
+    "Europäisch-Nordatlantischer Sektor"
+  ],
+  "metadata": {
+    "created": null,
+    "modified": "2021-10-14T00:00:00.000Z"
+  },
+  "modified": "2021-10-14T00:00:00.000Z",
+  "object_access": {
+    "restriction_key": [
+      "-1"
+    ],
+    "restriction_value": [
+      "keine Angaben"
+    ],
+    "terms_of_use": "Die Nutzung der Daten ist frei unter der Bedingung der Nennung der Quelle: Krahe, P., Nilson, E., Gelhardt, U. & J. Lang (2010): Auswertungen ausgewählter globaler Klimamodelle hinsichtlich atmosphärischer Zirkulationsbedingungen im nordatlantisch-mitteleuropäischen Sektor. BfG-Bericht 1682. 38 S. DOI:http://dx.doi.org/10.5676/BfG-1682-2011"
+  },
+  "partner": [
+    "bund"
+  ],
+  "provider": [
+    "wsv"
+  ],
+  "sort_hash": "6436f28bae56c78119ca0a24e7caef0e2567e1fc",
+  "spatial": {
+    "geometries": [
+      {
+        "bbox": [
+          -17.15,
+          36.93,
+          42.95000000000001,
+          57.73
+        ],
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -17.15,
+              57.73
+            ],
+            [
+              -17.15,
+              36.93
+            ],
+            [
+              42.95000000000001,
+              36.93
+            ],
+            [
+              42.95000000000001,
+              57.73
+            ],
+            [
+              -17.15,
+              57.73
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "spatial_system": {
+    "referencesystem_value": []
+  },
+  "summary": "Dieser Datenbestand dient der Analyse atmosphärischer Zirkulationsbedingungen (Wetterlagen, NAO) im nordatlantisch-mitteleuropäischen Sektor wie sie von Reanalyse- und globalen Klimamodellen (Status: 2010) simuliert werden. Ausgewählt wurden solche Klimamodelläufe, die für Mitteleuropa oder Deutschland regionalisiert wurden. Mit dem Datenbestand kann einerseits die Eignung der verschiedenen Modelle zur Reproduktion der beobachteten Zirkulationsverhälnisse (1950-2000) geprüft werden. Andererseits können simulierte Änderungen (2001-2100) ausgewertet werden. Zusätzlich werden Temperatur -und Niederschlagsdaten bereitgestellt, mit denen die Wetterwirksamkeit der Wetterlagen je GCM bewertet werden kann.",
+  "t0113_dataset_reference": [
+    {
+      "type": "1",
+      "reference_date": "20101208010000000"
+    },
+    {
+      "type": "2",
+      "reference_date": "20101208010000000"
+    }
+  ],
+  "t011_obj_geo": {
+    "datasource_uuid": "http://dx.doi.org/10.5676/BfG-1682-2011",
+    "hierarchy_level": false,
+    "keyc_incl_w_dataset": false,
+    "referencesystem_id": [],
+    "special_base": "s. Dokumentation"
+  },
+  "t011_obj_geo_keyc": [],
+  "t011_obj_geo_scale": [],
+  "t011_obj_geo_spatial_rep": {},
+  "t011_obj_geo_supplinfo": {},
+  "t011_obj_geo_symc": [],
+  "t011_obj_geo_vector": [],
+  "t011_obj_serv": {},
+  "t011_obj_serv_op_connpoint": [],
+  "t011_obj_serv_op_platform": [],
+  "t011_obj_serv_operation": [],
+  "t011_obj_serv_version": {
+    "version_value": ""
+  },
+  "t011_obj_topic_cat": [
+    {
+      "topic_category": "12"
+    }
+  ],
+  "t012_obj_adr": [
+    {
+      "typ": "11",
+      "special_ref": "0"
+    },
+    {
+      "typ": "11",
+      "special_ref": "0"
+    },
+    {
+      "typ": "11",
+      "special_ref": "0"
+    }
+  ],
+  "t017_url_ref": [
+    {
+      "descr": "",
+      "content": "",
+      "url_link": "http://geoportal.bafg.de/dokumente/m2/produkte/owlk/Krahe_et_al_2010_BfG-Bericht_1682.pdf",
+      "special_ref": "5302"
+    },
+    {
+      "descr": "",
+      "content": "",
+      "url_link": "ftp://owlk:w13n4vi@ftp.kliwas.de",
+      "special_ref": "9990"
+    },
+    {
+      "descr": "",
+      "content": "",
+      "url_link": "http://geoportal.bafg.de/dokumente/m2/produkte/owlk/Nutzungsbedingungen_oWLK_GCM_BfG.pdf",
+      "special_ref": "5302"
+    }
+  ],
+  "t01_object": {
+    "data_language_code": "de",
+    "metadata_character_set": "4",
+    "metadata_language_code": "de",
+    "metadata_standard_name": "ISO 19115",
+    "metadata_standard_version": "2003/Cor.1:2006",
+    "mod_time": "2021-10-14T00:00:00.000Z",
+    "obj_class": "1",
+    "obj_id": "0498827d-801e-49c9-a75e-0729fd964512",
+    "org_obj_id": "0498827d-801e-49c9-a75e-0729fd964512",
+    "time_from": "19500101010000000",
+    "time_status": "1",
+    "time_to": "21001231010000000",
+    "time_type": "von",
+    "vertical_extent_vdatum": "5105"
+  },
+  "t021_communication": [
+    {
+      "comm_type": "Telefon",
+      "comm_value": "++49 (0)261/1306-5325"
+    },
+    {
+      "comm_type": "Fax",
+      "comm_value": "++49 (0)261/1306-5280"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "nilson@bafg.de "
+    },
+    {
+      "comm_type": "Telefon",
+      "comm_value": "++49 (0)261/1306-5234"
+    },
+    {
+      "comm_type": "Fax",
+      "comm_value": "++49 (0)261/1306-5280"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "krahe@bafg.de"
+    },
+    {
+      "comm_type": "Telefon",
+      "comm_value": "++49 (0)261/1306-5325"
+    },
+    {
+      "comm_type": "Fax",
+      "comm_value": "++49 (0)261/1306-5280"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "nilson@bafg.de "
+    }
+  ],
+  "t02_address": [
+    {
+      "city": "Koblenz",
+      "street": "Am Mainzer Tor 1",
+      "lastname": "Dr. Enno Nilson",
+      "postcode": "56068 ",
+      "institution": "Bundesanstalt fuer Gewaesserkunde",
+      "country_code": "Germany",
+      "administrative_area_value": "M2"
+    },
+    {
+      "city": "Koblenz",
+      "street": "Am Mainzer Tor 1",
+      "lastname": "Peter Krahe",
+      "postcode": "56068",
+      "institution": "Bundesanstalt für Gewässerkunde",
+      "country_code": "Germany",
+      "administrative_area_value": "M2",
+      "identificationinfo_administrative_area_value": "M2"
+    },
+    {
+      "city": "Koblenz",
+      "street": "Am Mainzer Tor 1",
+      "lastname": "Dr. Enno Nilson",
+      "postcode": "56068 ",
+      "institution": "Bundesanstalt fuer Gewaesserkunde",
+      "country_code": "Germany",
+      "administrative_area_value": "M2",
+      "identificationinfo_administrative_area_value": "M2"
+    }
+  ],
+  "t04_search": [
+    {
+      "type": "F",
+      "searchterm": "GCM"
+    },
+    {
+      "type": "F",
+      "searchterm": "Globale Klimamodelle"
+    },
+    {
+      "type": "F",
+      "searchterm": "Zirkulation"
+    },
+    {
+      "type": "F",
+      "searchterm": "NAO"
+    },
+    {
+      "type": "F",
+      "searchterm": "oWLK"
+    },
+    {
+      "type": "F",
+      "searchterm": "Klimawandel"
+    },
+    {
+      "type": "F",
+      "searchterm": "Validierung"
+    },
+    {
+      "type": "F",
+      "searchterm": "KLIWAS"
+    },
+    {
+      "type": "F",
+      "searchterm": "kliwas_projekt401"
+    },
+    {
+      "type": "F",
+      "searchterm": "4.01"
+    },
+    {
+      "type": "F",
+      "searchterm": "401"
+    }
+  ],
+  "t1": "19500101010000000",
+  "t2": "21001231010000000",
+  "title": "Atmosphärische Zirkulationsindizes globaler Klimamodelle (Status: 2010) \"OWLK_GCM-plus\"",
+  "uuid": "0498827d-801e-49c9-a75e-0729fd964512",
+  "x1": "-17.15",
+  "x2": "42.95",
+  "y1": "36.93",
+  "y2": "57.73"
+}

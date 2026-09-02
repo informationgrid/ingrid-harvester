@@ -1,0 +1,323 @@
+{
+  "capabilities_url": [],
+  "collection": {
+    "name": "wsv-bfg-csw"
+  },
+  "content": [
+    "wsv-bfg-csw",
+    "bund",
+    "wsv",
+    "csw",
+    "metadata",
+    "wsv-bfg-csw",
+    "false",
+    "68c986b1-a98a-4af8-a504-30f542119bbf",
+    "wsv-bfg-csw",
+    "application",
+    "https://geoportal.bafg.de/csw/api",
+    "https://geoportal.bafg.de/csw/api?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=68c986b1-a98a-4af8-a504-30f542119bbf",
+    "csw",
+    "https://maps.lgrb-bw.de/",
+    "https://maps.lgrb-bw.de/",
+    "WWW",
+    "68c986b1-a98a-4af8-a504-30f542119bbf",
+    "68c986b1-a98a-4af8-a504-30f542119bbf",
+    "6",
+    "4",
+    "de",
+    "4",
+    "ISO 19115",
+    "2003/Cor.1:2006",
+    "de",
+    "5105",
+    "900001",
+    "application",
+    "Bundesanstalt für Gewässerkunde",
+    "Michael Hils",
+    "Am Mainzer Tor 1",
+    "56068",
+    "Koblenz",
+    "Rheinland-Pfalz",
+    "Deutschland",
+    "Bundesanstalt für Gewässerkunde",
+    "Michael Hils",
+    "Am Mainzer Tor 1",
+    "56068",
+    "Koblenz",
+    "Rheinland-Pfalz",
+    "Deutschland",
+    "Rheinland-Pfalz",
+    "Kartendienste LGRB Baden-Württemberg - Geologie",
+    "Übersicht über die Kartendienste (WMS-Dienste) des Landesamts für Geologie, Rohstoffe und Bergbau in Baden-Württemberg",
+    "",
+    "7.32",
+    "10.65",
+    "47.28",
+    "49.91",
+    "Polygon",
+    7.320000000000001,
+    49.91,
+    7.320000000000001,
+    47.28,
+    10.65,
+    47.28,
+    10.65,
+    49.91,
+    7.320000000000001,
+    49.91,
+    7.320000000000001,
+    47.28,
+    10.65,
+    49.91,
+    "Geologie",
+    "F",
+    false,
+    false,
+    "Verantwortlich für den Inhalt ist das Regierungspräsidium Freiburg, Landesamt für Geologie, Rohstoffe und Bergbau",
+    "",
+    "7",
+    "0",
+    "11",
+    "0",
+    "6",
+    "20071214010000000",
+    "1",
+    "20071214010000000",
+    "3",
+    "https://maps.lgrb-bw.de/",
+    "",
+    "",
+    "3100",
+    "Telefon",
+    "+49 261 1306 5295",
+    "Fax",
+    "+49 (0)261 1306 5302",
+    "Email",
+    "Hils@bafg.de",
+    "Telefon",
+    "+49 261 1306 5295",
+    "Fax",
+    "+49 (0)261 1306 5302",
+    "Email",
+    "Hils@bafg.de",
+    false,
+    "203b1cf3fd499ef6fb05923e792d94fcc3a3a515"
+  ],
+  "dataSourceName": "wsv-bfg-csw",
+  "datatype": [
+    "csw",
+    "metadata"
+  ],
+  "distributions": [
+    {
+      "format": [
+        "WWW"
+      ],
+      "accessURL": "https://maps.lgrb-bw.de/",
+      "access_url": "https://maps.lgrb-bw.de/"
+    }
+  ],
+  "extras": {
+    "hierarchy_level": "application",
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-09-02T08:27:49.034Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-09-02T08:27:48.816Z",
+      "merged_from": [],
+      "modified": null,
+      "source": {
+        "raw_data_source": "https://geoportal.bafg.de/csw/api?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=68c986b1-a98a-4af8-a504-30f542119bbf",
+        "source_base": "https://geoportal.bafg.de/csw/api",
+        "source_type": "csw"
+      }
+    }
+  },
+  "hierarchylevel": "application",
+  "iPlugId": "wsv-bfg-csw",
+  "idf": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.portalu.de/IDF/1.0\">\n  <head/>\n  <body>\n<idf:idfMdMetadata xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd\" xmlns:idf=\"http://www.portalu.de/IDF/1.0\">\n            <gmd:fileIdentifier>\n                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">68c986b1-a98a-4af8-a504-30f542119bbf</gco:CharacterString>\n            </gmd:fileIdentifier>\n            <gmd:characterSet>\n                <MD_CharacterSetCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://metadata.dgiwg.org/codelistRegistry?MD_CharacterSetCode\" codeListValue=\"utf8\"/>\n            </gmd:characterSet>\n            <gmd:hierarchyLevel>\n                <MD_ScopeCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://metadata.dgiwg.org/codelistRegistry?MD_ScopeCode\" codeListValue=\"application\"/>\n            </gmd:hierarchyLevel>\n            <gmd:hierarchyLevelName>\n                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Hydrogeologie</gco:CharacterString>\n            </gmd:hierarchyLevelName>\n            <gmd:contact>\n                <idf:idfResponsibleParty>\n                    <gmd:individualName>\n                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Michael Hils</gco:CharacterString>\n                    </gmd:individualName>\n                    <gmd:organisationName>\n                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Bundesanstalt für Gewässerkunde</gco:CharacterString>\n                    </gmd:organisationName>\n                    <gmd:contactInfo>\n                        <gmd:CI_Contact>\n                            <gmd:phone>\n                                <gmd:CI_Telephone>\n                                    <gmd:voice>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">+49 261 1306 5295</gco:CharacterString>\n                                    </gmd:voice>\n                                    <gmd:facsimile>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">+49 (0)261 1306 5302</gco:CharacterString>\n                                    </gmd:facsimile>\n                                </gmd:CI_Telephone>\n                            </gmd:phone>\n                            <gmd:address>\n                                <gmd:CI_Address>\n                                    <gmd:deliveryPoint>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Am Mainzer Tor 1</gco:CharacterString>\n                                    </gmd:deliveryPoint>\n                                    <gmd:city>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Koblenz</gco:CharacterString>\n                                    </gmd:city>\n                                    <gmd:administrativeArea>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Rheinland-Pfalz</gco:CharacterString>\n                                    </gmd:administrativeArea>\n                                    <gmd:postalCode>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">56068</gco:CharacterString>\n                                    </gmd:postalCode>\n                                    <gmd:country>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Deutschland</gco:CharacterString>\n                                    </gmd:country>\n                                    <gmd:electronicMailAddress>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Hils@bafg.de</gco:CharacterString>\n                                    </gmd:electronicMailAddress>\n                                </gmd:CI_Address>\n                            </gmd:address>\n                        </gmd:CI_Contact>\n                    </gmd:contactInfo>\n                    <gmd:role>\n                        <gmd:CI_RoleCode codeList=\"https://standards.iso.org/iso/19139/resources/gmxCodelists.xm#CI_RoleCode\" codeListValue=\"author\">author</gmd:CI_RoleCode>\n                    </gmd:role>\n                </idf:idfResponsibleParty>\n            </gmd:contact>\n            <gmd:dateStamp>\n                <gco:Date xmlns:gco=\"http://www.isotc211.org/2005/gco\">2020-03-25</gco:Date>\n            </gmd:dateStamp>\n            <gmd:metadataStandardName>\n                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">ISO 19115</gco:CharacterString>\n            </gmd:metadataStandardName>\n            <gmd:metadataStandardVersion>\n                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">2003/Cor.1:2006</gco:CharacterString>\n            </gmd:metadataStandardVersion>\n            <gmd:identificationInfo>\n                <gmd:MD_DataIdentification>\n                    <gmd:citation>\n                        <gmd:CI_Citation>\n                            <gmd:title>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Kartendienste LGRB Baden-Württemberg - Geologie</gco:CharacterString>\n                            </gmd:title>\n                            <gmd:date>\n                                <gmd:CI_Date>\n                                    <gmd:date>\n                                        <gco:Date xmlns:gco=\"http://www.isotc211.org/2005/gco\">2007-12-14</gco:Date>\n                                    </gmd:date>\n                                    <gmd:dateType>\n                                        <CI_DateTypeCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://metadata.dgiwg.org/codelistRegistry?CI_DateTypeCode\" codeListValue=\"creation\"/>\n                                    </gmd:dateType>\n                                </gmd:CI_Date>\n                            </gmd:date>\n                            <gmd:date>\n                                <gmd:CI_Date>\n                                    <gmd:date>\n                                        <gco:Date xmlns:gco=\"http://www.isotc211.org/2005/gco\">2007-12-14</gco:Date>\n                                    </gmd:date>\n                                    <gmd:dateType>\n                                        <CI_DateTypeCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://metadata.dgiwg.org/codelistRegistry?CI_DateTypeCode\" codeListValue=\"revision\"/>\n                                    </gmd:dateType>\n                                </gmd:CI_Date>\n                            </gmd:date>\n                        </gmd:CI_Citation>\n                    </gmd:citation>\n                    <gmd:abstract>\n                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Übersicht über die Kartendienste (WMS-Dienste) des Landesamts für Geologie, Rohstoffe und Bergbau in Baden-Württemberg</gco:CharacterString>\n                    </gmd:abstract>\n                    <gmd:pointOfContact>\n                        <idf:idfResponsibleParty>\n                            <gmd:individualName>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Michael Hils</gco:CharacterString>\n                            </gmd:individualName>\n                            <gmd:organisationName>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Bundesanstalt für Gewässerkunde</gco:CharacterString>\n                            </gmd:organisationName>\n                            <gmd:contactInfo>\n                                <gmd:CI_Contact>\n                                    <gmd:phone>\n                                        <gmd:CI_Telephone>\n                                            <gmd:voice>\n                                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">+49 261 1306 5295</gco:CharacterString>\n                                            </gmd:voice>\n                                            <gmd:facsimile>\n                                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">+49 (0)261 1306 5302</gco:CharacterString>\n                                            </gmd:facsimile>\n                                        </gmd:CI_Telephone>\n                                    </gmd:phone>\n                                    <gmd:address>\n                                        <gmd:CI_Address>\n                                            <gmd:deliveryPoint>\n                                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Am Mainzer Tor 1</gco:CharacterString>\n                                            </gmd:deliveryPoint>\n                                            <gmd:city>\n                                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Koblenz</gco:CharacterString>\n                                            </gmd:city>\n                                            <gmd:administrativeArea>\n                                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Rheinland-Pfalz</gco:CharacterString>\n                                            </gmd:administrativeArea>\n                                            <gmd:postalCode>\n                                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">56068</gco:CharacterString>\n                                            </gmd:postalCode>\n                                            <gmd:country>\n                                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Deutschland</gco:CharacterString>\n                                            </gmd:country>\n                                            <gmd:electronicMailAddress>\n                                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Hils@bafg.de</gco:CharacterString>\n                                            </gmd:electronicMailAddress>\n                                        </gmd:CI_Address>\n                                    </gmd:address>\n                                </gmd:CI_Contact>\n                            </gmd:contactInfo>\n                            <gmd:role>\n                                <gmd:CI_RoleCode codeList=\"https://standards.iso.org/iso/19139/resources/gmxCodelists.xm#CI_RoleCode\" codeListValue=\"originator\">originator</gmd:CI_RoleCode>\n                            </gmd:role>\n                        </idf:idfResponsibleParty>\n                    </gmd:pointOfContact>\n                    <gmd:descriptiveKeywords>\n                        <gmd:MD_Keywords>\n                            <gmd:keyword>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Geologie</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:type>\n                                <MD_KeywordTypeCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://metadata.dgiwg.org/codelistRegistry?MD_KeywordTypeCode\" codeListValue=\"theme\"/>\n                            </gmd:type>\n                        </gmd:MD_Keywords>\n                    </gmd:descriptiveKeywords>\n                    <gmd:language>\n                        <LanguageCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://www.loc.gov/standards/iso639-2/\" codeListValue=\"ger\">de</LanguageCode>\n                    </gmd:language>\n                    <gmd:characterSet>\n                        <MD_CharacterSetCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"http://metadata.dgiwg.org/codelistRegistry?MD_CharacterSetCode\" codeListValue=\"utf8\"/>\n                    </gmd:characterSet>\n                    <gmd:topicCategory>\n                        <gmd:MD_TopicCategoryCode>environment</gmd:MD_TopicCategoryCode>\n                    </gmd:topicCategory>\n                    <gmd:extent>\n                        <gmd:EX_Extent>\n                            <gmd:geographicElement>\n                                <gmd:EX_GeographicBoundingBox>\n                                    <gmd:extentTypeCode>\n                                        <gco:Boolean xmlns:gco=\"http://www.isotc211.org/2005/gco\">true</gco:Boolean>\n                                    </gmd:extentTypeCode>\n                                    <gmd:westBoundLongitude>\n                                        <gco:Decimal xmlns:gco=\"http://www.isotc211.org/2005/gco\">7.32</gco:Decimal>\n                                    </gmd:westBoundLongitude>\n                                    <gmd:eastBoundLongitude>\n                                        <gco:Decimal xmlns:gco=\"http://www.isotc211.org/2005/gco\">10.65</gco:Decimal>\n                                    </gmd:eastBoundLongitude>\n                                    <gmd:southBoundLatitude>\n                                        <gco:Decimal xmlns:gco=\"http://www.isotc211.org/2005/gco\">47.28</gco:Decimal>\n                                    </gmd:southBoundLatitude>\n                                    <gmd:northBoundLatitude>\n                                        <gco:Decimal xmlns:gco=\"http://www.isotc211.org/2005/gco\">49.91</gco:Decimal>\n                                    </gmd:northBoundLatitude>\n                                </gmd:EX_GeographicBoundingBox>\n                            </gmd:geographicElement>\n                        </gmd:EX_Extent>\n                    </gmd:extent>\n                </gmd:MD_DataIdentification>\n            </gmd:identificationInfo>\n            <gmd:distributionInfo>\n                <gmd:MD_Distribution>\n                    <gmd:transferOptions>\n                        <gmd:MD_DigitalTransferOptions>\n                            <gmd:onLine>\n                                <gmd:CI_OnlineResource>\n                                    <gmd:linkage>\n                                        <gmd:URL>https://maps.lgrb-bw.de/</gmd:URL>\n                                    </gmd:linkage>\n                                </gmd:CI_OnlineResource>\n                            </gmd:onLine>\n                        </gmd:MD_DigitalTransferOptions>\n                    </gmd:transferOptions>\n                </gmd:MD_Distribution>\n            </gmd:distributionInfo>\n            <gmd:dataQualityInfo>\n                <gmd:DQ_DataQuality>\n                    <gmd:scope>\n                        <gmd:DQ_Scope>\n                            <gmd:level>\n                                <MD_ScopeCode xmlns=\"http://www.isotc211.org/2005/gmd\" codeList=\"https://standards.iso.org/iso/19139/resources/gmxCodelists.xm#MD_ScopeCode\" codeListValue=\"application\"/>\n                            </gmd:level>\n                            <gmd:levelDescription xmlns:gco=\"http://www.isotc211.org/2005/gco\" gco:nilReason=\"inapplicable\"/>\n                        </gmd:DQ_Scope>\n                    </gmd:scope>\n                    <gmd:lineage>\n                        <gmd:LI_Lineage>\n                            <gmd:statement>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Verantwortlich für den Inhalt ist das Regierungspräsidium Freiburg, Landesamt für Geologie, Rohstoffe und Bergbau</gco:CharacterString>\n                            </gmd:statement>\n                        </gmd:LI_Lineage>\n                    </gmd:lineage>\n                </gmd:DQ_DataQuality>\n            </gmd:dataQualityInfo>\n        </idf:idfMdMetadata>\n  </body>\n</html>\n",
+  "is_hvd": false,
+  "isfolder": "false",
+  "location": "",
+  "metadata": {
+    "created": null,
+    "modified": "2020-03-25T00:00:00.000Z"
+  },
+  "modified": "2020-03-25T00:00:00.000Z",
+  "object_access": {
+    "restriction_key": [],
+    "restriction_value": []
+  },
+  "partner": [
+    "bund"
+  ],
+  "provider": [
+    "wsv"
+  ],
+  "sort_hash": "203b1cf3fd499ef6fb05923e792d94fcc3a3a515",
+  "spatial": {
+    "geometries": [
+      {
+        "bbox": [
+          7.320000000000001,
+          47.28,
+          10.65,
+          49.91
+        ],
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              7.320000000000001,
+              49.91
+            ],
+            [
+              7.320000000000001,
+              47.28
+            ],
+            [
+              10.65,
+              47.28
+            ],
+            [
+              10.65,
+              49.91
+            ],
+            [
+              7.320000000000001,
+              49.91
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "spatial_system": {
+    "referencesystem_value": []
+  },
+  "summary": "Übersicht über die Kartendienste (WMS-Dienste) des Landesamts für Geologie, Rohstoffe und Bergbau in Baden-Württemberg",
+  "t0113_dataset_reference": [
+    {
+      "type": "1",
+      "reference_date": "20071214010000000"
+    },
+    {
+      "type": "3",
+      "reference_date": "20071214010000000"
+    }
+  ],
+  "t011_obj_geo": {
+    "hierarchy_level": false,
+    "keyc_incl_w_dataset": false,
+    "referencesystem_id": [],
+    "special_base": "Verantwortlich für den Inhalt ist das Regierungspräsidium Freiburg, Landesamt für Geologie, Rohstoffe und Bergbau"
+  },
+  "t011_obj_geo_keyc": [],
+  "t011_obj_geo_scale": [],
+  "t011_obj_geo_spatial_rep": {},
+  "t011_obj_geo_supplinfo": {},
+  "t011_obj_geo_symc": [],
+  "t011_obj_geo_vector": [],
+  "t011_obj_serv": {},
+  "t011_obj_serv_op_connpoint": [],
+  "t011_obj_serv_op_platform": [],
+  "t011_obj_serv_operation": [],
+  "t011_obj_serv_version": {
+    "version_value": ""
+  },
+  "t011_obj_topic_cat": [
+    {
+      "topic_category": "7"
+    }
+  ],
+  "t012_obj_adr": [
+    {
+      "typ": "11",
+      "special_ref": "0"
+    },
+    {
+      "typ": "6",
+      "special_ref": "0"
+    }
+  ],
+  "t017_url_ref": [
+    {
+      "descr": "",
+      "content": "",
+      "url_link": "https://maps.lgrb-bw.de/",
+      "special_ref": "3100"
+    }
+  ],
+  "t01_object": {
+    "data_language_code": "de",
+    "dataset_character_set": "4",
+    "metadata_character_set": "4",
+    "metadata_language_code": "de",
+    "metadata_standard_name": "ISO 19115",
+    "metadata_standard_version": "2003/Cor.1:2006",
+    "mod_time": "2020-03-25T00:00:00.000Z",
+    "obj_class": "6",
+    "obj_id": "68c986b1-a98a-4af8-a504-30f542119bbf",
+    "org_obj_id": "68c986b1-a98a-4af8-a504-30f542119bbf",
+    "time_status": "900001",
+    "vertical_extent_vdatum": "5105"
+  },
+  "t021_communication": [
+    {
+      "comm_type": "Telefon",
+      "comm_value": "+49 261 1306 5295"
+    },
+    {
+      "comm_type": "Fax",
+      "comm_value": "+49 (0)261 1306 5302"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "Hils@bafg.de"
+    },
+    {
+      "comm_type": "Telefon",
+      "comm_value": "+49 261 1306 5295"
+    },
+    {
+      "comm_type": "Fax",
+      "comm_value": "+49 (0)261 1306 5302"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "Hils@bafg.de"
+    }
+  ],
+  "t02_address": [
+    {
+      "city": "Koblenz",
+      "street": "Am Mainzer Tor 1",
+      "lastname": "Michael Hils",
+      "postcode": "56068",
+      "institution": "Bundesanstalt für Gewässerkunde",
+      "country_code": "Deutschland",
+      "administrative_area_value": "Rheinland-Pfalz"
+    },
+    {
+      "city": "Koblenz",
+      "street": "Am Mainzer Tor 1",
+      "lastname": "Michael Hils",
+      "postcode": "56068",
+      "institution": "Bundesanstalt für Gewässerkunde",
+      "country_code": "Deutschland",
+      "administrative_area_value": "Rheinland-Pfalz",
+      "identificationinfo_administrative_area_value": "Rheinland-Pfalz"
+    }
+  ],
+  "t04_search": {
+    "searchterm": "Geologie",
+    "type": "F"
+  },
+  "title": "Kartendienste LGRB Baden-Württemberg - Geologie",
+  "uuid": "68c986b1-a98a-4af8-a504-30f542119bbf",
+  "x1": "7.32",
+  "x2": "10.65",
+  "y1": "47.28",
+  "y2": "49.91"
+}
