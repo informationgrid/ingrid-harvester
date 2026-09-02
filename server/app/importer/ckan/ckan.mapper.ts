@@ -439,10 +439,14 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
     }
 
     getCreator(): Person[] {
-        return [{
-            name: this.source.author,
-            mbox: this.source.author_email
-        }];
+        let creator: Person;
+        if (this.source.author) {
+            creator = {
+                name: this.source.author,
+                mbox: this.source.author_email
+            };
+        }
+        return creator ? [creator] : [];
     }
 
     getGroups(): string[] {
