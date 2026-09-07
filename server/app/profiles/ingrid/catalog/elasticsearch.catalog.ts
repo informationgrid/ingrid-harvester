@@ -343,6 +343,22 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
             document.references ??= [];
             document.references.push(...additionalDoc.references);
         }
+        // additionalDoc is another already-mapped IngridIndexDocument from the same coupling
+        // (service<->dataset), resolved via the `coupling` table / getBuckets.sql join - only
+        // there (not in a per-record mapper) are both sides of the relationship available at once
+        const additionalDocIsService = additionalDoc.metadata?.document_type === 'InGridGeoService';
+        document.ingrid.cross_references ??= [];
+        document.ingrid.cross_references.push({
+            uuid: additionalDoc.id,
+            name: additionalDoc.title,
+            document_type: additionalDoc.metadata?.document_type,
+            description: additionalDoc.description,
+            // matches the old codelist-2000 labels: 3600 "Gekoppelte Daten" when the coupled
+            // record is the service (viewed from the dataset), 3345 "Basisdaten" when it's the
+            // dataset (viewed from the service) - see codelist_2000.xml
+            reference_type: additionalDocIsService ? 'Gekoppelte Daten' : 'Basisdaten',
+            direction: additionalDocIsService ? 'IN' : 'OUT',
+        });
     }
 
     private createIdfForWfs(document: IngridIndexDocument, duplicates: Map<string | number, BucketDocument<IndexDocument>>) {
