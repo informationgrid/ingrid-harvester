@@ -31,11 +31,11 @@ rm -Rf %{buildroot}*
 mkdir -p %{target}
 ls -al ${WORKSPACE}/build
 cp -r ${WORKSPACE}/build/* %{target}
-ls -al %{target}
 
 # Copy over the systemd unit file
 mkdir -p %{buildroot}%{systemd_dir}
 cp ${WORKSPACE}/rpm/%{ingrid_unit_name} %{buildroot}%{systemd_dir}
+install -D ${WORKSPACE}/rpm/ingrid-harvester.sysconfig %{buildroot}/%{_sysconfdir}/sysconfig/ingrid-harvester
 
 %files
 %defattr(0644,ingrid,ingrid,0755)
@@ -46,6 +46,7 @@ cp ${WORKSPACE}/rpm/%{ingrid_unit_name} %{buildroot}%{systemd_dir}
 %config(noreplace) %{install_root}/config-general.json
 %config(noreplace) %{install_root}/server-config.json
 %config(noreplace) %{install_root}/users.json
+%config(noreplace) %attr(640, root, ingrid) %{_sysconfdir}/sysconfig/ingrid-harvester
 
 ################################################################################
 %pre

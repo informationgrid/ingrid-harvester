@@ -4,11 +4,12 @@ After=network.target
 
 [Service]
 Environment=NODE_ENV=production
+EnvironmentFile=-/etc/sysconfig/ingrid-harvester
 User=ingrid
 WorkingDirectory=/opt/ingrid/ingrid-harvester
-ExecStart=/usr/local/bin/pm2 start ./app/index.js -- --profile=ingrid
+ExecStart=/usr/local/bin/pm2 start ./app/index.js
 ExecStop=/usr/local/bin/pm2 delete ./app/index.js
-ExecReload=/usr/local/bin/pm2 restart ./app/index.js -- --profile=ingrid
+ExecReload=/usr/local/bin/pm2 restart ./app/index.js
 RemainAfterExit=yes
 
 [Install]
