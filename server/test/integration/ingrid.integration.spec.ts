@@ -23,13 +23,15 @@
 
 import { expect } from 'chai';
 import type { CswSettings } from '../../app/importer/csw/csw.settings.js';
+import type { WfsSettings } from '../../app/importer/wfs/wfs.settings.js';
 import { Summary } from '../../app/model/summary.js';
 import { PostgresUtils } from '../../app/persistence/postgres.utils.js';
 import cswEbaConfig from '../data/csw/eba/config.json' with { type: 'json' };
 import cswGdideConfig from '../data/csw/gdide/config.json' with { type: 'json' };
+import wfsZdmKuestendaten from '../data/wfs/zdm-kuestendaten/config.json' with { type: 'json' };
 import { runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
 import { getTestDatabaseConfig, resetDatabase } from '../utils/postgres-container.js';
-import { cswTestcase } from './base.testcases.js';
+import { cswTestcase, wfsTestcase } from './base.testcases.js';
 
 describe('Ingrid Integration Tests', function () {
     this.timeout(60000);
@@ -49,6 +51,37 @@ describe('Ingrid Integration Tests', function () {
             ...cswTestcase,
             settings: cswEbaConfig as CswSettings,
             baseFixture: 'test/data/csw/eba'
+        });
+    });
+
+    it('should harvest records from WFS and push them to ES (ZDM Kuestendaten)', async () => {
+        await runImporterIntegrationTest({
+            ...wfsTestcase,
+            settings: wfsZdmKuestendaten as WfsSettings,
+            baseFixture: 'test/data/wfs/zdm-kuestendaten',
+            mocks: [
+                ...wfsTestcase.mocks,
+                {
+                    match: { query: { request: 'GetFeature', typename: 'ms:DeichverbandZustaendigkeitBeschriftung', resultType: 'hits' }},
+                    fixture: 'input/DeichverbandZustaendigkeitBeschriftung/GetFeature_hits.xml'
+                },
+                {
+                    match: { query: { request: 'DescribeFeatureType', typename: 'ms:DeichverbandZustaendigkeitBeschriftung' }},
+                    fixture: 'input/DeichverbandZustaendigkeitBeschriftung/DescribeFeatureType.xml'
+                },
+                {
+                    match: { query: { request: 'GetFeature', typename: 'ms:DeichverbandZustaendigkeitBeschriftung', resultType: 'results' }},
+                    fixture: 'input/DeichverbandZustaendigkeitBeschriftung/GetFeature.xml'
+                },
+                {
+                    match: { query: { request: 'GetFeature', typename: 'ms:ElbeFrKilometrierung', resultType: 'hits' }},
+                    fixture: 'input/ElbeFrKilometrierung/GetFeature_hits.xml'
+                },
+                {
+                    match: { query: { request: 'DescribeFeatureType', typename: 'ms:ElbeFrKilometrierung' }},
+                    fixture: 'input/ElbeFrKilometrierung/DescribeFeatureType.xml'
+                }
+            ]
         });
     });
 
