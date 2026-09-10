@@ -1,0 +1,410 @@
+{
+  "collection": {
+    "name": "Harvester"
+  },
+  "contacts": [
+    {
+      "mbox": "geodienste@rostock.de",
+      "name": "Hanse- und Universitätsstadt Rostock",
+      "role": 11
+    }
+  ],
+  "content": [
+    "opendata-hro",
+    "mv",
+    "Rostock",
+    "metadata",
+    "Harvester",
+    "false",
+    "98155429-d260-4d6c-b1d0-3dd0c94d6ee0",
+    "98155429-d260-4d6c-b1d0-3dd0c94d6ee0",
+    "Harvester",
+    "https://www.opendata-hro.de/catalog.rdf",
+    "dcat",
+    "https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0",
+    "f30d88a72a94146b4418e96c3946b3a84da63a04",
+    "98155429-d260-4d6c-b1d0-3dd0c94d6ee0",
+    "Trinkwasserspender",
+    "Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock",
+    "https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0",
+    11,
+    "Hanse- und Universitätsstadt Rostock",
+    "geodienste@rostock.de",
+    "Brunnen",
+    "",
+    "FREE",
+    "Infrastruktur",
+    "",
+    "FREE",
+    "Planung",
+    "",
+    "FREE",
+    "Stadtplanung",
+    "",
+    "FREE",
+    "Trinkwasser",
+    "",
+    "FREE",
+    "Trinkwasserversorgung",
+    "",
+    "FREE",
+    "Wasserbrunnen",
+    "",
+    "FREE",
+    "Regierung und öffentlicher Sektor",
+    "10",
+    "THEMES",
+    "Regionen und Städte",
+    "11",
+    "THEMES",
+    "CSV",
+    "https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.csv",
+    "Trinkwasserspender",
+    "Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
+    378,
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "XLSX",
+    "https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.xlsx",
+    "Trinkwasserspender",
+    "Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
+    3425,
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "GEOJSON",
+    "https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.json",
+    "Trinkwasserspender",
+    "Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
+    826,
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "KML",
+    "https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.kml",
+    "Trinkwasserspender",
+    "Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
+    1731,
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "GML",
+    "https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.gml",
+    "Trinkwasserspender",
+    "Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
+    3125,
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "https://geo.sv.rostock.de/geodienste/trinkwasserspender/wms",
+    "Trinkwasserspender in der Hanse- und Universitätsstadt Rostock",
+    "Diese Karte umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "https://geo.sv.rostock.de/geodienste/trinkwasserspender/wfs",
+    "Trinkwasserspender in der Hanse- und Universitätsstadt Rostock",
+    "Diese Daten umfassen die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "https://geo.sv.rostock.de/inspire/us-govserv-drinkingfountains/view?service=WMS&version=1.3.0&request=GetCapabilities",
+    "Trinkwasserspender in der Hanse- und Universitätsstadt Rostock",
+    "Diese Karte umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock.",
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "https://geo.sv.rostock.de/inspire/us-govserv-drinkingfountains/download?service=WFS&version=2.0.0&request=GetCapabilities",
+    "Trinkwasserspender in der Hanse- und Universitätsstadt Rostock",
+    "Diese Daten umfassen die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock.",
+    "Creative Commons CC Zero License (cc-zero)",
+    "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "http://dcat-ap.de/def/politicalGeocoding/Level/administrativeDistrict",
+    "Polygon",
+    11.99143,
+    54.03856,
+    11.99143,
+    54.26196,
+    12.31306,
+    54.26196,
+    12.31306,
+    54.03856,
+    11.99143,
+    54.03856,
+    "",
+    ""
+  ],
+  "dataSourceName": "Harvester",
+  "datatype": [
+    "metadata"
+  ],
+  "dcat": {
+    "landingPage": "https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0"
+  },
+  "description": "Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock",
+  "distributions": [
+    {
+      "title": "Trinkwasserspender",
+      "format": [
+        "CSV"
+      ],
+      "issued": "2024-07-16T07:22:00.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "byteSize": 378,
+      "modified": "2026-08-20T10:07:17.233Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.csv",
+      "description": "Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Trinkwasserspender",
+      "format": [
+        "XLSX"
+      ],
+      "issued": "2024-07-16T07:22:00.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "byteSize": 3425,
+      "modified": "2026-08-20T10:07:17.233Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.xlsx",
+      "description": "Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Trinkwasserspender",
+      "format": [
+        "GEOJSON"
+      ],
+      "issued": "2024-07-16T07:22:00.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "byteSize": 826,
+      "modified": "2026-08-20T10:07:17.233Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.json",
+      "description": "Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Trinkwasserspender",
+      "format": [
+        "KML"
+      ],
+      "issued": "2024-07-16T07:22:00.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "byteSize": 1731,
+      "modified": "2026-08-20T10:07:17.233Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.kml",
+      "description": "Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Trinkwasserspender",
+      "format": [
+        "GML"
+      ],
+      "issued": "2024-07-16T07:22:00.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "byteSize": 3125,
+      "modified": "2026-08-20T10:07:17.233Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.gml",
+      "description": "Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Trinkwasserspender in der Hanse- und Universitätsstadt Rostock",
+      "format": [],
+      "issued": "2024-07-16T07:22:00.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "modified": "2026-08-20T10:07:17.233Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/geodienste/trinkwasserspender/wms",
+      "description": "Diese Karte umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Trinkwasserspender in der Hanse- und Universitätsstadt Rostock",
+      "format": [],
+      "issued": "2024-07-16T07:22:00.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "modified": "2026-08-20T10:07:17.233Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/geodienste/trinkwasserspender/wfs",
+      "description": "Diese Daten umfassen die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Trinkwasserspender in der Hanse- und Universitätsstadt Rostock",
+      "format": [],
+      "issued": "2024-07-16T07:22:00.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "modified": "2026-08-20T10:07:17.233Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/inspire/us-govserv-drinkingfountains/view?service=WMS&version=1.3.0&request=GetCapabilities",
+      "description": "Diese Karte umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    },
+    {
+      "title": "Trinkwasserspender in der Hanse- und Universitätsstadt Rostock",
+      "format": [],
+      "issued": "2024-07-16T07:22:00.000Z",
+      "license": {
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "name": "Creative Commons CC Zero License (cc-zero)"
+      },
+      "modified": "2026-08-20T10:07:17.233Z",
+      "languages": [],
+      "access_url": "https://geo.sv.rostock.de/inspire/us-govserv-drinkingfountains/download?service=WFS&version=2.0.0&request=GetCapabilities",
+      "description": "Diese Daten umfassen die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
+    }
+  ],
+  "extras": {
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-08-27T14:11:12.090Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-08-27T14:11:11.942Z",
+      "merged_from": [],
+      "modified": null,
+      "source": {
+        "portal_link": "https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0",
+        "source_base": "https://www.opendata-hro.de/catalog.rdf",
+        "source_type": "dcat"
+      }
+    }
+  },
+  "iPlugId": "opendata-hro",
+  "id": "98155429-d260-4d6c-b1d0-3dd0c94d6ee0",
+  "isfolder": "false",
+  "keywords": [
+    {
+      "id": "",
+      "term": "Brunnen",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "Infrastruktur",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "Planung",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "Stadtplanung",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "Trinkwasser",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "Trinkwasserversorgung",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "Wasserbrunnen",
+      "source": "FREE"
+    },
+    {
+      "id": "10",
+      "term": "Regierung und öffentlicher Sektor",
+      "source": "THEMES"
+    },
+    {
+      "id": "11",
+      "term": "Regionen und Städte",
+      "source": "THEMES"
+    }
+  ],
+  "metadata": {
+    "created": null,
+    "modified": "2026-08-20T10:07:17.229Z"
+  },
+  "modified": "2026-08-20T10:07:17.229Z",
+  "partner": [
+    "mv"
+  ],
+  "political_geocoding_level_uri": "http://dcat-ap.de/def/politicalGeocoding/Level/administrativeDistrict",
+  "provider": [
+    "Rostock"
+  ],
+  "rdf": "<?xml version='1.0' encoding='UTF-8'?><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"><dcat:Dataset xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" rdf:about=\"https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0\" xmlns:dcat=\"http://www.w3.org/ns/dcat#\">\n    <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Trinkwasserspender</dct:title>\n    <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock</dct:description>\n    <dct:identifier xmlns:dct=\"http://purl.org/dc/terms/\">98155429-d260-4d6c-b1d0-3dd0c94d6ee0</dct:identifier>\n    <dcat:keyword>Brunnen</dcat:keyword>\n    <dcat:keyword>Infrastruktur</dcat:keyword>\n    <dcat:keyword>Planung</dcat:keyword>\n    <dcat:keyword>Stadtplanung</dcat:keyword>\n    <dcat:keyword>Trinkwasser</dcat:keyword>\n    <dcat:keyword>Trinkwasserversorgung</dcat:keyword>\n    <dcat:keyword>Wasserbrunnen</dcat:keyword>\n    <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2024-07-16T09:21:56.254051</dct:issued>\n    <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-20T12:07:17.229554</dct:modified>\n    <dcat:contactPoint>\n      <vcard:Organization rdf:nodeID=\"N1d93f1400d4f4b0a95198a468ca6ce8a\" xmlns:vcard=\"http://www.w3.org/2006/vcard/ns#\">\n        <vcard:fn>Hanse- und Universitätsstadt Rostock</vcard:fn>\n        <vcard:hasEmail rdf:resource=\"mailto:geodienste@rostock.de\"/>\n        <vcard:hasEmail rdf:resource=\"mailto:mailto:geodienste@rostock.de\"/>\n      </vcard:Organization>\n    </dcat:contactPoint>\n    <dct:publisher xmlns:dct=\"http://purl.org/dc/terms/\">\n      <foaf:Agent rdf:about=\"https://www.opendata-hro.de/organization/b952e781-ab4c-456a-8e7a-2845f7efaf83\" xmlns:foaf=\"http://xmlns.com/foaf/0.1/\">\n        <foaf:name>Hanse- und Universitätsstadt Rostock</foaf:name>\n      </foaf:Agent>\n    </dct:publisher>\n    <dct:spatial xmlns:dct=\"http://purl.org/dc/terms/\">\n      <dct:Location rdf:nodeID=\"N625e7d7dc7fa428489b30be651e7677b\">\n        <locn:geometry rdf:datatype=\"http://www.opengis.net/ont/geosparql#wktLiteral\" xmlns:locn=\"http://www.w3.org/ns/locn#\">POLYGON ((11.9914 54.0386, 11.9914 54.2620, 12.3131 54.2620, 12.3131 54.0386, 11.9914 54.0386))</locn:geometry>\n        <locn:geometry rdf:datatype=\"https://www.iana.org/assignments/media-types/application/vnd.geo+json\" xmlns:locn=\"http://www.w3.org/ns/locn#\">{\"type\":\"Polygon\", \"coordinates\":[[[11.99143, 54.03856], [11.99143, 54.26196], [12.31306, 54.26196], [12.31306, 54.03856], [11.99143, 54.03856]]]}</locn:geometry>\n      </dct:Location>\n    </dct:spatial>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0/resource/9a4ae82b-dac9-4dc8-bb9b-87f67fe60b64\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Trinkwasserspender</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:mediaType rdf:resource=\"https://www.iana.org/assignments/media-types/text/csv\"/>\n        <dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/CSV\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.csv\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2024-07-16T09:22:00</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-20T12:07:17.233521</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-20T12:07:14</dct:modified>\n        <dcat:byteSize rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\">378</dcat:byteSize>\n        <spdx:checksum xmlns:spdx=\"http://spdx.org/rdf/terms#\">\n          <spdx:Checksum rdf:nodeID=\"N588bf940798642b8bd83c2d54a657659\">\n            <spdx:checksumValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#hexBinary\">1fcb4e7f82c37227e37b1b80f60a57725dd91ada0fdb3f2cf0ef7be3073ae87c</spdx:checksumValue>\n            <spdx:algorithm rdf:resource=\"http://dcat-ap.de/def/hashAlgorithms/sha/256\"/>\n          </spdx:Checksum>\n        </spdx:checksum>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcat:downloadURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.csv\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0/resource/86903c0c-8c4f-49b8-8af9-05fa6bca0879\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Trinkwasserspender</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:mediaType rdf:resource=\"https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\"/>\n        <dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/XLSX\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.xlsx\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2024-07-16T09:22:00</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-20T12:07:17.233597</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-20T12:07:14</dct:modified>\n        <dcat:byteSize rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\">3425</dcat:byteSize>\n        <spdx:checksum xmlns:spdx=\"http://spdx.org/rdf/terms#\">\n          <spdx:Checksum rdf:nodeID=\"Nb01aba7ba2a24cf1af8aba3eaeb7cc2a\">\n            <spdx:checksumValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#hexBinary\">71c7899824591761902c15c68c0a8ec640fcf365a6e0b3e0b84e0dd473d34428</spdx:checksumValue>\n            <spdx:algorithm rdf:resource=\"http://dcat-ap.de/def/hashAlgorithms/sha/256\"/>\n          </spdx:Checksum>\n        </spdx:checksum>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcat:downloadURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.xlsx\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0/resource/dcd1b3f5-32c9-4017-b638-8ad5872ea672\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Trinkwasserspender</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:mediaType rdf:resource=\"https://www.iana.org/assignments/media-types/application/geo+json\"/>\n        <dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/GEOJSON\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.json\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2024-07-16T09:22:00</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-20T12:07:17.233651</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-20T12:07:14</dct:modified>\n        <dcat:byteSize rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\">826</dcat:byteSize>\n        <spdx:checksum xmlns:spdx=\"http://spdx.org/rdf/terms#\">\n          <spdx:Checksum rdf:nodeID=\"N9e7fc9c84c18466da8c2939296d16326\">\n            <spdx:checksumValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#hexBinary\">aef2859ed5302e1416f217a86c7e8dcf20daf6b070149dc9ab653c27b5284156</spdx:checksumValue>\n            <spdx:algorithm rdf:resource=\"http://dcat-ap.de/def/hashAlgorithms/sha/256\"/>\n          </spdx:Checksum>\n        </spdx:checksum>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcat:downloadURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.json\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0/resource/18e65cfe-e791-4146-ad59-8ffa8793e358\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Trinkwasserspender</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:mediaType rdf:resource=\"https://www.iana.org/assignments/media-types/application/vnd.google-earth.kml+xml\"/>\n        <dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/KML\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.kml\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2024-07-16T09:22:00</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-20T12:07:17.233701</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-20T12:07:14</dct:modified>\n        <dcat:byteSize rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\">1731</dcat:byteSize>\n        <spdx:checksum xmlns:spdx=\"http://spdx.org/rdf/terms#\">\n          <spdx:Checksum rdf:nodeID=\"N86b46deb17f74593a35adf7782c36703\">\n            <spdx:checksumValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#hexBinary\">3b0f7c4f93429f14a4cdf816c47b58955c707aac97dd9e420ea944f0d73d8748</spdx:checksumValue>\n            <spdx:algorithm rdf:resource=\"http://dcat-ap.de/def/hashAlgorithms/sha/256\"/>\n          </spdx:Checksum>\n        </spdx:checksum>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcat:downloadURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.kml\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0/resource/e38e80ee-a6f6-4682-9450-7309ef574581\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Trinkwasserspender</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:mediaType rdf:resource=\"https://www.iana.org/assignments/media-types/application/gml+xml\"/>\n        <dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/GML\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.gml\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2024-07-16T09:22:00</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-20T12:07:17.233752</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-20T12:07:15</dct:modified>\n        <dcat:byteSize rdf:datatype=\"http://www.w3.org/2001/XMLSchema#nonNegativeInteger\">3125</dcat:byteSize>\n        <spdx:checksum xmlns:spdx=\"http://spdx.org/rdf/terms#\">\n          <spdx:Checksum rdf:nodeID=\"N25840c8354314dd6a7ee99709b43ba8d\">\n            <spdx:checksumValue rdf:datatype=\"http://www.w3.org/2001/XMLSchema#hexBinary\">0eb96adc2cf3a42a5623797c2b767d3b6b64c22d5ee887a5ee605ccb09846ca9</spdx:checksumValue>\n            <spdx:algorithm rdf:resource=\"http://dcat-ap.de/def/hashAlgorithms/sha/256\"/>\n          </spdx:Checksum>\n        </spdx:checksum>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcat:downloadURL rdf:resource=\"https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.gml\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0/resource/96ececd7-8e38-4cb2-adf3-2ee3d20b3a54\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Trinkwasserspender in der Hanse- und Universitätsstadt Rostock</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Diese Karte umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/geodienste/trinkwasserspender/wms\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2024-07-16T09:22:00</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-20T12:07:17.233801</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-20T12:07:15</dct:modified>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0/resource/baf0a879-e904-4496-b92c-2edaab81cbe0\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Trinkwasserspender in der Hanse- und Universitätsstadt Rostock</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Diese Daten umfassen die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/geodienste/trinkwasserspender/wfs\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2024-07-16T09:22:00</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-20T12:07:17.233849</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-20T12:07:15</dct:modified>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0/resource/f8151e7b-12d5-4b77-8085-6a95d2100fde\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Trinkwasserspender in der Hanse- und Universitätsstadt Rostock</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Diese Karte umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/inspire/us-govserv-drinkingfountains/view?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2024-07-16T09:22:00</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-20T12:07:17.233899</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-20T12:07:15</dct:modified>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:distribution>\n      <dcat:Distribution rdf:about=\"https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0/resource/9096c0c1-4211-4dfe-bc76-84e89b9f308b\">\n        <dct:title xmlns:dct=\"http://purl.org/dc/terms/\">Trinkwasserspender in der Hanse- und Universitätsstadt Rostock</dct:title>\n        <dct:description xmlns:dct=\"http://purl.org/dc/terms/\">Diese Daten umfassen die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock.</dct:description>\n        <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dcat:accessURL rdf:resource=\"https://geo.sv.rostock.de/inspire/us-govserv-drinkingfountains/download?service=WFS&amp;version=2.0.0&amp;request=GetCapabilities\"/>\n        <dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2024-07-16T09:22:00</dct:issued>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-20T12:07:17.233950</dct:modified>\n        <dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\" xmlns:dct=\"http://purl.org/dc/terms/\">2026-08-20T12:07:15</dct:modified>\n        <adms:status rdf:resource=\"http://purl.org/adms/status/Completed\" xmlns:adms=\"http://www.w3.org/ns/adms#\"/>\n        <dcatap:availability rdf:resource=\"http://publications.europa.eu/resource/authority/planned-availability/STABLE\" xmlns:dcatap=\"http://data.europa.eu/r5r/\"/>\n        <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n        <dct:rights rdf:resource=\"http://dcat-ap.de/def/licenses/cc-zero\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n      </dcat:Distribution>\n    </dcat:distribution>\n    <dcat:landingPage rdf:resource=\"https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0\"/>\n    <dcat:theme rdf:resource=\"http://publications.europa.eu/resource/authority/data-theme/GOVE\"/>\n    <dcat:theme rdf:resource=\"http://publications.europa.eu/resource/authority/data-theme/REGI\"/>\n    <dcatde:contributorID rdf:resource=\"http://dcat-ap.de/def/contributors/openDataHRO\" xmlns:dcatde=\"http://dcat-ap.de/def/dcatde/\"/>\n    <dcatde:geocodingDescription xmlns:dcatde=\"http://dcat-ap.de/def/dcatde/\">Rostock</dcatde:geocodingDescription>\n    <dcatde:politicalGeocodingLevelURI rdf:resource=\"http://dcat-ap.de/def/politicalGeocoding/Level/administrativeDistrict\" xmlns:dcatde=\"http://dcat-ap.de/def/dcatde/\"/>\n    <dcatde:politicalGeocodingURI rdf:resource=\"http://dcat-ap.de/def/politicalGeocoding/regionalKey/130030000000\" xmlns:dcatde=\"http://dcat-ap.de/def/dcatde/\"/>\n    <dcatde:maintainer xmlns:dcatde=\"http://dcat-ap.de/def/dcatde/\">\n      <foaf:Organization rdf:nodeID=\"N9fbe13bc8cd9440787d666f9210adf74\" xmlns:foaf=\"http://xmlns.com/foaf/0.1/\">\n        <foaf:name>Hanse- und Universitätsstadt Rostock</foaf:name>\n        <foaf:mbox>geodienste@rostock.de</foaf:mbox>\n      </foaf:Organization>\n    </dcatde:maintainer>\n    <dct:accessRights rdf:resource=\"http://publications.europa.eu/resource/authority/access-right/PUBLIC\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n    <dct:conformsTo rdf:resource=\"http://dcat-ap.de/def/dcatde/\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n    <dct:creator xmlns:dct=\"http://purl.org/dc/terms/\">\n      <foaf:Organization rdf:nodeID=\"Naa7ae07333bc4449ae626cc448f01cb8\" xmlns:foaf=\"http://xmlns.com/foaf/0.1/\">\n        <foaf:name>Hanse- und Universitätsstadt Rostock</foaf:name>\n        <foaf:mbox>geodienste@rostock.de</foaf:mbox>\n      </foaf:Organization>\n    </dct:creator>\n    <dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\" xmlns:dct=\"http://purl.org/dc/terms/\"/>\n  </dcat:Dataset></rdf:RDF>",
+  "sort_hash": "f30d88a72a94146b4418e96c3946b3a84da63a04",
+  "spatial": {
+    "geometries": [
+      {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              11.99143,
+              54.03856
+            ],
+            [
+              11.99143,
+              54.26196
+            ],
+            [
+              12.31306,
+              54.26196
+            ],
+            [
+              12.31306,
+              54.03856
+            ],
+            [
+              11.99143,
+              54.03856
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "t01_object": {
+    "obj_id": "98155429-d260-4d6c-b1d0-3dd0c94d6ee0"
+  },
+  "temporal": {
+    "accrual_periodicity": "",
+    "accrual_periodicity_key": ""
+  },
+  "title": "Trinkwasserspender",
+  "uuid": "98155429-d260-4d6c-b1d0-3dd0c94d6ee0"
+}
