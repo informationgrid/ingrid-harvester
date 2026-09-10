@@ -1,0 +1,152 @@
+{
+  "additional_html_1": "https://sgx.geodatenzentrum.de/wms_topplus_open?VERSION=1.3.0&amp;REQUEST=GetMap&amp;CRS=EPSG:25832&amp;BBOX=341906.9197243359,5855632.446696919,839019.2165705939,6112887.390398884&amp;LAYERS=web&amp;FORMAT=image/png&amp;STYLES=&amp;WIDTH=200&amp;HEIGHT=200",
+  "collection": {
+    "name": "Harvester"
+  },
+  "content": [
+    true,
+    "ms:meteorologie",
+    2,
+    "<iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CMeteorologie%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideweser_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:meteorologie%2CWMS%7C%7CMeteorologie%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideweser_ogc%2Fbs%3F%7C%7Cms:meteorologie%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"250\" frameborder=\"0\" style=\"border:0\"></iframe>",
+    "zdm_wfs",
+    "Bund",
+    "BAW",
+    "default",
+    "metadata",
+    "wfs",
+    "IDF_1.0",
+    "dsc_wfs",
+    "Harvester",
+    "false",
+    "68b374c1-0e6a-5a18-8996-548125b712f3",
+    "Harvester",
+    "https://www.kuestendaten.de/DE/dynamisch/tideweser_ogc/bs",
+    "https://www.kuestendaten.de/DE/dynamisch/tideweser_ogc/bs?REQUEST=GetFeature&SERVICE=WFS&VERSION=2.0.0&typeName=ms:meteorologie",
+    "wfs",
+    "68b374c1-0e6a-5a18-8996-548125b712f3",
+    "68b374c1-0e6a-5a18-8996-548125b712f3",
+    "Meteorologie",
+    "WebFeatureService (WFS) Küstendaten, FeatureType: ms:meteorologie<br>Dieser FeatureType umfasst <b>2</b> Feature(s).<br>Meteorologische Daten (Wind, Lufttemperatur, Luftdruck). Herausgeber: WSA Weser-Jade-Nordsee<br>",
+    6.6534610272252,
+    14.3085727776266,
+    52.82723614405201,
+    55.0468026744861,
+    "Polygon",
+    6.6534610272252,
+    55.0468026744861,
+    6.6534610272252,
+    52.82723614405201,
+    14.3085727776266,
+    52.82723614405201,
+    14.3085727776266,
+    55.0468026744861,
+    6.6534610272252,
+    55.0468026744861,
+    6.6534610272252,
+    52.82723614405201,
+    14.3085727776266,
+    55.0468026744861,
+    "https://sgx.geodatenzentrum.de/wms_topplus_open?VERSION=1.3.0&amp;REQUEST=GetMap&amp;CRS=EPSG:25832&amp;BBOX=341906.9197243359,5855632.446696919,839019.2165705939,6112887.390398884&amp;LAYERS=web&amp;FORMAT=image/png&amp;STYLES=&amp;WIDTH=200&amp;HEIGHT=200",
+    "dfde134a7b4890c7629449f69246ee5989c3d3cf"
+  ],
+  "dataSourceName": "Harvester",
+  "datatype": [
+    "default",
+    "metadata",
+    "wfs",
+    "IDF_1.0",
+    "dsc_wfs"
+  ],
+  "distributions": [
+    {
+      "title": null,
+      "format": null,
+      "access_url": null,
+      "operates_on": null
+    }
+  ],
+  "extras": {
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-08-27T08:45:22.249Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-08-27T08:45:16.127Z",
+      "merged_from": [
+        "meteorologie.78352665",
+        "meteorologie.78353585"
+      ],
+      "modified": null,
+      "source": {
+        "raw_data_source": "https://www.kuestendaten.de/DE/dynamisch/tideweser_ogc/bs?REQUEST=GetFeature&SERVICE=WFS&VERSION=2.0.0&typeName=ms:meteorologie",
+        "source_base": "https://www.kuestendaten.de/DE/dynamisch/tideweser_ogc/bs",
+        "source_type": "wfs"
+      }
+    }
+  },
+  "iPlugId": "zdm_wfs",
+  "idf": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><html xmlns=\"http://www.portalu.de/IDF/1.0\"><head/><body><h1>Meteorologie</h1><p>WebFeatureService (WFS) Küstendaten, FeatureType: ms:meteorologie&lt;br&gt;Dieser FeatureType umfasst &lt;b&gt;2&lt;/b&gt; Feature(s).&lt;br&gt;Meteorologische Daten (Wind, Lufttemperatur, Luftdruck). Herausgeber: WSA Weser-Jade-Nordsee&lt;br&gt;</p><h2>Ort:</h2><ul><li>Nord: 55.0468026744861</li><li>West: 6.6534610272252</li><li>Ost: 14.3085727776266</li><li>S&amp;uuml;d: 52.827236144052</li></ul><div>&lt;iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CMeteorologie%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideweser_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:meteorologie%2CWMS%7C%7CMeteorologie%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideweser_ogc%2Fbs%3F%7C%7Cms:meteorologie%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"450\" frameborder=\"0\" style=\"border:0\"&gt;&lt;/iframe&gt;</div><br/><h2>Details:</h2><h4>Feature Attribute:</h4><ul><li>msGeometry</li><li>OBJEKT_ID</li><li>STATION_ID</li><li>STATION_NAME</li><li>STATION_BESCHRIFT</li><li>OBERTHEMA_ID</li><li>STATION_AKTIV</li><li>GEWAESSER</li><li>STATIONSART</li><li>STROMKILOMETER</li><li>FOTO</li><li>BEMERKUNG</li><li>BEMERKUNG_URL</li><li>ORGANISATION</li><li>ZEITZONE</li><li>HOEHE_STATION</li><li>SENSOR</li><li>RECHTSWERT</li><li>HOCHWERT</li><li>PORTAL_TIDEELBE</li><li>PORTAL_NOK</li><li>PORTAL_OSK</li><li>PORTAL_NSK</li><li>PORTAL_TIDEWESER</li></ul><br/><h2>Features:</h2>\n<h4>meteorologie.78352665</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 6003770.703000, 427674.713000 / 6003770.703000, 427674.713000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 6003770.703000</li><li>West: 427674.713000</li><li>Ost: 427674.713000</li><li>S&amp;uuml;d: 6003770.703000</li></ul>\n<div>&lt;div id=\"map_ms_meteorologie_0\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_meteorologie_0 = addLeafletMapWithId('map_ms_meteorologie_0', getOSMLayer(''), [ [54.16489697417717,7.843906889545161],[54.18889697417717,7.939906889545161] ], null , 10);L.marker([54.17689697417717, 7.891906889545161],{ icon: L.icon({ iconUrl: \"/DE/dienste/ingrid-webmap-client/frontend/prd/img/marker.png\" }) }).bindTooltip(\"meteorologie.78352665\", {direction: \"center\"}).addTo(map_ms_meteorologie_0 );&lt;/script&gt;</div>\n<br/>\n\n<h4>meteorologie.78353585</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 6004763.204000, 428995.212000 / 6004763.204000, 428995.212000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 6004763.204000</li><li>West: 428995.212000</li><li>Ost: 428995.212000</li><li>S&amp;uuml;d: 6004763.204000</li></ul>\n<div>&lt;div id=\"map_ms_meteorologie_1\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_meteorologie_1 = addLeafletMapWithId('map_ms_meteorologie_1', getOSMLayer(''), [ [54.17400000978322,7.863899993401201],[54.19800000978322,7.959899993401201] ], null , 10);L.marker([54.18600000978322, 7.911899993401201],{ icon: L.icon({ iconUrl: \"/DE/dienste/ingrid-webmap-client/frontend/prd/img/marker.png\" }) }).bindTooltip(\"meteorologie.78353585\", {direction: \"center\"}).addTo(map_ms_meteorologie_1 );&lt;/script&gt;</div>\n<br/>\n</body></html>",
+  "is_feature_type": true,
+  "isfolder": "false",
+  "map_iframe": "<iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CMeteorologie%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideweser_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:meteorologie%2CWMS%7C%7CMeteorologie%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideweser_ogc%2Fbs%3F%7C%7Cms:meteorologie%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"250\" frameborder=\"0\" style=\"border:0\"></iframe>",
+  "metadata": {
+    "created": null
+  },
+  "number_of_features": 2,
+  "partner": [
+    "Bund"
+  ],
+  "provider": [
+    "BAW"
+  ],
+  "sort_hash": "dfde134a7b4890c7629449f69246ee5989c3d3cf",
+  "spatial": {
+    "geometries": [
+      {
+        "bbox": [
+          6.6534610272252,
+          52.82723614405201,
+          14.3085727776266,
+          55.0468026744861
+        ],
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              6.6534610272252,
+              55.0468026744861
+            ],
+            [
+              6.6534610272252,
+              52.82723614405201
+            ],
+            [
+              14.3085727776266,
+              52.82723614405201
+            ],
+            [
+              14.3085727776266,
+              55.0468026744861
+            ],
+            [
+              6.6534610272252,
+              55.0468026744861
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "summary": "WebFeatureService (WFS) Küstendaten, FeatureType: ms:meteorologie<br>Dieser FeatureType umfasst <b>2</b> Feature(s).<br>Meteorologische Daten (Wind, Lufttemperatur, Luftdruck). Herausgeber: WSA Weser-Jade-Nordsee<br>",
+  "t01_object": {
+    "obj_id": "68b374c1-0e6a-5a18-8996-548125b712f3",
+    "org_obj_id": "68b374c1-0e6a-5a18-8996-548125b712f3"
+  },
+  "title": "Meteorologie",
+  "typename": "ms:meteorologie",
+  "uuid": "68b374c1-0e6a-5a18-8996-548125b712f3",
+  "x1": 6.6534610272252,
+  "x2": 14.3085727776266,
+  "y1": 52.82723614405201,
+  "y2": 55.0468026744861
+}

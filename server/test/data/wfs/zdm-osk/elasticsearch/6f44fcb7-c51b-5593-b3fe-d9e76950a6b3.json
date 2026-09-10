@@ -1,0 +1,149 @@
+{
+  "additional_html_1": "https://sgx.geodatenzentrum.de/wms_topplus_open?VERSION=1.3.0&amp;REQUEST=GetMap&amp;CRS=EPSG:25832&amp;BBOX=640373.855201707,5932754.756620891,773234.7656549375,6057261.673837239&amp;LAYERS=web&amp;FORMAT=image/png&amp;STYLES=&amp;WIDTH=200&amp;HEIGHT=200",
+  "collection": {
+    "name": "Harvester"
+  },
+  "content": [
+    true,
+    "ms:tpVariante2_01",
+    381,
+    "<iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CTechnische%20Planung%20Variante%202%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fosk_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:tpVariante2_01%2CWMS%7C%7CTechnische%20Planung%20Variante%202%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fosk_ogc%2Fbs%3F%7C%7Cms:tpVariante2_01%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"250\" frameborder=\"0\" style=\"border:0\"></iframe>",
+    "zdm_wfs",
+    "Bund",
+    "BAW",
+    "default",
+    "metadata",
+    "wfs",
+    "IDF_1.0",
+    "dsc_wfs",
+    "Harvester",
+    "false",
+    "6f44fcb7-c51b-5593-b3fe-d9e76950a6b3",
+    "Harvester",
+    "https://www.kuestendaten.de/DE/dynamisch/osk_ogc/bs",
+    "https://www.kuestendaten.de/DE/dynamisch/osk_ogc/bs?REQUEST=GetFeature&SERVICE=WFS&VERSION=2.0.0&typeName=ms:tpVariante2_01",
+    "wfs",
+    "6f44fcb7-c51b-5593-b3fe-d9e76950a6b3",
+    "6f44fcb7-c51b-5593-b3fe-d9e76950a6b3",
+    "Technische Planung, Variante 2",
+    "WebFeatureService (WFS) Küstendaten, FeatureType: ms:tpVariante2_01<br>Dieser FeatureType umfasst <b>381</b> Feature(s).<br>Technische Planung, Variante 2 Herausgeber: WSA Stralsund<br>",
+    11.1175989603645,
+    13.2295251241671,
+    53.5249406762629,
+    54.5888085549273,
+    "Polygon",
+    11.1175989603645,
+    54.5888085549273,
+    11.1175989603645,
+    53.5249406762629,
+    13.2295251241671,
+    53.5249406762629,
+    13.2295251241671,
+    54.5888085549273,
+    11.1175989603645,
+    54.5888085549273,
+    11.1175989603645,
+    53.5249406762629,
+    13.2295251241671,
+    54.5888085549273,
+    "https://sgx.geodatenzentrum.de/wms_topplus_open?VERSION=1.3.0&amp;REQUEST=GetMap&amp;CRS=EPSG:25832&amp;BBOX=640373.855201707,5932754.756620891,773234.7656549375,6057261.673837239&amp;LAYERS=web&amp;FORMAT=image/png&amp;STYLES=&amp;WIDTH=200&amp;HEIGHT=200",
+    "14990495ccbeeeb890aeb0e4860434b080ea97da"
+  ],
+  "dataSourceName": "Harvester",
+  "datatype": [
+    "default",
+    "metadata",
+    "wfs",
+    "IDF_1.0",
+    "dsc_wfs"
+  ],
+  "distributions": [
+    {
+      "title": null,
+      "format": null,
+      "access_url": null,
+      "operates_on": null
+    }
+  ],
+  "extras": {
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-08-27T08:22:50.475Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-08-27T08:22:50.330Z",
+      "merged_from": [],
+      "modified": null,
+      "source": {
+        "raw_data_source": "https://www.kuestendaten.de/DE/dynamisch/osk_ogc/bs?REQUEST=GetFeature&SERVICE=WFS&VERSION=2.0.0&typeName=ms:tpVariante2_01",
+        "source_base": "https://www.kuestendaten.de/DE/dynamisch/osk_ogc/bs",
+        "source_type": "wfs"
+      }
+    }
+  },
+  "iPlugId": "zdm_wfs",
+  "idf": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><html xmlns=\"http://www.portalu.de/IDF/1.0\"><head/><body><h1>Technische Planung, Variante 2</h1><p>WebFeatureService (WFS) Küstendaten, FeatureType: ms:tpVariante2_01&lt;br&gt;Dieser FeatureType umfasst &lt;b&gt;381&lt;/b&gt; Feature(s).&lt;br&gt;Technische Planung, Variante 2 Herausgeber: WSA Stralsund&lt;br&gt;</p><h2>Ort:</h2><ul><li>Nord: 54.5888085549273</li><li>West: 11.1175989603645</li><li>Ost: 13.2295251241671</li><li>S&amp;uuml;d: 53.5249406762629</li></ul><div>&lt;iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CTechnische%20Planung%20Variante%202%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fosk_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:tpVariante2_01%2CWMS%7C%7CTechnische%20Planung%20Variante%202%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fosk_ogc%2Fbs%3F%7C%7Cms:tpVariante2_01%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"450\" frameborder=\"0\" style=\"border:0\"&gt;&lt;/iframe&gt;</div><br/><h2>Details:</h2><h4>Feature Attribute:</h4><ul><li>msGeometry</li></ul><br/></body></html>",
+  "is_feature_type": true,
+  "isfolder": "false",
+  "map_iframe": "<iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CTechnische%20Planung%20Variante%202%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fosk_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:tpVariante2_01%2CWMS%7C%7CTechnische%20Planung%20Variante%202%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fosk_ogc%2Fbs%3F%7C%7Cms:tpVariante2_01%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"250\" frameborder=\"0\" style=\"border:0\"></iframe>",
+  "metadata": {
+    "created": null
+  },
+  "number_of_features": 381,
+  "partner": [
+    "Bund"
+  ],
+  "provider": [
+    "BAW"
+  ],
+  "sort_hash": "14990495ccbeeeb890aeb0e4860434b080ea97da",
+  "spatial": {
+    "geometries": [
+      {
+        "bbox": [
+          11.1175989603645,
+          53.5249406762629,
+          13.2295251241671,
+          54.5888085549273
+        ],
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              11.1175989603645,
+              54.5888085549273
+            ],
+            [
+              11.1175989603645,
+              53.5249406762629
+            ],
+            [
+              13.2295251241671,
+              53.5249406762629
+            ],
+            [
+              13.2295251241671,
+              54.5888085549273
+            ],
+            [
+              11.1175989603645,
+              54.5888085549273
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "summary": "WebFeatureService (WFS) Küstendaten, FeatureType: ms:tpVariante2_01<br>Dieser FeatureType umfasst <b>381</b> Feature(s).<br>Technische Planung, Variante 2 Herausgeber: WSA Stralsund<br>",
+  "t01_object": {
+    "obj_id": "6f44fcb7-c51b-5593-b3fe-d9e76950a6b3",
+    "org_obj_id": "6f44fcb7-c51b-5593-b3fe-d9e76950a6b3"
+  },
+  "title": "Technische Planung, Variante 2",
+  "typename": "ms:tpVariante2_01",
+  "uuid": "6f44fcb7-c51b-5593-b3fe-d9e76950a6b3",
+  "x1": 11.1175989603645,
+  "x2": 13.2295251241671,
+  "y1": 53.5249406762629,
+  "y2": 54.5888085549273
+}

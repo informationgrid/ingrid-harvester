@@ -1,0 +1,172 @@
+{
+  "additional_html_1": "https://sgx.geodatenzentrum.de/wms_topplus_open?VERSION=1.3.0&amp;REQUEST=GetMap&amp;CRS=EPSG:25832&amp;BBOX=640373.855201707,5932754.756620891,773234.7656549375,6057261.673837239&amp;LAYERS=web&amp;FORMAT=image/png&amp;STYLES=&amp;WIDTH=200&amp;HEIGHT=200",
+  "collection": {
+    "name": "Harvester"
+  },
+  "content": [
+    true,
+    "ms:Landschaftsschutzgebiet",
+    22,
+    "<iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CLandschaftsschutzgebiete%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fosk_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:Landschaftsschutzgebiet%2CWMS%7C%7CLandschaftsschutzgebiete%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fosk_ogc%2Fbs%3F%7C%7Cms:Landschaftsschutzgebiet%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"250\" frameborder=\"0\" style=\"border:0\"></iframe>",
+    "zdm_wfs",
+    "Bund",
+    "BAW",
+    "default",
+    "metadata",
+    "wfs",
+    "IDF_1.0",
+    "dsc_wfs",
+    "Harvester",
+    "false",
+    "27c4fb09-efd1-5547-8bf6-45384e9710e9",
+    "Harvester",
+    "https://www.kuestendaten.de/DE/dynamisch/osk_ogc/bs",
+    "https://www.kuestendaten.de/DE/dynamisch/osk_ogc/bs?REQUEST=GetFeature&SERVICE=WFS&VERSION=2.0.0&typeName=ms:Landschaftsschutzgebiet",
+    "wfs",
+    "27c4fb09-efd1-5547-8bf6-45384e9710e9",
+    "27c4fb09-efd1-5547-8bf6-45384e9710e9",
+    "Landschaftsschutzgebiete",
+    "WebFeatureService (WFS) Küstendaten, FeatureType: ms:Landschaftsschutzgebiet<br>Dieser FeatureType umfasst <b>22</b> Feature(s).<br>Landschaftsschutzgebiet Quelle: LUNG MV Herausgeber: WSA Stralsund<br>",
+    11.1175989603645,
+    13.2295251241671,
+    53.5249406762629,
+    54.5888085549273,
+    "Polygon",
+    11.1175989603645,
+    54.5888085549273,
+    11.1175989603645,
+    53.5249406762629,
+    13.2295251241671,
+    53.5249406762629,
+    13.2295251241671,
+    54.5888085549273,
+    11.1175989603645,
+    54.5888085549273,
+    11.1175989603645,
+    53.5249406762629,
+    13.2295251241671,
+    54.5888085549273,
+    "https://sgx.geodatenzentrum.de/wms_topplus_open?VERSION=1.3.0&amp;REQUEST=GetMap&amp;CRS=EPSG:25832&amp;BBOX=640373.855201707,5932754.756620891,773234.7656549375,6057261.673837239&amp;LAYERS=web&amp;FORMAT=image/png&amp;STYLES=&amp;WIDTH=200&amp;HEIGHT=200",
+    "6dc4e76569ea9963f5b16bbe5d359b022d4a89c4"
+  ],
+  "dataSourceName": "Harvester",
+  "datatype": [
+    "default",
+    "metadata",
+    "wfs",
+    "IDF_1.0",
+    "dsc_wfs"
+  ],
+  "distributions": [
+    {
+      "title": null,
+      "format": null,
+      "access_url": null,
+      "operates_on": null
+    }
+  ],
+  "extras": {
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-08-27T08:22:50.474Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-08-27T08:22:50.330Z",
+      "merged_from": [
+        "Landschaftsschutzgebiet.16",
+        "Landschaftsschutzgebiet.17",
+        "Landschaftsschutzgebiet.18",
+        "Landschaftsschutzgebiet.21",
+        "Landschaftsschutzgebiet.22",
+        "Landschaftsschutzgebiet.19",
+        "Landschaftsschutzgebiet.14",
+        "Landschaftsschutzgebiet.20",
+        "Landschaftsschutzgebiet.1",
+        "Landschaftsschutzgebiet.2",
+        "Landschaftsschutzgebiet.3",
+        "Landschaftsschutzgebiet.4",
+        "Landschaftsschutzgebiet.5",
+        "Landschaftsschutzgebiet.6",
+        "Landschaftsschutzgebiet.7",
+        "Landschaftsschutzgebiet.8",
+        "Landschaftsschutzgebiet.9",
+        "Landschaftsschutzgebiet.10",
+        "Landschaftsschutzgebiet.11",
+        "Landschaftsschutzgebiet.12",
+        "Landschaftsschutzgebiet.13",
+        "Landschaftsschutzgebiet.15"
+      ],
+      "modified": null,
+      "source": {
+        "raw_data_source": "https://www.kuestendaten.de/DE/dynamisch/osk_ogc/bs?REQUEST=GetFeature&SERVICE=WFS&VERSION=2.0.0&typeName=ms:Landschaftsschutzgebiet",
+        "source_base": "https://www.kuestendaten.de/DE/dynamisch/osk_ogc/bs",
+        "source_type": "wfs"
+      }
+    }
+  },
+  "iPlugId": "zdm_wfs",
+  "idf": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><html xmlns=\"http://www.portalu.de/IDF/1.0\"><head/><body><h1>Landschaftsschutzgebiete</h1><p>WebFeatureService (WFS) Küstendaten, FeatureType: ms:Landschaftsschutzgebiet&lt;br&gt;Dieser FeatureType umfasst &lt;b&gt;22&lt;/b&gt; Feature(s).&lt;br&gt;Landschaftsschutzgebiet Quelle: LUNG MV Herausgeber: WSA Stralsund&lt;br&gt;</p><h2>Ort:</h2><ul><li>Nord: 54.5888085549273</li><li>West: 11.1175989603645</li><li>Ost: 13.2295251241671</li><li>S&amp;uuml;d: 53.5249406762629</li></ul><div>&lt;iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CLandschaftsschutzgebiete%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fosk_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:Landschaftsschutzgebiet%2CWMS%7C%7CLandschaftsschutzgebiete%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fosk_ogc%2Fbs%3F%7C%7Cms:Landschaftsschutzgebiet%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"450\" frameborder=\"0\" style=\"border:0\"&gt;&lt;/iframe&gt;</div><br/><h2>Details:</h2><h4>Feature Attribute:</h4><ul><li>msGeometry</li></ul><br/><h2>Features:</h2>\n<h4>Landschaftsschutzgebiet.16</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 6005228.275000, 704738.788000 / 6006381.688000, 708084.783000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 6006381.688000</li><li>West: 704738.788000</li><li>Ost: 708084.783000</li><li>S&amp;uuml;d: 6005228.275000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_21\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_21 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_21', getOSMLayer(''), [ [54.15426299238833,12.13551376438552],[54.16326923695303,12.18746585455214] ], null , 10);map_ms_Landschaftsschutzgebiet_21.addLayer(L.rectangle([ [54.15426299238833,12.13551376438552],[54.16326923695303,12.18746585455214] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.16\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.17</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 6006120.408000, 702503.883000 / 6006714.844000, 702939.057000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 6006714.844000</li><li>West: 702503.883000</li><li>Ost: 702939.057000</li><li>S&amp;uuml;d: 6006120.408000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_0\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_0 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_0', getOSMLayer(''), [ [54.16315519591715,12.10194182139856],[54.16831815863583,12.108997262330389] ], null , 10);map_ms_Landschaftsschutzgebiet_0.addLayer(L.rectangle([ [54.16315519591715,12.10194182139856],[54.16831815863583,12.108997262330389] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.17\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.18</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 5999582.011000, 700039.370000 / 6000051.345000, 700410.698000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 6000051.345000</li><li>West: 700039.370000</li><li>Ost: 700410.698000</li><li>S&amp;uuml;d: 5999582.011000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_1\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_1 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_1', getOSMLayer(''), [ [54.10543972446232,12.059918536313525],[54.10950748813177,12.06590063319768] ], null , 10);map_ms_Landschaftsschutzgebiet_1.addLayer(L.rectangle([ [54.10543972446232,12.059918536313525],[54.10950748813177,12.06590063319768] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.18\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.21</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 6017132.915000, 711275.104000 / 6018162.477000, 712682.738000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 6018162.477000</li><li>West: 711275.104000</li><li>Ost: 712682.738000</li><li>S&amp;uuml;d: 6017132.915000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_2\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_2 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_2', getOSMLayer(''), [ [54.25844001714342,12.243807772908177],[54.26709522384606,12.266112042633278] ], null , 10);map_ms_Landschaftsschutzgebiet_2.addLayer(L.rectangle([ [54.25844001714342,12.243807772908177],[54.26709522384606,12.266112042633278] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.21\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.22</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 5980758.485000, 695909.165000 / 5985816.227000, 703809.663000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 5985816.227000</li><li>West: 695909.165000</li><li>Ost: 703809.663000</li><li>S&amp;uuml;d: 5980758.485000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_3\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_3 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_3', getOSMLayer(''), [ [53.93807541839336,11.984705541038018],[53.98041845044682,12.108257395046756] ], null , 10);map_ms_Landschaftsschutzgebiet_3.addLayer(L.rectangle([ [53.93807541839336,11.984705541038018],[53.98041845044682,12.108257395046756] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.22\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.19</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 6003105.565000, 701113.808000 / 6003799.385000, 701603.263000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 6003799.385000</li><li>West: 701113.808000</li><li>Ost: 701603.263000</li><li>S&amp;uuml;d: 6003105.565000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_4\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_4 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_4', getOSMLayer(''), [ [54.13664407951801,12.078672765200821],[54.14267917540056,12.086616824757845] ], null , 10);map_ms_Landschaftsschutzgebiet_4.addLayer(L.rectangle([ [54.13664407951801,12.078672765200821],[54.14267917540056,12.086616824757845] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.19\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.14</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 5995616.025000, 683310.442000 / 5996279.258000, 684352.939000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 5996279.258000</li><li>West: 683310.442000</li><li>Ost: 684352.939000</li><li>S&amp;uuml;d: 5995616.025000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_19\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_19 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_19', getOSMLayer(''), [ [54.076067883792945,11.80197502014519],[54.081649708431705,11.818292405712594] ], null , 10);map_ms_Landschaftsschutzgebiet_19.addLayer(L.rectangle([ [54.076067883792945,11.80197502014519],[54.081649708431705,11.818292405712594] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.14\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.20</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 5997796.264000, 700581.105000 / 5998105.790000, 701190.566000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 5998105.790000</li><li>West: 700581.105000</li><li>Ost: 701190.566000</li><li>S&amp;uuml;d: 5997796.264000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_5\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_5 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_5', getOSMLayer(''), [ [54.08920202071072,12.067008469962161],[54.091742227586806,12.076518394506865] ], null , 10);map_ms_Landschaftsschutzgebiet_5.addLayer(L.rectangle([ [54.08920202071072,12.067008469962161],[54.091742227586806,12.076518394506865] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.20\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.1</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 5976966.590000, 709745.403000 / 5984132.747000, 714210.738000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 5984132.747000</li><li>West: 709745.403000</li><li>Ost: 714210.738000</li><li>S&amp;uuml;d: 5976966.590000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_6\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_6 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_6', getOSMLayer(''), [ [53.898627923478344,12.192553824299997],[53.9611078976369,12.26542209747986] ], null , 10);map_ms_Landschaftsschutzgebiet_6.addLayer(L.rectangle([ [53.898627923478344,12.192553824299997],[53.9611078976369,12.26542209747986] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.1\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.2</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 5983948.171000, 713628.372000 / 5985627.103000, 714692.593000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 5985627.103000</li><li>West: 713628.372000</li><li>Ost: 714692.593000</li><li>S&amp;uuml;d: 5983948.171000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_7\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_7 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_7', getOSMLayer(''), [ [53.95969237972757,12.2564311434493],[53.97431748314449,12.273806124675287] ], null , 10);map_ms_Landschaftsschutzgebiet_7.addLayer(L.rectangle([ [53.95969237972757,12.2564311434493],[53.97431748314449,12.273806124675287] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.2\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.3</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 6016779.967000, 713503.229000 / 6040499.839000, 751340.374000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 6040499.839000</li><li>West: 713503.229000</li><li>Ost: 751340.374000</li><li>S&amp;uuml;d: 6016779.967000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_8\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_8 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_8', getOSMLayer(''), [ [54.254348529851335,12.277704215652134],[54.44987053973708,12.877229429463238] ], null , 10);map_ms_Landschaftsschutzgebiet_8.addLayer(L.rectangle([ [54.254348529851335,12.277704215652134],[54.44987053973708,12.877229429463238] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.3\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.4</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 5993706.004000, 671425.679000 / 6007138.384000, 697985.039000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 6007138.384000</li><li>West: 671425.679000</li><li>Ost: 697985.039000</li><li>S&amp;uuml;d: 5993706.004000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_9\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_9 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_9', getOSMLayer(''), [ [54.06301076301525,11.619448215381649],[54.17405345441962,12.033499791809092] ], null , 10);map_ms_Landschaftsschutzgebiet_9.addLayer(L.rectangle([ [54.06301076301525,11.619448215381649],[54.17405345441962,12.033499791809092] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.4\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.5</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 6005907.391000, 695682.563000 / 6007482.826000, 700869.334000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 6007482.826000</li><li>West: 695682.563000</li><li>Ost: 700869.334000</li><li>S&amp;uuml;d: 6005907.391000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_10\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_10 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_10', getOSMLayer(''), [ [54.163887631521625,11.99747573585269],[54.17602434740497,12.077852322869225] ], null , 10);map_ms_Landschaftsschutzgebiet_10.addLayer(L.rectangle([ [54.163887631521625,11.99747573585269],[54.17602434740497,12.077852322869225] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.5\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.6</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 5990525.309000, 671443.694000 / 5993527.146000, 674712.031000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 5993527.146000</li><li>West: 671443.694000</li><li>Ost: 674712.031000</li><li>S&amp;uuml;d: 5990525.309000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_11\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_11 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_11', getOSMLayer(''), [ [54.03444706129265,11.617926295307354],[54.06030154323833,11.669502237302778] ], null , 10);map_ms_Landschaftsschutzgebiet_11.addLayer(L.rectangle([ [54.03444706129265,11.617926295307354],[54.06030154323833,11.669502237302778] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.6\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.7</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 5997689.225000, 698036.920000 / 5999356.573000, 699085.005000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 5999356.573000</li><li>West: 698036.920000</li><li>Ost: 699085.005000</li><li>S&amp;uuml;d: 5997689.225000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_12\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_12 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_12', getOSMLayer(''), [ [54.089225970484414,12.028096681953519],[54.10378644716273,12.045194461122467] ], null , 10);map_ms_Landschaftsschutzgebiet_12.addLayer(L.rectangle([ [54.089225970484414,12.028096681953519],[54.10378644716273,12.045194461122467] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.7\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.8</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 5997608.345000, 706802.706000 / 5999425.543000, 708623.998000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 5999425.543000</li><li>West: 706802.706000</li><li>Ost: 708623.998000</li><li>S&amp;uuml;d: 5997608.345000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_13\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_13 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_13', getOSMLayer(''), [ [54.08505497827735,12.161854675146975],[54.10062777568887,12.190905798978132] ], null , 10);map_ms_Landschaftsschutzgebiet_13.addLayer(L.rectangle([ [54.08505497827735,12.161854675146975],[54.10062777568887,12.190905798978132] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.8\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.9</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 5997014.792000, 716016.790000 / 6006208.929000, 726190.471000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 6006208.929000</li><li>West: 716016.790000</li><li>Ost: 726190.471000</li><li>S&amp;uuml;d: 5997014.792000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_14\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_14 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_14', getOSMLayer(''), [ [54.075947629817136,12.302054850888222],[54.154066299864006,12.464143414022326] ], null , 10);map_ms_Landschaftsschutzgebiet_14.addLayer(L.rectangle([ [54.075947629817136,12.302054850888222],[54.154066299864006,12.464143414022326] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.9\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.10</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 5985047.799000, 695615.552000 / 5992146.311000, 700276.796000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 5992146.311000</li><li>West: 695615.552000</li><li>Ost: 700276.796000</li><li>S&amp;uuml;d: 5985047.799000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_15\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_15 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_15', getOSMLayer(''), [ [53.9766864590252,11.982988341144097],[54.03861217252217,12.058630975984341] ], null , 10);map_ms_Landschaftsschutzgebiet_15.addLayer(L.rectangle([ [53.9766864590252,11.982988341144097],[54.03861217252217,12.058630975984341] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.10\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.11</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 5989575.473000, 709164.921000 / 5999093.231000, 720339.763000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 5999093.231000</li><li>West: 709164.921000</li><li>Ost: 720339.763000</li><li>S&amp;uuml;d: 5989575.473000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_16\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_16 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_16', getOSMLayer(''), [ [54.012015284012406,12.192373734753454],[54.09276552934751,12.369523444918146] ], null , 10);map_ms_Landschaftsschutzgebiet_16.addLayer(L.rectangle([ [54.012015284012406,12.192373734753454],[54.09276552934751,12.369523444918146] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.11\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.12</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 6006099.764000, 711821.622000 / 6019096.933000, 720251.068000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 6019096.933000</li><li>West: 711821.622000</li><li>Ost: 720251.068000</li><li>S&amp;uuml;d: 6006099.764000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_17\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_17 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_17', getOSMLayer(''), [ [54.15921199118312,12.244408544225465],[54.272277449360594,12.38280391278043] ], null , 10);map_ms_Landschaftsschutzgebiet_17.addLayer(L.rectangle([ [54.15921199118312,12.244408544225465],[54.272277449360594,12.38280391278043] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.12\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.13</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 6006352.823000, 704659.065000 / 6015522.221000, 714965.179000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 6015522.221000</li><li>West: 704659.065000</li><li>Ost: 714965.179000</li><li>S&amp;uuml;d: 6006352.823000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_18\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_18 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_18', getOSMLayer(''), [ [54.16438669584126,12.135058260005462],[54.24245143010578,12.299205395248794] ], null , 10);map_ms_Landschaftsschutzgebiet_18.addLayer(L.rectangle([ [54.16438669584126,12.135058260005462],[54.24245143010578,12.299205395248794] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.13\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>Landschaftsschutzgebiet.15</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 5983792.641000, 718797.548000 / 5991924.479000, 733319.058000</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 5991924.479000</li><li>West: 718797.548000</li><li>Ost: 733319.058000</li><li>S&amp;uuml;d: 5983792.641000</li></ul>\n<div>&lt;div id=\"map_ms_Landschaftsschutzgebiet_20\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_Landschaftsschutzgebiet_20 = addLeafletMapWithId('map_ms_Landschaftsschutzgebiet_20', getOSMLayer(''), [ [53.95613708290936,12.33497019578463],[54.022742403045676,12.56208248446377] ], null , 10);map_ms_Landschaftsschutzgebiet_20.addLayer(L.rectangle([ [53.95613708290936,12.33497019578463],[54.022742403045676,12.56208248446377] ], {color: \"#156570\", weight: 1}).bindTooltip(\"Landschaftsschutzgebiet.15\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n</body></html>",
+  "is_feature_type": true,
+  "isfolder": "false",
+  "map_iframe": "<iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CLandschaftsschutzgebiete%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fosk_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:Landschaftsschutzgebiet%2CWMS%7C%7CLandschaftsschutzgebiete%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fosk_ogc%2Fbs%3F%7C%7Cms:Landschaftsschutzgebiet%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"250\" frameborder=\"0\" style=\"border:0\"></iframe>",
+  "metadata": {
+    "created": null
+  },
+  "number_of_features": 22,
+  "partner": [
+    "Bund"
+  ],
+  "provider": [
+    "BAW"
+  ],
+  "sort_hash": "6dc4e76569ea9963f5b16bbe5d359b022d4a89c4",
+  "spatial": {
+    "geometries": [
+      {
+        "bbox": [
+          11.1175989603645,
+          53.5249406762629,
+          13.2295251241671,
+          54.5888085549273
+        ],
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              11.1175989603645,
+              54.5888085549273
+            ],
+            [
+              11.1175989603645,
+              53.5249406762629
+            ],
+            [
+              13.2295251241671,
+              53.5249406762629
+            ],
+            [
+              13.2295251241671,
+              54.5888085549273
+            ],
+            [
+              11.1175989603645,
+              54.5888085549273
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "summary": "WebFeatureService (WFS) Küstendaten, FeatureType: ms:Landschaftsschutzgebiet<br>Dieser FeatureType umfasst <b>22</b> Feature(s).<br>Landschaftsschutzgebiet Quelle: LUNG MV Herausgeber: WSA Stralsund<br>",
+  "t01_object": {
+    "obj_id": "27c4fb09-efd1-5547-8bf6-45384e9710e9",
+    "org_obj_id": "27c4fb09-efd1-5547-8bf6-45384e9710e9"
+  },
+  "title": "Landschaftsschutzgebiete",
+  "typename": "ms:Landschaftsschutzgebiet",
+  "uuid": "27c4fb09-efd1-5547-8bf6-45384e9710e9",
+  "x1": 11.1175989603645,
+  "x2": 13.2295251241671,
+  "y1": 53.5249406762629,
+  "y2": 54.5888085549273
+}

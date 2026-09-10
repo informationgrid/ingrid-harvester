@@ -2,7 +2,7 @@
   "id": 1,
   "dataSourceName": "Harvester",
   "type": "WFS",
-  "sourceURL": "https://www.kuestendaten.de/DE/dynamisch/kuestendaten_ogc/bs",
+  "sourceURL": "https://www.kuestendaten.de/DE/dynamisch/nsk_ogc/bs",
   "catalogIds": [1],
   "iPlugId": "zdm_wfs",
   "partner": "Bund",
@@ -24,5 +24,5 @@
   "featureLimit": 50,
   "harvestTypes": true,
   "timeout": 0,
-  "typename": "ms:copyright,ms:DeichverbandZustaendigkeitBeschriftung,ms:ElbeFrKilometrierung"
+  "typename": "ms:copyright,ms:Topographie_2017_Isolinien"
 }

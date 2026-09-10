@@ -1,0 +1,149 @@
+{
+  "additional_html_1": "https://sgx.geodatenzentrum.de/wms_topplus_open?VERSION=1.3.0&amp;REQUEST=GetMap&amp;CRS=EPSG:25832&amp;BBOX=308361.9715827093,5871743.360640029,424660.1755187545,5962676.237849601&amp;LAYERS=web&amp;FORMAT=image/png&amp;STYLES=&amp;WIDTH=200&amp;HEIGHT=200",
+  "collection": {
+    "name": "Harvester"
+  },
+  "content": [
+    true,
+    "ms:BR_Hydrologie",
+    61,
+    "<iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CBR%20Aspekte%20Hydrologie%20Gew%C3%A4ssermorphologie%20Wasserbeschaffenheit%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideems_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:BR_Hydrologie%2CWMS%7C%7CBR%20Aspekte%20Hydrologie%20Gew%C3%A4ssermorphologie%20Wasserbeschaffenheit%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideems_ogc%2Fbs%3F%7C%7Cms:BR_Hydrologie%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"250\" frameborder=\"0\" style=\"border:0\"></iframe>",
+    "zdm_wfs",
+    "Bund",
+    "BAW",
+    "default",
+    "metadata",
+    "wfs",
+    "IDF_1.0",
+    "dsc_wfs",
+    "Harvester",
+    "false",
+    "087b2a49-2e28-532d-ad3c-ee22071bd120",
+    "Harvester",
+    "https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs",
+    "https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?REQUEST=GetFeature&SERVICE=WFS&VERSION=2.0.0&typeName=ms:BR_Hydrologie",
+    "wfs",
+    "087b2a49-2e28-532d-ad3c-ee22071bd120",
+    "087b2a49-2e28-532d-ad3c-ee22071bd120",
+    "BR Aspekte Hydrologie, Gewässermorphologie, Wasserbeschaffenheit",
+    "WebFeatureService (WFS) Küstendaten, FeatureType: ms:BR_Hydrologie<br>Dieser FeatureType umfasst <b>61</b> Feature(s).<br>Betrachtungsraum Aspekte Hydrologie, Gewässermorphologie, Wasserbeschaffenheit. Herausgeber: WSA Ems-Nordsee<br>",
+    6.1466816383253,
+    7.855900478676971,
+    52.9610084095847,
+    53.8071834730473,
+    "Polygon",
+    6.1466816383253,
+    53.8071834730473,
+    6.1466816383253,
+    52.9610084095847,
+    7.855900478676971,
+    52.9610084095847,
+    7.855900478676971,
+    53.8071834730473,
+    6.1466816383253,
+    53.8071834730473,
+    6.1466816383253,
+    52.9610084095847,
+    7.855900478676971,
+    53.8071834730473,
+    "https://sgx.geodatenzentrum.de/wms_topplus_open?VERSION=1.3.0&amp;REQUEST=GetMap&amp;CRS=EPSG:25832&amp;BBOX=308361.9715827093,5871743.360640029,424660.1755187545,5962676.237849601&amp;LAYERS=web&amp;FORMAT=image/png&amp;STYLES=&amp;WIDTH=200&amp;HEIGHT=200",
+    "33041c621e7fac956415306bc42e25e8e7fdd360"
+  ],
+  "dataSourceName": "Harvester",
+  "datatype": [
+    "default",
+    "metadata",
+    "wfs",
+    "IDF_1.0",
+    "dsc_wfs"
+  ],
+  "distributions": [
+    {
+      "title": null,
+      "format": null,
+      "access_url": null,
+      "operates_on": null
+    }
+  ],
+  "extras": {
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-08-27T08:31:05.586Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-08-27T08:31:05.427Z",
+      "merged_from": [],
+      "modified": null,
+      "source": {
+        "raw_data_source": "https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?REQUEST=GetFeature&SERVICE=WFS&VERSION=2.0.0&typeName=ms:BR_Hydrologie",
+        "source_base": "https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs",
+        "source_type": "wfs"
+      }
+    }
+  },
+  "iPlugId": "zdm_wfs",
+  "idf": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><html xmlns=\"http://www.portalu.de/IDF/1.0\"><head/><body><h1>BR Aspekte Hydrologie, Gewässermorphologie, Wasserbeschaffenheit</h1><p>WebFeatureService (WFS) Küstendaten, FeatureType: ms:BR_Hydrologie&lt;br&gt;Dieser FeatureType umfasst &lt;b&gt;61&lt;/b&gt; Feature(s).&lt;br&gt;Betrachtungsraum Aspekte Hydrologie, Gewässermorphologie, Wasserbeschaffenheit. Herausgeber: WSA Ems-Nordsee&lt;br&gt;</p><h2>Ort:</h2><ul><li>Nord: 53.8071834730473</li><li>West: 6.1466816383253</li><li>Ost: 7.85590047867697</li><li>S&amp;uuml;d: 52.9610084095847</li></ul><div>&lt;iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CBR%20Aspekte%20Hydrologie%20Gew%C3%A4ssermorphologie%20Wasserbeschaffenheit%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideems_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:BR_Hydrologie%2CWMS%7C%7CBR%20Aspekte%20Hydrologie%20Gew%C3%A4ssermorphologie%20Wasserbeschaffenheit%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideems_ogc%2Fbs%3F%7C%7Cms:BR_Hydrologie%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"450\" frameborder=\"0\" style=\"border:0\"&gt;&lt;/iframe&gt;</div><br/><h2>Details:</h2><h4>Feature Attribute:</h4><ul><li>msGeometry</li><li>Bereich</li><li>OBJEKT_ID</li></ul><br/></body></html>",
+  "is_feature_type": true,
+  "isfolder": "false",
+  "map_iframe": "<iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CBR%20Aspekte%20Hydrologie%20Gew%C3%A4ssermorphologie%20Wasserbeschaffenheit%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideems_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:BR_Hydrologie%2CWMS%7C%7CBR%20Aspekte%20Hydrologie%20Gew%C3%A4ssermorphologie%20Wasserbeschaffenheit%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideems_ogc%2Fbs%3F%7C%7Cms:BR_Hydrologie%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"250\" frameborder=\"0\" style=\"border:0\"></iframe>",
+  "metadata": {
+    "created": null
+  },
+  "number_of_features": 61,
+  "partner": [
+    "Bund"
+  ],
+  "provider": [
+    "BAW"
+  ],
+  "sort_hash": "33041c621e7fac956415306bc42e25e8e7fdd360",
+  "spatial": {
+    "geometries": [
+      {
+        "bbox": [
+          6.1466816383253,
+          52.9610084095847,
+          7.855900478676971,
+          53.8071834730473
+        ],
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              6.1466816383253,
+              53.8071834730473
+            ],
+            [
+              6.1466816383253,
+              52.9610084095847
+            ],
+            [
+              7.855900478676971,
+              52.9610084095847
+            ],
+            [
+              7.855900478676971,
+              53.8071834730473
+            ],
+            [
+              6.1466816383253,
+              53.8071834730473
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "summary": "WebFeatureService (WFS) Küstendaten, FeatureType: ms:BR_Hydrologie<br>Dieser FeatureType umfasst <b>61</b> Feature(s).<br>Betrachtungsraum Aspekte Hydrologie, Gewässermorphologie, Wasserbeschaffenheit. Herausgeber: WSA Ems-Nordsee<br>",
+  "t01_object": {
+    "obj_id": "087b2a49-2e28-532d-ad3c-ee22071bd120",
+    "org_obj_id": "087b2a49-2e28-532d-ad3c-ee22071bd120"
+  },
+  "title": "BR Aspekte Hydrologie, Gewässermorphologie, Wasserbeschaffenheit",
+  "typename": "ms:BR_Hydrologie",
+  "uuid": "087b2a49-2e28-532d-ad3c-ee22071bd120",
+  "x1": 6.1466816383253,
+  "x2": 7.855900478676971,
+  "y1": 52.9610084095847,
+  "y2": 53.8071834730473
+}

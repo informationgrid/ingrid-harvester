@@ -1,0 +1,149 @@
+{
+  "additional_html_1": "https://sgx.geodatenzentrum.de/wms_topplus_open?VERSION=1.3.0&amp;REQUEST=GetMap&amp;CRS=EPSG:25832&amp;BBOX=459357.5704516814,5919636.959488354,575890.1443877283,5988665.873967377&amp;LAYERS=web&amp;FORMAT=image/png&amp;STYLES=&amp;WIDTH=200&amp;HEIGHT=200",
+  "collection": {
+    "name": "Harvester"
+  },
+  "content": [
+    true,
+    "ms:dop25_kachelung",
+    444,
+    "<iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CLuftbildbefliegung%202006%20(RGB)%20-%20Kachelung%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideelbe_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:dop25_kachelung%2CWMS%7C%7CLuftbildbefliegung%202006%20(RGB)%20-%20Kachelung%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideelbe_ogc%2Fbs%3F%7C%7Cms:dop25_kachelung%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"250\" frameborder=\"0\" style=\"border:0\"></iframe>",
+    "zdm_wfs",
+    "Bund",
+    "BAW",
+    "default",
+    "metadata",
+    "wfs",
+    "IDF_1.0",
+    "dsc_wfs",
+    "Harvester",
+    "false",
+    "c12e89b7-d1a7-56e8-9ae5-dd4cece4a76b",
+    "Harvester",
+    "https://www.kuestendaten.de/DE/dynamisch/tideelbe_ogc/bs",
+    "https://www.kuestendaten.de/DE/dynamisch/tideelbe_ogc/bs?REQUEST=GetFeature&SERVICE=WFS&VERSION=2.0.0&typeName=ms:dop25_kachelung",
+    "wfs",
+    "c12e89b7-d1a7-56e8-9ae5-dd4cece4a76b",
+    "c12e89b7-d1a7-56e8-9ae5-dd4cece4a76b",
+    "Luftbildbefliegung 2006 (RGB) - Kachelung",
+    "WebFeatureService (WFS) Küstendaten, FeatureType: ms:dop25_kachelung<br>Dieser FeatureType umfasst <b>444</b> Feature(s).<br>Eine hochauflösende Luftbildbefliegung von 2006 deckt einen Streifen beidseits der Unterelbe von der Ortschaft Over bis zur Nordseeinsel Scharhörn ab. Herausgeber: WSA Elbe-Nordsee - Beweissicherung<br>",
+    8.38837922046597,
+    10.1589062858628,
+    53.4242159984423,
+    54.0406515993851,
+    "Polygon",
+    8.38837922046597,
+    54.0406515993851,
+    8.38837922046597,
+    53.4242159984423,
+    10.1589062858628,
+    53.4242159984423,
+    10.1589062858628,
+    54.0406515993851,
+    8.38837922046597,
+    54.0406515993851,
+    8.38837922046597,
+    53.4242159984423,
+    10.1589062858628,
+    54.0406515993851,
+    "https://sgx.geodatenzentrum.de/wms_topplus_open?VERSION=1.3.0&amp;REQUEST=GetMap&amp;CRS=EPSG:25832&amp;BBOX=459357.5704516814,5919636.959488354,575890.1443877283,5988665.873967377&amp;LAYERS=web&amp;FORMAT=image/png&amp;STYLES=&amp;WIDTH=200&amp;HEIGHT=200",
+    "38fd60697159a844e4b248e7f41b300321811e90"
+  ],
+  "dataSourceName": "Harvester",
+  "datatype": [
+    "default",
+    "metadata",
+    "wfs",
+    "IDF_1.0",
+    "dsc_wfs"
+  ],
+  "distributions": [
+    {
+      "title": null,
+      "format": null,
+      "access_url": null,
+      "operates_on": null
+    }
+  ],
+  "extras": {
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-08-27T08:29:09.295Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-08-27T08:29:09.039Z",
+      "merged_from": [],
+      "modified": null,
+      "source": {
+        "raw_data_source": "https://www.kuestendaten.de/DE/dynamisch/tideelbe_ogc/bs?REQUEST=GetFeature&SERVICE=WFS&VERSION=2.0.0&typeName=ms:dop25_kachelung",
+        "source_base": "https://www.kuestendaten.de/DE/dynamisch/tideelbe_ogc/bs",
+        "source_type": "wfs"
+      }
+    }
+  },
+  "iPlugId": "zdm_wfs",
+  "idf": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><html xmlns=\"http://www.portalu.de/IDF/1.0\"><head/><body><h1>Luftbildbefliegung 2006 (RGB) - Kachelung</h1><p>WebFeatureService (WFS) Küstendaten, FeatureType: ms:dop25_kachelung&lt;br&gt;Dieser FeatureType umfasst &lt;b&gt;444&lt;/b&gt; Feature(s).&lt;br&gt;Eine hochauflösende Luftbildbefliegung von 2006 deckt einen Streifen beidseits der Unterelbe von der Ortschaft Over bis zur Nordseeinsel Scharhörn ab. Herausgeber: WSA Elbe-Nordsee - Beweissicherung&lt;br&gt;</p><h2>Ort:</h2><ul><li>Nord: 54.0406515993851</li><li>West: 8.38837922046597</li><li>Ost: 10.1589062858628</li><li>S&amp;uuml;d: 53.4242159984423</li></ul><div>&lt;iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CLuftbildbefliegung%202006%20(RGB)%20-%20Kachelung%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideelbe_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:dop25_kachelung%2CWMS%7C%7CLuftbildbefliegung%202006%20(RGB)%20-%20Kachelung%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideelbe_ogc%2Fbs%3F%7C%7Cms:dop25_kachelung%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"450\" frameborder=\"0\" style=\"border:0\"&gt;&lt;/iframe&gt;</div><br/><h2>Details:</h2><h4>Feature Attribute:</h4><ul><li>msGeometry</li><li>IMAGE_</li><li>DGK5BLNR</li><li>DGK5BLNAME</li><li>FILENAME</li><li>HMIN</li><li>HMAX</li><li>DATE_DATAC</li><li>WSD</li><li>WSA</li><li>BNDSLD</li><li>FILEPATH</li></ul><br/></body></html>",
+  "is_feature_type": true,
+  "isfolder": "false",
+  "map_iframe": "<iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CLuftbildbefliegung%202006%20(RGB)%20-%20Kachelung%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideelbe_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:dop25_kachelung%2CWMS%7C%7CLuftbildbefliegung%202006%20(RGB)%20-%20Kachelung%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideelbe_ogc%2Fbs%3F%7C%7Cms:dop25_kachelung%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"250\" frameborder=\"0\" style=\"border:0\"></iframe>",
+  "metadata": {
+    "created": null
+  },
+  "number_of_features": 444,
+  "partner": [
+    "Bund"
+  ],
+  "provider": [
+    "BAW"
+  ],
+  "sort_hash": "38fd60697159a844e4b248e7f41b300321811e90",
+  "spatial": {
+    "geometries": [
+      {
+        "bbox": [
+          8.38837922046597,
+          53.4242159984423,
+          10.1589062858628,
+          54.0406515993851
+        ],
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              8.38837922046597,
+              54.0406515993851
+            ],
+            [
+              8.38837922046597,
+              53.4242159984423
+            ],
+            [
+              10.1589062858628,
+              53.4242159984423
+            ],
+            [
+              10.1589062858628,
+              54.0406515993851
+            ],
+            [
+              8.38837922046597,
+              54.0406515993851
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "summary": "WebFeatureService (WFS) Küstendaten, FeatureType: ms:dop25_kachelung<br>Dieser FeatureType umfasst <b>444</b> Feature(s).<br>Eine hochauflösende Luftbildbefliegung von 2006 deckt einen Streifen beidseits der Unterelbe von der Ortschaft Over bis zur Nordseeinsel Scharhörn ab. Herausgeber: WSA Elbe-Nordsee - Beweissicherung<br>",
+  "t01_object": {
+    "obj_id": "c12e89b7-d1a7-56e8-9ae5-dd4cece4a76b",
+    "org_obj_id": "c12e89b7-d1a7-56e8-9ae5-dd4cece4a76b"
+  },
+  "title": "Luftbildbefliegung 2006 (RGB) - Kachelung",
+  "typename": "ms:dop25_kachelung",
+  "uuid": "c12e89b7-d1a7-56e8-9ae5-dd4cece4a76b",
+  "x1": 8.38837922046597,
+  "x2": 10.1589062858628,
+  "y1": 53.4242159984423,
+  "y2": 54.0406515993851
+}

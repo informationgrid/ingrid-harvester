@@ -1,0 +1,152 @@
+{
+  "additional_html_1": "https://sgx.geodatenzentrum.de/wms_topplus_open?VERSION=1.3.0&amp;REQUEST=GetMap&amp;CRS=EPSG:25832&amp;BBOX=332698.8691914831,5887657.314141621,413542.36477926397,5946296.075721113&amp;LAYERS=web&amp;FORMAT=image/png&amp;STYLES=&amp;WIDTH=200&amp;HEIGHT=200",
+  "collection": {
+    "name": "Harvester"
+  },
+  "content": [
+    true,
+    "ms:BR_Schadstoffe",
+    2,
+    "<iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CBR%20Aspekt%20Schadstoffe%20in%20Sedimenten%20und%20%C3%B6kotoxikologisches%20Wirkungspotenzial%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideems_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:BR_Schadstoffe%2CWMS%7C%7CBR%20Aspekt%20Schadstoffe%20in%20Sedimenten%20und%20%C3%B6kotoxikologisches%20Wirkungspotenzial%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideems_ogc%2Fbs%3F%7C%7Cms:BR_Schadstoffe%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"250\" frameborder=\"0\" style=\"border:0\"></iframe>",
+    "zdm_wfs",
+    "Bund",
+    "BAW",
+    "default",
+    "metadata",
+    "wfs",
+    "IDF_1.0",
+    "dsc_wfs",
+    "Harvester",
+    "false",
+    "2d1b1b39-1b20-577b-bfc5-448582279156",
+    "Harvester",
+    "https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs",
+    "https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?REQUEST=GetFeature&SERVICE=WFS&VERSION=2.0.0&typeName=ms:BR_Schadstoffe",
+    "wfs",
+    "2d1b1b39-1b20-577b-bfc5-448582279156",
+    "2d1b1b39-1b20-577b-bfc5-448582279156",
+    "BR Aspekt Schadstoffe in Sedimenten und ökotoxikologisches Wirkungspotenzial",
+    "WebFeatureService (WFS) Küstendaten, FeatureType: ms:BR_Schadstoffe<br>Dieser FeatureType umfasst <b>2</b> Feature(s).<br>Betrachtungsraum Aspekt Schadstoffe in Sedimenten und ökotoxikologisches Wirkungspotenzial. Herausgeber: WSA Ems-Nordsee<br>",
+    6.50037702049628,
+    7.69169154204488,
+    53.1120716122706,
+    53.6582628511111,
+    "Polygon",
+    6.50037702049628,
+    53.6582628511111,
+    6.50037702049628,
+    53.1120716122706,
+    7.69169154204488,
+    53.1120716122706,
+    7.69169154204488,
+    53.6582628511111,
+    6.50037702049628,
+    53.6582628511111,
+    6.50037702049628,
+    53.1120716122706,
+    7.69169154204488,
+    53.6582628511111,
+    "https://sgx.geodatenzentrum.de/wms_topplus_open?VERSION=1.3.0&amp;REQUEST=GetMap&amp;CRS=EPSG:25832&amp;BBOX=332698.8691914831,5887657.314141621,413542.36477926397,5946296.075721113&amp;LAYERS=web&amp;FORMAT=image/png&amp;STYLES=&amp;WIDTH=200&amp;HEIGHT=200",
+    "5f6f09fa4a3d990dcbad3174f208cd1da16844b3"
+  ],
+  "dataSourceName": "Harvester",
+  "datatype": [
+    "default",
+    "metadata",
+    "wfs",
+    "IDF_1.0",
+    "dsc_wfs"
+  ],
+  "distributions": [
+    {
+      "title": null,
+      "format": null,
+      "access_url": null,
+      "operates_on": null
+    }
+  ],
+  "extras": {
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-08-27T08:31:05.587Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-08-27T08:31:05.427Z",
+      "merged_from": [
+        "BR_Schadstoffe.Leda Jümme Gebiet",
+        "BR_Schadstoffe.Ems"
+      ],
+      "modified": null,
+      "source": {
+        "raw_data_source": "https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?REQUEST=GetFeature&SERVICE=WFS&VERSION=2.0.0&typeName=ms:BR_Schadstoffe",
+        "source_base": "https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs",
+        "source_type": "wfs"
+      }
+    }
+  },
+  "iPlugId": "zdm_wfs",
+  "idf": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><html xmlns=\"http://www.portalu.de/IDF/1.0\"><head/><body><h1>BR Aspekt Schadstoffe in Sedimenten und ökotoxikologisches Wirkungspotenzial</h1><p>WebFeatureService (WFS) Küstendaten, FeatureType: ms:BR_Schadstoffe&lt;br&gt;Dieser FeatureType umfasst &lt;b&gt;2&lt;/b&gt; Feature(s).&lt;br&gt;Betrachtungsraum Aspekt Schadstoffe in Sedimenten und ökotoxikologisches Wirkungspotenzial. Herausgeber: WSA Ems-Nordsee&lt;br&gt;</p><h2>Ort:</h2><ul><li>Nord: 53.6582628511111</li><li>West: 6.50037702049628</li><li>Ost: 7.69169154204488</li><li>S&amp;uuml;d: 53.1120716122706</li></ul><div>&lt;iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CBR%20Aspekt%20Schadstoffe%20in%20Sedimenten%20und%20%C3%B6kotoxikologisches%20Wirkungspotenzial%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideems_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:BR_Schadstoffe%2CWMS%7C%7CBR%20Aspekt%20Schadstoffe%20in%20Sedimenten%20und%20%C3%B6kotoxikologisches%20Wirkungspotenzial%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideems_ogc%2Fbs%3F%7C%7Cms:BR_Schadstoffe%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"450\" frameborder=\"0\" style=\"border:0\"&gt;&lt;/iframe&gt;</div><br/><h2>Details:</h2><h4>Feature Attribute:</h4><ul><li>msGeometry</li><li>MAPKEY</li><li>OBJEKT_ID</li></ul><br/><h2>Features:</h2>\n<h4>BR_Schadstoffe.Leda Jümme Gebiet</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 5892377.203188, 399623.868313 / 5899177.096639, 412466.997404</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 5899177.096639</li><li>West: 399623.868313</li><li>Ost: 412466.997404</li><li>S&amp;uuml;d: 5892377.203188</li></ul>\n<div>&lt;div id=\"map_ms_BR_Schadstoffe_0\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_BR_Schadstoffe_0 = addLeafletMapWithId('map_ms_BR_Schadstoffe_0', getOSMLayer(''), [ [53.17127931594106,7.49831510255571],[53.23465526223391,7.688532258729256] ], null , 10);map_ms_BR_Schadstoffe_0.addLayer(L.rectangle([ [53.17127931594106,7.49831510255571],[53.23465526223391,7.688532258729256] ], {color: \"#156570\", weight: 1}).bindTooltip(\"BR_Schadstoffe.Leda Jümme Gebiet\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n\n<h4>BR_Schadstoffe.Ems</h4>\n<p>urn:ogc:def:crs:EPSG::25832: 5887586.323505, 334754.972719 / 5946316.461746, 399717.038157</p>\n<h6>Ort:</h6>\n<ul><li>Nord: 5946316.461746</li><li>West: 334754.972719</li><li>Ost: 399717.038157</li><li>S&amp;uuml;d: 5887586.323505</li></ul>\n<div>&lt;div id=\"map_ms_BR_Schadstoffe_1\" style=\"height: 160px;\"&gt;&lt;/div&gt; &lt;script&gt;var map_ms_BR_Schadstoffe_1 = addLeafletMapWithId('map_ms_BR_Schadstoffe_1', getOSMLayer(''), [ [53.112074818902805,6.531102135406497],[53.655977972674954,7.482550207366149] ], null , 10);map_ms_BR_Schadstoffe_1.addLayer(L.rectangle([ [53.112074818902805,6.531102135406497],[53.655977972674954,7.482550207366149] ], {color: \"#156570\", weight: 1}).bindTooltip(\"BR_Schadstoffe.Ems\", {direction: \"center\"}));&lt;/script&gt;</div>\n<br/>\n</body></html>",
+  "is_feature_type": true,
+  "isfolder": "false",
+  "map_iframe": "<iframe src=\"/DE/dienste/ingrid-webmap-client/frontend/prd/embed.html?layers=WFS%7C%7CBR%20Aspekt%20Schadstoffe%20in%20Sedimenten%20und%20%C3%B6kotoxikologisches%20Wirkungspotenzial%20(WFS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideems_ogc%2Fbs%3FSERVICE%3DWFS%26VERSION%3D2.0.0%26%7C%7Cms:BR_Schadstoffe%2CWMS%7C%7CBR%20Aspekt%20Schadstoffe%20in%20Sedimenten%20und%20%C3%B6kotoxikologisches%20Wirkungspotenzial%20(WMS)%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Ftideems_ogc%2Fbs%3F%7C%7Cms:BR_Schadstoffe%7C%7C1.3.0%7C%7Ctrue%7C%7Cfalse%7C%7CInformationstechnikzentrum%2520Bund%252C%2520Dienstsitz%2520Ilmenau%7C%7Chttps%3A%2F%2Fwww.kuestendaten.de%2FDE%2Fdynamisch%2Fkuestendaten_ogc%2Fbs%3F\" height=\"250\" frameborder=\"0\" style=\"border:0\"></iframe>",
+  "metadata": {
+    "created": null
+  },
+  "number_of_features": 2,
+  "partner": [
+    "Bund"
+  ],
+  "provider": [
+    "BAW"
+  ],
+  "sort_hash": "5f6f09fa4a3d990dcbad3174f208cd1da16844b3",
+  "spatial": {
+    "geometries": [
+      {
+        "bbox": [
+          6.50037702049628,
+          53.1120716122706,
+          7.69169154204488,
+          53.6582628511111
+        ],
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              6.50037702049628,
+              53.6582628511111
+            ],
+            [
+              6.50037702049628,
+              53.1120716122706
+            ],
+            [
+              7.69169154204488,
+              53.1120716122706
+            ],
+            [
+              7.69169154204488,
+              53.6582628511111
+            ],
+            [
+              6.50037702049628,
+              53.6582628511111
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "summary": "WebFeatureService (WFS) Küstendaten, FeatureType: ms:BR_Schadstoffe<br>Dieser FeatureType umfasst <b>2</b> Feature(s).<br>Betrachtungsraum Aspekt Schadstoffe in Sedimenten und ökotoxikologisches Wirkungspotenzial. Herausgeber: WSA Ems-Nordsee<br>",
+  "t01_object": {
+    "obj_id": "2d1b1b39-1b20-577b-bfc5-448582279156",
+    "org_obj_id": "2d1b1b39-1b20-577b-bfc5-448582279156"
+  },
+  "title": "BR Aspekt Schadstoffe in Sedimenten und ökotoxikologisches Wirkungspotenzial",
+  "typename": "ms:BR_Schadstoffe",
+  "uuid": "2d1b1b39-1b20-577b-bfc5-448582279156",
+  "x1": 6.50037702049628,
+  "x2": 7.69169154204488,
+  "y1": 53.1120716122706,
+  "y2": 53.6582628511111
+}
