@@ -54,6 +54,14 @@ import { Codelist } from "../utils/codelist.js";
 
 export type ingridMapperType = CswMapper | CkanMapper | DcatapdeMapper | WfsMapper | GenesisMapper;
 
+// which document shape a mapper produces. Extend this union (and getDocumentBuilders() below) when
+// a new shape is added - createIndexDocument() itself doesn't need to change.
+export type DocumentKind = 'ingrid' | 'opendata';
+
+// the fields shared by every document kind, assembled once in buildCommonFields() and merged into
+// each kind's specific fields by that kind's builder (see getDocumentBuilders()).
+type CommonIndexFields = Awaited<ReturnType<ingridMapper<any>['buildCommonFields']>>;
+
 export abstract class ingridMapper<M extends ingridMapperType>
     implements DocumentFactory<IngridIndexDocument | IngridOpendataIndexDocument>, ToElasticMapper<IngridIndexDocument | IngridOpendataIndexDocument> {
 
@@ -79,7 +87,7 @@ export abstract class ingridMapper<M extends ingridMapperType>
     // Resolved from the target catalogs' configured Elastic mapping (see resolveMappingHint());
     // falls back to `getDefaultDocumentKind()` when that can't be resolved (e.g. dry runs, no
     // catalogs assigned, or catalogs with mixed mappings).
-    getDocumentKind(): 'ingrid' | 'opendata' {
+    getDocumentKind(): DocumentKind {
         return this.resolveMappingHint() ?? this.getDefaultDocumentKind();
     }
 
@@ -88,7 +96,7 @@ export abstract class ingridMapper<M extends ingridMapperType>
     // one document shape (most notably CSW) knows which one to build. Returns undefined if none
     // of the catalogs are Elasticsearch catalogs, or if they resolve to more than one distinct
     // mapping (mixed InGrid/OpenData catalogs for the same import job).
-    private resolveMappingHint(): 'ingrid' | 'opendata' | undefined {
+    private resolveMappingHint(): DocumentKind | undefined {
         const schemaNames = new Set<string>();
         for (const catalogId of this.baseMapper.settings.catalogIds ?? []) {
             const catalogSettings = CatalogService.getCatalogSettings(catalogId) as Partial<ElasticsearchCatalogSettings>;
@@ -100,7 +108,7 @@ export abstract class ingridMapper<M extends ingridMapperType>
             }
         }
         if (schemaNames.size === 1) {
-            return [...schemaNames][0] as 'ingrid' | 'opendata';
+            return [...schemaNames][0] as DocumentKind;
         }
         if (schemaNames.size > 1) {
             this._log.warn(`Catalogs [${this.baseMapper.settings.catalogIds}] use mixed Elastic mappings (${[...schemaNames].join(', ')}); falling back to this mapper's default document kind.`);
@@ -113,12 +121,15 @@ export abstract class ingridMapper<M extends ingridMapperType>
     // since only the source format determines which fields can meaningfully be populated by
     // default (e.g. a CSW source has no real DCAT `distributions`, a CKAN source has no real ISO
     // `exports.iso`).
-    protected getDefaultDocumentKind(): 'ingrid' | 'opendata' {
+    protected getDefaultDocumentKind(): DocumentKind {
         return 'ingrid';
     }
 
-    async createIndexDocument(): Promise<IngridIndexDocument | IngridOpendataIndexDocument> {
-        const common = {
+    // the fields shared by every document kind. Kept separate from the kind-specific builders in
+    // getDocumentBuilders() so createIndexDocument() only has to assemble this once regardless of
+    // which kind ends up being built.
+    private async buildCommonFields() {
+        return {
             ...this.getCustomEntries(),
             id: this.getGeneratedId(),
             $schema: undefined, // set by the target catalog from the selected JSON schema's $id
@@ -146,27 +157,46 @@ export abstract class ingridMapper<M extends ingridMapperType>
             keywords: this.getKeywords(),
             references: this.getReferences(),
         };
+    }
 
-        let result: IngridIndexDocument | IngridOpendataIndexDocument;
-        if (this.getDocumentKind() === 'opendata') {
-            result = {
-                ...common,
-                exports: { rdf: await this.getRdf() },
-                dcat: this.getDcat(),
-                legal_basis: this.getLegalBasis(),
-                distributions: await this.getDistributions(),
-                political_geocoding_level_uri: this.getPoliticalGeocodingLevelUri(),
-            };
-        }
-        else {
-            result = {
-                ...common,
-                exports: { iso: this.getIso() },
-                ingrid: this.getIngrid(),
-                crs: this.getCrs(),
-            };
-        }
+    private async buildIngridDocument(common: CommonIndexFields): Promise<IngridIndexDocument> {
+        return {
+            ...common,
+            exports: { iso: this.getIso() },
+            ingrid: this.getIngrid(),
+            crs: this.getCrs(),
+        };
+    }
 
+    private async buildOpendataDocument(common: CommonIndexFields): Promise<IngridOpendataIndexDocument> {
+        return {
+            ...common,
+            exports: { rdf: await this.getRdf() },
+            dcat: this.getDcat(),
+            legal_basis: this.getLegalBasis(),
+            distributions: await this.getDistributions(),
+            political_geocoding_level_uri: this.getPoliticalGeocodingLevelUri(),
+        };
+    }
+
+    // registry of document-kind builders, keyed by DocumentKind. This is the single place new
+    // kinds get wired up - adding one means adding a union member to DocumentKind, a buildXyz()
+    // method above, and an entry here; createIndexDocument() itself never needs to change.
+    protected getDocumentBuilders(): Record<DocumentKind, (common: CommonIndexFields) => Promise<IngridIndexDocument | IngridOpendataIndexDocument>> {
+        return {
+            ingrid: common => this.buildIngridDocument(common),
+            opendata: common => this.buildOpendataDocument(common),
+        };
+    }
+
+    async createIndexDocument(): Promise<IngridIndexDocument | IngridOpendataIndexDocument> {
+        const common = await this.buildCommonFields();
+        const kind = this.getDocumentKind();
+        const build = this.getDocumentBuilders()[kind];
+        if (!build) {
+            throw new Error(`No document builder registered for kind "${kind}"`);
+        }
+        const result = await build(common);
         this.executeCustomCode(result);
         return result;
     }
