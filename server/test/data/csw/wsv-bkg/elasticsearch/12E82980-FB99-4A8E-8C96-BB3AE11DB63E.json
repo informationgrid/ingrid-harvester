@@ -1,0 +1,457 @@
+{
+  "additional_html_1": "<img src='/documents/igc_bkg/12E82980-FB99-4A8E-8C96-BB3AE11DB63E/geocoderplus_detail.png' height='100' class='preview_image' alt='/documents/igc_bkg/12E82980-FB99-4A8E-8C96-BB3AE11DB63E/geocoderplus_detail.png' >",
+  "alternatetitle": [
+    "GeocoderPlus"
+  ],
+  "capabilities_url": [],
+  "collection": {
+    "name": "wsv-bkg-csw"
+  },
+  "content": [
+    "wsv-bkg-csw",
+    "bund",
+    "wsv",
+    "csw",
+    "metadata",
+    "wsv-bkg-csw",
+    "false",
+    "12E82980-FB99-4A8E-8C96-BB3AE11DB63E",
+    "wsv-bkg-csw",
+    "application",
+    "https://mis.bkg.bund.de/csw",
+    "https://mis.bkg.bund.de/csw?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=12E82980-FB99-4A8E-8C96-BB3AE11DB63E",
+    "csw",
+    "https://gdz.bkg.bund.de/index.php/default/software/geocoderplus.html",
+    "https://gdz.bkg.bund.de/index.php/default/software/geocoderplus.html",
+    "Produktseite des Geodatenzentrum",
+    "WWW",
+    "https://daten.gdz.bkg.bund.de/software/geocoder-plus",
+    "https://daten.gdz.bkg.bund.de/software/geocoder-plus",
+    "GeocoderPlus Download",
+    "Unbekannt",
+    "12E82980-FB99-4A8E-8C96-BB3AE11DB63E",
+    "12E82980-FB99-4A8E-8C96-BB3AE11DB63E",
+    "6",
+    "GeocoderPlus",
+    "de",
+    "4",
+    "ISO19115",
+    "2003/Cor.1:2006",
+    "de",
+    "5105",
+    "4",
+    "9",
+    "application",
+    "GeocoderPlus",
+    "Bundesamt für Kartographie und Geodäsie (BKG)",
+    "Bundesrepublik Deutschland",
+    "DEU",
+    "Bundesamt für Kartographie und Geodäsie (BKG)",
+    "Richard-Strauss-Allee 11",
+    "60598",
+    "Frankfurt am Main",
+    "Bundesrepublik Deutschland",
+    "DEU",
+    "Bundesrepublik Deutschland",
+    "Bundesamt für Kartographie und Geodäsie (BKG)",
+    "Karl-Rothe-Str. 10-14",
+    "04105",
+    "Leipzig",
+    "Bundesrepublik Deutschland",
+    "DEU",
+    "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie (DLZ)",
+    "Bundesrepublik Deutschland",
+    "GeocoderPlus",
+    "Die Anwendung GeocoderPlus ermöglicht die Geokodierung von amtlichen bzw. postalischen Adressen, Ortsnamen, Straßennamen oder Postleitzahlen. Mit dieser Anwendung können Register mit massenhaften adressbezogenen Einträgen über eine Datenaustauschnittstelle (CSV-Datei) einfach automatisch geokodiert werden. Dabei wird den Registereinträgen eine räumliche Lagebeschreibung in Form einer Koordinate (Geokodierung) zugeordnet und die Ergebnisse in einer interaktiven Karte visualisiert. Ebenso wird die Reverse Geokodierung unterstützt, d.h. die Suche von Adressen ausgehend von einer Koordinate.\n\n                            Wesentliche Funktionen und Merkmale:\n                            • Geokodierung und Reverse Geokodierung\n                            • Einzelsuche und Batch-Suche\n                            • Massenverarbeitung von über 100.000 Adressen\n                            • Ergebniskorrekturmöglichkeiten\n                            • interaktive Kartenkomponente\n                            • Parallelisierung mehrerer Verarbeitungsprozesse\n                            • Suchen und Ergebnisse sind persistierbar\n\n                            Die Desktop-Anwendung kann auf mehreren Betriebssystemen genutzt werden. Die Bereitstellung erfolgt als Download (*.exe, *.deb, *.rpm).\n\n                            Die Voraussetzung für die Nutzung des GeocoderPlus ist der Erwerb einer Lizenz für den Dienst gdz_geokodierung bzw. gdz_geokodierung_bund beim Dienstleistungszentrum des BKG.\n\n                            Die Authentifizierung erfolgt über einen eindeutigen Nutzeridentifikator (UUID) oder über Ihre bei uns registrierte IP-Adresse.",
+    "Bundesrepublik Deutschland",
+    "",
+    "6.098034",
+    "15.578555",
+    "47.23942",
+    "55.054344",
+    "Polygon",
+    6.098034,
+    55.054344,
+    6.098034,
+    47.23942,
+    15.578555,
+    47.23942,
+    15.578555,
+    55.054344,
+    6.098034,
+    55.054344,
+    6.098034,
+    47.23942,
+    15.578555,
+    55.054344,
+    "<img src='/documents/igc_bkg/12E82980-FB99-4A8E-8C96-BB3AE11DB63E/geocoderplus_detail.png' height='100' class='preview_image' alt='/documents/igc_bkg/12E82980-FB99-4A8E-8C96-BB3AE11DB63E/geocoderplus_detail.png' >",
+    "Geocoder",
+    "F",
+    "Geokodierung",
+    "F",
+    "Ortsnamen",
+    "F",
+    "Straßennamen",
+    "F",
+    "Adresse",
+    "F",
+    "geocoding",
+    "F",
+    "GN250",
+    "F",
+    "HK-DE",
+    "F",
+    "invocableSpatialDataService",
+    "F",
+    "OpenSearch Geo and Time Extensions",
+    "F",
+    false,
+    false,
+    "",
+    "0",
+    "7",
+    "0",
+    "10",
+    "0",
+    "7",
+    "20250106000000000",
+    "1",
+    "20260701000000000",
+    "3",
+    "https://gdz.bkg.bund.de/index.php/default/software/geocoderplus.html",
+    "Produktseite des Geodatenzentrum",
+    "",
+    "5302",
+    "https://daten.gdz.bkg.bund.de/software/geocoder-plus",
+    "GeocoderPlus Download",
+    "",
+    "5302",
+    "Email",
+    "dlz@bkg.bund.de",
+    "Telefon",
+    "+49 69 6333-1",
+    "Fax",
+    "+49 69 6333-235",
+    "Email",
+    "mailbox@bkg.bund.de",
+    "URL",
+    "https://www.bkg.bund.de",
+    "Telefon",
+    "+49 69 6333-2995",
+    "Fax",
+    "+49 69 6333-251",
+    "Email",
+    "dlz@bkg.bund.de",
+    "URL",
+    "https://www.bkg.bund.de",
+    "Die Software ist urheberrechtlich geschützt. Die Software wird Nutzungsberechtigten nach V GeoBund und Dritten geldleistungsfrei zur Verfügung gestellt. Bitte informieren Sie sich unter den nachfolgenden Links über die Lizenzvereinbarung: https://sg.geodatenzentrum.de/web_public/gdz/lizenz/deu/lizenz_geocoderplus_bund.pdf und https://sg.geodatenzentrum.de/web_public/gdz/lizenz/deu/lizenz_geocoderplus_dritte.pdf. Der Quellenvermerk ist zu beachten.",
+    "Quellenvermerk: © BKG (Jahr des letzten Softwarebezugs)",
+    "-1",
+    "Es gelten Zugriffsbeschränkungen. Für den Erwerb von Nutzungsrechten wenden Sie sich deshalb bitte an die Zentrale Stelle Geotopographie der AdV (ZSGT) / Dienstleistungszentrum (DLZ) des Bundesamtes für Kartographie und Geodäsie: https://www.bkg.bund.de/DE/Service/Kontakt/kontakt.html.",
+    false,
+    "01595cf64fbe7e97df8ec25eb6330e3fc699c6c0"
+  ],
+  "dataSourceName": "wsv-bkg-csw",
+  "datatype": [
+    "csw",
+    "metadata"
+  ],
+  "distributions": [
+    {
+      "title": "Produktseite des Geodatenzentrum",
+      "format": [
+        "WWW"
+      ],
+      "accessURL": "https://gdz.bkg.bund.de/index.php/default/software/geocoderplus.html",
+      "access_url": "https://gdz.bkg.bund.de/index.php/default/software/geocoderplus.html"
+    },
+    {
+      "title": "GeocoderPlus Download",
+      "format": [
+        "Unbekannt"
+      ],
+      "accessURL": "https://daten.gdz.bkg.bund.de/software/geocoder-plus",
+      "access_url": "https://daten.gdz.bkg.bund.de/software/geocoder-plus"
+    }
+  ],
+  "extras": {
+    "hierarchy_level": "application",
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-09-02T08:38:25.983Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-09-02T08:38:25.781Z",
+      "merged_from": [],
+      "modified": null,
+      "source": {
+        "raw_data_source": "https://mis.bkg.bund.de/csw?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=12E82980-FB99-4A8E-8C96-BB3AE11DB63E",
+        "source_base": "https://mis.bkg.bund.de/csw",
+        "source_type": "csw"
+      }
+    }
+  },
+  "hierarchylevel": "application",
+  "iPlugId": "wsv-bkg-csw",
+  "idf": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.portalu.de/IDF/1.0\">\n  <head/>\n  <body>\n<idf:idfMdMetadata xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gml=\"http://www.opengis.net/gml/3.2\" xmlns:gmx=\"http://www.isotc211.org/2005/gmx\" xmlns:gts=\"http://www.isotc211.org/2005/gts\" xmlns:igctx=\"https://www.ingrid-oss.eu/schemas/igctx\" xmlns:srv=\"http://www.isotc211.org/2005/srv\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.isotc211.org/2005/gmd http://repository.gdi-de.org/schemas/geonetwork/2020-12-11/csw/2.0.2/profiles/apiso/1.0.1/apiso.xsd https://www.ingrid-oss.eu/schemas/igctx https://www.ingrid-oss.eu/schemas/igctx/igctx.xsd\" xmlns:idf=\"http://www.portalu.de/IDF/1.0\">\n            <gmd:fileIdentifier>\n                <gco:CharacterString>12E82980-FB99-4A8E-8C96-BB3AE11DB63E</gco:CharacterString>\n            </gmd:fileIdentifier>\n            <gmd:language>\n                <gmd:LanguageCode codeList=\"http://www.loc.gov/standards/iso639-2/\" codeListValue=\"ger\"/>\n            </gmd:language>\n            <gmd:characterSet>\n                <gmd:MD_CharacterSetCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode\" codeListValue=\"utf8\"/>\n            </gmd:characterSet>\n            <gmd:hierarchyLevel>\n                <gmd:MD_ScopeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode\" codeListValue=\"application\">application</gmd:MD_ScopeCode>\n            </gmd:hierarchyLevel>\n            <gmd:hierarchyLevelName>\n                <gco:CharacterString>application</gco:CharacterString>\n            </gmd:hierarchyLevelName>\n            <gmd:contact>\n                <idf:idfResponsibleParty uuid=\"93295cfc-f8b5-4511-bf59-a4f679b1bf42\">\n                    <gmd:organisationName>\n                        <gco:CharacterString>Bundesamt für Kartographie und Geodäsie (BKG)</gco:CharacterString>\n                    </gmd:organisationName>\n                    <gmd:contactInfo>\n                        <gmd:CI_Contact>\n                            <gmd:address>\n                                <gmd:CI_Address>\n                                    <gmd:administrativeArea>\n                                        <gco:CharacterString>Bundesrepublik Deutschland</gco:CharacterString>\n                                    </gmd:administrativeArea>\n                                    <gmd:country>\n                                        <gco:CharacterString>DEU</gco:CharacterString>\n                                    </gmd:country>\n                                    <gmd:electronicMailAddress>\n                                        <gco:CharacterString>dlz@bkg.bund.de</gco:CharacterString>\n                                    </gmd:electronicMailAddress>\n                                </gmd:CI_Address>\n                            </gmd:address>\n                        </gmd:CI_Contact>\n                    </gmd:contactInfo>\n                    <gmd:role>\n                        <gmd:CI_RoleCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode\" codeListValue=\"pointOfContact\"/>\n                    </gmd:role>\n                </idf:idfResponsibleParty>\n            </gmd:contact>\n            <gmd:dateStamp>\n                <gco:Date>2026-07-01</gco:Date>\n            </gmd:dateStamp>\n            <gmd:metadataStandardName>\n                <gco:CharacterString>ISO19115</gco:CharacterString>\n            </gmd:metadataStandardName>\n            <gmd:metadataStandardVersion>\n                <gco:CharacterString>2003/Cor.1:2006</gco:CharacterString>\n            </gmd:metadataStandardVersion>\n            <gmd:identificationInfo>\n                <gmd:MD_DataIdentification uuid=\"https://registry.gdi-de.org/id/de.bund.bkg.csw/12E82980-FB99-4A8E-8C96-BB3AE11DB63E\">\n                    <gmd:citation>\n                        <gmd:CI_Citation>\n                            <gmd:title>\n                                <gco:CharacterString>GeocoderPlus</gco:CharacterString>\n                            </gmd:title>\n                            <gmd:alternateTitle>\n                                <gco:CharacterString>GeocoderPlus</gco:CharacterString>\n                            </gmd:alternateTitle>\n                            <gmd:date>\n                                <gmd:CI_Date>\n                                    <gmd:date>\n                                        <gco:DateTime>2025-01-06T00:00:00.000+01:00</gco:DateTime>\n                                    </gmd:date>\n                                    <gmd:dateType>\n                                        <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"creation\"/>\n                                    </gmd:dateType>\n                                </gmd:CI_Date>\n                            </gmd:date>\n                            <gmd:date>\n                                <gmd:CI_Date>\n                                    <gmd:date>\n                                        <gco:DateTime>2026-07-01T00:00:00.000+02:00</gco:DateTime>\n                                    </gmd:date>\n                                    <gmd:dateType>\n                                        <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"revision\"/>\n                                    </gmd:dateType>\n                                </gmd:CI_Date>\n                            </gmd:date>\n                        </gmd:CI_Citation>\n                    </gmd:citation>\n                    <gmd:abstract>\n                        <gco:CharacterString>Die Anwendung GeocoderPlus ermöglicht die Geokodierung von amtlichen bzw. postalischen Adressen, Ortsnamen, Straßennamen oder Postleitzahlen. Mit dieser Anwendung können Register mit massenhaften adressbezogenen Einträgen über eine Datenaustauschnittstelle (CSV-Datei) einfach automatisch geokodiert werden. Dabei wird den Registereinträgen eine räumliche Lagebeschreibung in Form einer Koordinate (Geokodierung) zugeordnet und die Ergebnisse in einer interaktiven Karte visualisiert. Ebenso wird die Reverse Geokodierung unterstützt, d.h. die Suche von Adressen ausgehend von einer Koordinate.\n\n                            Wesentliche Funktionen und Merkmale:\n                            • Geokodierung und Reverse Geokodierung\n                            • Einzelsuche und Batch-Suche\n                            • Massenverarbeitung von über 100.000 Adressen\n                            • Ergebniskorrekturmöglichkeiten\n                            • interaktive Kartenkomponente\n                            • Parallelisierung mehrerer Verarbeitungsprozesse\n                            • Suchen und Ergebnisse sind persistierbar\n\n                            Die Desktop-Anwendung kann auf mehreren Betriebssystemen genutzt werden. Die Bereitstellung erfolgt als Download (*.exe, *.deb, *.rpm).\n\n                            Die Voraussetzung für die Nutzung des GeocoderPlus ist der Erwerb einer Lizenz für den Dienst gdz_geokodierung bzw. gdz_geokodierung_bund beim Dienstleistungszentrum des BKG.\n\n                            Die Authentifizierung erfolgt über einen eindeutigen Nutzeridentifikator (UUID) oder über Ihre bei uns registrierte IP-Adresse.</gco:CharacterString>\n                    </gmd:abstract>\n                    <gmd:status>\n                        <gmd:MD_ProgressCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ProgressCode\" codeListValue=\"onGoing\"/>\n                    </gmd:status>\n                    <gmd:pointOfContact>\n                        <idf:idfResponsibleParty uuid=\"11904ACE-A410-48BB-806D-8A70600E0911\">\n                            <gmd:organisationName>\n                                <gco:CharacterString>Bundesamt für Kartographie und Geodäsie (BKG)</gco:CharacterString>\n                            </gmd:organisationName>\n                            <gmd:contactInfo>\n                                <gmd:CI_Contact>\n                                    <gmd:phone>\n                                        <gmd:CI_Telephone>\n                                            <gmd:voice>\n                                                <gco:CharacterString>+49 69 6333-1</gco:CharacterString>\n                                            </gmd:voice>\n                                            <gmd:facsimile>\n                                                <gco:CharacterString>+49 69 6333-235</gco:CharacterString>\n                                            </gmd:facsimile>\n                                        </gmd:CI_Telephone>\n                                    </gmd:phone>\n                                    <gmd:address>\n                                        <gmd:CI_Address>\n                                            <gmd:deliveryPoint>\n                                                <gco:CharacterString>Richard-Strauss-Allee 11</gco:CharacterString>\n                                            </gmd:deliveryPoint>\n                                            <gmd:city>\n                                                <gco:CharacterString>Frankfurt am Main</gco:CharacterString>\n                                            </gmd:city>\n                                            <gmd:administrativeArea>\n                                                <gco:CharacterString>Bundesrepublik Deutschland</gco:CharacterString>\n                                            </gmd:administrativeArea>\n                                            <gmd:postalCode>\n                                                <gco:CharacterString>60598</gco:CharacterString>\n                                            </gmd:postalCode>\n                                            <gmd:country>\n                                                <gco:CharacterString>DEU</gco:CharacterString>\n                                            </gmd:country>\n                                            <gmd:electronicMailAddress>\n                                                <gco:CharacterString>mailbox@bkg.bund.de</gco:CharacterString>\n                                            </gmd:electronicMailAddress>\n                                        </gmd:CI_Address>\n                                    </gmd:address>\n                                    <gmd:onlineResource>\n                                        <gmd:CI_OnlineResource>\n                                            <gmd:linkage>\n                                                <gmd:URL>https://www.bkg.bund.de</gmd:URL>\n                                            </gmd:linkage>\n                                        </gmd:CI_OnlineResource>\n                                    </gmd:onlineResource>\n                                </gmd:CI_Contact>\n                            </gmd:contactInfo>\n                            <gmd:role>\n                                <gmd:CI_RoleCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode\" codeListValue=\"publisher\"/>\n                            </gmd:role>\n                        </idf:idfResponsibleParty>\n                    </gmd:pointOfContact>\n                    <gmd:pointOfContact>\n                        <idf:idfResponsibleParty uuid=\"B464CFD9-70BA-4B96-8CB6-E670D8E810E9\">\n                            <gmd:organisationName>\n                                <gco:CharacterString>Bundesamt für Kartographie und Geodäsie (BKG)</gco:CharacterString>\n                            </gmd:organisationName>\n                            <gmd:positionName>\n                                <gco:CharacterString>Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie (DLZ)</gco:CharacterString>\n                            </gmd:positionName>\n                            <gmd:contactInfo>\n                                <gmd:CI_Contact>\n                                    <gmd:phone>\n                                        <gmd:CI_Telephone>\n                                            <gmd:voice>\n                                                <gco:CharacterString>+49 69 6333-2995</gco:CharacterString>\n                                            </gmd:voice>\n                                            <gmd:facsimile>\n                                                <gco:CharacterString>+49 69 6333-251</gco:CharacterString>\n                                            </gmd:facsimile>\n                                        </gmd:CI_Telephone>\n                                    </gmd:phone>\n                                    <gmd:address>\n                                        <gmd:CI_Address>\n                                            <gmd:deliveryPoint>\n                                                <gco:CharacterString>Karl-Rothe-Str. 10-14</gco:CharacterString>\n                                            </gmd:deliveryPoint>\n                                            <gmd:city>\n                                                <gco:CharacterString>Leipzig</gco:CharacterString>\n                                            </gmd:city>\n                                            <gmd:administrativeArea>\n                                                <gco:CharacterString>Bundesrepublik Deutschland</gco:CharacterString>\n                                            </gmd:administrativeArea>\n                                            <gmd:postalCode>\n                                                <gco:CharacterString>04105</gco:CharacterString>\n                                            </gmd:postalCode>\n                                            <gmd:country>\n                                                <gco:CharacterString>DEU</gco:CharacterString>\n                                            </gmd:country>\n                                            <gmd:electronicMailAddress>\n                                                <gco:CharacterString>dlz@bkg.bund.de</gco:CharacterString>\n                                            </gmd:electronicMailAddress>\n                                        </gmd:CI_Address>\n                                    </gmd:address>\n                                    <gmd:onlineResource>\n                                        <gmd:CI_OnlineResource>\n                                            <gmd:linkage>\n                                                <gmd:URL>https://www.bkg.bund.de</gmd:URL>\n                                            </gmd:linkage>\n                                        </gmd:CI_OnlineResource>\n                                    </gmd:onlineResource>\n                                </gmd:CI_Contact>\n                            </gmd:contactInfo>\n                            <gmd:role>\n                                <gmd:CI_RoleCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode\" codeListValue=\"pointOfContact\"/>\n                            </gmd:role>\n                        </idf:idfResponsibleParty>\n                    </gmd:pointOfContact>\n                    <gmd:resourceMaintenance>\n                        <gmd:MD_MaintenanceInformation>\n                            <gmd:maintenanceAndUpdateFrequency>\n                                <gmd:MD_MaintenanceFrequencyCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_MaintenanceFrequencyCode\" codeListValue=\"asNeeded\"/>\n                            </gmd:maintenanceAndUpdateFrequency>\n                            <gmd:updateScope>\n                                <gmd:MD_ScopeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode\" codeListValue=\"application\"/>\n                            </gmd:updateScope>\n                        </gmd:MD_MaintenanceInformation>\n                    </gmd:resourceMaintenance>\n                    <gmd:graphicOverview>\n                        <gmd:MD_BrowseGraphic>\n                            <gmd:fileName>\n                                <gco:CharacterString>/documents/igc_bkg/12E82980-FB99-4A8E-8C96-BB3AE11DB63E/geocoderplus_detail.png</gco:CharacterString>\n                            </gmd:fileName>\n                        </gmd:MD_BrowseGraphic>\n                    </gmd:graphicOverview>\n                    <gmd:descriptiveKeywords>\n                        <gmd:MD_Keywords>\n                            <gmd:keyword>\n                                <gco:CharacterString>Geocoder</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Geokodierung</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Ortsnamen</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Straßennamen</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Adresse</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>geocoding</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>GN250</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>HK-DE</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>invocableSpatialDataService</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>OpenSearch Geo and Time Extensions</gco:CharacterString>\n                            </gmd:keyword>\n                        </gmd:MD_Keywords>\n                    </gmd:descriptiveKeywords>\n                    <gmd:resourceConstraints>\n                        <gmd:MD_LegalConstraints>\n                            <gmd:useConstraints>\n                                <gmd:MD_RestrictionCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode\" codeListValue=\"otherRestrictions\"/>\n                            </gmd:useConstraints>\n                            <gmd:otherConstraints>\n                                <gco:CharacterString>Die Software ist urheberrechtlich geschützt. Die Software wird Nutzungsberechtigten nach V GeoBund und Dritten geldleistungsfrei zur Verfügung gestellt. Bitte informieren Sie sich unter den nachfolgenden Links über die Lizenzvereinbarung: https://sg.geodatenzentrum.de/web_public/gdz/lizenz/deu/lizenz_geocoderplus_bund.pdf und https://sg.geodatenzentrum.de/web_public/gdz/lizenz/deu/lizenz_geocoderplus_dritte.pdf. Der Quellenvermerk ist zu beachten.</gco:CharacterString>\n                            </gmd:otherConstraints>\n                            <gmd:otherConstraints>\n                                <gco:CharacterString>Quellenvermerk: © BKG (Jahr des letzten Softwarebezugs)</gco:CharacterString>\n                            </gmd:otherConstraints>\n                        </gmd:MD_LegalConstraints>\n                    </gmd:resourceConstraints>\n                    <gmd:resourceConstraints>\n                        <gmd:MD_LegalConstraints>\n                            <gmd:accessConstraints>\n                                <gmd:MD_RestrictionCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode\" codeListValue=\"otherRestrictions\">otherRestrictions</gmd:MD_RestrictionCode>\n                            </gmd:accessConstraints>\n                            <gmd:otherConstraints>\n                                <gco:CharacterString>Es gelten Zugriffsbeschränkungen. Für den Erwerb von Nutzungsrechten wenden Sie sich deshalb bitte an die Zentrale Stelle Geotopographie der AdV (ZSGT) / Dienstleistungszentrum (DLZ) des Bundesamtes für Kartographie und Geodäsie: https://www.bkg.bund.de/DE/Service/Kontakt/kontakt.html.</gco:CharacterString>\n                            </gmd:otherConstraints>\n                        </gmd:MD_LegalConstraints>\n                    </gmd:resourceConstraints>\n                    <gmd:language>\n                        <gmd:LanguageCode codeList=\"http://www.loc.gov/standards/iso639-2/\" codeListValue=\"ger\"/>\n                    </gmd:language>\n                    <gmd:extent>\n                        <gmd:EX_Extent>\n                            <gmd:geographicElement>\n                                <gmd:EX_GeographicDescription>\n                                    <gmd:extentTypeCode>\n                                        <gco:Boolean>true</gco:Boolean>\n                                    </gmd:extentTypeCode>\n                                    <gmd:geographicIdentifier>\n                                        <gmd:MD_Identifier>\n                                            <gmd:code>\n                                                <gco:CharacterString>Bundesrepublik Deutschland</gco:CharacterString>\n                                            </gmd:code>\n                                        </gmd:MD_Identifier>\n                                    </gmd:geographicIdentifier>\n                                </gmd:EX_GeographicDescription>\n                            </gmd:geographicElement>\n                            <gmd:geographicElement>\n                                <gmd:EX_GeographicBoundingBox>\n                                    <gmd:extentTypeCode>\n                                        <gco:Boolean>true</gco:Boolean>\n                                    </gmd:extentTypeCode>\n                                    <gmd:westBoundLongitude>\n                                        <gco:Decimal>6.098034</gco:Decimal>\n                                    </gmd:westBoundLongitude>\n                                    <gmd:eastBoundLongitude>\n                                        <gco:Decimal>15.578555</gco:Decimal>\n                                    </gmd:eastBoundLongitude>\n                                    <gmd:southBoundLatitude>\n                                        <gco:Decimal>47.23942</gco:Decimal>\n                                    </gmd:southBoundLatitude>\n                                    <gmd:northBoundLatitude>\n                                        <gco:Decimal>55.054344</gco:Decimal>\n                                    </gmd:northBoundLatitude>\n                                </gmd:EX_GeographicBoundingBox>\n                            </gmd:geographicElement>\n                        </gmd:EX_Extent>\n                    </gmd:extent>\n                </gmd:MD_DataIdentification>\n            </gmd:identificationInfo>\n            <gmd:distributionInfo>\n                <gmd:MD_Distribution>\n                    <gmd:distributionFormat>\n                        <gmd:MD_Format>\n                            <gmd:name gco:nilReason=\"unknown\"/>\n                            <gmd:version gco:nilReason=\"unknown\"/>\n                        </gmd:MD_Format>\n                    </gmd:distributionFormat>\n                    <gmd:transferOptions>\n                        <gmd:MD_DigitalTransferOptions>\n                            <gmd:onLine>\n                                <gmd:CI_OnlineResource>\n                                    <gmd:linkage>\n                                        <gmd:URL>https://gdz.bkg.bund.de/index.php/default/software/geocoderplus.html</gmd:URL>\n                                    </gmd:linkage>\n                                    <gmd:applicationProfile>\n                                        <gco:CharacterString>HTML</gco:CharacterString>\n                                    </gmd:applicationProfile>\n                                    <gmd:name>\n                                        <gco:CharacterString>Produktseite des Geodatenzentrum</gco:CharacterString>\n                                    </gmd:name>\n                                    <gmd:function>\n                                        <gmd:CI_OnLineFunctionCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode\" codeListValue=\"information\">information</gmd:CI_OnLineFunctionCode>\n                                    </gmd:function>\n                                </gmd:CI_OnlineResource>\n                            </gmd:onLine>\n                        </gmd:MD_DigitalTransferOptions>\n                    </gmd:transferOptions>\n                    <gmd:transferOptions>\n                        <gmd:MD_DigitalTransferOptions>\n                            <gmd:onLine>\n                                <gmd:CI_OnlineResource>\n                                    <gmd:linkage>\n                                        <gmd:URL>https://daten.gdz.bkg.bund.de/software/geocoder-plus</gmd:URL>\n                                    </gmd:linkage>\n                                    <gmd:name>\n                                        <gco:CharacterString>GeocoderPlus Download</gco:CharacterString>\n                                    </gmd:name>\n                                    <gmd:function>\n                                        <gmd:CI_OnLineFunctionCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode\" codeListValue=\"information\">information</gmd:CI_OnLineFunctionCode>\n                                    </gmd:function>\n                                </gmd:CI_OnlineResource>\n                            </gmd:onLine>\n                        </gmd:MD_DigitalTransferOptions>\n                    </gmd:transferOptions>\n                </gmd:MD_Distribution>\n            </gmd:distributionInfo>\n        </idf:idfMdMetadata>\n  </body>\n</html>\n",
+  "is_hvd": false,
+  "isfolder": "false",
+  "location": [
+    "Bundesrepublik Deutschland",
+    ""
+  ],
+  "metadata": {
+    "created": null,
+    "modified": "2026-07-01T00:00:00.000Z"
+  },
+  "modified": "2026-07-01T00:00:00.000Z",
+  "object_access": {
+    "restriction_key": [
+      "-1"
+    ],
+    "restriction_value": [
+      "Es gelten Zugriffsbeschränkungen. Für den Erwerb von Nutzungsrechten wenden Sie sich deshalb bitte an die Zentrale Stelle Geotopographie der AdV (ZSGT) / Dienstleistungszentrum (DLZ) des Bundesamtes für Kartographie und Geodäsie: https://www.bkg.bund.de/DE/Service/Kontakt/kontakt.html."
+    ]
+  },
+  "object_use_constraint": {
+    "license_value": [
+      "Die Software ist urheberrechtlich geschützt. Die Software wird Nutzungsberechtigten nach V GeoBund und Dritten geldleistungsfrei zur Verfügung gestellt. Bitte informieren Sie sich unter den nachfolgenden Links über die Lizenzvereinbarung: https://sg.geodatenzentrum.de/web_public/gdz/lizenz/deu/lizenz_geocoderplus_bund.pdf und https://sg.geodatenzentrum.de/web_public/gdz/lizenz/deu/lizenz_geocoderplus_dritte.pdf. Der Quellenvermerk ist zu beachten.",
+      "Quellenvermerk: © BKG (Jahr des letzten Softwarebezugs)"
+    ]
+  },
+  "partner": [
+    "bund"
+  ],
+  "provider": [
+    "wsv"
+  ],
+  "sort_hash": "01595cf64fbe7e97df8ec25eb6330e3fc699c6c0",
+  "spatial": {
+    "geometries": [
+      {
+        "bbox": [
+          6.098034,
+          47.23942,
+          15.578555,
+          55.054344
+        ],
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              6.098034,
+              55.054344
+            ],
+            [
+              6.098034,
+              47.23942
+            ],
+            [
+              15.578555,
+              47.23942
+            ],
+            [
+              15.578555,
+              55.054344
+            ],
+            [
+              6.098034,
+              55.054344
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "spatial_system": {
+    "referencesystem_value": []
+  },
+  "summary": "Die Anwendung GeocoderPlus ermöglicht die Geokodierung von amtlichen bzw. postalischen Adressen, Ortsnamen, Straßennamen oder Postleitzahlen. Mit dieser Anwendung können Register mit massenhaften adressbezogenen Einträgen über eine Datenaustauschnittstelle (CSV-Datei) einfach automatisch geokodiert werden. Dabei wird den Registereinträgen eine räumliche Lagebeschreibung in Form einer Koordinate (Geokodierung) zugeordnet und die Ergebnisse in einer interaktiven Karte visualisiert. Ebenso wird die Reverse Geokodierung unterstützt, d.h. die Suche von Adressen ausgehend von einer Koordinate.\n\n                            Wesentliche Funktionen und Merkmale:\n                            • Geokodierung und Reverse Geokodierung\n                            • Einzelsuche und Batch-Suche\n                            • Massenverarbeitung von über 100.000 Adressen\n                            • Ergebniskorrekturmöglichkeiten\n                            • interaktive Kartenkomponente\n                            • Parallelisierung mehrerer Verarbeitungsprozesse\n                            • Suchen und Ergebnisse sind persistierbar\n\n                            Die Desktop-Anwendung kann auf mehreren Betriebssystemen genutzt werden. Die Bereitstellung erfolgt als Download (*.exe, *.deb, *.rpm).\n\n                            Die Voraussetzung für die Nutzung des GeocoderPlus ist der Erwerb einer Lizenz für den Dienst gdz_geokodierung bzw. gdz_geokodierung_bund beim Dienstleistungszentrum des BKG.\n\n                            Die Authentifizierung erfolgt über einen eindeutigen Nutzeridentifikator (UUID) oder über Ihre bei uns registrierte IP-Adresse.",
+  "t0110_avail_format": {},
+  "t0113_dataset_reference": [
+    {
+      "type": "1",
+      "reference_date": "20250106000000000"
+    },
+    {
+      "type": "3",
+      "reference_date": "20260701000000000"
+    }
+  ],
+  "t011_obj_geo": {
+    "hierarchy_level": false,
+    "keyc_incl_w_dataset": false,
+    "referencesystem_id": []
+  },
+  "t011_obj_geo_keyc": [],
+  "t011_obj_geo_scale": [],
+  "t011_obj_geo_spatial_rep": {},
+  "t011_obj_geo_supplinfo": {},
+  "t011_obj_geo_symc": [],
+  "t011_obj_geo_vector": [],
+  "t011_obj_serv": {},
+  "t011_obj_serv_op_connpoint": [],
+  "t011_obj_serv_op_platform": [],
+  "t011_obj_serv_operation": [],
+  "t011_obj_serv_version": {
+    "version_value": ""
+  },
+  "t011_obj_topic_cat": [],
+  "t012_obj_adr": [
+    {
+      "typ": "7",
+      "special_ref": "0"
+    },
+    {
+      "typ": "10",
+      "special_ref": "0"
+    },
+    {
+      "typ": "7",
+      "special_ref": "0"
+    }
+  ],
+  "t017_url_ref": [
+    {
+      "descr": "",
+      "content": "Produktseite des Geodatenzentrum",
+      "url_link": "https://gdz.bkg.bund.de/index.php/default/software/geocoderplus.html",
+      "special_ref": "5302"
+    },
+    {
+      "descr": "",
+      "content": "GeocoderPlus Download",
+      "url_link": "https://daten.gdz.bkg.bund.de/software/geocoder-plus",
+      "special_ref": "5302"
+    }
+  ],
+  "t01_object": {
+    "data_language_code": "de",
+    "dataset_alternate_name": [
+      "GeocoderPlus"
+    ],
+    "metadata_character_set": "4",
+    "metadata_language_code": "de",
+    "metadata_standard_name": "ISO19115",
+    "metadata_standard_version": "2003/Cor.1:2006",
+    "mod_time": "2026-07-01T00:00:00.000Z",
+    "obj_class": "6",
+    "obj_id": "12E82980-FB99-4A8E-8C96-BB3AE11DB63E",
+    "org_obj_id": "12E82980-FB99-4A8E-8C96-BB3AE11DB63E",
+    "time_period": "9",
+    "time_status": "4",
+    "vertical_extent_vdatum": "5105"
+  },
+  "t021_communication": [
+    {
+      "comm_type": "Email",
+      "comm_value": "dlz@bkg.bund.de"
+    },
+    {
+      "comm_type": "Telefon",
+      "comm_value": "+49 69 6333-1"
+    },
+    {
+      "comm_type": "Fax",
+      "comm_value": "+49 69 6333-235"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "mailbox@bkg.bund.de"
+    },
+    {
+      "comm_type": "URL",
+      "comm_value": "https://www.bkg.bund.de"
+    },
+    {
+      "comm_type": "Telefon",
+      "comm_value": "+49 69 6333-2995"
+    },
+    {
+      "comm_type": "Fax",
+      "comm_value": "+49 69 6333-251"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "dlz@bkg.bund.de"
+    },
+    {
+      "comm_type": "URL",
+      "comm_value": "https://www.bkg.bund.de"
+    }
+  ],
+  "t02_address": [
+    {
+      "institution": "Bundesamt für Kartographie und Geodäsie (BKG)",
+      "country_code": "DEU",
+      "administrative_area_value": "Bundesrepublik Deutschland"
+    },
+    {
+      "city": "Frankfurt am Main",
+      "street": "Richard-Strauss-Allee 11",
+      "postcode": "60598",
+      "institution": "Bundesamt für Kartographie und Geodäsie (BKG)",
+      "country_code": "DEU",
+      "administrative_area_value": "Bundesrepublik Deutschland",
+      "identificationinfo_administrative_area_value": "Bundesrepublik Deutschland"
+    },
+    {
+      "job": "Dienstleistungszentrum des Bundes für Geoinformation und Geodäsie (DLZ)",
+      "city": "Leipzig",
+      "street": "Karl-Rothe-Str. 10-14",
+      "postcode": "04105",
+      "institution": "Bundesamt für Kartographie und Geodäsie (BKG)",
+      "country_code": "DEU",
+      "administrative_area_value": "Bundesrepublik Deutschland",
+      "identificationinfo_administrative_area_value": "Bundesrepublik Deutschland"
+    }
+  ],
+  "t04_search": [
+    {
+      "type": "F",
+      "searchterm": "Geocoder"
+    },
+    {
+      "type": "F",
+      "searchterm": "Geokodierung"
+    },
+    {
+      "type": "F",
+      "searchterm": "Ortsnamen"
+    },
+    {
+      "type": "F",
+      "searchterm": "Straßennamen"
+    },
+    {
+      "type": "F",
+      "searchterm": "Adresse"
+    },
+    {
+      "type": "F",
+      "searchterm": "geocoding"
+    },
+    {
+      "type": "F",
+      "searchterm": "GN250"
+    },
+    {
+      "type": "F",
+      "searchterm": "HK-DE"
+    },
+    {
+      "type": "F",
+      "searchterm": "invocableSpatialDataService"
+    },
+    {
+      "type": "F",
+      "searchterm": "OpenSearch Geo and Time Extensions"
+    }
+  ],
+  "title": "GeocoderPlus",
+  "uuid": "12E82980-FB99-4A8E-8C96-BB3AE11DB63E",
+  "x1": "6.098034",
+  "x2": "15.578555",
+  "y1": "47.23942",
+  "y2": "55.054344"
+}

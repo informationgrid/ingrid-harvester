@@ -1,0 +1,444 @@
+{
+  "additional_html_1": "<img src='https://geoportal.wsv.res.bund.de/documents/wsv-igc/e84178b6-7364-439a-861d-8a29259c0772/3dda.png' height='100' class='preview_image' alt='https://geoportal.wsv.res.bund.de/documents/wsv-igc/e84178b6-7364-439a-861d-8a29259c0772/3dda.png' >",
+  "capabilities_url": [],
+  "collection": {
+    "name": "wsv-geokat-csw"
+  },
+  "content": [
+    "wsv-geokat-csw",
+    "bund",
+    "wsv",
+    "csw",
+    "metadata",
+    "wsv-geokat-csw",
+    "false",
+    "e84178b6-7364-439a-861d-8a29259c0772",
+    "wsv-geokat-csw",
+    "application",
+    "https://via.bund.de/wsv/geokat/csw",
+    "https://via.bund.de/wsv/geokat/csw?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=e84178b6-7364-439a-861d-8a29259c0772",
+    "csw",
+    "https://via.res.bund.de/wsv/3darchiv/app",
+    "https://via.res.bund.de/wsv/3darchiv/app",
+    "https://via.res.bund.de/wsv/3darchiv/app",
+    "Web-Applikation",
+    "e84178b6-7364-439a-861d-8a29259c0772",
+    "e84178b6-7364-439a-861d-8a29259c0772",
+    "6",
+    "de",
+    "4",
+    "ISO19115",
+    "2003/Cor.1:2006",
+    "de",
+    "5105",
+    "4",
+    "application",
+    "ITZBund - Informationstechnikzentrum Bund, Poststelle",
+    "Am Ehrenberg 8",
+    "98693",
+    "Ilmenau",
+    "Bundesrepublik Deutschland",
+    "GIS-/GDI-Spezialisten",
+    "ITZBund - Informationstechnikzentrum Bund, Poststelle",
+    "Am Ehrenberg 8",
+    "98693",
+    "Ilmenau",
+    "Bundesrepublik Deutschland",
+    "GIS-/GDI-Spezialisten",
+    "Bundesrepublik Deutschland",
+    "GDWS - Generaldirektion Wasserstraßen und Schifffahrt",
+    "Bundesrepublik Deutschland",
+    "Bundesrepublik Deutschland",
+    "3D-Datenarchiv BWaStr - WebApplikation der WSV im BMVI-Intranet",
+    "Das 3D-Datenarchiv BWaStr dient der zentralen mittel- und langfristigen Archivierung und Bereitstellung von Topografiedaten der Bundeswasserstraßen (BWaStr). Als Topografiedaten sind z.B. Daten aus der hydrografischen Vermessung, Befliegungsdaten, Profile und digitale Geländemodelle zu verstehen. Das IT-Verfahren ersetzt die Peildatenbanken Binnen und Küste und zeichnet sich durch folgende Funktionalität aus: _*_ Komfortable Recherche über Schlagworte, Metadaten, Karte etc., _*_ Visualisierung der Daten (Lage, Situationsdarstellung, Profilansichten, Sachdatenkopplung), _*_ Download der Daten, _*_ Lückenloser Metadatennachweis, _*_ Überblick über den gesamten Bestand an relevanten Geodaten der WSV, _*_ Kontinuierliche Datenübernahme von den datenerhebenden WSV-Dienststellen Diese WebApplikation der Wasserstraßen- und Schifffahrtsverwaltung des Bundes ist nur im Intranet der Bundesverwaltung für Verkehr, Bau und Stadtentwicklung (BVBS) erreichbar. Recherche-Rechte hat jeder angemeldete WSV-Mitarbeiter. Die Anmeldung am 3D-Datenarchiv erfolgt über den WSV-Verzeichnisdienst durch Eingabe der Eimailadresse und dem Arbeitsplatzpasswort. Download- oder weitere Rechte sind an die Rechtevergabe im IT-Verfahren gebunden.",
+    "Bundesrepublik Deutschland, Nationalstaat (000000000000)",
+    "",
+    "5.561252",
+    "15.578555",
+    "47.141224",
+    "55.054344",
+    "Polygon",
+    5.561252,
+    55.054344,
+    5.561252,
+    47.141224,
+    15.578555,
+    47.141224,
+    15.578555,
+    55.054344,
+    5.561252,
+    55.054344,
+    5.561252,
+    47.141224,
+    15.578555,
+    55.054344,
+    "<img src='https://geoportal.wsv.res.bund.de/documents/wsv-igc/e84178b6-7364-439a-861d-8a29259c0772/3dda.png' height='100' class='preview_image' alt='https://geoportal.wsv.res.bund.de/documents/wsv-igc/e84178b6-7364-439a-861d-8a29259c0772/3dda.png' >",
+    "3D-Datenarchiv",
+    "F",
+    "Biogeografische Regionen",
+    "F",
+    "geografische Gittersysteme",
+    "F",
+    "Höhe",
+    "F",
+    "DOM",
+    "F",
+    "DGM",
+    "F",
+    "Profile und digitales Geländemodell",
+    "F",
+    "Befliegung",
+    "F",
+    "Befliegungsdaten",
+    "F",
+    "Vermessung",
+    "F",
+    "hydrografisch",
+    "F",
+    "WSV",
+    "F",
+    "Topografiedaten",
+    "F",
+    "Langzeitarchivierung",
+    "F",
+    "Web-Applikation",
+    "1.1.245",
+    false,
+    false,
+    "",
+    "0",
+    "7",
+    "0",
+    "1",
+    "0",
+    "1",
+    "20100503000000000",
+    "1",
+    "https://via.res.bund.de/wsv/3darchiv/app",
+    "https://via.res.bund.de/wsv/3darchiv/app",
+    "",
+    "5302",
+    "Telefon",
+    "+49 (22899) 680 - 0",
+    "Fax",
+    "-",
+    "Email",
+    "geodatenservices@itzbund.de",
+    "URL",
+    "https://www.itzbund.de",
+    "Telefon",
+    "+49 (22899) 680 - 0",
+    "Fax",
+    "-",
+    "Email",
+    "geodatenservices@itzbund.de",
+    "URL",
+    "https://www.itzbund.de",
+    "Email",
+    "gdws@wsv.bund.de",
+    "URL",
+    "https://www.gdws.wsv.bund.de",
+    "-1",
+    "restricted",
+    "Diese WebApplikation der Wasserstraßen- und Schifffahrtsverwaltung des Bundes ist nur im Intranet der Bundesverwaltung für Verkehr und digitale Infrastruktur (BMVI WAN) erreichbar. Recherche-Rechte hat jeder angemeldete WSV-Mitarbeiter. Die Anmeldung am 3D-Datenarchiv erfolgt über den WSV-Verzeichnisdienst durch Eingabe der Eimailadresse und dem Arbeitsplatzpasswort. Download- oder weitere Rechte sind an die Rechtevergabe im IT-Verfahren gebunden.",
+    false,
+    "57d77cd8999b1c0fe2ad7853723dc4feafe42efe"
+  ],
+  "dataSourceName": "wsv-geokat-csw",
+  "datatype": [
+    "csw",
+    "metadata"
+  ],
+  "distributions": [
+    {
+      "title": "https://via.res.bund.de/wsv/3darchiv/app",
+      "format": [
+        "Web-Applikation"
+      ],
+      "accessURL": "https://via.res.bund.de/wsv/3darchiv/app",
+      "access_url": "https://via.res.bund.de/wsv/3darchiv/app"
+    }
+  ],
+  "extras": {
+    "hierarchy_level": "application",
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-09-02T07:58:43.890Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-09-02T07:58:43.008Z",
+      "merged_from": [],
+      "modified": null,
+      "source": {
+        "raw_data_source": "https://via.bund.de/wsv/geokat/csw?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=e84178b6-7364-439a-861d-8a29259c0772",
+        "source_base": "https://via.bund.de/wsv/geokat/csw",
+        "source_type": "csw"
+      }
+    }
+  },
+  "hierarchylevel": "application",
+  "iPlugId": "wsv-geokat-csw",
+  "idf": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.portalu.de/IDF/1.0\">\n  <head/>\n  <body>\n<idf:idfMdMetadata xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gml=\"http://www.opengis.net/gml/3.2\" xmlns:gmx=\"http://www.isotc211.org/2005/gmx\" xmlns:gts=\"http://www.isotc211.org/2005/gts\" xmlns:igctx=\"https://www.ingrid-oss.eu/schemas/igctx\" xmlns:srv=\"http://www.isotc211.org/2005/srv\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.isotc211.org/2005/gmd http://repository.gdi-de.org/schemas/geonetwork/2020-12-11/csw/2.0.2/profiles/apiso/1.0.1/apiso.xsd https://www.ingrid-oss.eu/schemas/igctx https://www.ingrid-oss.eu/schemas/igctx/igctx.xsd\" xmlns:idf=\"http://www.portalu.de/IDF/1.0\">\n            <gmd:fileIdentifier>\n                <gco:CharacterString>e84178b6-7364-439a-861d-8a29259c0772</gco:CharacterString>\n            </gmd:fileIdentifier>\n            <gmd:language>\n                <gmd:LanguageCode codeList=\"http://www.loc.gov/standards/iso639-2/\" codeListValue=\"ger\"/>\n            </gmd:language>\n            <gmd:characterSet>\n                <gmd:MD_CharacterSetCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode\" codeListValue=\"utf8\"/>\n            </gmd:characterSet>\n            <gmd:hierarchyLevel>\n                <gmd:MD_ScopeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode\" codeListValue=\"application\">application</gmd:MD_ScopeCode>\n            </gmd:hierarchyLevel>\n            <gmd:hierarchyLevelName>\n                <gco:CharacterString>application</gco:CharacterString>\n            </gmd:hierarchyLevelName>\n            <gmd:contact>\n                <idf:idfResponsibleParty uuid=\"88CAB694-A171-3FE1-BCF9-AC149E57D4B0\">\n                    <gmd:organisationName>\n                        <gco:CharacterString>ITZBund - Informationstechnikzentrum Bund, Poststelle</gco:CharacterString>\n                    </gmd:organisationName>\n                    <gmd:positionName>\n                        <gco:CharacterString>GIS-/GDI-Spezialisten</gco:CharacterString>\n                    </gmd:positionName>\n                    <gmd:contactInfo>\n                        <gmd:CI_Contact>\n                            <gmd:phone>\n                                <gmd:CI_Telephone>\n                                    <gmd:voice>\n                                        <gco:CharacterString>+49 (22899) 680 - 0</gco:CharacterString>\n                                    </gmd:voice>\n                                    <gmd:facsimile>\n                                        <gco:CharacterString>-</gco:CharacterString>\n                                    </gmd:facsimile>\n                                </gmd:CI_Telephone>\n                            </gmd:phone>\n                            <gmd:address>\n                                <gmd:CI_Address>\n                                    <gmd:deliveryPoint>\n                                        <gco:CharacterString>Am Ehrenberg 8</gco:CharacterString>\n                                    </gmd:deliveryPoint>\n                                    <gmd:city>\n                                        <gco:CharacterString>Ilmenau</gco:CharacterString>\n                                    </gmd:city>\n                                    <gmd:administrativeArea>\n                                        <gco:CharacterString>Bundesrepublik Deutschland</gco:CharacterString>\n                                    </gmd:administrativeArea>\n                                    <gmd:postalCode>\n                                        <gco:CharacterString>98693</gco:CharacterString>\n                                    </gmd:postalCode>\n                                    <gmd:electronicMailAddress>\n                                        <gco:CharacterString>geodatenservices@itzbund.de</gco:CharacterString>\n                                    </gmd:electronicMailAddress>\n                                </gmd:CI_Address>\n                            </gmd:address>\n                            <gmd:onlineResource>\n                                <gmd:CI_OnlineResource>\n                                    <gmd:linkage>\n                                        <gmd:URL>https://www.itzbund.de</gmd:URL>\n                                    </gmd:linkage>\n                                </gmd:CI_OnlineResource>\n                            </gmd:onlineResource>\n                        </gmd:CI_Contact>\n                    </gmd:contactInfo>\n                    <gmd:role>\n                        <gmd:CI_RoleCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode\" codeListValue=\"pointOfContact\"/>\n                    </gmd:role>\n                </idf:idfResponsibleParty>\n            </gmd:contact>\n            <gmd:dateStamp>\n                <gco:Date>2026-02-17</gco:Date>\n            </gmd:dateStamp>\n            <gmd:metadataStandardName>\n                <gco:CharacterString>ISO19115</gco:CharacterString>\n            </gmd:metadataStandardName>\n            <gmd:metadataStandardVersion>\n                <gco:CharacterString>2003/Cor.1:2006</gco:CharacterString>\n            </gmd:metadataStandardVersion>\n            <gmd:identificationInfo>\n                <gmd:MD_DataIdentification uuid=\"https://registry.gdi-de.org/id/de.bund.wsv.csw/e84178b6-7364-439a-861d-8a29259c0772\">\n                    <gmd:citation>\n                        <gmd:CI_Citation>\n                            <gmd:title>\n                                <gco:CharacterString>3D-Datenarchiv BWaStr - WebApplikation der WSV im BMVI-Intranet</gco:CharacterString>\n                            </gmd:title>\n                            <gmd:date>\n                                <gmd:CI_Date>\n                                    <gmd:date>\n                                        <gco:DateTime>2010-05-03T00:00:00.000+02:00</gco:DateTime>\n                                    </gmd:date>\n                                    <gmd:dateType>\n                                        <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"creation\"/>\n                                    </gmd:dateType>\n                                </gmd:CI_Date>\n                            </gmd:date>\n                        </gmd:CI_Citation>\n                    </gmd:citation>\n                    <gmd:abstract>\n                        <gco:CharacterString>Das 3D-Datenarchiv BWaStr dient der zentralen mittel- und langfristigen Archivierung und Bereitstellung von Topografiedaten der Bundeswasserstraßen (BWaStr). Als Topografiedaten sind z.B. Daten aus der hydrografischen Vermessung, Befliegungsdaten, Profile und digitale Geländemodelle zu verstehen. Das IT-Verfahren ersetzt die Peildatenbanken Binnen und Küste und zeichnet sich durch folgende Funktionalität aus: _*_ Komfortable Recherche über Schlagworte, Metadaten, Karte etc., _*_ Visualisierung der Daten (Lage, Situationsdarstellung, Profilansichten, Sachdatenkopplung), _*_ Download der Daten, _*_ Lückenloser Metadatennachweis, _*_ Überblick über den gesamten Bestand an relevanten Geodaten der WSV, _*_ Kontinuierliche Datenübernahme von den datenerhebenden WSV-Dienststellen Diese WebApplikation der Wasserstraßen- und Schifffahrtsverwaltung des Bundes ist nur im Intranet der Bundesverwaltung für Verkehr, Bau und Stadtentwicklung (BVBS) erreichbar. Recherche-Rechte hat jeder angemeldete WSV-Mitarbeiter. Die Anmeldung am 3D-Datenarchiv erfolgt über den WSV-Verzeichnisdienst durch Eingabe der Eimailadresse und dem Arbeitsplatzpasswort. Download- oder weitere Rechte sind an die Rechtevergabe im IT-Verfahren gebunden.</gco:CharacterString>\n                    </gmd:abstract>\n                    <gmd:status>\n                        <gmd:MD_ProgressCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ProgressCode\" codeListValue=\"onGoing\"/>\n                    </gmd:status>\n                    <gmd:pointOfContact>\n                        <idf:idfResponsibleParty uuid=\"88CAB694-A171-3FE1-BCF9-AC149E57D4B0\">\n                            <gmd:organisationName>\n                                <gco:CharacterString>ITZBund - Informationstechnikzentrum Bund, Poststelle</gco:CharacterString>\n                            </gmd:organisationName>\n                            <gmd:positionName>\n                                <gco:CharacterString>GIS-/GDI-Spezialisten</gco:CharacterString>\n                            </gmd:positionName>\n                            <gmd:contactInfo>\n                                <gmd:CI_Contact>\n                                    <gmd:phone>\n                                        <gmd:CI_Telephone>\n                                            <gmd:voice>\n                                                <gco:CharacterString>+49 (22899) 680 - 0</gco:CharacterString>\n                                            </gmd:voice>\n                                            <gmd:facsimile>\n                                                <gco:CharacterString>-</gco:CharacterString>\n                                            </gmd:facsimile>\n                                        </gmd:CI_Telephone>\n                                    </gmd:phone>\n                                    <gmd:address>\n                                        <gmd:CI_Address>\n                                            <gmd:deliveryPoint>\n                                                <gco:CharacterString>Am Ehrenberg 8</gco:CharacterString>\n                                            </gmd:deliveryPoint>\n                                            <gmd:city>\n                                                <gco:CharacterString>Ilmenau</gco:CharacterString>\n                                            </gmd:city>\n                                            <gmd:administrativeArea>\n                                                <gco:CharacterString>Bundesrepublik Deutschland</gco:CharacterString>\n                                            </gmd:administrativeArea>\n                                            <gmd:postalCode>\n                                                <gco:CharacterString>98693</gco:CharacterString>\n                                            </gmd:postalCode>\n                                            <gmd:electronicMailAddress>\n                                                <gco:CharacterString>geodatenservices@itzbund.de</gco:CharacterString>\n                                            </gmd:electronicMailAddress>\n                                        </gmd:CI_Address>\n                                    </gmd:address>\n                                    <gmd:onlineResource>\n                                        <gmd:CI_OnlineResource>\n                                            <gmd:linkage>\n                                                <gmd:URL>https://www.itzbund.de</gmd:URL>\n                                            </gmd:linkage>\n                                        </gmd:CI_OnlineResource>\n                                    </gmd:onlineResource>\n                                </gmd:CI_Contact>\n                            </gmd:contactInfo>\n                            <gmd:role>\n                                <gmd:CI_RoleCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode\" codeListValue=\"resourceProvider\"/>\n                            </gmd:role>\n                        </idf:idfResponsibleParty>\n                    </gmd:pointOfContact>\n                    <gmd:pointOfContact>\n                        <idf:idfResponsibleParty uuid=\"A4FDDCA4-B328-367C-AD78-D9D727AF0464\">\n                            <gmd:organisationName>\n                                <gco:CharacterString>GDWS - Generaldirektion Wasserstraßen und Schifffahrt</gco:CharacterString>\n                            </gmd:organisationName>\n                            <gmd:contactInfo>\n                                <gmd:CI_Contact>\n                                    <gmd:address>\n                                        <gmd:CI_Address>\n                                            <gmd:administrativeArea>\n                                                <gco:CharacterString>Bundesrepublik Deutschland</gco:CharacterString>\n                                            </gmd:administrativeArea>\n                                            <gmd:electronicMailAddress>\n                                                <gco:CharacterString>gdws@wsv.bund.de</gco:CharacterString>\n                                            </gmd:electronicMailAddress>\n                                        </gmd:CI_Address>\n                                    </gmd:address>\n                                    <gmd:onlineResource>\n                                        <gmd:CI_OnlineResource>\n                                            <gmd:linkage>\n                                                <gmd:URL>https://www.gdws.wsv.bund.de</gmd:URL>\n                                            </gmd:linkage>\n                                        </gmd:CI_OnlineResource>\n                                    </gmd:onlineResource>\n                                </gmd:CI_Contact>\n                            </gmd:contactInfo>\n                            <gmd:role>\n                                <gmd:CI_RoleCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode\" codeListValue=\"resourceProvider\"/>\n                            </gmd:role>\n                        </idf:idfResponsibleParty>\n                    </gmd:pointOfContact>\n                    <gmd:graphicOverview>\n                        <gmd:MD_BrowseGraphic>\n                            <gmd:fileName>\n                                <gco:CharacterString>https://geoportal.wsv.res.bund.de/documents/wsv-igc/e84178b6-7364-439a-861d-8a29259c0772/3dda.png</gco:CharacterString>\n                            </gmd:fileName>\n                        </gmd:MD_BrowseGraphic>\n                    </gmd:graphicOverview>\n                    <gmd:descriptiveKeywords>\n                        <gmd:MD_Keywords>\n                            <gmd:keyword>\n                                <gco:CharacterString>3D-Datenarchiv</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Biogeografische Regionen</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>geografische Gittersysteme</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Höhe</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>DOM</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>DGM</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Profile und digitales Geländemodell</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Befliegung</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Befliegungsdaten</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Vermessung</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>hydrografisch</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>WSV</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Topografiedaten</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString>Langzeitarchivierung</gco:CharacterString>\n                            </gmd:keyword>\n                        </gmd:MD_Keywords>\n                    </gmd:descriptiveKeywords>\n                    <gmd:descriptiveKeywords>\n                        <gmd:MD_Keywords>\n                            <gmd:keyword>\n                                <gmx:Anchor xlink:href=\"https://sns.uba.de/umthes/TH_00051879\">Bodenbedeckung</gmx:Anchor>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gmx:Anchor xlink:href=\"https://sns.uba.de/umthes/TH_00029014\">Boden</gmx:Anchor>\n                            </gmd:keyword>\n                            <gmd:type>\n                                <gmd:MD_KeywordTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_KeywordTypeCode\" codeListValue=\"theme\"/>\n                            </gmd:type>\n                            <gmd:thesaurusName>\n                                <gmd:CI_Citation>\n                                    <gmd:title>\n                                        <gco:CharacterString>UMTHES Thesaurus</gco:CharacterString>\n                                    </gmd:title>\n                                    <gmd:date>\n                                        <gmd:CI_Date>\n                                            <gmd:date>\n                                                <gco:Date>2009-01-15</gco:Date>\n                                            </gmd:date>\n                                            <gmd:dateType>\n                                                <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\">publication</gmd:CI_DateTypeCode>\n                                            </gmd:dateType>\n                                        </gmd:CI_Date>\n                                    </gmd:date>\n                                </gmd:CI_Citation>\n                            </gmd:thesaurusName>\n                        </gmd:MD_Keywords>\n                    </gmd:descriptiveKeywords>\n                    <gmd:resourceConstraints>\n                        <gmd:MD_LegalConstraints>\n                            <gmd:useLimitation>\n                                <gco:CharacterString>Diese WebApplikation der Wasserstraßen- und Schifffahrtsverwaltung des Bundes ist nur im Intranet der Bundesverwaltung für Verkehr und digitale Infrastruktur (BMVI WAN) erreichbar. Recherche-Rechte hat jeder angemeldete WSV-Mitarbeiter. Die Anmeldung am 3D-Datenarchiv erfolgt über den WSV-Verzeichnisdienst durch Eingabe der Eimailadresse und dem Arbeitsplatzpasswort. Download- oder weitere Rechte sind an die Rechtevergabe im IT-Verfahren gebunden.</gco:CharacterString>\n                            </gmd:useLimitation>\n                        </gmd:MD_LegalConstraints>\n                    </gmd:resourceConstraints>\n                    <gmd:resourceConstraints>\n                        <gmd:MD_LegalConstraints>\n                            <gmd:accessConstraints>\n                                <gmd:MD_RestrictionCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode\" codeListValue=\"otherRestrictions\">otherRestrictions</gmd:MD_RestrictionCode>\n                            </gmd:accessConstraints>\n                            <gmd:otherConstraints>\n                                <gco:CharacterString>restricted</gco:CharacterString>\n                            </gmd:otherConstraints>\n                        </gmd:MD_LegalConstraints>\n                    </gmd:resourceConstraints>\n                    <gmd:language>\n                        <gmd:LanguageCode codeList=\"http://www.loc.gov/standards/iso639-2/\" codeListValue=\"ger\"/>\n                    </gmd:language>\n                    <gmd:extent>\n                        <gmd:EX_Extent>\n                            <gmd:geographicElement>\n                                <gmd:EX_GeographicDescription>\n                                    <gmd:extentTypeCode>\n                                        <gco:Boolean>true</gco:Boolean>\n                                    </gmd:extentTypeCode>\n                                    <gmd:geographicIdentifier>\n                                        <gmd:MD_Identifier>\n                                            <gmd:code>\n                                                <gco:CharacterString>Bundesrepublik Deutschland, Nationalstaat (000000000000)</gco:CharacterString>\n                                            </gmd:code>\n                                        </gmd:MD_Identifier>\n                                    </gmd:geographicIdentifier>\n                                </gmd:EX_GeographicDescription>\n                            </gmd:geographicElement>\n                            <gmd:geographicElement>\n                                <gmd:EX_GeographicBoundingBox>\n                                    <gmd:extentTypeCode>\n                                        <gco:Boolean>true</gco:Boolean>\n                                    </gmd:extentTypeCode>\n                                    <gmd:westBoundLongitude>\n                                        <gco:Decimal>5.561252</gco:Decimal>\n                                    </gmd:westBoundLongitude>\n                                    <gmd:eastBoundLongitude>\n                                        <gco:Decimal>15.578555</gco:Decimal>\n                                    </gmd:eastBoundLongitude>\n                                    <gmd:southBoundLatitude>\n                                        <gco:Decimal>47.141224</gco:Decimal>\n                                    </gmd:southBoundLatitude>\n                                    <gmd:northBoundLatitude>\n                                        <gco:Decimal>55.054344</gco:Decimal>\n                                    </gmd:northBoundLatitude>\n                                </gmd:EX_GeographicBoundingBox>\n                            </gmd:geographicElement>\n                            <gmd:geographicElement>\n                                <gmd:EX_GeographicDescription>\n                                    <gmd:geographicIdentifier>\n                                        <gmd:MD_Identifier>\n                                            <gmd:code>\n                                                <gmx:Anchor xlink:href=\"https://registry.gdi-de.org/id/de.bund.bkg.regschluessel/000000000000\">000000000000</gmx:Anchor>\n                                            </gmd:code>\n                                        </gmd:MD_Identifier>\n                                    </gmd:geographicIdentifier>\n                                </gmd:EX_GeographicDescription>\n                            </gmd:geographicElement>\n                        </gmd:EX_Extent>\n                    </gmd:extent>\n                </gmd:MD_DataIdentification>\n            </gmd:identificationInfo>\n            <gmd:distributionInfo>\n                <gmd:MD_Distribution>\n                    <gmd:distributionFormat>\n                        <gmd:MD_Format>\n                            <gmd:name>\n                                <gco:CharacterString>Web-Applikation</gco:CharacterString>\n                            </gmd:name>\n                            <gmd:version>\n                                <gco:CharacterString>1.1.245</gco:CharacterString>\n                            </gmd:version>\n                        </gmd:MD_Format>\n                    </gmd:distributionFormat>\n                    <gmd:transferOptions>\n                        <gmd:MD_DigitalTransferOptions>\n                            <gmd:onLine>\n                                <gmd:CI_OnlineResource>\n                                    <gmd:linkage>\n                                        <gmd:URL>https://via.res.bund.de/wsv/3darchiv/app</gmd:URL>\n                                    </gmd:linkage>\n                                    <gmd:name>\n                                        <gco:CharacterString>https://via.res.bund.de/wsv/3darchiv/app</gco:CharacterString>\n                                    </gmd:name>\n                                    <gmd:function>\n                                        <gmd:CI_OnLineFunctionCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode\" codeListValue=\"information\">information</gmd:CI_OnLineFunctionCode>\n                                    </gmd:function>\n                                </gmd:CI_OnlineResource>\n                            </gmd:onLine>\n                        </gmd:MD_DigitalTransferOptions>\n                    </gmd:transferOptions>\n                </gmd:MD_Distribution>\n            </gmd:distributionInfo>\n        </idf:idfMdMetadata>\n  </body>\n</html>\n",
+  "is_hvd": false,
+  "isfolder": "false",
+  "location": [
+    "Bundesrepublik Deutschland, Nationalstaat (000000000000)",
+    ""
+  ],
+  "metadata": {
+    "created": null,
+    "modified": "2026-02-17T00:00:00.000Z"
+  },
+  "modified": "2026-02-17T00:00:00.000Z",
+  "object_access": {
+    "restriction_key": [
+      "-1"
+    ],
+    "restriction_value": [
+      "restricted"
+    ],
+    "terms_of_use": "Diese WebApplikation der Wasserstraßen- und Schifffahrtsverwaltung des Bundes ist nur im Intranet der Bundesverwaltung für Verkehr und digitale Infrastruktur (BMVI WAN) erreichbar. Recherche-Rechte hat jeder angemeldete WSV-Mitarbeiter. Die Anmeldung am 3D-Datenarchiv erfolgt über den WSV-Verzeichnisdienst durch Eingabe der Eimailadresse und dem Arbeitsplatzpasswort. Download- oder weitere Rechte sind an die Rechtevergabe im IT-Verfahren gebunden."
+  },
+  "partner": [
+    "bund"
+  ],
+  "provider": [
+    "wsv"
+  ],
+  "sort_hash": "57d77cd8999b1c0fe2ad7853723dc4feafe42efe",
+  "spatial": {
+    "geometries": [
+      {
+        "bbox": [
+          5.561252,
+          47.141224,
+          15.578555,
+          55.054344
+        ],
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.561252,
+              55.054344
+            ],
+            [
+              5.561252,
+              47.141224
+            ],
+            [
+              15.578555,
+              47.141224
+            ],
+            [
+              15.578555,
+              55.054344
+            ],
+            [
+              5.561252,
+              55.054344
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "spatial_system": {
+    "referencesystem_value": []
+  },
+  "summary": "Das 3D-Datenarchiv BWaStr dient der zentralen mittel- und langfristigen Archivierung und Bereitstellung von Topografiedaten der Bundeswasserstraßen (BWaStr). Als Topografiedaten sind z.B. Daten aus der hydrografischen Vermessung, Befliegungsdaten, Profile und digitale Geländemodelle zu verstehen. Das IT-Verfahren ersetzt die Peildatenbanken Binnen und Küste und zeichnet sich durch folgende Funktionalität aus: _*_ Komfortable Recherche über Schlagworte, Metadaten, Karte etc., _*_ Visualisierung der Daten (Lage, Situationsdarstellung, Profilansichten, Sachdatenkopplung), _*_ Download der Daten, _*_ Lückenloser Metadatennachweis, _*_ Überblick über den gesamten Bestand an relevanten Geodaten der WSV, _*_ Kontinuierliche Datenübernahme von den datenerhebenden WSV-Dienststellen Diese WebApplikation der Wasserstraßen- und Schifffahrtsverwaltung des Bundes ist nur im Intranet der Bundesverwaltung für Verkehr, Bau und Stadtentwicklung (BVBS) erreichbar. Recherche-Rechte hat jeder angemeldete WSV-Mitarbeiter. Die Anmeldung am 3D-Datenarchiv erfolgt über den WSV-Verzeichnisdienst durch Eingabe der Eimailadresse und dem Arbeitsplatzpasswort. Download- oder weitere Rechte sind an die Rechtevergabe im IT-Verfahren gebunden.",
+  "t0110_avail_format": {
+    "name": "Web-Applikation",
+    "version": "1.1.245"
+  },
+  "t0113_dataset_reference": [
+    {
+      "type": "1",
+      "reference_date": "20100503000000000"
+    }
+  ],
+  "t011_obj_geo": {
+    "hierarchy_level": false,
+    "keyc_incl_w_dataset": false,
+    "referencesystem_id": []
+  },
+  "t011_obj_geo_keyc": [],
+  "t011_obj_geo_scale": [],
+  "t011_obj_geo_spatial_rep": {},
+  "t011_obj_geo_supplinfo": {},
+  "t011_obj_geo_symc": [],
+  "t011_obj_geo_vector": [],
+  "t011_obj_serv": {},
+  "t011_obj_serv_op_connpoint": [],
+  "t011_obj_serv_op_platform": [],
+  "t011_obj_serv_operation": [],
+  "t011_obj_serv_version": {
+    "version_value": ""
+  },
+  "t011_obj_topic_cat": [],
+  "t012_obj_adr": [
+    {
+      "typ": "7",
+      "special_ref": "0"
+    },
+    {
+      "typ": "1",
+      "special_ref": "0"
+    },
+    {
+      "typ": "1",
+      "special_ref": "0"
+    }
+  ],
+  "t017_url_ref": [
+    {
+      "descr": "",
+      "content": "https://via.res.bund.de/wsv/3darchiv/app",
+      "url_link": "https://via.res.bund.de/wsv/3darchiv/app",
+      "special_ref": "5302"
+    }
+  ],
+  "t01_object": {
+    "data_language_code": "de",
+    "metadata_character_set": "4",
+    "metadata_language_code": "de",
+    "metadata_standard_name": "ISO19115",
+    "metadata_standard_version": "2003/Cor.1:2006",
+    "mod_time": "2026-02-17T00:00:00.000Z",
+    "obj_class": "6",
+    "obj_id": "e84178b6-7364-439a-861d-8a29259c0772",
+    "org_obj_id": "e84178b6-7364-439a-861d-8a29259c0772",
+    "time_status": "4",
+    "vertical_extent_vdatum": "5105"
+  },
+  "t021_communication": [
+    {
+      "comm_type": "Telefon",
+      "comm_value": "+49 (22899) 680 - 0"
+    },
+    {
+      "comm_type": "Fax",
+      "comm_value": "-"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "geodatenservices@itzbund.de"
+    },
+    {
+      "comm_type": "URL",
+      "comm_value": "https://www.itzbund.de"
+    },
+    {
+      "comm_type": "Telefon",
+      "comm_value": "+49 (22899) 680 - 0"
+    },
+    {
+      "comm_type": "Fax",
+      "comm_value": "-"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "geodatenservices@itzbund.de"
+    },
+    {
+      "comm_type": "URL",
+      "comm_value": "https://www.itzbund.de"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "gdws@wsv.bund.de"
+    },
+    {
+      "comm_type": "URL",
+      "comm_value": "https://www.gdws.wsv.bund.de"
+    }
+  ],
+  "t02_address": [
+    {
+      "job": "GIS-/GDI-Spezialisten",
+      "city": "Ilmenau",
+      "street": "Am Ehrenberg 8",
+      "postcode": "98693",
+      "institution": "ITZBund - Informationstechnikzentrum Bund, Poststelle",
+      "administrative_area_value": "Bundesrepublik Deutschland"
+    },
+    {
+      "job": "GIS-/GDI-Spezialisten",
+      "city": "Ilmenau",
+      "street": "Am Ehrenberg 8",
+      "postcode": "98693",
+      "institution": "ITZBund - Informationstechnikzentrum Bund, Poststelle",
+      "administrative_area_value": "Bundesrepublik Deutschland",
+      "identificationinfo_administrative_area_value": "Bundesrepublik Deutschland"
+    },
+    {
+      "institution": "GDWS - Generaldirektion Wasserstraßen und Schifffahrt",
+      "administrative_area_value": "Bundesrepublik Deutschland",
+      "identificationinfo_administrative_area_value": "Bundesrepublik Deutschland"
+    }
+  ],
+  "t04_search": [
+    {
+      "type": "F",
+      "searchterm": "3D-Datenarchiv"
+    },
+    {
+      "type": "F",
+      "searchterm": "Biogeografische Regionen"
+    },
+    {
+      "type": "F",
+      "searchterm": "geografische Gittersysteme"
+    },
+    {
+      "type": "F",
+      "searchterm": "Höhe"
+    },
+    {
+      "type": "F",
+      "searchterm": "DOM"
+    },
+    {
+      "type": "F",
+      "searchterm": "DGM"
+    },
+    {
+      "type": "F",
+      "searchterm": "Profile und digitales Geländemodell"
+    },
+    {
+      "type": "F",
+      "searchterm": "Befliegung"
+    },
+    {
+      "type": "F",
+      "searchterm": "Befliegungsdaten"
+    },
+    {
+      "type": "F",
+      "searchterm": "Vermessung"
+    },
+    {
+      "type": "F",
+      "searchterm": "hydrografisch"
+    },
+    {
+      "type": "F",
+      "searchterm": "WSV"
+    },
+    {
+      "type": "F",
+      "searchterm": "Topografiedaten"
+    },
+    {
+      "type": "F",
+      "searchterm": "Langzeitarchivierung"
+    }
+  ],
+  "title": "3D-Datenarchiv BWaStr - WebApplikation der WSV im BMVI-Intranet",
+  "uuid": "e84178b6-7364-439a-861d-8a29259c0772",
+  "x1": "5.561252",
+  "x2": "15.578555",
+  "y1": "47.141224",
+  "y2": "55.054344"
+}

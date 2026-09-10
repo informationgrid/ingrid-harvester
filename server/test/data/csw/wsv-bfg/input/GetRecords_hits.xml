@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<csw:GetRecordsResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0.2">
+    <csw:SearchStatus timestamp="2026-09-02T08:24:19.821Z"/>
+    <csw:SearchResults elementSet="summary" nextRecord="0" numberOfRecordsMatched="2" numberOfRecordsReturned="0" recordSchema="http://www.isotc211.org/2005/gmd"/>
+</csw:GetRecordsResponse>
