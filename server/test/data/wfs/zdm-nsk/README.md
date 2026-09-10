@@ -12,14 +12,14 @@ Replace `{TYPENAMES}` with the desired type name, e.g., "ms:Topographie_2017_Iso
 
 Request: `GET https://www.kuestendaten.de/DE/dynamisch/nsk_ogc/bs?request=DescribeFeatureType&VERSION=2.0.0&SERVICE=WFS&typenames={TYPENAMES}` 
 
-## GetFeature.xml
-
-Replace `{TYPENAMES}` with the desired type name, e.g., "ms:Topographie_2017_Isolinien":
-
-Request: `GET https://www.kuestendaten.de/DE/dynamisch/nsk_ogc/bs?request=GetFeature&VERSION=2.0.0&SERVICE=WFS&resultType=results&typenames={TYPENAMES}`
-
 ## GetFeature_hits.xml
 
 Replace `{TYPENAMES}` with the desired type name, e.g., "ms:Topographie_2017_Isolinien":
 
 Request: `GET https://www.kuestendaten.de/DE/dynamisch/nsk_ogc/bs?request=GetFeature&VERSION=2.0.0&SERVICE=WFS&resultType=hits&typenames={TYPENAMES}`
+
+## GetFeature_results.xml
+
+Replace `{TYPENAMES}` with the desired type name, e.g., "ms:Topographie_2017_Isolinien":
+
+Request: `GET https://www.kuestendaten.de/DE/dynamisch/nsk_ogc/bs?request=GetFeature&VERSION=2.0.0&SERVICE=WFS&resultType=results&typenames={TYPENAMES}`

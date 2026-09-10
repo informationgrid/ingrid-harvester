@@ -6,7 +6,7 @@ The input data for the CSW tests has been obtained using the following CSW reque
 
 Request: `GET https://gdk.gdi-de.org/gdi-de/srv/eng/csw?request=GetCapabilities&service=CSW`
 
-## GetRecordsHits.xml
+## GetRecords_hits.xml
 
 Request: `POST https://gdk.gdi-de.org/gdi-de/srv/eng/csw?service=CSW&request=GetRecords`
 ```
@@ -46,7 +46,7 @@ Request: `POST https://gdk.gdi-de.org/gdi-de/srv/eng/csw?service=CSW&request=Get
 </csw:GetRecords>
 ```
 
-## GetRecordsResults.xml
+## GetRecords_results.xml
 
 Request: `POST https://gdk.gdi-de.org/gdi-de/srv/eng/csw?service=CSW&request=GetRecords`
 ```

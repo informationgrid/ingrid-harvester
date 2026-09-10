@@ -23,7 +23,7 @@
 
 import type { CswSettings } from '../../app/importer/csw/csw.settings.js';
 import cswEbaConfig from '../data/csw/eba/config.json' with { type: 'json' };
-import cswGdideConfig from '../data/csw/gdide/config.json' with { type: 'json' };
+import cswGdideConfig from '../data/csw/gdi-de/config.json' with { type: 'json' };
 import { type ImporterIntegrationTestCase, runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
 
 describe('CSW Integration Tests', function () {
@@ -33,6 +33,7 @@ describe('CSW Integration Tests', function () {
 
     const cswTestcase = {
         profile: 'ingrid',
+        expectedDocsDir: 'elasticsearch',
         mocks: [
             {
                 match: { query: { request: 'GetCapabilities' }},
@@ -40,11 +41,11 @@ describe('CSW Integration Tests', function () {
             },
             {
                 match: { query: { resultType: 'hits' }},
-                fixture: 'input/GetRecordsHits.xml'
+                fixture: 'input/GetRecords_hits.xml'
             },
             {
                 match: { query: { resultType: 'results' }},
-                fixture: 'input/GetRecordsResults.xml'
+                fixture: 'input/GetRecords_results.xml'
             },
             {
                 match: { method: 'POST', bodyMatch: (body) => body.indexOf('GetCapabilities') !== -1 },
@@ -54,25 +55,24 @@ describe('CSW Integration Tests', function () {
                 match: { method: 'POST', bodyMatch: (body) =>
                         /<csw:SearchResults numberOfRecordsMatched="\d+" numberOfRecordsReturned="\d+" elementSet="summary" nextRecord="\d+"\/>/.test(body)
                 },
-                fixture: 'input/GetRecordsHits.xml'
+                fixture: 'input/GetRecords_hits.xml'
             },
             {
                 match: { method: 'POST', bodyMatch: (body) => body.indexOf('gmd:MD_Metadata') !== -1 },
-                fixture: 'input/GetRecordsResults.xml'
+                fixture: 'input/GetRecords_results.xml'
             }
-        ],
-        expectedDocsDir: 'elasticsearch'
+        ]
     } satisfies Partial<ImporterIntegrationTestCase<any>>;
 
-    it('should harvest records from CSW and push them to ES (GDI-DE)', async () => {
+    it('gdi-de', async () => {
         await runImporterIntegrationTest({
             ...cswTestcase,
             settings: cswGdideConfig as CswSettings,
-            baseFixture: 'test/data/csw/gdide'
+            baseFixture: 'test/data/csw/gdi-de'
         });
     });
 
-    it('should harvest records from CSW and push them to ES (EBA)', async () => {
+    it('eba', async () => {
         await runImporterIntegrationTest({
             ...cswTestcase,
             settings: cswEbaConfig as CswSettings,

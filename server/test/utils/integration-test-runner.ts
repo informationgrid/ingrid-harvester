@@ -219,8 +219,7 @@ export function setupRequestMock(baseFixture: string, mocks: HttpMockRule[], san
 export async function runImporter<T extends ImporterSettings>(importer: Importer<T>): Promise<void> {
     return new Promise<void>((resolve, reject) => {
         importer.run().subscribe({
-            next: () => {
-            },
+            next: () => {},
             error: (err) => reject(err),
             complete: () => resolve()
         });
