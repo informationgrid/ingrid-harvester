@@ -56,9 +56,6 @@ import { ElasticQueries } from './persistence/elastic.queries.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
-export const INGRID_META_INDEX = 'ingrid_meta';
-export const APPLICATION_NAME = 'Harvester';
-
 export type ingridSettings = CswSettings | WfsSettings | DcatapdeSettings | GenesisSettings;
 
 export class ingridFactory extends ProfileFactory<ingridSettings> {

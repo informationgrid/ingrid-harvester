@@ -23,6 +23,7 @@
 
 import log4js from 'log4js';
 import type { Observer } from 'rxjs';
+import { APPLICATION_NAME, INGRID_META_INDEX } from '../../../../app/constants.js';
 import { ElasticsearchCatalog } from '../../../catalog/elasticsearch/elasticsearch.catalog.js';
 import type { ImporterSettings } from '../../../importer/importer.settings.js';
 import type { ImportLogMessage } from '../../../model/import.result.js';
@@ -35,7 +36,6 @@ import { camelize, escapeXml } from '../../../utils/misc.utils.js';
 import { ProfileFactoryLoader } from '../../profile.factory.loader.js';
 import { createEsId } from '../ingrid.utils.js';
 import type { IngridIndexDocument } from '../model/index.document.js';
-import { APPLICATION_NAME, INGRID_META_INDEX } from '../profile.factory.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
