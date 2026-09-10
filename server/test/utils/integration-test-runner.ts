@@ -288,7 +288,7 @@ export function assertElasticsearchDocuments(
 /**
  * Encapsulates PostgreSQL testcontainer startup and table initialization for Mocha test suites.
  */
-export function setupIntegrationTestLifecycle(profile = 'ingrid') {
+export function setupIntegrationTestLifecycle(profile: string) {
     before(async function () {
         this.timeout(60000);
         process.env.IMPORTER_PROFILE = profile;

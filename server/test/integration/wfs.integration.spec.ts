@@ -35,10 +35,11 @@ import { type ImporterIntegrationTestCase, runImporterIntegrationTest, setupInte
 describe('WFS Integration Tests', function () {
     this.timeout(60000);
 
-    setupIntegrationTestLifecycle();
+    const profile = 'ingrid';
+    setupIntegrationTestLifecycle(profile);
 
     const wfsTestcase = {
-        profile: 'ingrid',
+        profile,
         expectedDocsDir: 'elasticsearch'
     } satisfies Partial<ImporterIntegrationTestCase<any>>;
 

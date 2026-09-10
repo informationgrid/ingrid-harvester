@@ -33,10 +33,11 @@ import { type ImporterIntegrationTestCase, runImporterIntegrationTest, setupInte
 describe('CSW Integration Tests', function () {
     this.timeout(60000);
 
-    setupIntegrationTestLifecycle();
+    const profile = 'ingrid';
+    setupIntegrationTestLifecycle(profile);
 
     const cswTestcase = {
-        profile: 'ingrid',
+        profile,
         expectedDocsDir: 'elasticsearch',
         mocks: [
             {

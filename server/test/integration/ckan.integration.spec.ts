@@ -28,11 +28,12 @@ import type { CkanSettings } from '../../app/importer/ckan/ckan.settings.js';
 describe('CKAN Integration Tests', function () {
     this.timeout(60000);
 
-    setupIntegrationTestLifecycle();
+    const profile = 'ingrid';
+    setupIntegrationTestLifecycle(profile);
 
     it('govdata-uba', async () => {
         await runImporterIntegrationTest({
-            profile: 'ingrid',
+            profile,
             expectedDocsDir: 'elasticsearch',
             mocks: [
                 {

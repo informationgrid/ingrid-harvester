@@ -29,12 +29,13 @@ import { resolveFixturePath, runImporterIntegrationTest, setupIntegrationTestLif
 describe('GENESIS Integration Tests', function () {
     this.timeout(60000);
 
-    setupIntegrationTestLifecycle();
+    const profile = 'ingrid';
+    setupIntegrationTestLifecycle(profile);
 
     it('genesis-st', async () => {
         const baseFixture = 'test/data/genesis/genesis-st';
         await runImporterIntegrationTest({
-            profile: 'ingrid',
+            profile,
             expectedDocsDir: 'elasticsearch',
             mocks: createGenesisMocks(baseFixture, '11111', '11911', '12511'),
             settings: genesisStSettings as GenesisSettings,

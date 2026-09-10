@@ -28,11 +28,12 @@ import type { DcatapdeSettings } from '../../app/importer/dcatapde/dcatapde.sett
 describe('DCAT-AP.de Integration Tests', function () {
     this.timeout(60000);
 
-    setupIntegrationTestLifecycle();
+    const profile = 'ingrid';
+    setupIntegrationTestLifecycle(profile);
 
     it('opendata-hro', async () => {
         await runImporterIntegrationTest({
-            profile: 'ingrid',
+            profile,
             expectedDocsDir: 'elasticsearch',
             mocks: [{
                 match: { url: 'https://www.opendata-hro.de/catalog.rdf' },
