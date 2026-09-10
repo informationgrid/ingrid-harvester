@@ -21,14 +21,15 @@
  * ==================================================
  */
 
+import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
 import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 import pg from 'pg';
-import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
 import { PostgresUtils } from '../../app/persistence/postgres.utils.js';
 
 let container: StartedPostgreSqlContainer | null = null;
 let pool: pg.Pool | null = null;
 let currentConfig: DatabaseConfiguration | null = null;
+let startPromise: Promise<DatabaseConfiguration> | null = null;
 
 export function getTestDatabaseConfig(): DatabaseConfiguration {
     if (process.env.TEST_DB_HOST) {
@@ -48,46 +49,62 @@ export function getTestDatabaseConfig(): DatabaseConfiguration {
 }
 
 export async function startPostgresContainer(): Promise<DatabaseConfiguration> {
-    if (process.env.TEST_DB_HOST) {
+    if (currentConfig && pool) {
+        return currentConfig;
+    }
+
+    if (startPromise) {
+        return startPromise;
+    }
+
+    startPromise = (async () => {
+        if (process.env.TEST_DB_HOST) {
+            currentConfig = {
+                type: 'postgresql',
+                host: process.env.TEST_DB_HOST,
+                port: Number(process.env.TEST_DB_PORT) || 5432,
+                database: process.env.TEST_DB_NAME || 'metadaten',
+                user: process.env.TEST_DB_USER || 'postgres',
+                password: process.env.TEST_DB_PASSWORD || 'postgres'
+            };
+            if (!pool) {
+                pool = new pg.Pool(currentConfig);
+            }
+            (PostgresUtils as any).pool = pool;
+            return currentConfig;
+        }
+
+        if (!container) {
+            container = await new PostgreSqlContainer('postgres:16-alpine')
+                .withDatabase('metadaten')
+                .withUsername('ogcrecords')
+                .withPassword('ogcrecords')
+                .start();
+        }
+
         currentConfig = {
             type: 'postgresql',
-            host: process.env.TEST_DB_HOST,
-            port: Number(process.env.TEST_DB_PORT) || 5432,
-            database: process.env.TEST_DB_NAME || 'metadaten',
-            user: process.env.TEST_DB_USER || 'postgres',
-            password: process.env.TEST_DB_PASSWORD || 'postgres'
+            host: container.getHost(),
+            port: container.getPort(),
+            database: container.getDatabase(),
+            user: container.getUsername(),
+            password: container.getPassword()
         };
+
         if (!pool) {
             pool = new pg.Pool(currentConfig);
         }
         (PostgresUtils as any).pool = pool;
+
         return currentConfig;
+    })();
+
+    try {
+        return await startPromise;
     }
-
-    if (!container) {
-        container = await new PostgreSqlContainer('postgres:16-alpine')
-            .withDatabase('metadaten')
-            .withUsername('ogcrecords')
-            .withPassword('ogcrecords')
-            .start();
+    finally {
+        startPromise = null;
     }
-
-    currentConfig = {
-        type: 'postgresql',
-        host: container.getHost(),
-        port: container.getPort(),
-        database: container.getDatabase(),
-        user: container.getUsername(),
-        password: container.getPassword()
-    };
-
-    if (pool) {
-        await pool.end();
-    }
-    pool = new pg.Pool(currentConfig);
-    (PostgresUtils as any).pool = pool;
-
-    return currentConfig;
 }
 
 export async function stopPostgresContainer(): Promise<void> {
@@ -103,6 +120,7 @@ export async function stopPostgresContainer(): Promise<void> {
         container = null;
     }
     currentConfig = null;
+    startPromise = null;
 }
 
 export async function resetDatabase(): Promise<void> {

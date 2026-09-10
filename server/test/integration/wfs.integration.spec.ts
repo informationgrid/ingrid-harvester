@@ -21,38 +21,25 @@
  * ==================================================
  */
 
-import { expect } from 'chai';
-import type { CswSettings } from '../../app/importer/csw/csw.settings.js';
 import type { WfsSettings } from '../../app/importer/wfs/wfs.settings.js';
-import { Summary } from '../../app/model/summary.js';
-import { PostgresUtils } from '../../app/persistence/postgres.utils.js';
-import cswEbaConfig from '../data/csw/eba/config.json' with { type: 'json' };
-import cswGdideConfig from '../data/csw/gdide/config.json' with { type: 'json' };
 import wfsZdmKuestendaten from '../data/wfs/zdm-kuestendaten/config.json' with { type: 'json' };
 import { runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
-import { getTestDatabaseConfig, resetDatabase } from '../utils/postgres-container.js';
-import { cswTestcase, wfsTestcase } from './base.testcases.js';
 
-describe('Ingrid Integration Tests', function () {
+describe('WFS Integration Tests', function () {
     this.timeout(60000);
 
     setupIntegrationTestLifecycle();
 
-    it('should harvest records from CSW and push them to ES (GDI-DE)', async () => {
-        await runImporterIntegrationTest({
-            ...cswTestcase,
-            settings: cswGdideConfig as CswSettings,
-            baseFixture: 'test/data/csw/gdide'
-        });
-    });
-
-    it('should harvest records from CSW and push them to ES (EBA)', async () => {
-        await runImporterIntegrationTest({
-            ...cswTestcase,
-            settings: cswEbaConfig as CswSettings,
-            baseFixture: 'test/data/csw/eba'
-        });
-    });
+    const wfsTestcase = {
+        profile: 'ingrid',
+        mocks: [
+            {
+                match: { query: { request: 'GetCapabilities' }},
+                fixture: 'input/GetCapabilities.xml'
+            }
+        ],
+        expectedDocsDir: 'elasticsearch'
+    };
 
     it('should harvest records from WFS and push them to ES (ZDM Kuestendaten)', async () => {
         await runImporterIntegrationTest({
@@ -83,12 +70,5 @@ describe('Ingrid Integration Tests', function () {
                 }
             ]
         });
-    });
-
-    it('should maintain test isolation via database table reset', async () => {
-        await resetDatabase();
-        const postgresUtils = new PostgresUtils(getTestDatabaseConfig(), new Summary('test-isolation', {} as any));
-        const identifiers = await postgresUtils.getDatasetIdentifiers('test-source');
-        expect(identifiers).to.be.an('array').that.is.empty;
     });
 });

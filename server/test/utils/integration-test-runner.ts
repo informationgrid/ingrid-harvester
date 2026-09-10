@@ -41,7 +41,7 @@ import { ConfigService } from '../../app/services/config/ConfigService.js';
 import type { RequestOptions } from '../../app/utils/http-request.utils.js';
 import { RequestDelegate } from '../../app/utils/http-request.utils.js';
 import { setupElasticMock } from '../mocks/elastic.mock.js';
-import { getTestDatabaseConfig, resetDatabase, startPostgresContainer, stopPostgresContainer } from './postgres-container.js';
+import { getTestDatabaseConfig, resetDatabase, startPostgresContainer } from './postgres-container.js';
 import { compareEsDocuments } from './test-utils.js';
 
 chai.use(chaiExclude);
@@ -75,7 +75,7 @@ export interface ImporterIntegrationTestCase<T extends ImporterSettings> {
     mocks: HttpMockRule[];
     expectedDocsDir: string;
     expectedDocCount?: number;
-    profile?: string; // default: 'ingrid'
+    profile: string;
     catalogId?: number; // default: 1
 }
 
@@ -260,7 +260,7 @@ export function assertElasticsearchDocuments(
 }
 
 /**
- * Encapsulates PostgreSQL testcontainer startup and teardown for Mocha test suites.
+ * Encapsulates PostgreSQL testcontainer startup and table initialization for Mocha test suites.
  */
 export function setupIntegrationTestLifecycle(profile = 'ingrid') {
     before(async function () {
@@ -271,11 +271,6 @@ export function setupIntegrationTestLifecycle(profile = 'ingrid') {
         const postgresUtils = new PostgresUtils(dbConfig, new Summary('test-init', {} as any));
         await postgresUtils.init();
     });
-
-    after(async function () {
-        this.timeout(30000);
-        await stopPostgresContainer();
-    });
 }
 
 /**
@@ -284,8 +279,7 @@ export function setupIntegrationTestLifecycle(profile = 'ingrid') {
 export async function runImporterIntegrationTest<T extends ImporterSettings>(
     testCase: ImporterIntegrationTestCase<T>
 ): Promise<void> {
-    const profile = testCase.profile || 'ingrid';
-    process.env.IMPORTER_PROFILE = profile;
+    process.env.IMPORTER_PROFILE = testCase.profile;
 
     await resetDatabase();
 
@@ -303,7 +297,7 @@ export async function runImporterIntegrationTest<T extends ImporterSettings>(
         const catalogId = testCase.catalogId ?? 1;
         sandbox.stub(CatalogService, 'getCatalogSettings').withArgs(catalogId).returns({
             id: catalogId,
-            name: profile,
+            name: testCase.profile,
             type: 'elasticsearch',
             url: 'http://localhost:9200',
             settings: {
