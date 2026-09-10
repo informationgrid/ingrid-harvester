@@ -370,7 +370,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
                 features.push(featureDocument.exports.iso);
             }
         }
-        document.exports.iso = document.exports.iso.replace('<h2>Features:</h2>', '<h2>Features:</h2>\n' + features.join('\n'));
+        document.idf = document?.idf?.replace('<h2>Features:</h2>', '<h2>Features:</h2>\n' + features.join('\n'));
     }
 }
 

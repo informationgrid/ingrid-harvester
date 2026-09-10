@@ -42,6 +42,7 @@ export type IndexDocument = {
     references?: IndexReference[],
     fulltext?: string[],
     exports?: { [key: string]: string },
+    idf?: any,
 };
 
 export type IndexDocumentMetadata = {
