@@ -25,6 +25,7 @@ import { expect } from 'chai';
 import type { CswSettings } from '../../app/importer/csw/csw.settings.js';
 import { Summary } from '../../app/model/summary.js';
 import { PostgresUtils } from '../../app/persistence/postgres.utils.js';
+import cswEbaConfig from '../data/csw/eba/config.json' with { type: 'json' };
 import cswGdideConfig from '../data/csw/gdide/config.json' with { type: 'json' };
 import { type ImporterIntegrationTestCase, runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
 import { getTestDatabaseConfig, resetDatabase } from '../utils/postgres-container.js';
@@ -71,6 +72,14 @@ describe('Ingrid Integration Tests', function () {
             ...cswTestcase,
             settings: cswGdideConfig as CswSettings,
             baseFixture: 'test/data/csw/gdide'
+        });
+    });
+
+    it('should harvest records from CSW and push them to ES (EBA)', async () => {
+        await runImporterIntegrationTest({
+            ...cswTestcase,
+            settings: cswEbaConfig as CswSettings,
+            baseFixture: 'test/data/csw/eba'
         });
     });
 
