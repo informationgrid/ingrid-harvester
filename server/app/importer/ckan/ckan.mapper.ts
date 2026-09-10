@@ -42,7 +42,7 @@ import type { CkanParameters, CkanParametersListWithResources, RequestOptions, R
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 import { DCAT_CATEGORY_URL } from '../dcatapde/dcatapde.utils.js';
-import { Mapper } from '../mapper.js';
+import { Mapper, type MetadataSource } from '../mapper.js';
 import { namespaces } from "../namespaces.js";
 import type { ToDcatapdeMapper } from "../to.dcatapde.mapper.js";
 import type { CkanSettings } from './ckan.settings.js';
@@ -187,6 +187,19 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
 
     getMetadataSourceType(): string {
         return 'ckan';
+    }
+
+    // legacy metadata shape still consumed by non-migrated profiles and the deprecated document kinds
+    getMetadataSource(): MetadataSource {
+        let rawSource = this.settings.sourceURL + '/api/3/action/package_show?id=' + this.source.name;
+        let portalSource = this.settings.sourceURL + '/dataset/' + this.source.name;
+        return {
+            source_base: this.settings.sourceURL,
+            raw_data_source: rawSource,
+            source_type: 'ckan',
+            portal_link: portalSource,
+            attribution: this.settings.defaultAttribution
+        };
     }
 
     getModifiedDate() {

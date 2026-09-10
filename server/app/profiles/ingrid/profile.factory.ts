@@ -48,7 +48,9 @@ import { ingridDcatapdeMapper } from "./mapper/ingrid.dcatapde.mapper.js";
 import { ingridGenesisMapper } from "./mapper/ingrid.genesis.mapper.js";
 import type { ingridMapperType } from './mapper/ingrid.mapper.js';
 import type { IngridIndexDocument } from './model/index.document.js';
+import type { IngridDeprecatedIndexDocument } from './model/index.document.deprecated.js';
 import type { IngridOpendataIndexDocument } from './model/opendataindex.document.js';
+import type { IngridOpendataDeprecatedIndexDocument } from './model/opendataindex.document.deprecated.js';
 import { ingridWfsMapper } from './mapper/ingrid.wfs.mapper.js';
 import { PegelonlineWfsMapper } from './mapper/wfs/pegelonline.wfs.mapper.js';
 import { ZdmWfsMapper } from './mapper/wfs/zdm.wfs.mapper.js';
@@ -61,7 +63,7 @@ export const APPLICATION_NAME = 'Harvester';
 
 export type ingridSettings = CswSettings | WfsSettings | DcatapdeSettings | GenesisSettings;
 
-export class ingridFactory extends ProfileFactory<ingridSettings> {
+export class ingridFactory extends ProfileFactory<ingridSettings, IngridIndexDocument | IngridOpendataIndexDocument | IngridDeprecatedIndexDocument | IngridOpendataDeprecatedIndexDocument> {
 
     protected getSupportedTypeNames(): ImporterType[] {
         return ["CSW", "CKAN", "DCATAPDE", "WFS", "GENESIS"];
@@ -69,8 +71,10 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
 
     override getAvailableIndexMappings(): IndexMappingOption[] {
         return [
-            { label: 'InGrid',   value: 'default-mapping',  schemaName: 'ingrid'   },
-            { label: 'OpenData', value: 'opendata-mapping', schemaName: 'opendata' },
+            { label: 'InGrid',                value: 'default-mapping',             schemaName: 'ingrid'              },
+            { label: 'OpenData',              value: 'opendata-mapping',            schemaName: 'opendata'            },
+            { label: 'InGrid (deprecated)',   value: 'default-mapping.deprecated',  schemaName: 'ingrid-deprecated'   },
+            { label: 'OpenData (deprecated)', value: 'opendata-mapping.deprecated', schemaName: 'opendata-deprecated' },
         ];
     }
 
@@ -112,7 +116,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
         return importer;
     }
 
-    getDocumentFactory(mapper: ingridMapperType): DocumentFactory<IngridIndexDocument | IngridOpendataIndexDocument> {
+    getDocumentFactory(mapper: ingridMapperType): DocumentFactory<IngridIndexDocument | IngridOpendataIndexDocument | IngridDeprecatedIndexDocument | IngridOpendataDeprecatedIndexDocument> {
         switch (mapper.constructor.name) {
             case 'CswMapper': return new ingridCswMapper(mapper as CswMapper);
             case 'CkanMapper': return new ingridCkanMapper(mapper as CkanMapper);

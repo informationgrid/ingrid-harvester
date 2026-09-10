@@ -218,7 +218,7 @@ export class WfsImporter extends Importer<WfsSettings> {
         let doc: IndexDocument = await documentFactory.createIndexDocument();
         if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
             let entity: RecordEntity = {
-                identifier: doc.id,
+                identifier: getDocumentIdentifier(doc),
                 source: this.settings.sourceURL,
                 catalog_ids: this.settings.catalogIds,
                 dataset: doc,
@@ -302,7 +302,7 @@ export class WfsImporter extends Importer<WfsSettings> {
 
             if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
                 let entity: RecordEntity = {
-                    identifier: doc.id,
+                    identifier: getDocumentIdentifier(doc),
                     source: this.settings.sourceURL,
                     catalog_ids: this.settings.catalogIds,
                     dataset: doc,
@@ -461,3 +461,11 @@ const GML_GEOMETRY_PROPERTY_TYPES: string[] = [
     "GeometryPropertyType",
     "AbstractGeometryPropertyType"
 ];
+
+// this file is shared across profiles (ingrid, diplanung), whose document shapes aren't all the same:
+// most have `id`, but e.g. DiplanungIndexDocument and IngridDeprecatedIndexDocument only have `uuid`.
+// Mirrors ingrid.utils.ts's createEsId() fallback, kept generic here since this file can't depend on
+// a specific profile.
+function getDocumentIdentifier(doc: any): string {
+    return doc.id ?? doc.uuid;
+}

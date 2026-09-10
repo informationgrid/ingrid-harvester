@@ -21,8 +21,8 @@
  * ==================================================
  */
 
-import type { IndexDocument } from '../model/index.document.js';
+import type { CatalogColumnType } from '../catalog/catalog.factory.js';
 
-export interface ToElasticMapper<TargetFormat extends IndexDocument> {
+export interface ToElasticMapper<TargetFormat extends CatalogColumnType> {
     createIndexDocument(): Promise<TargetFormat>;
 }

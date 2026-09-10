@@ -23,6 +23,7 @@
 
 import turfBbox from '@turf/bbox';
 import { DOMImplementation } from '@xmldom/xmldom';
+import type { Geometry } from 'geojson';
 import {
     DCAT_FILE_TYPE_URL,
     DCAT_LANGUAGE_URL,
@@ -36,6 +37,7 @@ import { UrlUtils } from '../../../utils/url.utils.js';
 import { ensureNoEndSlash, generateUuid } from "../ingrid.utils.js";
 import type { IndexContact, IndexSpatial } from '../../../model/index.document.js';
 import type { IngridOpendataDistribution } from '../model/opendataindex.document.js';
+import type { IngridOpendataDeprecatedIndexDocument } from '../model/opendataindex.document.deprecated.js';
 import { Codelist } from '../utils/codelist.js';
 import { ingridMapper } from './ingrid.mapper.js';
 
@@ -61,6 +63,84 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
 
     protected getDefaultDocumentKind(): 'ingrid' | 'opendata' {
         return 'opendata';
+    }
+
+    protected override getDocumentBuilders() {
+        return {
+            ...super.getDocumentBuilders(),
+            'opendata-deprecated': () => this.buildOpendataDeprecatedDocument(),
+        };
+    }
+
+    // the pre-migration ("opendata") document shape - see ingridCkanMapper's equivalent for context;
+    // same shape, wired to Genesis's own data sources. Reuses createDcatapdeDocument() as-is for `rdf`
+    // (already shared between old and new shape) and getKeywords()/getFreeKeywords()/getThemeKeyword()
+    // as-is (unchanged by the migration).
+    private async buildOpendataDeprecatedDocument(): Promise<IngridOpendataDeprecatedIndexDocument> {
+        const settings = this.baseMapper.settings;
+        let result: IngridOpendataDeprecatedIndexDocument = {
+            ...this.getCustomEntries(),
+            iPlugId: settings.iPlugId,
+            partner: settings.partner?.split(',').map(p => p.trim()),
+            provider: settings.provider?.split(',').map(p => p.trim()),
+            organisation: this.transformToIgcDomainId(settings.provider, "111"),
+            datatype: settings.datatype?.split(',').map(p => p.trim()) ?? ["default"],
+            dataSourceName: settings.dataSourceName,
+            boost: settings.boost,
+            isfolder: "false",
+            metadata: {
+                created: null,
+                modified: this.getModifiedDate(),
+            },
+            id: this.baseMapper.getCode(),
+            uuid: this.baseMapper.getGeneratedId(),
+            title: this.getTitle(),
+            description: this.baseMapper.getDescription(),
+            modified: this.getModifiedDate(),
+            collection: {
+                name: settings.dataSourceName,
+            },
+            t01_object: {
+                obj_id: this.baseMapper.getGeneratedId(),
+            },
+            extras: {
+                metadata: {
+                    harvested: this.baseMapper.getHarvestingDate(),
+                    harvesting_errors: null,
+                    issued: null,
+                    is_valid: null,
+                    modified: null,
+                    source: this.baseMapper.getMetadataSource(),
+                    merged_from: [],
+                }
+            },
+            spatial: null, // assigned after
+            temporal: {
+                "accrual_periodicity": "",
+                "accrual_periodicity_key": ""
+            },
+            contacts: this.baseMapper.getContact(),
+            keywords: this.getKeywords().map(keyword => ({ id: null, ...keyword })),
+            // getDistributions() was retyped for the new shape (IngridOpendataDistribution) - bypass
+            // it and go straight to the base importer mapper, matching the old field layout.
+            distributions: this.baseMapper.getDistributions(),
+            dcat: { landingPage: this.baseMapper.getLandingPageUrl() },
+            legal_basis: null,
+            political_geocoding_level_uri: this.baseMapper.getSpatialUri(),
+            rdf: null, // assigned after
+            sort_hash: this.getSortUuid(),
+            content: null,
+        };
+        result.content = [...new Set(this.getContent(result))];
+        result.rdf = this.createDcatapdeDocument();
+        result.spatial = { geometries: this.getOldSpatial() };
+        return result;
+    }
+
+    private getOldSpatial(): Geometry[] {
+        const spatialWkt = this.baseMapper.settings.typeConfig?.spatialWkt;
+        const geometry = spatialWkt ? this.normalizeGeometryType(this.baseMapper.wktToGeoJson(spatialWkt)) : undefined;
+        return geometry ? [geometry] : [];
     }
 
     // the document id is the plain table code, as opposed to `uuid` (a hash of partner+code)

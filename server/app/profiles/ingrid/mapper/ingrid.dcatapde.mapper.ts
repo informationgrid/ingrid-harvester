@@ -26,6 +26,7 @@ import log4js from 'log4js';
 import { DcatapdeMapper } from "../../../importer/dcatapde/dcatapde.mapper.js";
 import type { IndexContact, IndexSpatial } from '../../../model/index.document.js';
 import type { IngridOpendataDistribution } from "../model/opendataindex.document.js";
+import type { IngridOpendataDeprecatedIndexDocument } from "../model/opendataindex.document.deprecated.js";
 import { ingridMapper } from './ingrid.mapper.js';
 import { Codelist } from "../utils/codelist.js";
 
@@ -35,6 +36,100 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> {
 
     protected getDefaultDocumentKind(): 'ingrid' | 'opendata' {
         return 'opendata';
+    }
+
+    protected override getDocumentBuilders() {
+        return {
+            ...super.getDocumentBuilders(),
+            'opendata-deprecated': () => this.buildOpendataDeprecatedDocument(),
+        };
+    }
+
+    // the pre-migration ("opendata") document shape - see ingridCkanMapper's equivalent for context;
+    // same shape, wired to DCAT-AP.de's own data sources.
+    private async buildOpendataDeprecatedDocument(): Promise<IngridOpendataDeprecatedIndexDocument> {
+        const settings = this.baseMapper.settings;
+        let result: IngridOpendataDeprecatedIndexDocument = {
+            ...this.getCustomEntries(),
+            iPlugId: settings.iPlugId,
+            partner: settings.partner?.split(',').map(p => p.trim()),
+            provider: settings.provider?.split(',').map(p => p.trim()),
+            organisation: this.transformToIgcDomainId(settings.provider, "111"),
+            datatype: settings.datatype?.split(',').map(p => p.trim()) ?? ["default"],
+            dataSourceName: settings.dataSourceName,
+            boost: settings.boost,
+            isfolder: "false",
+            metadata: {
+                created: null,
+                modified: this.getModifiedDate(),
+            },
+            id: this.getGeneratedId(),
+            uuid: this.getGeneratedId(),
+            modified: this.getModifiedDate(),
+            collection: {
+                name: settings.dataSourceName,
+            },
+            extras: {
+                metadata: {
+                    harvested: this.baseMapper.getHarvestingDate(),
+                    harvesting_errors: null,
+                    issued: null,
+                    is_valid: null,
+                    modified: null,
+                    source: this.baseMapper.getMetadataSource(),
+                    merged_from: []
+                }
+            },
+            t01_object: {
+                obj_id: this.getGeneratedId()
+            },
+            title: this.getTitle(),
+            description: this.baseMapper.getDescription(),
+            dcat: {
+                landingPage: this.baseMapper.getLandingPage(),
+            },
+            contacts: this.getOldContacts(),
+            keywords: this.getKeywords(),
+            legal_basis: this.baseMapper.getLegalBasis(),
+            // getDistributions() was retyped for the new shape (IngridOpendataDistribution) - bypass
+            // it and go straight to the base importer mapper, matching the old field layout.
+            distributions: await this.baseMapper.getDistributions(),
+            political_geocoding_level_uri: this.baseMapper.getPoliticalGeocodingLevelURI(),
+            spatial: {
+                geometries: [this.baseMapper.getSpatial()]
+            },
+            temporal: {
+                "accrual_periodicity": "",
+                "accrual_periodicity_key": ""
+            },
+            sort_hash: this.getSortUuid(),
+            content: null, // assigned after
+            rdf: null, // assigned after
+        };
+        result.content = this.getContent(result);
+        // add "rdf" at the end, so it does not get included in the "content" array
+        result.rdf = "<?xml version='1.0' encoding='UTF-8'?><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">" + this.getHarvestedData() + "</rdf:RDF>";
+        return result;
+    }
+
+    private getOldContacts(): any[] {
+        const withRole = (role: string) => (contact: any) => ({ role: this.getRoleId(role), ...contact });
+        return [
+            ...this.baseMapper.getPublisher().map(withRole("publisher")),
+            ...this.baseMapper.getCreator().map(withRole("creator")),
+            ...this.baseMapper.getMaintainer().map(withRole("maintainer")),
+            ...this.baseMapper.getOriginator().map(withRole("originator")),
+        ];
+    }
+
+    private getRoleId(role: string) {
+        switch (role) {
+            case "publisher": return 10;
+            case "creator": return 11;
+            case "maintainer": return 2;
+            case "originator": return 6;
+        }
+        return role;
     }
 
     getDescription(): string {

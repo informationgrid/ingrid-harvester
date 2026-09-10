@@ -28,12 +28,23 @@ import { CswMapper } from "../../../importer/csw/csw.mapper.js";
 import * as GeoJsonUtils from "../../../utils/geojson.utils.js";
 import * as XpathUtils from "../../../utils/xpath.utils.js";
 import { ingridMapper } from "./ingrid.mapper.js";
+import type { Distribution } from "../../../model/distribution.js";
 import type { IndexContact, IndexKeyword, IndexReference, IndexSpatial, IndexTemporalItem } from "../../../model/index.document.js";
 import type {IngridConformanceResult, IngridDataQuality, IngridDocumentType, IngridLicense, IngridSpatialRepresentation, IngridSpecific, IngridTemporal} from "../model/index.document.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
 export class ingridCswMapper extends ingridMapper<CswMapper> {
+
+    // 'ingrid-deprecated' (the pre-migration IGC/t0xx-column-style shape) is available for CSW-sourced
+    // mappers - see ingridMapper.buildIngridDeprecatedDocument() for the shared assembly and the field
+    // getters overridden below (getT0/getT01_object/getT011_obj_*/getAddress/getLocation/etc.).
+    protected override getDocumentBuilders() {
+        return {
+            ...super.getDocumentBuilders(),
+            'ingrid-deprecated': () => this.buildIngridDeprecatedDocument(),
+        };
+    }
 
     getT0() {
         let temporal = this.baseMapper.getTemporal()?.[0];
@@ -61,6 +72,15 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
 
     getAlternateTitle(): string {
         return this.baseMapper._getAlternateTitle().join(" ");
+    }
+
+    getAlternateTitleDeprecated(): string[] {
+        return this.baseMapper._getAlternateTitle();
+    }
+
+    async getDistributionsDeprecated(): Promise<Distribution[]> {
+        let distributions = await this.baseMapper.getDistributions();
+        return distributions?.filter(distribution => distribution.accessURL);
     }
 
     getAddress() {
@@ -584,7 +604,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             obj_class: this.getObjClass(),
             info_note: this.text("./gmd:MD_DataIdentification/gmd:purpose/gco:CharacterString", this.baseMapper.idInfo),
             loc_descr: this.text("./gmd:MD_DataIdentification/gmd:EX_Extent/gmd:description/gco:CharacterString", this.baseMapper.idInfo),
-            dataset_alternate_name: this.getAlternateTitle(),
+            dataset_alternate_name: this.getAlternateTitleDeprecated(),
             dataset_character_set: this.transformToIgcDomainId(this.text("./gmd:MD_DataIdentification/gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue", this.baseMapper.idInfo), "510"),
             dataset_usage: this.text("./gmd:MD_DataIdentification/gmd:resourceSpecificUsage/gmd:MD_Usage/gmd:specificUsage/gco:CharacterString", this.baseMapper.idInfo),
             data_language_code: this.transformGeneric(this.text("./*/gmd:language/gco:CharacterString", this.baseMapper.idInfo), {"deu":"de", "ger":"de", "eng":"en"}, "de"),

@@ -1,0 +1,127 @@
+/*
+ * ==================================================
+ * ingrid-harvester
+ * ==================================================
+ * Copyright (C) 2017 - 2024 wemove digital solutions GmbH
+ * ==================================================
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be
+ * approved by the European Commission - subsequent versions of the
+ * EUPL (the "Licence");
+ *
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the Licence is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the Licence for the specific language governing permissions and
+ * limitations under the Licence.
+ * ==================================================
+ */
+
+import type { Geometry } from 'geojson';
+import type { MetadataSource } from '../../../importer/mapper.js';
+import type { Distribution } from '../../../model/distribution.js';
+import type { IngridMetadata } from './ingrid.metadata.js';
+
+// mirrors the harvesting-metadata shape the LVR/Diplanung profiles inline for the same purpose
+// (server/app/importer/mapper.ts only exports the MetadataSource sub-shape, not a wrapper type).
+// Exported so opendataindex.document.deprecated.ts can reuse it instead of duplicating it.
+export type HarvestingMetadata = {
+    harvested?: Date,
+    harvesting_errors?: string[],
+    issued: Date,
+    is_changed?: boolean,
+    is_valid?: boolean,
+    modified: Date,
+    quality_notes?: string[],
+    source: MetadataSource,
+    merged_from: string[],
+    deleted?: Date,
+};
+
+// the pre-migration ("IGC"/t0xx-column-style) document shape, last produced by createIndexDocument()
+// before commit 993c13ae rewrote it to the current nested shape. Reintroduced as the 'ingrid-deprecated'
+// document kind - see ingridCswMapper.buildIngridDeprecatedDocument(). Deliberately standalone (does not
+// extend the current shared IndexDocument, e.g. `id` vs `uuid`) to stay a faithful reintroduction of the
+// old shape rather than a hybrid of old and new fields.
+export type IngridDeprecatedIndexDocument = IngridMetadata & {
+    metadata: {
+        created: Date | null,
+        modified: Date,
+    },
+    uuid: string,
+    extras: {
+        hierarchy_level?: string,
+        metadata: HarvestingMetadata,
+    },
+    collection: {
+        name: string
+    },
+    distributions?: Distribution[],
+    t0: string,
+    t1: string,
+    t2: string,
+    t01_object: any,
+    hierarchylevel: string,
+    alternatetitle: string[],
+    t02_address: any[],
+    title: string,
+    summary: string,
+    content: string[],
+    location: string[],
+    x1: number[],
+    x2: number[],
+    y1: number[],
+    y2: number[],
+    spatial: {
+        geometries: Geometry[]
+    },
+    idf: string,
+    modified: Date,
+    capabilities_url: string[],
+    refering?: any,
+    refering_service_uuid?: string[],
+    additional_html_1: string,
+    t04_search: any,
+    t0110_avail_format: any,
+    t011_obj_geo: any,
+    t011_obj_geo_keyc: any,
+    t011_obj_geo_symc: any,
+    t011_obj_geo_scale: any,
+    t011_obj_geo_spatial_rep: any,
+    t011_obj_geo_vector: any,
+    t011_obj_geo_supplinfo: any,
+    t011_obj_serv: any,
+    t011_obj_serv_version: any,
+    t011_obj_serv_op_connpoint: any,
+    t011_obj_serv_op_depends: any,
+    t011_obj_serv_op_para: any,
+    t011_obj_serv_operation: any,
+    t011_obj_serv_op_platform: any,
+    t011_obj_topic_cat: any,
+    t012_obj_adr: any[],
+    t0113_dataset_reference: any,
+    t017_url_ref: any[],
+    t021_communication: any[],
+    object_use: {
+        terms_of_use_value: string[],
+    },
+    object_use_constraint: {
+        license_key?: string | string[],
+        license_value: string | string[],
+    },
+    object_access: {
+        restriction_key: string[],
+        restriction_value: string[],
+        terms_of_use: string,
+    },
+    object_reference?: any[],
+    is_hvd: boolean,
+    spatial_system: {
+        referencesystem_value: string[],
+    },
+    sort_hash: string,
+};

@@ -23,6 +23,7 @@
 
 import type { Geometry } from 'geojson';
 import { WfsMapper } from '../../../importer/wfs/wfs.mapper.js';
+import type { Distribution } from '../../../model/distribution.js';
 import * as GeojsonUtils from '../../../utils/geojson.utils.js';
 import * as MiscUtils from '../../../utils/misc.utils.js';
 import { IdfGenerator } from '../idf.generator.js';
@@ -31,6 +32,18 @@ import type { IngridIndexDocument } from '../model/index.document.js';
 import { ingridMapper } from './ingrid.mapper.js';
 
 export class ingridWfsMapper extends ingridMapper<WfsMapper> {
+
+    // 'ingrid-deprecated' (the pre-migration IGC/t0xx-column-style shape) is available for WFS-sourced
+    // mappers too - see ingridMapper.buildIngridDeprecatedDocument() for the shared assembly. Only
+    // getSpatial/getIDF/getX1-getY2/getAdditionalHtml/getDistributionsDeprecated are overridden below
+    // for this shape (same as before the migration); every other field falls back to the base class's
+    // stub (undefined).
+    protected override getDocumentBuilders() {
+        return {
+            ...super.getDocumentBuilders(),
+            'ingrid-deprecated': () => this.buildIngridDeprecatedDocument(),
+        };
+    }
 
     getTitle(): string {
         const featureTitleAttribute = this.baseMapper.settings.featureTitleAttribute;
@@ -58,6 +71,17 @@ export class ingridWfsMapper extends ingridMapper<WfsMapper> {
     getIDF() {
         let idfGenerator = new IdfGenerator(this);
         return idfGenerator.createIdf(this.baseMapper.fetched.idx);
+    }
+
+    // WFS has no real distributions of its own - this placeholder-of-nulls entry matches the old
+    // shape's actual historical output verbatim (unlike CSW, this isn't data-dependent).
+    async getDistributionsDeprecated(): Promise<Distribution[]> {
+        return [{
+            access_url: null,
+            format: null,
+            operates_on: null,
+            title: null
+        }];
     }
 
     getCustomEntries(toLower: boolean = true): Object {

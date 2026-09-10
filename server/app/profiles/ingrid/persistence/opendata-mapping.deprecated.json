@@ -1,0 +1,1569 @@
+{
+  "properties": {
+    "additional_html_1": {
+      "type": "keyword",
+      "store": true
+    },
+    "areaid": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "boost": {
+      "type": "float",
+      "store": true,
+      "null_value": 0
+    },
+    "capabilities_download_url": {
+      "type": "keyword",
+      "store": true
+    },
+    "capabilities_url": {
+      "type": "keyword",
+      "store": true
+    },
+    "capabilities_url_with_client": {
+      "type": "keyword",
+      "store": true
+    },
+    "children": {
+      "properties": {
+        "address_node": {
+          "properties": {
+            "addr_uuid": {
+              "type": "keyword"
+            }
+          }
+        },
+        "object_node": {
+          "properties": {
+            "obj_uuid": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    },
+    "collection": {
+      "properties": {
+        "id": {
+          "type": "keyword",
+          "store": true
+        },
+        "name": {
+          "type": "keyword",
+          "store": true
+        }
+      }
+    },
+    "contacts": {
+      "properties": {
+        "administrative_area": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "code": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "communications": {
+          "properties": {
+            "type": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "value": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            }
+          }
+        },
+        "country": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "locality": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "name": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "pobox": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "pocode": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "role": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "street": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }
+      }
+    },
+    "content": {
+      "type": "text",
+      "store": true,
+      "fields": {
+        "edge_ngram": {
+          "type": "text",
+          "analyzer": "edge_ngram",
+          "search_analyzer": "german"
+        },
+        "ngram": {
+          "type": "text",
+          "analyzer": "ngram",
+          "search_analyzer": "german"
+        }
+      },
+      "analyzer": "german"
+    },
+    "created": {
+      "type": "date",
+      "store": true
+    },
+    "dataSourceName": {
+      "type": "keyword",
+      "store": true
+    },
+    "datatype": {
+      "type": "keyword",
+      "store": true
+    },
+    "dcat": {
+      "properties": {
+        "landingPage": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }
+      }
+    },
+    "description": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "distributions": {
+      "properties": {
+        "access_url": {
+          "type": "text",
+          "store": true
+        },
+        "availability": {
+          "type": "text",
+          "store": true
+        },
+        "description": {
+          "type": "text",
+          "copy_to": [
+            "content"
+          ]
+        },
+        "format": {
+          "type": "keyword",
+          "store": true
+        },
+        "languages": {
+          "type": "keyword",
+          "store": true
+        },
+        "license": {
+          "properties": {
+            "attribution_by_text": {
+              "type": "text",
+              "store": true
+            },
+            "name": {
+              "type": "keyword",
+              "store": true
+            },
+            "url": {
+              "type": "text",
+              "store": true
+            }
+          }
+        },
+        "modified": {
+          "type": "text",
+          "store": true
+        },
+        "title": {
+          "type": "text",
+          "store": true,
+          "copy_to": [
+            "content"
+          ]
+        }
+      }
+    },
+    "doi": {
+      "properties": {
+        "type": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }
+      }
+    },
+    "iPlugId": {
+      "type": "keyword",
+      "store": true
+    },
+    "id": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "idf": {
+      "type": "text",
+      "store": true
+    },
+    "is_hvd": {
+      "type": "keyword",
+      "store": true
+    },
+    "isfolder": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "keywords": {
+      "properties": {
+        "id": {
+          "type": "keyword"
+        },
+        "source": {
+          "type": "keyword"
+        },
+        "term": {
+          "type": "keyword"
+        }
+      }
+    },
+    "kml": {
+      "type": "keyword",
+      "store": true
+    },
+    "lang": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "legal_basis": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "location": {
+      "type": "keyword",
+      "store": true,
+      "copy_to": [
+        "content"
+      ]
+    },
+    "location_description": {
+      "type": "text",
+      "copy_to": [
+        "content"
+      ]
+    },
+    "metadata": {
+      "properties": {
+        "created": {
+          "type": "date"
+        },
+        "modified": {
+          "type": "date"
+        }
+      }
+    },
+    "modified": {
+      "type": "date",
+      "store": true
+    },
+    "object_access": {
+      "properties": {
+        "line": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "restriction_key": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }
+      }
+    },
+    "object_conformity": {
+      "properties": {
+        "degree_key": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "specification_key": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }
+      }
+    },
+    "object_data_language": {
+      "type": "object"
+    },
+    "object_data_quality": {
+      "type": "object"
+    },
+    "object_reference": {
+      "properties": {
+        "explanation": {
+          "type": "text",
+          "copy_to": [
+            "content"
+          ]
+        },
+        "obj_class": {
+          "type": "keyword",
+          "store": true
+        },
+        "obj_name": {
+          "type": "keyword",
+          "store": true,
+          "copy_to": [
+            "content"
+          ]
+        },
+        "obj_to_uuid": {
+          "type": "keyword"
+        },
+        "obj_uuid": {
+          "type": "keyword",
+          "store": true
+        },
+        "type": {
+          "type": "keyword",
+          "store": true
+        },
+        "version": {
+          "type": "keyword",
+          "store": true
+        }
+      }
+    },
+    "object_types_catalogue": {
+      "properties": {
+        "line": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "title_key": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "title_value": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "type_date": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }
+      }
+    },
+    "object_use": {
+      "properties": {
+        "terms_of_use_value": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }
+      }
+    },
+    "object_use_constraint": {
+      "properties": {
+        "license_key": {
+          "type": "keyword",
+          "store": true
+        },
+        "license_value": {
+          "type": "keyword",
+          "store": true
+        }
+      }
+    },
+    "organisation": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "parent": {
+      "properties": {
+        "address_node": {
+          "properties": {
+            "addr_uuid": {
+              "type": "keyword"
+            }
+          }
+        },
+        "object_node": {
+          "properties": {
+            "obj_uuid": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    },
+    "parent2": {
+      "properties": {
+        "address_node": {
+          "properties": {
+            "addr_uuid": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    },
+    "parent3": {
+      "properties": {
+        "address_node": {
+          "properties": {
+            "addr_uuid": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    },
+    "parent4": {
+      "properties": {
+        "address_node": {
+          "properties": {
+            "addr_uuid": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    },
+    "parent5": {
+      "properties": {
+        "address_node": {
+          "properties": {
+            "addr_uuid": {
+              "type": "keyword"
+            }
+          }
+        }
+      }
+    },
+    "partner": {
+      "type": "keyword",
+      "store": true
+    },
+    "political_geocoding_level_uri": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "provider": {
+      "type": "keyword",
+      "store": true
+    },
+    "publish_id": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "rdf": {
+      "type": "text",
+      "store": true
+    },
+    "refering": {
+      "properties": {
+        "object_reference": {
+          "properties": {
+            "obj_class": {
+              "type": "keyword",
+              "store": true
+            },
+            "obj_name": {
+              "type": "keyword",
+              "store": true
+            },
+            "obj_uuid": {
+              "type": "keyword",
+              "store": true
+            },
+            "type": {
+              "type": "keyword",
+              "store": true
+            },
+            "version": {
+              "type": "keyword",
+              "store": true
+            }
+          }
+        }
+      }
+    },
+    "refering_service_uuid": {
+      "type": "keyword",
+      "store": true
+    },
+    "searchterm_value": {
+      "type": "object"
+    },
+    "sort_hash": {
+      "type": "keyword"
+    },
+    "spatial": {
+      "type": "nested",
+      "properties": {
+        "administrative": {
+          "properties": {
+            "regional_key": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            }
+          }
+        },
+        "geometries": {
+          "type": "geo_shape"
+        },
+        "title": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }
+      }
+    },
+    "spatial_ref_value": {
+      "properties": {
+        "nativekey": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "x1": {
+          "type": "float"
+        },
+        "x2": {
+          "type": "float"
+        },
+        "y1": {
+          "type": "float"
+        },
+        "y2": {
+          "type": "float"
+        }
+      }
+    },
+    "spatial_system": {
+      "type": "object"
+    },
+    "summary": {
+      "type": "text",
+      "store": true,
+      "fields": {
+        "edge_ngram": {
+          "type": "text",
+          "analyzer": "edge_ngram",
+          "search_analyzer": "german"
+        },
+        "ngram": {
+          "type": "text",
+          "analyzer": "ngram",
+          "search_analyzer": "german"
+        }
+      },
+      "analyzer": "german"
+    },
+    "t0": {
+      "type": "keyword",
+      "store": true
+    },
+    "t0110_avail_format": {
+      "type": "object"
+    },
+    "t0112_media_option": {
+      "type": "object"
+    },
+    "t0113_dataset_reference": {
+      "properties": {
+        "reference_date": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }
+      }
+    },
+    "t0114_env_topic": {
+      "type": "object"
+    },
+    "t011_obj_geo": {
+      "properties": {
+        "datasource_uuid": {
+          "type": "keyword"
+        },
+        "vector_topology_level": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }
+      }
+    },
+    "t011_obj_geo_scale": {
+      "type": "object"
+    },
+    "t011_obj_geo_spatial_rep": {
+      "type": "object"
+    },
+    "t011_obj_geo_symc": {
+      "properties": {
+        "symbol_cat": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "symbol_date": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }
+      }
+    },
+    "t011_obj_serv": {
+      "properties": {
+        "coupling_type": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "has_access_constraint": {
+          "type": "keyword",
+          "store": true
+        },
+        "has_atom_download": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "type": {
+          "type": "text",
+          "store": true
+        },
+        "type_key": {
+          "type": "keyword",
+          "store": true
+        }
+      }
+    },
+    "t011_obj_serv_op_connpoint": {
+      "properties": {
+        "connect_point": {
+          "type": "keyword",
+          "store": true
+        }
+      }
+    },
+    "t011_obj_serv_url": {
+      "properties": {
+        "description": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "line": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "name": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "url": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }
+      }
+    },
+    "t011_obj_serv_version": {
+      "properties": {
+        "version_value": {
+          "type": "text",
+          "store": true
+        }
+      }
+    },
+    "t012_obj_adr": {
+      "properties": {
+        "adr_id": {
+          "type": "keyword"
+        },
+        "mod_time": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "special_name": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "special_ref": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "typ": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }
+      }
+    },
+    "t015_legist": {
+      "type": "object"
+    },
+    "t017_url_ref": {
+      "properties": {
+        "content": {
+          "type": "keyword",
+          "store": true,
+          "copy_to": [
+            "content"
+          ]
+        },
+        "datatype": {
+          "type": "keyword",
+          "store": true
+        },
+        "explanation": {
+          "type": "text",
+          "copy_to": [
+            "content"
+          ]
+        },
+        "line": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "special_ref": {
+          "type": "keyword",
+          "store": true
+        },
+        "url_link": {
+          "type": "keyword",
+          "store": true
+        }
+      }
+    },
+    "t01_object": {
+      "properties": {
+        "dataset_usage": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "id": {
+          "type": "keyword",
+          "store": true,
+          "copy_to": [
+            "content"
+          ]
+        },
+        "is_adv_compatible": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "metadata_standard_version": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "metadata_time": {
+          "type": "keyword",
+          "store": true
+        },
+        "mod_time": {
+          "type": "keyword",
+          "store": true
+        },
+        "mod_uuid": {
+          "type": "keyword"
+        },
+        "obj_class": {
+          "type": "keyword",
+          "store": true,
+          "copy_to": [
+            "content"
+          ]
+        },
+        "obj_id": {
+          "type": "keyword",
+          "store": true,
+          "copy_to": [
+            "content"
+          ]
+        },
+        "org_obj_id": {
+          "type": "keyword",
+          "store": true
+        },
+        "responsible_uuid": {
+          "type": "keyword"
+        },
+        "time_alle": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "time_descr": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "time_from": {
+          "type": "keyword",
+          "store": true
+        },
+        "time_period": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "time_to": {
+          "type": "keyword",
+          "store": true
+        },
+        "time_type": {
+          "type": "keyword",
+          "store": true
+        },
+        "vertical_extent_vdatum_value": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }
+      }
+    },
+    "t021_communication": {
+      "properties": {
+        "comm_type": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "comm_value": {
+          "type": "text",
+          "copy_to": [
+            "content"
+          ]
+        },
+        "commtype_key": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "descr": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "line": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        }
+      }
+    },
+    "t022_adr_adr": {
+      "properties": {
+        "adr_from_id": {
+          "type": "keyword",
+          "store": true
+        },
+        "adr_to_id": {
+          "type": "keyword"
+        }
+      }
+    },
+    "t022_adr_adr3": {
+      "properties": {
+        "adr_from_id": {
+          "type": "keyword",
+          "store": true
+        }
+      }
+    },
+    "t02_address": {
+      "properties": {
+        "address": {
+          "type": "keyword",
+          "store": true
+        },
+        "address_key": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "address_value": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "adr_id": {
+          "type": "keyword",
+          "store": true,
+          "copy_to": [
+            "content"
+          ]
+        },
+        "city": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "country_code": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "country_key": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "create_time": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "descr": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "firstname": {
+          "type": "keyword",
+          "store": true
+        },
+        "institution": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "job": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "lastname": {
+          "type": "keyword",
+          "store": true
+        },
+        "mod_time": {
+          "type": "keyword",
+          "store": true
+        },
+        "mod_uuid": {
+          "type": "keyword"
+        },
+        "org_adr_id": {
+          "type": "keyword"
+        },
+        "postbox": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "postbox_pc": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "postcode": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "responsible_uuid": {
+          "type": "keyword",
+          "store": true
+        },
+        "street": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "title": {
+          "type": "keyword",
+          "store": true
+        },
+        "title_key": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "typ": {
+          "type": "keyword",
+          "store": true
+        }
+      }
+    },
+    "t02_address2": {
+      "properties": {
+        "adr_id": {
+          "type": "keyword",
+          "store": true
+        },
+        "typ": {
+          "type": "keyword",
+          "store": true
+        }
+      }
+    },
+    "t02_address3": {
+      "properties": {
+        "adr_id": {
+          "type": "keyword",
+          "store": true
+        },
+        "typ": {
+          "type": "keyword",
+          "store": true
+        }
+      }
+    },
+    "t02_address4": {
+      "properties": {
+        "adr_id": {
+          "type": "keyword"
+        }
+      }
+    },
+    "t02_address5": {
+      "properties": {
+        "adr_id": {
+          "type": "keyword"
+        }
+      }
+    },
+    "t03_catalogue": {
+      "properties": {
+        "cat_name": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "cat_namespace": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "cat_uuid": {
+          "type": "keyword"
+        },
+        "country_code": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "country_key": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "create_time": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "language_code": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "language_key": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "mod_time": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "mod_uuid": {
+          "type": "keyword"
+        }
+      }
+    },
+    "t04_search": {
+      "properties": {
+        "searchterm": {
+          "type": "keyword",
+          "store": true,
+          "copy_to": [
+            "content"
+          ]
+        }
+      }
+    },
+    "t1": {
+      "type": "keyword",
+      "store": true
+    },
+    "t2": {
+      "type": "keyword",
+      "store": true
+    },
+    "temporal": {
+      "properties": {
+        "accrual_periodicity": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "accrual_periodicity_key": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "gte": {
+          "type": "date"
+        },
+        "lte": {
+          "type": "date"
+        }
+      }
+    },
+    "title": {
+      "type": "text",
+      "store": true,
+      "fields": {
+        "edge_ngram": {
+          "type": "text",
+          "analyzer": "edge_ngram",
+          "search_analyzer": "german"
+        },
+        "ngram": {
+          "type": "text",
+          "analyzer": "ngram",
+          "search_analyzer": "german"
+        }
+      },
+      "analyzer": "german"
+    },
+    "title2": {
+      "type": "text",
+      "store": true
+    },
+    "title3": {
+      "type": "text",
+      "store": true
+    },
+    "topic": {
+      "type": "keyword",
+      "store": true
+    },
+    "topic_categories": {
+      "type": "keyword",
+      "store": true,
+      "copy_to": [
+        "content"
+      ]
+    },
+    "wkt_geo": {
+      "type": "geo_shape"
+    },
+    "wkt_geo_text": {
+      "type": "text",
+      "store": true
+    },
+    "x1": {
+      "type": "double",
+      "store": true
+    },
+    "x2": {
+      "type": "double",
+      "store": true
+    },
+    "y1": {
+      "type": "double",
+      "store": true
+    },
+    "y2": {
+      "type": "double",
+      "store": true
+    }
+  }
+}

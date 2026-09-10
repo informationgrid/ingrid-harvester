@@ -40,7 +40,7 @@ import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 import type { XPathElementSelect } from '../../utils/xpath.utils.js';
-import { Mapper } from '../mapper.js';
+import { Mapper, type MetadataSource } from '../mapper.js';
 import type { DcatapdeSettings } from './dcatapde.settings.js';
 import type {ToDcatapdeMapper} from "../to.dcatapde.mapper.js";
 import { DCAT_LANGUAGE_URL } from './dcatapde.utils.js';
@@ -329,6 +329,17 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
 
     getMetadataSourceType(): string {
         return 'dcat';
+    }
+
+    // legacy metadata shape still consumed by non-migrated profiles and the deprecated document kinds
+    getMetadataSource(): MetadataSource {
+        let portalLink = this.record.getAttribute('rdf:about');
+        return {
+            source_base: this.settings.sourceURL,
+            source_type: 'dcat',
+            portal_link: portalLink,
+            attribution: this.settings.defaultAttribution
+        };
     }
 
     getModifiedDate() {

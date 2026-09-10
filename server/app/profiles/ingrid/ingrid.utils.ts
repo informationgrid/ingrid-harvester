@@ -23,11 +23,15 @@
 
 import { v5 as uuidv5 } from 'uuid';
 import type { IndexDocument } from '../../model/index.document.js';
+import type { IngridDeprecatedIndexDocument } from './model/index.document.deprecated.js';
+import type { IngridOpendataDeprecatedIndexDocument } from './model/opendataindex.document.deprecated.js';
 
 const UUID_NAMESPACE = 'b5d8aadf-d03f-452a-8d91-3a6a7f3b1203';
 
-export function createEsId(document: IndexDocument): string {
-    return document.id;
+// the new shape (and IngridOpendataDeprecatedIndexDocument) always has `id`; only
+// IngridDeprecatedIndexDocument (the old flat "ingrid" shape) lacks it and needs `uuid` instead.
+export function createEsId(document: IndexDocument | IngridDeprecatedIndexDocument | IngridOpendataDeprecatedIndexDocument): string {
+    return 'id' in document ? document.id : document.uuid;
 }
 
 export function generateWfsUuid(source_base: string, typename: string, obj_id: string) {

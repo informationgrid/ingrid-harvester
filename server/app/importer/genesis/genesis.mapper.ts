@@ -26,7 +26,7 @@ import log4js from 'log4js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { Summary } from '../../model/summary.js';
-import { Mapper } from '../mapper.js';
+import { Mapper, type MetadataSource } from '../mapper.js';
 import type { GenesisSettings } from './genesis.settings.js';
 import { generateUuid } from "../../profiles/ingrid/ingrid.utils.js";
 import dayjs from '../../utils/dayjs.js';
@@ -66,6 +66,15 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
 
     getMetadataSourceType(): string {
         return 'GENESIS';
+    }
+
+    // legacy metadata shape still consumed by non-migrated profiles and the deprecated document kinds
+    getMetadataSource(): MetadataSource {
+        return {
+            source_base: this.settings.sourceURL,
+            source_type: 'GENESIS',
+            raw_data_source: this.settings.sourceURL,
+        };
     }
 
     getTitle(): string {
