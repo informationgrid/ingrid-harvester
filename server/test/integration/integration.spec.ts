@@ -30,7 +30,7 @@ import { getTestDatabaseConfig, resetDatabase } from '../utils/postgres-containe
 describe('Basic Integration Tests', function () {
     this.timeout(60000);
 
-    setupIntegrationTestLifecycle();
+    setupIntegrationTestLifecycle('ingrid');
 
     it('should maintain test isolation via database table reset', async () => {
         await resetDatabase();

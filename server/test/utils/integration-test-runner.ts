@@ -34,6 +34,7 @@ import type { Importer } from '../../app/importer/importer.js';
 import type { ImporterSettings } from '../../app/importer/importer.settings.js';
 import { Summary } from '../../app/model/summary.js';
 import { ElasticsearchFactory } from '../../app/persistence/elastic.factory.js';
+import { PostgresQueries } from '../../app/persistence/postgres.queries.js';
 import { PostgresUtils } from '../../app/persistence/postgres.utils.js';
 import { ProfileFactoryLoader } from '../../app/profiles/profile.factory.loader.js';
 import { CatalogService } from '../../app/services/catalog/CatalogService.js';
@@ -41,7 +42,7 @@ import { ConfigService } from '../../app/services/config/ConfigService.js';
 import type { RequestOptions } from '../../app/utils/http-request.utils.js';
 import { RequestDelegate } from '../../app/utils/http-request.utils.js';
 import { setupElasticMock } from '../mocks/elastic.mock.js';
-import { getTestDatabaseConfig, resetDatabase, startPostgresContainer } from './postgres-container.js';
+import { dropTables, getTestDatabaseConfig, resetDatabase, startPostgresContainer } from './postgres-container.js';
 import { compareEsDocuments } from './test-utils.js';
 
 chai.use(chaiExclude);
@@ -286,14 +287,24 @@ export function assertElasticsearchDocuments(
 }
 
 /**
+ * Resets the active profile environment and clears static singleton instances.
+ */
+export function resetProfileContext(profile: string): void {
+    process.env.IMPORTER_PROFILE = profile;
+    (ProfileFactoryLoader as any).instance = undefined;
+    (PostgresQueries as any).instance = undefined;
+}
+
+/**
  * Encapsulates PostgreSQL testcontainer startup and table initialization for Mocha test suites.
  */
 export function setupIntegrationTestLifecycle(profile: string) {
     before(async function () {
         this.timeout(60000);
-        process.env.IMPORTER_PROFILE = profile;
+        resetProfileContext(profile);
 
         const dbConfig = await startPostgresContainer();
+        await dropTables();
         const postgresUtils = new PostgresUtils(dbConfig, new Summary('test-init', {} as any));
         await postgresUtils.init();
     });
@@ -305,7 +316,7 @@ export function setupIntegrationTestLifecycle(profile: string) {
 export async function runImporterIntegrationTest<T extends ImporterSettings>(
     testCase: ImporterIntegrationTestCase<T>
 ): Promise<void> {
-    process.env.IMPORTER_PROFILE = testCase.profile;
+    resetProfileContext(testCase.profile);
 
     await resetDatabase();
 

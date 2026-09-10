@@ -129,6 +129,12 @@ export async function resetDatabase(): Promise<void> {
     }
 }
 
+export async function dropTables(): Promise<void> {
+    if (pool) {
+        await pool.query('DROP TABLE IF EXISTS public.coupling, public.record, public.collection CASCADE;');
+    }
+}
+
 export async function truncateTables(): Promise<void> {
     return resetDatabase();
 }
