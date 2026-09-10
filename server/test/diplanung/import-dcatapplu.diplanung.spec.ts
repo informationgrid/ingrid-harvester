@@ -30,7 +30,7 @@ import { DcatappluImporter } from '../../app/importer/dcatapplu/dcatapplu.import
 import type { DcatappluSettings } from '../../app/importer/dcatapplu/dcatapplu.settings.js';
 import { DiPlanungDocument } from "../../app/profiles/diplanung/model/index.document.js";
 import { RdfXmlParser } from 'rdfxml-streaming-parser';
-import { TestUtils } from "../utils/test-utils.js";
+import { prepareStoredData } from "../utils/test-utils.js";
 import fs from "fs";
 var Readable = require('node:stream').Readable;
 
@@ -78,7 +78,7 @@ describe('Import DCAT AP PLU', function () {
 
         let importer = new DcatappluImporter(settings);
 
-        sinon.stub(importer.elastic, 'getStoredData').resolves(TestUtils.prepareStoredData(1, { issued: '2019-01-09T17:51:38.934Z' }));
+        sinon.stub(importer.elastic, 'getStoredData').resolves(prepareStoredData(1, { issued: '2019-01-09T17:51:38.934Z' }));
 
         indexDocumentCreateSpy = sinon.spy(DiPlanungDocument.prototype, 'create');
 

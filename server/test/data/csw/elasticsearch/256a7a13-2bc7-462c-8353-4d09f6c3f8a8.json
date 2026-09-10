@@ -1,0 +1,541 @@
+{
+  "additional_html_1": "<img src='https://mis.bkg.bund.de/preview/GeographicalNames.png' height='100' class='preview_image' alt='grafische Darstellung' title='grafische Darstellung' >",
+  "alternatetitle": ["INSPIRE Geografische Bezeichnungen"],
+  "capabilities_url": [],
+  "collection": {
+    "name": "Harvester"
+  },
+  "content": [
+    "geoportal",
+    "bund",
+    "bu_bkg",
+    "default",
+    "dsc_csw",
+    "csw",
+    "metadata",
+    "IDF_1.0",
+    "Harvester",
+    "false",
+    "256a7a13-2bc7-462c-8353-4d09f6c3f8a8",
+    "Harvester",
+    "service",
+    "https://gdk.gdi-de.org/gdi-de/srv/eng/csw",
+    "https://gdk.gdi-de.org/gdi-de/srv/eng/csw?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=256a7a13-2bc7-462c-8353-4d09f6c3f8a8",
+    "csw",
+    "https://sg.geodatenzentrum.de/wfs_gn250_inspire",
+    "WFS",
+    "Dienst \"INSPIRE-WFS Geographical Names GN250\" (GetCapabilities)",
+    "142d56bb-108b-4e6a-96a6-8239b80af77e",
+    "https://gdz.bkg.bund.de/index.php/default/inspire-wfs-geographical-names-gn250-wfs-gn250-inspire.html",
+    "https://gdz.bkg.bund.de/index.php/default/inspire-wfs-geographical-names-gn250-wfs-gn250-inspire.html",
+    "Service Center",
+    "WFS",
+    "256a7a13-2bc7-462c-8353-4d09f6c3f8a8",
+    "256a7a13-2bc7-462c-8353-4d09f6c3f8a8",
+    "3",
+    "INSPIRE Geografische Bezeichnungen",
+    "de",
+    "4",
+    "ISO19119",
+    "2005/PDAM 1",
+    "de",
+    "5105",
+    "900001",
+    "service",
+    "INSPIRE Geografische Bezeichnungen",
+    "Federal Agency for Cartography and Geodesy",
+    "Karl-Rothe-Str. 10-14",
+    "04105",
+    "Leipzig",
+    "Bundesrepublik Deutschland",
+    "DEU",
+    "service centre",
+    "Federal Agency for Cartography and Geodesy",
+    "Karl-Rothe-Str. 10-14",
+    "04105",
+    "Leipzig",
+    "Bundesrepublik Deutschland",
+    "DEU",
+    "service centre",
+    "Bundesrepublik Deutschland",
+    "Federal Agency for Cartography and Geodesy",
+    "Richard-Strauss-Allee 11",
+    "60598",
+    "Frankfurt am Main",
+    "Bundesrepublik Deutschland",
+    "DEU",
+    "Bundesrepublik Deutschland",
+    "INSPIRE-WFS Geographical Names GN250",
+    "INSPIRE Direct Access Download Service for geographical names of municipalities or parts thereof, landscapes, mountain ranges, mountains, islands, rivers, canals, lakes, seas, etc. Data is provided for the Federal Republic of Germany. The dataset is structured according to the INSPIRE Annex I Theme - Geographical Names. The selection of the geographical names is based on the map scale 1:250.000 and is derived from different statistical sources, Digital Landscape Models 1:250.000 (DLM250) and Digital Elevation Model grid width 10 m (DGM10). This service is published under the Ordinance to Determine the Conditions for Use for the Provision of Spatial Data of the Federation (GeoNutzV) and thereof free of charge.",
+    "Bundesrepublik Deutschland (000000000000)",
+    "",
+    "6.098033905029297",
+    "15.5785551071167",
+    "47.23942184448242",
+    "55.054344177246094",
+    "Polygon",
+    6.098033905029297,
+    55.054344177246094,
+    6.098033905029297,
+    47.23942184448242,
+    15.5785551071167,
+    47.23942184448242,
+    15.5785551071167,
+    55.054344177246094,
+    6.098033905029297,
+    55.054344177246094,
+    6.098033905029297,
+    47.23942184448242,
+    15.5785551071167,
+    55.054344177246094,
+    "<img src='https://mis.bkg.bund.de/preview/GeographicalNames.png' height='100' class='preview_image' alt='grafische Darstellung' title='grafische Darstellung' >",
+    "Addresses",
+    "I",
+    "infoFeatureAccessService",
+    "F",
+    "Geonames",
+    "F",
+    "WFS",
+    "F",
+    "Geographical Names",
+    "F",
+    "AdVMIS",
+    "F",
+    "inspireidentifiziert",
+    "F",
+    "GML",
+    "3.2",
+    false,
+    false,
+    "download",
+    "OGC:WFS 2.0",
+    "https://sg.geodatenzentrum.de/wfs_gn250_inspire?",
+    "https://sg.geodatenzentrum.de/wfs_gn250_inspire?",
+    "https://sg.geodatenzentrum.de/wfs_gn250_inspire?",
+    "GetCapabilities",
+    "DescribeFeatureType",
+    "GetFeature",
+    "WebServices",
+    "WebServices",
+    "WebServices",
+    "0",
+    "7",
+    "0",
+    "7",
+    "0",
+    "1",
+    "https://gdz.bkg.bund.de/index.php/default/inspire-wfs-geographical-names-gn250-wfs-gn250-inspire.html",
+    "Service Center",
+    "",
+    "5302",
+    "https://sg.geodatenzentrum.de/wfs_gn250_inspire?",
+    "Dienst \"INSPIRE-WFS Geographical Names GN250\" (GetCapabilities)",
+    "",
+    "5302",
+    "Telefon",
+    "+49 69 6333-2995",
+    "Fax",
+    "+49 69 6333-251",
+    "Email",
+    "dlz@bkg.bund.de",
+    "URL",
+    "https://www.bkg.bund.de",
+    "Telefon",
+    "+49 69 6333-2995",
+    "Fax",
+    "+49 69 6333-251",
+    "Email",
+    "dlz@bkg.bund.de",
+    "URL",
+    "https://www.bkg.bund.de",
+    "Telefon",
+    "+49 69 6333-1",
+    "Fax",
+    "+49 69 6333-235",
+    "Email",
+    "mailbox@bkg.bund.de",
+    "URL",
+    "https://www.bkg.bund.de",
+    "The data are protected by copyright. In accordance with the \"Geodatenzugangsgesetz\" (Geodata Access Act), the data are made available free of charge for download and online use, see https://sgx.geodatenzentrum.de/web_public/gdz/lizenz/geozg.pdf. The use of the data is regulat-ed by the \"Verordnung zur Festlegung der Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes – GeoNutzV\" (Regulation on the Determination of the Terms of Use for the Provision of Federal Geodata) of 19 March 2013 (Bundesgesetzblatt Jahrgang 2013 Teil I Nr. 14), see https://sgx.geodatenzentrum.de/web_public/gdz/lizenz/eng/geonutzv.pdf. The source note must be observed.",
+    "Quellenvermerk: © GeoBasis-DE / BKG",
+    false,
+    "7cdd7e18b3c97ccf30ad8d48fbeac6ea1a78c7a3"
+  ],
+  "dataSourceName": "Harvester",
+  "datatype": [
+    "default",
+    "dsc_csw",
+    "csw",
+    "metadata",
+    "IDF_1.0"
+  ],
+  "distributions": [
+    {
+      "title": "Dienst \"INSPIRE-WFS Geographical Names GN250\" (GetCapabilities)",
+      "format": [
+        "WFS"
+      ],
+      "accessURL": "https://sg.geodatenzentrum.de/wfs_gn250_inspire",
+      "operates_on": [
+        "142d56bb-108b-4e6a-96a6-8239b80af77e"
+      ]
+    },
+    {
+      "title": "Service Center",
+      "format": [
+        "WFS"
+      ],
+      "accessURL": "https://gdz.bkg.bund.de/index.php/default/inspire-wfs-geographical-names-gn250-wfs-gn250-inspire.html",
+      "access_url": "https://gdz.bkg.bund.de/index.php/default/inspire-wfs-geographical-names-gn250-wfs-gn250-inspire.html"
+    }
+  ],
+  "extras": {
+    "hierarchy_level": "service",
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-08-13T10:31:42.885Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-06-26T19:53:32.967Z",
+      "merged_from": [],
+      "modified": "2026-08-13T10:30:00.072Z",
+      "source": {
+        "raw_data_source": "https://gdk.gdi-de.org/gdi-de/srv/eng/csw?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=256a7a13-2bc7-462c-8353-4d09f6c3f8a8",
+        "source_base": "https://gdk.gdi-de.org/gdi-de/srv/eng/csw",
+        "source_type": "csw"
+      }
+    }
+  },
+  "hierarchylevel": "service",
+  "iPlugId": "geoportal",
+  "idf": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.portalu.de/IDF/1.0\">\n  <head/>\n  <body>\n<idf:idfMdMetadata xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:gml=\"http://www.opengis.net/gml/3.2\" xmlns:gmx=\"http://www.isotc211.org/2005/gmx\" xmlns:gts=\"http://www.isotc211.org/2005/gts\" xmlns:igctx=\"https://www.ingrid-oss.eu/schemas/igctx\" xmlns:srv=\"http://www.isotc211.org/2005/srv\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:geonet=\"http://www.fao.org/geonetwork\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.isotc211.org/2005/gmd http://repository.gdi-de.org/schemas/geonetwork/2020-12-11/csw/2.0.2/profiles/apiso/1.0.1/apiso.xsd https://www.ingrid-oss.eu/schemas/igctx https://www.ingrid-oss.eu/schemas/igctx/igctx.xsd\" xmlns:idf=\"http://www.portalu.de/IDF/1.0\">\n      <gmd:fileIdentifier>\n        <gco:CharacterString>256a7a13-2bc7-462c-8353-4d09f6c3f8a8</gco:CharacterString>\n      </gmd:fileIdentifier>\n      <gmd:language>\n        <gmd:LanguageCode codeList=\"http://www.loc.gov/standards/iso639-2/\" codeListValue=\"eng\"/>\n      </gmd:language>\n      <gmd:characterSet>\n        <gmd:MD_CharacterSetCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_CharacterSetCode\" codeListValue=\"utf8\"/>\n      </gmd:characterSet>\n      <gmd:hierarchyLevel>\n        <gmd:MD_ScopeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode\" codeListValue=\"service\">service</gmd:MD_ScopeCode>\n      </gmd:hierarchyLevel>\n      <gmd:hierarchyLevelName>\n        <gco:CharacterString>service</gco:CharacterString>\n      </gmd:hierarchyLevelName>\n      <gmd:contact>\n        <idf:idfResponsibleParty uuid=\"1D535E43-935E-43CF-BF03-1D3FC62F1019\">\n          <gmd:organisationName>\n            <gco:CharacterString>Federal Agency for Cartography and Geodesy</gco:CharacterString>\n          </gmd:organisationName>\n          <gmd:positionName>\n            <gco:CharacterString>service centre</gco:CharacterString>\n          </gmd:positionName>\n          <gmd:contactInfo>\n            <gmd:CI_Contact>\n              <gmd:phone>\n                <gmd:CI_Telephone>\n                  <gmd:voice>\n                    <gco:CharacterString>+49 69 6333-2995</gco:CharacterString>\n                  </gmd:voice>\n                  <gmd:facsimile>\n                    <gco:CharacterString>+49 69 6333-251</gco:CharacterString>\n                  </gmd:facsimile>\n                </gmd:CI_Telephone>\n              </gmd:phone>\n              <gmd:address>\n                <gmd:CI_Address>\n                  <gmd:deliveryPoint>\n                    <gco:CharacterString>Karl-Rothe-Str. 10-14</gco:CharacterString>\n                  </gmd:deliveryPoint>\n                  <gmd:city>\n                    <gco:CharacterString>Leipzig</gco:CharacterString>\n                  </gmd:city>\n                  <gmd:administrativeArea>\n                    <gco:CharacterString>Bundesrepublik Deutschland</gco:CharacterString>\n                  </gmd:administrativeArea>\n                  <gmd:postalCode>\n                    <gco:CharacterString>04105</gco:CharacterString>\n                  </gmd:postalCode>\n                  <gmd:country>\n                    <gco:CharacterString>DEU</gco:CharacterString>\n                  </gmd:country>\n                  <gmd:electronicMailAddress>\n                    <gco:CharacterString>dlz@bkg.bund.de</gco:CharacterString>\n                  </gmd:electronicMailAddress>\n                </gmd:CI_Address>\n              </gmd:address>\n              <gmd:onlineResource>\n                <gmd:CI_OnlineResource>\n                  <gmd:linkage>\n                    <gmd:URL>https://www.bkg.bund.de</gmd:URL>\n                  </gmd:linkage>\n                </gmd:CI_OnlineResource>\n              </gmd:onlineResource>\n            </gmd:CI_Contact>\n          </gmd:contactInfo>\n          <gmd:role>\n            <gmd:CI_RoleCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode\" codeListValue=\"pointOfContact\"/>\n          </gmd:role>\n        </idf:idfResponsibleParty>\n      </gmd:contact>\n      <gmd:dateStamp>\n        <gco:Date>2026-07-20</gco:Date>\n      </gmd:dateStamp>\n      <gmd:metadataStandardName>\n        <gco:CharacterString>ISO19119</gco:CharacterString>\n      </gmd:metadataStandardName>\n      <gmd:metadataStandardVersion>\n        <gco:CharacterString>2005/PDAM 1</gco:CharacterString>\n      </gmd:metadataStandardVersion>\n      <gmd:referenceSystemInfo>\n        <gmd:MD_ReferenceSystem>\n          <gmd:referenceSystemIdentifier>\n            <gmd:RS_Identifier>\n              <gmd:code>\n                <gmx:Anchor xlink:href=\"http://www.opengis.net/def/crs/EPSG/0/4258\">EPSG 4258: ETRS89 / geographisch</gmx:Anchor>\n              </gmd:code>\n            </gmd:RS_Identifier>\n          </gmd:referenceSystemIdentifier>\n        </gmd:MD_ReferenceSystem>\n      </gmd:referenceSystemInfo>\n      <gmd:referenceSystemInfo>\n        <gmd:MD_ReferenceSystem>\n          <gmd:referenceSystemIdentifier>\n            <gmd:RS_Identifier>\n              <gmd:code>\n                <gmx:Anchor xlink:href=\"http://www.opengis.net/def/crs/EPSG/0/32632\">EPSG 32632: WGS 84 / UTM Zone 33N</gmx:Anchor>\n              </gmd:code>\n            </gmd:RS_Identifier>\n          </gmd:referenceSystemIdentifier>\n        </gmd:MD_ReferenceSystem>\n      </gmd:referenceSystemInfo>\n      <gmd:referenceSystemInfo>\n        <gmd:MD_ReferenceSystem>\n          <gmd:referenceSystemIdentifier>\n            <gmd:RS_Identifier>\n              <gmd:code>\n                <gmx:Anchor xlink:href=\"http://www.opengis.net/def/crs/EPSG/0/32632\">EPSG 32632: WGS 84 / UTM Zone 32N</gmx:Anchor>\n              </gmd:code>\n            </gmd:RS_Identifier>\n          </gmd:referenceSystemIdentifier>\n        </gmd:MD_ReferenceSystem>\n      </gmd:referenceSystemInfo>\n      <gmd:referenceSystemInfo>\n        <gmd:MD_ReferenceSystem>\n          <gmd:referenceSystemIdentifier>\n            <gmd:RS_Identifier>\n              <gmd:code>\n                <gmx:Anchor xlink:href=\"http://www.opengis.net/def/crs/EPSG/0/25833\">EPSG 25833: ETRS89 / UTM Zone 33N</gmx:Anchor>\n              </gmd:code>\n            </gmd:RS_Identifier>\n          </gmd:referenceSystemIdentifier>\n        </gmd:MD_ReferenceSystem>\n      </gmd:referenceSystemInfo>\n      <gmd:referenceSystemInfo>\n        <gmd:MD_ReferenceSystem>\n          <gmd:referenceSystemIdentifier>\n            <gmd:RS_Identifier>\n              <gmd:code>\n                <gmx:Anchor xlink:href=\"http://www.opengis.net/def/crs/EPSG/0/25832\">EPSG 25832: ETRS89 / UTM Zone 32N</gmx:Anchor>\n              </gmd:code>\n            </gmd:RS_Identifier>\n          </gmd:referenceSystemIdentifier>\n        </gmd:MD_ReferenceSystem>\n      </gmd:referenceSystemInfo>\n      <gmd:referenceSystemInfo>\n        <gmd:MD_ReferenceSystem>\n          <gmd:referenceSystemIdentifier>\n            <gmd:RS_Identifier>\n              <gmd:code>\n                <gmx:Anchor xlink:href=\"http://www.opengis.net/def/crs/EPSG/0/31469\">EPSG 31469: DHDN / Gauss-Krüger Zone 5</gmx:Anchor>\n              </gmd:code>\n            </gmd:RS_Identifier>\n          </gmd:referenceSystemIdentifier>\n        </gmd:MD_ReferenceSystem>\n      </gmd:referenceSystemInfo>\n      <gmd:referenceSystemInfo>\n        <gmd:MD_ReferenceSystem>\n          <gmd:referenceSystemIdentifier>\n            <gmd:RS_Identifier>\n              <gmd:code>\n                <gmx:Anchor xlink:href=\"http://www.opengis.net/def/crs/EPSG/0/31468\">EPSG 31468: DHDN / Gauss-Krüger Zone 4</gmx:Anchor>\n              </gmd:code>\n            </gmd:RS_Identifier>\n          </gmd:referenceSystemIdentifier>\n        </gmd:MD_ReferenceSystem>\n      </gmd:referenceSystemInfo>\n      <gmd:referenceSystemInfo>\n        <gmd:MD_ReferenceSystem>\n          <gmd:referenceSystemIdentifier>\n            <gmd:RS_Identifier>\n              <gmd:code>\n                <gmx:Anchor xlink:href=\"http://www.opengis.net/def/crs/EPSG/0/31467\">EPSG 31467: DHDN / Gauss-Krüger Zone 3</gmx:Anchor>\n              </gmd:code>\n            </gmd:RS_Identifier>\n          </gmd:referenceSystemIdentifier>\n        </gmd:MD_ReferenceSystem>\n      </gmd:referenceSystemInfo>\n      <gmd:referenceSystemInfo>\n        <gmd:MD_ReferenceSystem>\n          <gmd:referenceSystemIdentifier>\n            <gmd:RS_Identifier>\n              <gmd:code>\n                <gmx:Anchor xlink:href=\"http://www.opengis.net/def/crs/EPSG/0/31466\">EPSG 31466: DHDN / Gauss-Krüger Zone 2</gmx:Anchor>\n              </gmd:code>\n            </gmd:RS_Identifier>\n          </gmd:referenceSystemIdentifier>\n        </gmd:MD_ReferenceSystem>\n      </gmd:referenceSystemInfo>\n      <gmd:referenceSystemInfo>\n        <gmd:MD_ReferenceSystem>\n          <gmd:referenceSystemIdentifier>\n            <gmd:RS_Identifier>\n              <gmd:code>\n                <gmx:Anchor xlink:href=\"http://www.opengis.net/def/crs/EPSG/0/4326\">EPSG 4326: WGS 84 / geographisch</gmx:Anchor>\n              </gmd:code>\n            </gmd:RS_Identifier>\n          </gmd:referenceSystemIdentifier>\n        </gmd:MD_ReferenceSystem>\n      </gmd:referenceSystemInfo>\n      <gmd:identificationInfo>\n        <srv:SV_ServiceIdentification uuid=\"https://registry.gdi-de.org/id/de.bund.bkg.csw/256a7a13-2bc7-462c-8353-4d09f6c3f8a8\">\n          <gmd:citation>\n            <gmd:CI_Citation>\n              <gmd:title>\n                <gco:CharacterString>INSPIRE-WFS Geographical Names GN250</gco:CharacterString>\n              </gmd:title>\n              <gmd:alternateTitle>\n                <gco:CharacterString>INSPIRE Geografische Bezeichnungen</gco:CharacterString>\n              </gmd:alternateTitle>\n              <gmd:date>\n                <gmd:CI_Date>\n                  <gmd:date>\n                    <gco:DateTime>2015-09-23T00:00:00.000+02:00</gco:DateTime>\n                  </gmd:date>\n                  <gmd:dateType>\n                    <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"creation\"/>\n                  </gmd:dateType>\n                </gmd:CI_Date>\n              </gmd:date>\n            </gmd:CI_Citation>\n          </gmd:citation>\n          <gmd:abstract>\n            <gco:CharacterString>INSPIRE Direct Access Download Service for geographical names of municipalities or parts thereof, landscapes, mountain ranges, mountains, islands, rivers, canals, lakes, seas, etc. Data is provided for the Federal Republic of Germany. The dataset is structured according to the INSPIRE Annex I Theme - Geographical Names. The selection of the geographical names is based on the map scale 1:250.000 and is derived from different statistical sources, Digital Landscape Models 1:250.000 (DLM250) and Digital Elevation Model grid width 10 m (DGM10). This service is published under the Ordinance to Determine the Conditions for Use for the Provision of Spatial Data of the Federation (GeoNutzV) and thereof free of charge.</gco:CharacterString>\n          </gmd:abstract>\n          <gmd:status>\n            <gmd:MD_ProgressCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ProgressCode\" codeListValue=\"onGoing\"/>\n          </gmd:status>\n          <gmd:pointOfContact>\n            <idf:idfResponsibleParty uuid=\"1D535E43-935E-43CF-BF03-1D3FC62F1019\">\n              <gmd:organisationName>\n                <gco:CharacterString>Federal Agency for Cartography and Geodesy</gco:CharacterString>\n              </gmd:organisationName>\n              <gmd:positionName>\n                <gco:CharacterString>service centre</gco:CharacterString>\n              </gmd:positionName>\n              <gmd:contactInfo>\n                <gmd:CI_Contact>\n                  <gmd:phone>\n                    <gmd:CI_Telephone>\n                      <gmd:voice>\n                        <gco:CharacterString>+49 69 6333-2995</gco:CharacterString>\n                      </gmd:voice>\n                      <gmd:facsimile>\n                        <gco:CharacterString>+49 69 6333-251</gco:CharacterString>\n                      </gmd:facsimile>\n                    </gmd:CI_Telephone>\n                  </gmd:phone>\n                  <gmd:address>\n                    <gmd:CI_Address>\n                      <gmd:deliveryPoint>\n                        <gco:CharacterString>Karl-Rothe-Str. 10-14</gco:CharacterString>\n                      </gmd:deliveryPoint>\n                      <gmd:city>\n                        <gco:CharacterString>Leipzig</gco:CharacterString>\n                      </gmd:city>\n                      <gmd:administrativeArea>\n                        <gco:CharacterString>Bundesrepublik Deutschland</gco:CharacterString>\n                      </gmd:administrativeArea>\n                      <gmd:postalCode>\n                        <gco:CharacterString>04105</gco:CharacterString>\n                      </gmd:postalCode>\n                      <gmd:country>\n                        <gco:CharacterString>DEU</gco:CharacterString>\n                      </gmd:country>\n                      <gmd:electronicMailAddress>\n                        <gco:CharacterString>dlz@bkg.bund.de</gco:CharacterString>\n                      </gmd:electronicMailAddress>\n                    </gmd:CI_Address>\n                  </gmd:address>\n                  <gmd:onlineResource>\n                    <gmd:CI_OnlineResource>\n                      <gmd:linkage>\n                        <gmd:URL>https://www.bkg.bund.de</gmd:URL>\n                      </gmd:linkage>\n                    </gmd:CI_OnlineResource>\n                  </gmd:onlineResource>\n                </gmd:CI_Contact>\n              </gmd:contactInfo>\n              <gmd:role>\n                <gmd:CI_RoleCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode\" codeListValue=\"pointOfContact\"/>\n              </gmd:role>\n            </idf:idfResponsibleParty>\n          </gmd:pointOfContact>\n          <gmd:pointOfContact>\n            <idf:idfResponsibleParty uuid=\"7D085966-E0BF-4185-A344-3B50DAE9FEF9\">\n              <gmd:organisationName>\n                <gco:CharacterString>Federal Agency for Cartography and Geodesy</gco:CharacterString>\n              </gmd:organisationName>\n              <gmd:contactInfo>\n                <gmd:CI_Contact>\n                  <gmd:phone>\n                    <gmd:CI_Telephone>\n                      <gmd:voice>\n                        <gco:CharacterString>+49 69 6333-1</gco:CharacterString>\n                      </gmd:voice>\n                      <gmd:facsimile>\n                        <gco:CharacterString>+49 69 6333-235</gco:CharacterString>\n                      </gmd:facsimile>\n                    </gmd:CI_Telephone>\n                  </gmd:phone>\n                  <gmd:address>\n                    <gmd:CI_Address>\n                      <gmd:deliveryPoint>\n                        <gco:CharacterString>Richard-Strauss-Allee 11</gco:CharacterString>\n                      </gmd:deliveryPoint>\n                      <gmd:city>\n                        <gco:CharacterString>Frankfurt am Main</gco:CharacterString>\n                      </gmd:city>\n                      <gmd:administrativeArea>\n                        <gco:CharacterString>Bundesrepublik Deutschland</gco:CharacterString>\n                      </gmd:administrativeArea>\n                      <gmd:postalCode>\n                        <gco:CharacterString>60598</gco:CharacterString>\n                      </gmd:postalCode>\n                      <gmd:country>\n                        <gco:CharacterString>DEU</gco:CharacterString>\n                      </gmd:country>\n                      <gmd:electronicMailAddress>\n                        <gco:CharacterString>mailbox@bkg.bund.de</gco:CharacterString>\n                      </gmd:electronicMailAddress>\n                    </gmd:CI_Address>\n                  </gmd:address>\n                  <gmd:onlineResource>\n                    <gmd:CI_OnlineResource>\n                      <gmd:linkage>\n                        <gmd:URL>https://www.bkg.bund.de</gmd:URL>\n                      </gmd:linkage>\n                    </gmd:CI_OnlineResource>\n                  </gmd:onlineResource>\n                </gmd:CI_Contact>\n              </gmd:contactInfo>\n              <gmd:role>\n                <gmd:CI_RoleCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_RoleCode\" codeListValue=\"resourceProvider\"/>\n              </gmd:role>\n            </idf:idfResponsibleParty>\n          </gmd:pointOfContact>\n          <gmd:resourceMaintenance>\n            <gmd:MD_MaintenanceInformation>\n              <gmd:maintenanceAndUpdateFrequency>\n                <gmd:MD_MaintenanceFrequencyCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_MaintenanceFrequencyCode\" codeListValue=\"asNeeded\"/>\n              </gmd:maintenanceAndUpdateFrequency>\n              <gmd:updateScope>\n                <gmd:MD_ScopeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode\" codeListValue=\"service\"/>\n              </gmd:updateScope>\n            </gmd:MD_MaintenanceInformation>\n          </gmd:resourceMaintenance>\n          <gmd:graphicOverview>\n            <gmd:MD_BrowseGraphic>\n              <gmd:fileName>\n                <gco:CharacterString>https://mis.bkg.bund.de/preview/GeographicalNames.png</gco:CharacterString>\n              </gmd:fileName>\n              <gmd:fileDescription>\n                <gco:CharacterString>grafische Darstellung</gco:CharacterString>\n              </gmd:fileDescription>\n            </gmd:MD_BrowseGraphic>\n          </gmd:graphicOverview>\n          <gmd:descriptiveKeywords>\n            <gmd:MD_Keywords>\n              <gmd:keyword>\n                <gco:CharacterString>Addresses</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:type>\n                <gmd:MD_KeywordTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_KeywordTypeCode\" codeListValue=\"theme\"/>\n              </gmd:type>\n              <gmd:thesaurusName>\n                <gmd:CI_Citation>\n                  <gmd:title>\n                    <gco:CharacterString>GEMET - INSPIRE themes, version 1.0</gco:CharacterString>\n                  </gmd:title>\n                  <gmd:date>\n                    <gmd:CI_Date>\n                      <gmd:date>\n                        <gco:Date>2008-06-01</gco:Date>\n                      </gmd:date>\n                      <gmd:dateType>\n                        <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\">publication</gmd:CI_DateTypeCode>\n                      </gmd:dateType>\n                    </gmd:CI_Date>\n                  </gmd:date>\n                </gmd:CI_Citation>\n              </gmd:thesaurusName>\n            </gmd:MD_Keywords>\n          </gmd:descriptiveKeywords>\n          <gmd:descriptiveKeywords>\n            <gmd:MD_Keywords>\n              <gmd:keyword>\n                <gco:CharacterString>infoFeatureAccessService</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:type>\n                <gmd:MD_KeywordTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_KeywordTypeCode\" codeListValue=\"theme\"/>\n              </gmd:type>\n              <gmd:thesaurusName>\n                <gmd:CI_Citation>\n                  <gmd:title>\n                    <gco:CharacterString>Service Classification, version 1.0</gco:CharacterString>\n                  </gmd:title>\n                  <gmd:date>\n                    <gmd:CI_Date>\n                      <gmd:date>\n                        <gco:Date>2008-06-01</gco:Date>\n                      </gmd:date>\n                      <gmd:dateType>\n                        <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\">publication</gmd:CI_DateTypeCode>\n                      </gmd:dateType>\n                    </gmd:CI_Date>\n                  </gmd:date>\n                </gmd:CI_Citation>\n              </gmd:thesaurusName>\n            </gmd:MD_Keywords>\n          </gmd:descriptiveKeywords>\n          <gmd:descriptiveKeywords>\n            <gmd:MD_Keywords>\n              <gmd:keyword>\n                <gco:CharacterString>Geonames</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>WFS</gco:CharacterString>\n              </gmd:keyword>\n              <gmd:keyword>\n                <gco:CharacterString>Geographical Names</gco:CharacterString>\n              </gmd:keyword>\n            </gmd:MD_Keywords>\n          </gmd:descriptiveKeywords>\n          <gmd:descriptiveKeywords>\n            <gmd:MD_Keywords>\n              <gmd:keyword>\n                <gco:CharacterString/>\n              </gmd:keyword>\n              <gmd:thesaurusName>\n                <gmd:CI_Citation>\n                  <gmd:title>\n                    <gmx:Anchor xlink:href=\"http://inspire.ec.europa.eu/metadata-codelist/SpatialScope\">Spatial scope</gmx:Anchor>\n                  </gmd:title>\n                  <gmd:date>\n                    <gmd:CI_Date>\n                      <gmd:date>\n                        <gco:Date>2019-05-22</gco:Date>\n                      </gmd:date>\n                      <gmd:dateType>\n                        <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\">publication</gmd:CI_DateTypeCode>\n                      </gmd:dateType>\n                    </gmd:CI_Date>\n                  </gmd:date>\n                </gmd:CI_Citation>\n              </gmd:thesaurusName>\n            </gmd:MD_Keywords>\n          </gmd:descriptiveKeywords>\n          <gmd:descriptiveKeywords>\n            <gmd:MD_Keywords>\n              <gmd:keyword>\n                <gco:CharacterString>AdVMIS</gco:CharacterString>\n              </gmd:keyword>\n            </gmd:MD_Keywords>\n          </gmd:descriptiveKeywords>\n          <gmd:descriptiveKeywords>\n            <gmd:MD_Keywords>\n              <gmd:keyword>\n                <gco:CharacterString>inspireidentifiziert</gco:CharacterString>\n              </gmd:keyword>\n            </gmd:MD_Keywords>\n          </gmd:descriptiveKeywords>\n          <gmd:resourceConstraints>\n            <gmd:MD_LegalConstraints>\n              <gmd:useConstraints>\n                <gmd:MD_RestrictionCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode\" codeListValue=\"otherRestrictions\"/>\n              </gmd:useConstraints>\n              <gmd:otherConstraints>\n                <gmx:Anchor xlink:href=\"https://sg.geodatenzentrum.de/web_public/gdz/lizenz/geonutzv.pdf\">The data are protected by copyright. In accordance with the \"Geodatenzugangsgesetz\" (Geodata Access Act), the data are made available free of charge for download and online use, see https://sgx.geodatenzentrum.de/web_public/gdz/lizenz/geozg.pdf. The use of the data is regulat-ed by the \"Verordnung zur Festlegung der Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes – GeoNutzV\" (Regulation on the Determination of the Terms of Use for the Provision of Federal Geodata) of 19 March 2013 (Bundesgesetzblatt Jahrgang 2013 Teil I Nr. 14), see https://sgx.geodatenzentrum.de/web_public/gdz/lizenz/eng/geonutzv.pdf. The source note must be observed.</gmx:Anchor>\n              </gmd:otherConstraints>\n              <gmd:otherConstraints>\n                <gco:CharacterString>Quellenvermerk: © GeoBasis-DE / BKG</gco:CharacterString>\n              </gmd:otherConstraints>\n            </gmd:MD_LegalConstraints>\n          </gmd:resourceConstraints>\n          <gmd:resourceConstraints>\n            <gmd:MD_LegalConstraints>\n              <gmd:accessConstraints>\n                <gmd:MD_RestrictionCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode\" codeListValue=\"otherRestrictions\">otherRestrictions</gmd:MD_RestrictionCode>\n              </gmd:accessConstraints>\n              <gmd:otherConstraints>\n                <gmx:Anchor xlink:href=\"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations\">no limitations to public access</gmx:Anchor>\n              </gmd:otherConstraints>\n            </gmd:MD_LegalConstraints>\n          </gmd:resourceConstraints>\n          <gmd:resourceConstraints>\n            <gmd:MD_LegalConstraints>\n              <gmd:accessConstraints>\n                <gmd:MD_RestrictionCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode\" codeListValue=\"otherRestrictions\">otherRestrictions</gmd:MD_RestrictionCode>\n              </gmd:accessConstraints>\n            </gmd:MD_LegalConstraints>\n          </gmd:resourceConstraints>\n          <srv:serviceType>\n            <gco:LocalName>download</gco:LocalName>\n          </srv:serviceType>\n          <srv:serviceTypeVersion>\n            <gco:CharacterString>OGC:WFS 2.0</gco:CharacterString>\n          </srv:serviceTypeVersion>\n          <srv:extent>\n            <gmd:EX_Extent>\n              <gmd:geographicElement>\n                <gmd:EX_GeographicDescription>\n                  <gmd:extentTypeCode>\n                    <gco:Boolean>true</gco:Boolean>\n                  </gmd:extentTypeCode>\n                  <gmd:geographicIdentifier>\n                    <gmd:MD_Identifier>\n                      <gmd:code>\n                        <gco:CharacterString>Bundesrepublik Deutschland (000000000000)</gco:CharacterString>\n                      </gmd:code>\n                    </gmd:MD_Identifier>\n                  </gmd:geographicIdentifier>\n                </gmd:EX_GeographicDescription>\n              </gmd:geographicElement>\n              <gmd:geographicElement>\n                <gmd:EX_GeographicBoundingBox>\n                  <gmd:extentTypeCode>\n                    <gco:Boolean>true</gco:Boolean>\n                  </gmd:extentTypeCode>\n                  <gmd:westBoundLongitude>\n                    <gco:Decimal>6.098033905029297</gco:Decimal>\n                  </gmd:westBoundLongitude>\n                  <gmd:eastBoundLongitude>\n                    <gco:Decimal>15.5785551071167</gco:Decimal>\n                  </gmd:eastBoundLongitude>\n                  <gmd:southBoundLatitude>\n                    <gco:Decimal>47.23942184448242</gco:Decimal>\n                  </gmd:southBoundLatitude>\n                  <gmd:northBoundLatitude>\n                    <gco:Decimal>55.054344177246094</gco:Decimal>\n                  </gmd:northBoundLatitude>\n                </gmd:EX_GeographicBoundingBox>\n              </gmd:geographicElement>\n              <gmd:geographicElement>\n                <gmd:EX_GeographicDescription>\n                  <gmd:geographicIdentifier>\n                    <gmd:MD_Identifier>\n                      <gmd:code>\n                        <gmx:Anchor xlink:href=\"https://registry.gdi-de.org/id/de.bund.bkg.regschluessel/000000000000\">000000000000</gmx:Anchor>\n                      </gmd:code>\n                    </gmd:MD_Identifier>\n                  </gmd:geographicIdentifier>\n                </gmd:EX_GeographicDescription>\n              </gmd:geographicElement>\n            </gmd:EX_Extent>\n          </srv:extent>\n          <srv:couplingType>\n            <srv:SV_CouplingType codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#SV_CouplingType\" codeListValue=\"tight\"/>\n          </srv:couplingType>\n          <srv:containsOperations>\n            <srv:SV_OperationMetadata>\n              <srv:operationName>\n                <gco:CharacterString>GetCapabilities</gco:CharacterString>\n              </srv:operationName>\n              <srv:DCP>\n                <srv:DCPList codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CSW_DCPCodeType\" codeListValue=\"WebServices\"/>\n              </srv:DCP>\n              <srv:connectPoint>\n                <gmd:CI_OnlineResource>\n                  <gmd:linkage>\n                    <gmd:URL>https://sg.geodatenzentrum.de/wfs_gn250_inspire?</gmd:URL>\n                  </gmd:linkage>\n                </gmd:CI_OnlineResource>\n              </srv:connectPoint>\n            </srv:SV_OperationMetadata>\n          </srv:containsOperations>\n          <srv:containsOperations>\n            <srv:SV_OperationMetadata>\n              <srv:operationName>\n                <gco:CharacterString>DescribeFeatureType</gco:CharacterString>\n              </srv:operationName>\n              <srv:DCP>\n                <srv:DCPList codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CSW_DCPCodeType\" codeListValue=\"WebServices\"/>\n              </srv:DCP>\n              <srv:connectPoint>\n                <gmd:CI_OnlineResource>\n                  <gmd:linkage>\n                    <gmd:URL>https://sg.geodatenzentrum.de/wfs_gn250_inspire?</gmd:URL>\n                  </gmd:linkage>\n                </gmd:CI_OnlineResource>\n              </srv:connectPoint>\n            </srv:SV_OperationMetadata>\n          </srv:containsOperations>\n          <srv:containsOperations>\n            <srv:SV_OperationMetadata>\n              <srv:operationName>\n                <gco:CharacterString>GetFeature</gco:CharacterString>\n              </srv:operationName>\n              <srv:DCP>\n                <srv:DCPList codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CSW_DCPCodeType\" codeListValue=\"WebServices\"/>\n              </srv:DCP>\n              <srv:connectPoint>\n                <gmd:CI_OnlineResource>\n                  <gmd:linkage>\n                    <gmd:URL>https://sg.geodatenzentrum.de/wfs_gn250_inspire?</gmd:URL>\n                  </gmd:linkage>\n                </gmd:CI_OnlineResource>\n              </srv:connectPoint>\n            </srv:SV_OperationMetadata>\n          </srv:containsOperations>\n          <srv:operatesOn uuidref=\"142d56bb-108b-4e6a-96a6-8239b80af77e\" xlink:href=\"https://registry.gdi-de.org/id/de.bund.bkg.csw/DEBKG00M00000187\"/>\n        </srv:SV_ServiceIdentification>\n      </gmd:identificationInfo>\n      <gmd:distributionInfo>\n        <gmd:MD_Distribution>\n          <gmd:distributionFormat>\n            <gmd:MD_Format>\n              <gmd:name>\n                <gco:CharacterString>GML</gco:CharacterString>\n              </gmd:name>\n              <gmd:version>\n                <gco:CharacterString>3.2</gco:CharacterString>\n              </gmd:version>\n            </gmd:MD_Format>\n          </gmd:distributionFormat>\n          <gmd:transferOptions>\n            <gmd:MD_DigitalTransferOptions>\n              <gmd:onLine>\n                <gmd:CI_OnlineResource>\n                  <gmd:linkage>\n                    <gmd:URL>https://gdz.bkg.bund.de/index.php/default/inspire-wfs-geographical-names-gn250-wfs-gn250-inspire.html</gmd:URL>\n                  </gmd:linkage>\n                  <gmd:name>\n                    <gco:CharacterString>Service Center</gco:CharacterString>\n                  </gmd:name>\n                  <gmd:function>\n                    <gmd:CI_OnLineFunctionCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode\" codeListValue=\"information\">information</gmd:CI_OnLineFunctionCode>\n                  </gmd:function>\n                </gmd:CI_OnlineResource>\n              </gmd:onLine>\n            </gmd:MD_DigitalTransferOptions>\n          </gmd:transferOptions>\n          <gmd:transferOptions>\n            <gmd:MD_DigitalTransferOptions>\n              <gmd:onLine>\n                <gmd:CI_OnlineResource>\n                  <gmd:linkage>\n                    <gmd:URL>https://sg.geodatenzentrum.de/wfs_gn250_inspire?</gmd:URL>\n                  </gmd:linkage>\n                  <gmd:protocol>\n                    <gmx:Anchor xlink:href=\"http://www.opengis.net/def/serviceType/ogc/wfs\">OGC Web Feature Service</gmx:Anchor>\n                  </gmd:protocol>\n                  <gmd:name>\n                    <gco:CharacterString>Dienst \"INSPIRE-WFS Geographical Names GN250\" (GetCapabilities)</gco:CharacterString>\n                  </gmd:name>\n                  <gmd:function>\n                    <gmd:CI_OnLineFunctionCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_OnLineFunctionCode\" codeListValue=\"information\">information</gmd:CI_OnLineFunctionCode>\n                  </gmd:function>\n                </gmd:CI_OnlineResource>\n              </gmd:onLine>\n            </gmd:MD_DigitalTransferOptions>\n          </gmd:transferOptions>\n        </gmd:MD_Distribution>\n      </gmd:distributionInfo>\n      <gmd:dataQualityInfo>\n        <gmd:DQ_DataQuality>\n          <gmd:scope>\n            <gmd:DQ_Scope>\n              <gmd:level>\n                <gmd:MD_ScopeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_ScopeCode\" codeListValue=\"service\"/>\n              </gmd:level>\n              <gmd:levelDescription>\n                <gmd:MD_ScopeDescription>\n                  <gmd:other>\n                    <gco:CharacterString>service</gco:CharacterString>\n                  </gmd:other>\n                </gmd:MD_ScopeDescription>\n              </gmd:levelDescription>\n            </gmd:DQ_Scope>\n          </gmd:scope>\n          <gmd:report>\n            <gmd:DQ_DomainConsistency>\n              <gmd:result>\n                <gmd:DQ_ConformanceResult>\n                  <gmd:specification>\n                    <gmd:CI_Citation>\n                      <gmd:title>\n                        <gco:CharacterString>COMMISSION REGULATION (EC) No 976/2009 of 19 October 2009 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards the Network Services</gco:CharacterString>\n                      </gmd:title>\n                      <gmd:date>\n                        <gmd:CI_Date>\n                          <gmd:date>\n                            <gco:Date>2009-10-20</gco:Date>\n                          </gmd:date>\n                          <gmd:dateType>\n                            <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\">publication</gmd:CI_DateTypeCode>\n                          </gmd:dateType>\n                        </gmd:CI_Date>\n                      </gmd:date>\n                    </gmd:CI_Citation>\n                  </gmd:specification>\n                  <gmd:explanation>\n                    <gco:CharacterString>see the referenced specification</gco:CharacterString>\n                  </gmd:explanation>\n                  <gmd:pass>\n                    <gco:Boolean>true</gco:Boolean>\n                  </gmd:pass>\n                </gmd:DQ_ConformanceResult>\n              </gmd:result>\n            </gmd:DQ_DomainConsistency>\n          </gmd:report>\n        </gmd:DQ_DataQuality>\n      </gmd:dataQualityInfo>\n    \n<idf:crossReference direction=\"OUT\" orig-uuid=\"142d56bb-108b-4e6a-96a6-8239b80af77e\" uuid=\"142d56bb-108b-4e6a-96a6-8239b80af77e\">\n    <idf:objectName>INSPIRE Geographical Names GN250</idf:objectName>\n    <idf:attachedToField entry-id=\"3600\" list-id=\"2000\">Gekoppelte Daten</idf:attachedToField>\n    <idf:objectType>1</idf:objectType>\n    <idf:description>The INSPIRE-conform dataset geographical names Germany is the base for an INSPIRE-conform Web Feature Service (WFS) and Web Map Services (WMS). The dataset includes all relevant feature types from the digital landscape model scale 1:250.000 (DLM250): settlements, transportation, vegetation, hydrography, areas and regions with attributes regarding position (geometry data from DLM250), status and language of the geographical name.</idf:description>\n    <idf:graphicOverview>https://mis.bkg.bund.de/preview/GeographicalNames.png</idf:graphicOverview>\n</idf:crossReference>\n</idf:idfMdMetadata>\n  </body>\n</html>\n",
+  "is_hvd": false,
+  "isfolder": "false",
+  "location": [
+    "Bundesrepublik Deutschland (000000000000)",
+    ""
+  ],
+  "metadata": {
+    "created": null,
+    "modified": "2026-07-20T00:00:00.000Z"
+  },
+  "modified": "2026-07-20T00:00:00.000Z",
+  "object_access": {
+    "restriction_key": [],
+    "restriction_value": []
+  },
+  "object_reference": [
+    {
+      "obj_uuid": "142d56bb-108b-4e6a-96a6-8239b80af77e",
+      "obj_to_uuid": "142d56bb-108b-4e6a-96a6-8239b80af77e",
+      "obj_name": "INSPIRE Geographical Names GN250",
+      "obj_class": "1",
+      "special_name": "Gekoppelte Daten",
+      "special_ref": "3345",
+      "type": "",
+      "version": ""
+    },
+    {
+      "obj_uuid": "142d56bb-108b-4e6a-96a6-8239b80af77e",
+      "obj_to_uuid": "142d56bb-108b-4e6a-96a6-8239b80af77e",
+      "obj_name": "",
+      "obj_class": "",
+      "special_name": "",
+      "special_ref": "3600",
+      "type": "",
+      "version": ""
+    }
+  ],
+  "object_use_constraint": {
+    "license_value": [
+      "The data are protected by copyright. In accordance with the \"Geodatenzugangsgesetz\" (Geodata Access Act), the data are made available free of charge for download and online use, see https://sgx.geodatenzentrum.de/web_public/gdz/lizenz/geozg.pdf. The use of the data is regulat-ed by the \"Verordnung zur Festlegung der Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes – GeoNutzV\" (Regulation on the Determination of the Terms of Use for the Provision of Federal Geodata) of 19 March 2013 (Bundesgesetzblatt Jahrgang 2013 Teil I Nr. 14), see https://sgx.geodatenzentrum.de/web_public/gdz/lizenz/eng/geonutzv.pdf. The source note must be observed.",
+      "Quellenvermerk: © GeoBasis-DE / BKG"
+    ]
+  },
+  "partner": [
+    "bund"
+  ],
+  "provider": [
+    "bu_bkg"
+  ],
+  "sort_hash": "7cdd7e18b3c97ccf30ad8d48fbeac6ea1a78c7a3",
+  "spatial": {
+    "geometries": [
+      {
+        "bbox": [
+          6.098033905029297,
+          47.23942184448242,
+          15.5785551071167,
+          55.054344177246094
+        ],
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              6.098033905029297,
+              55.054344177246094
+            ],
+            [
+              6.098033905029297,
+              47.23942184448242
+            ],
+            [
+              15.5785551071167,
+              47.23942184448242
+            ],
+            [
+              15.5785551071167,
+              55.054344177246094
+            ],
+            [
+              6.098033905029297,
+              55.054344177246094
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "spatial_system": {
+    "referencesystem_value": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "summary": "INSPIRE Direct Access Download Service for geographical names of municipalities or parts thereof, landscapes, mountain ranges, mountains, islands, rivers, canals, lakes, seas, etc. Data is provided for the Federal Republic of Germany. The dataset is structured according to the INSPIRE Annex I Theme - Geographical Names. The selection of the geographical names is based on the map scale 1:250.000 and is derived from different statistical sources, Digital Landscape Models 1:250.000 (DLM250) and Digital Elevation Model grid width 10 m (DGM10). This service is published under the Ordinance to Determine the Conditions for Use for the Provision of Spatial Data of the Federation (GeoNutzV) and thereof free of charge.",
+  "t0110_avail_format": {
+    "name": "GML",
+    "version": "3.2"
+  },
+  "t0113_dataset_reference": [],
+  "t011_obj_geo": {
+    "hierarchy_level": false,
+    "keyc_incl_w_dataset": false,
+    "referencesystem_id": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "t011_obj_geo_keyc": [],
+  "t011_obj_geo_scale": [],
+  "t011_obj_geo_spatial_rep": {},
+  "t011_obj_geo_supplinfo": {},
+  "t011_obj_geo_symc": [],
+  "t011_obj_geo_vector": [],
+  "t011_obj_serv": {
+    "type": "download"
+  },
+  "t011_obj_serv_op_connpoint": [
+    {
+      "connect_point": "https://sg.geodatenzentrum.de/wfs_gn250_inspire?"
+    },
+    {
+      "connect_point": "https://sg.geodatenzentrum.de/wfs_gn250_inspire?"
+    },
+    {
+      "connect_point": "https://sg.geodatenzentrum.de/wfs_gn250_inspire?"
+    }
+  ],
+  "t011_obj_serv_op_platform": [
+    {
+      "platform": "WebServices"
+    },
+    {
+      "platform": "WebServices"
+    },
+    {
+      "platform": "WebServices"
+    }
+  ],
+  "t011_obj_serv_operation": [
+    {
+      "name": "GetCapabilities"
+    },
+    {
+      "name": "DescribeFeatureType"
+    },
+    {
+      "name": "GetFeature"
+    }
+  ],
+  "t011_obj_serv_version": {
+    "version_value": "OGC:WFS 2.0"
+  },
+  "t011_obj_topic_cat": [],
+  "t012_obj_adr": [
+    {
+      "typ": "7",
+      "special_ref": "0"
+    },
+    {
+      "typ": "7",
+      "special_ref": "0"
+    },
+    {
+      "typ": "1",
+      "special_ref": "0"
+    }
+  ],
+  "t017_url_ref": [
+    {
+      "descr": "",
+      "content": "Service Center",
+      "url_link": "https://gdz.bkg.bund.de/index.php/default/inspire-wfs-geographical-names-gn250-wfs-gn250-inspire.html",
+      "special_ref": "5302"
+    },
+    {
+      "descr": "",
+      "content": "Dienst \"INSPIRE-WFS Geographical Names GN250\" (GetCapabilities)",
+      "url_link": "https://sg.geodatenzentrum.de/wfs_gn250_inspire?",
+      "special_ref": "5302"
+    }
+  ],
+  "t01_object": {
+    "data_language_code": "de",
+    "dataset_alternate_name": [
+      "INSPIRE Geografische Bezeichnungen"
+    ],
+    "metadata_character_set": "4",
+    "metadata_language_code": "de",
+    "metadata_standard_name": "ISO19119",
+    "metadata_standard_version": "2005/PDAM 1",
+    "mod_time": "2026-07-20T00:00:00.000Z",
+    "obj_class": "3",
+    "obj_id": "256a7a13-2bc7-462c-8353-4d09f6c3f8a8",
+    "org_obj_id": "256a7a13-2bc7-462c-8353-4d09f6c3f8a8",
+    "time_status": "900001",
+    "vertical_extent_vdatum": "5105"
+  },
+  "t021_communication": [
+    {
+      "comm_type": "Telefon",
+      "comm_value": "+49 69 6333-2995"
+    },
+    {
+      "comm_type": "Fax",
+      "comm_value": "+49 69 6333-251"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "dlz@bkg.bund.de"
+    },
+    {
+      "comm_type": "URL",
+      "comm_value": "https://www.bkg.bund.de"
+    },
+    {
+      "comm_type": "Telefon",
+      "comm_value": "+49 69 6333-2995"
+    },
+    {
+      "comm_type": "Fax",
+      "comm_value": "+49 69 6333-251"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "dlz@bkg.bund.de"
+    },
+    {
+      "comm_type": "URL",
+      "comm_value": "https://www.bkg.bund.de"
+    },
+    {
+      "comm_type": "Telefon",
+      "comm_value": "+49 69 6333-1"
+    },
+    {
+      "comm_type": "Fax",
+      "comm_value": "+49 69 6333-235"
+    },
+    {
+      "comm_type": "Email",
+      "comm_value": "mailbox@bkg.bund.de"
+    },
+    {
+      "comm_type": "URL",
+      "comm_value": "https://www.bkg.bund.de"
+    }
+  ],
+  "t02_address": [
+    {
+      "job": "service centre",
+      "city": "Leipzig",
+      "street": "Karl-Rothe-Str. 10-14",
+      "postcode": "04105",
+      "institution": "Federal Agency for Cartography and Geodesy",
+      "country_code": "DEU",
+      "administrative_area_value": "Bundesrepublik Deutschland"
+    },
+    {
+      "job": "service centre",
+      "city": "Leipzig",
+      "street": "Karl-Rothe-Str. 10-14",
+      "postcode": "04105",
+      "institution": "Federal Agency for Cartography and Geodesy",
+      "country_code": "DEU",
+      "administrative_area_value": "Bundesrepublik Deutschland",
+      "identificationinfo_administrative_area_value": "Bundesrepublik Deutschland"
+    },
+    {
+      "city": "Frankfurt am Main",
+      "street": "Richard-Strauss-Allee 11",
+      "postcode": "60598",
+      "institution": "Federal Agency for Cartography and Geodesy",
+      "country_code": "DEU",
+      "administrative_area_value": "Bundesrepublik Deutschland",
+      "identificationinfo_administrative_area_value": "Bundesrepublik Deutschland"
+    }
+  ],
+  "t04_search": [
+    {
+      "type": "I",
+      "searchterm": "Addresses"
+    },
+    {
+      "type": "F",
+      "searchterm": "infoFeatureAccessService"
+    },
+    {
+      "type": "F",
+      "searchterm": "Geonames"
+    },
+    {
+      "type": "F",
+      "searchterm": "WFS"
+    },
+    {
+      "type": "F",
+      "searchterm": "Geographical Names"
+    },
+    {
+      "type": "F",
+      "searchterm": "AdVMIS"
+    },
+    {
+      "type": "F",
+      "searchterm": "inspireidentifiziert"
+    }
+  ],
+  "title": "INSPIRE-WFS Geographical Names GN250",
+  "uuid": "256a7a13-2bc7-462c-8353-4d09f6c3f8a8",
+  "x1": "6.098033905029297",
+  "x2": "15.5785551071167",
+  "y1": "47.23942184448242",
+  "y2": "55.054344177246094"
+}
