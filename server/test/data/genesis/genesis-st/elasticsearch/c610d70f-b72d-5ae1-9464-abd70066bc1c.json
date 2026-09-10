@@ -1,0 +1,197 @@
+{
+  "collection": {
+    "name": "GENESIS Online Sachsen-Anhalt"
+  },
+  "contacts": [
+    {
+      "name": "Statistisches Landesamt Sachsen-Anhalt",
+      "role": 10
+    }
+  ],
+  "content": [
+    "genesis-lsa",
+    "st",
+    "ST",
+    "research",
+    "metadata",
+    "GENESIS Online Sachsen-Anhalt",
+    "false",
+    "11911",
+    "c610d70f-b72d-5ae1-9464-abd70066bc1c",
+    "Gemeindeverzeichnis",
+    "11911 Gemeindeverzeichnis\n\nDas Gemeindeverzeichnis führt jede politisch selbständige\nGemeinde und zeigt die Gliederung des kommunalen\nVerwaltungsaufbaus an einem Stichtag.",
+    "https://genesis.sachsen-anhalt.de/webservice/rest/2020",
+    "GENESIS",
+    "",
+    "Statistisches Landesamt Sachsen-Anhalt",
+    10,
+    "FREE",
+    "Sachsen-Anhalt Gesamt",
+    "Anzahl der Gemeinden",
+    "Anzahl Einheitsgemeinden",
+    "Gemeinden mit Stadtrecht",
+    "Anzahl der Verwaltungsgemeinschaften",
+    "Anzahl der nach dem Trägermodell arbeitenden Verwaltungsgemeinschaften",
+    "Anzahl der Verbandsgemeinden",
+    "Anzahl der kreisfreien Städte und Landkreise",
+    "Stichtag",
+    "Anzahl von Mitgliedsgemeinden",
+    "Kreisfreie Städte und Landkreise Sachsen-Anhalts",
+    "opendata",
+    "https://genesis.sachsen-anhalt.de/genesis/online?operation=table&code=11911-0001",
+    "text/html",
+    "Verwaltungsgliederung in Sachsen-Anhalt seit 31.12.1985",
+    "https://genesis.sachsen-anhalt.de/genesis/online?operation=table&code=11911-0002",
+    "Verwaltungsgliederung nach kreisfreien Städten und\nLandkreisen seit 01.01.2014",
+    "https://genesis.sachsen-anhalt.de/genesis/online?operation=statistic&code=11911",
+    "https://www.geonames.org/2842565",
+    "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<rdf:RDF xmlns:dcat=\"http://www.w3.org/ns/dcat#\" xmlns:dct=\"http://purl.org/dc/terms/\" xmlns:dcatde=\"http://dcat-ap.de/def/dcatde/\" xmlns:foaf=\"http://xmlns.com/foaf/0.1/\" xmlns:vcard=\"http://www.w3.org/2006/vcard/ns#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"><dcat:Dataset><dct:title>Gemeindeverzeichnis</dct:title><dct:description>11911 Gemeindeverzeichnis\n\nDas Gemeindeverzeichnis führt jede politisch selbständige\nGemeinde und zeigt die Gliederung des kommunalen\nVerwaltungsaufbaus an einem Stichtag.</dct:description><dct:identifier rdf:resource=\"https://genesis.sachsen-anhalt.de/webservice/rest/2020/table/11911\"/><dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\">2025-07-15T09:25:39.000Z</dct:modified><dcat:keyword>Gemeindeverzeichnis</dcat:keyword><dcat:keyword>Sachsen-Anhalt Gesamt</dcat:keyword><dcat:keyword>Anzahl der Gemeinden</dcat:keyword><dcat:keyword>Anzahl Einheitsgemeinden</dcat:keyword><dcat:keyword>Gemeinden mit Stadtrecht</dcat:keyword><dcat:keyword>Anzahl der Verwaltungsgemeinschaften</dcat:keyword><dcat:keyword>Anzahl der nach dem Trägermodell arbeitenden Verwaltungsgemeinschaften</dcat:keyword><dcat:keyword>Anzahl der Verbandsgemeinden</dcat:keyword><dcat:keyword>Anzahl der kreisfreien Städte und Landkreise</dcat:keyword><dcat:keyword>Stichtag</dcat:keyword><dcat:keyword>Anzahl von Mitgliedsgemeinden</dcat:keyword><dcat:keyword>Kreisfreie Städte und Landkreise Sachsen-Anhalts</dcat:keyword><dcat:keyword>opendata</dcat:keyword><dcat:theme rdf:resource=\"http://publications.europa.eu/resource/authority/data-theme/GOVE\"/><dct:accrualPeriodicity rdf:resource=\"http://publications.europa.eu/resource/authority/frequency/IRREGULAR\"/><dcat:distribution rdf:resource=\"urn:uuid:5f712c22-4632-5d59-a9dd-9f4545ae596d\"/><dcat:distribution rdf:resource=\"urn:uuid:2bf681dc-4e51-5015-b503-a30ed8b978d3\"/><dct:publisher><foaf:Agent><foaf:name>Statistisches Landesamt Sachsen-Anhalt</foaf:name></foaf:Agent></dct:publisher><dcat:contactPoint><vcard:Organization><vcard:fn>Statistisches Landesamt Sachsen-Anhalt</vcard:fn><vcard:hasEmail>mailto:poststelle@stala.mi.sachsen-anhalt.de</vcard:hasEmail></vcard:Organization></dcat:contactPoint><dcatde:contributorID rdf:resource=\"http://dcat-ap.de/def/contributors/genesisLsa\"/><dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\"/><dct:spatial rdf:resource=\"https://www.geonames.org/2842565\"/><dcat:landingPage rdf:resource=\"https://genesis.sachsen-anhalt.de/genesis/online?operation=statistic&amp;code=11911\"/></dcat:Dataset><dcat:Distribution rdf:about=\"urn:uuid:5f712c22-4632-5d59-a9dd-9f4545ae596d\"><dct:title>Verwaltungsgliederung in Sachsen-Anhalt seit 31.12.1985</dct:title><dcat:accessURL rdf:resource=\"https://genesis.sachsen-anhalt.de/genesis/online?operation=table&amp;code=11911-0001\"/><dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/HTML\"/><dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\">2025-07-15T09:27:48.000Z</dct:modified><dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/dl-by-de/2.0\"/></dcat:Distribution><dcat:Distribution rdf:about=\"urn:uuid:2bf681dc-4e51-5015-b503-a30ed8b978d3\"><dct:title>Verwaltungsgliederung nach kreisfreien Städten und\nLandkreisen seit 01.01.2014</dct:title><dcat:accessURL rdf:resource=\"https://genesis.sachsen-anhalt.de/genesis/online?operation=table&amp;code=11911-0002\"/><dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/HTML\"/><dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\">2025-07-15T09:27:48.000Z</dct:modified><dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/dl-by-de/2.0\"/></dcat:Distribution></rdf:RDF>",
+    "91d604c42be8e51a4d7ff8ef968ee271c6835594"
+  ],
+  "dataSourceName": "GENESIS Online Sachsen-Anhalt",
+  "datatype": [
+    "research",
+    "metadata"
+  ],
+  "dcat": {
+    "landingPage": "https://genesis.sachsen-anhalt.de/genesis/online?operation=statistic&code=11911"
+  },
+  "description": "11911 Gemeindeverzeichnis\n\nDas Gemeindeverzeichnis führt jede politisch selbständige\nGemeinde und zeigt die Gliederung des kommunalen\nVerwaltungsaufbaus an einem Stichtag.",
+  "distributions": [
+    {
+      "title": "Verwaltungsgliederung in Sachsen-Anhalt seit 31.12.1985",
+      "format": [
+        "text/html"
+      ],
+      "modified": "2025-07-15T09:27:48.000Z",
+      "temporal": {
+        "gte": "1985-12-30T23:00:00.000Z",
+        "lte": "2013-12-31T23:00:00.000Z"
+      },
+      "access_url": "https://genesis.sachsen-anhalt.de/genesis/online?operation=table&code=11911-0001"
+    },
+    {
+      "title": "Verwaltungsgliederung nach kreisfreien Städten und\nLandkreisen seit 01.01.2014",
+      "format": [
+        "text/html"
+      ],
+      "modified": "2025-07-15T09:27:48.000Z",
+      "temporal": {
+        "gte": "2013-12-31T23:00:00.000Z",
+        "lte": "2013-12-31T23:00:00.000Z"
+      },
+      "access_url": "https://genesis.sachsen-anhalt.de/genesis/online?operation=table&code=11911-0002"
+    }
+  ],
+  "extras": {
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-09-02T14:05:59.277Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-09-02T14:05:59.277Z",
+      "merged_from": [],
+      "modified": null,
+      "source": {
+        "raw_data_source": "https://genesis.sachsen-anhalt.de/webservice/rest/2020",
+        "source_base": "https://genesis.sachsen-anhalt.de/webservice/rest/2020",
+        "source_type": "GENESIS"
+      }
+    }
+  },
+  "iPlugId": "genesis-lsa",
+  "id": "11911",
+  "isfolder": "false",
+  "keywords": [
+    {
+      "id": null,
+      "term": "Gemeindeverzeichnis",
+      "source": "FREE"
+    },
+    {
+      "id": null,
+      "term": "Sachsen-Anhalt Gesamt",
+      "source": "FREE"
+    },
+    {
+      "id": null,
+      "term": "Anzahl der Gemeinden",
+      "source": "FREE"
+    },
+    {
+      "id": null,
+      "term": "Anzahl Einheitsgemeinden",
+      "source": "FREE"
+    },
+    {
+      "id": null,
+      "term": "Gemeinden mit Stadtrecht",
+      "source": "FREE"
+    },
+    {
+      "id": null,
+      "term": "Anzahl der Verwaltungsgemeinschaften",
+      "source": "FREE"
+    },
+    {
+      "id": null,
+      "term": "Anzahl der nach dem Trägermodell arbeitenden Verwaltungsgemeinschaften",
+      "source": "FREE"
+    },
+    {
+      "id": null,
+      "term": "Anzahl der Verbandsgemeinden",
+      "source": "FREE"
+    },
+    {
+      "id": null,
+      "term": "Anzahl der kreisfreien Städte und Landkreise",
+      "source": "FREE"
+    },
+    {
+      "id": null,
+      "term": "Stichtag",
+      "source": "FREE"
+    },
+    {
+      "id": null,
+      "term": "Anzahl von Mitgliedsgemeinden",
+      "source": "FREE"
+    },
+    {
+      "id": null,
+      "term": "Kreisfreie Städte und Landkreise Sachsen-Anhalts",
+      "source": "FREE"
+    },
+    {
+      "id": null,
+      "term": "opendata",
+      "source": "FREE"
+    }
+  ],
+  "legal_basis": null,
+  "metadata": {
+    "created": null,
+    "modified": "2025-07-15T09:25:39.000Z"
+  },
+  "modified": "2025-07-15T09:25:39.000Z",
+  "partner": [
+    "st"
+  ],
+  "political_geocoding_level_uri": "https://www.geonames.org/2842565",
+  "provider": [
+    "ST"
+  ],
+  "rdf": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<rdf:RDF xmlns:dcat=\"http://www.w3.org/ns/dcat#\" xmlns:dct=\"http://purl.org/dc/terms/\" xmlns:dcatde=\"http://dcat-ap.de/def/dcatde/\" xmlns:foaf=\"http://xmlns.com/foaf/0.1/\" xmlns:vcard=\"http://www.w3.org/2006/vcard/ns#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"><dcat:Dataset><dct:title>Gemeindeverzeichnis</dct:title><dct:description>11911 Gemeindeverzeichnis\n\nDas Gemeindeverzeichnis führt jede politisch selbständige\nGemeinde und zeigt die Gliederung des kommunalen\nVerwaltungsaufbaus an einem Stichtag.</dct:description><dct:identifier rdf:resource=\"https://genesis.sachsen-anhalt.de/webservice/rest/2020/table/11911\"/><dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\">2025-07-15T09:25:39.000Z</dct:modified><dcat:keyword>Gemeindeverzeichnis</dcat:keyword><dcat:keyword>Sachsen-Anhalt Gesamt</dcat:keyword><dcat:keyword>Anzahl der Gemeinden</dcat:keyword><dcat:keyword>Anzahl Einheitsgemeinden</dcat:keyword><dcat:keyword>Gemeinden mit Stadtrecht</dcat:keyword><dcat:keyword>Anzahl der Verwaltungsgemeinschaften</dcat:keyword><dcat:keyword>Anzahl der nach dem Trägermodell arbeitenden Verwaltungsgemeinschaften</dcat:keyword><dcat:keyword>Anzahl der Verbandsgemeinden</dcat:keyword><dcat:keyword>Anzahl der kreisfreien Städte und Landkreise</dcat:keyword><dcat:keyword>Stichtag</dcat:keyword><dcat:keyword>Anzahl von Mitgliedsgemeinden</dcat:keyword><dcat:keyword>Kreisfreie Städte und Landkreise Sachsen-Anhalts</dcat:keyword><dcat:keyword>opendata</dcat:keyword><dcat:theme rdf:resource=\"http://publications.europa.eu/resource/authority/data-theme/GOVE\"/><dct:accrualPeriodicity rdf:resource=\"http://publications.europa.eu/resource/authority/frequency/IRREGULAR\"/><dcat:distribution rdf:resource=\"urn:uuid:5f712c22-4632-5d59-a9dd-9f4545ae596d\"/><dcat:distribution rdf:resource=\"urn:uuid:2bf681dc-4e51-5015-b503-a30ed8b978d3\"/><dct:publisher><foaf:Agent><foaf:name>Statistisches Landesamt Sachsen-Anhalt</foaf:name></foaf:Agent></dct:publisher><dcat:contactPoint><vcard:Organization><vcard:fn>Statistisches Landesamt Sachsen-Anhalt</vcard:fn><vcard:hasEmail>mailto:poststelle@stala.mi.sachsen-anhalt.de</vcard:hasEmail></vcard:Organization></dcat:contactPoint><dcatde:contributorID rdf:resource=\"http://dcat-ap.de/def/contributors/genesisLsa\"/><dct:language rdf:resource=\"http://publications.europa.eu/resource/authority/language/DEU\"/><dct:spatial rdf:resource=\"https://www.geonames.org/2842565\"/><dcat:landingPage rdf:resource=\"https://genesis.sachsen-anhalt.de/genesis/online?operation=statistic&amp;code=11911\"/></dcat:Dataset><dcat:Distribution rdf:about=\"urn:uuid:5f712c22-4632-5d59-a9dd-9f4545ae596d\"><dct:title>Verwaltungsgliederung in Sachsen-Anhalt seit 31.12.1985</dct:title><dcat:accessURL rdf:resource=\"https://genesis.sachsen-anhalt.de/genesis/online?operation=table&amp;code=11911-0001\"/><dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/HTML\"/><dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\">2025-07-15T09:27:48.000Z</dct:modified><dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/dl-by-de/2.0\"/></dcat:Distribution><dcat:Distribution rdf:about=\"urn:uuid:2bf681dc-4e51-5015-b503-a30ed8b978d3\"><dct:title>Verwaltungsgliederung nach kreisfreien Städten und\nLandkreisen seit 01.01.2014</dct:title><dcat:accessURL rdf:resource=\"https://genesis.sachsen-anhalt.de/genesis/online?operation=table&amp;code=11911-0002\"/><dct:format rdf:resource=\"http://publications.europa.eu/resource/authority/file-type/HTML\"/><dct:modified rdf:datatype=\"http://www.w3.org/2001/XMLSchema#dateTime\">2025-07-15T09:27:48.000Z</dct:modified><dct:license rdf:resource=\"http://dcat-ap.de/def/licenses/dl-by-de/2.0\"/></dcat:Distribution></rdf:RDF>",
+  "sort_hash": "91d604c42be8e51a4d7ff8ef968ee271c6835594",
+  "spatial": null,
+  "t01_object": {
+    "obj_id": "c610d70f-b72d-5ae1-9464-abd70066bc1c"
+  },
+  "temporal": {
+    "accrual_periodicity": "",
+    "accrual_periodicity_key": ""
+  },
+  "title": "Gemeindeverzeichnis",
+  "uuid": "c610d70f-b72d-5ae1-9464-abd70066bc1c"
+}

@@ -53,6 +53,7 @@ export interface HttpMockRule {
         url?: string | RegExp;
         method?: 'GET' | 'POST' | 'HEAD' | 'PUT' | 'DELETE' | string;
         query?: Record<string, string | number | boolean>;
+        bodyParams?: Record<string, string | number | boolean>;
         bodyMatch?: (body: any) => boolean;
     } | ((options: RequestOptions) => boolean);
 
@@ -110,13 +111,32 @@ function getQueryParam(config: RequestOptions, key: string): string | null {
 }
 
 /**
+ * Extracts parameter value from a form URL-encoded body.
+ */
+function getBodyParam(config: RequestOptions, key: string): string | null {
+    try {
+        let params = config.body;
+        if (typeof params === 'string') {
+            params = new URLSearchParams(params);
+        }
+        if (params instanceof URLSearchParams) {
+            return params.get(key);
+        }
+        return null;
+    }
+    catch {
+        return null;
+    }
+}
+
+/**
  * Evaluates whether an incoming HTTP request options object matches a mock rule.
  */
 function matchesRule(rule: HttpMockRule, config: RequestOptions): boolean {
     if (typeof rule.match === 'function') {
         return rule.match(config);
     }
-    const { method, url, query, bodyMatch } = rule.match;
+    const { method, url, query, bodyParams, bodyMatch } = rule.match;
     if (method && method.toUpperCase() !== (config.method || 'GET').toUpperCase()) {
         return false;
     }
@@ -129,6 +149,13 @@ function matchesRule(rule: HttpMockRule, config: RequestOptions): boolean {
     if (query) {
         for (const [key, expected] of Object.entries(query)) {
             if (getQueryParam(config, key) !== String(expected)) {
+                return false;
+            }
+        }
+    }
+    if (bodyParams) {
+        for (const [key, expected] of Object.entries(bodyParams)) {
+            if (getBodyParam(config, key) !== String(expected)) {
                 return false;
             }
         }
@@ -293,7 +320,7 @@ export async function runImporterIntegrationTest<T extends ImporterSettings>(
             mail: {enabled: false}
         } as any);
 
-        const catalogId = testCase.catalogId ?? 1;
+        const catalogId = testCase.settings.catalogIds[0];
         sandbox.stub(CatalogService, 'getCatalogSettings').withArgs(catalogId).returns({
             id: catalogId,
             name: testCase.profile,

@@ -1,0 +1,87 @@
+{
+  "Ident": {
+    "Service": "metadata",
+    "Method": "table"
+  },
+  "Status": {
+    "Code": 0,
+    "Content": "erfolgreich",
+    "Type": "Information"
+  },
+  "Parameter": {
+    "username": "********************",
+    "password": "********************",
+    "name": "12511-0001",
+    "area": "Öffentlich",
+    "language": "de"
+  },
+  "Object": {
+    "Code": "12511-0001",
+    "Content": "Einbürgerungen von Ausländerinnen und Ausländern nach\nKontinenten in den kreisfreien Städten und Landkreisen",
+    "Time": {
+      "From": "2005",
+      "To": "2025"
+    },
+    "Valid": "false",
+    "Structure": {
+      "Head": {
+        "Code": "12511",
+        "Content": "Einbürgerungsstatistik",
+        "Type": "Statistik",
+        "Values": null,
+        "Selected": null,
+        "Functions": null,
+        "Structure": [
+          {
+            "Code": "BEV008",
+            "Content": "Einbürgerungen von Ausländerinnen und Ausländern",
+            "Type": "Merkmal",
+            "Values": null,
+            "Selected": null,
+            "Functions": null,
+            "Structure": null,
+            "Updated": "see parent"
+          }
+        ],
+        "Updated": "see parent"
+      },
+      "Columns": [
+        {
+          "Code": "STAKNW",
+          "Content": "Kontinente (einschl. staatenlos und ungeklärt)",
+          "Type": "Merkmal",
+          "Values": null,
+          "Selected": null,
+          "Functions": null,
+          "Structure": null,
+          "Updated": "see parent"
+        }
+      ],
+      "Rows": [
+        {
+          "Code": "KREISE",
+          "Content": "Kreisfreie Städte und Landkreise Sachsen-Anhalts",
+          "Type": "Merkmal",
+          "Values": null,
+          "Selected": null,
+          "Functions": null,
+          "Structure": null,
+          "Updated": "see parent"
+        }
+      ],
+      "Subtitel": {
+        "Code": "JAHR",
+        "Content": "Jahr",
+        "Type": "Merkmal",
+        "Values": "1",
+        "Selected": "1",
+        "Functions": null,
+        "Structure": null,
+        "Updated": "see parent"
+      },
+      "Subheading": null
+    },
+    "Updated": "02.06.2026 09:55:00h"
+  },
+  "Copyright": "© Statistisches Landesamt Sachsen-Anhalt, Halle (Saale), 2026"
+}

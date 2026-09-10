@@ -1,0 +1,34 @@
+{
+  "Ident": {
+    "Service": "metadata",
+    "Method": "statistic"
+  },
+  "Status": {
+    "Code": 0,
+    "Content": "erfolgreich",
+    "Type": "Information"
+  },
+  "Parameter": {
+    "username": "********************",
+    "password": "********************",
+    "name": "12511",
+    "area": "Öffentlich",
+    "language": "de"
+  },
+  "Object": {
+    "Code": "12511",
+    "Content": "Einbürgerungsstatistik",
+    "Cubes": "8",
+    "Variables": "7",
+    "Frequency": [
+      {
+        "From": "01.01.2000",
+        "To": null,
+        "Type": "Jährlich"
+      }
+    ],
+    "Information": "Einbürgerungen (EVAS 12511)\n\nDie Einbürgerungsstatistik (EBS) ist im\nStaatsangehörigkeitsgesetz (StAG) geregelt. Seit dem\nBerichtsjahr 2000 wird eine jährliche Bundesstatistik über\nEinbürgerungen durchgeführt. Eine Einbürgerung wird\nstatistisch erfasst, wenn die Einbürgerungsurkunde\nausgehändigt wurde. Die Einbürgerungsstatistik umfasst\nErstentscheidungen sowie infolge von Widerspruch- und\nKlageverfahren. Es handelt sich um eine Fallstatistik.\n\nMit dem Staatsangehörigkeitsrechtsmodernisierungsgesetz\n(StARModG), das am 27. Juni 2024 in Kraft trat, werden ab\ndem Berichtsjahr 2025 zwei neue Fallstatistiken erhoben:\n•\tStatistik über Einbürgerungsanträge (EBAS),\n•\tStatistik über Verfahrenserledigungen (EBES).\n\nDie Statistik über Einbürgerungsanträge bildet die im Laufe\neines Berichtsjahres gestellten Einbürgerungsanträge ab.\nDie Grundgesamtheit der Einbürgerungsantragsstatistik\nentspricht der Grundgesamtheit der\nVer-fahrenserledigungsstatistik in dem Sinne, dass es eine\nVerfahrenserledigung pro Antrag gibt. Allerdings sind die\nGrundgesamtheit der Einbürgerungsanträge und\nVerfahrenserledigungen für ein Berichtsjahr und eine\nGebietseinheit nicht deckungsgleich. Zum einem kann sich\nder Wohnort zwischen Antrag und Erledigung ändern. Vor\nallem können Antragstellung und Erledigung eines\nEinbürgerungsverfahrens in unterschiedlichen Jahren\nstattfinden. Somit können die Zahlen der Antragstellungen\nund der Verfahrenserledigungen nicht unmittelbar ins\nVerhältnis gesetzt werden.\n\nDie Statistik über die erledigten Einbürgerungsverfahren\nweist die im Laufe eines Berichtsjahres abgeschlossenen\nErstentscheidungen über Einbürgerungen aus. Nicht Teil der\nStatistik sind Verfahrenserledi-gungen in Folge von\nWiderspruch- und Klageverfahren. Daher kann die im\nBerichtsjahr ausgewiesene An-zahl der Einbürgerungsfälle\nvon jener der Einbürgerungsstatistik abweichen.\n\nVerfahren gelten als erledigt, wenn\n•\teine Einbürgerungsurkunde ausgehändigt wurde\n(Einbürgerung),\n•\tein Ablehnungsbescheid zugestellt wurde (Ablehnung),\n•\tdie zuständige Behörde eine Rücknahmeerklärung erhält\n(Rücknahme) oder\n•\tsonstige Erledigung, wie Tod oder Rückzug ins Ausland der\nantragstellenden Person, vermerkt wird (Sonstige).\n\nDurch die Gesetzesänderung entfällt die Erfassung der\nMerkmale erste fortbestehende Staatsangehörigkeit und\nzweite fortbestehende\nStaatsangehörigkeit.\n\nMethodischer Hinweis\nDer regionale Nachweis erfolgt auf Grundlage des Wohnortes\nzum Zeitpunkt der Antragstellung bzw. zum Zeitpunkt der\nEinbürgerung.\n\nBerichtszeitraum:\n1. Januar bis 31. Dezember des Berichtsjahres.\n\nPeriodizität:\nDie Veröffentlichungen zur Einbürgerungsstatistik erfolgen\njährlich.\n\nAktualität/Pünktlichkeit:\nDie Ergebnisse stehen in der Regel im 2. Quartal des\nFolgejahres zur Verfügung.\n\nGeheimhaltung:\n\nDie Geheimhaltung in der amtlichen Statistik ist in § 16\nBundesstatistikgesetz (BStatG) geregelt. Einzelangaben über\npersönliche und sachliche Verhältnisse sind geheim zu\nhalten, soweit gesetzlich nichts anderes bestimmt ist.\n\nFür die Einbürgerungsstatistiken der Berichtsjahre 2018 bis\n2024 wurde die Vergröberungen von Tabellen in der\nVerbindung mit dem Zellsperrverfahren eingesetzt.\n\nAb dem Berichtsjahr 2025 wird die stochastische Überlagerung\nnach der Cell-Key-Methode (kurz CKM) als\nGeheimhaltungsverfahren eingesetzt.\nBei der Cell-Key-Methode werden auch Randsummen überlagert.\nDies bedeutet, dass nicht die Innenfelder von Tabellen zur\nRandsumme aufsummiert werden, sondern zunächst die\nRandsumme exakt berechnet und anschließend einzeln\nüberlagert wird. Durch diese Vorgehensweise sind\nTabellenzeilen und -spalten nicht mehr additiv. D.h. die\nausgewiesenen Randsummen können größer oder kleiner sein\nals die Summe der dazugehörigen Innenfeld-Ergebnisse. Diese\nVorgehensweise sichert, dass die Randsummen nah an den\nOriginalwerten bleiben.",
+    "Updated": "01.06.2026 13:18:31h"
+  },
+  "Copyright": "© Statistisches Landesamt Sachsen-Anhalt, Halle (Saale), 2026"
+}

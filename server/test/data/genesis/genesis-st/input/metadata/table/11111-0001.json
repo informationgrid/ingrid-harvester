@@ -1,0 +1,99 @@
+{
+  "Ident": {
+    "Service": "metadata",
+    "Method": "table"
+  },
+  "Status": {
+    "Code": 0,
+    "Content": "erfolgreich",
+    "Type": "Information"
+  },
+  "Parameter": {
+    "username": "********************",
+    "password": "********************",
+    "name": "11111-0001",
+    "area": "Öffentlich",
+    "language": "de"
+  },
+  "Object": {
+    "Code": "11111-0001",
+    "Content": "Bodenflächen der Gemeinden am 31.12.",
+    "Time": {
+      "From": "1992",
+      "To": "31.12.2024"
+    },
+    "Valid": "false",
+    "Structure": {
+      "Head": {
+        "Code": "11111",
+        "Content": "Feststellung des Gebietsstandes",
+        "Type": "Statistik",
+        "Values": null,
+        "Selected": null,
+        "Functions": null,
+        "Structure": null,
+        "Updated": "see parent"
+      },
+      "Columns": [
+        {
+          "Code": "FLC999",
+          "Content": "Bodenfläche insgesamt",
+          "Type": "Merkmal",
+          "Values": null,
+          "Selected": null,
+          "Functions": "ID0002",
+          "Structure": [
+            {
+              "Code": "JAHR",
+              "Content": "Jahr",
+              "Type": "Merkmal",
+              "Values": null,
+              "Selected": null,
+              "Functions": null,
+              "Structure": null,
+              "Updated": "see parent"
+            }
+          ],
+          "Updated": "see parent"
+        },
+        {
+          "Code": "FLC005",
+          "Content": "Bodenfläche",
+          "Type": "Merkmal",
+          "Values": null,
+          "Selected": null,
+          "Functions": "ID0004",
+          "Structure": [
+            {
+              "Code": "STAG",
+              "Content": "Stichtag",
+              "Type": "Merkmal",
+              "Values": null,
+              "Selected": null,
+              "Functions": null,
+              "Structure": null,
+              "Updated": "see parent"
+            }
+          ],
+          "Updated": "see parent"
+        }
+      ],
+      "Rows": [
+        {
+          "Code": "GEMEIN",
+          "Content": "Gemeinden",
+          "Type": "Merkmal",
+          "Values": null,
+          "Selected": null,
+          "Functions": null,
+          "Structure": null,
+          "Updated": "see parent"
+        }
+      ],
+      "Subtitel": null,
+      "Subheading": null
+    },
+    "Updated": "15.07.2025 11:27:48h"
+  },
+  "Copyright": "© Statistisches Landesamt Sachsen-Anhalt, Halle (Saale), 2026"
+}

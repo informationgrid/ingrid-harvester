@@ -1,0 +1,42 @@
+{
+  "Ident": {
+    "Service": "catalogue",
+    "Method": "statistics"
+  },
+  "Status": {
+    "Code": 0,
+    "Content": "erfolgreich",
+    "Type": "Information"
+  },
+  "Parameter": {
+    "username": "********************",
+    "password": "********************",
+    "selection": "*",
+    "searchcriterion": "Code",
+    "sortcriterion": "Code",
+    "pagelength": "2500",
+    "language": "de",
+    "area": "Alle"
+  },
+  "List": [
+    {
+      "Code": "11111",
+      "Content": "Feststellung des Gebietsstandes",
+      "Cubes": "2",
+      "Information": "true"
+    },
+    {
+      "Code": "11911",
+      "Content": "Gemeindeverzeichnis",
+      "Cubes": "2",
+      "Information": "true"
+    },
+    {
+      "Code": "12511",
+      "Content": "Einbürgerungsstatistik",
+      "Cubes": "8",
+      "Information": "true"
+    }
+  ],
+  "Copyright": "© Statistisches Landesamt Sachsen-Anhalt, Halle (Saale), 2026"
+}
