@@ -59,8 +59,8 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return undefined;
     }
 
-    getAlternateTitle() {
-        return this.baseMapper._getAlternateTitle();
+    getAlternateTitle(): string {
+        return this.baseMapper._getAlternateTitle().join(" ");
     }
 
     getAddress() {
