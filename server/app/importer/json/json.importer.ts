@@ -60,6 +60,10 @@ export class JsonImporter extends Importer<JsonSettings> {
         // For Profile specific Handling
     }
 
+    protected updateRecord(record: object) {
+        // For Profile specific Handling
+    };
+
     /**
      * Harvest method implementation
      * NOTE Any error added to summary.errors with type 'app' or 'database' will cause a database transaction rollback!
@@ -113,6 +117,7 @@ export class JsonImporter extends Importer<JsonSettings> {
                     logRequest.debug("Record content: ", JSON.stringify(record));
                 }
 
+                this.updateRecord(record);
                 const mapper = new JsonMapper(this.settings, record, harvestTime, this.summary);
                 let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
