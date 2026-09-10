@@ -23,8 +23,8 @@
   "author": "andre.wallat@wemove.com",
   "license": "EUPL",
   "dependencies": {
-    "@bbob/html": "^4.2.0",
-    "@bbob/preset-html5": "^4.2.0",
+    "@bbob/html": "^4.4.1",
+    "@bbob/preset-html5": "^4.4.1",
     "@tsed/common": "^8.25.4",
     "@tsed/components-scan": "^8.25.4",
     "@tsed/core": "^8.25.4",
