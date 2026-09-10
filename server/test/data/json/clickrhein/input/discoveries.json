@@ -1,0 +1,587 @@
+[
+  {
+    "id": 222,
+    "title": "Stadtspaziergang in Siegburg",
+    "duration": 150.0,
+    "track": 2.8,
+    "travel_mode": 1,
+    "suitabilities": [
+      6,
+      7
+    ],
+    "themes": [
+      1,
+      7,
+      9,
+      10,
+      12
+    ],
+    "epochs": [
+      3,
+      4,
+      7,
+      21
+    ],
+    "territories": [
+      1,
+      2
+    ],
+    "location": {
+      "coordinate": [
+        50.796127668629509,
+        7.206402297848256
+      ],
+      "municipalities": [
+        "Rhein-Sieg-Kreis"
+      ],
+      "districts": [
+        "Siegburg"
+      ]
+    },
+    "media": [
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDjkVLEUxy-5RBl6mfPWwSb_2fpDZhaPWKJhPVT9htEpHYmPnbNppF1M5KBoh7WyUJTlzbQWB-wH3RnbCx0w0QLgRoMnZd-O4qQ3mJFU9Uz69",
+        "description": "Luftaufnahme der Abtei Michaelsberg auf dem Michaelsberg in Siegburg (2020).",
+        "description_alternative": "Luftaufnahme bei Sonnenaufgang von einer Abtei, die auf einem Berg steht. Im Hintergrund ist eine Stadt.",
+        "copyright": "Bastian Ulrich",
+        "author": "Bastian Ulrich",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPcVDIv9-o4xPzNqoFFD-td-g-4TH7644ZPNoExJUxPSg9nAzfIyeWEayTKcMnFjpMDJ_kdC-CZYL8qvjytTkK7WxKDM1nfVB6U79D7n-dITXBQeFRuo3gP_dHoxMtKm9Vg2bDkoYdwoXgq2Ej5SiEJAe2FjeEOYPuvKzID8rOQUI7gy2k5DUXdWoZavjTSIfXkZMuQVkQS3q64cmGe4JxFdQ5OcAiu-WsRZSniuul4CN-0WkyNi-WoSARTBzvJgWfKf6ynsuP2--unH6AXPh_5K-w8hIDbLtL0hKu89lzXH3A((",
+        "ratio": 1.3333333333333333
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDvu7s6enKyt9SIa9YcS1gJmYrpSXZJHPAuxewANVT4jHkUzBu8ihfbu1qyDdBQmu1aFbvN0n1bUxdpUndGMmN6fI-AR0_275zLRwec6QSfYH",
+        "description": "Frontansicht des Stadtmuseums Siegburg vom Marktplatz aus (2023).",
+        "description_alternative": "Auf einem gepflasterten Platz steht ein historisches Gebäude mit repräsentativer Fassade hinter einem Baum, der sich rechts im Bild befindet. Vor dem Gebäude befindet sich ein kleiner Brunnen, der aus einem groben Steinblock besteht.",
+        "copyright": "ARTICUS&ROETTGEN - CC-BY-NC-SA",
+        "author": "Stadtbetriebe Siegburg AöR, Tourismusförderung",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rr-RB62XoLMXxFTBbSHScS78tR_XbnuVIx2PdN9OiBcS4pEpd2U5h9aO7rUcbvdiOS5pzK1Yn8gPhX6d7vBriDBtVp8ineyt1r-iSqU__pKZ8ykekfQE2v22qk8YsoZG4qOZeHqbsO8yfxOqFRtnv2ZHuyvhdyKn0FF3S2zorWj5Ng-_f5siCssk3oOh-a1_zz5oncbILocscjbOYs2ytjgGtffwuEovH1-Xhfx-VbwagNsQ8wNV8M_ylmssYT7mzQ(",
+        "ratio": 0.88020833333333337
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDuogcopxVgogsCQmyw8rokwQ6AB60arJQMKKOKD7VeBmpgYKOKGGtUp11KWzwcrBI0nZbkzoQw0N6g_0DKo5EjGF6GhyevbFtX8UZrvt-2L8",
+        "description": "Der Marktplatz in Siegburg vom Stadtmuseum aus gesehen (2026).",
+        "description_alternative": "Im Vordergrund ein Brunnen, der aus einer abstrakten, blockfömrigen Steinskulptur besteht. Dahinter erstreckt sich ein gepflasterter Platz, an dessen Seiten Bäume stehen. Rechts steht im Hintergrund eine Kirche.",
+        "copyright": "Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA",
+        "author": "Stadtbetriebe Siegburg AöR, Tourismusförderung",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rop0BVP3xT_DC9uKcQvdbYFmjedLQ8JgvyGOrQs1YVsxzJFTLhClS_MZ9dy_6ykaLgrdEpnb75_Eki2rHnvd6dA6oFtPwKNp-wsooraiVMJjcCpsxrfYzo8MHaIg7xwxnas6a1AWI6vZuLjyNlR3ORbYvCgRKNdkX4_aZohGea1JfQsJPj8fbKDGHRhdatCfuIOPyTZ2hMRe5y4PakPKOZcw_hpb52WdW6B36fncr3kh1uDTut9hvd_xbxHxyBtYcE(",
+        "ratio": 0.75
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDmcASTQW6J6NFOYlOkbMX6lFq6keqd64jhI_nZrhmUa3ZifzgIH05GRJbPT0wnjEz1PBs5rESkRO5CptBVH2X5Fp0R2566tPbWxF8uEwl_88",
+        "description": "Ansicht des Johannistürmchens am Michaelsberg in Siegburg mit der Abtei dahinter (2026).",
+        "description_alternative": "Auf einem bewaldeten Hügel steht links im Bild ein Teil der mittelalterlichen Stadtbefestigung mit rundem Türmchen, rechts im Bild die barocke Abtei mit der Abteikirche und ihrem Turm.",
+        "copyright": "ARTICUS & ROETTGEN",
+        "author": "Stadtbetriebe Siegburg AöR, Tourismusförderung",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RrIsdJoyV5UtkKZ5K7WA9IOsHl43mDz6751o1l0fwynP-fzwOWqxp9bIMNA4QQFFpM8oJwemROCRFpfPtGFfsR0U2nJVGURx15jok-YUlyeontqCuNo1m1mqFXH3rbaFlZ8DpiOjX3Iz4lt2BomunluWTErtf6Yl1WT5cWu1zWly8Sv4JChVEwXWTJxVP2b1wejNGXXaiTad4ka1MWml3-RjH4iMz5XEAtPGDMJJeQls5hvF7VIW0gEJnO1Q_EZEa4(",
+        "ratio": 1.4992679355783309
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDl0mKUDszUxTL5YrpIC1MLXOOMZlLbc3o4slpeG1fWcQS1nRTdxNkS3p8xctebt4HMIMn386KeQfq0ke8XsfztiShkd3VqHDfXZ01iPg8iZl",
+        "description": "Fronansicht des Hauses zum Winter mit der Kirche Sankt Servatius im Hintergrund (2026). Das Haus zum Winter ist das älteste Profangebäude in Siegburg und wurde bereits im 13. Jahrhundert errichtet.",
+        "description_alternative": "Vor einem Kirchturm steht ein historisches Haus, dessen Fassade schlicht gehalten und im zweiten Stock mit Fachwerk ausgekleidet ist. Die Seitenwände des Hauses bestehen aus Steinquadern verschiedener Größen.",
+        "copyright": "Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA",
+        "author": "Stadtbetriebe Siegburg AöR, Tourismusförderung",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RpYO-E43qfUMr1mlJyXSvmkItwaZTIeKynJjJAB_X88iuqNgaXfztYvTX3Jh30nLxfgweVl-Ix6yE1kM5PhX_wlxPWTxEfVMh7hX6_94WPT7X2pxyF_IcnTka8LOCkcSUHzuzn3FacmLhJJG0YohPR8HjIQqmRK-UjToLb8I-2J_7xXPERbIxXrb0pnD8Rcr0iPLTV-0T4MIFxm2KZk-gi5xoj-EssO9eFRI9RvDc6f-JfWg64unrqdoC5NWsJsdEM(",
+        "ratio": 1.0338541666666667
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDmgVKVrj0C2ioJjd3ppTAwoJ8j3E0sqtbDZmBVNpc2HOAcy3cniQ1ywueSzJNQb0Kug5YvoADsOfP6sv2E0CA_aRqe19DbEMuhIWuM9nI0wZ",
+        "description": "Ansicht des Neubaus und dahinter der barocken Abtei am Michaelsberg in Siegburg (2023).",
+        "description_alternative": "Im Vordergrund ein eckiger Neubau mit hohen Fenstern, dahinter das barocke Abteigebäude mit dem von einer Kuppel gekrönten Turm in der Mitte.",
+        "copyright": "Helge Articus",
+        "author": "Helge Articus",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RoMV0P8172KFOgG4uVTbAJPW6LSH_ONwgOCnL1jq10zyhsqXGcB69kqqO6Rn2C5bFUMEVZaiEbW4TKIwfZhTwfqjmJl9_S7ZybhRix5kEwe6EVsVIEMT7vQ3cOlHtrYD-xfqYTOWfr-PcWxEH2jlTyRYOim478TGXxZcNPfa3NWUoAJT14qGFMAKboCNfQVOBU95IeEoSt-acalj4xY2JFev4PYzFIiQerg_enf532CYNCrmdlv8BPOf0WzSu6v9Ts(",
+        "ratio": 1.4992679355783309
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDtIwXoKEh6ViKMEfhzBQ7iXjoQw0uB-DGcdaAVNAG5TU0GpEro7JCW6UwlHi8C7z6bTsdRlE80j3tVfDuE4tHRFMirk_MnqjJHrEbzyc9xfO",
+        "description": "Ansicht der romanisch-gotischen Kirche Sankt Servatius in Siegburg mit dem Chor im Vordergrund (2023).",
+        "description_alternative": "Eine Kirche mit hohen Fenstern im Schiff und Chor und niedrigen Fenstern im dahinterstehenden Turm.",
+        "copyright": "Articus & Roettgen",
+        "author": "Helge Articus",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RqrgMCwgFdGFAJJ79yKjLxZM469Q5PZvzLO-fQc0TuJHV0NS91-mRwF63je3zJ4BDSthYsQYsefiqAs5tA6ghMvAsHsqPLop3e-Ob6rghfisZTHHemBYNq9wrLmtYaY1AqsfqEVZq30zsFB7YrI7QgGrBql7HtNQhTfQ1ym_2VuVmT9ezHJI_XhMASXb3kZL0Yj0C52pVoJYuJkZ_bEXz1z8SL_GiY2pKliAJL0t7mUizf4pHf0x6AHJyEFK4GTK5M(",
+        "ratio": 1.07421875
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDrslkTHHaYVFCqhacSbIu_wgHDdrilAn6bn-QRKo5QXX5LXMQm0RipfyFkrym3iC0sYcllBs2h4_QD65fJKBDJzd_Q4cB8q4wke5KRGMp2wy",
+        "description": "Am Standort der 1938 zerstörten Synagoge Siegburg erinnert heute eine Gedenkstätte an die ermordeten jüdischen Siegburger*innen (2026).",
+        "description_alternative": "In einem auf den Boden gepflasterten Kreis steht mittig auf einem runden Sockel ein Gedenkstein mit einem Davidstern auf der Oberseite. In das Pflaster sind Inschriften auf Deutsch und Hebräisch eingelassen.",
+        "copyright": "Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA",
+        "author": "Stadtbetriebe Siegburg AöR, Tourismusförderung",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rq91sbehWnUgokGeBaQrwDJYi4IIE_SDd8DTbFc01hC44bU7owTzMZKXZKcrExQe0lwUNhDswdKJd5s72DvX3u8fLUTRLXgXXKgT2kq0cGk3cz5dD0NrKsg58BzKDzBXfJbtJsNi1PrQ-EQ3TNLkFv5vOCt5JVvPza4uOJwUb5g0lqHS-U1lTxHaXlhJBcwH3p-VR0H2ixoxhcyM5yNgJs3qBxsOSscVvb8pT7mudEmqHYxY4Bmy3ljRCop04OuKsw(",
+        "ratio": 1.3333333333333333
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDqbKwsLIl4YwAnysndgpPDhNtboSfb06VxYGUMbhv0kTCEDp4oYRxP1ruHJSgc1PggDTM0KtbLi3qWV6-hMWfb0DdWBkp3vK1Qt4SgdWcmPv",
+        "description": "Ansicht der alten kaiserlichen Poststation im Haus am Markt 45 in Siegburg links im Vordergrund, dahinter das Stadtmuseum Siegburg mit Glockenspiel an der Außenwand (2026).",
+        "description_alternative": "An einem Platz stehen mehrere, teils historische Häuser. Auf dem Platz befinden sich eine alte Straßenlaterne sowie ein herbstlicher Baum.",
+        "copyright": "Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA",
+        "author": "Stadtbetriebe Siegburg AöR, Tourismusförderung",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rq1E35n7hxOEEB4vA5Du6aekrlB0Qsz6oIuv_UTZn7_btEQV09ECFSfm5twl8zTIAgZysUOtO3Qd2psEywEXccD3L2hPw8EDQdXFrkvUFf9wug-JtgxUBoJhrvtLbeNq5C00IdbGq02UFcBbwEiyfMZkaNhRh_AUUHqGP-MWxIBmQD_9QXTA8nBGwm8vI-yFZYZe-3lgU4G79Fbr5HM8E0KZ-hgWWBs74j9YPEDf-OEeA((",
+        "ratio": 1.3333333333333333
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDkTrOgMpys95MKE-wG5wlzCMb_jrvSVoY-uS8mVcz9-PD8rrNcYkMeUiFTozpyD9Ggz_zcQ2GXrjEmOoMvP6yjDRQtonprxFIP1MISKtuViz",
+        "description": "Frontalansicht des Hauses zum Tannenbaum in Siegburg (2026).",
+        "description_alternative": "Fassade eines historischen Fachwerkhauses.",
+        "copyright": "Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA",
+        "author": "Stadtbetriebe Siegburg AöR, Tourismusförderung",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rr1j5_dGFC4ql6PT8E2DP79Ulyo3Pu8l4_-dWhApBrlEHR1yOYyjx1znuL66acblxlvhQBUza-kos0bMuaQSAj7Al4kFk-X24pylvskJlejaKQn4Nh1_IOTQDsnSwO25N7-JsLYqPbeJPhBTR3KLeilVY1lLHOHk9TnsjXLdlJnnrMWKOvNQbS4_wd7krXdJiYWdAlijiCe-52uon_jBRfLL8LPiH2vn7HGfbji2mu4tA((",
+        "ratio": 0.79166666666666663
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDl7FXNpRSy36WG-hT0uz8ijWi-Tl8pXdkk5GeKije-UjelFkSTGfZSyo_ipzEEogLv4BeyvFuUNoD7E1jZXIUU1SuiBxQZBY9_eK898b_-4S",
+        "description": "Der Hexenturm am Michaelsberg in Siegburg ist ein alter Wachturm aus dem Hochmittelalter (2026). Seinen Namen und damit den Bezug zur Hexenverfolgung erhielt er im 19. Jahrhundert. Die Prozesse fanden tatsächlich anderswo statt.",
+        "description_alternative": "Ein runder Steinturm steht an einem gepflasterten Fußweg.",
+        "copyright": "Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA",
+        "author": "Stadtbetriebe Siegburg AöR, Tourismusförderung",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RrqlVovRW_QHcq45FdlnDl3Z44YzABqC_UVujDOU85MiE0C15vc8y5rvfyOGD89n1gIQ_x9Rbnz7wfFyMBmC8qF-3IkkjtSjnuatDs6Mw9KOlmAfSS-o9T-ZCwrLtoxYnnPbZbUCHpz7b4Oy5ND_7gg2T4J8I4eq0ujeWGVWq_CbBlv9yjZZDI36FLUmgPLtVwSUDuodxsHBwFcN5p5Lr5cvPL67bmlHxE_ZsKAjyDHCH9G1SjNO0orK0cNhqMwoo0(",
+        "ratio": 1.3333333333333333
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDnEEX6MpAW9d8PqCTX7op5lWMOFOCw2iNgYo6e8Myz189izx3Um4tFp6l9R1AIkorl-gYF4McAIuXL3qcc_pCG2jmdEML-6L_gPOUEz11lpv",
+        "description": "Der 2021 vom US-amerikanischen Künstler Brody Neuenschwander geschaffene vierte Anno-Schrein mit den sterblichen Überresten Erzbischofs Anno II. in der Abtei auf dem Michaelsberg in Siegburg (2026). Anno war der Gründer der Abtei.",
+        "description_alternative": "Der Schrein steht in der Mitte eines schmalen Raums mit steinernem Boden. Er hat die Form eines Hauses mit spitzem Dach und besteht aus Metall, aus dem die Zeilen des Anno-Lieds geformt wurden. Dadurch ist das Innere des Schreins sichtbar und er wirft dynamische Schatten auf den Boden.",
+        "copyright": "Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA",
+        "author": "Stadtbetriebe Siegburg AöR, Tourismusförderung",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rrdim1sM-jR1DOd_Zd3_QsMk5d9dBPTS8wR0EwTn08_O2XtuWBej-Rn0M4ln-mvpQdJfBznNs9Cr6YRAciDfeAY9124q_UHF7xlw9yCU82p76O7F6DesQwGm7NBZ2_4-BZIAAdvcqAgGauydee7Tlotn0jVgQoRwwfGL9606CVcs98OkYz4OKgJW0VjpaDKRSSIrCSAGUG_z_liWgpRRnKR5IOEavfveX-_Crkr8oBeVlbKihZ8MBFiUXeElP_-yj0(",
+        "ratio": 1.3333333333333333
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDlXq4NHHRjUxJzd9cnZtS4aAZ6e0H9y_wm7_EXBCJW5MebhXDKMuqKKzjl1wDtkmKs8yJMAOT5h0kRPRr_IFqNdDUTsd7IhPk5rlCd5Bq38Q",
+        "description": "Das Tor zur Arbeit auf dem Michaelsberg in Siegburg (2023).",
+        "description_alternative": "Ein Steinerer Bogen gibt den Blick auf den Innenhof der barocken Abtei mit der Abteikirche frei.",
+        "copyright": "Bastian Ulrich / Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA",
+        "author": "Bastian Ulrich",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RqsuL0_wWLdIs785Tmfk680HwVHQtFQZ-Et4XoZ0zPHgetop0yu14Bt317gI2WyLPdcm2kBN8vl3L-qEfkdSjmAFYpAtfGXrh8Kx6faeeLyNz_7F8DoYI6X14pFy1DpZ20iRRv4SFzM55Qh4mZJnkXsuUEEaDQtYx3BYPgyMpGL84BwbV12DW0Ct2KBQTf7emWr0QXFxn8ropw2kdrIqq7dhRcq_m9K_iXRfhIbqN0PGxP2Tneq-8S8a83d5n7UWDQ(",
+        "ratio": 0.75390625
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDld1IbT3oYA8QXSEJo8XS3AD3ND_XWzQxI4Xpz9d-ml_0OzK9EGs_uCrOg2DPaev8QdLindkFFF07Pnhd6OMPJjqrCTxnriOSzMNOHr6ggWA",
+        "description": "Der Mühlengraben in Siegburg im Vordergrund mit dem Mühlrad an der Mahlgasse im Hintergrund (2026).",
+        "description_alternative": "Im Vordergrund des Bildes ist ein Abschnitt des Mühlengrabens zu sehen, der künstlich angelegt wurde. Dahinter steht ein Haus am Ufer. An der Fassade ist ein historisches Mühlrad angebracht.",
+        "copyright": "Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA",
+        "author": "Stadtbetriebe Siegburg AöR, Tourismusförderung",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RoOWt00oLKDd_EX9btiFgdL89UNv3Z5LyMuIGSXRwrvt0zA5GuQfvbWyn7jWJ1OcjITVF5j83tyBzMCu9e6LGnaXTM8fHOUOKVUkuc8mt_YGluKasYQxCWb67U9Ty9b7jczn8Ycjc6djMSL99ab0MwKWG9GEUqL2cNcD3ZB0dfQ9swFOi2D6cPruFeJ9fmDHQ6Y6Q_dWIRvqs3GXVlrw3qw1Ti-tGEbVPcwc9vQQ0wXoBxrCBNurm_rz_uVBVyaJ0g(",
+        "ratio": 1.3333333333333333
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDgJW-lZmuXmj3ZgSufHOMbjbh6wwIx2k1hv7ZqyCB37OwEeLh3cHupzvqjGUWmYYt-gEE-QX7gCG5pfoxHNuk0nDPn5_ZqdmPihpRO2vg3Wy",
+        "description": "Ein erhaltenes Fragment der Stadtmauer aus dem Hochmittelalter in einem Park nahe des S-Carrés in Siegburg (2026).",
+        "description_alternative": "Ein kleiner Bach verläuft durch eine mit Bäumen bepflanzte Grünfläche. Rechts im Bild steht eine alte Mauer.",
+        "copyright": "Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA",
+        "author": "Stadtbetriebe Siegburg AöR, Tourismusförderung",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rrb0b4A9EP1ZoAI7JsV863NrqhxKaoYm_zq-pmn3fhKjXksPSfWCLH1itMuXogjKPhG1R20eyj8PSf-iF6cDXJGFK4FBuWsMNM8TGfVlv97SoGwi7yx-fxmWDHdMZMCHl3L0CtZVI1qndmBSWrlbsYxBBwBOzY47OW4maOLV5X_F5868WqOZ1fYTXuZnmACqKRFsqb3ncmwPZOLCgSGS5A3DHRZDpvOXeCNf3S9ng4L2k0mKvtpb1Br8WaJFV_H7BE(",
+        "ratio": 1.3333333333333333
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDmCNIGR8x1njfsOwg7ydwb-ixbVBnVTWmqi8Hly-IQzcxl7VnABVly8Y9mErNMEeVEv7wZ36EsiukbVKGF3LeOik7b27beo6zjg6DmMh1tLr",
+        "description": "Das Zeughaus an der Zeughausstraße in Siegburg (2026). Heute ist hier die Engelbert-Humperdinck-Musikschule untergebracht.",
+        "description_alternative": "Ein historisches Haus mit steinerner Fassade steht an einer Straße. Zu seiner linken Seite führt ein Tor in einen Innenhof.",
+        "copyright": "Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA",
+        "author": "Stadtbetriebe Siegburg AöR, Tourismusförderung",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rpp1s4yukTLQv-gGR1hV5qYTVVk9vEMbg4dmWBFb2Dzf9gjJSmdPQn16K3e3FJE7GszPCElsa7i-xhNErS6SLCcbw5MEHG3yZuzxLbAdL6KxGFk69Qv-R3KRXwnlrijPUKzptlkH7bWbTf6HqthS5odlVLTJMTj2BxLT8RrwB4O0ZCSbgwHhSh_9gs9RvqV8OzKTW76Nr9Lr1UkQrkSPFQZ13hkY04LFxZNF3vThaT_P7Xo_HZHKpevoK_o8nfZqk4(",
+        "ratio": 1.3333333333333333
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDma2v-xOjR96nG77pYDaMhZgEYOop82MGp9hYnN-yy86GM91-_u7jlxWJxubrTviJOo8fO427e3a4FJy6vXx69ZIDgqmlbSB82CGyaRaeOZY",
+        "description": "Ansicht des Spielplatzes am Michaelsberg in Siegburg (2026).",
+        "description_alternative": "Ein Spielplatz mit sandigem Untergrund, Wippen, Klettergerüsten und Rutschen.",
+        "copyright": "Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA",
+        "author": "Stadtbetriebe Siegburg AöR, Tourismusförderung",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RpmHvX3Hx9-qziLSuHq_NejIRRXYhyYLWLwMVfCY6jxm6MgZbyAcD5O9ZxDAtNjec4qQ6CEbDdZ0D7MRzbk93pxqp_9I7_dj8dEhL0IXGvKdYS0ItWDUwhnU2Vey7ZxKIs68ahiWb9-XkROU1r_J8GtzlCKh7aFIW46-sWRPGDQVIP8v3Qdu6wu8x0Qv6MgeJfDd43LeWMhKK-KvxCPdd7hyynDJqpoxGGthNVJx8qmoYr3pCpu-1e_mnN0MYZwyWA(",
+        "ratio": 1.4992679355783309
+      }
+    ]
+  },
+  {
+    "id": 221,
+    "title": "Zwischen Festungsmauern und Flusslandschaft",
+    "duration": 240.0,
+    "track": 14.0,
+    "travel_mode": 1,
+    "suitabilities": [
+      9
+    ],
+    "themes": [
+      7,
+      12,
+      20,
+      17
+    ],
+    "epochs": [
+      4
+    ],
+    "territories": [
+      2
+    ],
+    "location": {
+      "coordinate": [
+        50.766598600484834,
+        7.0821145149575884
+      ],
+      "municipalities": [
+        "Bonn"
+      ],
+      "districts": [
+        "Bonn"
+      ]
+    },
+    "media": [
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDiiL-Qsl4hVAobsyaXFXa_Yg43TyVhSRuB23Ae5o8T2ie2JVorYiYvocV8tRdGFb-iE-fmvor4Lbg0M2vq__-5WI-llrpd-fwTkczmJZnWCm",
+        "description": "Aalschokker \"Maria Theresia\" im Sieg-Altarm \"Diescholl\" in Troisdorf-Bergheim (2026). Heute befindet es sich im Besitz des anliegenden Fischereimuseums der Bergheimer Fischereibruderschaft.",
+        "description_alternative": "Ein einmastiges Segelboot auf einem Fluss ankernd. Im Hintergrund ist ein bewaldetes Ufer und links eine Autobrücke zu sehen.",
+        "copyright": "Marianne Miggel, LVR / CC BY 4.0",
+        "author": "Marianne Miggel",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rr6I2u4uXc8Zky8dRSzDhWbO_CMgTvi9_9311KBDxEGM42AiJkfGd5pgvvftVbNY8nhrXfLvBWR0GGJGZUx6C_2A5tK1l53E0xY8ZUD_YXommcbaN5ld5vX0vGrzIWWaU95kIlE2qSh3bNIuSvPWZgFit77pYeZ3C0UHAwBZtoYrqErpJ1XxAQl-hSMVDW7Und82jUBZYA-UAcO4F1jNwEFTulrzOMSsNbajvafKzjUufLBhme0fN2qz2LHLpnR1lo(",
+        "ratio": 1.4970760233918128
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDkTrOgMpys95MKE-wG5wlzCMb_jrvSVoY-uS8mVcz9-PDtcsIPd2R48tW7CbS0EvcHjteTEQzFI-z5A-v3kVWYKy0H1PKuW7nzOlPFyM0IV3",
+        "description": "Überfahrt mit der Gierseilfähre \"Sankt Adelheid\" auf der Sieg zwischen Bonn und Troisdorf-Bergeim (2026).",
+        "description_alternative": "Eine Frau sitzt auf einem Boot und schaut flussabwärts. An den Ufer sind Bäume und Wiesen zu sehen.",
+        "copyright": "Marianne Miggel, LVR / CC BY-SA 4.0",
+        "author": "Marianne Miggel",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RpR5n3qlxUIoj8PAaenZCSoAs4vetm-S_NcRLoP18BuGvZzwXzpeoZcxi6siWuiDNrBGYZsqdFEI7ZcL0oRHvNZE1TJW9lAe0oTRYugrWYveB7rauotDGG5p8Jb9W-XLls47UgbQ0kHiznZZYfVAYdiKfeaDCkibMfaiIxxZOAzeLQUqBZjn1uknmKqDFvotsUvLBOzsc3ejk5VjRhE1p2Iuc1tS0fT4l5gNjtncj32lLHK_YHAlXiNo2p1HsXqZRc(",
+        "ratio": 1.4970760233918128
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDvrwyXTo5aSievO0JcQziUHWYtqXaP0IYHUYHVfR_PQfKsL518INohbuSeqpiWSAiTbHz821ZbZ7Y11E3dDdbOITIJxBTBeR9wPbIv8uqtqH",
+        "description": "\"Abbildung der Holländischen Schantz Pfaffenmütz zwischen Köln und Bonn im Rhein erbauen. Anno 1620\" von Unbekannt - Herzog August Bibliothek, Deutschland.",
+        "description_alternative": "Ein Foto eines alten Kupferstichs, auf dem eine Flussinsel mit einer Festung gestochen wurde. Am unteren Festlandufer ist ein Dorf mit Kirche und Häusern zu sehen. Am oberen Ufer ist eine kleine militärische Schanze zu sehen.",
+        "copyright": "Herzog August Bibliothek Wolfenbüttel / CC BY-SA 3.0",
+        "author": "unbekannt",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3c1TIv5QXiatpolVjFDKQTG7Hsl-QEU5O_dy4ZH2psDpZ6ifbjFCCHp3A_hHeaHcDty2C8RHbjexV4U40EGJV8s2Xa1SbFu6qlkGkeBiWrhrnUFl-ykjuuf4ppEUSQc7zWv1UioBdAlP9o-RvKXKEpeYWJKqco2G_kOpKFgSwiPln-equXfV1WIBKUHkFQKH6DOO4aqn8kGJwLhept9Y5JeIx4sH0BndpoYzboCwqewr9QaHiQCguP56HMv4z27AAM(",
+        "ratio": 1.0520833333333333
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDmYRtrvQ4NaXFP--REf0TekH4ADD8rVK6-AvYwauir3-xwoFoMMFagQY6fqpNWbaeQUoZiuvG8J5p8wu-gBK3WbbnQFhtFCIaQyUQtmeytwz",
+        "description": "Altarm \"Diescholl\" der Sieg bei Troisdorf-Bergheim (2026). Rechts neben der Insel ist der Aalschokker \"Maria Theresia\", davon rechts am Ufer das Fischereimuseum der Fischereibruderschaft Bergheim zu sehen.",
+        "description_alternative": "Flussbereich mit einer bewaldeten Insel in der Mitte, neben der auf der rechten Seite ein Boot ankert. Rings um den Fluss ist das Ufer bewaldet. Am rechten Ufer ragt ein rotes Gebäude über den Bäumen hervor.",
+        "copyright": "Marianne Miggel, LVR / CC BY 4.0",
+        "author": "Marianne Miggel",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RomYDKhmOn2TAOIgVisrt4o_fh-cd9TukNGiwCvQ5ceH8lzARyy0To_AxGMiYIG9N5XJKWvwIL7hvEnch4sn0pUFXGFcV8VGDiYhbskWiJ7p5lBsO0AsryWM6-BC4rfJvXQJYXNSsnsRWK14AwF7nLUJgRRbyqjrlCv1j2TdQOFrpoJpQuaNJf3H3MjZPjN7d-b7rHQrTLgI0c4SVZhEJgV6xaSWeWvMhttOaAc5bPcOIEiwgztOaieZ1L53SiIPis(",
+        "ratio": 1.494890510948905
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDpONQAoEzxQg9SCawU9YU6SZC59Ct0DsdBNDA4-q0R_pG7gQPtZ3lRdU_UxCTLgi34L8PykXE1cKmBDbRWnQUM4NZ15dM3hyim-qIXVpvcXK",
+        "description": "Gierseilfähre \"Sankt Adelheid\" auf der Sieg zwischen Bonn und Troisdorf (2026).",
+        "description_alternative": "Eine kleine anlegende Fähre mit eine Fährmann, der eine Kapitänsmütze trägt und einen langen Stock ins Wasser hält. Auf der Fähre steht der Schriftzug \"Geislar-Bergheim\", darunter \"Sankt Adelheid\". Im Hintergrund ist eine Gastronomie zwischen Bäumen und Wiesen.",
+        "copyright": "Marianne Miggel, LVR / CC BY-SA 4.0",
+        "author": "Marianne Miggel",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RqqegOYfKVBY2Y_XkIITmHZr-2LgXL7vSp3G6se2k7B-76_xnxsnqPqwBY9dQL393Vp9nm7yxz1kU4pvxmG-wFX0bgYL739Sw9E34n8oR3FbuQSSXIvpasgqilaXP6FNDZzcWa2OVzlT5LOHbQKJOgnAXr8D6qWM4J1EluDvZRO1ICRMIRkUAm-WljOodOCkYi7Jqa4L5YsYZxJhczJ4_5KtN2lGlK1RE3t6qQtKQ5TQUayQS-rgjBYHxnEf4lYNxg(",
+        "ratio": 1.4970760233918128
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDrRk84n9mB7B3GODp-M37RFJLa1CND9Pv1GLw1S769AluI2xGo1IsAN-8KTFoj2n3bg8Ihb_mMbpmqQADE_OsynLdaBvt0kwrlYKoM7rsdPv",
+        "description": "Weg durch die Auenlandschaft an der Sieg zwischen Bonn und Troisdorf (2026).",
+        "description_alternative": "Zwei Personen, die auf einem nicht befestigten Weg zwischen zwei Baumreihen entlang gehen.",
+        "copyright": "Marianne Miggel, LVR / CC BY-SA 4.0",
+        "author": "Marianne Miggel",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RruEz4DDqTnV1J-0ukBxlYczFVS_G4soztDCzES9EoSxknm39AdEAMsdA7-lmAGCwFIbE4K-Tm2aR134XuJTsBxobGX-7xFg2w0SBDLemPgH7tvk0vY54ooB3yrUo5cqux4nAZbYB3wN3PH0crEfiSahu8E61BbQYktRTtLIi8948i_9fv65cVqs-NtI950p7eE_dOnYWpt1WrS8ZiJKHkIPtUOweOoyEpElvvuAn4csLdktF-u3832p9-JLtJFd4o(",
+        "ratio": 0.66927083333333337
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDqRvBdtniH_HBeI-xD-O8dh0U2YNqJLSVjVn6fqmZzo-FPZ0GkcL_h-3QNTxxoc46iMUmDzebPBqESblQtTCUszij0nf6gUCqAurGf7sdOm5",
+        "description": "Das Naturschutzgebiet \"Siegaue\" in Troisdorf-Bergheim (2026) eignet sich hervorragend für die Beobachtung seltener und beliebter Vogelarten wie den Eisvogel, den Flussregenpfeifer oder den Schwarzmilan.",
+        "description_alternative": "Ein Mann steht mit einem Fernglas um den Hals auf einem umgefallenen großen Baumstamm in einem Wald unter gleißendem Sonnenschein.",
+        "copyright": "Marianne Miggel, LVR / CC BY-SA 4.0",
+        "author": "Marianne Miggel",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RoBdBaLYpsjm3X5CWfTXMsLKtf5laTbtgdey5COpY_1ppZtuKJnHOWuuz-dx1n6dpxnLRDZ0al27rHCqeOVTmemdwnv9aUVqBcpNdgHX77jJ8BxMdXUrJy6QgUP2tWHXDkFuljByH-qIG3f4dxaaq-0Rp-x_-WWPDWyg9GYB_zuRaDAfu8sjuYzcM0QwSucZ26Igpy31UlI3g0FR_ZSg2oIBUALB5hcxuSmyzpra4RIA28IjM1cIH-w3kblwuKWUE0(",
+        "ratio": 0.66796875
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDiwP1E0o06CKxgEDbEwGolQY1etbUK8CfBNbtqFT1wldW-zTmSHTwPpSSdXuLn7FQ_3FzCJzA3azFat2jLal9My-hezMveaKj3Lj4mV8jcq2",
+        "description": "Kormoran (Phalacrocorax carbo) auf einer Sitzwarte auf dem Kemper Werth in Bonn-Schwarzrheindorf/Vilich-Rheindorf (2026).",
+        "description_alternative": "Ein Kormoran mit dunklem Gefieder, der auf einem hohen kahlen Ast sitzt und Ausschau hält. Darüber sind ist klarer Himmel mit Kondensstreifen eines Flugzeugs zu erkennen.",
+        "copyright": "Marianne Miggel, LVR / CC BY 4.0",
+        "author": "Marianne Miggel",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RphuRXEYPs_hUCE5fQi75i_nNR3G-ytzMAVoU1rL-YsXWVLin3mbNrA_wzNGYevSxnQi06FD8eANmYUkGdT7lV3ueMMyUyrGJyRVH_47606kfIFBim6qjw_-bUerE4TC-xehWK8cfPuyK6Fl4HKyL0hYgP9mJsqgQpCRiSP9ERfNL8YX_r1YHIEjCO76NN7o8xDKHwRXfv75Tpr00S8A_Ac_x0o9xo9CzFx2uQ9D9OoC661Zo3UIS5KQlhmm-lC2WE(",
+        "ratio": 0.66796875
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDrd6l0JiZ-XlEQhSP2MNUaAWHVSecCehP50RDncFWRORRj65UOaYMvAomR9ttbsKDJWtHBF3X9ar1SglvuDnAPzme3aJobFVDraYL0j2rzgO",
+        "description": "Blick vom Kemper Werth in Richtung des Sieg-Altarmes \"Diescholl\" samt Brücke nahe Troisdorf-Bergheim (2026).",
+        "description_alternative": "Blick über einen Fluss in Richtung eines überbrückten Zuflusses. Links und rechts von dem Zufluss sind Wälder am Ufer zu sehen.",
+        "copyright": "Marianne Miggel, LVR / CC BY 4.0",
+        "author": "Marianne Miggel",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RoUOUrzjso1TT5BOCTv3zdok7tIxcpL4lf0gTOkWbr-a1rvi_X7R6ZYqYnsxF9ih3uUnSQLmXn_taaVTOTSQzhS74tXfvyLR9jRUH_6kxZ5RV1vH35Fgwch7XWipVktTeGRrSZWpg8ofORKNGHZMIHXoFRXZE3nJzlhiDex9Nf71ZCbibXprygS7SSVqOpVM5hGE4wFCwcbk-7oG_ldgoGpG4ghoPIz6c17TPMVuQ9J8a1-TNBy9hdsLWbOEnURed0(",
+        "ratio": 1.4970760233918128
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDsLXUiJAjiIaTU3oE-VB-k0iMPVma6j6haEwar2dLWR_tnZ7SeHGEAAsGnOLUI9voiz0dBBssqu0FI7gHiB8oS6W9fF7JL04ntLbB_5rAlAT",
+        "description": "Blick von der Spitze des Kemper Werths bei Bonn auf den Rhein (2026).",
+        "description_alternative": "Blick auf einen breiten Fluss von einer Halbinsel aus. Am Ufer stehen zwei Personen, eine davon macht ein Foto. Am gegenüberliegenden Ufer sind Bäume zu sehen.",
+        "copyright": "Marianne Miggel, LVR / CC BY 4.0",
+        "author": "Marianne Miggel",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RqB8RtHdRzHswIFourcKP2M4IWi-rJZgj0GshmbHm-U2d7uI_FQw8L9w01xaM7qCA9DptTKxQAApiUmNXOHSGLW2d4eSHNX554OMsl7F3PvhiinKedbYVXEzBVgU63Vhgf-BrG4SX512ejKLX0GOmeTbitDblzDuMpaXCy8iK6rQhcPfPyAUp8lWevXqQtIs0sGJKa4YJOfDy2vlAUxAJ5ysPW6RD2WZjufp6usViEkGA((",
+        "ratio": 1.4970760233918128
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDlla_Dq8_LBcmqP8lBYR0fi3Vm0r5Rk_fnRNxJOfr-Ifp-xlt_Ufvqg6PwEwBUNOvluFvgw3YOReBJ033iFXxHwREOXHXFgvZTSVdigkXSbq",
+        "description": "Zerstörte Brücke über den Sieg-Altarm \"Oberste Fahr\" bei Niederkassel-Mondorf (2026).",
+        "description_alternative": "Eine brach liegende Holzbrücke, die über ein trockenliegendes Flussbett führt. Der Brücke fehlen die meisten Holzplanken. Im Hintergrund ist ein Wald zu sehen.",
+        "copyright": "Marianne Miggel, LVR / CC BY-SA 4.0",
+        "author": "Marianne Miggel",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rp5ZXsd-u0OUtYMMfALzuNE3WKTlA5kvKlXpGwLV0ey_HEefVJCbdliWgkfSGvzRfHoSxPsiOg3_tAxdRu7rtM5l02MzZLSmCGimW1F3hZPpwDyP7d4OzxyTV9QfedTBejpENZT4rnficZoAddwXBK85JfqMPPB0V0hPM7C-tsjQ7WZ-0fQsARh_ptiaTb70CS1wPfiq1lbqwss3op-BEzYPgvg1bH0pftSFxvw19zZ2WmRZF9_1-WZNq0JGw5j5Ws(",
+        "ratio": 1.4970760233918128
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDsc88ySYTEiPdT5KGYDM4IgeMqzjz8wmP3om2jHf8eB7m8SGA2q3EbQMqoxVTyE2Ur1okQ0PkmPwTdVpGU8VflLHHVsHo0ZhOKhA1YQrtUR-",
+        "description": "Brücke über den Sieg-Altarm \"Diescholl\" bei Niederkassel-Mondorf (2026).",
+        "description_alternative": "Zwei miteinander redende Personen auf einer Holzbrücke, die über ein Fluss führt. Im Hintergrund ist ein Wald.",
+        "copyright": "Marianne Miggel, LVR / CC BY-SA 4.0",
+        "author": "Marianne Miggel",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rr6kkbzY0IlFoBbklFLcCo5nrkjW8950rGi-tYe6S3VhKpRtEa4g3O5wRXLW1CocvspOJYfDoP4W56J03-AC2nXHb5zPMVK9GKFeRW_RaxyQHfcILB0A2xPzPx9VGhSiQ_g7A9ojtn2V6mMHiSrniiaFjL4i0oOnfFnBaM0-02Ev0uOlIOQvlANKB3Lt5Ryj3gk2hTg12JmhDIUEyoCG5kMfIdGj9l11VBR6E6s6xY1CQ((",
+        "ratio": 1.494890510948905
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDs6FxRw80oE0rznOs3G7zFdPl29LnO7AP9kcOv1g6akUZNu-w_MVxqduV7OkY2SzQcz1Y_euRQV72VjtoHII48BIe5dFwPGqxJiDp3qU8U2d",
+        "description": "Mündung des Altarmes \"Diescholl\" in die Sieg (2026). Im Hintergrund ist das Kemper Werth und die Siegmündung in den Rhein zu sehen.",
+        "description_alternative": "Blick über einen Fluss in Richtung eines überbrückten Zuflusses. Links und rechts von dem Zufluss sind Wälder am Ufer zu sehen.",
+        "copyright": "Marianne Miggel, LVR / CC BY 4.0",
+        "author": "Marianne Miggel",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rqban6MCymp2hhNSaHXmB57gt92e5jNgmRzYtYctNxpkQkcOZrl0HuzUyFtgwxjf4fIiMu1czFbpW-vL1O9BllurfmdsAWnueRFe9Kbytwy2_ww2O9L7AtH4kAodwomY_pCg3-8mpXZLEQLVqMEZkxsSx6xTMWSGtDTjP6O5yzy8k_uPBpw8RBEswGu_wuB8fyphBOV1Zd_UDgROW_TQFnK7IvCj0roj83l_3cnmLKVQ6fjzSXjOq3yZ3LObg2tBTE(",
+        "ratio": 1.4970760233918128
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDir_-Ov9WFT6NFv8yj6WVOc3t3rJRbcFtKUHPW8ZA7A38Ri2U1azt0xDGwCl70dyjWYA53Sab00533uy5rJ14BRzswk5zE9ghFc-XP25Tr3h",
+        "description": "Mondorfer Hafen mit ankerliegenden Yachten in Niederkassel-Mondorf (2026).",
+        "description_alternative": "Ein Hafen mit vielen vor Anker liegenden Yachten und Sportbooten. Im Vordergrund ist ein naturbelassenes Ufer mit Büschen, im Hintergrund ist eine Siedlung hinter Bäumen zu sehen.",
+        "copyright": "Marianne Miggel, LVR / CC BY-SA 4.0",
+        "author": "Marianne Miggel",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RqR2NLpx3jw8YYcDpS6PUBIVURcjTIKbKWlYEBHejt0LETDy6cWeTmmNjPokPsE44eWsOYdorwNXJPV3wbrhc1FzAzdpmjlfAaIbXZL3VxU2kkiYZWvtw-TLCd_XWJoj7SA6jD2gm77cyRE42IrI0dtttay3HKdCXkixr6pOqFyE9ICzMg9xyzfZNqlkIQumAiFdxaZLfvYYalPT374LMcGv-4k4mIDNWsFWbI9xodd9lmnOhGhWt-FZ4zC280rRSY(",
+        "ratio": 1.4970760233918128
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDmaTS0Act2DXa-ZPIfqnxSuocYqtMXJd4d3BecUu28etB9BEnFAya4wpC7AbsercRmsX9FwihO80TiFEUzQGgzv1i1UYY5zvngCxHqsVL0Ul",
+        "description": "Fischerbruder beim traditionellen Fang von Fisch in der Sieg bei Troisdorf-Bergheim (2010).",
+        "description_alternative": "Ein Mann auf einem Boot, der mit einem Netz einen Fisch aus dem Fluss einzieht. Im Hintergrund bewaldetes Ufer.",
+        "copyright": "Fischereimuseum Bergheim an der Sieg",
+        "author": "Fischereimuseum Bergheim an der Sieg",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RpZYKmXQ10pc1jPcr-0Zixbu4bZWz6NrpAidkJUpCVUurJEerigiqCIXlgpCw6BlkO7Jmt251uGb9L_uP5fxYhmB_QTe_BKIB-B3KRyCxJVgciK0dKK1MIQT9cvlPI6MwkaGZqzQm14WbftiCBtBDtV9b5bYjclA_8scxrteCMiSgxySYFQJQp8pRu4GqQ_QMNEtJYWhgG3e9gIBmyR1YIrjVAy_NLOAmQUYgtmjC56iw((",
+        "ratio": 1.4992679355783309
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDkM1g6lpOYHHEhCR4R7Pbm2YNVcs9Ofqfb2By-kH5rVB-9Fg5_LAo2_lACVqZRRJipk5KIOnerCxge5jyCvfhchQfzXQdTLrq4zDeh7TRuxX",
+        "description": "Fischereimuseum Bergheim an der Sieg in Troisdorf (2010).",
+        "description_alternative": "Ein Gewässer mit dicht bewaldeten Ufern und einer kleinen Insel am rechten Bildrand. Im Hintergrund steht zentral ein Gebäude, das über die Baumkronen am Ufer hinaus ragt.",
+        "copyright": "Sabine Klinke, Fischereimuseum Bergheim an der Sieg",
+        "author": "Sabine Klinke",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rq7Uardcv-v0K_yoo3qBkOngYUgx4en3-EVtwrhL4FAVRsXbdmWmxA6tUtHf4g_ESid3tHNc05xQDhfKcsH7vw-x6IROc24zBALHQdF3ybSvgPNgUrmKUH3pL1XUruoiB_aWOo5B7oVAm7t0hASx8Nhx3ZFSju4oB1x4aQVFt-6deZEiSU69O30Riq_7JybALLd63o6zMplEyXIMjXOrcucux15SlaFysre1vtPpaoMSQ((",
+        "ratio": 1.517037037037037
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDnH84s007vWsoxSYtGWjfegE7r4C-KJqWXlB8BUloJfHZeRJNxKp3HnV1-GPkmbggAz-5auP3c8R58g-1Z-1_oHWJeVhBtF8-_uaaccIZ7j0",
+        "description": "Der sogenannte Bruderschaftsraum der Ausstellung im Fischereimuseum Bergheim an der Sieg in Troisdorf (2011).",
+        "description_alternative": "Ein Ausstellungsraum mit einigen Texttafeln und Vitrinen, in denen sich Objekte wie christliche Holzfiguren befinden.",
+        "copyright": "Ulrich Scheib, Fischereimuseum Bergheim an der Sieg",
+        "author": "Ulrich Scheib",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RrT3WloftSaGH5VQeR6rEObla1dAQ-7sgCljo_kuJcmGiJpPugcvqHvPmY2K3XVghKyb2cUbqj7eybPBOEAx1xXWiITSmImMqU2oBEVHrqaejUsje5wFp8mVgsu_40srXTu2Nl1vaDkdKubpLnmxX3rFx5IbNvgl6-zY9cb3V77CbrANQ9SQTXaYFzVh2NAx0JyoLbOQ31Xndzcn5qdVd9pvnnzr_L8ELsYZO7dz6P5V5iM77_dVBBB4WJfqxkH8B0(",
+        "ratio": 1.6100628930817611
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDsWISfG5dFW8LeSgqXOH6ANBcvwtjCgIMTByjNYV-NrIL-AwmCHMjEdg5WWpmOVH2zeNvL-JX85DRWY8sLDlX_yJV9xD1ngdOjZ-eigXu2xp",
+        "description": "Blick vom Fischereimuseum auf den im Sieg-Altarm vor Anker liegenden Aalschokker \"Maria Theresia\" in Troisdorf-Bergheim (2026). Er befindet sich im Besitz der über 1000 Jahre alten Fischereibruderschaft zu\r\nBergheim an der Sieg.",
+        "description_alternative": "Eine bewaldete Flusslandschaft, in deren Mitte sich ein Segelboot befindet.",
+        "copyright": "Marianne Miggel, LVR / CC BY-SA 4.0",
+        "author": "Marianne Miggel",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RoB2XpPIylsV-cAoEjZxMyPtMHVBnZfMfjqLHEQ9QBDbAZQ4Un0gOTFlmvIr7UOebWO8xs3rG6-ynQY1RG9bn-E21zvkz_Fc2DotXeK_E9hgmOGWtvVggN_NJJhlkyjTuYTViWe3J1imSuzdcLcsDQVz4DX4WFpGVlESallDabq9xR5oASjJ5dRSFUrXCuKCQpJRyR09xtqTYUt0YnVUWd6ah1azg_RX1O6r7SsB1BFEA((",
+        "ratio": 1.4970760233918128
+      }
+    ]
+  },
+  {
+    "id": 218,
+    "title": "Zwischen edlen Herrschaften und unedlen Schwermetallen",
+    "duration": 45.0,
+    "track": 3.3,
+    "travel_mode": 1,
+    "suitabilities": [
+      6,
+      7
+    ],
+    "themes": [
+      8,
+      11,
+      12,
+      18
+    ],
+    "epochs": [
+      5
+    ],
+    "territories": [
+      2
+    ],
+    "location": {
+      "coordinate": [
+        50.977929988933667,
+        7.3454118396598167
+      ],
+      "municipalities": [
+        "Oberbergischer Kreis"
+      ],
+      "districts": [
+        "Engelskirchen"
+      ]
+    },
+    "media": [
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDma2v-xOjR96nG77pYDaMhZgEYOop82MGp9hYnN-yy86vjKfT2m_GvKzrANwZ71t-z8eREDhUG_8NNMGp0HrZMubbrMlUiXVWOrYg_bywd7o",
+        "description": "Hängebrücke über die Agger bei der Grube Castor in Loope (2026). Sie wird auch \"Schwungbrücke\" genannt.",
+        "description_alternative": "Eine Hängebrücke, die über einen Fluss führt und auf der eine Person steht.",
+        "copyright": "Lea Recken, LVR / CC BY 4.0",
+        "author": "Lea Recken",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3dL_JcD0af4GeaBx5qujC5-Ht1j0nEybM4WWkGDTSwVkwINnfjuGsU8ZrbRDCfpfYPqWNR0QuLQ-W_WM5sEKQZlhD9CyHx88hRfIAkqYzVS9eY9JUt7kn9URJToJKDEwJ-TOmMbxb2F4aUl2mdmSOsAUUGeFKPx074SZlb5hSP2oJjF6mdv62CauQS1Q0qzr_VWbQytTzmn_W0kQDe7hVfGcyWUWGMVVG18AbsLK0VC1g((",
+        "ratio": 1.3333333333333333
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDl0mKUDszUxTL5YrpIC1MLXOOMZlLbc3o4slpeG1fWcQ_Cx7xZxhslxc5la2hU5rt4OeXJJbNjfRaOBaSBoDRtfNKN0IXPj7I5zWB6Adoex6",
+        "description": "Drohnenaufnahme vom Wasserschloss Ehreshoven im Aggertal bei Loope (2025).",
+        "description_alternative": "Ausschnitt einer Siedlung auf einer topographischen Karte. Mittig sieht man oberhalb des Ortes \"Ehreshoven\" die Bezeichnung \"Grube Castor\".",
+        "copyright": "Peter Schönfeld, BGV Rhein-Berg e.V. / CC BY 4.0",
+        "author": "Peter Schönfeld",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3dWeVvTKViNyYZ74aXTrhCPqeKAKffPOTFalrX4E9Jn02GfE5z6RNTFTOuKY69dPBi48bS4eT1kv6Th0_TyNUOeQkE8V4CVJ3a7TQlhXTvWESdHpOC7Q7laKfMUQ2HSUiiRttgXNdt3wAe44Zxky7kyBMkIY1LglbFO_EnLMgcd14uhWVKEx0z2p3FF6SW8Mpq7D2s2FZD6jkA0VH_kpIckhW_blL-AeqDZv46cWhZhmcbkfvgHhvJnjgK_M22Ixyw(",
+        "ratio": 1.7444633730834753
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDjm-KAhNUt0OlNRW_H8TPcbqclxU6uFSMgLG0uRJaNWuzsXbVsXMNl3Ilprgrq7WSucWQQ8eURCKJMe8yfvTpC6b7CdBHCtCBJBkFEVHvksw",
+        "description": "Das Mundloch des Oberen Stollens der Grube Castor (2010). Der Stolleneingang ist heute zugemauert, aus Naturschutzgründen befinden sich im oberen und unteren Bereich Öffnungen für Fledermäuse und Amphibien.",
+        "description_alternative": "Ein mit Beton versiegelter Stolleneingang an einem bewaldeten Gefälle.",
+        "copyright": "Rainer Schmidt",
+        "author": "Rainer Schmidt",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3fnTy8uBILgtxtEQATALqezA84gqG-c8viJUayteuvcw3ndNQ9aS1vQcDoJxN-tGTbH2JPIcm93XMb45b-cKCvXcJKr-5XMz-Oab4CWY-9tZl8893bssYhrEXrgJaHUcZbU-1us_Gxbo24vmm8RLIL_zanPwv8x9DTwdAlTja9EDJc-9LyRCWEpm5cKf9bASmyALcc0_LKqjo1Hs-mxmNCAhDr4-iQh5gmJoqs1MTnI1aFQxlLY1sS3dknziPNRnAs(",
+        "ratio": 0.62109375
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDls5yhbw1uF0MiWZz1A5iGwmtJjnXPe3Kqb3PzHh2yK0vjYlvrDZk9i1bRSyW2v4fuUAQWNgcBThPPeNa-58ePuacgg1J8bVs62DLiouAuCZ",
+        "description": "Die sogenannte \"Schwungbrücke\" über die Agger zum Gelände der Grube Castor (um 1895). Auf der Brücke sind die Gleise für die Grubenwagen gut zu erkennen. Links im Hintergrund die Aufbereitung der Grube Castor, rechts etwas erhöht das Obersteigerhaus.",
+        "description_alternative": "Eine über einen Fluss führende Hängebrücke in Richtung eines Bergwerkgeländes. Auf der Brücke steht ein Mensch, im Hintergrund sind Häuser und ein Schornstein zu erkennen.",
+        "copyright": "Repro: François Wouters / VMHA / CC BY 4.0",
+        "author": "unbekannt",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3cZEvVHLoGgBi0ZyIEuYV7rwKlzcAmf2wjCjKqnv6MR-iVITraN6_NxFP_UDRD79P6lyeETyn1MMtD2Xyc6fMD4tG5Q2BRYHmAHNrU30ZBi9iCNcxmJUNT8o5uK1OOk8oXcVSY3ea6XOR4Wn4U41WwWZKBMP6jdhPbiNjtg7efi_UbU_vUlUBv9drV6f6ErvfVIyle8xnwf2k_HR42_CsdG1UwzJkTrKMFiWuYhwH2LfA((",
+        "ratio": 1.2955729166666667
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDmQ2VShiQs2MiShuD85DhivJUg2BVtYTNaHnHelKNe9Z820k7QBU3WSxnlJWkv41843iWmBPyt-69gkoQXAdTskAPfgCtnaA-725kMbnHmQy",
+        "description": "Das alte Steigerhaus der Grube Castor bei Loope (2025). Im Vordergrund Reste von den Halden der Grube Castor, die heute ein wertvolles Naturschutzgebiet darstellen.",
+        "description_alternative": "Blick auf eine kleine Siedlung mit einem alten Fachwerkhaus in erhöhter Position. Im Vordergrund sind Büsche und Bäume und ein Kiesbett zu sehen.",
+        "copyright": "Peter Schönfeld, BGV Rhein-Berg e.V. / CC BY 4.0",
+        "author": "Peter Schönfeld",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3c0jkKZRo8aJNvNVsYSxq2RoIxSvPzafnI3ue0ZRM6S3C2pqvUHaTHhf5a2ZkgB6vxXJC7pN5Bm7TD-j2f5bQ-63Tr-y7V-AjzuraA7UPF5klisPvyQ6CYFj8dVepQ9AQIia99FaQq97FIEKriu4g0YeNjE6su5RkHzuKoGYog8iAez4Dl55l88SR5Lnf-NkyA0W8MmUn3AWi2ERMx1tmpPXvTElLn6GfO_6tijdQyI5Q((",
+        "ratio": 0.7890625
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDp_PvUrUQ1qzeujVNhFQuSz5NMRkxdtBhlYyy0nM7rkCZWgfsQhFNbaGYgjZd_loRJ7pNSoN3q2ZXeUNQFxIdjGEaxJNOZmwOGEdIk0yODlp",
+        "description": "Altes Zechenhaus der Grube Castor am Zugang von der Schwungbrücke (2014). Die noch erhaltenen Gebäude dienen heute als private Wohnhäuser.",
+        "description_alternative": "Eine kleine hölzerne Hängebrücke über einen Fluss. Das Areal um die Brücke ist geprägt von Bäumen, Wiesen und Sträuchern.",
+        "copyright": "Sammlung Pingsjong (commons.wikimedia.org)",
+        "author": "Herbert Stahl",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3chiW88wOFsHf4xHmgf16HIo5s_n4S5JJn1-XP9HtrW1T33WJzONssiQpb-0q94uw3fJpyUUBp6xluDjMaIYepdAhVgP-ELLxt7v1h0l5b62wg3Ulbgv5kvTt445hPPufb2GhM2sIAY7URYdvM4kJySZsDHyyWGQxTW-0nBqwAj9JjGvn3WkzcwORyyvs4_5hyss3a9zlNX0y3fhSFVSiJtd4MydncDYn1jVDLOYzMkT3_XeOic8SGSCVC0M_UDJfo(",
+        "ratio": 1.3151041666666667
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDklWyaajiX3LGvZ6ME_hXYEvrYEzlwKCRL9_VEfTEsAPm66SxRZshHfKb_GRgRAFAknvUNmZQQz-wH-2G4YSYSIVTup6X05Oax2Bt8AJR7nZ",
+        "description": "Am ehemaligen Zechenplatz der Grube Castor ist ein alter Förderwagen erhalten (2025). Er erinnert an die betriebsame Vergangenheit des heute idyllischen Geländes.",
+        "description_alternative": "Eine kleine hölzerne Hängebrücke über einen Fluss. Das Areal um die Brücke ist geprägt von Bäumen, Wiesen und Sträuchern.",
+        "copyright": null,
+        "author": "Peter Schönfeld",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3fgb3IUpMZK8dyrO9jL-SdKNLRSNQVk_13OUq7bKv27m-Yt3NlLppnITQi9EULxaQPbvUh6ObYrjqmKVLxMMTSjqw_M-tnWn9L0kp1vTkF-SprHizP0ZF8qtMltcW1WFhsWLEHx0LagyDmVQre_jbxN45WOviqbDTElyJrwOmzz4QJOv55A1Xhm0vZeKRTVcJnhjC545XPGW6aqZrLPeTRNqPmMkuxJ_Rfg52IGWHIpC_NcpZGUUCLUXHLYKJTq0EY(",
+        "ratio": 1.4182825484764543
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDvQXfhlumTVsiRo_4WyzQ35LTxDsHgZoT4KCfTXS3q1xswqKnli17HsndmYVdGJpvpi4T_6XAFNH1WhF6ItYowoDgSOeBuhbuYeAtjo1f-em",
+        "description": "Ein Teil der Belegschaft der Grube Castor (um 1895). Das Foto ist mit \"1928\" beschriftet, mehre Details wie Kleidung und Barttracht lassen aber ein höheres Alter erkennen. In der vordersten Reihe sitzen ausschließlich Kinder auf dem Boden. Kinderarbeit war im Bergbau noch bis zum Ersten Weltkrieg weit verbreitet.",
+        "description_alternative": "Eine alte Fotografie eines Zugangs zu einem Bergwerkstollen. Mittig führen Schienen für Güterloren in den Stollen hinein. Kurz vor dem Eingang steht ein Arbeiter.",
+        "copyright": "Repro: Bürger- und Verschönerungsverein Loope",
+        "author": "unbekannt",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3eiRwftmExb1p23bWAMBNGEKISPyHnQAPpNIXuyvQVuVpccYSponSo1fdgcY3ieucaxr_cWWeoqxKTGFvZT_KMizBqFAho4Qbdfm1pFsgOP2NtarmotIQqFf2KcW76IPVYUxr9UQcu-OrHjMIUgQB3_N-paVfZ4ZmxZ4S0WKCv7I4kStrG-coAHAz2GSqEaq57TmSeMeRqa4dEwepkBUEeA-X25ahVM7t8Zkyiny_LFF788Ah28YmFQgmP3FN2ET2Q(",
+        "ratio": 1.5491679273827534
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDhA4O6vIwqJ9Se3ZwEXwjvXMTQtheUZun8LbvRYz5Lh8eAuYUAQYJGCMpoP5O7vUQVFMaGe60FLKIePqQDLolSRjZHXOYo86I4VFkgUJL7T8",
+        "description": "Blick vom Steigerhaus der Grube Castor auf das ehemalige Zechengelände (2025).",
+        "description_alternative": "Blick in ein bewaldetes Tal, zwischen Bäumen sind Dächer erkennbar. Am linken Bildrand ist eine Hausecke mit dem an der Wand angebrachten Straßenschild \"Kastor\" zu sehen.",
+        "copyright": "Peter Schönfeld, BGV Rhein-Berg e.V. / CC BY 4.0",
+        "author": "Peter Schönfeld",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3eTVZhjGGM8MPSVOIZu6ImJSRqbly6ASxuxHpRwsvkiGRTi0Wv1hUIYXOXOrQrj1J6dY2xNEI7d-RBikXb2kND75P6o8L75wDWcbi0GtMbjK6_cOtsU5oZ3L1Y6L1bCFUA1i436q5jUNer_NOMMMk0O-wqoHlVJ9RqeoYqwrGq_0qqeK4vFOJU0TPGoC8AorCWo7ZPnh0ej_7D9GylHBCdf0RKB_wd9aKY9T66DODgIrRRppsxsb_tsC3zi1ft-IuQ(",
+        "ratio": 1.4182825484764543
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDl91T6gWAGR156sXe-xK6iyB5hDfgL86KvrU1xl6kvPQMnYwL4G9LorisB42FD40pU8kj39dAG2t4wwKjQWmvtNUGE6j32msMi9IG2gbF6Dj",
+        "description": "Eines der alten Zechenhäuser vor dem Oberen Stollen der Grube Castor (2025). Die Arbeiterwohnhäuser blieben auch nach der Stilllegung der Grube in Nutzung. Das Grundstück ist heute in Privatbesitz.",
+        "description_alternative": "Ein einstöckiges Fachwerkhaus an einer schmalen Straße. Im Hintergrund ist ein bewaldeter Hang zu sehen.",
+        "copyright": "Peter Schönfeld, BGV Rhein-Berg e.V. / CC BY 4.0",
+        "author": "Peter Schönfeld",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3ds5DEMJFE1STxBR7lT9WcXjxcyzG7jneZJlcs72Yr94R74YxEO9RYf0lQ4-CYXcOELkFhALnZnwt8CvVLSlql-wVUh0Y4eD6vB8X6BunWnJl3f4EwcPBteVd5ThhJ36_9BQ0DU9aFEvoWAMUWn36cTn0MX74j9j2VFCK9aFqWsSQttp39Psm3s4qdwaKEMOfH2NYO9lYM2d0oKpvPKXvYt87q6_RDeoUtAkYHXVKj8Ug((",
+        "ratio": 1.3333333333333333
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDgJW-lZmuXmj3ZgSufHOMbjbh6wwIx2k1hv7ZqyCB37OwmdAJT-1_pFA2H9nydKapDo0jKCVH1vFbkuuIMPZq1Sl0enbwymPwIeBJ2oBtJTz",
+        "description": "Blick auf das alte Steigerhaus der Grube Castor (2025). Von hier aus führt der Weg weiter hangaufwärts zum ehemaligen Oberen Stollen.",
+        "description_alternative": "Ausschnitt einer Siedlung auf einer topographischen Karte. Mittig sieht man oberhalb des Ortes \"Ehreshoven\" die Bezeichnung \"Grube Castor\".",
+        "copyright": null,
+        "author": "Peter Schönfeld",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3etLKMM9iJ_W_ruVA4qIA4NpmLT_PkLUIWdD-oRiqtYJY6n15maGrD09RxchzqMHlyRJbVN4ytjSsWzDcQucsoRQ9x-WmsB6_gx6he9cFRrhk_jNKPKINWa9HR4mU2rEfYlmYOE1CkxWqjaHKuld85VBU6UjfrW3zh50w2QuzcoJad9dt1Vzx_xtJ2Ac0V9FC2V_JYRyzprSeMajrBHqqeYqWosw3-822o49drVezq4X87t7pjaENoLtKMTZYxG9Kw(",
+        "ratio": 1.3203125
+      },
+      {
+        "url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDke4yH_yeaz5u_4K7NzEulnKNKXN8bKYM_T5T_QVVjCXde3InW2Lm-49olScifuSYr0V6isISjTdrRNcrJYI-jYWhuVYPB1v3k17gpz3Xw45",
+        "description": "Die sogenannte \"Schwungbrücke\" über die Agger zum ehemaligen Gelände der Grube Castor bei Loope (2025).",
+        "description_alternative": "Eine kleine hölzerne Hängebrücke über einen Fluss. Das Areal um die Brücke ist geprägt von Bäumen, Wiesen und Sträuchern.",
+        "copyright": "Peter Schönfeld, BGV Rhein-Berg e.V. / CC BY 4.0",
+        "author": "Peter Schönfeld",
+        "media_type": "image",
+        "download_url": "/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3cj3JirpgfOuzUyOABPh_G_6wUbrn27vp8sSMUg5_rQR9snajQLmJk4-AIRyy3-5NlZDirEb77mMWWDHXCEuvUBUMFfI6JvVz8ciJXzZB8qH9hrid1DB8-_NRlJ3WP9tuslC4l0gZyjlPhK3LIPoUufoSqvLCBELXnMRph9hOy2_THBCyLF5i2ywNauCg8LbWr1hUWhaREI7QMn52m__zowUPSLRRsz76mrXf9o0bSxuED3Ix7gyo7cl_yIysGskNo(",
+        "ratio": 1.4085281980742779
+      }
+    ]
+  }
+]

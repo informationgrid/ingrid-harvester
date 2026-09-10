@@ -1,0 +1,196 @@
+{
+  "description": "",
+  "extras": {
+    "metadata": {
+      "deleted": null,
+      "issued": "2026-03-21T00:00:00.067Z",
+      "merged_from": [
+        "CLICKRHEIN-DISCOVERY-218"
+      ],
+      "modified": "2026-09-02T23:00:00.060Z",
+      "source": {
+        "raw_data_source": "https://www.kuladig.de/ClickRhein/api/discoveries?amount=999",
+        "source_base": "https://www.kuladig.de/ClickRhein/api/discoveries?amount=999",
+        "source_type": "json"
+      }
+    }
+  },
+  "fulltext": "{\"id\":218,\"title\":\"Zwischen edlen Herrschaften und unedlen Schwermetallen\",\"duration\":45,\"track\":3.3,\"travel_mode\":1,\"suitabilities\":[6,7],\"themes\":[8,11,12,18],\"epochs\":[5],\"territories\":[2],\"location\":{\"coordinate\":[50.97792998893367,7.345411839659817],\"municipalities\":[\"Oberbergischer Kreis\"],\"districts\":[\"Engelskirchen\"]},\"media\":[{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDma2v-xOjR96nG77pYDaMhZgEYOop82MGp9hYnN-yy86vjKfT2m_GvKzrANwZ71t-z8eREDhUG_8NNMGp0HrZMubbrMlUiXVWOrYg_bywd7o\",\"description\":\"Hängebrücke über die Agger bei der Grube Castor in Loope (2026). Sie wird auch \\\"Schwungbrücke\\\" genannt.\",\"description_alternative\":\"Eine Hängebrücke, die über einen Fluss führt und auf der eine Person steht.\",\"copyright\":\"Lea Recken, LVR / CC BY 4.0\",\"author\":\"Lea Recken\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3dL_JcD0af4GeaBx5qujC5-Ht1j0nEybM4WWkGDTSwVkwINnfjuGsU8ZrbRDCfpfYPqWNR0QuLQ-W_WM5sEKQZlhD9CyHx88hRfIAkqYzVS9eY9JUt7kn9URJToJKDEwJ-TOmMbxb2F4aUl2mdmSOsAUUGeFKPx074SZlb5hSP2oJjF6mdv62CauQS1Q0qzr_VWbQytTzmn_W0kQDe7hVfGcyWUWGMVVG18AbsLK0VC1g((\",\"ratio\":1.3333333333333333},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDl0mKUDszUxTL5YrpIC1MLXOOMZlLbc3o4slpeG1fWcQ_Cx7xZxhslxc5la2hU5rt4OeXJJbNjfRaOBaSBoDRtfNKN0IXPj7I5zWB6Adoex6\",\"description\":\"Drohnenaufnahme vom Wasserschloss Ehreshoven im Aggertal bei Loope (2025).\",\"description_alternative\":\"Ausschnitt einer Siedlung auf einer topographischen Karte. Mittig sieht man oberhalb des Ortes \\\"Ehreshoven\\\" die Bezeichnung \\\"Grube Castor\\\".\",\"copyright\":\"Peter Schönfeld, BGV Rhein-Berg e.V. / CC BY 4.0\",\"author\":\"Peter Schönfeld\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3dWeVvTKViNyYZ74aXTrhCPqeKAKffPOTFalrX4E9Jn02GfE5z6RNTFTOuKY69dPBi48bS4eT1kv6Th0_TyNUOeQkE8V4CVJ3a7TQlhXTvWESdHpOC7Q7laKfMUQ2HSUiiRttgXNdt3wAe44Zxky7kyBMkIY1LglbFO_EnLMgcd14uhWVKEx0z2p3FF6SW8Mpq7D2s2FZD6jkA0VH_kpIckhW_blL-AeqDZv46cWhZhmcbkfvgHhvJnjgK_M22Ixyw(\",\"ratio\":1.7444633730834753},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDjm-KAhNUt0OlNRW_H8TPcbqclxU6uFSMgLG0uRJaNWuzsXbVsXMNl3Ilprgrq7WSucWQQ8eURCKJMe8yfvTpC6b7CdBHCtCBJBkFEVHvksw\",\"description\":\"Das Mundloch des Oberen Stollens der Grube Castor (2010). Der Stolleneingang ist heute zugemauert, aus Naturschutzgründen befinden sich im oberen und unteren Bereich Öffnungen für Fledermäuse und Amphibien.\",\"description_alternative\":\"Ein mit Beton versiegelter Stolleneingang an einem bewaldeten Gefälle.\",\"copyright\":\"Rainer Schmidt\",\"author\":\"Rainer Schmidt\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3fnTy8uBILgtxtEQATALqezA84gqG-c8viJUayteuvcw3ndNQ9aS1vQcDoJxN-tGTbH2JPIcm93XMb45b-cKCvXcJKr-5XMz-Oab4CWY-9tZl8893bssYhrEXrgJaHUcZbU-1us_Gxbo24vmm8RLIL_zanPwv8x9DTwdAlTja9EDJc-9LyRCWEpm5cKf9bASmyALcc0_LKqjo1Hs-mxmNCAhDr4-iQh5gmJoqs1MTnI1aFQxlLY1sS3dknziPNRnAs(\",\"ratio\":0.62109375},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDls5yhbw1uF0MiWZz1A5iGwmtJjnXPe3Kqb3PzHh2yK0vjYlvrDZk9i1bRSyW2v4fuUAQWNgcBThPPeNa-58ePuacgg1J8bVs62DLiouAuCZ\",\"description\":\"Die sogenannte \\\"Schwungbrücke\\\" über die Agger zum Gelände der Grube Castor (um 1895). Auf der Brücke sind die Gleise für die Grubenwagen gut zu erkennen. Links im Hintergrund die Aufbereitung der Grube Castor, rechts etwas erhöht das Obersteigerhaus.\",\"description_alternative\":\"Eine über einen Fluss führende Hängebrücke in Richtung eines Bergwerkgeländes. Auf der Brücke steht ein Mensch, im Hintergrund sind Häuser und ein Schornstein zu erkennen.\",\"copyright\":\"Repro: François Wouters / VMHA / CC BY 4.0\",\"author\":\"unbekannt\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3cZEvVHLoGgBi0ZyIEuYV7rwKlzcAmf2wjCjKqnv6MR-iVITraN6_NxFP_UDRD79P6lyeETyn1MMtD2Xyc6fMD4tG5Q2BRYHmAHNrU30ZBi9iCNcxmJUNT8o5uK1OOk8oXcVSY3ea6XOR4Wn4U41WwWZKBMP6jdhPbiNjtg7efi_UbU_vUlUBv9drV6f6ErvfVIyle8xnwf2k_HR42_CsdG1UwzJkTrKMFiWuYhwH2LfA((\",\"ratio\":1.2955729166666667},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDmQ2VShiQs2MiShuD85DhivJUg2BVtYTNaHnHelKNe9Z820k7QBU3WSxnlJWkv41843iWmBPyt-69gkoQXAdTskAPfgCtnaA-725kMbnHmQy\",\"description\":\"Das alte Steigerhaus der Grube Castor bei Loope (2025). Im Vordergrund Reste von den Halden der Grube Castor, die heute ein wertvolles Naturschutzgebiet darstellen.\",\"description_alternative\":\"Blick auf eine kleine Siedlung mit einem alten Fachwerkhaus in erhöhter Position. Im Vordergrund sind Büsche und Bäume und ein Kiesbett zu sehen.\",\"copyright\":\"Peter Schönfeld, BGV Rhein-Berg e.V. / CC BY 4.0\",\"author\":\"Peter Schönfeld\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3c0jkKZRo8aJNvNVsYSxq2RoIxSvPzafnI3ue0ZRM6S3C2pqvUHaTHhf5a2ZkgB6vxXJC7pN5Bm7TD-j2f5bQ-63Tr-y7V-AjzuraA7UPF5klisPvyQ6CYFj8dVepQ9AQIia99FaQq97FIEKriu4g0YeNjE6su5RkHzuKoGYog8iAez4Dl55l88SR5Lnf-NkyA0W8MmUn3AWi2ERMx1tmpPXvTElLn6GfO_6tijdQyI5Q((\",\"ratio\":0.7890625},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDp_PvUrUQ1qzeujVNhFQuSz5NMRkxdtBhlYyy0nM7rkCZWgfsQhFNbaGYgjZd_loRJ7pNSoN3q2ZXeUNQFxIdjGEaxJNOZmwOGEdIk0yODlp\",\"description\":\"Altes Zechenhaus der Grube Castor am Zugang von der Schwungbrücke (2014). Die noch erhaltenen Gebäude dienen heute als private Wohnhäuser.\",\"description_alternative\":\"Eine kleine hölzerne Hängebrücke über einen Fluss. Das Areal um die Brücke ist geprägt von Bäumen, Wiesen und Sträuchern.\",\"copyright\":\"Sammlung Pingsjong (commons.wikimedia.org)\",\"author\":\"Herbert Stahl\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3chiW88wOFsHf4xHmgf16HIo5s_n4S5JJn1-XP9HtrW1T33WJzONssiQpb-0q94uw3fJpyUUBp6xluDjMaIYepdAhVgP-ELLxt7v1h0l5b62wg3Ulbgv5kvTt445hPPufb2GhM2sIAY7URYdvM4kJySZsDHyyWGQxTW-0nBqwAj9JjGvn3WkzcwORyyvs4_5hyss3a9zlNX0y3fhSFVSiJtd4MydncDYn1jVDLOYzMkT3_XeOic8SGSCVC0M_UDJfo(\",\"ratio\":1.3151041666666667},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDklWyaajiX3LGvZ6ME_hXYEvrYEzlwKCRL9_VEfTEsAPm66SxRZshHfKb_GRgRAFAknvUNmZQQz-wH-2G4YSYSIVTup6X05Oax2Bt8AJR7nZ\",\"description\":\"Am ehemaligen Zechenplatz der Grube Castor ist ein alter Förderwagen erhalten (2025). Er erinnert an die betriebsame Vergangenheit des heute idyllischen Geländes.\",\"description_alternative\":\"Eine kleine hölzerne Hängebrücke über einen Fluss. Das Areal um die Brücke ist geprägt von Bäumen, Wiesen und Sträuchern.\",\"copyright\":null,\"author\":\"Peter Schönfeld\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3fgb3IUpMZK8dyrO9jL-SdKNLRSNQVk_13OUq7bKv27m-Yt3NlLppnITQi9EULxaQPbvUh6ObYrjqmKVLxMMTSjqw_M-tnWn9L0kp1vTkF-SprHizP0ZF8qtMltcW1WFhsWLEHx0LagyDmVQre_jbxN45WOviqbDTElyJrwOmzz4QJOv55A1Xhm0vZeKRTVcJnhjC545XPGW6aqZrLPeTRNqPmMkuxJ_Rfg52IGWHIpC_NcpZGUUCLUXHLYKJTq0EY(\",\"ratio\":1.4182825484764543},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDvQXfhlumTVsiRo_4WyzQ35LTxDsHgZoT4KCfTXS3q1xswqKnli17HsndmYVdGJpvpi4T_6XAFNH1WhF6ItYowoDgSOeBuhbuYeAtjo1f-em\",\"description\":\"Ein Teil der Belegschaft der Grube Castor (um 1895). Das Foto ist mit \\\"1928\\\" beschriftet, mehre Details wie Kleidung und Barttracht lassen aber ein höheres Alter erkennen. In der vordersten Reihe sitzen ausschließlich Kinder auf dem Boden. Kinderarbeit war im Bergbau noch bis zum Ersten Weltkrieg weit verbreitet.\",\"description_alternative\":\"Eine alte Fotografie eines Zugangs zu einem Bergwerkstollen. Mittig führen Schienen für Güterloren in den Stollen hinein. Kurz vor dem Eingang steht ein Arbeiter.\",\"copyright\":\"Repro: Bürger- und Verschönerungsverein Loope\",\"author\":\"unbekannt\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3eiRwftmExb1p23bWAMBNGEKISPyHnQAPpNIXuyvQVuVpccYSponSo1fdgcY3ieucaxr_cWWeoqxKTGFvZT_KMizBqFAho4Qbdfm1pFsgOP2NtarmotIQqFf2KcW76IPVYUxr9UQcu-OrHjMIUgQB3_N-paVfZ4ZmxZ4S0WKCv7I4kStrG-coAHAz2GSqEaq57TmSeMeRqa4dEwepkBUEeA-X25ahVM7t8Zkyiny_LFF788Ah28YmFQgmP3FN2ET2Q(\",\"ratio\":1.5491679273827534},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDhA4O6vIwqJ9Se3ZwEXwjvXMTQtheUZun8LbvRYz5Lh8eAuYUAQYJGCMpoP5O7vUQVFMaGe60FLKIePqQDLolSRjZHXOYo86I4VFkgUJL7T8\",\"description\":\"Blick vom Steigerhaus der Grube Castor auf das ehemalige Zechengelände (2025).\",\"description_alternative\":\"Blick in ein bewaldetes Tal, zwischen Bäumen sind Dächer erkennbar. Am linken Bildrand ist eine Hausecke mit dem an der Wand angebrachten Straßenschild \\\"Kastor\\\" zu sehen.\",\"copyright\":\"Peter Schönfeld, BGV Rhein-Berg e.V. / CC BY 4.0\",\"author\":\"Peter Schönfeld\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3eTVZhjGGM8MPSVOIZu6ImJSRqbly6ASxuxHpRwsvkiGRTi0Wv1hUIYXOXOrQrj1J6dY2xNEI7d-RBikXb2kND75P6o8L75wDWcbi0GtMbjK6_cOtsU5oZ3L1Y6L1bCFUA1i436q5jUNer_NOMMMk0O-wqoHlVJ9RqeoYqwrGq_0qqeK4vFOJU0TPGoC8AorCWo7ZPnh0ej_7D9GylHBCdf0RKB_wd9aKY9T66DODgIrRRppsxsb_tsC3zi1ft-IuQ(\",\"ratio\":1.4182825484764543},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDl91T6gWAGR156sXe-xK6iyB5hDfgL86KvrU1xl6kvPQMnYwL4G9LorisB42FD40pU8kj39dAG2t4wwKjQWmvtNUGE6j32msMi9IG2gbF6Dj\",\"description\":\"Eines der alten Zechenhäuser vor dem Oberen Stollen der Grube Castor (2025). Die Arbeiterwohnhäuser blieben auch nach der Stilllegung der Grube in Nutzung. Das Grundstück ist heute in Privatbesitz.\",\"description_alternative\":\"Ein einstöckiges Fachwerkhaus an einer schmalen Straße. Im Hintergrund ist ein bewaldeter Hang zu sehen.\",\"copyright\":\"Peter Schönfeld, BGV Rhein-Berg e.V. / CC BY 4.0\",\"author\":\"Peter Schönfeld\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3ds5DEMJFE1STxBR7lT9WcXjxcyzG7jneZJlcs72Yr94R74YxEO9RYf0lQ4-CYXcOELkFhALnZnwt8CvVLSlql-wVUh0Y4eD6vB8X6BunWnJl3f4EwcPBteVd5ThhJ36_9BQ0DU9aFEvoWAMUWn36cTn0MX74j9j2VFCK9aFqWsSQttp39Psm3s4qdwaKEMOfH2NYO9lYM2d0oKpvPKXvYt87q6_RDeoUtAkYHXVKj8Ug((\",\"ratio\":1.3333333333333333},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDgJW-lZmuXmj3ZgSufHOMbjbh6wwIx2k1hv7ZqyCB37OwmdAJT-1_pFA2H9nydKapDo0jKCVH1vFbkuuIMPZq1Sl0enbwymPwIeBJ2oBtJTz\",\"description\":\"Blick auf das alte Steigerhaus der Grube Castor (2025). Von hier aus führt der Weg weiter hangaufwärts zum ehemaligen Oberen Stollen.\",\"description_alternative\":\"Ausschnitt einer Siedlung auf einer topographischen Karte. Mittig sieht man oberhalb des Ortes \\\"Ehreshoven\\\" die Bezeichnung \\\"Grube Castor\\\".\",\"copyright\":null,\"author\":\"Peter Schönfeld\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3etLKMM9iJ_W_ruVA4qIA4NpmLT_PkLUIWdD-oRiqtYJY6n15maGrD09RxchzqMHlyRJbVN4ytjSsWzDcQucsoRQ9x-WmsB6_gx6he9cFRrhk_jNKPKINWa9HR4mU2rEfYlmYOE1CkxWqjaHKuld85VBU6UjfrW3zh50w2QuzcoJad9dt1Vzx_xtJ2Ac0V9FC2V_JYRyzprSeMajrBHqqeYqWosw3-822o49drVezq4X87t7pjaENoLtKMTZYxG9Kw(\",\"ratio\":1.3203125},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDke4yH_yeaz5u_4K7NzEulnKNKXN8bKYM_T5T_QVVjCXde3InW2Lm-49olScifuSYr0V6isISjTdrRNcrJYI-jYWhuVYPB1v3k17gpz3Xw45\",\"description\":\"Die sogenannte \\\"Schwungbrücke\\\" über die Agger zum ehemaligen Gelände der Grube Castor bei Loope (2025).\",\"description_alternative\":\"Eine kleine hölzerne Hängebrücke über einen Fluss. Das Areal um die Brücke ist geprägt von Bäumen, Wiesen und Sträuchern.\",\"copyright\":\"Peter Schönfeld, BGV Rhein-Berg e.V. / CC BY 4.0\",\"author\":\"Peter Schönfeld\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3cj3JirpgfOuzUyOABPh_G_6wUbrn27vp8sSMUg5_rQR9snajQLmJk4-AIRyy3-5NlZDirEb77mMWWDHXCEuvUBUMFfI6JvVz8ciJXzZB8qH9hrid1DB8-_NRlJ3WP9tuslC4l0gZyjlPhK3LIPoUufoSqvLCBELXnMRph9hOy2_THBCyLF5i2ywNauCg8LbWr1hUWhaREI7QMn52m__zowUPSLRRsz76mrXf9o0bSxuED3Ix7gyo7cl_yIysGskNo(\",\"ratio\":1.4085281980742779}],\"categoryMap\":{\"territory\":{\"1\":\"Drinnen\",\"2\":\"Draußen\"},\"suitabilities\":{\"4\":\"inklusive Infos\",\"6\":\"familienfreundlich\",\"7\":\"für Kinder\",\"8\":\"kinderwagentauglich\",\"9\":\"für Wanderer*innen\"},\"themes\":{\"1\":\"Architektur\",\"4\":\"Street Art\",\"7\":\"Museum\",\"8\":\"Erinnerungskultur\",\"9\":\"Glaube und Religion\",\"10\":\"Stadtgeschichte\",\"11\":\"Industriekultur\",\"12\":\"Schlösser, Burgen und Festungen\",\"13\":\"Migrationsgeschichten\",\"16\":\"Wald und Park\",\"17\":\"Seen und Flüsse\",\"18\":\"Bergbau\",\"19\":\"Umweltschutz\",\"20\":\"Tiere\",\"22\":\"Karneval\",\"23\":\"Essen und Trinken\",\"25\":\"Persönlichkeiten\",\"29\":\"Feste und Feiern\",\"31\":\"Sport\",\"33\":\"Lost Place\",\"35\":\"Kunst\",\"36\":\"Ländliche Kultur\",\"37\":\"Sagen und Legenden\",\"38\":\"Bildung\",\"39\":\"Denkmal\",\"40\":\"Politik\",\"41\":\"Sprache\"},\"themes_spot\":{\"1\":\"Siedlung\",\"2\":\"Religion, Kult, Brauchtum\",\"3\":\"Wirtschaft, Technik, Verkehr\",\"4\":\"Befestigung, Militär, Wehrwesen\",\"5\":\"Staat, Herrschaft, Recht, Verwaltung\",\"6\":\"Kunst und Kultur\",\"7\":\"Gesundheitswesen und Sozialwesen\",\"8\":\"Sport, Freizeit, Tourismus\",\"9\":\"Natur und Umwelt\",\"10\":\"Bildung und Wissenschaft\"},\"epochs\":{\"1\":\"Zeit des Neandertalers\",\"2\":\"Römer und Germanen\",\"3\":\"Mittelalter\",\"4\":\"Neuzeit\",\"5\":\"Industrialisierung\",\"6\":\"Zeitgeschichte\",\"7\":\"Kaiserreich\",\"8\":\"Erster Weltkrieg\",\"9\":\"Weimarer Republik\",\"10\":\"Zweiter Weltkrieg\",\"11\":\"Nachkriegszeit\",\"12\":\"Kalter Krieg\",\"13\":\"1960er\",\"14\":\"1970er\",\"15\":\"1980er\",\"16\":\"1990er\",\"17\":\"2000er\",\"19\":\"1920er\",\"20\":\"1930er\",\"21\":\"Nationalsozialismus\",\"22\":\"1950er\",\"26\":\"Antike\"}}}",
+  "id": "CLICKRHEIN-DISCOVERY-218",
+  "keywords": [
+    {
+      "id": null,
+      "term": "familienfreundlich",
+      "source": null
+    },
+    {
+      "id": null,
+      "term": "für Kinder",
+      "source": null
+    },
+    {
+      "id": null,
+      "term": "Erinnerungskultur",
+      "source": null
+    },
+    {
+      "id": null,
+      "term": "Industriekultur",
+      "source": null
+    },
+    {
+      "id": null,
+      "term": "Schlösser, Burgen und Festungen",
+      "source": null
+    },
+    {
+      "id": null,
+      "term": "Bergbau",
+      "source": null
+    },
+    {
+      "id": null,
+      "term": "Industrialisierung",
+      "source": null
+    }
+  ],
+  "lvr": {
+    "genres": null,
+    "identifier": "CLICKRHEIN-DISCOVERY-218",
+    "licenses": null,
+    "media": [
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3dL_JcD0af4GeaBx5qujC5-Ht1j0nEybM4WWkGDTSwVkwINnfjuGsU8ZrbRDCfpfYPqWNR0QuLQ-W_WM5sEKQZlhD9CyHx88hRfIAkqYzVS9eY9JUt7kn9URJToJKDEwJ-TOmMbxb2F4aUl2mdmSOsAUUGeFKPx074SZlb5hSP2oJjF6mdv62CauQS1Q0qzr_VWbQytTzmn_W0kQDe7hVfGcyWUWGMVVG18AbsLK0VC1g((&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDma2v-xOjR96nG77pYDaMhZgEYOop82MGp9hYnN-yy86vjKfT2m_GvKzrANwZ71t-z8eREDhUG_8NNMGp0HrZMubbrMlUiXVWOrYg_bywd7o&width=512",
+        "dimensions": null,
+        "description": "Hängebrücke über die Agger bei der Grube Castor in Loope (2026). Sie wird auch \"Schwungbrücke\" genannt."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3dWeVvTKViNyYZ74aXTrhCPqeKAKffPOTFalrX4E9Jn02GfE5z6RNTFTOuKY69dPBi48bS4eT1kv6Th0_TyNUOeQkE8V4CVJ3a7TQlhXTvWESdHpOC7Q7laKfMUQ2HSUiiRttgXNdt3wAe44Zxky7kyBMkIY1LglbFO_EnLMgcd14uhWVKEx0z2p3FF6SW8Mpq7D2s2FZD6jkA0VH_kpIckhW_blL-AeqDZv46cWhZhmcbkfvgHhvJnjgK_M22Ixyw(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDl0mKUDszUxTL5YrpIC1MLXOOMZlLbc3o4slpeG1fWcQ_Cx7xZxhslxc5la2hU5rt4OeXJJbNjfRaOBaSBoDRtfNKN0IXPj7I5zWB6Adoex6&width=512",
+        "dimensions": null,
+        "description": "Drohnenaufnahme vom Wasserschloss Ehreshoven im Aggertal bei Loope (2025)."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3fnTy8uBILgtxtEQATALqezA84gqG-c8viJUayteuvcw3ndNQ9aS1vQcDoJxN-tGTbH2JPIcm93XMb45b-cKCvXcJKr-5XMz-Oab4CWY-9tZl8893bssYhrEXrgJaHUcZbU-1us_Gxbo24vmm8RLIL_zanPwv8x9DTwdAlTja9EDJc-9LyRCWEpm5cKf9bASmyALcc0_LKqjo1Hs-mxmNCAhDr4-iQh5gmJoqs1MTnI1aFQxlLY1sS3dknziPNRnAs(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDjm-KAhNUt0OlNRW_H8TPcbqclxU6uFSMgLG0uRJaNWuzsXbVsXMNl3Ilprgrq7WSucWQQ8eURCKJMe8yfvTpC6b7CdBHCtCBJBkFEVHvksw&width=512",
+        "dimensions": null,
+        "description": "Das Mundloch des Oberen Stollens der Grube Castor (2010). Der Stolleneingang ist heute zugemauert, aus Naturschutzgründen befinden sich im oberen und unteren Bereich Öffnungen für Fledermäuse und Amphibien."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3cZEvVHLoGgBi0ZyIEuYV7rwKlzcAmf2wjCjKqnv6MR-iVITraN6_NxFP_UDRD79P6lyeETyn1MMtD2Xyc6fMD4tG5Q2BRYHmAHNrU30ZBi9iCNcxmJUNT8o5uK1OOk8oXcVSY3ea6XOR4Wn4U41WwWZKBMP6jdhPbiNjtg7efi_UbU_vUlUBv9drV6f6ErvfVIyle8xnwf2k_HR42_CsdG1UwzJkTrKMFiWuYhwH2LfA((&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDls5yhbw1uF0MiWZz1A5iGwmtJjnXPe3Kqb3PzHh2yK0vjYlvrDZk9i1bRSyW2v4fuUAQWNgcBThPPeNa-58ePuacgg1J8bVs62DLiouAuCZ&width=512",
+        "dimensions": null,
+        "description": "Die sogenannte \"Schwungbrücke\" über die Agger zum Gelände der Grube Castor (um 1895). Auf der Brücke sind die Gleise für die Grubenwagen gut zu erkennen. Links im Hintergrund die Aufbereitung der Grube Castor, rechts etwas erhöht das Obersteigerhaus."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3c0jkKZRo8aJNvNVsYSxq2RoIxSvPzafnI3ue0ZRM6S3C2pqvUHaTHhf5a2ZkgB6vxXJC7pN5Bm7TD-j2f5bQ-63Tr-y7V-AjzuraA7UPF5klisPvyQ6CYFj8dVepQ9AQIia99FaQq97FIEKriu4g0YeNjE6su5RkHzuKoGYog8iAez4Dl55l88SR5Lnf-NkyA0W8MmUn3AWi2ERMx1tmpPXvTElLn6GfO_6tijdQyI5Q((&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDmQ2VShiQs2MiShuD85DhivJUg2BVtYTNaHnHelKNe9Z820k7QBU3WSxnlJWkv41843iWmBPyt-69gkoQXAdTskAPfgCtnaA-725kMbnHmQy&width=512",
+        "dimensions": null,
+        "description": "Das alte Steigerhaus der Grube Castor bei Loope (2025). Im Vordergrund Reste von den Halden der Grube Castor, die heute ein wertvolles Naturschutzgebiet darstellen."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3chiW88wOFsHf4xHmgf16HIo5s_n4S5JJn1-XP9HtrW1T33WJzONssiQpb-0q94uw3fJpyUUBp6xluDjMaIYepdAhVgP-ELLxt7v1h0l5b62wg3Ulbgv5kvTt445hPPufb2GhM2sIAY7URYdvM4kJySZsDHyyWGQxTW-0nBqwAj9JjGvn3WkzcwORyyvs4_5hyss3a9zlNX0y3fhSFVSiJtd4MydncDYn1jVDLOYzMkT3_XeOic8SGSCVC0M_UDJfo(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDp_PvUrUQ1qzeujVNhFQuSz5NMRkxdtBhlYyy0nM7rkCZWgfsQhFNbaGYgjZd_loRJ7pNSoN3q2ZXeUNQFxIdjGEaxJNOZmwOGEdIk0yODlp&width=512",
+        "dimensions": null,
+        "description": "Altes Zechenhaus der Grube Castor am Zugang von der Schwungbrücke (2014). Die noch erhaltenen Gebäude dienen heute als private Wohnhäuser."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3fgb3IUpMZK8dyrO9jL-SdKNLRSNQVk_13OUq7bKv27m-Yt3NlLppnITQi9EULxaQPbvUh6ObYrjqmKVLxMMTSjqw_M-tnWn9L0kp1vTkF-SprHizP0ZF8qtMltcW1WFhsWLEHx0LagyDmVQre_jbxN45WOviqbDTElyJrwOmzz4QJOv55A1Xhm0vZeKRTVcJnhjC545XPGW6aqZrLPeTRNqPmMkuxJ_Rfg52IGWHIpC_NcpZGUUCLUXHLYKJTq0EY(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDklWyaajiX3LGvZ6ME_hXYEvrYEzlwKCRL9_VEfTEsAPm66SxRZshHfKb_GRgRAFAknvUNmZQQz-wH-2G4YSYSIVTup6X05Oax2Bt8AJR7nZ&width=512",
+        "dimensions": null,
+        "description": "Am ehemaligen Zechenplatz der Grube Castor ist ein alter Förderwagen erhalten (2025). Er erinnert an die betriebsame Vergangenheit des heute idyllischen Geländes."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3eiRwftmExb1p23bWAMBNGEKISPyHnQAPpNIXuyvQVuVpccYSponSo1fdgcY3ieucaxr_cWWeoqxKTGFvZT_KMizBqFAho4Qbdfm1pFsgOP2NtarmotIQqFf2KcW76IPVYUxr9UQcu-OrHjMIUgQB3_N-paVfZ4ZmxZ4S0WKCv7I4kStrG-coAHAz2GSqEaq57TmSeMeRqa4dEwepkBUEeA-X25ahVM7t8Zkyiny_LFF788Ah28YmFQgmP3FN2ET2Q(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDvQXfhlumTVsiRo_4WyzQ35LTxDsHgZoT4KCfTXS3q1xswqKnli17HsndmYVdGJpvpi4T_6XAFNH1WhF6ItYowoDgSOeBuhbuYeAtjo1f-em&width=512",
+        "dimensions": null,
+        "description": "Ein Teil der Belegschaft der Grube Castor (um 1895). Das Foto ist mit \"1928\" beschriftet, mehre Details wie Kleidung und Barttracht lassen aber ein höheres Alter erkennen. In der vordersten Reihe sitzen ausschließlich Kinder auf dem Boden. Kinderarbeit war im Bergbau noch bis zum Ersten Weltkrieg weit verbreitet."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3eTVZhjGGM8MPSVOIZu6ImJSRqbly6ASxuxHpRwsvkiGRTi0Wv1hUIYXOXOrQrj1J6dY2xNEI7d-RBikXb2kND75P6o8L75wDWcbi0GtMbjK6_cOtsU5oZ3L1Y6L1bCFUA1i436q5jUNer_NOMMMk0O-wqoHlVJ9RqeoYqwrGq_0qqeK4vFOJU0TPGoC8AorCWo7ZPnh0ej_7D9GylHBCdf0RKB_wd9aKY9T66DODgIrRRppsxsb_tsC3zi1ft-IuQ(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDhA4O6vIwqJ9Se3ZwEXwjvXMTQtheUZun8LbvRYz5Lh8eAuYUAQYJGCMpoP5O7vUQVFMaGe60FLKIePqQDLolSRjZHXOYo86I4VFkgUJL7T8&width=512",
+        "dimensions": null,
+        "description": "Blick vom Steigerhaus der Grube Castor auf das ehemalige Zechengelände (2025)."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3ds5DEMJFE1STxBR7lT9WcXjxcyzG7jneZJlcs72Yr94R74YxEO9RYf0lQ4-CYXcOELkFhALnZnwt8CvVLSlql-wVUh0Y4eD6vB8X6BunWnJl3f4EwcPBteVd5ThhJ36_9BQ0DU9aFEvoWAMUWn36cTn0MX74j9j2VFCK9aFqWsSQttp39Psm3s4qdwaKEMOfH2NYO9lYM2d0oKpvPKXvYt87q6_RDeoUtAkYHXVKj8Ug((&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDl91T6gWAGR156sXe-xK6iyB5hDfgL86KvrU1xl6kvPQMnYwL4G9LorisB42FD40pU8kj39dAG2t4wwKjQWmvtNUGE6j32msMi9IG2gbF6Dj&width=512",
+        "dimensions": null,
+        "description": "Eines der alten Zechenhäuser vor dem Oberen Stollen der Grube Castor (2025). Die Arbeiterwohnhäuser blieben auch nach der Stilllegung der Grube in Nutzung. Das Grundstück ist heute in Privatbesitz."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3etLKMM9iJ_W_ruVA4qIA4NpmLT_PkLUIWdD-oRiqtYJY6n15maGrD09RxchzqMHlyRJbVN4ytjSsWzDcQucsoRQ9x-WmsB6_gx6he9cFRrhk_jNKPKINWa9HR4mU2rEfYlmYOE1CkxWqjaHKuld85VBU6UjfrW3zh50w2QuzcoJad9dt1Vzx_xtJ2Ac0V9FC2V_JYRyzprSeMajrBHqqeYqWosw3-822o49drVezq4X87t7pjaENoLtKMTZYxG9Kw(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDgJW-lZmuXmj3ZgSufHOMbjbh6wwIx2k1hv7ZqyCB37OwmdAJT-1_pFA2H9nydKapDo0jKCVH1vFbkuuIMPZq1Sl0enbwymPwIeBJ2oBtJTz&width=512",
+        "dimensions": null,
+        "description": "Blick auf das alte Steigerhaus der Grube Castor (2025). Von hier aus führt der Weg weiter hangaufwärts zum ehemaligen Oberen Stollen."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPf_aiEDokmneNozSabI4j9u6SDiH4Wx0uDMTfz_uYZ5CxQMcTLvo0sUm9Cd9gW7k3cj3JirpgfOuzUyOABPh_G_6wUbrn27vp8sSMUg5_rQR9snajQLmJk4-AIRyy3-5NlZDirEb77mMWWDHXCEuvUBUMFfI6JvVz8ciJXzZB8qH9hrid1DB8-_NRlJ3WP9tuslC4l0gZyjlPhK3LIPoUufoSqvLCBELXnMRph9hOy2_THBCyLF5i2ywNauCg8LbWr1hUWhaREI7QMn52m__zowUPSLRRsz76mrXf9o0bSxuED3Ix7gyo7cl_yIysGskNo(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDke4yH_yeaz5u_4K7NzEulnKNKXN8bKYM_T5T_QVVjCXde3InW2Lm-49olScifuSYr0V6isISjTdrRNcrJYI-jYWhuVYPB1v3k17gpz3Xw45&width=512",
+        "dimensions": null,
+        "description": "Die sogenannte \"Schwungbrücke\" über die Agger zum ehemaligen Gelände der Grube Castor bei Loope (2025)."
+      }
+    ],
+    "persons": null,
+    "relations": null,
+    "source": {
+      "id": "ClickRhein"
+    },
+    "vector": null
+  },
+  "metadata": {
+    "issued": null,
+    "modified": null,
+    "source": {
+      "raw_data_source": "https://www.kuladig.de/ClickRhein/api/discoveries?amount=999",
+      "source_base": "https://www.kuladig.de/ClickRhein/api/discoveries?amount=999",
+      "source_type": "json"
+    }
+  },
+  "schema_version": "0.0.2-SNAPSHOT",
+  "sort_uuid": "cf272e9d-401d-5b98-85df-763c5a1f3d8f",
+  "spatial": {
+    "bbox": {
+      "coordinates": [
+        50.97792998893367,
+        7.345411839659817
+      ],
+      "type": "Point"
+    },
+    "centroid": {
+      "coordinates": [
+        50.97792998893367,
+        7.345411839659817
+      ],
+      "type": "Point"
+    },
+    "geometry": {
+      "coordinates": [
+        50.97792998893367,
+        7.345411839659817
+      ],
+      "type": "Point"
+    },
+    "title": null
+  },
+  "temporal": {
+    "data_temporal": null,
+    "issued": null,
+    "modified": null
+  },
+  "title": "Zwischen edlen Herrschaften und unedlen Schwermetallen",
+  "uuid": "CLICKRHEIN-DISCOVERY-218"
+}
