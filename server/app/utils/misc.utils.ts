@@ -192,6 +192,11 @@ export function normalizeDateTime(datetime: string): Date {
  * @returns width an height of the image if 
  */
 export async function getImageDimensionsFromURL(url: string): Promise<Dimensions> {
+
+    // ED (2026-10-09): This is fragile, and slow; furthermore, the information is not needed anymore
+    // TODO refactor to completely remove this function
+    return null;
+
     try {
         let response = await fetch(url);
         if (!response.ok) {
