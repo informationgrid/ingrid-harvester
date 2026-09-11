@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="https://oamh-lvr.digicult-verbund.de/oai_files/oai2_original.xsl"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:lido="http://www.lido-schema.org" xmlns:dex="http://schema.digicult-verbund.de/dex" xmlns:gml="http://www.opengis.net/gml" xsi:schemaLocation="
+	http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+    <responseDate>2026-09-10T17:12:07Z</responseDate>
+    <request verb="ListRecords" metadataPrefix="lido">https://oamh-lvr.digicult-verbund.de/cv/sprache_lvr_13tHztt9gZr</request>
+    <ListRecords>
+        <record>
+            <header>
+                <identifier>DE-2086/lido/6a50c2fe6ca8e3.58379442</identifier>
+                <datestamp>2026-09-09T15:22:36Z</datestamp>
+            </header>
+            <metadata>
+                <lido:lido xmlns:lido="http://www.lido-schema.org" xsi:schemaLocation="http://www.lido-schema.org http://www.lido-schema.org/schema/v1.0/lido-v1.0.xsd">
+                    <lido:lidoRecID lido:type="http://terminology.lido-schema.org/identifier_type/local_identifier" lido:source="digiCULT-Verbund eG">DE-2086/lido/6a50c2fe6ca8e3.58379442</lido:lidoRecID>
+                    <lido:category>
+                        <lido:conceptID lido:type="http://terminology.lido-schema.org/lido00099" lido:source="http://digicult.vocnet.org/terminology/ter01528">http://digicult.vocnet.org/terminology/ter02110</lido:conceptID>
+                    </lido:category>
+                    <lido:descriptiveMetadata xml:lang="de">
+                        <lido:objectClassificationWrap>
+                            <lido:objectWorkTypeWrap>
+                                <lido:objectWorkType>
+                                    <lido:conceptID lido:type="http://terminology.lido-schema.org/identifier_type/uri" lido:source="xTree"></lido:conceptID>
+                                    <lido:term lido:pref="preferred" lido:addedSearchTerm="no" xml:lang="de"></lido:term>
+                                </lido:objectWorkType>
+                            </lido:objectWorkTypeWrap>
+                            <lido:classificationWrap>
+                                <lido:classification lido:type="http://digicult.vocnet.org/terminology/ter03123">
+                                    <lido:conceptID lido:type="http://terminology.lido-schema.org/identifier_type/uri" lido:source="xTree">http://digicult.vocnet.org/portal/p0304</lido:conceptID>
+                                    <lido:term lido:pref="preferred" lido:addedSearchTerm="no" xml:lang="de">Dat Portal</lido:term>
+                                </lido:classification>
+                                <lido:classification lido:type="Quellentyp">
+                                    <lido:conceptID lido:type="http://terminology.lido-schema.org/identifier_type/uri">http://digicult.vocnet.org/terminology/ter03645</lido:conceptID>
+                                    <lido:term lido:pref="preferred" lido:addedSearchTerm="no" xml:lang="de">POI</lido:term>
+                                </lido:classification>
+                            </lido:classificationWrap>
+                        </lido:objectClassificationWrap>
+                        <lido:objectIdentificationWrap>
+                            <lido:titleWrap>
+                                <lido:titleSet>
+                                    <lido:appellationValue lido:pref="preferred" xml:lang="de">Solingen 2</lido:appellationValue>
+                                </lido:titleSet>
+                            </lido:titleWrap>
+                            <lido:repositoryWrap>
+                                <lido:repositorySet>
+                                    <lido:repositoryName>
+                                        <lido:legalBodyID lido:type="URI">info:isil/DE-2086</lido:legalBodyID>
+                                        <lido:legalBodyName>
+                                            <lido:appellationValue>LVR-Institut für Landeskunde und Regionalgeschichte</lido:appellationValue>
+                                        </lido:legalBodyName>
+                                        <lido:legalBodyWeblink>https://rheinische-landeskunde.lvr.de</lido:legalBodyWeblink>
+                                    </lido:repositoryName>
+                                </lido:repositorySet>
+                                <lido:repositorySet>
+                                    <lido:repositoryLocation>
+                                        <lido:gml>
+                                            <gml:Point srsName="EPSG:4326">
+                                                <gml:pos>51.1721629 7.0845893</gml:pos>
+                                            </gml:Point>
+                                        </lido:gml>
+                                    </lido:repositoryLocation>
+                                </lido:repositorySet>
+                            </lido:repositoryWrap>
+                            <lido:objectDescriptionWrap>
+                                <lido:objectDescriptionSet lido:type="Postleitzahl">
+                                    <lido:descriptiveNoteValue xml:lang="de">42659</lido:descriptiveNoteValue>
+                                </lido:objectDescriptionSet>
+                                <lido:objectDescriptionSet lido:type="Ort">
+                                    <lido:descriptiveNoteValue xml:lang="de">Solingen</lido:descriptiveNoteValue>
+                                </lido:objectDescriptionSet>
+                                <lido:objectDescriptionSet lido:type="Land">
+                                    <lido:descriptiveNoteValue xml:lang="de">Deutschland</lido:descriptiveNoteValue>
+                                </lido:objectDescriptionSet>
+                            </lido:objectDescriptionWrap>
+                            <lido:objectMeasurementsWrap/>
+                        </lido:objectIdentificationWrap>
+                        <lido:eventWrap>
+                            <lido:eventSet>
+                                <lido:event>
+                                    <lido:eventType>
+                                        <lido:conceptID lido:type="http://terminology.lido-schema.org/identifier_type/uri">http://terminology.lido-schema.org/eventType/publication</lido:conceptID>
+                                        <lido:term lido:pref="preferred" lido:addedSearchTerm="no" xml:lang="de">Veröffentlichung (Ereignis)</lido:term>
+                                    </lido:eventType>
+                                </lido:event>
+                            </lido:eventSet>
+                        </lido:eventWrap>
+                        <lido:objectRelationWrap>
+                            <lido:subjectWrap>
+                                <lido:subjectSet>
+                                    <lido:subject>
+                                        <lido:subjectActor>
+                                            <lido:actor lido:type="http://terminology.lido-schema.org/actor_type/person">
+                                                <lido:actorID lido:type="http://terminology.lido-schema.org/identifier_type/uri" lido:source="Temporärer Identifikator digiCULT.web">http://digicult.vocnet.org/terminology/ter01528#actor/63050</lido:actorID>
+                                                <lido:actorID lido:type="http://terminology.lido-schema.org/identifier_type/uri" lido:source="https://transformation.digicult-verbund.de/metadata_rdf">https://transformation.digicult-verbund.de/metadata_rdf/0fcf623ba</lido:actorID>
+                                                <lido:nameActorSet>
+                                                    <lido:appellationValue lido:pref="preferred">Böhm, Elsa</lido:appellationValue>
+                                                </lido:nameActorSet>
+                                            </lido:actor>
+                                        </lido:subjectActor>
+                                        <lido:subjectDate>
+                                            <lido:date>
+                                                <lido:earliestDate>1982</lido:earliestDate>
+                                                <lido:latestDate>1982</lido:latestDate>
+                                            </lido:date>
+                                        </lido:subjectDate>
+                                    </lido:subject>
+                                </lido:subjectSet>
+                            </lido:subjectWrap>
+                        </lido:objectRelationWrap>
+                    </lido:descriptiveMetadata>
+                    <lido:administrativeMetadata xml:lang="de">
+                        <lido:rightsWorkWrap>
+                            <lido:rightsWorkSet/>
+                        </lido:rightsWorkWrap>
+                        <lido:recordWrap>
+                            <lido:recordID lido:type="http://terminology.lido-schema.org/lido00100">6a50c2fe6ca8e3.58379442</lido:recordID>
+                            <lido:recordID lido:type="http://terminology.lido-schema.org/lido00100" lido:source="http://digicult.vocnet.org/terminology/ter01528">391647</lido:recordID>
+                            <lido:recordType>
+                                <lido:term lido:pref="preferred" lido:addedSearchTerm="no" xml:lang="de">Einzelobjekt</lido:term>
+                            </lido:recordType>
+                            <lido:recordSource>
+                                <lido:legalBodyName>
+                                    <lido:appellationValue>digiCULT-Verbund eG</lido:appellationValue>
+                                </lido:legalBodyName>
+                                <lido:legalBodyWeblink>https://www.digicult-verbund.de</lido:legalBodyWeblink>
+                            </lido:recordSource>
+                            <lido:recordSource>
+                                <lido:legalBodyName>
+                                    <lido:appellationValue>LVR-Institut für Landeskunde und Regionalgeschichte</lido:appellationValue>
+                                </lido:legalBodyName>
+                                <lido:legalBodyWeblink>https://rheinische-landeskunde.lvr.de</lido:legalBodyWeblink>
+                            </lido:recordSource>
+                            <lido:recordRights>
+                                <lido:rightsHolder>
+                                    <lido:legalBodyName>
+                                        <lido:appellationValue>LVR-Institut für Landeskunde und Regionalgeschichte</lido:appellationValue>
+                                    </lido:legalBodyName>
+                                </lido:rightsHolder>
+                            </lido:recordRights>
+                            <lido:recordInfoSet lido:type="lido record">
+                                <lido:recordInfoLink></lido:recordInfoLink>
+                                <lido:recordMetadataDate lido:type="http://terminology.lido-schema.org/recordMetadataDate_type/modified">2026-09-09T15:22:34+02:00</lido:recordMetadataDate>
+                            </lido:recordInfoSet>
+                            <lido:recordInfoSet lido:type="source record">
+                                <lido:recordMetadataDate lido:type="http://terminology.lido-schema.org/recordMetadataDate_type/created">2026-07-10T12:01:34+01:00</lido:recordMetadataDate>
+                                <lido:recordMetadataDate lido:type="http://terminology.lido-schema.org/recordMetadataDate_type/modified">2026-09-09T15:22:29+01:00</lido:recordMetadataDate>
+                            </lido:recordInfoSet>
+                        </lido:recordWrap>
+                        <lido:resourceWrap>
+                            <lido:resourceSet lido:sortorder="1">
+                                <lido:resourceID lido:type="http://terminology.lido-schema.org/lido00100" lido:source="http://digicult.vocnet.org/terminology/ter01528">459069</lido:resourceID>
+                                <lido:resourceID lido:type="http://terminology.lido-schema.org/lido00100" lido:source="http://digicult.vocnet.org/terminology/ter01293">digicult_digi_00629914/digicult_derivate_00955730/Solingen1.mp3</lido:resourceID>
+                                <lido:resourceRepresentation lido:type="http://terminology.lido-schema.org/lido00465">
+                                    <lido:linkResource lido:formatResource="audio/mpeg">https://mab.digicult-verbund.de/digicult/servlets/MCRFileNodeServlet/digicult_derivate_00955730/Solingen1.mp3</lido:linkResource>
+                                </lido:resourceRepresentation>
+                                <lido:resourceType>
+                                    <lido:term>Audio</lido:term>
+                                </lido:resourceType>
+                                <lido:resourceDescription lido:type="Titel">Solingen 2</lido:resourceDescription>
+                                <lido:rightsResource>
+                                    <lido:rightsType>
+                                        <lido:term lido:pref="preferred" lido:addedSearchTerm="no" xml:lang="de">rights_reserved</lido:term>
+                                    </lido:rightsType>
+                                    <lido:rightsHolder>
+                                        <lido:legalBodyName>
+                                            <lido:appellationValue>LVR-Institut für Landeskunde und Regionalgeschichte</lido:appellationValue>
+                                        </lido:legalBodyName>
+                                    </lido:rightsHolder>
+                                </lido:rightsResource>
+                            </lido:resourceSet>
+                        </lido:resourceWrap>
+                    </lido:administrativeMetadata>
+                </lido:lido>
+            </metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>DE-2086/lido/6a5785db161ef0.64980336</identifier>
+                <datestamp>2026-09-09T15:19:20Z</datestamp>
+            </header>
+            <metadata>
+                <lido:lido xmlns:lido="http://www.lido-schema.org" xsi:schemaLocation="http://www.lido-schema.org http://www.lido-schema.org/schema/v1.0/lido-v1.0.xsd">
+                    <lido:lidoRecID lido:type="http://terminology.lido-schema.org/identifier_type/local_identifier" lido:source="digiCULT-Verbund eG">DE-2086/lido/6a5785db161ef0.64980336</lido:lidoRecID>
+                    <lido:category>
+                        <lido:conceptID lido:type="http://terminology.lido-schema.org/lido00099" lido:source="http://digicult.vocnet.org/terminology/ter01528">http://digicult.vocnet.org/terminology/ter02110</lido:conceptID>
+                    </lido:category>
+                    <lido:descriptiveMetadata xml:lang="de">
+                        <lido:objectClassificationWrap>
+                            <lido:objectWorkTypeWrap>
+                                <lido:objectWorkType>
+                                    <lido:conceptID lido:type="http://terminology.lido-schema.org/identifier_type/uri" lido:source="xTree"></lido:conceptID>
+                                    <lido:term lido:pref="preferred" lido:addedSearchTerm="no" xml:lang="de"></lido:term>
+                                </lido:objectWorkType>
+                            </lido:objectWorkTypeWrap>
+                            <lido:classificationWrap>
+                                <lido:classification lido:type="http://digicult.vocnet.org/terminology/ter03123">
+                                    <lido:conceptID lido:type="http://terminology.lido-schema.org/identifier_type/uri" lido:source="xTree">http://digicult.vocnet.org/portal/p0304</lido:conceptID>
+                                    <lido:term lido:pref="preferred" lido:addedSearchTerm="no" xml:lang="de">Dat Portal</lido:term>
+                                </lido:classification>
+                                <lido:classification lido:type="Quellentyp">
+                                    <lido:conceptID lido:type="http://terminology.lido-schema.org/identifier_type/uri">http://digicult.vocnet.org/terminology/ter03645</lido:conceptID>
+                                    <lido:term lido:pref="preferred" lido:addedSearchTerm="no" xml:lang="de">POI</lido:term>
+                                </lido:classification>
+                            </lido:classificationWrap>
+                        </lido:objectClassificationWrap>
+                        <lido:objectIdentificationWrap>
+                            <lido:titleWrap>
+                                <lido:titleSet>
+                                    <lido:appellationValue lido:pref="preferred" xml:lang="de">Altenahr</lido:appellationValue>
+                                </lido:titleSet>
+                            </lido:titleWrap>
+                            <lido:repositoryWrap>
+                                <lido:repositorySet>
+                                    <lido:repositoryName>
+                                        <lido:legalBodyID lido:type="URI">info:isil/DE-2086</lido:legalBodyID>
+                                        <lido:legalBodyName>
+                                            <lido:appellationValue>LVR-Institut für Landeskunde und Regionalgeschichte</lido:appellationValue>
+                                        </lido:legalBodyName>
+                                        <lido:legalBodyWeblink>https://rheinische-landeskunde.lvr.de</lido:legalBodyWeblink>
+                                    </lido:repositoryName>
+                                </lido:repositorySet>
+                                <lido:repositorySet>
+                                    <lido:repositoryLocation>
+                                        <lido:gml>
+                                            <gml:Point srsName="EPSG:4326">
+                                                <gml:pos>50.5169469 6.9920517</gml:pos>
+                                            </gml:Point>
+                                        </lido:gml>
+                                    </lido:repositoryLocation>
+                                </lido:repositorySet>
+                            </lido:repositoryWrap>
+                            <lido:objectDescriptionWrap>
+                                <lido:objectDescriptionSet lido:type="Postleitzahl">
+                                    <lido:descriptiveNoteValue xml:lang="de">53505</lido:descriptiveNoteValue>
+                                </lido:objectDescriptionSet>
+                                <lido:objectDescriptionSet lido:type="Ort">
+                                    <lido:descriptiveNoteValue xml:lang="de">Altenahr</lido:descriptiveNoteValue>
+                                </lido:objectDescriptionSet>
+                                <lido:objectDescriptionSet lido:type="Landkreis">
+                                    <lido:descriptiveNoteValue xml:lang="de">Kreis Ahrweiler</lido:descriptiveNoteValue>
+                                </lido:objectDescriptionSet>
+                                <lido:objectDescriptionSet lido:type="Land">
+                                    <lido:descriptiveNoteValue xml:lang="de">Deutschland</lido:descriptiveNoteValue>
+                                </lido:objectDescriptionSet>
+                            </lido:objectDescriptionWrap>
+                            <lido:objectMeasurementsWrap/>
+                        </lido:objectIdentificationWrap>
+                        <lido:eventWrap>
+                            <lido:eventSet>
+                                <lido:event>
+                                    <lido:eventType>
+                                        <lido:conceptID lido:type="http://terminology.lido-schema.org/identifier_type/uri">http://terminology.lido-schema.org/eventType/publication</lido:conceptID>
+                                        <lido:term lido:pref="preferred" lido:addedSearchTerm="no" xml:lang="de">Veröffentlichung (Ereignis)</lido:term>
+                                    </lido:eventType>
+                                </lido:event>
+                            </lido:eventSet>
+                        </lido:eventWrap>
+                        <lido:objectRelationWrap>
+                            <lido:subjectWrap>
+                                <lido:subjectSet>
+                                    <lido:subject>
+                                        <lido:subjectActor>
+                                            <lido:actor lido:type="http://terminology.lido-schema.org/actor_type/person">
+                                                <lido:actorID lido:type="http://terminology.lido-schema.org/identifier_type/uri" lido:source="Temporärer Identifikator digiCULT.web">http://digicult.vocnet.org/terminology/ter01528#actor/62933</lido:actorID>
+                                                <lido:actorID lido:type="http://terminology.lido-schema.org/identifier_type/uri" lido:source="https://transformation.digicult-verbund.de/metadata_rdf">https://transformation.digicult-verbund.de/metadata_rdf/751a30e5e</lido:actorID>
+                                                <lido:nameActorSet>
+                                                    <lido:appellationValue lido:pref="preferred">Simon, Werner</lido:appellationValue>
+                                                </lido:nameActorSet>
+                                            </lido:actor>
+                                        </lido:subjectActor>
+                                        <lido:subjectDate>
+                                            <lido:date>
+                                                <lido:earliestDate>1982</lido:earliestDate>
+                                                <lido:latestDate>1982</lido:latestDate>
+                                            </lido:date>
+                                        </lido:subjectDate>
+                                    </lido:subject>
+                                </lido:subjectSet>
+                            </lido:subjectWrap>
+                        </lido:objectRelationWrap>
+                    </lido:descriptiveMetadata>
+                    <lido:administrativeMetadata xml:lang="de">
+                        <lido:rightsWorkWrap>
+                            <lido:rightsWorkSet/>
+                        </lido:rightsWorkWrap>
+                        <lido:recordWrap>
+                            <lido:recordID lido:type="http://terminology.lido-schema.org/lido00100">6a5785db161ef0.64980336</lido:recordID>
+                            <lido:recordID lido:type="http://terminology.lido-schema.org/lido00100" lido:source="http://digicult.vocnet.org/terminology/ter01528">391898</lido:recordID>
+                            <lido:recordType>
+                                <lido:term lido:pref="preferred" lido:addedSearchTerm="no" xml:lang="de">Einzelobjekt</lido:term>
+                            </lido:recordType>
+                            <lido:recordSource>
+                                <lido:legalBodyName>
+                                    <lido:appellationValue>digiCULT-Verbund eG</lido:appellationValue>
+                                </lido:legalBodyName>
+                                <lido:legalBodyWeblink>https://www.digicult-verbund.de</lido:legalBodyWeblink>
+                            </lido:recordSource>
+                            <lido:recordSource>
+                                <lido:legalBodyName>
+                                    <lido:appellationValue>LVR-Institut für Landeskunde und Regionalgeschichte</lido:appellationValue>
+                                </lido:legalBodyName>
+                                <lido:legalBodyWeblink>https://rheinische-landeskunde.lvr.de</lido:legalBodyWeblink>
+                            </lido:recordSource>
+                            <lido:recordRights>
+                                <lido:rightsHolder>
+                                    <lido:legalBodyName>
+                                        <lido:appellationValue>LVR-Institut für Landeskunde und Regionalgeschichte</lido:appellationValue>
+                                    </lido:legalBodyName>
+                                </lido:rightsHolder>
+                            </lido:recordRights>
+                            <lido:recordInfoSet lido:type="lido record">
+                                <lido:recordInfoLink></lido:recordInfoLink>
+                                <lido:recordMetadataDate lido:type="http://terminology.lido-schema.org/recordMetadataDate_type/modified">2026-09-09T15:19:19+02:00</lido:recordMetadataDate>
+                            </lido:recordInfoSet>
+                            <lido:recordInfoSet lido:type="source record">
+                                <lido:recordMetadataDate lido:type="http://terminology.lido-schema.org/recordMetadataDate_type/created">2026-07-15T15:06:35+01:00</lido:recordMetadataDate>
+                                <lido:recordMetadataDate lido:type="http://terminology.lido-schema.org/recordMetadataDate_type/modified">2026-09-09T15:19:16+01:00</lido:recordMetadataDate>
+                            </lido:recordInfoSet>
+                        </lido:recordWrap>
+                        <lido:resourceWrap>
+                            <lido:resourceSet lido:sortorder="1">
+                                <lido:resourceID lido:type="http://terminology.lido-schema.org/lido00100" lido:source="http://digicult.vocnet.org/terminology/ter01528">456706</lido:resourceID>
+                                <lido:resourceID lido:type="http://terminology.lido-schema.org/lido00100" lido:source="http://digicult.vocnet.org/terminology/ter01293">digicult_digi_00610399/digicult_derivate_00936216/Altenahr.mp3</lido:resourceID>
+                                <lido:resourceRepresentation lido:type="http://terminology.lido-schema.org/lido00465">
+                                    <lido:linkResource lido:formatResource="audio/mpeg">https://mab.digicult-verbund.de/digicult/servlets/MCRFileNodeServlet/digicult_derivate_00936216/Altenahr.mp3</lido:linkResource>
+                                </lido:resourceRepresentation>
+                                <lido:resourceType>
+                                    <lido:term>Audio</lido:term>
+                                </lido:resourceType>
+                                <lido:resourceDescription lido:type="Titel">Altenahr</lido:resourceDescription>
+                                <lido:rightsResource>
+                                    <lido:rightsType>
+                                        <lido:term lido:pref="preferred" lido:addedSearchTerm="no" xml:lang="de">rights_reserved</lido:term>
+                                    </lido:rightsType>
+                                    <lido:rightsHolder>
+                                        <lido:legalBodyName>
+                                            <lido:appellationValue>LVR-Institut für Landeskunde und Regionalgeschichte</lido:appellationValue>
+                                        </lido:legalBodyName>
+                                    </lido:rightsHolder>
+                                </lido:rightsResource>
+                            </lido:resourceSet>
+                        </lido:resourceWrap>
+                    </lido:administrativeMetadata>
+                </lido:lido>
+            </metadata>
+        </record>
+    </ListRecords>
+</OAI-PMH>

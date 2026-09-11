@@ -1,0 +1,29 @@
+{
+  "type": "OAI",
+  "maxRecords": 200,
+  "startPosition": 1,
+  "catalogIds": [1],
+  "rejectUnauthorizedSSL": true,
+  "rules": {
+    "containsDocumentsWithData": null
+  },
+  "maxConcurrent": 1,
+  "skipUrlCheckOnHarvest": false,
+  "timeout": 60000,
+  "sourceURL": "https://oamh-lvr.digicult-verbund.de/cv/sprache_lvr_13tHztt9gZr",
+  "filterTags": [],
+  "filterGroups": [],
+  "providerPrefix": "",
+  "metadataPrefix": "lido",
+  "set": null,
+  "id": 1,
+  "description": "digicult-sprache",
+  "iPlugId": "digicult-sprache",
+  "partner": null,
+  "provider": null,
+  "dataSourceName": null,
+  "datatype": null,
+  "from": null,
+  "until": null,
+  "eitherKeywords": []
+}
