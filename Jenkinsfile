@@ -12,6 +12,17 @@ pipeline {
     }
 
     stages {
+        stage ('Run Tests') {
+            steps {
+                nodejs(nodeJSInstallationName: 'nodejs20') {
+                    dir('server') {
+                        sh 'npm ci'
+                        sh 'npm test'
+                    }
+                }
+            }
+        }
+
         stage('Build and Push Image') {
             steps {
                 sh 'if [ -d build ]; then rm -rf build; fi'
