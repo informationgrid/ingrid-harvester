@@ -41,7 +41,7 @@ describe('WFS Integration Tests', function () {
     const wfsTestcase = {
         profile,
         expectedDocsDir: 'elasticsearch'
-    } satisfies Partial<ImporterIntegrationTestCase<any>>;
+    } satisfies Partial<ImporterIntegrationTestCase<WfsSettings>>;
 
     it('ZDM kuestendaten', async () => {
         await runImporterIntegrationTest({

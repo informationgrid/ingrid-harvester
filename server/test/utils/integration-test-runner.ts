@@ -143,7 +143,7 @@ function matchesRule(rule: HttpMockRule, config: RequestOptions): boolean {
     }
     if (url) {
         const uri = config.uri ?? '';
-        if (typeof url === 'string' ? !uri.includes(url) : !url.test(uri)) {
+        if (typeof url === 'string' ? uri != url : !url.test(uri)) {
             return false;
         }
     }

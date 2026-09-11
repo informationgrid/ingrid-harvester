@@ -67,7 +67,7 @@ describe('CSW Integration Tests', function () {
                 fixture: 'input/GetRecords_results.xml'
             }
         ]
-    } satisfies Partial<ImporterIntegrationTestCase<any>>;
+    } satisfies Partial<ImporterIntegrationTestCase<CswSettings>>;
 
     it('gdi-de', async () => {
         await runImporterIntegrationTest({
