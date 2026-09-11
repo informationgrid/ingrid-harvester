@@ -1,0 +1,275 @@
+{
+  "description": "Anhand des Meilenblattes und verschiedener Messtischblätter konnte an dieser Stelle eine vermutliche \"Bauerngrube\" identifiziert werden. Das Schummerungsbild des digitalen Geländemodells zeigt einzelne voneinander getrennte, kleine Bodeneintiefungen, die für einen sporadischen Kohlenabbau sprechen. <br><br>Lehm- oder Kiesgruben würden sich durch große Befunde davon unterscheiden. Bei Begehung wurde deutlich, wie sehr bei der Kohleförderung das Bodengefüge gestört wurde und so nur noch spärliches Unterholz wächst. Der gesamte Befund ist ca. 1,53 ha groß und wurde durch einen Wirtschaftsweg mit der Heeresstraße verbunden.<br> <br>(Ullrich Ochs, Landesamt für Archäologie Sachsen, 2023)<br>    <br>    <strong>Datierung:</strong><br>    <ul><br>    <li> Neuzeit bis Mitte 19. Jh.<br>    </li></ul><br>    <br>    <strong>Quellen/Literaturangaben:</strong><br>    <ul><br>    <li> GeoSN, dl-de/by-2-0.: DGM1 Sachsen. 2023. <br>    </li><li> —: DOP Sachsen. 2021. <br>    </li><li> Sächsische Landesbibliothek – Staats- und Universitätsbibliothek / Deutsche Fotothek:  <br>    </li><li> Meilenblätter von Sachsen, Berliner Exemplar, Blatt 79: Grimma, Großbardau, Großbothen, Kaditzsch, 1803. 2022. <br>    </li><li> —: TK (Äquidistantenkarte) Sachsen, Section Grimma, 1876. 2021. <br>    </li><li> —: TK (Messtischblätter) Sachsen, Section Grimma, 1907. 2022 <br>    </li><li>  Keine Literatur zu finden.<br>    </li></ul><br>    <br>    <strong>Bauherr / Auftraggeber:</strong><br>    <ul><br>    <li> --<br>    </li></ul><br>    <br>    <strong>BKM-Nummer:</strong> 30400004",
+  "extras": {
+    "metadata": {
+      "deleted": null,
+      "issued": "2026-09-11T11:58:17.027Z",
+      "merged_from": [
+        "BKM-30400004"
+      ],
+      "modified": null,
+      "source": {
+        "raw_data_source": "https://www.kuladig.de/api/public/Objekt/BKM-30400004",
+        "source_base": "https://www.kuladig.de/api/public/",
+        "source_type": "kld"
+      }
+    }
+  },
+  "fulltext": "{\"Punktkoordinate\":{\"type\":\"Point\",\"coordinates\":[12.780011430265327,51.228632210080626]},\"Polygon\":{\"type\":\"Polygon\",\"coordinates\":[[[12.779462493249627,51.22914605416833],[12.779325349002674,51.22909776345679],[12.779228133792207,51.2290388086957],[12.779078578701435,51.22880753215087],[12.778957275119582,51.228573024192805],[12.77903573836602,51.228137025401324],[12.779064429309017,51.22798873381687],[12.779183812609368,51.22789628621582],[12.779405854894385,51.227909521562516],[12.779661611240199,51.22796849826864],[12.779929552492144,51.228072807543356],[12.780094852215917,51.22822027042481],[12.78033365528275,51.2283330462071],[12.78050242696256,51.22840841134406],[12.780699906196604,51.22848432083617],[12.780883466206578,51.228550945578895],[12.781067460362282,51.22860855788682],[12.781208827883212,51.22865634106612],[12.781378469300014,51.22871368066003],[12.781472007831736,51.22885978057893],[12.781393302916502,51.22900261401469],[12.781190183634608,51.229043863643525],[12.78108580537734,51.22912306731125],[12.780989687706935,51.229179876633765],[12.780760819149325,51.2292056130023],[12.780624499966635,51.22913003166105],[12.78051104732253,51.22915643394917],[12.78039928469059,51.22913842309675],[12.780238030167215,51.22897040765224],[12.779908368715336,51.22910974906311],[12.779825895532742,51.22909203473964],[12.779728504086332,51.22909970462924],[12.779462493249627,51.22914605416833]]]},\"IstKulturlandschaft\":false,\"IstKulturlandschaftbereich\":false,\"AnfangVon\":1500,\"AnfangBis\":1850,\"EndeVon\":null,\"EndeBis\":null,\"Erfassungsmassstab\":[1,\"Keine Angabe\"],\"Datenherkunft\":{\"Id\":57,\"Name\":\"Landesamt für Archäologie Sachsen\",\"Url\":\"https://www.lfa.sachsen.de/\"},\"Denkmalschutz\":null,\"Schutzwuerdigkeit\":null,\"Adresse\":\"Grechwitz\",\"Denkmalarten\":[],\"Erfassungsmethoden\":[[99,\"Übernahme aus externer Fachdatenbank\"]],\"Bundeslaender\":[\"Sachsen\"],\"Kreise\":[\"Leipzig\"],\"Gemeinden\":[\"Grimma\"],\"Objekttyp\":\"Kuladigobjekt\",\"Id\":\"BKM-30400004\",\"Name\":\"\\\"Die Gruben\\\", Grechwitz\",\"Beschreibung\":\"Anhand des Meilenblattes und verschiedener Messtischblätter konnte an dieser Stelle eine vermutliche \\\"Bauerngrube\\\" identifiziert werden. Das Schummerungsbild des digitalen Geländemodells zeigt einzelne voneinander getrennte, kleine Bodeneintiefungen, die für einen sporadischen Kohlenabbau sprechen. \\r\\n\\r\\nLehm- oder Kiesgruben würden sich durch große Befunde davon unterscheiden. Bei Begehung wurde deutlich, wie sehr bei der Kohleförderung das Bodengefüge gestört wurde und so nur noch spärliches Unterholz wächst. Der gesamte Befund ist ca. 1,53 ha groß und wurde durch einen Wirtschaftsweg mit der Heeresstraße verbunden.\\r\\n \\r\\n(Ullrich Ochs, Landesamt für Archäologie Sachsen, 2023)\\r\\n    \\r\\n    [b]Datierung:[/b]\\r\\n    [list]\\r\\n    [*] Neuzeit bis Mitte 19. Jh.\\r\\n    [/list]\\r\\n    \\r\\n    [b]Quellen/Literaturangaben:[/b]\\r\\n    [list]\\r\\n    [*] GeoSN, dl-de/by-2-0.: DGM1 Sachsen. 2023. \\r\\n    [*] —: DOP Sachsen. 2021. \\r\\n    [*] Sächsische Landesbibliothek – Staats- und Universitätsbibliothek / Deutsche Fotothek:  \\r\\n    [*] Meilenblätter von Sachsen, Berliner Exemplar, Blatt 79: Grimma, Großbardau, Großbothen, Kaditzsch, 1803. 2022. \\r\\n    [*] —: TK (Äquidistantenkarte) Sachsen, Section Grimma, 1876. 2021. \\r\\n    [*] —: TK (Messtischblätter) Sachsen, Section Grimma, 1907. 2022 \\r\\n    [*]  Keine Literatur zu finden.\\r\\n    [/list]\\r\\n    \\r\\n    [b]Bauherr / Auftraggeber:[/b]\\r\\n    [list]\\r\\n    [*] --\\r\\n    [/list]\\r\\n    \\r\\n    [b]BKM-Nummer:[/b] 30400004\",\"Kurzbeschreibung\":\"Anhand des Meilenblattes und verschiedener Messtischblätter konnte an dieser Stelle eine vermutliche \\\"Bauerngrube\\\" identifiziert werden.\",\"Lizenz\":{\"Id\":4,\"Lizenz\":\"CC BY-NC 4.0\",\"Ausgabetext\":\"Der hier präsentierte Inhalt steht unter der freien Lizenz CC BY-NC 4.0 (Namensnennung, nicht kommerziell). Die angezeigten Medien unterliegen möglicherweise zusätzlichen urheberrechtlichen Bedingungen, die an diesen ausgewiesen sind.\",\"Url\":\"https://creativecommons.org/licenses/by-nc/4.0/deed.de\"},\"Logo\":null,\"AlternativeLogoUrl\":null,\"ZuletztGeaendert\":\"2024-02-07T11:58:30.2951433\",\"Themen\":[[3,\"Wirtschaft, Technik, Verkehr\"]],\"AlternativeNamen\":[],\"Schlagwoerter\":{\"wk001217\":\"Tagebau\",\"wk002533\":\"Braunkohle\"},\"Fachsichten\":[[3,\"Denkmalpflege\"]],\"Projekte\":[[4107,\"Braunkohle-Inventar Sachsen\"]],\"LiteraturZitate\":[],\"UebergeordnetesObjekt\":null,\"UntergeordneteObjekte\":[],\"VerwandteObjekte\":[],\"Dokumente\":[{\"Medientyp\":\"Bild\",\"Dateierweiterung\":\"jpg\",\"Ueberschrift\":\"Die Gruben, Grechwitz, (Kartengrundlage: Sächsische Landesbibliothek - Staats- und Universitätsbibliothek / Deutsche Fotothek: Meilenblätter von Sachsen, Berliner Exemplar, Blatt 79: Grimma, Großbardau, Großbothen, Kaditzsch, 1803.)\",\"Beschreibung\":\"Die Gruben, Grechwitz, (Kartengrundlage: Sächsische Landesbibliothek - Staats- und Universitätsbibliothek / Deutsche Fotothek: Meilenblätter von Sachsen, Berliner Exemplar, Blatt 79: Grimma, Großbardau, Großbothen, Kaditzsch, 1803.)\",\"AlternativeBeschreibung\":null,\"Copyright\":null,\"FotografUrheber\":\"Ullrich Ochs\",\"Thumbnail1Token\":\"BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hONyhuCBSUzunmZ4__240rqcNVEeySqjbOGhdCcJTyoKeZfeoxS0DwpEp7hvNVVvQjE-fRHPmNGZtnWVqAAvjiXdhrPJK3ss7KSVhUX7JUumn804m1qcoMa_u-_KhrVJ7gBDVNjsdZiodovM52XmhCF\",\"Thumbnail2Token\":\"BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDsXPYfEHb_zVXe0kn5hOD-qf-RiIuNh2U3P4KNhUZGK3XXcBMI5fCQfFA1nN9eXG_Flbavh3lvDlU8_nL1BG1Zc2rT9RHF1o_JP6BrEni93D\",\"Thumbnail3Token\":\"BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDsXPYfEHb_zVXe0kn5hOD-qf-RiIuNh2U3P4KNhUZGK3XXcBMI5fCQfFA1nN9eXG_Flbavh3lvDlU8_nL1BG1Ze4x90kC6-F_7nAt4L6-GxTRgnoINK_4NrprOvf9NepWg((\",\"DownloadToken\":null},{\"Medientyp\":\"Bild\",\"Dateierweiterung\":\"jpg\",\"Ueberschrift\":\"Die Gruben, Grechwitz, (Kartengrundlage: GeoSN, dl-de/by-2-0.:  DGM1 Sachsen. 2023.)\",\"Beschreibung\":\"Die Gruben, Grechwitz, (Kartengrundlage: GeoSN, dl-de/by-2-0.:  DGM1 Sachsen. 2023.)\",\"AlternativeBeschreibung\":null,\"Copyright\":null,\"FotografUrheber\":\"Ullrich Ochs\",\"Thumbnail1Token\":\"BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hONyhuCBSUzunmZ4__240rqcNVEeySqjbOGhdCcJTyoKZTTHCxKICwPzhowpphfzUDBBzfDqeJ3vRAbNAGVZdSLm3naLnTGcls_PnfMLW-DPNbWm2h8r1H3SqaK8lLlR-35Ls1wZmUbVkNc9YfHDGrP\",\"Thumbnail2Token\":\"BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDtxDIEtjIzG3iWhGsTKzowfZMDEjPtdx_tWTLXbtfDWjfkAmHUJ9opZkdPPyODTEKLwap0VPi2_sxn0CVnpAXNoZVjlq2lGFE0LfKbTr2GA2\",\"Thumbnail3Token\":\"BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDtxDIEtjIzG3iWhGsTKzowfZMDEjPtdx_tWTLXbtfDWjfkAmHUJ9opZkdPPyODTEKLwap0VPi2_sxn0CVnpAXNqJ_wllJoLHIcMCQMm8pg53xVxpQ3D3QvfYGXSlK6CXuA((\",\"DownloadToken\":null},{\"Medientyp\":\"Bild\",\"Dateierweiterung\":\"jpg\",\"Ueberschrift\":\"Die Gruben, Grechwitz, (Kartengrundlage: GeoSN, dl-de/by-2-0.:  DOP Sachsen. 2021.)\",\"Beschreibung\":\"Die Gruben, Grechwitz, (Kartengrundlage: GeoSN, dl-de/by-2-0.:  DOP Sachsen. 2021.)\",\"AlternativeBeschreibung\":null,\"Copyright\":null,\"FotografUrheber\":\"Ullrich Ochs\",\"Thumbnail1Token\":\"BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hONyhuCBSUzunmZ4__240rqcNVEeySqjbOGhdCcJTyoKX3PoWcdWZ7NhL5b12GpV8YKx4bTkJb2UTCwzNYUBICFiTpHMRv_VW3YFTxLlndPL82wpzK3PAzRjvsw48DH0z_0_Mmh5FtKrC1kghsDweeA\",\"Thumbnail2Token\":\"BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDrB5cD-k0fCIrueAAl8N16rIPGjZyrUX0J_FL1oAJyRi4u_gNACbaF8xQY6m90pYI1A0taz-6R5KDYw3CASPerPktHHCgk1M7u4SX5T2rWa2\",\"Thumbnail3Token\":\"BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDrB5cD-k0fCIrueAAl8N16rIPGjZyrUX0J_FL1oAJyRi4u_gNACbaF8xQY6m90pYI1A0taz-6R5KDYw3CASPerMOoCQZvlRek1BQHd5N_8X63JR7O5yoZ87mtkRHgoewBw((\",\"DownloadToken\":null}]}",
+  "id": "BKM-30400004",
+  "keywords": [
+    {
+      "id": "wk001217",
+      "term": "Tagebau",
+      "thesaurus": "WNK"
+    },
+    {
+      "id": "wk002533",
+      "term": "Braunkohle",
+      "thesaurus": "WNK"
+    }
+  ],
+  "lvr": {
+    "genres": null,
+    "identifier": "BKM-30400004",
+    "licenses": [
+      {
+        "url": "https://creativecommons.org/licenses/by-nc/4.0/deed.de",
+        "title": "CC BY-NC 4.0"
+      }
+    ],
+    "media": [
+      {
+        "url": "https://www.kuladig.de/api/public/Dokument?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDsXPYfEHb_zVXe0kn5hOD-qf-RiIuNh2U3P4KNhUZGK3XXcBMI5fCQfFA1nN9eXG_Flbavh3lvDlU8_nL1BG1Ze4x90kC6-F_7nAt4L6-GxTRgnoINK_4NrprOvf9NepWg((",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/api/public/Dokument?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDsXPYfEHb_zVXe0kn5hOD-qf-RiIuNh2U3P4KNhUZGK3XXcBMI5fCQfFA1nN9eXG_Flbavh3lvDlU8_nL1BG1Zc2rT9RHF1o_JP6BrEni93D",
+        "dimensions": null,
+        "description": "Die Gruben, Grechwitz, (Kartengrundlage: Sächsische Landesbibliothek - Staats- und Universitätsbibliothek / Deutsche Fotothek: Meilenblätter von Sachsen, Berliner Exemplar, Blatt 79: Grimma, Großbardau, Großbothen, Kaditzsch, 1803.)"
+      },
+      {
+        "url": "https://www.kuladig.de/api/public/Dokument?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDtxDIEtjIzG3iWhGsTKzowfZMDEjPtdx_tWTLXbtfDWjfkAmHUJ9opZkdPPyODTEKLwap0VPi2_sxn0CVnpAXNqJ_wllJoLHIcMCQMm8pg53xVxpQ3D3QvfYGXSlK6CXuA((",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/api/public/Dokument?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDtxDIEtjIzG3iWhGsTKzowfZMDEjPtdx_tWTLXbtfDWjfkAmHUJ9opZkdPPyODTEKLwap0VPi2_sxn0CVnpAXNoZVjlq2lGFE0LfKbTr2GA2",
+        "dimensions": null,
+        "description": "Die Gruben, Grechwitz, (Kartengrundlage: GeoSN, dl-de/by-2-0.:  DGM1 Sachsen. 2023.)"
+      },
+      {
+        "url": "https://www.kuladig.de/api/public/Dokument?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDrB5cD-k0fCIrueAAl8N16rIPGjZyrUX0J_FL1oAJyRi4u_gNACbaF8xQY6m90pYI1A0taz-6R5KDYw3CASPerMOoCQZvlRek1BQHd5N_8X63JR7O5yoZ87mtkRHgoewBw((",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/api/public/Dokument?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDrB5cD-k0fCIrueAAl8N16rIPGjZyrUX0J_FL1oAJyRi4u_gNACbaF8xQY6m90pYI1A0taz-6R5KDYw3CASPerPktHHCgk1M7u4SX5T2rWa2",
+        "dimensions": null,
+        "description": "Die Gruben, Grechwitz, (Kartengrundlage: GeoSN, dl-de/by-2-0.:  DOP Sachsen. 2021.)"
+      }
+    ],
+    "persons": null,
+    "relations": [],
+    "source": {
+      "display_url": "https://www.kuladig.de/Objektansicht/BKM-30400004",
+      "id": "KuLaDig"
+    },
+    "vector": null
+  },
+  "metadata": {
+    "modified": 1707303510295,
+    "source": {
+      "raw_data_source": "https://www.kuladig.de/api/public/Objekt/BKM-30400004",
+      "source_base": "https://www.kuladig.de/api/public/",
+      "source_type": "kld"
+    }
+  },
+  "schema_version": "0.0.2-SNAPSHOT",
+  "sort_uuid": "54444af2-4cc5-5644-b9e9-ecc30151b194",
+  "spatial": {
+    "bbox": {
+      "bbox": [
+        12.778957275119582,
+        51.22789628621582,
+        12.781472007831736,
+        51.2292056130023
+      ],
+      "coordinates": [
+        [
+          [
+            12.778957275119582,
+            51.22789628621582
+          ],
+          [
+            12.781472007831736,
+            51.22789628621582
+          ],
+          [
+            12.781472007831736,
+            51.2292056130023
+          ],
+          [
+            12.778957275119582,
+            51.2292056130023
+          ],
+          [
+            12.778957275119582,
+            51.22789628621582
+          ]
+        ]
+      ],
+      "type": "Polygon"
+    },
+    "centroid": {
+      "coordinates": [
+        12.780207166571389,
+        51.228710100920395
+      ],
+      "type": "Point"
+    },
+    "geometry": {
+      "coordinates": [
+        [
+          [
+            12.779462493249627,
+            51.22914605416833
+          ],
+          [
+            12.779325349002674,
+            51.22909776345679
+          ],
+          [
+            12.779228133792207,
+            51.2290388086957
+          ],
+          [
+            12.779078578701435,
+            51.22880753215087
+          ],
+          [
+            12.778957275119582,
+            51.228573024192805
+          ],
+          [
+            12.77903573836602,
+            51.228137025401324
+          ],
+          [
+            12.779064429309017,
+            51.22798873381687
+          ],
+          [
+            12.779183812609368,
+            51.22789628621582
+          ],
+          [
+            12.779405854894385,
+            51.227909521562516
+          ],
+          [
+            12.779661611240199,
+            51.22796849826864
+          ],
+          [
+            12.779929552492144,
+            51.228072807543356
+          ],
+          [
+            12.780094852215917,
+            51.22822027042481
+          ],
+          [
+            12.78033365528275,
+            51.2283330462071
+          ],
+          [
+            12.78050242696256,
+            51.22840841134406
+          ],
+          [
+            12.780699906196604,
+            51.22848432083617
+          ],
+          [
+            12.780883466206578,
+            51.228550945578895
+          ],
+          [
+            12.781067460362282,
+            51.22860855788682
+          ],
+          [
+            12.781208827883212,
+            51.22865634106612
+          ],
+          [
+            12.781378469300014,
+            51.22871368066003
+          ],
+          [
+            12.781472007831736,
+            51.22885978057893
+          ],
+          [
+            12.781393302916502,
+            51.22900261401469
+          ],
+          [
+            12.781190183634608,
+            51.229043863643525
+          ],
+          [
+            12.78108580537734,
+            51.22912306731125
+          ],
+          [
+            12.780989687706935,
+            51.229179876633765
+          ],
+          [
+            12.780760819149325,
+            51.2292056130023
+          ],
+          [
+            12.780624499966635,
+            51.22913003166105
+          ],
+          [
+            12.78051104732253,
+            51.22915643394917
+          ],
+          [
+            12.78039928469059,
+            51.22913842309675
+          ],
+          [
+            12.780238030167215,
+            51.22897040765224
+          ],
+          [
+            12.779908368715336,
+            51.22910974906311
+          ],
+          [
+            12.779825895532742,
+            51.22909203473964
+          ],
+          [
+            12.779728504086332,
+            51.22909970462924
+          ],
+          [
+            12.779462493249627,
+            51.22914605416833
+          ]
+        ]
+      ],
+      "type": "Polygon"
+    },
+    "title": null
+  },
+  "temporal": {
+    "data_temporal": {
+      "date_range": {
+        "gte": "1500",
+        "lte": "1850"
+      }
+    },
+    "modified": 1707303510295
+  },
+  "title": "\"Die Gruben\", Grechwitz",
+  "uuid": "BKM-30400004"
+}
