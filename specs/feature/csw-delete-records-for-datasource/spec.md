@@ -1,12 +1,7 @@
 ---
 feature: csw-delete-records-for-datasource
-status: draft
+status: stable
 created: 2026-04-20
-applies-context:
-  - context/architecture
-  - context/conventions
-  - context/domain
-  - context/anti-patterns
 ---
 
 ## Overview

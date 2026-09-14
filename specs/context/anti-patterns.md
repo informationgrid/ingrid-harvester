@@ -19,6 +19,16 @@ This document records patterns that are rejected, cause problems, or violate arc
 
 ---
 
+## AP-002: Spying on log4js loggers with sinon
+
+**Pattern:** `sinon.spy(log4js.getLogger('CategoryName'), 'info')` — intercepting log calls by spying on the return value of `getLogger`.
+
+**Why it's wrong:** `log4js.getLogger()` returns a new `Logger` instance on every call. The spy wraps a different object than the `const log` captured at module load time, so no log calls are intercepted and `spy.called` is always `false`.
+
+**Use instead:** Configure a log4js inline appender that collects events into an array (see Testing section of `conventions.md`).
+
+---
+
 <!-- Add new anti-patterns as they are discovered:
 ## AP-NNN: Short title
 **Pattern:** What the bad approach looks like.
