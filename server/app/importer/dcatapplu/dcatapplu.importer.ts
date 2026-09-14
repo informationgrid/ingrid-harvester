@@ -136,7 +136,6 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
 
         let dcatApPluDocuments = ogcApiResponse?.map(obj => obj.dcat_ap_plu);
         for (let dcatApPluDocument of dcatApPluDocuments) {
-            this.checkCancellation();
             let xml = this.domParser.parseFromString(dcatApPluDocument, 'application/xml');
             let rootNode = xml.getElementsByTagNameNS(namespaces.RDF, 'RDF')[0];
             // let records =  DcatappluMapper.select('./dcat:Catalog/dcat:dataset/dcat:Dataset|./dcat:Dataset', rootNode);
@@ -172,7 +171,6 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
             });
 
             for (let i = 0; i < records.length; i++) {
-                this.checkCancellation();
                 this.summary.numDocs++;
 
                 let uuid = DcatappluMapper.select('./dct:identifier', records[i], true).textContent;

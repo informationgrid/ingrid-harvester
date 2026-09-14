@@ -37,7 +37,7 @@ import { SummaryService } from '../../services/config/SummaryService.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
-import { Importer, HarvestRunCancelledError } from '../importer.js';
+import { Importer } from '../importer.js';
 import type { ObjectListRequestParams, ObjectListResponse, ObjectResponse } from './kld.api.js';
 import { PAGE_SIZE } from './kld.api.js';
 import { KldMapper } from './kld.mapper.js';
@@ -159,10 +159,7 @@ export class KldImporter extends Importer<KldSettings> {
         }
         // run in parallel
         const idMap: Record<string, string> = {};
-        const listResults: PromiseSettledResult<any>[] = await Promise.allSettled(listRequests);
-        const cancelledList = listResults.find(r => r.status === 'rejected' && r.reason instanceof HarvestRunCancelledError);
-        if (cancelledList) throw (cancelledList as PromiseRejectedResult).reason;
-        const results = listResults;
+        const results: PromiseSettledResult<any>[] = await Promise.allSettled(listRequests);
         let numAddedIds = 0;
         collectIds:
         for (let i = 0, count = results.length; i < count; i++) {
@@ -211,9 +208,7 @@ export class KldImporter extends Importer<KldSettings> {
                 detailRequests.push(request);
             }
         }
-        const detailResults = await Promise.allSettled(detailRequests);
-        const cancelledDetail = detailResults.find(r => r.status === 'rejected' && r.reason instanceof HarvestRunCancelledError);
-        if (cancelledDetail) throw (cancelledDetail as PromiseRejectedResult).reason;
+        await Promise.allSettled(detailRequests);
 
         log.info(`Finished requesting records`);
 
@@ -224,7 +219,6 @@ export class KldImporter extends Importer<KldSettings> {
     }
 
     protected async extractObjectIds(delegate: RequestDelegate, index: number, total: number): Promise<Record<string, string>> {
-        this.checkCancellation();
         const counter = KldImporter.formatCounter(index, total);
         const requestUrl = delegate.getFullURL();
         log.info(`${counter} Requesting record ids from (${requestUrl})`);
@@ -252,7 +246,6 @@ export class KldImporter extends Importer<KldSettings> {
     }
 
     protected async extractObjectDetails(delegate: RequestDelegate, index: number, total: number): Promise<void> {
-        this.checkCancellation();
         const counter = KldImporter.formatCounter(index, total);
         const requestUrl = delegate.getFullURL();
         log.info(`${counter} Requesting record details from ${requestUrl}`);

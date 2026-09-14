@@ -28,7 +28,7 @@ import type { Observer } from 'rxjs';
 import { CswCatalog } from '../../app/catalog/csw/csw.catalog.js';
 import type { ImportLogMessage } from '../../app/model/import.result.js';
 import type { ImporterSettings } from '../../app/importer/importer.settings.js';
-import { Importer, HarvestRunCancelledError } from '../../app/importer/importer.js';
+import { Importer } from '../../app/importer/importer.js';
 import { DatabaseFactory } from '../../app/persistence/database.factory.js';
 import { ElasticsearchFactory } from '../../app/persistence/elastic.factory.js';
 import { ProfileFactoryLoader } from '../../app/profiles/profile.factory.loader.js';

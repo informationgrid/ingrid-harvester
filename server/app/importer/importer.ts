@@ -39,10 +39,9 @@ import { ConfigService } from '../services/config/ConfigService.js';
 import { FilterUtils } from '../utils/filter.utils.js';
 import * as MiscUtils from '../utils/misc.utils.js';
 import { MailServer } from '../utils/nodemailer.utils.js';
+import { CancellationScope, HarvestRunCancelledError } from '../utils/cancellation.utils.js';
 
 const log = log4js.getLogger(import.meta.filename)
-
-export class HarvestRunCancelledError extends Error {}
 
 /**
  * Base class for all importers.
@@ -60,6 +59,7 @@ export abstract class Importer<S extends ImporterSettings> {
     protected isIncremental: boolean = false;
     protected observer: Observer<ImportLogMessage>;
     protected harvesterRunCancelled: boolean = false;
+    private readonly _cancellationScope = new CancellationScope();
 
     readonly database: DatabaseUtils;
     readonly elastic: ElasticsearchUtils;
@@ -83,6 +83,7 @@ export abstract class Importer<S extends ImporterSettings> {
 
     public cancel(): void {
         this.harvesterRunCancelled = true;
+        this._cancellationScope.abort();
     }
 
     protected checkCancellation(): void {
@@ -95,7 +96,10 @@ export abstract class Importer<S extends ImporterSettings> {
         return new Observable<ImportLogMessage>(observer => {
             this.observer = observer;
             this.summary.startTime = new Date();
-            this.exec(observer);//.then(() => this.elastic.close());
+            this.database.setCancellationCheck(() => this.checkCancellation());
+            this._cancellationScope.run(() => {
+                this.exec(observer);
+            });
         });
     }
 
@@ -113,11 +117,9 @@ export abstract class Importer<S extends ImporterSettings> {
             let transactionCommitted = false;
             const processedCatalogs: Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>[] = [];
             try {
-                this.checkCancellation();
                 transactionTimestamp = await this.database.beginTransaction();
                 // get datasets
                 let numIndexDocs = await this.harvest();
-                this.checkCancellation();
                 if (!this.isIncremental) {
                     // did the harvesting return results at all?
                     if (numIndexDocs == 0) {
@@ -144,7 +146,7 @@ export abstract class Importer<S extends ImporterSettings> {
                 transactionCommitted = true;
                 // TODO support concurrency of different catalogs
                 for (const catalogId of this.settings.catalogIds) {
-                    this.checkCancellation();
+                    this.database.checkCancellation();
                     const stageSummary = this.startStage(`catalog/${catalogId}`);
                     const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, stageSummary);
                     try {
