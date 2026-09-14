@@ -68,6 +68,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
         let requestDelegate = new RequestDelegate(requestConfig);
 
         while (true) {
+            this.checkCancellation();
             log.debug('Requesting next records');
             let response = await requestDelegate.doRequest();
             let harvestTime = new Date();
@@ -141,6 +142,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
          */
 
         for (let i = 0; i < records.length; i++) {
+            this.checkCancellation();
             this.summary.numDocs++;
 
             let uuid = DcatapdeMapper.select('./dct:identifier', records[i], true).textContent;
