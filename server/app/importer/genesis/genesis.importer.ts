@@ -83,7 +83,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         const allStatistics: GenesisListEntry[] = [];
         this.observer.next(this.summary.msgImport(`Fetching statistics`));
         await Promise.allSettled(
-            statisticCodes.map(selection => selectionLimit(async () => {
+            statisticCodes.map(async selection => {
                 log.debug(`Fetching statistics for selection "${selection}"`);
                 try {
                     const statistics = await this.fetchStatisticList(selection);
@@ -107,7 +107,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
 
         // Stage 2: process each statistic
         await Promise.allSettled(
-            allStatistics.map(stat => limit(() => this.processStatistic(stat, harvestTime)))
+            allStatistics.map(stat => this.processStatistic(stat, harvestTime))
         );
 
         await this.database.sendBulkData();

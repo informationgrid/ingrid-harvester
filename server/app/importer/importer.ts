@@ -195,7 +195,7 @@ export abstract class Importer<S extends ImporterSettings> {
                     observer.next(this.summary.msgCancelled());
                 }
                 else {
-                let message = err?.message ?? String(err);
+                    let message = err?.message ?? String(err);
                     if (message) {
                         if (message.includes('The user aborted a request.')) {
                             message = 'A request to the server timed out. If this occurs frequently, try reducing the "maxRecords" setting.';
