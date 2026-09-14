@@ -4,64 +4,68 @@ status: draft
 created: 2026-04-27
 ---
 
-# Tasks: Cancel Harvester Run
-
-- [ ] **TASK-001** Add `CancellationToken` interface and `CancelledError` class
+- [ ] **TASK-001** Add `HarvestRunCancelledError` and `harvesterRunCancelled` to `Importer`
   - Refs: FR-005, FR-006, NFR-001, NFR-004
-  - File: `server/app/importer/importer.ts` (or new `server/app/model/cancellation.ts`)
-  - Details: `export interface CancellationToken { cancelled: boolean }`. `export class CancelledError extends Error {}`. These are used to distinguish a user-initiated cancel from a regular harvest error in run-loop catch blocks.
-  - Acceptance: Both types exported and importable; `instanceof CancelledError` check works in catch blocks.
-
-- [ ] **TASK-002** Thread `CancellationToken` through `Importer.run()` and check at bucket boundaries
-  - Refs: FR-005, NFR-001
   - File: `server/app/importer/importer.ts`
-  - Details: Add optional `token?: CancellationToken` param to `run()`. At the top of each `for await (const bucket of ...)` iteration, check `if (token?.cancelled) throw new CancelledError()`. Catch `CancelledError` in a separate catch block (before the general error catch).
-  - Acceptance: Passing a pre-cancelled token stops the harvest at the first bucket boundary without committing; regular errors still reach the existing error catch block unaffected.
+  - Details: `export class HarvestRunCancelledError extends Error {}`. Add `protected harvesterRunCancelled: boolean = false` and `public cancel(): void { this.harvesterRunCancelled = true; }` to `Importer`.
+  - Acceptance: `instanceof HarvestRunCancelledError` works in catch blocks; `cancel()` sets the field.
+
+- [ ] **TASK-001b** Add `cancelled` field to `ImportLogMessage`, `msgCancelled()` to `Summary`, update `jobs.utils.ts`
+  - Refs: FR-007, FR-011
+  - Files: `server/app/model/import.result.ts`, `server/app/model/summary.ts`, `server/app/statistic/jobs.utils.ts`
+  - Details: Add `cancelled?: boolean` to `ImportLogMessage`. Add `msgCancelled(): ImportLogMessage` to `Summary` returning `{ stage: this.stage, complete: true, summary: this, cancelled: true }`. In `jobs.utils.ts` `deriveStatus()`, replace `logMessage.message === 'Import cancelled'` with `logMessage.cancelled === true`.
+  - Acceptance: `msgCancelled()` returns `cancelled: true`; `deriveStatus` returns `'cancelled'` for a message with `cancelled: true`, not for one with `message: 'Import cancelled'`.
+
+- [ ] **TASK-002** Stage-boundary checks + cancel cleanup in `Importer.exec()`
+  - Refs: FR-005, FR-006, FR-007, FR-008, FR-010, NFR-001, NFR-004
+  - File: `server/app/importer/importer.ts`
+  - Details: Declare `let transactionCommitted = false` and `const processedCatalogs: Catalog[] = []` before try. Set `transactionCommitted = true` after `commitTransaction()`. Push to `processedCatalogs` after each `catalog.process()`. Add `if (this.harvesterRunCancelled) throw new HarvestRunCancelledError()` after `harvest()` and before each catalog iteration. In catch: `if (err instanceof HarvestRunCancelledError)` → Phase 1 (`!transactionCommitted`): `startStage('rollbackSourceImport')` then `rollbackTransaction()`; Phase 2: `startStage('rollbackSourceImport')` then `rollbackSourceImport(sourceURL, transactionTimestamp)`, then for each CSW entry in `processedCatalogs`: `startStage('rollbackTargetCatalog')` then `rollbackTargetCatalog(this.settings.id, transactionTimestamp)`. Emit `msgComplete()` for each rollback stage. Call `observer.next(this.summary.msgCancelled())` as final message. Do **not** call `postHarvestingHandling()` on cancel path.
+  - Acceptance: Phase 1 cancel → rollback stage started, `rollbackTransaction` called, no `rollbackSourceImport`. Phase 2 → both rollback stages started and completed; `msgCancelled()` emitted last. Non-cancel error → existing path unchanged.
+
+- [ ] **TASK-002b** Stage-boundary checks + cancel cleanup in `CswImporter.exec()`
+  - Refs: FR-005, FR-006, FR-007, FR-008, FR-010, NFR-001, NFR-004
+  - File: `server/app/importer/csw/csw.importer.ts`
+  - Details: Same scaffolding as TASK-002. Add checks after `harvest()`, after `harvestServices()` (if `harvestingMode == 'separate'`), after `coupleDatasetsServices()`, before each catalog. Same rollback stage tracking and `msgCancelled()` pattern. `DiplanungCswImporter` inherits `exec()` and requires no changes.
+  - Acceptance: Same as TASK-002 applied to `CswImporter`; `DiplanungCswImporter` verified via inheritance.
 
 - [ ] **TASK-003** Implement `ImportSocketService.cancelImport(harvesterId, jobId)`
   - Refs: FR-003, FR-004, FR-007, FR-009
   - File: `server/app/sockets/import.socket.service.ts`
-  - Details: Add `private activeJobs: Map<number, { token: CancellationToken; jobId: string }> = new Map()`. Register token on harvest start; deregister on finish (success, error, or cancel). `cancelImport(harvesterId, jobId)` sets `token.cancelled = true` and returns `true` if the job is found, `false` otherwise. After the cancelled run finishes cleanup, emit `cancelled` status via Socket.IO (FR-009).
-  - Acceptance: Token is registered before the harvest loop starts and deregistered on all exit paths; `cancelImport` returns false for unknown or finished harvesters.
+  - Details: `private activeJobs: Map<number, { importer: Importer<any>; jobId: string }>`. Register importer on start; deregister on all exit paths. `cancelImport` calls `importer.cancel()`; returns `true` if found, `false` otherwise. Emit `cancelled` status via Socket.IO after cleanup.
+  - Acceptance: Registered before harvest starts; deregistered on success/error/cancel; returns `false` for unknown harvesters.
 
 - [ ] **TASK-004** Add `POST /api/import/:id/cancel` endpoint
   - Refs: FR-003, FR-004, NFR-002
-  - File: `server/app/controllers/ApiCtrl.ts` (follow pattern of existing `POST /import/:id`)
-  - Details: Auth guard: admin | editor. Read `id` from path, `jobId` from request body. Call `ImportSocketService.cancelImport(id, jobId)`. Return `200 { cancelled: true }` if found, `404 { error: 'no running harvest for id' }` otherwise.
-  - Acceptance: Authenticated POST with running job → 200 and token flipped. No running job → 404. Viewer/unauthenticated → 401/403.
+  - File: `server/app/controllers/ApiCtrl.ts` (follow `@Post('/import/:id')` pattern)
+  - Details: Auth: admin | editor. `id` from path, `jobId` from body. Call `ImportSocketService.cancelImport`. Return `200 { cancelled: true }` or `404 { error: 'no running harvest for id' }`.
+  - Acceptance: Running job → 200. No job → 404. Viewer/unauthenticated → 401/403.
 
-- [ ] **TASK-005** Add `deleteHarvestedDatasets(source, last_modified)` to PostgresUtils
+- [ ] **TASK-005** Add `rollbackSourceImport` to `DatabaseUtils` and `PostgresUtils`
   - Refs: FR-006
-  - File: `server/app/persistence/postgres.utils.ts`
-  - Details: New method executing `DELETE FROM record WHERE source = $1 AND last_modified = $2`. Return the count of deleted rows. Add the SQL string to the queries object following the pattern of `deleteNonFetchedRecords`.
-  - Acceptance: Deletes only records matching both `source` AND `last_modified`; returns correct count; records with different source or different timestamp are unaffected.
+  - Files: `server/app/persistence/database.utils.ts`, `server/app/persistence/postgres.utils.ts`
+  - Details: Abstract method in `DatabaseUtils`: `abstract rollbackSourceImport(source: string, transactionTimestamp: Date): Promise<number>`. Implement in `PostgresUtils`: `DELETE FROM record WHERE source = $1 AND last_modified = $2`. Add SQL to queries object following pattern of `deleteNonFetchedDatasets`.
+  - Acceptance: Deletes only records matching both fields; returns correct count.
 
-- [ ] **TASK-006** Implement `CswCatalog.deleteHarvestRun(transactionTimestamp)`
+- [ ] **TASK-006** Implement `CswCatalog.rollbackTargetCatalog`
   - Refs: FR-006, FR-008
   - File: `server/app/catalog/csw/csw.catalog.ts`
-  - Details: Add private `buildDeleteByTransactionTransaction(transactionTimestamp: Date): string` returning the CSW-T Delete XML from design.md (three-way `PropertyIsLike` filter). Add public `async deleteHarvestRun(transactionTimestamp: Date): Promise<void>` calling `buildTargetUrl → postTransaction → parseTransactionResponse`; log `totalDeleted` at INFO; catch errors and log at ERROR without rethrowing. Model on existing `deleteRecordsForDatasource()` (~line 136).
-  - Acceptance: Correct XML with all three filter clauses; `totalDeleted` logged at INFO on success; HTTP/ExceptionReport errors caught and logged at ERROR; no rethrow.
+  - Details: Private `buildRollbackTargetCatalogTransaction(datasourceId, transactionTimestamp)` returning CSW-T Delete XML from design.md (`source:${datasourceId}`, `catalog:${this.settings.id}`). Public `async rollbackTargetCatalog(datasourceId, transactionTimestamp)`: `buildTargetUrl → postTransaction → parseTransactionResponse`; log `totalDeleted` at INFO; catch and log at ERROR without rethrowing. Model on `deleteRecordsForDatasource()`.
+  - Acceptance: Correct XML; `totalDeleted` at INFO; errors logged at ERROR, not rethrown.
 
-- [ ] **TASK-007** Wire cancel cleanup into `Importer.run()` catch block
-  - Refs: FR-005, FR-006, FR-007, FR-008, NFR-004
-  - File: `server/app/importer/importer.ts`
-  - Details: In the `CancelledError` catch block: (a) if the DB transaction is still open (Phase 1), call `database.rollbackTransaction()`; (b) if the DB was already committed (Phase 2), call `database.deleteHarvestedDatasets(sourceURL, transactionTimestamp)` and then, for each catalog in the already-processed list that is a CSW catalog, call `catalog.deleteHarvestRun(transactionTimestamp)`. Log a summary at INFO (FR-008). Set job status to `cancelled` (FR-007). Regular catalog errors must reach the existing error catch, not this block (NFR-004).
-  - Acceptance: Phase 1 cancel → rollback called, no delete methods called. Phase 2 cancel → `deleteHarvestedDatasets` called with correct args, `deleteHarvestRun` called only for already-processed CSW catalogs. Non-cancel catalog error → existing behavior unchanged.
+- [ ] **TASK-007** Add cancel button to frontend active job/progress view
+  - Refs: FR-001, FR-002, FR-009, FR-010, NFR-005
+  - File: Angular component for active harvest progress view (identify from `client/src/`)
+  - Details: Button handler: `onCancel($event: Event) { $event.stopPropagation(); /* POST cancel */ }` — prevents accordion toggle (NFR-005). State machine: `idle → running → cancelling → cancelled`. In `cancelling` state: button label "Cancelling…", disabled; accordion stays unchanged. WebSocket messages with rollback stages (`rollbackSourceImport`, `rollbackTargetCatalog`) are shown in progress view. When `message.cancelled === true` arrives: transition to `cancelled` state. Add `cancelled?: boolean` to the client-side `ImportLogMessage` type if defined separately.
+  - Acceptance: Cancel click does not toggle accordion; button shows "Cancelling…" between click and WebSocket event; status updates to `cancelled` on `cancelled: true` message; rollback stages visible in progress view.
 
-- [ ] **TASK-008** Add cancel button to frontend active job/progress view
-  - Refs: FR-001, FR-002, FR-009
-  - File: Angular component for the active harvest progress view (identify from `client/src/`)
-  - Details: Show a "Cancel" button while job status is running. On click: disable the button immediately, then `POST /api/import/:id/cancel` with `{ jobId }`. When the WebSocket emits `cancelled` status, update the job status display accordingly.
-  - Acceptance: Button visible during an active run; disabled after click; hidden when status is idle/finished/cancelled/error; status label updates to `cancelled` when WebSocket event arrives.
-
-- [ ] **TASK-009** Write unit tests for `CswCatalog.deleteHarvestRun`
+- [ ] **TASK-008** Unit tests for `CswCatalog.rollbackTargetCatalog`
   - Refs: FR-006
   - File: `server/test/catalog/csw/`
-  - Details: Two sinon stubs on `postTransaction`: (1) success path — stub returns a valid TransactionResponse; assert `totalDeleted` logged at INFO. (2) error path — stub rejects or returns ExceptionReport; assert ERROR logged and method does not rethrow. Follow the pattern from the csw-delete-records-for-datasource feature tests.
-  - Acceptance: Both tests pass under `npm test`; no existing tests broken.
+  - Details: Stub `RequestDelegate.doRequest` (see conventions.md). (1) Success: valid TransactionResponse → assert `totalDeleted` at INFO. (2) Error: reject/ExceptionReport → assert ERROR logged, no rethrow. Follow csw-delete-records-for-datasource test pattern.
+  - Acceptance: Both pass under `npm test`; no regressions.
 
-- [ ] **TASK-010** Write unit tests for Phase 1 and Phase 2 cancellation paths in Importer
+- [ ] **TASK-009** Unit tests for Phase 1/2 cancellation paths in `Importer`
   - Refs: FR-005, FR-006, NFR-004
   - File: `server/test/importer/`
-  - Details: Three scenarios: (1) Phase 1 cancel — assert `rollbackTransaction` called, `commitTransaction` not called, `deleteHarvestedDatasets` not called. (2) Phase 2 cancel — assert `deleteHarvestedDatasets` called with correct `(sourceURL, transactionTimestamp)`, `deleteHarvestRun` called for each already-processed CSW catalog only. (3) Phase 2 catalog error (non-cancel) — assert none of the cancel cleanup methods (`deleteHarvestedDatasets`, `deleteHarvestRun`) are called; existing error handling path runs.
-  - Acceptance: All three scenarios pass; cancel vs. error paths are verifiably distinct.
+  - Details: (1) Phase 1 cancel: `rollbackTransaction` called; `rollbackSourceImport` not called; `msgCancelled()` emitted. (2) Phase 2 cancel: `rollbackSourceImport(sourceURL, transactionTimestamp)` called; `rollbackTargetCatalog` called for processed CSW catalogs only; rollback stages in `stageSummaries`. (3) Non-cancel catalog error: no cancel cleanup called; existing error path runs.
+  - Acceptance: All three pass; cancel vs. error paths verifiably distinct.

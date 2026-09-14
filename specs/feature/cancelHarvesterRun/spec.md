@@ -4,8 +4,6 @@ status: draft
 created: 2026-04-27
 ---
 
-# Spec: Cancel Harvester Run
-
 ## Overview
 
 Users must be able to cancel an in-progress datasource harvest from the frontend's active job/progress view. On cancellation the backend stops the harvest pipeline and removes all records written during the run from PostgreSQL and from any CSW catalog targets that were already written to, leaving the system in its pre-harvest state.
@@ -22,12 +20,16 @@ Users must be able to cancel an in-progress datasource harvest from the frontend
 - **FR-008**: Cancellation outcome is logged at INFO level, including how many DB records were removed and (for CSW) how many CSW records were deleted per catalog.
 - **FR-009**: The frontend reflects the `cancelled` job status once received via WebSocket.
 
+- **FR-010**: While rollback is in progress the frontend shows a `cancelling` status. The backend emits rollback stages (`rollbackSourceImport`, `rollbackTargetCatalog`) as named stages in the WebSocket stream so the frontend can display them.
+- **FR-011**: `ImportLogMessage` carries a `cancelled: boolean` field. `jobs.utils.ts` derives `'cancelled'` status from this field (not from a message string).
+
 ## Non-Functional Requirements
 
-- **NFR-001**: The harvest loop checks for cancellation at bucket boundaries (not mid-bucket) to avoid partial writes.
+- **NFR-001**: Cancellation takes effect at the next stage boundary; within a running stage (e.g. a batch of HTTP fetches) the stage runs to completion before cancel is processed.
 - **NFR-002**: The cancel endpoint requires at minimum `editor` role (consistent with `POST /api/import/:id`).
 - **NFR-003**: Only running jobs can be cancelled; scheduled/queued jobs not yet started are out of scope.
 - **NFR-004**: Catalog errors in non-cancelled harvests must not trigger the cancellation cleanup path — the two error paths are strictly separate.
+- **NFR-005**: The cancel button click must not toggle the accordion that contains it (`event.stopPropagation()`).
 
 ## Out of Scope
 
