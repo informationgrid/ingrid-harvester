@@ -48,6 +48,9 @@ export class DatasourceService {
   private _importLogs = signal<Record<number, ImportLogMessage>>(undefined);
   importLogs = this._importLogs.asReadonly();
 
+  private _batchProgress = signal<{ total: number; finished: number } | null>(null);
+  batchProgress = this._batchProgress.asReadonly();
+
   constructor(
     private api: DatasourceApi,
     private socketService: SocketService,
@@ -56,6 +59,7 @@ export class DatasourceService {
     this.fetchDatasources();
     this.fetchImportLogs();
     this.listenToImportLogChangesFromServer();
+    this.socketService.batchProgress$.subscribe(data => this._batchProgress.set(data));
     this.listenToConnectionChangesFromServer();
   }
 
