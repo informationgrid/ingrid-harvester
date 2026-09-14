@@ -29,7 +29,7 @@ flowchart TD
 
 **`commitTransaction()` remains before the catalog loop** (existing position). This preserves the invariant that PostgreSQL records survive Phase 2 catalog errors. Cancellation is handled by deliberate cleanup code, not transaction rollback.
 
-**Stage-level cancellation**: `harvesterRunCancelled` is checked at stage boundaries (after `harvest()`, after `harvestServices()`, after `coupleDatasetsServices()`, before/between catalog iterations) — not inside parallel batch loops. This satisfies NFR-001 and avoids modifying every importer's internal loops.
+**Delegate-level cancellation**: `checkCancellation()` is called at the top of `handleHarvest()`. After each `Promise.allSettled()` call in `harvest()` and `harvestServices()`, the results are checked for a `HarvestRunCancelledError` rejection; the first found is rethrown so it reaches `exec()`'s catch block directly. In-flight HTTP requests complete; queued delegates skip immediately. Stage-boundary checks in `exec()` remain as a fallback for non-CSW importers (which do not use `handleHarvest()`).
 
 **Two exec() files only**: `Importer.exec()` (base) covers all importers that call `super.exec()`; `CswImporter.exec()` is modified separately because it replaces exec() entirely. Level-3 importers (e.g. `DiplanungCswImporter`) inherit from their Level-2 parent and require no changes. See `specs/context/importers.md`.
 
@@ -95,9 +95,13 @@ protected harvesterRunCancelled: boolean = false;
 public cancel(): void {
     this.harvesterRunCancelled = true;
 }
+
+protected checkCancellation(): void {
+    if (this.harvesterRunCancelled) throw new HarvestRunCancelledError();
+}
 ```
 
-Stage-boundary check: `if (this.harvesterRunCancelled) throw new HarvestRunCancelledError();`
+Stage-boundary check: `this.checkCancellation();`
 
 Scaffolding declared before try block:
 ```typescript
@@ -188,4 +192,4 @@ The button element uses `(click)="onCancel($event)"` with `$event.stopPropagatio
 | Three-way CSW filter in `rollbackTargetCatalog` (transaction + source + catalog) | Maximally safe; avoids collateral deletion across runs, datasources, and catalog instances | source + catalog only — would delete records from previous successful runs |
 | Track already-processed catalogs during run | Call `rollbackTargetCatalog` only for catalogs already written to | Delete from all configured catalogs — over-deletes when cancel arrives before catalog loop starts |
 | `HarvestRunCancelledError` separate from regular errors | Keeps cancel cleanup path strictly isolated from existing error handling (NFR-004); `instanceof` check in single catch block | Reusing existing error catch block — risks triggering cancel cleanup on unrelated catalog failures |
-| Stage-level cancellation checks (not mid-loop) | Avoids modifying all importer harvest loops; satisfies NFR-001 (not mid-bucket) | Per-batch check inside harvest/service loops — more responsive but requires touching all importers |
+| Duck-type check `'rollbackTargetCatalog' in catalog` instead of `instanceof CswCatalog` | Avoids importing `CswCatalog` in `importer.ts` / `csw.importer.ts`, which would create a circular module dependency (`importer` → `csw.catalog` → `catalog.factory` → `postgres.utils` → `profile.factory.loader` → importer) | `instanceof CswCatalog` — introduces circular ESM import, causes RangeError at module load |

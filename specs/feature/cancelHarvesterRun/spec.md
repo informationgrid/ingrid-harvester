@@ -25,7 +25,7 @@ Users must be able to cancel an in-progress datasource harvest from the frontend
 
 ## Non-Functional Requirements
 
-- **NFR-001**: Cancellation takes effect at the next stage boundary; within a running stage (e.g. a batch of HTTP fetches) the stage runs to completion before cancel is processed.
+- **NFR-001**: ~~Cancellation takes effect at the next stage boundary; within a running stage (e.g. a batch of HTTP fetches) the stage runs to completion before cancel is processed.~~ Cancellation takes effect at the next delegate boundary within `handleHarvest()`: in-flight HTTP requests complete, but pending delegates skip immediately and the `HarvestRunCancelledError` propagates out of `harvest()` / `harvestServices()` as soon as any delegate detects it.
 - **NFR-002**: The cancel endpoint requires at minimum `editor` role (consistent with `POST /api/import/:id`).
 - **NFR-003**: Only running jobs can be cancelled; scheduled/queued jobs not yet started are out of scope.
 - **NFR-004**: Catalog errors in non-cancelled harvests must not trigger the cancellation cleanup path — the two error paths are strictly separate.
