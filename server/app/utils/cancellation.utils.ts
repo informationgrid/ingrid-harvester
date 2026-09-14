@@ -41,6 +41,10 @@ export const cancellationSignalStorage = new AsyncLocalStorage<AbortSignal>();
 export class CancellationScope {
     private readonly _controller = new AbortController();
 
+    get signal(): AbortSignal {
+        return this._controller.signal;
+    }
+
     abort(): void {
         this._controller.abort();
     }

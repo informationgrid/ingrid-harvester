@@ -21,26 +21,27 @@
  * ==================================================
  */
 
+import type { CatalogSettings } from '@shared/catalog.js';
 import type { GeneralSettings } from '@shared/general-config.settings.js';
 import log4js from 'log4js';
+import PQueue from 'p-queue';
 import type { Observer } from 'rxjs';
 import { Observable } from 'rxjs';
 import type { Catalog, CatalogColumnType, CatalogOperation } from '../catalog/catalog.factory.js';
-import type { CatalogSettings } from '@shared/catalog.js';
-import type { ImporterSettings } from './importer.settings.js';
+import type { Entity } from '../model/entity.js';
 import type { ImportLogMessage } from '../model/import.result.js';
 import { Summary } from '../model/summary.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
 import type { BulkResponse, DatabaseUtils } from '../persistence/database.utils.js';
-import type { Entity } from '../model/entity.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from '../services/config/ConfigService.js';
+import { CancellationScope, HarvestRunCancelledError, cancellationSignalStorage } from '../utils/cancellation.utils.js';
 import { FilterUtils } from '../utils/filter.utils.js';
 import * as MiscUtils from '../utils/misc.utils.js';
 import { MailServer } from '../utils/nodemailer.utils.js';
-import { CancellationScope, HarvestRunCancelledError } from '../utils/cancellation.utils.js';
+import type { ImporterSettings } from './importer.settings.js';
 
 const log = log4js.getLogger(import.meta.filename)
 
@@ -60,7 +61,12 @@ export abstract class Importer<S extends ImporterSettings> {
     protected isIncremental: boolean = false;
     protected observer: Observer<ImportLogMessage>;
     protected harvesterRunCancelled: boolean = false;
-    private readonly _cancellationScope = new CancellationScope();
+    protected harvesterRunCancelledByUser: boolean = false;
+    protected readonly cancellationScope = new CancellationScope();
+
+    protected get cancellationSignal(): AbortSignal | undefined {
+        return cancellationSignalStorage.getStore() ?? this.cancellationScope.signal;
+    }
 
     readonly database: DatabaseUtils;
     readonly elastic: ElasticsearchUtils;
@@ -82,18 +88,51 @@ export abstract class Importer<S extends ImporterSettings> {
         }
     }
 
-    public cancel(): void {
+    public cancel(isUserCancelled: boolean = true): void {
         this.harvesterRunCancelled = true;
-        this._cancellationScope.abort();
+        if (isUserCancelled) {
+            this.harvesterRunCancelledByUser = true;
+        }
+        this.cancellationScope.abort();
     }
 
     protected checkCancellation(): void {
-        if (this.harvesterRunCancelled) throw new HarvestRunCancelledError();
+        if (this.harvesterRunCancelled) {
+            throw new HarvestRunCancelledError();
+        }
     }
 
-    protected addEntityToBulk(entity: Entity): Promise<BulkResponse> {
+    protected async addEntityToBulk(entity: Entity): Promise<BulkResponse> {
         this.checkCancellation();
         return this.database.addEntityToBulk(entity);
+    }
+
+    protected async runInParallel<T, R>(items: T[], task: (item: T, index: number) => Promise<R>, concurrency = this.settings.maxConcurrent): Promise<R[]> {
+        const queue = new PQueue({ concurrency });
+        const signal = this.cancellationSignal;
+        let firstError: any;
+        try {
+            const tasks = items.map((item, index) =>
+                queue.add(async () => {
+                    this.checkCancellation();
+                    try {
+                        return await task(item, index);
+                    }
+                    catch (e) {
+                        firstError ??= e;
+                        this.cancel(false);
+                        queue.clear();
+                        throw e;
+                    }
+                }, { signal })
+            );
+            return await Promise.all(tasks);
+        }
+        catch (err) {
+            this.cancel(false);
+            queue.clear();
+            throw firstError ?? err;
+        }
     }
 
     run(isIncremental: boolean = false): Observable<ImportLogMessage> {
@@ -102,7 +141,7 @@ export abstract class Importer<S extends ImporterSettings> {
         return new Observable<ImportLogMessage>(observer => {
             this.observer = observer;
             this.summary.startTime = new Date();
-            this._cancellationScope.run(() => {
+            this.cancellationScope.run(() => {
                 this.exec(observer);
             });
         });
@@ -146,7 +185,10 @@ export abstract class Importer<S extends ImporterSettings> {
                     throw new Error();
                 }
 
-                await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
+                this.checkCancellation();
+                if (!this.isIncremental) {
+                    await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
+                }
                 await this.database.commitTransaction();
                 transactionCommitted = true;
                 // TODO support concurrency of different catalogs
@@ -174,14 +216,14 @@ export abstract class Importer<S extends ImporterSettings> {
                 observer.next(this.summary.msgComplete());
             }
             catch (err) {
-                if (err instanceof HarvestRunCancelledError) {
+                this.cancel(false);
+                if (this.harvesterRunCancelledByUser) {
+                    const rollbackDbStage = this.startStage('rollbackSourceImport');
                     if (!transactionCommitted) {
-                        const rollbackDbStage = this.startStage('rollbackSourceImport');
                         await this.database.rollbackTransaction();
                         observer.next(rollbackDbStage.msgImport('Transaction rolled back'));
                     }
                     else {
-                        const rollbackDbStage = this.startStage('rollbackSourceImport');
                         const count = await this.database.rollbackSourceImport(this.settings.sourceURL, transactionTimestamp);
                         observer.next(rollbackDbStage.msgImport(`Rolled back ${count} records`));
                         for (const catalog of processedCatalogs) {
@@ -204,6 +246,9 @@ export abstract class Importer<S extends ImporterSettings> {
                     }
                     await this.database.rollbackTransaction();
                     let msg = this.summary.errors.find(e => e.type === 'app' || e.type === 'database')?.error;
+                    if (this.generalConfig.mail.enabled) {
+                        MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
+                    }
                     log.error(err);
                     observer.next(this.summary.msgComplete(msg));
                 }
