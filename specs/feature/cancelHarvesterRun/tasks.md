@@ -70,6 +70,30 @@ created: 2026-04-27
   - Details: Add `this.checkCancellation()` as first line of `handleHarvest()`. After each `Promise.allSettled(delegates.map(...handleHarvest...))` in `harvest()` and `harvestServices()`, check for a `HarvestRunCancelledError` rejection and rethrow it so `exec()`'s catch block receives it.
   - Acceptance: Setting cancel mid-batch causes pending delegates to skip immediately; first cancelled rejection propagates out of `harvest()` into `exec()` cancel path.
 
+- [x] **TASK-011** Move run-status derivation to backend; simplify frontend `runStatus`
+  - Refs: FR-007, FR-009, FR-011
+  - Files: `shared/job.ts`, `server/app/model/import.result.ts`, `server/app/model/summary.ts`, `server/app/importer/importer.ts`, `client/src/app/datasources/datasource-entry/status-indicator/status-indicator.component.ts`
+  - Details: Add `'importing'` to `JobStatus`. Set `status: 'importing'` in `Summary.msgImport()` and `msgRunning()`. Set `status: 'cancelled'` in `Summary.msgCancelled()`. Derive status inside `Summary.msgComplete()` directly (checking `this.errors`, `this.numErrors`, `this.skippedDocs`) so all call sites stay as `observer.next(this.summary.msgComplete())`. In `Importer.exec()` error catch path, pass the error message to `msgComplete(msg)` which derives `'error'`. Simplify `runStatus` computed in `StatusIndicatorComponent` to `log?.status as Status ?? null`.
+  - Acceptance: `runStatus` has no if-checks beyond the null guard; all states (`importing`, `cancelled`, `error`, `partial`, `success`) are set exclusively by the backend; `msgComplete()` call sites need no external `deriveStatus` call.
+
+- [x] **TASK-014** Add cancellation checks to `CkanImporter.harvest()`
+  - Refs: FR-005, NFR-001
+  - File: `server/app/importer/ckan/ckan.importer.ts`
+  - Details: Add `this.checkCancellation()` at the top of the `while` loop (before each page fetch) and at the top of the `for` loop (before each document). Sequential execution means the throw propagates directly through `super.exec()`'s catch block — no `Promise.allSettled` rethrow needed.
+  - Acceptance: Cancel mid-harvest stops the loop at the next page or document boundary.
+
+- [x] **TASK-013** Add cancellation checks to `GenesisImporter.harvest()`
+  - Refs: FR-005, NFR-001
+  - File: `server/app/importer/genesis/genesis.importer.ts`
+  - Details: Add `this.checkCancellation()` as first line of `processStatistic()`. `Promise.allSettled` swallows the rejection; `exec()`'s own `checkCancellation()` after `harvest()` returns picks it up and routes to the cancel path.
+  - Acceptance: Setting cancel mid-batch causes pending statistics to skip; first cancelled rejection propagates out of `harvest()` into `exec()` cancel path.
+
+- [x] **TASK-012** Remove `deriveStatus` from `JobsUtils`; use `logMessage.status` in `saveJob`
+  - Refs: FR-007, FR-011
+  - File: `server/app/statistic/jobs.utils.ts`
+  - Details: In `saveJob`, replace `JobsUtils.deriveStatus(logMessage, allStages)` with `logMessage.status`. Delete `deriveStatus` static method. Remove unused `JobStatus` import.
+  - Acceptance: `deriveStatus` no longer exists; `saveJob` stores whatever status the message already carries; no behaviour change for normal runs.
+
 - [x] **TASK-009** Unit tests for Phase 1/2 cancellation paths in `Importer`
   - Refs: FR-005, FR-006, NFR-004
   - File: `server/test/importer/importer.spec.ts`

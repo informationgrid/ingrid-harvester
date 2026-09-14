@@ -147,6 +147,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
     // -------------------------------------------------------------------------
 
     private async processStatistic(entry: GenesisListEntry, harvestTime: Date): Promise<void> {
+        this.checkCancellation();
         this.summary.numDocs++;
         try {
             await this.processStatisticData(entry, harvestTime);

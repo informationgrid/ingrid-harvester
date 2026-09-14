@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import type { TypedError } from '@shared/job.js';
+import type { JobStatus, TypedError } from '@shared/job.js';
 import type { ImporterSettings } from '../importer/importer.settings.js';
 import type { ImportLogMessage } from './import.result.js';
 
@@ -131,10 +131,11 @@ export class Summary {
     additionalSummary() {
     }
 
-    msgImport(message: string): ImportLogMessage {
+    msgImport(message?: string): ImportLogMessage {
         return {
             stage: this.stage,
             complete: false,
+            status: 'importing',
             message: message
         }
     }
@@ -143,6 +144,7 @@ export class Summary {
         return {
             stage: this.stage,
             complete: false,
+            status: 'importing',
             progress: {
                 current: current,
                 total: total
@@ -152,9 +154,13 @@ export class Summary {
     }
 
     msgComplete(message?: string): ImportLogMessage {
+        let status: JobStatus = 'success';
+        if ((this.errors?.length ?? 0) > 0 || (this.numErrors ?? 0) > 0) status = 'error';
+        else if ((this.skippedDocs?.length ?? 0) > 0) status = 'partial';
         return {
             stage: this.stage,
             complete: true,
+            status,
             summary: this,
             message: message ?? undefined
         };
@@ -164,6 +170,7 @@ export class Summary {
         return {
             stage: this.stage,
             complete: true,
+            status: 'cancelled',
             summary: this,
             cancelled: true
         };

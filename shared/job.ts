@@ -26,7 +26,7 @@ export type TypedError = {
     error: string
 };
 
-export type JobStatus = 'success' | 'error' | 'cancelled' | 'partial';
+export type JobStatus = 'success' | 'error' | 'cancelled' | 'partial' | 'importing';
 
 export type JobStage = {
     name: string;
