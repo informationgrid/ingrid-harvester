@@ -21,13 +21,13 @@
  * ==================================================
  */
 
-import { Component, computed, input, output, ViewChild } from "@angular/core";
+import { Component, computed, effect, input, output, signal, ViewChild } from "@angular/core";
 import { Datasource } from "@shared/datasource";
 import { ImportLogMessage } from "../../../../../server/app/model/import.result";
 import { TranslocoDirective } from "@ngneat/transloco";
 import { StatusIndicatorComponent } from "./status-indicator/status-indicator.component";
 import { MatIcon } from "@angular/material/icon";
-import { MatIconButton } from "@angular/material/button";
+import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatTooltip } from "@angular/material/tooltip";
 import { MatMenu, MatMenuItem, MatMenuTrigger } from "@angular/material/menu";
 import { ProgressIndicatorComponent } from "./progress-indicator/progress-indicator.component";
@@ -43,6 +43,7 @@ import { DatasourceService } from "../services/datasource.service";
     TranslocoDirective,
     StatusIndicatorComponent,
     MatIcon,
+    MatButton,
     MatIconButton,
     MatTooltip,
     MatMenu,
@@ -68,6 +69,9 @@ export class DatasourceEntryComponent {
   onDuplicate = output<void>();
   onSchedule = output<void>();
   onOpenJobLogs = output<void>();
+  onCancel = output<void>();
+
+  cancelling = signal(false);
 
   isIncrementalSupported = computed(() => {
     return (
@@ -76,7 +80,17 @@ export class DatasourceEntryComponent {
     );
   });
 
-  constructor(private datasourceService: DatasourceService) {}
+  constructor(private datasourceService: DatasourceService) {
+    effect(() => {
+      if (this.importLog()?.complete) this.cancelling.set(false);
+    });
+  }
+
+  cancelImport(evt: Event): void {
+    evt.stopPropagation();
+    this.cancelling.set(true);
+    this.onCancel.emit();
+  }
 
   openActionMenu(evt) {
     evt.stopPropagation();

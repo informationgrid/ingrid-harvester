@@ -95,7 +95,7 @@ export class JobsUtils {
     }
 
     static deriveStatus(logMessage: ImportLogMessage, allStages: Summary[]): JobStatus {
-        if (logMessage.message === 'Import cancelled') return 'cancelled';
+        if (logMessage.cancelled === true) return 'cancelled';
         if (!logMessage.summary) return 'success';
         if (logMessage.message) return 'error';
         if (allStages.some(s => (s?.errors?.length ?? 0) > 0 || (s?.numErrors ?? 0) > 0)) return 'error';

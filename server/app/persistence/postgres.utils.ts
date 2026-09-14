@@ -162,6 +162,11 @@ export class PostgresUtils extends DatabaseUtils {
         await this.transactionClient.query(this.queries.deleteNonFetchedRecords, [source, last_modified]);
     }
 
+    async rollbackSourceImport(source: string, transactionTimestamp: Date): Promise<number> {
+        const result = await PostgresUtils.pool.query(this.queries.rollbackSourceImport, [source, transactionTimestamp]);
+        return result.rowCount ?? 0;
+    }
+
     async deleteCatalogDatasets(catalogId: number): Promise<void> {
         await this.transactionClient.query(
             'DELETE FROM record WHERE catalog_ids = ARRAY[$1]',

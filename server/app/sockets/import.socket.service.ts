@@ -28,6 +28,7 @@ import log4js from 'log4js';
 import pLimit from 'p-limit';
 import * as SocketIO from 'socket.io';
 import type { ImportLogMessage } from '../model/import.result.js';
+import type { Importer } from '../importer/importer.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import { SummaryService } from '../services/config/SummaryService.js';
@@ -48,6 +49,15 @@ export class ImportSocketService {
     // throttling of messages to frontend to make UI more responsive
     private lastEmitTimes = new Map<number, number>();
     private static readonly THROTTLE_MS = 500;
+
+    private activeJobs = new Map<number, { importer: Importer<any>; jobId: string }>();
+
+    cancelImport(harvesterId: number, jobId: string): boolean {
+        const entry = this.activeJobs.get(harvesterId);
+        if (!entry || entry.jobId !== jobId) return false;
+        entry.importer.cancel();
+        return true;
+    }
 
     constructor(private summaryService: SummaryService) {
     }
@@ -83,6 +93,7 @@ export class ImportSocketService {
                     let mode = isIncremental ? 'incr' : 'full';
                     this.log.info(`>> Running importer: [${configHarvester.type}] ${configHarvester.description}`);
                     const jobId = crypto.randomUUID();
+                    this.activeJobs.set(id, { importer, jobId });
                     harvestLogContext.run({ harvesterId: id, jobId }, () => {
                         importer.run(isIncremental).subscribe({
                             next: response => {
@@ -141,16 +152,21 @@ export class ImportSocketService {
                                 }
                             },
                             error: error => {
+                                this.activeJobs.delete(id);
                                 this.log.error('There was an error: ', error);
                                 if (configGeneral.mail.enabled) {
                                     MailServer.getInstance().send(`Importer [${configHarvester.type}] ${configData.description} failed`, error.toString());
                                 }
                                 resolve();
                             },
-                            complete: () => resolve()
+                            complete: () => {
+                                this.activeJobs.delete(id);
+                                resolve();
+                            }
                         });
                     });
                 }).catch(e => {
+                    this.activeJobs.delete(id);
                     this.log.error(`An error occured while harvesting (id=${id}): `, e);
                     resolve();
                 });

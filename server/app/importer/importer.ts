@@ -25,6 +25,8 @@ import type { GeneralSettings } from '@shared/general-config.settings.js';
 import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import { Observable } from 'rxjs';
+import type { Catalog } from '../catalog/catalog.factory.js';
+import { CswCatalog } from '../catalog/csw/csw.catalog.js';
 import type { ImporterSettings } from './importer.settings.js';
 import type { ImportLogMessage } from '../model/import.result.js';
 import { Summary } from '../model/summary.js';
@@ -41,6 +43,8 @@ import { JobsUtils } from '../statistic/jobs.utils.js';
 
 const log = log4js.getLogger(import.meta.filename)
 
+export class HarvestRunCancelledError extends Error {}
+
 /**
  * Base class for all importers.
  *
@@ -56,6 +60,7 @@ export abstract class Importer<S extends ImporterSettings> {
     protected generalConfig: GeneralSettings;
     protected isIncremental: boolean = false;
     protected observer: Observer<ImportLogMessage>;
+    protected harvesterRunCancelled: boolean = false;
 
     readonly database: DatabaseUtils;
     readonly elastic: ElasticsearchUtils;
@@ -75,6 +80,10 @@ export abstract class Importer<S extends ImporterSettings> {
         if (this.generalConfig.allowAllUnauthorizedSSL) {
             this.settings.rejectUnauthorizedSSL = false;
         }
+    }
+
+    public cancel(): void {
+        this.harvesterRunCancelled = true;
     }
 
     run(isIncremental: boolean = false): Observable<ImportLogMessage> {
@@ -97,10 +106,14 @@ export abstract class Importer<S extends ImporterSettings> {
             observer.next(this.summary.msgComplete('Dry run ... no indexing of data'));
         }
         else {
+            let transactionTimestamp: Date;
+            let transactionCommitted = false;
+            const processedCatalogs: Catalog[] = [];
             try {
-                let transactionTimestamp = await this.database.beginTransaction();
+                transactionTimestamp = await this.database.beginTransaction();
                 // get datasets
                 let numIndexDocs = await this.harvest();
+                if (this.harvesterRunCancelled) throw new HarvestRunCancelledError();
                 if (!this.isIncremental) {
                     // did the harvesting return results at all?
                     if (numIndexDocs == 0) {
@@ -124,8 +137,10 @@ export abstract class Importer<S extends ImporterSettings> {
 
                 await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
                 await this.database.commitTransaction();
+                transactionCommitted = true;
                 // TODO support concurrency of different catalogs
                 for (const catalogId of this.settings.catalogIds) {
+                    if (this.harvesterRunCancelled) throw new HarvestRunCancelledError();
                     const stageSummary = this.startStage(`catalog/${catalogId}`);
                     const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, stageSummary);
                     try {
@@ -137,6 +152,7 @@ export abstract class Importer<S extends ImporterSettings> {
                         // for that, we need to consider how to handle "deleted", i.e. non-fetched, datasets
 
                         await catalog.process(this.settings.sourceURL, this.settings, observer);
+                        processedCatalogs.push(catalog);
                     }
                     catch (e) {
                         log.error(`Error while importing into catalog ${catalog.settings.name} (id=${catalogId}):`, e);
@@ -149,17 +165,39 @@ export abstract class Importer<S extends ImporterSettings> {
                 observer.next(completeMsg);
             }
             catch (err) {
-                let message = err?.message ?? String(err);
-                if (message) {
-                    if (message.includes('The user aborted a request.')) {
-                        message = 'A request to the server timed out. If this occurs frequently, try reducing the "maxRecords" setting.';
+                if (err instanceof HarvestRunCancelledError) {
+                    if (!transactionCommitted) {
+                        const rollbackDbStage = this.startStage('rollbackSourceImport');
+                        await this.database.rollbackTransaction();
+                        observer.next(rollbackDbStage.msgComplete('Transaction rolled back'));
                     }
-                    this.summary.errors.push({ type: 'app', error: message });
+                    else {
+                        const rollbackDbStage = this.startStage('rollbackSourceImport');
+                        const count = await this.database.rollbackSourceImport(this.settings.sourceURL, transactionTimestamp);
+                        observer.next(rollbackDbStage.msgComplete(`Rolled back ${count} records`));
+                        for (const catalog of processedCatalogs) {
+                            if (catalog instanceof CswCatalog) {
+                                const rollbackCatalogStage = this.startStage('rollbackTargetCatalog');
+                                await catalog.rollbackTargetCatalog(this.settings.id, transactionTimestamp);
+                                observer.next(rollbackCatalogStage.msgComplete());
+                            }
+                        }
+                    }
+                    observer.next(this.summary.msgCancelled());
                 }
-                await this.database.rollbackTransaction();
-                let msg = this.summary.errors.find(e => e.type === 'app' || e.type === 'database')?.error;
-                log.error(err);
-                observer.next(this.summary.msgComplete(msg));
+                else {
+                let message = err?.message ?? String(err);
+                    if (message) {
+                        if (message.includes('The user aborted a request.')) {
+                            message = 'A request to the server timed out. If this occurs frequently, try reducing the "maxRecords" setting.';
+                        }
+                        this.summary.errors.push({ type: 'app', error: message });
+                    }
+                    await this.database.rollbackTransaction();
+                    let msg = this.summary.errors.find(e => e.type === 'app' || e.type === 'database')?.error;
+                    log.error(err);
+                    observer.next(this.summary.msgComplete(msg));
+                }
             }
         }
         observer.complete();

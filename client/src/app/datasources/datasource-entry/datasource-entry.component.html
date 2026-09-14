@@ -37,6 +37,17 @@
 
   <ng-container header-end>
     <div class="flex-row self-center">
+      @if (importLog() && !importLog().complete && canEdit()) {
+        <button
+          matButton
+          color="warn"
+          [disabled]="cancelling()"
+          (click)="cancelImport($event)"
+          data-test="cancel"
+        >
+          {{ cancelling() ? 'Cancelling…' : 'Cancel' }}
+        </button>
+      }
       <button
         #actionMenuBtn="matMenuTrigger"
         matIconButton
