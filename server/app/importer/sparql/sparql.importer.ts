@@ -165,7 +165,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
                     original_document: mapper.getHarvestedData()
                 };
                 promises.push(
-                    this.database.addEntityToBulk(entity)
+                    this.addEntityToBulk(entity)
                         .then(response => {
                             if (!response.queued) {
                                 // numIndexDocs += ElasticsearchUtils.maxBulkSize;

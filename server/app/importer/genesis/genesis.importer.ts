@@ -83,7 +83,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
         const allStatistics: GenesisListEntry[] = [];
         this.observer.next(this.summary.msgImport(`Fetching statistics`));
         await Promise.allSettled(
-            statisticCodes.map(selection => this.database.limitedRun(selectionLimit, async () => {
+            statisticCodes.map(selection => selectionLimit(async () => {
                 log.debug(`Fetching statistics for selection "${selection}"`);
                 try {
                     const statistics = await this.fetchStatisticList(selection);
@@ -107,7 +107,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
 
         // Stage 2: process each statistic
         await Promise.allSettled(
-            allStatistics.map(stat => this.database.limitedRun(limit, () => this.processStatistic(stat, harvestTime)))
+            allStatistics.map(stat => limit(() => this.processStatistic(stat, harvestTime)))
         );
 
         await this.database.sendBulkData();
@@ -239,7 +239,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
                 dataset_dcatapde: dcatapdeDoc,
                 original_document: mapper.getHarvestedData(),
             };
-            await this.database.addEntityToBulk(entity)
+            await this.addEntityToBulk(entity)
                 .catch(err => {
                     log.error(`Error saving entity ${entry.Code}`, err);
                     this.summary.errors.push({ type: 'app', error: `DB error for ${entry.Code}: ${err.message}` });
