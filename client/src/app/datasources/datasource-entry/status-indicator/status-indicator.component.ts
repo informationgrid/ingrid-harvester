@@ -74,6 +74,34 @@ export class StatusIndicatorComponent {
     if (!summary) return 0;
     return summary.numErrors + (summary.errors?.length ?? 0) + summary.warnings.length;
   });
+  cancelled = computed(() => this.importLog().cancelled);
 
   constructor() {}
+
+  getStatuses() {
+    let statuses: Status[] = [];
+
+    if (this.importLog() !== undefined) {
+      if (this.importLog().complete == false) {
+        statuses.push("importing");
+      } else if (this.importLog().summary) {
+        if (this.cancelled()) {
+          statuses.push("cancelled");
+        } else if (this.errorNum() > 0) {
+          statuses.push("error");
+        } else {
+          statuses.push("success");
+        }
+      }
+    }
+
+    const cron = this.datasource().cron;
+    if (this.datasource().disable) {
+      statuses = ["disable"];
+    } else if (cron?.full?.active || cron?.incr?.active) {
+      statuses.push("cron");
+    }
+
+    return statuses;
+  }
 }

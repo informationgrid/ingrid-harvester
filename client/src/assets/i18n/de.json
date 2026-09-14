@@ -58,6 +58,7 @@
     "importStarted": "Import gestartet.",
     "allImportStarted": "Import aller Datenquellen gestartet.",
     "importing": "Import läuft...",
+    "cancelling": "Abbruch...",
     "lastImport": "Letzte Ausführung",
     "durationImport": "Dauer der Ausführung",
     "nextImport": "Nächste Ausführung",
@@ -101,7 +102,7 @@
         "tooltip": "Import abgeschlossen, aber einige Datensätze wurden übersprungen"
       },
       "cancelled": {
-        "icon": "cancel",
+        "icon": "close",
         "title": "Abgebrochen",
         "tooltip": "Import wurde abgebrochen"
       }

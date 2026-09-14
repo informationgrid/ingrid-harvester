@@ -45,7 +45,7 @@
           (click)="cancelImport($event)"
           data-test="cancel"
         >
-          {{ cancelling() ? 'Cancelling…' : 'Cancel' }}
+          {{ cancelling() ? t('datasources.cancelling') : t('common.cancel') }}
         </button>
       }
       <button
