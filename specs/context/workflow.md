@@ -70,6 +70,8 @@ Frontmatter: + `spec: ./spec.md`
 
 Sections: Architecture (Mermaid diagram) · Data Model · API / Interface · Key Decisions (decision | rationale | alternatives).
 
+> **Diagrams:** Use Mermaid only. ASCII art diagrams are not allowed anywhere in `specs/`.
+
 ### `tasks.md`
 
 Frontmatter: + `spec: ./spec.md`, `design: ./design.md`
