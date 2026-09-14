@@ -44,7 +44,10 @@ export class ImportSocketService {
 
     log = log4js.getLogger();
 
-    private limit = pLimit(ConfigService.getThreadpoolSize());
+    readonly threadpoolSize = ConfigService.getThreadpoolSize();
+    private limit = pLimit(this.threadpoolSize);
+    private activeImportIds = new Set<number>();
+    private cancelledJobs = new Set<string>();
 
     // throttling of messages to frontend to make UI more responsive
     private lastEmitTimes = new Map<number, number>();
@@ -54,17 +57,30 @@ export class ImportSocketService {
 
     cancelImport(harvesterId: number, jobId: string): boolean {
         const entry = this.activeJobs.get(harvesterId);
-        if (!entry || entry.jobId !== jobId) return false;
-        entry.importer.cancel();
-        const existing = this.summaryService.get(harvesterId);
-        if (existing?.summary) {
-            const cancellingMsg: ImportLogMessage = { ...existing, id: harvesterId, jobId, complete: false, cancelling: true, status: 'importing' };
-            this.summaryService.update(cancellingMsg);
-            this.nsp.emit('/log', cancellingMsg);
-        } else {
-            this.nsp.emit('/log', { id: harvesterId, jobId, complete: false, cancelling: true, stage: '' });
+        if (entry && entry.jobId === jobId) {
+            entry.importer.cancel();
+            const existing = this.summaryService.get(harvesterId);
+            if (existing?.summary) {
+                const cancellingMsg: ImportLogMessage = { ...existing, id: harvesterId, jobId, complete: false, cancelling: true, status: 'importing' };
+                this.summaryService.setInProgress(cancellingMsg);
+                this.nsp.emit('/log', cancellingMsg);
+            } else {
+                const cancellingMsg: ImportLogMessage = { id: harvesterId, jobId, complete: false, cancelling: true, stage: '' };
+                this.summaryService.setInProgress(cancellingMsg);
+                this.nsp.emit('/log', cancellingMsg);
+            }
+            return true;
         }
-        return true;
+
+        const liveState = this.summaryService.getLiveStates().find(t => t.id === harvesterId);
+        if (liveState?.jobId === jobId && liveState?.status === 'queued') {
+            this.cancelledJobs.add(jobId);
+            this.summaryService.clearLiveState(harvesterId);
+            this.nsp.emit('/log', { id: harvesterId, jobId, complete: true, status: 'cancelled', stage: '' });
+            return true;
+        }
+
+        return false;
     }
 
     constructor(private summaryService: SummaryService) {
@@ -75,6 +91,9 @@ export class ImportSocketService {
      */
     $onConnection(@Socket socket: Socket, @SocketSession session: SocketSession) {
         this.log.info('SOCKETIO: A client is connected');
+        for (const msg of this.summaryService.getLiveStates()) {
+            socket.emit('/log', msg);
+        }
     }
 
     /**
@@ -87,7 +106,30 @@ export class ImportSocketService {
     @Input('runImport')
     @Emit('/log')
     async runImport(id: number, isIncremental?: boolean): Promise<void> {
+        if (this.activeImportIds.has(id)) return;
+        this.activeImportIds.add(id);
+
+        const jobId = crypto.randomUUID();
+
+        if (this.activeImportIds.size >= this.threadpoolSize) {
+            const queuedMsg: ImportLogMessage = { id, jobId, status: 'queued', stage: '' };
+            this.summaryService.setLiveState(id, queuedMsg);
+            this.nsp.emit('/log', queuedMsg);
+        } else {
+            this.summaryService.clearLiveState(id);
+        }
+
         return this.limit(() => new Promise<void>((resolve) => {
+            const done = () => { this.activeImportIds.delete(id); resolve(); };
+
+            if (this.cancelledJobs.has(jobId)) {
+                this.cancelledJobs.delete(jobId);
+                this.summaryService.clearLiveState(id);
+                this.nsp.emit('/log', { id, jobId, complete: true, status: 'cancelled', stage: '' });
+                done();
+                return;
+            }
+
             try {
                 let lastExecution = new Date();
                 let configGeneral = ConfigService.getGeneralSettings();
@@ -97,12 +139,11 @@ export class ImportSocketService {
                 let configHarvester = MiscUtils.merge(configData, configGeneral);
 
                 let profile = ProfileFactoryLoader.get();
-                const jobId = crypto.randomUUID();
                 let cancelBeforeStart = false;
                 this.activeJobs.set(id, { importer: { cancel: () => { cancelBeforeStart = true; } }, jobId });
                 const startingMsg: ImportLogMessage = { id, jobId, complete: false, stage: 'starting', lastExecution, status: 'importing' };
+                this.summaryService.setInProgress(startingMsg);
                 this.nsp.emit('/log', startingMsg);
-                this.summaryService.update(startingMsg);
                 profile.getImporter(configHarvester).then(importer => {
                     if (cancelBeforeStart) importer.cancel();
                     this.activeJobs.set(id, { importer, jobId });
@@ -130,6 +171,7 @@ export class ImportSocketService {
 
                                 // when complete then write information log to file
                                 if (response.complete) {
+                                    this.summaryService.clearLiveState(id);
                                     this.lastEmitTimes.delete(id);
                                     // save old summary to compare
                                     let summaryLastRun: ImportLogMessage = this.summaryService.get(id);
@@ -168,28 +210,30 @@ export class ImportSocketService {
                             },
                             error: error => {
                                 this.activeJobs.delete(id);
-                                this.summaryService.delete(id);
                                 this.log.error('There was an error: ', error);
                                 if (configGeneral.mail.enabled) {
                                     MailServer.getInstance().send(`Importer [${configHarvester.type}] ${configData.description} failed`, error.toString());
                                 }
-                                resolve();
+                                this.summaryService.clearImport(id);
+                                done();
                             },
                             complete: () => {
                                 this.activeJobs.delete(id);
-                                resolve();
+                                done();
                             }
                         });
                     });
                 }).catch(e => {
                     this.activeJobs.delete(id);
                     this.log.error(`An error occured while harvesting (id=${id}): `, e);
-                    resolve();
+                    this.summaryService.clearLiveState(id);
+                    done();
                 });
             }
             catch (e) {
                 this.log.error(`An error occured while harvesting (id=${id}): `, e);
-                resolve();
+                this.summaryService.clearLiveState(id);
+                done();
             }
         }));
     }

@@ -36,6 +36,7 @@ import {ConfigService} from './ConfigService.js';
 export class SummaryService {
     private summaries: ImportLogMessage[] = [];
     private summaryPath = 'data/importLogSummaries.json';
+    private liveStates = new Map<number, ImportLogMessage>();
 
     constructor() {
 
@@ -53,6 +54,30 @@ export class SummaryService {
 
     }
 
+    setLiveState(id: number, msg: ImportLogMessage): void {
+        this.liveStates.set(id, msg);
+    }
+
+    clearLiveState(id: number): void {
+        this.liveStates.delete(id);
+    }
+
+    getLiveStates(): ImportLogMessage[] {
+        return [...this.liveStates.values()];
+    }
+
+    /** Set live in-progress state: updates live states AND in-memory summaries. */
+    setInProgress(msg: ImportLogMessage): void {
+        this.liveStates.set(msg.id, msg);
+        this.update(msg);
+    }
+
+    /** Remove all traces of an import that ended without a result (error / abort). */
+    clearImport(id: number): void {
+        this.liveStates.delete(id);
+        this.delete(id);
+    }
+
     /**
      * Get the last import summary of the harvester with the given ID
      * @param id is the ID the harvester is identified with
@@ -66,8 +91,10 @@ export class SummaryService {
      */
     getAll(): ImportLogMessage[] {
         let harvesters = ConfigService.getHarvesters();
+        const liveStateIds = new Set(this.liveStates.keys());
 
-        return this.summaries
+        const persistedResult = this.summaries
+            .filter(s => !liveStateIds.has(s.id))
             .map(summary => {
                 let harvester = harvesters.find(h => h.id === summary.id);
                 if (summary.summary) {
@@ -81,6 +108,7 @@ export class SummaryService {
                 }
                 return summary;
             });
+        return [...persistedResult, ...this.liveStates.values()];
     }
 
     /**

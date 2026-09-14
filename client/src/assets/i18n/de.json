@@ -91,6 +91,11 @@
         "title": "Wird importiert",
         "tooltip": "Datensätze werden gerade importiert"
       },
+      "queued": {
+        "icon": "schedule",
+        "title": "Warteschlange",
+        "tooltip": "Import wartet auf Ausführung"
+      },
       "error": {
         "icon": "error",
         "title": "Fehler",
