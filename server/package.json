@@ -80,7 +80,7 @@
     "socket.io": "^4.8.1",
     "sparql-http-client": "^2.2.2",
     "undici": "^8.10.2",
-    "uuid": "^9.0.1",
+    "uuid": "^14.0.2",
     "xml-escape": "^1.1.0",
     "xpath": "^0.0.32"
   },
@@ -101,7 +101,6 @@
     "@types/passport-local": "^1.0.33",
     "@types/pg": "^8.10.2",
     "@types/sinon": "^7.5.2",
-    "@types/uuid": "^10.0.0",
     "chai": "^5.3.3",
     "chai-as-promised": "^7.1.1",
     "chai-exclude": "^3.0.1",
