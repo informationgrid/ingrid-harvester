@@ -35,6 +35,7 @@ import { kldDefaults } from '../../importer/kld/kld.settings.js';
 import { oaiDefaults } from '../../importer/oai/oai.settings.js';
 import { sparqlDefaults } from '../../importer/sparql/sparql.settings.js';
 import { wfsDefaults } from '../../importer/wfs/wfs.settings.js';
+import { resetDispatcher } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 
@@ -327,6 +328,7 @@ export class ConfigService {
             "mail.mailServer.auth.pass"
         ]);
         fs.writeFileSync(this.GENERAL_CONFIG_FILE, JSON.stringify(config, null, 2));
+        resetDispatcher();
     }
 
     static getMappingDistribution(): MappingDistribution[] {

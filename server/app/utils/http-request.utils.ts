@@ -22,7 +22,8 @@
  */
 
 import log4js from 'log4js';
-import { Agent, ProxyAgent, fetch, type RequestInit, type Response } from 'undici';
+import { Agent, ProxyAgent, fetch, type Dispatcher, type HeadersInit, type RequestInit, type Response } from 'undici';
+import { ConfigService } from '../services/config/ConfigService.js';
 import { HarvestRunCancelledError, cancellationSignalStorage } from './cancellation.utils.js';
 import * as MiscUtils from './misc.utils.js';
 
@@ -30,6 +31,45 @@ const log = log4js.getLogger('requests');
 
 const DEFAULT_NUM_RETRIES = 3;
 const DEFAULT_WAIT_MS = 1000;
+
+let currentDispatcher: Dispatcher | undefined;
+
+export function getDispatcher(): Dispatcher | undefined {
+    if (currentDispatcher === undefined) {
+        initDispatcher();
+    }
+    return currentDispatcher;
+}
+
+export function initDispatcher(): Dispatcher | undefined {
+    const { proxy, allowAllUnauthorizedSSL } = ConfigService.getGeneralSettings();
+    const proxyUri = proxy?.trim() || undefined;
+
+    if (proxyUri) {
+        currentDispatcher = new ProxyAgent({
+            uri: proxyUri,
+            requestTls: allowAllUnauthorizedSSL ? { rejectUnauthorized: false } : undefined
+        });
+    }
+    else if (allowAllUnauthorizedSSL) {
+        currentDispatcher = new Agent({
+            connect: { rejectUnauthorized: false }
+        });
+    }
+    else {
+        currentDispatcher = new Agent();
+    }
+    return currentDispatcher;
+}
+
+// TODO remove this function and its uses when proxy settings are made read-only (set at startup)
+export async function resetDispatcher(): Promise<void> {
+    if (currentDispatcher) {
+        await currentDispatcher.destroy().catch(() => {});
+        currentDispatcher = undefined;
+    }
+    initDispatcher();
+}
 
 /**
  * HTTP parameters configuration for CSW harvesters.
@@ -248,20 +288,7 @@ export class RequestDelegate {
         const timeoutMs = config.timeout ?? DEFAULT_TIMEOUT_MS;
         const cancellationSignal = cancellationSignalStorage.getStore();
 
-        if (config.proxy) {
-            config.dispatcher = new ProxyAgent({
-                uri: config.proxy,
-                requestTls: config.rejectUnauthorized === false ? { rejectUnauthorized: false } : undefined
-            });
-        }
-        // `=== false` is important here since rejectUnauthorized could be falsy (e.g. undefined)
-        else if (config.rejectUnauthorized === false) {
-            config.dispatcher = new Agent({
-                connect: {
-                    rejectUnauthorized: false
-                }
-            });
-        }
+        config.dispatcher ??= getDispatcher();
         let fullURL = RequestDelegate.getFullURL(config);
         if (log.isDebugEnabled()) {
             let addInfo = '';

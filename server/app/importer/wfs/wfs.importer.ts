@@ -360,8 +360,6 @@ export class WfsImporter extends Importer<WfsSettings> {
             uri: settings.sourceURL,
             json: false,
             headers: RequestDelegate.wfsRequestHeaders(),
-            proxy: settings.proxy || null,
-            rejectUnauthorized: settings.rejectUnauthorizedSSL,
             resolveWithFullResponse: settings.resolveWithFullResponse ?? false,
             timeout: settings.timeout
         };

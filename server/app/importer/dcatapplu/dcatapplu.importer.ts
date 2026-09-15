@@ -244,8 +244,6 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
             method: "GET",
             uri: settings.sourceURL,
             json: true,
-            proxy: settings.proxy || null,
-            rejectUnauthorized: settings.rejectUnauthorizedSSL,
             timeout: settings.timeout
         };
 /*

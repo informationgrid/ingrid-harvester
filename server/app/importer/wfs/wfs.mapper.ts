@@ -255,10 +255,6 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
             uri: uri
         };
 
-        if (this.settings.proxy) {
-            config.proxy = this.settings.proxy;
-        }
-
         return config;
     }
 

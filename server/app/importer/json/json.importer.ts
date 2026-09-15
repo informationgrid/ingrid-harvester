@@ -156,7 +156,6 @@ export class JsonImporter extends Importer<JsonSettings> {
             uri: settings.sourceURL,
             json: true,
             headers: RequestDelegate.defaultRequestHeaders(),
-            proxy: settings.proxy || null,
             timeout: settings.timeout
         };
         return requestConfig;

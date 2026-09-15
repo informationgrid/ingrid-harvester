@@ -10,7 +10,6 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
@@ -51,7 +50,6 @@
     "startPosition": null,
     "customCode": null,
     "defaultDCATCategory": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
@@ -90,7 +88,6 @@
     "startPosition": null,
     "customCode": null,
     "defaultDCATCategory": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
@@ -129,7 +126,6 @@
     "startPosition": null,
     "customCode": null,
     "defaultDCATCategory": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
@@ -166,7 +162,6 @@
     "startPosition": 0,
     "customCode": null,
     "defaultDCATCategory": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
@@ -203,7 +198,6 @@
     "startPosition": null,
     "customCode": null,
     "defaultDCATCategory": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
@@ -239,7 +233,6 @@
     "startPosition": null,
     "customCode": null,
     "defaultDCATCategory": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
@@ -275,7 +268,6 @@
     "startPosition": null,
     "customCode": null,
     "defaultDCATCategory": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
@@ -311,7 +303,6 @@
     "startPosition": null,
     "customCode": null,
     "defaultDCATCategory": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
@@ -347,7 +338,6 @@
     "startPosition": null,
     "customCode": null,
     "defaultDCATCategory": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
@@ -383,7 +373,6 @@
     "startPosition": null,
     "customCode": null,
     "defaultDCATCategory": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
@@ -419,7 +408,6 @@
     "startPosition": null,
     "customCode": null,
     "defaultDCATCategory": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
@@ -455,7 +443,6 @@
     "startPosition": null,
     "customCode": null,
     "defaultDCATCategory": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
@@ -491,7 +478,6 @@
     "startPosition": null,
     "customCode": "doc.spatial_text = `Berlin ${doc.spatial_text}`;",
     "defaultDCATCategory": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
@@ -528,7 +514,6 @@
     "startPosition": null,
     "customCode": null,
     "defaultDCATCategory": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
@@ -585,7 +570,6 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
@@ -668,7 +652,6 @@
     "provider": "",
     "datatype": "",
     "dataSourceName": "",
-    "rejectUnauthorizedSSL": true,
     "timeout": 60000,
     "cron": {
       "full": {

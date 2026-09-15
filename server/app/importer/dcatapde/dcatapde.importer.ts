@@ -205,8 +205,6 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
             method: "GET",
             uri: settings.sourceURL,
             json: false,
-            proxy: settings.proxy || null,
-            rejectUnauthorized: settings.rejectUnauthorizedSSL,
             timeout: settings.timeout
         };
         return requestConfig;
