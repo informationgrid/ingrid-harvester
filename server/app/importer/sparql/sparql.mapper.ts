@@ -304,10 +304,6 @@ export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMap
             uri: uri
         };
 
-        if (this.settings.proxy) {
-            config.proxy = this.settings.proxy;
-        }
-
         return config;
     }
 

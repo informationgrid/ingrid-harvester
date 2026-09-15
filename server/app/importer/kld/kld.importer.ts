@@ -333,7 +333,6 @@ export class KldImporter extends Importer<KldSettings> {
             uri: settings.sourceURL + operation,
             json: true,
             headers: RequestDelegate.defaultRequestHeaders(),
-            proxy: settings.proxy || null,
             timeout: settings.timeout,
             qs: params,
             resolveWithFullResponse: true

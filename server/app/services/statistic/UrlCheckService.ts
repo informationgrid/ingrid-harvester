@@ -24,7 +24,7 @@
 import { Service } from '@tsed/di';
 import log4js from 'log4js';
 import pLimit from 'p-limit';
-import { Agent, ProxyAgent, fetch, type Dispatcher, type RequestInit } from 'undici';
+import { fetch, type RequestInit } from 'undici';
 import { ElasticsearchFactory } from '../../persistence/elastic.factory.js';
 import type { ElasticQueries } from '../../persistence/elastic.queries.js';
 import type { IndexSettings } from '../../persistence/elastic.setting.js';
@@ -32,6 +32,7 @@ import { ElasticsearchUtils } from '../../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import urlCheckMapping from '../../statistic/url_check.mapping.json' with { type: 'json' };
 import dayjs from '../../utils/dayjs.js';
+import { getDispatcher } from '../../utils/http-request.utils.js';
 import { ConfigService } from '../config/ConfigService.js';
 
 const log = log4js.getLogger(import.meta.filename);
@@ -56,19 +57,6 @@ export class UrlCheckService {
         };
         // @ts-ignore
         return ElasticsearchFactory.getElasticUtils(config, { errors: [] });
-    }
-
-    private get httpsDispatcher(): Dispatcher {
-        const { proxy } = ConfigService.getGeneralSettings();
-        if (proxy) {
-            return new ProxyAgent({
-                uri: proxy,
-                requestTls: { rejectUnauthorized: false }
-            });
-        }
-        else {
-            return new Agent({ connect: { rejectUnauthorized: false }});
-        }
     }
 
     async getHistory() {
@@ -128,7 +116,7 @@ export class UrlCheckService {
         const options: RequestInit = {
             method: 'HEAD',
             signal: AbortSignal.timeout(10000),
-            dispatcher: url.startsWith('https://') ? this.httpsDispatcher : undefined
+            dispatcher: getDispatcher()
         };
         try {
             let response = await fetch(url, options);

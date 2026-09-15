@@ -24,12 +24,12 @@
 import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import SimpleClient from 'sparql-http-client/SimpleClient.js';
-import { Agent, ProxyAgent, fetch, type Dispatcher } from 'undici';
+import { fetch } from 'undici';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
-import { ConfigService } from '../../services/config/ConfigService.js';
+import { getDispatcher } from '../../utils/http-request.utils.js';
 import { Importer } from '../importer.js';
 import { SparqlMapper } from './sparql.mapper.js';
 import { sparqlDefaults, type SparqlSettings } from './sparql.settings.js';
@@ -41,8 +41,6 @@ export class SparqlImporter extends Importer<SparqlSettings> {
 
     private totalRecords = 0;
     private numIndexDocs = 0;
-
-    private generalSettings = ConfigService.getGeneralSettings();
 
     constructor(settings: SparqlSettings) {
         super(settings);
@@ -64,20 +62,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
 
         const endpointUrl = this.settings.sourceURL;
 
-        let dispatcher: Dispatcher;
-
-        if (this.generalSettings.proxy) {
-            dispatcher = new ProxyAgent({
-                uri: this.generalSettings.proxy,
-                requestTls: this.generalSettings.allowAllUnauthorizedSSL ? { rejectUnauthorized: false } : undefined
-            });
-        }
-        else if (this.generalSettings.allowAllUnauthorizedSSL) {
-            dispatcher = new Agent({
-                connect: { rejectUnauthorized: false }
-            });
-        }
-
+        const dispatcher = getDispatcher();
         const customFetch: typeof fetch & { Headers?: typeof Headers } = (url, options) =>
             fetch(url, dispatcher ? { ...options, dispatcher } : options);
         customFetch.Headers = Headers;

@@ -326,8 +326,6 @@ export class GenesisImporter extends Importer<GenesisSettings> {
                 ...this.buildAuthHeaders(),
             },
             body,
-            proxy: this.settings.proxy ?? null,
-            rejectUnauthorized: this.settings.rejectUnauthorizedSSL,
             timeout: this.settings.timeout,
         };
 

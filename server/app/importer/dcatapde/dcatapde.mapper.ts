@@ -641,10 +641,6 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
             uri: uri
         };
 
-        if (this.settings.proxy) {
-            config.proxy = this.settings.proxy;
-        }
-
         return config;
     }
 

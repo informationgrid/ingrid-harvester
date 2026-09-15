@@ -1154,10 +1154,6 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
             uri: uri
         };
 
-        if (this.settings.proxy) {
-            config.proxy = this.settings.proxy;
-        }
-
         return config;
     }
 

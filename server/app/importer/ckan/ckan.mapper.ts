@@ -557,10 +557,6 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
             uri: uri
         };
 
-        if (this.settings.proxy) {
-            config.proxy = this.settings.proxy;
-        }
-
         return config;
     }
 
@@ -630,8 +626,6 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
                 uri: settings.sourceURL + '/api/3/action/current_package_list_with_resources',
                 json: true,
                 headers: RequestDelegate.defaultRequestHeaders(),
-                proxy: settings.proxy || null,
-                rejectUnauthorized: settings.rejectUnauthorizedSSL,
                 qs: <CkanParametersListWithResources> {
                     offset: settings.startPosition,
                     limit: settings.maxRecords
@@ -653,8 +647,6 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
                 uri: settings.sourceURL + '/api/action/package_search', // See http://docs.ckan.org/en/ckan-2.7.3/api/
                 json: true,
                 headers: RequestDelegate.defaultRequestHeaders(),
-                proxy: settings.proxy || null,
-                rejectUnauthorized: settings.rejectUnauthorizedSSL,
                 qs,
                 timeout: settings.timeout
             };
@@ -668,8 +660,6 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
             uri: settings.sourceURL + '/api/3/action/package_list', // See http://docs.ckan.org/en/ckan-2.7.3/api/
             json: true,
             headers: RequestDelegate.defaultRequestHeaders(),
-            proxy: settings.proxy || null,
-            rejectUnauthorized: settings.rejectUnauthorizedSSL,
             qs: <CkanParametersListWithResources> {
                 offset: settings.startPosition,
                 limit: settings.maxRecords

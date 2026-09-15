@@ -823,10 +823,6 @@ export class OaiMapper extends Mapper<OaiSettings> {
             uri: uri
         };
 
-        if (this.settings.proxy) {
-            config.proxy = this.settings.proxy;
-        }
-
         return config;
     }
 

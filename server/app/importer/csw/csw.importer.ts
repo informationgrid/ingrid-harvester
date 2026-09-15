@@ -557,8 +557,6 @@ export class CswImporter extends Importer<CswSettings> {
             uri: settings.sourceURL,
             json: false,
             headers: RequestDelegate.cswRequestHeaders(),
-            proxy: settings.proxy || null,
-            rejectUnauthorized: settings.rejectUnauthorizedSSL,
             timeout: settings.timeout
         };
 
