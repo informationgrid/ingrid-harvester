@@ -21,11 +21,10 @@
  * ==================================================
  */
 
+import { Controller, Get, Req, Res } from '@tsed/common';
+import { Inject } from "@tsed/di";
 import * as Express from 'express';
-import {Controller, Get, Req, Res} from '@tsed/common';
-import {KeycloakService} from '../../services/keycloak/KeycloakService.js';
-import fetch from 'node-fetch';
-import {Inject} from "@tsed/di";
+import { KeycloakService } from '../../services/keycloak/KeycloakService.js';
 
 @Controller('/auth/keycloak')
 export class KeycloakCtrl {
@@ -84,7 +83,8 @@ export class KeycloakCtrl {
         await fetch(`${realmUrl}/protocol/openid-connect/logout`, {
           method: 'POST',
           body: params,
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          signal: AbortSignal.timeout(10000)
         });
       } catch (e) {
         console.error('Error during Keycloak back-channel logout:', e);

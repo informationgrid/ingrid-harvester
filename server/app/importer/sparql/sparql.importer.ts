@@ -21,11 +21,10 @@
  * ==================================================
  */
 
-import { HttpsProxyAgent } from 'https-proxy-agent';
 import log4js from 'log4js';
-import plain_fetch from 'node-fetch';
 import type { Observer } from 'rxjs';
 import SimpleClient from 'sparql-http-client/SimpleClient.js';
+import { Agent, ProxyAgent, fetch, type Dispatcher } from 'undici';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
@@ -65,16 +64,25 @@ export class SparqlImporter extends Importer<SparqlSettings> {
 
         const endpointUrl = this.settings.sourceURL;
 
-        let fetch: any = plain_fetch;
+        let dispatcher: Dispatcher;
 
-        if (this.generalSettings.proxy){
-            let proxyAgent = new HttpsProxyAgent(this.generalSettings.proxy);
-            proxyAgent.options.rejectUnauthorized = !this.generalSettings.allowAllUnauthorizedSSL;
-            fetch = (url, options) => plain_fetch(url, {...options, agent: proxyAgent});
-            fetch.Headers = plain_fetch.Headers;
+        if (this.generalSettings.proxy) {
+            dispatcher = new ProxyAgent({
+                uri: this.generalSettings.proxy,
+                requestTls: this.generalSettings.allowAllUnauthorizedSSL ? { rejectUnauthorized: false } : undefined
+            });
+        }
+        else if (this.generalSettings.allowAllUnauthorizedSSL) {
+            dispatcher = new Agent({
+                connect: { rejectUnauthorized: false }
+            });
         }
 
-        const client = new SimpleClient({endpointUrl, fetch});
+        const customFetch: typeof fetch & { Headers?: typeof Headers } = (url, options) =>
+            fetch(url, dispatcher ? { ...options, dispatcher } : options);
+        customFetch.Headers = Headers;
+
+        const client = new SimpleClient({ endpointUrl, fetch: customFetch });
         return new Promise<number>((resolve, reject) => client.query.select(this.settings.query).then(result => {
             let hadError = result.status >= 400;
 

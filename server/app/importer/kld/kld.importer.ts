@@ -345,9 +345,10 @@ export class KldImporter extends Importer<KldSettings> {
         try {
             const response: Response = await delegate.doRequest();
             return response ? await response.json() : null;
-        } catch (e) {
+        }
+        catch (e: any) {
             // ignore time out errors
-            if (e.name != 'AbortError') {
+            if (e.name !== 'AbortError' && e.name !== 'TimeoutError') {
                 const message = e.message ? e.message : e;
                 this.summary.warnings.push(['Request failure', message]);
                 log.warn('Error during request', e);

@@ -22,7 +22,6 @@
  */
 
 import * as fs from 'fs';
-import fetch from 'node-fetch';
 import log4js from 'log4js';
 import { ConfigService } from '../services/config/ConfigService.js';
 import type { RequestOptions } from './http-request.utils.js';
@@ -42,7 +41,7 @@ export class UrlUtils {
         if (url instanceof URL) {
             url = url.hostname + url.pathname;
         }
-        let response = await fetch(url, { method: 'HEAD' });
+        let response = await fetch(url, { method: 'HEAD', signal: AbortSignal.timeout(10000) });
         return response.status;
     }
 
