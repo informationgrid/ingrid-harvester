@@ -21,7 +21,14 @@
  * ==================================================
  */
 
-import { Component, computed, effect, signal, Signal } from "@angular/core";
+import {
+  Component,
+  computed,
+  effect,
+  signal,
+  Signal,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { UntilDestroy } from "@ngneat/until-destroy";
@@ -41,13 +48,14 @@ import { AuthenticationService } from "../../security/authentication.service";
   selector: "harvester-datasource-overview",
   templateUrl: "./datasource-overview.component.html",
   styleUrls: ["./datasource-overview.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DatasourceOverviewComponent {
   importLogs = computed(() => this.datasourceService.importLogs());
 
   hasActiveImports = computed(() =>
-    Object.values(this.importLogs() ?? {}).some(log => !log.complete)
+    Object.values(this.importLogs() ?? {}).some((log) => !log.complete),
   );
   importProgress = computed(() => this.datasourceService.batchProgress());
   progressVisible = signal(false);

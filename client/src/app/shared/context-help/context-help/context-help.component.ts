@@ -5,6 +5,7 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
+  ChangeDetectionStrategy,
 } from "@angular/core";
 import {
   MAT_DIALOG_DATA,
@@ -18,18 +19,19 @@ import { MatIcon } from "@angular/material/icon";
 import { MatIconButton } from "@angular/material/button";
 
 @Component({
-    selector: "ige-context-help",
-    templateUrl: "./context-help.component.html",
-    styleUrls: ["./context-help.component.scss"],
-    imports: [
-        CdkDrag,
-        CdkDragHandle,
-        MatIcon,
-        MatDialogTitle,
-        MatIconButton,
-        MatDialogClose,
-        MatDialogContent,
-    ]
+  selector: "ige-context-help",
+  templateUrl: "./context-help.component.html",
+  styleUrls: ["./context-help.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    CdkDrag,
+    CdkDragHandle,
+    MatIcon,
+    MatDialogTitle,
+    MatIconButton,
+    MatDialogClose,
+    MatDialogContent,
+  ],
 })
 export class ContextHelpComponent implements OnInit, OnDestroy {
   @ViewChild("contextHelpContainer") container: ElementRef;

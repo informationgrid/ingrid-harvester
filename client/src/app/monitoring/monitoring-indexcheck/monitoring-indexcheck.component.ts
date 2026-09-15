@@ -21,36 +21,42 @@
  * ==================================================
  */
 
-import { indexCheckChart } from '../../charts/reuseableChart';
-import { Chart } from 'chart.js';
-import { Component, OnInit, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { MatDialog } from '@angular/material/dialog';
-import { MonitoringIndexCheckDetailComponent } from './monitoring-indexcheck-detail/monitoring-indexcheck-detail.component';
-import { Observable, lastValueFrom } from 'rxjs';
-import { AuthenticationService } from '../../security/authentication.service';
+import { indexCheckChart } from "../../charts/reuseableChart";
+import { Chart } from "chart.js";
+import {
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { MatDialog } from "@angular/material/dialog";
+import { MonitoringIndexCheckDetailComponent } from "./monitoring-indexcheck-detail/monitoring-indexcheck-detail.component";
+import { Observable, lastValueFrom } from "rxjs";
+import { AuthenticationService } from "../../security/authentication.service";
 
 @Component({
-    selector: 'app-monitoring-indexcheck',
-    templateUrl: './monitoring-indexcheck.component.html',
-    styleUrls: ['./monitoring-indexcheck.component.scss'],
-    standalone: false
+  selector: "app-monitoring-indexcheck",
+  templateUrl: "./monitoring-indexcheck.component.html",
+  styleUrls: ["./monitoring-indexcheck.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class MonitoringIndexCheckComponent implements OnInit {
-
   data;
 
-
-  private chartIndexCheck : Chart;
+  private chartIndexCheck: Chart;
   private dialog: MatDialog;
   private authService = inject(AuthenticationService);
 
   get canStart(): boolean {
-    return !this.authService.hasRole('viewer');
+    return !this.authService.hasRole("viewer");
   }
 
-
-  constructor(private http: HttpClient, private _dialog: MatDialog) {
+  constructor(
+    private http: HttpClient,
+    private _dialog: MatDialog,
+  ) {
     this.dialog = _dialog;
   }
 
@@ -59,39 +65,41 @@ export class MonitoringIndexCheckComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.draw_chart()
+    this.draw_chart();
   }
 
   getHarvesterHistory(id: number): Observable<any> {
-    return this.http.get<any>('rest/api/monitoring/indexcheck');
+    return this.http.get<any>("rest/api/monitoring/indexcheck");
   }
 
   public async draw_chart() {
     let dialog = this.dialog;
     if (!this.chartIndexCheck) {
       lastValueFrom(this.getHarvesterHistory(6)).then((data) => {
-        this.chartIndexCheck = indexCheckChart('chart_indexcheck', data.history)
+        this.chartIndexCheck = indexCheckChart(
+          "chart_indexcheck",
+          data.history,
+        );
       });
     } else {
     }
   }
 
   async showDetails(data) {
-    if(data){
+    if (data) {
       const dialogRef = this.dialog.open(MonitoringIndexCheckDetailComponent, {
         data: data,
-        width: '950px',
-        disableClose: true
+        width: "950px",
+        disableClose: true,
       });
     }
   }
-
 
   indexCheck() {
     this.startIndexCheck().subscribe();
   }
 
   startIndexCheck(): Observable<void> {
-    return this.http.post<void>('rest/api/index_check', null);
+    return this.http.post<void>("rest/api/index_check", null);
   }
 }

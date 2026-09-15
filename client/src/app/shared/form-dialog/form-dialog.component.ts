@@ -21,7 +21,12 @@
  * ==================================================
  */
 
-import { Component, Inject, OnDestroy } from "@angular/core";
+import {
+  Component,
+  Inject,
+  OnDestroy,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { UntypedFormGroup } from "@angular/forms";
 import {
   MAT_DIALOG_DATA,
@@ -40,6 +45,7 @@ import { CdkDrag, CdkDragHandle } from "@angular/cdk/drag-drop";
   selector: "ingrid-form-dialog",
   templateUrl: "./form-dialog.component.html",
   styleUrls: ["./form-dialog.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     DialogHeaderComponent,
     MatDialogContent,

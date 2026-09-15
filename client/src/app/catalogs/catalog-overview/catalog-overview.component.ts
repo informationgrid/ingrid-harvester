@@ -21,7 +21,12 @@
  * ==================================================
  */
 
-import { Component, computed, Signal } from "@angular/core";
+import {
+  Component,
+  computed,
+  Signal,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { CatalogService } from "../services/catalog.service";
 import { MatDialog } from "@angular/material/dialog";
 import { FormDialogComponent } from "../../shared/form-dialog/form-dialog.component";
@@ -39,6 +44,7 @@ import { AuthenticationService } from "../../security/authentication.service";
   templateUrl: "./catalog-overview.component.html",
   styleUrls: ["./catalog-overview.component.scss"],
   providers: [TranslocoPipe],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class CatalogOverviewComponent {

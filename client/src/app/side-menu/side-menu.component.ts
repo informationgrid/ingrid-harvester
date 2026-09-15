@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { Observable, map } from "rxjs";
 import { NavigationEnd, Route, Router } from "@angular/router";
 import { animate, style, transition, trigger } from "@angular/animations";
@@ -44,6 +44,7 @@ import { AuthenticationService } from "../security/authentication.service";
       ]),
     ]),
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SideMenuComponent {

@@ -21,7 +21,12 @@
  * ==================================================
  */
 
-import { Component, Inject, signal } from "@angular/core";
+import {
+  Component,
+  Inject,
+  signal,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { FormGroup, UntypedFormGroup } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { ConfigService } from "../../config/config.service";
@@ -45,6 +50,7 @@ import { DatasourceService } from "../services/datasource.service";
   selector: "app-dialog-edit",
   templateUrl: "./dialog-edit.component.html",
   styleUrls: ["./dialog-edit.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DialogEditComponent {

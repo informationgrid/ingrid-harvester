@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { FieldTypeConfig, FieldWrapper } from "@ngx-formly/core";
 import { MatButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
@@ -30,6 +30,7 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
 @Component({
   selector: "formly-section-wrapper",
   templateUrl: "./formly-action-wrapper.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatButton, MatIcon, MatProgressSpinner],
 })
 export class FormlyActionWrapperComponent extends FieldWrapper<FieldTypeConfig> {}

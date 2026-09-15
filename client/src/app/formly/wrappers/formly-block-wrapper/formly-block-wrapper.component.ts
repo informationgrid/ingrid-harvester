@@ -21,13 +21,14 @@
  * ==================================================
  */
 
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { FieldTypeConfig, FieldWrapper } from "@ngx-formly/core";
 
 @Component({
   selector: "formly-section-wrapper",
   templateUrl: "./formly-block-wrapper.component.html",
   styleUrls: ["./formly-block-wrapper.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [],
 })
 export class FormlyBlockWrapperComponent extends FieldWrapper<FieldTypeConfig> {}

@@ -21,7 +21,14 @@
  * ==================================================
  */
 
-import { Component, Inject, OnDestroy, OnInit, Optional } from "@angular/core";
+import {
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+  Optional,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { CronData } from "../../../../../server/app/importer/importer.settings";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { UntypedFormGroup } from "@angular/forms";
@@ -33,6 +40,7 @@ import { FormDialogComponent } from "../../shared/form-dialog/form-dialog.compon
   selector: "app-dialog-scheduler",
   templateUrl: "./dialog-scheduler.component.html",
   styleUrls: ["./dialog-scheduler.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DialogSchedulerComponent implements OnDestroy {

@@ -21,7 +21,12 @@
  * ==================================================
  */
 
-import { Component, computed, input } from "@angular/core";
+import {
+  Component,
+  computed,
+  input,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { ImportLogMessage } from "../../../../../../server/app/model/import.result";
 import { Datasource } from "@shared/datasource";
 import { TranslocoDirective } from "@ngneat/transloco";
@@ -35,6 +40,7 @@ import {
   selector: "harvester-status-indicator",
   templateUrl: "./status-indicator.component.html",
   styleUrls: ["./status-indicator.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslocoDirective, DatePipe, StatusLabelComponent],
 })
 export class StatusIndicatorComponent {
@@ -43,10 +49,9 @@ export class StatusIndicatorComponent {
 
   /** Result of the last import run — null if no run has completed yet. */
   runStatus = computed<Status | null>(() => {
-      console.log("status", this.importLog()?.status)
-      return (this.importLog()?.status as Status) ?? null
-    }
-  );
+    console.log("status", this.importLog()?.status);
+    return (this.importLog()?.status as Status) ?? null;
+  });
 
   /** Configuration state of the harvester, independent of run result. */
   configStatuses = computed<Status[]>(() => {
@@ -57,15 +62,19 @@ export class StatusIndicatorComponent {
 
   statuses = computed<Status[]>(() =>
     [this.runStatus(), ...this.configStatuses()].filter(
-      (s): s is Status => s !== null
-    )
+      (s): s is Status => s !== null,
+    ),
   );
 
   /** Total number of errors + warnings from the last completed run, for display in the error tooltip. */
   errorNum = computed<number>(() => {
     const summary = this.importLog()?.summary;
     if (!summary) return 0;
-    return summary.numErrors + (summary.errors?.length ?? 0) + summary.warnings.length;
+    return (
+      summary.numErrors +
+      (summary.errors?.length ?? 0) +
+      summary.warnings.length
+    );
   });
 
   constructor() {}
