@@ -115,7 +115,7 @@
     "rdfxml-streaming-parser": "^2.2.3",
     "sinon": "^8.0.2",
     "testcontainers": "^12.1.0",
-    "typescript": "^5.8.3"
+    "typescript": "~6.0.3"
   },
   "pkg": {
     "scripts": "build/**/*.js",
