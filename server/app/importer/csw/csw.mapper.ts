@@ -29,8 +29,6 @@ import type { Geometry, Point } from 'geojson';
 import log4js from 'log4js';
 import { throwError } from 'rxjs';
 import * as xpath from 'xpath';
-import { DCAT_CATEGORY_URL, DCAT_THEMES, dcatThemeUriFromKeyword } from '../dcatapde/dcatapde.utils.js';
-import { namespaces } from '../../importer/namespaces.js';
 import type { Agent, Contact, Organization, Person } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
@@ -45,7 +43,9 @@ import * as MiscUtils from '../../utils/misc.utils.js';
 import * as ServiceUtils from '../../utils/service.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 import type { XPathElementSelect } from '../../utils/xpath.utils.js';
+import { DCAT_CATEGORY_URL, DCAT_THEMES, dcatThemeUriFromKeyword } from '../dcatapde/dcatapde.utils.js';
 import { Mapper } from '../mapper.js';
+import { namespaces } from '../namespaces.js';
 import type { ToElasticMapper } from '../to.elastic.mapper.js';
 import type { CswSettings } from './csw.settings.js';
 

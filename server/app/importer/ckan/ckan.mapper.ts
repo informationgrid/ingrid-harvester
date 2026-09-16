@@ -30,7 +30,7 @@ import log4js from 'log4js';
 import { marked } from 'marked';
 import { throwError } from 'rxjs';
 import mapping from "../../../mappings.json" with { type: "json" };
-import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
+import type { ToElasticMapper } from '../to.elastic.mapper.js';
 import type { Organization, Person } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';

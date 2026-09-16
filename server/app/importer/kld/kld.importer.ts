@@ -180,7 +180,7 @@ export class KldImporter extends Importer<KldSettings> {
                     break collectIds;
                 }
             }
-        };
+        }
 
         // check if number of received objects matches number of expected objects
         const ids = Object.keys(idMap);

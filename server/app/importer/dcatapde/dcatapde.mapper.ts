@@ -28,8 +28,6 @@ import type { License } from '@shared/license.model.js';
 import log4js from 'log4js';
 import { throwError } from 'rxjs';
 import * as xpath from 'xpath';
-import { namespaces } from '../../importer/namespaces.js';
-import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
 import type { Contact, Person } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
@@ -41,8 +39,10 @@ import { RequestDelegate } from '../../utils/http-request.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 import type { XPathElementSelect } from '../../utils/xpath.utils.js';
 import { Mapper } from '../mapper.js';
+import { namespaces } from '../namespaces.js';
+import type { ToDcatapdeMapper } from '../to.dcatapde.mapper.js';
+import type { ToElasticMapper } from '../to.elastic.mapper.js';
 import type { DcatapdeSettings } from './dcatapde.settings.js';
-import type {ToDcatapdeMapper} from "../to.dcatapde.mapper.js";
 import { DCAT_LANGUAGE_URL } from './dcatapde.utils.js';
 
 export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasticMapper<IndexDocument>, ToDcatapdeMapper {

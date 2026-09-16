@@ -26,7 +26,6 @@ import type { DOMParser } from '@xmldom/xmldom';
 import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import type { Catalog, CatalogColumnType, CatalogOperation } from '../../catalog/catalog.factory.js';
-import { namespaces } from '../../importer/namespaces.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { CouplingEntity, RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
@@ -41,6 +40,7 @@ import { MailServer } from '../../utils/nodemailer.utils.js';
 import * as ServiceUtils from '../../utils/service.utils.js';
 import * as XpathUtils from '../../utils/xpath.utils.js';
 import { Importer } from '../importer.js';
+import { namespaces } from '../namespaces.js';
 import { CswMapper } from './csw.mapper.js';
 import { cswDefaults, type CswSettings } from './csw.settings.js';
 

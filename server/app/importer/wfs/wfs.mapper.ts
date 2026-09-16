@@ -24,7 +24,6 @@
 import type { Geometry, Point } from 'geojson';
 import log4js from 'log4js';
 import { throwError } from 'rxjs';
-import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
 import type { Contact, Organization, Person } from '../../model/agent.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
 import type { Distribution } from '../../model/distribution.js';
@@ -35,6 +34,7 @@ import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
 import { Mapper } from '../mapper.js';
+import type { ToElasticMapper } from '../to.elastic.mapper.js';
 import type { FeatureInfo, FeatureTypeInfo } from './wfs.importer.js';
 import type { WfsSettings } from './wfs.settings.js';
 

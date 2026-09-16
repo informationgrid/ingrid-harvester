@@ -27,7 +27,6 @@
 import type { License } from '@shared/license.model.js';
 import log4js from 'log4js';
 import { throwError } from 'rxjs';
-import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
 import type { Person } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
@@ -37,6 +36,7 @@ import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import { Mapper } from '../mapper.js';
+import type { ToElasticMapper } from '../to.elastic.mapper.js';
 import type { SparqlSettings } from './sparql.settings.js';
 
 export class SparqlMapper extends Mapper<SparqlSettings> implements ToElasticMapper<IndexDocument> {

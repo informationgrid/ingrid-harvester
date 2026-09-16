@@ -24,7 +24,6 @@
 import type { DOMParser } from '@xmldom/xmldom';
 import log4js from 'log4js';
 import type { Observer } from 'rxjs';
-import { namespaces } from '../../importer/namespaces.js';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
@@ -34,6 +33,7 @@ import { RequestDelegate } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { dereferenceRdfElements } from "../../utils/rdf.utils.js";
 import { Importer } from '../importer.js';
+import { namespaces } from '../namespaces.js';
 import { DcatapdeMapper } from './dcatapde.mapper.js';
 import { dcatapdeDefaults, type DcatapdeSettings } from './dcatapde.settings.js';
 
