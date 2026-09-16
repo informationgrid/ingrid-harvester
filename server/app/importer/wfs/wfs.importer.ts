@@ -41,6 +41,7 @@ import * as MiscUtils from '../../utils/misc.utils.js';
 import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
 import { firstElementChild, getExtendedNsMap, getNsMap } from '../../utils/xpath.utils.js';
 import { Importer } from '../importer.js';
+import { HarvestRunCancelledError } from '../../utils/cancellation.utils.js';
 import { WfsMapper } from './wfs.mapper.js';
 import { wfsDefaults, type WfsSettings } from './wfs.settings.js';
 
@@ -128,7 +129,6 @@ export class WfsImporter extends Importer<WfsSettings> {
         await Promise.allSettled(Object.keys(featureTypes).map(featureTypeName =>
             limit(() => this.extractCompleteFeatureType(featureTypeName, featureTypes[featureTypeName]))
         ));
-
         log.info(`Finished requests`);
         await this.database.sendBulkData();
 
@@ -190,6 +190,7 @@ export class WfsImporter extends Importer<WfsSettings> {
                 await this.extractFeatures(responseDom, harvestTime, generalInfo);
             }
             catch (e) {
+                if (e instanceof HarvestRunCancelledError) throw e;
                 const message = `Error while fetching WFS Features for FeatureType ${featureTypeName}:\n${e}\nWill continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom?.toString())}.`;
                 log.error(message);
                 this.summary.errors.push({ type: 'app', error: message });
@@ -224,7 +225,7 @@ export class WfsImporter extends Importer<WfsSettings> {
                 dataset: doc,
                 original_document: mapper.getHarvestedData()
             };
-            await this.database.addEntityToBulk(entity);
+            await this.addEntityToBulk(entity);
         }
         else {
             this.summary.skippedDocs.push(featureTypeName);
@@ -308,7 +309,7 @@ export class WfsImporter extends Importer<WfsSettings> {
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };
-                promises.push(this.database.addEntityToBulk(entity));
+                promises.push(this.addEntityToBulk(entity));
             } else {
                 this.summary.skippedDocs.push(gmlId);
             }
@@ -317,7 +318,9 @@ export class WfsImporter extends Importer<WfsSettings> {
                 this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.numItems, 'Features werden heruntergeladen'));
             }
         }
-        await Promise.all(promises).catch(err => log.error('Error indexing WFS record', err));
+        await Promise.all(promises).catch(err => {
+            log.error('Error indexing WFS record', err);
+        });
     }
 
     getMapper(harvestTime: Date, feature: Node, featureInfo: FeatureInfo): WfsMapper {

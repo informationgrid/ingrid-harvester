@@ -157,7 +157,7 @@ export class OaiImporter extends Importer<OaiSettings> {
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };
-                promises.push(this.database.addEntityToBulk(entity));
+                promises.push(this.addEntityToBulk(entity));
             }
             else {
                 this.summary.skippedDocs.push(uuid);

@@ -239,7 +239,7 @@ export class GenesisImporter extends Importer<GenesisSettings> {
                 dataset_dcatapde: dcatapdeDoc,
                 original_document: mapper.getHarvestedData(),
             };
-            await this.database.addEntityToBulk(entity)
+            await this.addEntityToBulk(entity)
                 .catch(err => {
                     log.error(`Error saving entity ${entry.Code}`, err);
                     this.summary.errors.push({ type: 'app', error: `DB error for ${entry.Code}: ${err.message}` });

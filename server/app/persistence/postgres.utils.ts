@@ -35,6 +35,7 @@ import type { Summary } from '../model/summary.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import type { BulkResponse } from './database.utils.js';
 import { DatabaseUtils } from './database.utils.js';
+import { HarvestRunCancelledError, cancellationSignalStorage } from '../utils/cancellation.utils.js';
 import type { PostgresQueries } from './postgres.queries.js';
 
 const log = log4js.getLogger(import.meta.filename);
@@ -160,6 +161,11 @@ export class PostgresUtils extends DatabaseUtils {
 
     async deleteNonFetchedDatasets(source: string, last_modified: Date): Promise<void> {
         await this.transactionClient.query(this.queries.deleteNonFetchedRecords, [source, last_modified]);
+    }
+
+    async rollbackSourceImport(source: string, transactionTimestamp: Date): Promise<number> {
+        const result = await PostgresUtils.pool.query(this.queries.rollbackSourceImport, [source, transactionTimestamp]);
+        return result.rowCount ?? 0;
     }
 
     async deleteCatalogDatasets(catalogId: number): Promise<void> {
@@ -402,6 +408,7 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async sendBulkData(commitTransaction: boolean = false): Promise<BulkResponse> {
+        if (cancellationSignalStorage.getStore()?.aborted) throw new HarvestRunCancelledError();
         if (this._bulkData.length > 0) {
             log.debug('Sending BULK message with ' + this._bulkData.length + ' items to persist');
             let promise = this.bulk(this._bulkData, commitTransaction);
@@ -414,6 +421,7 @@ export class PostgresUtils extends DatabaseUtils {
     }
 
     async sendBulkCouples(commitTransaction: boolean = false): Promise<BulkResponse> {
+        if (cancellationSignalStorage.getStore()?.aborted) throw new HarvestRunCancelledError();
         if (this._bulkCouples.length > 0) {
             log.debug('Sending BULK message with ' + this._bulkCouples.length + ' items to persist');
             let promise = this.bulk(this._bulkCouples, commitTransaction);

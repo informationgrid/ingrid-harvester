@@ -95,8 +95,9 @@ export class SparqlImporter extends Importer<SparqlSettings> {
                     try {
                         let json = JSON.parse(response);
                         let harvestTime = new Date();
-                        this.extractRecords(json, harvestTime).then(() =>
-                            resolve(this.numIndexDocs));
+                        this.extractRecords(json, harvestTime)
+                            .then(() => resolve(this.numIndexDocs))
+                            .catch(reject);
                     } catch (e) {
                         this.summary.errors.push({ type: 'app', error: e.toString() });
                         log.error(e);
@@ -164,7 +165,7 @@ export class SparqlImporter extends Importer<SparqlSettings> {
                     original_document: mapper.getHarvestedData()
                 };
                 promises.push(
-                    this.database.addEntityToBulk(entity)
+                    this.addEntityToBulk(entity)
                         .then(response => {
                             if (!response.queued) {
                                 // numIndexDocs += ElasticsearchUtils.maxBulkSize;
@@ -177,7 +178,6 @@ export class SparqlImporter extends Importer<SparqlSettings> {
             }
             this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
-        await Promise.all(promises)
-            .catch(err => log.error('Error indexing DCAT record', err));
+        await Promise.all(promises).catch(err => log.error('Error indexing DCAT record', err));
     }
 }

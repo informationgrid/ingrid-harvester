@@ -21,10 +21,11 @@
  * ==================================================
  */
 
+import type { CatalogSettings } from '@shared/catalog.js';
 import type { DOMParser } from '@xmldom/xmldom';
 import log4js from 'log4js';
-import pLimit from 'p-limit';
 import type { Observer } from 'rxjs';
+import type { Catalog, CatalogColumnType, CatalogOperation } from '../../catalog/catalog.factory.js';
 import { namespaces } from '../../importer/namespaces.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { CouplingEntity, RecordEntity } from '../../model/entity.js';
@@ -101,8 +102,11 @@ export class CswImporter extends Importer<CswSettings> {
             observer.next(this.summary.msgComplete('Dry run ... no indexing of data'));
         }
         else {
+            let transactionTimestamp: Date;
+            let transactionCommitted = false;
+            const processedCatalogs: Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>[] = [];
             try {
-                let transactionTimestamp = await this.database.beginTransaction();
+                transactionTimestamp = await this.database.beginTransaction();
                 // configure for incremental harvesting
                 if (this.isIncremental) {
                     // only change the record filter (i.e. do an incremental harvest) if a previous run exists
@@ -156,12 +160,15 @@ export class CswImporter extends Importer<CswSettings> {
                     throw new Error();
                 }
 
+                this.checkCancellation();
                 if (!this.isIncremental) {
                     await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
                 }
                 await this.database.commitTransaction();
+                transactionCommitted = true;
                 // TODO support concurrency of different catalogs
                 for (const catalogId of this.settings.catalogIds) {
+                    this.checkCancellation();
                     const stageSummary = this.startStage(`catalog/${catalogId}`);
                     const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, stageSummary);
                     try {
@@ -173,6 +180,7 @@ export class CswImporter extends Importer<CswSettings> {
                         // for that, we need to consider how to handle "deleted", i.e. non-fetched, datasets
 
                         await catalog.process(this.settings.sourceURL, this.settings, observer);
+                        processedCatalogs.push(catalog);
                     }
                     catch (e) {
                         log.error(`Error while importing into catalog ${catalog.settings.name} (id=${catalogId}):`, e);
@@ -183,20 +191,42 @@ export class CswImporter extends Importer<CswSettings> {
                 observer.next(this.summary.msgComplete());
             }
             catch (err) {
-                let message = err?.message ?? String(err);
-                if (message) {
-                    if (message.includes('The user aborted a request.')) {
-                        message = 'A request to the server timed out. If this occurs frequently, try reducing the "maxRecords" setting.';
+                this.cancel(false);
+                if (this.harvesterRunCancelledByUser) {
+                    const rollbackDbStage = this.startStage('rollbackSourceImport');
+                    if (!transactionCommitted) {
+                        await this.database.rollbackTransaction();
+                        observer.next(rollbackDbStage.msgImport('Transaction rolled back'));
                     }
-                    this.summary.errors.push({ type: 'app', error: message });
+                    else {
+                        const count = await this.database.rollbackSourceImport(this.settings.sourceURL, transactionTimestamp);
+                        observer.next(rollbackDbStage.msgImport(`Rolled back ${count} records`));
+                        for (const catalog of processedCatalogs) {
+                            if ('rollbackTargetCatalog' in catalog) {
+                                const rollbackCatalogStage = this.startStage('rollbackTargetCatalog');
+                                await (catalog as any).rollbackTargetCatalog(this.settings.id, transactionTimestamp);
+                                observer.next(rollbackCatalogStage.msgImport());
+                            }
+                        }
+                    }
+                    observer.next(this.summary.msgCancelled());
                 }
-                await this.database.rollbackTransaction();
-                let msg = this.summary.errors.find(e => e.type === 'app' || e.type === 'database')?.error;
-                if (this.generalConfig.mail.enabled) {
-                    MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
+                else {
+                    let message = err?.message ?? String(err);
+                    if (message) {
+                        if (message.includes('The user aborted a request.')) {
+                            message = 'A request to the server timed out. If this occurs frequently, try reducing the "maxRecords" setting.';
+                        }
+                        this.summary.errors.push({ type: 'app', error: message });
+                    }
+                    await this.database.rollbackTransaction();
+                    let msg = this.summary.errors.find(e => e.type === 'app' || e.type === 'database')?.error;
+                    if (this.generalConfig.mail.enabled) {
+                        MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
+                    }
+                    log.error(err);
+                    observer.next(this.summary.msgComplete(msg));
                 }
-                log.error(err);
-                observer.next(this.summary.msgComplete(msg));
             }
         }
         observer.complete();
@@ -245,8 +275,7 @@ export class CswImporter extends Importer<CswSettings> {
             })));
         }
         // 2) run in parallel
-        const limit = pLimit(this.settings.maxConcurrent);
-        await Promise.all(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
+        await this.runInParallel(delegates, delegate => this.handleHarvest(delegate));
         log.info(`Finished requesting records`);
         // 3) persist leftovers
         await this.database.sendBulkData();
@@ -274,8 +303,7 @@ export class CswImporter extends Importer<CswSettings> {
             ));
         }
         // 2) run in parallel
-        const limit = pLimit(this.settings.maxConcurrent);
-        await Promise.allSettled(delegates.map(delegate => limit(() => this.handleHarvest(delegate))));
+        await this.runInParallel(delegates, delegate => this.handleHarvest(delegate));
         // 3) persist leftovers
         await this.database.sendBulkData();
         log.info(`Finished requesting services`);
@@ -287,8 +315,7 @@ export class CswImporter extends Importer<CswSettings> {
         let recordEntities: RecordEntity[] = await this.database.getDatasets(this.settings.sourceURL) ?? [];
         // for all services, get WFS, WMS info and merge into dataset
         // 2) run in parallel
-        const limit = pLimit(this.settings.maxConcurrent);
-        await Promise.allSettled(recordEntities.map(recordEntity => limit(() => this.coupleService(recordEntity, resolveOgcDistributions, true))));
+        await this.runInParallel(recordEntities, recordEntity => this.coupleService(recordEntity, resolveOgcDistributions, true));
         log.info(`Finished self-coupling`);
         // 3) persist leftovers
         await this.database.sendBulkCouples();
@@ -300,8 +327,7 @@ export class CswImporter extends Importer<CswSettings> {
         let serviceEntities: RecordEntity[] = await this.database.getServices(this.settings.sourceURL) ?? [];
         // for all services, get WFS, WMS info and merge into dataset
         // 2) run in parallel
-        const limit = pLimit(this.settings.maxConcurrent);
-        await Promise.allSettled(serviceEntities.map(serviceEntity => limit(() => this.coupleService(serviceEntity, resolveOgcDistributions, false))));
+        await this.runInParallel(serviceEntities, serviceEntity => this.coupleService(serviceEntity, resolveOgcDistributions, false));
         log.info(`Finished dataset-service coupling`);
         // 3) persist leftovers
         await this.database.sendBulkCouples();
@@ -377,7 +403,7 @@ export class CswImporter extends Importer<CswSettings> {
                             service_type: serviceType,
                             distribution
                         };
-                        await this.database.addEntityToBulk(coupling);
+                        await this.addEntityToBulk(coupling);
                         // }
                         // else {
                         //     log.warn(`Did not fetch WFS from ${serviceEntity.identifier}: ${errors.join(', ')}`);
@@ -411,7 +437,7 @@ export class CswImporter extends Importer<CswSettings> {
                             service_type: serviceType,
                             distribution
                         };
-                        await this.database.addEntityToBulk(coupling);
+                        await this.addEntityToBulk(coupling);
                     }
                     break;
                 default:
@@ -494,7 +520,7 @@ export class CswImporter extends Importer<CswSettings> {
                     dataset_csw: mapper.getHarvestedData(),
                     original_document: mapper.getHarvestedData()
                 };
-                promises.push(this.database.addEntityToBulk(entity));
+                promises.push(this.addEntityToBulk(entity));
             } else {
                 this.summary.skippedDocs.push(uuid);
             }

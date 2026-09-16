@@ -120,6 +120,17 @@ export class CatalogService {
         return settings;
     }
 
+    static async deleteRecordsFromCatalogs(datasourceId: number, catalogIds: number[]): Promise<void> {
+        for (const catalogId of catalogIds) {
+            try {
+                const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, new Summary('catalogUnlink', {}));
+                await catalog.deleteRecordsForDatasource(datasourceId);
+            } catch (e) {
+                log.error(`Failed to delete records for datasource '${datasourceId}' from catalog '${catalogId}': ${e}`);
+            }
+        }
+    }
+
     static async removeCatalog(id: number) {
         const existingSettings = CatalogService.getCatalogSettings();
         const catalogIndex = existingSettings.findIndex(catalog => catalog.id == id);

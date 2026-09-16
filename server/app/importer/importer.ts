@@ -21,23 +21,27 @@
  * ==================================================
  */
 
+import type { CatalogSettings } from '@shared/catalog.js';
 import type { GeneralSettings } from '@shared/general-config.settings.js';
 import log4js from 'log4js';
+import PQueue from 'p-queue';
 import type { Observer } from 'rxjs';
 import { Observable } from 'rxjs';
-import type { ImporterSettings } from './importer.settings.js';
+import type { Catalog, CatalogColumnType, CatalogOperation } from '../catalog/catalog.factory.js';
+import type { Entity } from '../model/entity.js';
 import type { ImportLogMessage } from '../model/import.result.js';
 import { Summary } from '../model/summary.js';
 import { DatabaseFactory } from '../persistence/database.factory.js';
-import type { DatabaseUtils } from '../persistence/database.utils.js';
+import type { BulkResponse, DatabaseUtils } from '../persistence/database.utils.js';
 import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import { ConfigService } from '../services/config/ConfigService.js';
+import { CancellationScope, HarvestRunCancelledError, cancellationSignalStorage } from '../utils/cancellation.utils.js';
 import { FilterUtils } from '../utils/filter.utils.js';
 import * as MiscUtils from '../utils/misc.utils.js';
 import { MailServer } from '../utils/nodemailer.utils.js';
-import { JobsUtils } from '../statistic/jobs.utils.js';
+import type { ImporterSettings } from './importer.settings.js';
 
 const log = log4js.getLogger(import.meta.filename)
 
@@ -56,6 +60,13 @@ export abstract class Importer<S extends ImporterSettings> {
     protected generalConfig: GeneralSettings;
     protected isIncremental: boolean = false;
     protected observer: Observer<ImportLogMessage>;
+    protected harvesterRunCancelled: boolean = false;
+    protected harvesterRunCancelledByUser: boolean = false;
+    protected readonly cancellationScope = new CancellationScope();
+
+    protected get cancellationSignal(): AbortSignal | undefined {
+        return cancellationSignalStorage.getStore() ?? this.cancellationScope.signal;
+    }
 
     readonly database: DatabaseUtils;
     readonly elastic: ElasticsearchUtils;
@@ -77,13 +88,62 @@ export abstract class Importer<S extends ImporterSettings> {
         }
     }
 
+    public cancel(isUserCancelled: boolean = true): void {
+        this.harvesterRunCancelled = true;
+        if (isUserCancelled) {
+            this.harvesterRunCancelledByUser = true;
+        }
+        this.cancellationScope.abort();
+    }
+
+    protected checkCancellation(): void {
+        if (this.harvesterRunCancelled) {
+            throw new HarvestRunCancelledError();
+        }
+    }
+
+    protected async addEntityToBulk(entity: Entity): Promise<BulkResponse> {
+        this.checkCancellation();
+        return this.database.addEntityToBulk(entity);
+    }
+
+    protected async runInParallel<T, R>(items: T[], task: (item: T, index: number) => Promise<R>, concurrency = this.settings.maxConcurrent): Promise<R[]> {
+        const queue = new PQueue({ concurrency });
+        const signal = this.cancellationSignal;
+        let firstError: any;
+        try {
+            const tasks = items.map((item, index) =>
+                queue.add(async () => {
+                    this.checkCancellation();
+                    try {
+                        return await task(item, index);
+                    }
+                    catch (e) {
+                        firstError ??= e;
+                        this.cancel(false);
+                        queue.clear();
+                        throw e;
+                    }
+                }, { signal })
+            );
+            return await Promise.all(tasks);
+        }
+        catch (err) {
+            this.cancel(false);
+            queue.clear();
+            throw firstError ?? err;
+        }
+    }
+
     run(isIncremental: boolean = false): Observable<ImportLogMessage> {
         this.isIncremental = isIncremental;
         this.summary.isIncremental = isIncremental;
         return new Observable<ImportLogMessage>(observer => {
             this.observer = observer;
             this.summary.startTime = new Date();
-            this.exec(observer);//.then(() => this.elastic.close());
+            this.cancellationScope.run(() => {
+                this.exec(observer);
+            });
         });
     }
 
@@ -97,8 +157,11 @@ export abstract class Importer<S extends ImporterSettings> {
             observer.next(this.summary.msgComplete('Dry run ... no indexing of data'));
         }
         else {
+            let transactionTimestamp: Date;
+            let transactionCommitted = false;
+            const processedCatalogs: Catalog<CatalogColumnType, CatalogSettings, CatalogOperation>[] = [];
             try {
-                let transactionTimestamp = await this.database.beginTransaction();
+                transactionTimestamp = await this.database.beginTransaction();
                 // get datasets
                 let numIndexDocs = await this.harvest();
                 if (!this.isIncremental) {
@@ -122,10 +185,15 @@ export abstract class Importer<S extends ImporterSettings> {
                     throw new Error();
                 }
 
-                await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
+                this.checkCancellation();
+                if (!this.isIncremental) {
+                    await this.database.deleteNonFetchedDatasets(this.settings.sourceURL, transactionTimestamp);
+                }
                 await this.database.commitTransaction();
+                transactionCommitted = true;
                 // TODO support concurrency of different catalogs
                 for (const catalogId of this.settings.catalogIds) {
+                    this.checkCancellation();
                     const stageSummary = this.startStage(`catalog/${catalogId}`);
                     const catalog = await ProfileFactoryLoader.get().getCatalog(catalogId, stageSummary);
                     try {
@@ -137,6 +205,7 @@ export abstract class Importer<S extends ImporterSettings> {
                         // for that, we need to consider how to handle "deleted", i.e. non-fetched, datasets
 
                         await catalog.process(this.settings.sourceURL, this.settings, observer);
+                        processedCatalogs.push(catalog);
                     }
                     catch (e) {
                         log.error(`Error while importing into catalog ${catalog.settings.name} (id=${catalogId}):`, e);
@@ -144,22 +213,45 @@ export abstract class Importer<S extends ImporterSettings> {
                     }
                 }
                 await this.postHarvestingHandling();
-                const completeMsg = this.summary.msgComplete();
-                completeMsg.status = JobsUtils.deriveStatus(completeMsg, [this.summary, ...this.stageSummaries]);
-                observer.next(completeMsg);
+                observer.next(this.summary.msgComplete());
             }
             catch (err) {
-                let message = err?.message ?? String(err);
-                if (message) {
-                    if (message.includes('The user aborted a request.')) {
-                        message = 'A request to the server timed out. If this occurs frequently, try reducing the "maxRecords" setting.';
+                this.cancel(false);
+                if (this.harvesterRunCancelledByUser) {
+                    const rollbackDbStage = this.startStage('rollbackSourceImport');
+                    if (!transactionCommitted) {
+                        await this.database.rollbackTransaction();
+                        observer.next(rollbackDbStage.msgImport('Transaction rolled back'));
                     }
-                    this.summary.errors.push({ type: 'app', error: message });
+                    else {
+                        const count = await this.database.rollbackSourceImport(this.settings.sourceURL, transactionTimestamp);
+                        observer.next(rollbackDbStage.msgImport(`Rolled back ${count} records`));
+                        for (const catalog of processedCatalogs) {
+                            if ('rollbackTargetCatalog' in catalog) {
+                                const rollbackCatalogStage = this.startStage('rollbackTargetCatalog');
+                                await (catalog as any).rollbackTargetCatalog(this.settings.id, transactionTimestamp);
+                                observer.next(rollbackCatalogStage.msgImport());
+                            }
+                        }
+                    }
+                    observer.next(this.summary.msgCancelled());
                 }
-                await this.database.rollbackTransaction();
-                let msg = this.summary.errors.find(e => e.type === 'app' || e.type === 'database')?.error;
-                log.error(err);
-                observer.next(this.summary.msgComplete(msg));
+                else {
+                    let message = err?.message ?? String(err);
+                    if (message) {
+                        if (message.includes('The user aborted a request.')) {
+                            message = 'A request to the server timed out. If this occurs frequently, try reducing the "maxRecords" setting.';
+                        }
+                        this.summary.errors.push({ type: 'app', error: message });
+                    }
+                    await this.database.rollbackTransaction();
+                    let msg = this.summary.errors.find(e => e.type === 'app' || e.type === 'database')?.error;
+                    if (this.generalConfig.mail.enabled) {
+                        MailServer.getInstance().send(msg, `An error occurred during harvesting: ${msg}`);
+                    }
+                    log.error(err);
+                    observer.next(this.summary.msgComplete(msg));
+                }
             }
         }
         observer.complete();
