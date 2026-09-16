@@ -301,7 +301,7 @@ export class RequestDelegate {
             log.debug(`Requesting: ${fullURL}${addInfo} (retries: ${retries}, wait: ${waitMilliSeconds}ms)`);
         }
 
-        let resolvedResponse: Response;
+        let tries = 0;
         while (true) {
             const timeoutSignal = AbortSignal.timeout(timeoutMs);
             const signals: AbortSignal[] = [timeoutSignal];
@@ -314,8 +314,14 @@ export class RequestDelegate {
             const effectiveSignal = signals.length === 1 ? signals[0] : AbortSignal.any(signals);
 
             try {
-                resolvedResponse = await fetch(fullURL, { ...config, signal: effectiveSignal });
-                break;
+                const resolvedResponse = await fetch(fullURL, { ...config, signal: effectiveSignal });
+                if (config.resolveWithFullResponse) {
+                    return resolvedResponse;
+                }
+                if (config.json) {
+                    return await resolvedResponse.json();
+                }
+                return await resolvedResponse.text();
             }
             catch (e: any) {
                 const isUserCancelled = cancellationSignal?.aborted && (e.name === 'AbortError' || e.name === 'TimeoutError');
@@ -324,26 +330,20 @@ export class RequestDelegate {
                 }
 
                 // if a connection or timeout error occurs, retry (but not on user-initiated cancellation)
-                if (retries > 0 && e.name !== 'AbortError' && !cancellationSignal?.aborted) {
-                    retries -= 1;
-                    log.info(`Retrying request for ${fullURL} (waiting ${waitMilliSeconds}ms)`);
-                    await RequestDelegate.sleep(waitMilliSeconds);
+                if (e.name !== 'AbortError' && !cancellationSignal?.aborted) {
+                    if (tries < retries) {
+                        tries++;
+                        log.info(`Retrying request for ${fullURL} (waiting ${waitMilliSeconds}ms)`);
+                        await RequestDelegate.sleep(waitMilliSeconds);
+                    }
+                    else {
+                        throw new Error(`Timeout after ${retries} retries while requesting ${fullURL}: ${e.message}`, { cause: e });
+                    }
                 }
                 else {
                     throw e;
                 }
             }
-        }
-
-        if (config.resolveWithFullResponse) {
-            return resolvedResponse;
-        }
-
-        if (config.json) {
-            return resolvedResponse.json();
-        }
-        else {
-            return resolvedResponse.text();
         }
     }
 
