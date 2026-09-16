@@ -21,30 +21,18 @@
  * ==================================================
  */
 
-import type { WfsMapper } from "../../../../importer/wfs/wfs.mapper.js";
 import { IdfGenerator } from "../../idf.generator.js";
 import type { PegelonlineWfsMapper } from './pegelonline.wfs.mapper.js';
 
 export class PegelonlineIdfGenerator extends IdfGenerator {
 
-    protected mapper: PegelonlineWfsMapper;
-    // private baseMapper: WfsMapper;
+    declare protected mapper: PegelonlineWfsMapper;
 
     constructor(profileMapper: PegelonlineWfsMapper) {
         super(profileMapper);
-        // this.mapper = profileMapper;
-        // this.baseMapper = profileMapper.baseMapper;
-        // let idfBody = '<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.portalu.de/IDF/1.0"><head/><body/></html>';
-        // this.document = this.domParser.parseFromString(idfBody);
     }
 
     createIdf(): string {
-        // if (this.mapper.isFeatureType()) {
-        //     return this.createFeatureTypeIdf();
-        // }
-        // else {
-        //     return this.createFeatureIdf(idx);
-        // }
         return this.createFeatureIdf();
     }
 
