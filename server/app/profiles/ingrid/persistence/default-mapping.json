@@ -503,10 +503,10 @@
                 },
                 "data_quality": {
                     "properties": {
-                        "completenessOmission": {
+                        "completeness_omission": {
                             "type": "float"
                         },
-                        "positionalAccuracy": {
+                        "positional_accuracy": {
                             "properties": {
                                 "horizontal": {
                                     "type": "float"
@@ -551,7 +551,7 @@
                         }
                     }
                 },
-                "spatialResolutionScale": {
+                "spatial_resolution_scale": {
                     "properties": {
                         "scale": {
                             "type": "integer"
@@ -614,13 +614,13 @@
                         }
                     }
                 },
-                "processStepDescription": {
+                "process_step_description": {
                     "type": "text",
                     "copy_to": [
                         "fulltext"
                     ]
                 },
-                "symbolCatalogue": {
+                "symbol_catalogue": {
                     "properties": {
                         "title": {
                             "type": "text",
@@ -636,7 +636,7 @@
                         }
                     }
                 },
-                "codeListReference": {
+                "codelist_reference": {
                     "properties": {
                         "title": {
                             "type": "text",
@@ -652,7 +652,7 @@
                         }
                     }
                 },
-                "attributeDescription": {
+                "attribute_description": {
                     "type": "text",
                     "copy_to": [
                         "fulltext"
@@ -725,16 +725,16 @@
                                 }
                             }
                         },
-                        "environmentDescription": {
+                        "environment_description": {
                             "type": "text"
                         },
-                        "serviceHistory": {
+                        "service_history": {
                             "type": "text"
                         },
-                        "additionalInformation": {
+                        "additional_information": {
                             "type": "text"
                         },
-                        "hasAccessConstraints": {
+                        "has_access_constraints": {
                             "type": "boolean"
                         },
                         "doi": {
@@ -742,10 +742,10 @@
                                 "identifier": {
                                     "type": "keyword"
                                 },
-                                "generalResourceType": {
+                                "general_resource_type": {
                                     "type": "keyword"
                                 },
-                                "resourceType": {
+                                "resource_type": {
                                     "type": "keyword"
                                 }
                             }

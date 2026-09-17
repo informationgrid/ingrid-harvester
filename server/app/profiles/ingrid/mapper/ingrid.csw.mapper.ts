@@ -315,7 +315,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return result?.length ? result : undefined;
     }
 
-    getSpatialResolutionScale(): IngridSpecific['spatialResolutionScale'] {
+    getSpatialResolutionScale(): IngridSpecific['spatial_resolution_scale'] {
         const node = CswMapper.select("./gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution", this.baseMapper.idInfo, true);
         if (!node) return undefined;
         const parseNum = (val: string | undefined) => { const n = Number(val); return isNaN(n) || val == null ? undefined : n; };
@@ -342,7 +342,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return result?.length ? result : undefined;
     }
 
-    getSymbolCatalogue(): IngridSpecific['symbolCatalogue'] {
+    getSymbolCatalogue(): IngridSpecific['symbol_catalogue'] {
         const citations = CswMapper.select("./gmd:portrayalCatalogueInfo/gmd:MD_PortrayalCatalogueReference/gmd:portrayalCatalogueCitation/gmd:CI_Citation", this.baseMapper.record);
         const result = citations?.map(citation => ({
             title: this.text("./gmd:title/gco:CharacterString", citation) ?? undefined,
@@ -352,7 +352,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return result?.length ? result : undefined;
     }
 
-    getCodeListReference(): IngridSpecific['codeListReference'] {
+    getCodeListReference(): IngridSpecific['codelist_reference'] {
         const citations = CswMapper.select("./gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation/gmd:CI_Citation", this.baseMapper.record);
         const result = citations?.map(citation => ({
             title: this.text("./gmd:title/gco:CharacterString", citation) ?? undefined,
@@ -393,16 +393,16 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             access_url: this.text("./srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL", op) ?? undefined,
         }));
         const hasAccessConstraints = !!this.getObjectAccess()?.restriction_value?.length;
-        // TODO: no confirmed ISO source found yet for classifications / environmentDescription / additionalInformation / doi
+        // TODO: no confirmed ISO source found yet for classifications / environment_description / additional_information / doi
         return {
             type,
             classifications: undefined,
             versions: versions?.length ? versions : undefined,
             operations: operations?.length ? operations : undefined,
-            environmentDescription: undefined,
-            serviceHistory: undefined,
-            additionalInformation: undefined,
-            hasAccessConstraints,
+            environment_description: undefined,
+            service_history: undefined,
+            additional_information: undefined,
+            has_access_constraints: hasAccessConstraints,
             doi: undefined,
         };
     }
@@ -999,8 +999,8 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             }));
 
         const result: IngridDataQuality = {};
-        if (completenessOmission != null) result.completenessOmission = completenessOmission;
-        if (horizontal != null || vertical != null) result.positionalAccuracy = { horizontal, vertical };
+        if (completenessOmission != null) result.completeness_omission = completenessOmission;
+        if (horizontal != null || vertical != null) result.positional_accuracy = { horizontal, vertical };
         if (qualities?.length) result.qualities = qualities;
         return Object.keys(result).length ? result : undefined;
     }

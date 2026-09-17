@@ -54,7 +54,7 @@ export type IngridSpecific = {
     order_info?: string,
     data_quality?: IngridDataQuality,
     character_set?: { key: string | null, value: string | null },
-    spatialResolutionScale?: { scale?: number, resolution_ground?: number, resolution_scan?: number },
+    spatial_resolution_scale?: { scale?: number, resolution_ground?: number, resolution_scan?: number },
     cross_references?: {
         uuid?: string,
         name?: string,
@@ -64,10 +64,10 @@ export type IngridSpecific = {
         direction?: 'IN' | 'OUT',
     }[],
     lineage?: { statement?: string, source?: string, process_step?: string },
-    processStepDescription?: string[],
-    symbolCatalogue?: { title?: string, date?: string, version?: string }[],
-    codeListReference?: { title?: string, date?: string, version?: string }[],
-    attributeDescription?: string[],
+    process_step_description?: string[],
+    symbol_catalogue?: { title?: string, date?: string, version?: string }[],
+    codelist_reference?: { title?: string, date?: string, version?: string }[],
+    attribute_description?: string[],
     spatial?: {
         description?: string,
         vertical_extent?: {
@@ -82,11 +82,11 @@ export type IngridSpecific = {
         classifications?: string[],
         versions?: string[],
         operations?: { name?: string, description?: string, access_url?: string }[],
-        environmentDescription?: string,
-        serviceHistory?: string,
-        additionalInformation?: string,
-        hasAccessConstraints?: boolean,
-        doi?: { identifier?: string, generalResourceType?: string, resourceType?: string },
+        environment_description?: string,
+        service_history?: string,
+        additional_information?: string,
+        has_access_constraints?: boolean,
+        doi?: { identifier?: string, general_resource_type?: string, resource_type?: string },
     },
 };
 
@@ -109,8 +109,8 @@ export type IngridConformanceResult = {
 };
 
 export type IngridDataQuality = {
-    completenessOmission?: number,
-    positionalAccuracy?: {
+    completeness_omission?: number,
+    positional_accuracy?: {
         horizontal?: number,
         vertical?: number,
     },

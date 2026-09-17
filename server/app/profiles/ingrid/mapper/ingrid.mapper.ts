@@ -225,13 +225,13 @@ export abstract class ingridMapper<M extends ingridMapperType>
             order_info: this.getOrderInfo(),
             data_quality: this.getDataQuality(),
             character_set: this.getCharacterSet(),
-            spatialResolutionScale: this.getSpatialResolutionScale(),
+            spatial_resolution_scale: this.getSpatialResolutionScale(),
             cross_references: this.getCrossReferences(),
             lineage: this.getLineage(),
-            processStepDescription: this.getProcessStepDescription(),
-            symbolCatalogue: this.getSymbolCatalogue(),
-            codeListReference: this.getCodeListReference(),
-            attributeDescription: this.getAttributeDescription(),
+            process_step_description: this.getProcessStepDescription(),
+            symbol_catalogue: this.getSymbolCatalogue(),
+            codelist_reference: this.getCodeListReference(),
+            attribute_description: this.getAttributeDescription(),
             spatial: this.getIngridSpatial(),
             service: this.getService(),
         };
@@ -241,7 +241,7 @@ export abstract class ingridMapper<M extends ingridMapperType>
         return undefined;
     }
 
-    getSpatialResolutionScale(): IngridSpecific['spatialResolutionScale'] {
+    getSpatialResolutionScale(): IngridSpecific['spatial_resolution_scale'] {
         return undefined;
     }
 
@@ -264,11 +264,11 @@ export abstract class ingridMapper<M extends ingridMapperType>
         return undefined;
     }
 
-    getSymbolCatalogue(): IngridSpecific['symbolCatalogue'] {
+    getSymbolCatalogue(): IngridSpecific['symbol_catalogue'] {
         return undefined;
     }
 
-    getCodeListReference(): IngridSpecific['codeListReference'] {
+    getCodeListReference(): IngridSpecific['codelist_reference'] {
         return undefined;
     }
 
