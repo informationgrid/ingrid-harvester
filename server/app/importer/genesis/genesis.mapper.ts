@@ -193,6 +193,10 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
         return this.settings.typeConfig.spatialUri;
     }
 
+    getPoliticalGeocodingLevel(): string | undefined {
+        return this.settings.typeConfig.politicalGeocodingLevel;
+    }
+
     getLandingPageUrl(): string | undefined {
         const template = this.settings.typeConfig.statisticUrlTemplate;
         if (!template) return undefined;

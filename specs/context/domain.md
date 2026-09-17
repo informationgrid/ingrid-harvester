@@ -31,6 +31,7 @@ InGrid Harvester pulls metadata from heterogeneous sources (CSW, WFS, CKAN, JSON
 | Summary | Mutable object accumulating metrics (counts, errors, warnings) over a Harvest Run | |
 | Dry run | Harvest that validates records without writing to the target catalog | |
 | Incremental harvest | Harvest processing only records changed since the last run | |
+| politicalGeocodingLevel | DCAT-AP.DE codelist (20006): geopolitical coverage level of a dataset — `international`, `european`, `federal`, `state`, `administrativeDistrict`, `municipality`. Key stored in settings; mapped to full URI `http://dcat-ap.de/def/politicalGeocoding/Level/<key>` for `dcatde:politicalGeocodingLevelURI` and index field `political_geocoding_level_uri` | Codelist 20006 |
 
 ---
 
