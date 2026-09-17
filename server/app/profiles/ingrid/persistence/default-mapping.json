@@ -357,6 +357,9 @@
                                 },
                                 "value": {
                                     "type": "keyword"
+                                },
+                                "source": {
+                                    "type": "keyword"
                                 }
                             }
                         }
