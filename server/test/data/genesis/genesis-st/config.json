@@ -29,7 +29,6 @@
       "email": "mailto:poststelle@stala.mi.sachsen-anhalt.de",
       "name": "Statistisches Landesamt Sachsen-Anhalt"
     },
-    "spatialUri": "https://www.geonames.org/2842565",
     "politicalGeocodingLevel": "administrativeDistrict",
     "landingPageUrl": "Configurable landingPageUrl here",
     "statisticUrlTemplate": "https://genesis.sachsen-anhalt.de/genesis/online?operation=statistic&code={code}",

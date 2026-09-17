@@ -25,7 +25,7 @@ flowchart TD
     Profile --> Rdf
 ```
 
-`spatialUri` keeps its existing, separate path (`GenesisMapper.getSpatialUri()` → `ingridGenesisMapper._buildDcatapdeDocument()` → `dct:spatial`), untouched by this feature.
+`spatialUri` (setting, `GenesisMapper.getSpatialUri()`, `dct:spatial` RDF output, frontend field, context-help section) is removed entirely, not repurposed — there is no replacement path for it.
 
 ## Data Model
 
@@ -54,8 +54,8 @@ private getPoliticalGeocodingLevelUri(): string | undefined {
     return key ? POLITICAL_GEOCODING_LEVEL_BASE + key : undefined;
 }
 ```
-- `createIndexDocument()`: `political_geocoding_level_uri: this.getPoliticalGeocodingLevelUri()` (was `this.baseMapper.getSpatialUri()`).
-- `_buildDcatapdeDocument()`: appends `<dcatde:politicalGeocodingLevelURI rdf:resource="...">` after the existing `dct:spatial` block, reusing the already-declared `dcatde` namespace on `rdfRoot`.
+- `createIndexDocument()`: `political_geocoding_level_uri: this.getPoliticalGeocodingLevelUri()`.
+- `_buildDcatapdeDocument()`: appends `<dcatde:politicalGeocodingLevelURI rdf:resource="...">`, reusing the already-declared `dcatde` namespace on `rdfRoot`. The former `dct:spatial rdf:resource=...` block (from `spatialUri`) is removed, not replaced.
 
 ### Frontend field (`client/src/app/datasources/dialog-edit/fields/types/genesis.type.ts`)
 `type: "select"` (Material, via `withFormlyMaterial()`), static `props.options` array — same pattern as `wfs.type.ts`'s `httpMethod`/`pluPlanState` fields. No `labelProp`/`valueProp` needed (codebase always uses default `{ label, value }`).
@@ -64,7 +64,8 @@ private getPoliticalGeocodingLevelUri(): string | undefined {
 
 | Decision | Rationale | Rejected Alternative |
 |----------|-----------|----------------------|
-| Add new field `politicalGeocodingLevel` instead of repurposing `spatialUri` | User decision after clarification: existing configs/behavior for `spatialUri` → `dct:spatial` must keep working unchanged | Renaming `spatialUri` to `politicalGeocodingLevel` (the originally requested approach) |
+| Add new field `politicalGeocodingLevel`, then remove `spatialUri` entirely | Two-step user decision: first keep `spatialUri` separate while adding the new field, then (explicit follow-up) drop `spatialUri` and its `dct:spatial` output altogether — no replacement, no migration | Renaming `spatialUri` to `politicalGeocodingLevel` in place (the originally requested single-step approach); keeping `spatialUri` alongside the new field indefinitely |
 | URI built by simple string concatenation (`BASE + key`) | The 6 codelist keys are exactly the DCAT-AP.DE URI path segments (confirmed by existing `opendata-hro` DCATAPDE fixture) | A `Record<string,string>` lookup map (unnecessary indirection — see `getAccrualPeriodicityUri()` for where a map *is* needed, because German labels don't match URI segments) |
 | Codelist values hardcoded as static frontend array | User decision: "erstmal als statisches Array" — no codelist XML/REST endpoint for this iteration | `codelist_20006.xml` + `Codelist.getInstance()` + new REST endpoint (bigger scope, no precedent for client-side codelist consumption) |
 | `political_geocoding_level_uri` now sourced from the new field, not `spatialUri` | Fixes the semantic bug — this index field is documented DCAT-AP.DE vocabulary (`dcatde:politicalGeocodingLevelURI`), not a free-text spatial reference | Leaving it fed by `spatialUri` (perpetuates the bug) |
+| `server/config/ingrid/config.json` left untouched despite containing `spatialUri` | It is live runtime datasource config for a running instance on this machine, not a static repo/spec source — has its own independent uncommitted local changes | Editing it as part of this feature (would risk corrupting a running application's config) |

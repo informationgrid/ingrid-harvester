@@ -48,3 +48,33 @@ status: stable
   - File: `server/test/data/genesis/genesis-st/config.json`, `server/test/data/genesis/genesis-st/elasticsearch/*.json`
   - Details: Add `typeConfig.politicalGeocodingLevel: "administrativeDistrict"` to the config fixture. Run `npm run test`, capture the actual mismatch for the 3 expected elasticsearch docs, and update `political_geocoding_level_uri` (new DCAT-AP.DE URI) and the embedded `rdf` string (add `dcatde:politicalGeocodingLevelURI`, keep existing `dct:spatial`) to match real mapper output — do not hand-craft the RDF string.
   - Acceptance: `GENESIS Integration Tests` (`genesis.integration.spec.ts`) pass.
+
+- [x] TASK-008: Remove `spatialUri` from `GenesisTypeConfig`
+  - Refs: FR-008
+  - File: `server/app/importer/genesis/genesis.settings.ts`
+  - Details: Delete the `spatialUri?: string;` field and its comment.
+  - Acceptance: Field no longer exists on `GenesisTypeConfig`.
+
+- [x] TASK-009: Remove `getSpatialUri()` from `GenesisMapper`
+  - Refs: FR-008
+  - File: `server/app/importer/genesis/genesis.mapper.ts`
+  - Details: Delete the `getSpatialUri()` method.
+  - Acceptance: No remaining references to `getSpatialUri` in `server/app`.
+
+- [x] TASK-010: Remove the `dct:spatial` (spatialUri) block from the DCAT-AP.DE export
+  - Refs: FR-008
+  - File: `server/app/profiles/ingrid/mapper/ingrid.genesis.mapper.ts`
+  - Details: Delete the `const spatialUri = this.baseMapper.getSpatialUri(); if (spatialUri) {...}` block in `_buildDcatapdeDocument()`. The `dcatde:politicalGeocodingLevelURI` block (TASK-003) is unaffected.
+  - Acceptance: Integration test (TASK-012) shows no `dct:spatial rdf:resource=...` element in the RDF output.
+
+- [x] TASK-011: Remove the orphaned frontend field and its context-help section
+  - Refs: FR-008
+  - File: `client/src/app/datasources/dialog-edit/fields/types/genesis.type.ts`, `server/app/contextHelp/de/ingrid/harvester_genesis_settings.md`
+  - Details: Delete the `spatialUri` input field block (label "Räumliche Abdeckung (URI)") and the corresponding `# Räumliche Abdeckung (URI)` context-help section.
+  - Acceptance: No field or help section references `spatialUri`.
+
+- [x] TASK-012: Update GENESIS integration fixtures for the removal
+  - Refs: FR-008
+  - File: `server/test/data/genesis/genesis-st/config.json`, `server/test/data/genesis/genesis-st/elasticsearch/*.json`
+  - Details: Remove `typeConfig.spatialUri` from the config fixture. Remove the `<dct:spatial rdf:resource="https://www.geonames.org/2842565"/>` element from the embedded `rdf` string in the 3 expected elasticsearch docs (verify against real mapper output, don't hand-craft).
+  - Acceptance: `GENESIS Integration Tests` (`genesis.integration.spec.ts`) pass; `server/config/ingrid/config.json` (live runtime state, out of scope) left untouched.

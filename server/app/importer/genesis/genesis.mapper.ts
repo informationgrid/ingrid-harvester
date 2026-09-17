@@ -189,10 +189,6 @@ export class GenesisMapper extends Mapper<GenesisSettings> {
         return this.settings.typeConfig.contributorId;
     }
 
-    getSpatialUri(): string | undefined {
-        return this.settings.typeConfig.spatialUri;
-    }
-
     getPoliticalGeocodingLevel(): string | undefined {
         return this.settings.typeConfig.politicalGeocodingLevel;
     }

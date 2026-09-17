@@ -337,13 +337,6 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             dataset.appendChild(langEl);
         }
 
-        const spatialUri = this.baseMapper.getSpatialUri();
-        if (spatialUri) {
-            const spatialEl = doc.createElement('dct:spatial');
-            spatialEl.setAttribute('rdf:resource', spatialUri);
-            dataset.appendChild(spatialEl);
-        }
-
         const politicalGeocodingLevelUri = this.getPoliticalGeocodingLevelUri();
         if (politicalGeocodingLevelUri) {
             const levelEl = doc.createElement('dcatde:politicalGeocodingLevelURI');
