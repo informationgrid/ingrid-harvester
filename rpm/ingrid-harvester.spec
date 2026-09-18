@@ -14,7 +14,7 @@ AutoReqProv:                no
 %define ingrid_unit_name    ingrid-harvester.service
 %define ingrid_service      %{systemd_dir}/%{ingrid_unit_name}
 
-Requires: nodejs >= 21.0.0
+Requires: nodejs >= 24.0.0
 Requires: npm
 
 %description
