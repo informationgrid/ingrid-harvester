@@ -924,7 +924,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         if (objectUseConstraint?.license_value?.length) {
             licenses.push({
                 type: 'useConstraints',
-                items: objectUseConstraint.license_value.map(v => ({ key: null, value: v }))
+                items: objectUseConstraint.license_value.map(v => ({ key: null, value: v, source: objectUseConstraint.source }))
             });
         }
 
@@ -1011,10 +1011,35 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return result?.length ? { terms_of_use_value: result } : undefined;
     }
 
+    // useConstraints/otherConstraints siblings can carry the same license in up to three forms
+    // (GDI-DE convention, see csw.mapper.ts getLicense()/getAccessRights()): the plain license
+    // name/text, a "Quellenvermerk: <source>" free-text line, and a JSON snippet duplicating
+    // name/url plus a "quelle" field. Only the plain text is a real license_value; the other two
+    // just carry the source/attribution for it.
     getObjectUseConstraint() {
         let constraints = CswMapper.select("./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:useConstraints]/gmx:Anchor | ./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:useConstraints]/gco:CharacterString", this.baseMapper.idInfo);
-        let result = constraints?.map(constraint => constraint.textContent).filter(text => text?.trim());
-        return result?.length ? { license_value: result } : undefined;
+        let texts = constraints?.map(constraint => constraint.textContent).filter(text => text?.trim());
+        if (!texts?.length) return undefined;
+
+        let source: string;
+        let license_value: string[] = [];
+        for (let text of texts) {
+            let trimmed = text.trim();
+            try {
+                let json = JSON.parse(trimmed);
+                source ??= json?.quelle;
+                continue;
+            } catch (ignored) {
+                // not a JSON snippet
+            }
+            let quellenvermerk = trimmed.match(/^Quellenvermerk:\s*(.+)$/);
+            if (quellenvermerk) {
+                source ??= quellenvermerk[1].trim();
+                continue;
+            }
+            license_value.push(trimmed);
+        }
+        return license_value.length ? { license_value, source } : undefined;
     }
 
     getObjectAccess() {
