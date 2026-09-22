@@ -71,7 +71,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getAlternateTitle(): string {
-        return this.baseMapper._getAlternateTitle().join(" ");
+        return this.baseMapper._getAlternateTitle()?.join(" ");
     }
 
     getAlternateTitleDeprecated(): string[] {
