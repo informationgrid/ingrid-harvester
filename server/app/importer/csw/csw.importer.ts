@@ -114,8 +114,11 @@ export class CswImporter extends Importer<CswSettings> {
                     if (lastHarvestingDate) {
                         let isoLastHarvestingDate = new Date(lastHarvestingDate).toISOString();
                         log.info(`Setting incremental filter to >= ${isoLastHarvestingDate}`);
-                        let lastModifiedFilter = `<ogc:PropertyIsGreaterThanOrEqualTo><ogc:PropertyName>Modified</ogc:PropertyName><ogc:Literal>${isoLastHarvestingDate}</ogc:Literal></ogc:PropertyIsGreaterThanOrEqualTo>`;
-                        this.settings.recordFilter = this.appendFilter(lastModifiedFilter);
+                        const dateFilters = [];
+                        for (const dateField of ['Modified', 'CreationDate', 'PublicationDate', 'RevisionDate']) {
+                            dateFilters.push(`<ogc:PropertyIsGreaterThanOrEqualTo><ogc:PropertyName>apiso:${dateField}</ogc:PropertyName><ogc:Literal>${isoLastHarvestingDate}</ogc:Literal></ogc:PropertyIsGreaterThanOrEqualTo>`);
+                        }
+                        this.settings.recordFilter = this.appendFilter('<ogc:Or>' + dateFilters.join('\n') + '</ogc:Or>');
                     }
                     else {
                         log.warn(`Changing type of harvesting to "full" because no previous harvesting was found for harvester with id ${this.settings.id}`);
