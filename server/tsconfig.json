@@ -10,6 +10,11 @@
     "typeRoots": [
       "./node_modules/@types"
     ],
+    "types": [
+      "mocha",
+      "chai",
+      "sinon"
+    ],
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "experimentalDecorators":true,

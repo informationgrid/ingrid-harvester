@@ -1,0 +1,30 @@
+{
+  "type": "CSW",
+  "maxRecords": 100,
+  "startPosition": 1,
+  "catalogIds": [
+    1
+  ],
+  "rejectUnauthorizedSSL": true,
+  "rules": {
+    "containsDocumentsWithData": false
+  },
+  "maxConcurrent": 2,
+  "skipUrlCheckOnHarvest": false,
+  "timeout": 60000,
+  "sourceURL": "https://mis.bkg.bund.de/csw",
+  "maxServices": 30,
+  "resolveOgcDistributions": false,
+  "harvestingMode": "standard",
+  "eitherKeywords": [],
+  "httpMethod": "GET",
+  "resultType": "results",
+  "simplifyTolerance": 0,
+  "id": 4,
+  "description": "WSV-bkg",
+  "iPlugId": "wsv-bkg-csw",
+  "partner": "bund",
+  "provider": "wsv",
+  "dataSourceName": "wsv-bkg-csw",
+  "datatype": "csw,metadata"
+}

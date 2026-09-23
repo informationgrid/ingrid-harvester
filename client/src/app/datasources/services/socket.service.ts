@@ -36,6 +36,7 @@ export class SocketService {
   private socket: io.Socket;
 
   log$ = new Subject<ImportLogMessage>();
+  batchProgress$ = new Subject<{ total: number; finished: number }>();
 
   constructor(configService: ConfigService) {
     if (configService.config) {
@@ -45,6 +46,7 @@ export class SocketService {
       });
 
       this.socket.on("/log", (data) => this.log$.next(data));
+      this.socket.on("/batchProgress", (data) => this.batchProgress$.next(data));
 
       this.socket.on("connect_failed", () => {
         console.error("Sorry, there seems to be an issue with the connection!");

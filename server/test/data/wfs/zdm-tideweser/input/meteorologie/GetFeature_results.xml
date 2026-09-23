@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wfs:FeatureCollection xmlns:ms="http://mapserver.gis.umn.edu/mapserver" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://mapserver.gis.umn.edu/mapserver https://www.kuestendaten.de/DE/dynamisch/tideweser_ogc/bs?SERVICE=WFS&amp;VERSION=2.0.0&amp;REQUEST=DescribeFeatureType&amp;TYPENAME=ms:meteorologie&amp;OUTPUTFORMAT=application%2Fgml%2Bxml%3B%20version%3D3.2 http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd" timeStamp="2026-08-26T17:05:01" numberMatched="2" numberReturned="2">
+    <wfs:boundedBy>
+        <gml:Envelope srsName="urn:ogc:def:crs:EPSG::25832">
+            <gml:lowerCorner>427674.713000 6003770.703000</gml:lowerCorner>
+            <gml:upperCorner>428995.212000 6004763.204000</gml:upperCorner>
+        </gml:Envelope>
+    </wfs:boundedBy>
+    <wfs:member>
+        <ms:meteorologie gml:id="meteorologie.78352665">
+            <gml:boundedBy>
+                <gml:Envelope srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:lowerCorner>427674.713000 6003770.703000</gml:lowerCorner>
+                    <gml:upperCorner>427674.713000 6003770.703000</gml:upperCorner>
+                </gml:Envelope>
+            </gml:boundedBy>
+            <ms:msGeometry>
+                <gml:Point gml:id="meteorologie.78352665.1" srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:pos>427674.713000 6003770.703000</gml:pos>
+                </gml:Point>
+            </ms:msGeometry>
+            <ms:OBJEKT_ID>78352665</ms:OBJEKT_ID>
+            <ms:STATION_ID>286</ms:STATION_ID>
+            <ms:STATION_NAME>Helgoland (DWD)</ms:STATION_NAME>
+            <ms:STATION_BESCHRIFT>Helgoland_DWD</ms:STATION_BESCHRIFT>
+            <ms:OBERTHEMA_ID>272</ms:OBERTHEMA_ID>
+            <ms:STATION_AKTIV>1</ms:STATION_AKTIV>
+            <ms:GEWAESSER>Nordsee, Nordsee</ms:GEWAESSER>
+            <ms:STATIONSART>Wetterstation (DWD)</ms:STATIONSART>
+            <ms:STROMKILOMETER></ms:STROMKILOMETER>
+            <ms:FOTO></ms:FOTO>
+            <ms:BEMERKUNG>Datenquelle: Deutscher Wetterdienst </ms:BEMERKUNG>
+            <ms:BEMERKUNG_URL>https://www.dwd.de/DE/klimaumwelt/cdc/cdc_node.html</ms:BEMERKUNG_URL>
+            <ms:ORGANISATION>Deutscher Wetterdienst (DWD)</ms:ORGANISATION>
+            <ms:ZEITZONE>Mitteleuropäische Zeit (MEZ, engl. Central European Time, CET, UTC+1)</ms:ZEITZONE>
+            <ms:HOEHE_STATION>4m (NHN)</ms:HOEHE_STATION>
+            <ms:SENSOR>10m (bis 28.02.1964 15,85m und andere Position, bis 07.12.1989 15,00m; siehe DWD)</ms:SENSOR>
+            <ms:RECHTSWERT>427674,713</ms:RECHTSWERT>
+            <ms:HOCHWERT>6003770,703</ms:HOCHWERT>
+            <ms:PORTAL_TIDEELBE>1</ms:PORTAL_TIDEELBE>
+            <ms:PORTAL_NOK>0</ms:PORTAL_NOK>
+            <ms:PORTAL_OSK>0</ms:PORTAL_OSK>
+            <ms:PORTAL_NSK>1</ms:PORTAL_NSK>
+            <ms:PORTAL_TIDEWESER>1</ms:PORTAL_TIDEWESER>
+        </ms:meteorologie>
+    </wfs:member>
+    <wfs:member>
+        <ms:meteorologie gml:id="meteorologie.78353585">
+            <gml:boundedBy>
+                <gml:Envelope srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:lowerCorner>428995.212000 6004763.204000</gml:lowerCorner>
+                    <gml:upperCorner>428995.212000 6004763.204000</gml:upperCorner>
+                </gml:Envelope>
+            </gml:boundedBy>
+            <ms:msGeometry>
+                <gml:Point gml:id="meteorologie.78353585.1" srsName="urn:ogc:def:crs:EPSG::25832">
+                    <gml:pos>428995.212000 6004763.204000</gml:pos>
+                </gml:Point>
+            </ms:msGeometry>
+            <ms:OBJEKT_ID>78353585</ms:OBJEKT_ID>
+            <ms:STATION_ID>423</ms:STATION_ID>
+            <ms:STATION_NAME>Helgoland Düne (DWD)</ms:STATION_NAME>
+            <ms:STATION_BESCHRIFT>Helgoland_Duene_DWD</ms:STATION_BESCHRIFT>
+            <ms:OBERTHEMA_ID>272</ms:OBERTHEMA_ID>
+            <ms:STATION_AKTIV>1</ms:STATION_AKTIV>
+            <ms:GEWAESSER>Nordsee, Nordsee</ms:GEWAESSER>
+            <ms:STATIONSART>Wetterstation (DWD)</ms:STATIONSART>
+            <ms:STROMKILOMETER></ms:STROMKILOMETER>
+            <ms:FOTO></ms:FOTO>
+            <ms:BEMERKUNG>Datenquelle: Deutscher Wetterdienst </ms:BEMERKUNG>
+            <ms:BEMERKUNG_URL></ms:BEMERKUNG_URL>
+            <ms:ORGANISATION>Deutscher Wetterdienst (DWD)</ms:ORGANISATION>
+            <ms:ZEITZONE>Mitteleuropäische Zeit (MEZ, engl. Central European Time, CET, UTC+1)</ms:ZEITZONE>
+            <ms:HOEHE_STATION>4m</ms:HOEHE_STATION>
+            <ms:SENSOR>10m</ms:SENSOR>
+            <ms:RECHTSWERT>428995,212</ms:RECHTSWERT>
+            <ms:HOCHWERT>6004763,204</ms:HOCHWERT>
+            <ms:PORTAL_TIDEELBE>1</ms:PORTAL_TIDEELBE>
+            <ms:PORTAL_NOK>0</ms:PORTAL_NOK>
+            <ms:PORTAL_OSK>0</ms:PORTAL_OSK>
+            <ms:PORTAL_NSK>1</ms:PORTAL_NSK>
+            <ms:PORTAL_TIDEWESER>1</ms:PORTAL_TIDEWESER>
+        </ms:meteorologie>
+    </wfs:member>
+</wfs:FeatureCollection>

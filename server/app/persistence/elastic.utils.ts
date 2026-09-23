@@ -25,9 +25,9 @@ import type { ElasticsearchConfiguration } from '@shared/general-config.settings
 import type { Index } from '@shared/index.model.js';
 import type { Client as Client8 } from 'elasticsearch8';
 import type { Client as Client9 } from 'elasticsearch9';
+import { INGRID_META_INDEX } from '../../app/constants.js';
 import type { CatalogOperation } from '../catalog/catalog.factory.js';
 import type { Summary } from '../model/summary.js';
-import { INGRID_META_INDEX } from '../profiles/ingrid/profile.factory.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
 import type { ElasticQueries } from './elastic.queries.js';
 import type { IndexSettings } from './elastic.setting.js';

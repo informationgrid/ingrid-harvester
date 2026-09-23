@@ -69,8 +69,8 @@ URI des Datenbereitstellers im DCAT-AP.DE-Beitragendenregister. Wird als `dcatde
 
 **Beispiel:** `http://dcat-ap.de/def/contributors/genesisLsa`
 
-# Räumliche Abdeckung (URI)
+# Ebene der geopolitischen Abdeckung
 
-URI zur Beschreibung des geografischen Geltungsbereichs der Daten. Wird als `dct:spatial` eingetragen.
+Ebene der geopolitischen Abdeckung aus der DCAT-AP.DE-Codeliste `politicalGeocodingLevel` (20006). Wird als `dcatde:politicalGeocodingLevelURI` im DCAT-AP.DE-Dokument sowie als `political_geocoding_level_uri` im Index-Dokument eingetragen.
 
-**Beispiel:** `https://www.geonames.org/2842565` (Sachsen-Anhalt)
+**Werte:** internationale Ebene, EU-Ebene, Bundesebene, Ebene der Bundesländer, Ebene der Landkreise und Regierungsbezirke, kommunale Ebene

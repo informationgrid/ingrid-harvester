@@ -1,0 +1,188 @@
+{
+  "collection": {
+    "name": "govdata"
+  },
+  "contacts": [
+    {
+      "name": "Umweltbundesamt",
+      "role": 10
+    },
+    {
+      "mbox": null,
+      "name": null,
+      "role": 11
+    }
+  ],
+  "content": [
+    "govdata",
+    "bund",
+    "govdata",
+    "metadata",
+    "govdata",
+    "075805c1-b86c-4158-a472-ff0c7379403d",
+    "075805c1-b86c-4158-a472-ff0c7379403d",
+    "govdata",
+    "https://ckan.govdata.de",
+    "https://ckan.govdata.de/api/3/action/package_show?id=bodenkennwerte-bundesweit-aus-der-bodenubersichtskarte-1-200-000-mittleres-gesamtporenvolumen-b",
+    "ckan",
+    "https://ckan.govdata.de/dataset/bodenkennwerte-bundesweit-aus-der-bodenubersichtskarte-1-200-000-mittleres-gesamtporenvolumen-b",
+    "fa75624349c008eb97fdb665636d423933ed2118",
+    "075805c1-b86c-4158-a472-ff0c7379403d",
+    "Bodenkennwerte (bundesweit) aus der Bodenübersichtskarte 1:200.000 - Mittleres Gesamtporenvolumen bis 3 dm Tiefe (Datensatz)",
+    "<p>Der Datensatz enthält Informationen zum mittleres Gesamtporenvolumen (GPV, in mm/dm) bis maximal 3 Dezimeter Tiefe der Böden in Deutschland. Grundlage für die Erstellung des Datensatzes ist die deutschlandweit harmonisiert verfügbare Bodenübersichtskarte im Maßstab 1:200.000 (BÜK 200), bereitgestellt von der BGR (2021). Es handelt sich um Mittelwerte, die landnutzungsspezifisch aus den in der BÜK200 vorliegenden Profilen eines BÜK-Polygons abgeleitet wurden. Die Daten sind keine absolut gültigen Ergebnisse, sondern stehen im Kontext der methodischen Annahmen bei der Erstellung und Verarbeitung der Ausgangsdaten. Die Ableitung des Bodenkennwertes erfolgte auf Grundlage der Bodenkundlichen Kartieranleitung (KA5; Ad-hoc-AG Boden (2005): Bodenkundliche Kartieranleitung (KA 5). Ad-hoc-Arbeitsgruppe Boden der geologischen Landesämter und der Bundesanstalt für Geowissenschaften und Rohstoffe der BRD, Hannover.). Eine grundsätzliche Beschreibung des methodischen Vorgehens findet sich in (Veröffentlichung Abschlussbericht). Diese Kenngröße wird aktuell für die Weiterentwicklung der Wasserhaushaltsmodellierung mit dem Modell LARSIM (der BfG) verwendet.</p>\n",
+    "Umweltbundesamt",
+    "bodenkennwert",
+    "bük200",
+    "deutschland",
+    "gesamtporenvolumen",
+    "gpv",
+    "opendata",
+    "e5c574b3-c271-489e-bc35-76a7f9e72fb6",
+    "Datensatz herunterladen (ZIP/TIFF)",
+    "Datensatz herunterladen (ZIP/TIFF)",
+    "https://gis.uba.de/daten/1a451675-ede1-4980-909d-71533cf7400e_tiff.zip",
+    "TIF/TIFF",
+    "Polygon",
+    5.87,
+    55.05,
+    15.04,
+    55.05,
+    15.04,
+    47.27,
+    5.87,
+    47.27,
+    5.87,
+    55.05,
+    "",
+    ""
+  ],
+  "dataSourceName": "govdata",
+  "datatype": [
+    "metadata"
+  ],
+  "dcat": {
+    "landingPage": null
+  },
+  "description": "<p>Der Datensatz enthält Informationen zum mittleres Gesamtporenvolumen (GPV, in mm/dm) bis maximal 3 Dezimeter Tiefe der Böden in Deutschland. Grundlage für die Erstellung des Datensatzes ist die deutschlandweit harmonisiert verfügbare Bodenübersichtskarte im Maßstab 1:200.000 (BÜK 200), bereitgestellt von der BGR (2021). Es handelt sich um Mittelwerte, die landnutzungsspezifisch aus den in der BÜK200 vorliegenden Profilen eines BÜK-Polygons abgeleitet wurden. Die Daten sind keine absolut gültigen Ergebnisse, sondern stehen im Kontext der methodischen Annahmen bei der Erstellung und Verarbeitung der Ausgangsdaten. Die Ableitung des Bodenkennwertes erfolgte auf Grundlage der Bodenkundlichen Kartieranleitung (KA5; Ad-hoc-AG Boden (2005): Bodenkundliche Kartieranleitung (KA 5). Ad-hoc-Arbeitsgruppe Boden der geologischen Landesämter und der Bundesanstalt für Geowissenschaften und Rohstoffe der BRD, Hannover.). Eine grundsätzliche Beschreibung des methodischen Vorgehens findet sich in (Veröffentlichung Abschlussbericht). Diese Kenngröße wird aktuell für die Weiterentwicklung der Wasserhaushaltsmodellierung mit dem Modell LARSIM (der BfG) verwendet.</p>\n",
+  "distributions": [
+    {
+      "id": "e5c574b3-c271-489e-bc35-76a7f9e72fb6",
+      "title": "Datensatz herunterladen (ZIP/TIFF)",
+      "format": [
+        "TIF/TIFF"
+      ],
+      "issued": "2025-07-24T22:54:37.909Z",
+      "byteSize": null,
+      "modified": null,
+      "access_url": "https://gis.uba.de/daten/1a451675-ede1-4980-909d-71533cf7400e_tiff.zip",
+      "description": "Datensatz herunterladen (ZIP/TIFF)"
+    }
+  ],
+  "extras": {
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-09-02T14:54:25.580Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-09-02T14:54:25.580Z",
+      "merged_from": [],
+      "modified": null,
+      "source": {
+        "portal_link": "https://ckan.govdata.de/dataset/bodenkennwerte-bundesweit-aus-der-bodenubersichtskarte-1-200-000-mittleres-gesamtporenvolumen-b",
+        "raw_data_source": "https://ckan.govdata.de/api/3/action/package_show?id=bodenkennwerte-bundesweit-aus-der-bodenubersichtskarte-1-200-000-mittleres-gesamtporenvolumen-b",
+        "source_base": "https://ckan.govdata.de",
+        "source_type": "ckan"
+      }
+    }
+  },
+  "iPlugId": "govdata",
+  "id": "075805c1-b86c-4158-a472-ff0c7379403d",
+  "isfolder": "false",
+  "keywords": [
+    {
+      "id": "",
+      "term": "bodenkennwert",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "bük200",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "deutschland",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "gesamtporenvolumen",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "gpv",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "opendata",
+      "source": "FREE"
+    }
+  ],
+  "legal_basis": null,
+  "metadata": {
+    "created": null,
+    "modified": "2025-08-13T21:31:31.931Z"
+  },
+  "modified": "2025-08-13T21:31:31.931Z",
+  "partner": [
+    "bund"
+  ],
+  "political_geocoding_level_uri": null,
+  "provider": [
+    "govdata"
+  ],
+  "rdf": "<RDF xmlns=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"><Dataset xmlns=\"http://www.w3.org/ns/dcat#\"><title xmlns=\"http://purl.org/dc/terms/\">Bodenkennwerte (bundesweit) aus der Bodenübersichtskarte 1:200.000 - Mittleres Gesamtporenvolumen bis 3 dm Tiefe (Datensatz)</title><description xmlns=\"http://purl.org/dc/terms/\">&lt;p&gt;Der Datensatz enthält Informationen zum mittleres Gesamtporenvolumen (GPV, in mm/dm) bis maximal 3 Dezimeter Tiefe der Böden in Deutschland. Grundlage für die Erstellung des Datensatzes ist die deutschlandweit harmonisiert verfügbare Bodenübersichtskarte im Maßstab 1:200.000 (BÜK 200), bereitgestellt von der BGR (2021). Es handelt sich um Mittelwerte, die landnutzungsspezifisch aus den in der BÜK200 vorliegenden Profilen eines BÜK-Polygons abgeleitet wurden. Die Daten sind keine absolut gültigen Ergebnisse, sondern stehen im Kontext der methodischen Annahmen bei der Erstellung und Verarbeitung der Ausgangsdaten. Die Ableitung des Bodenkennwertes erfolgte auf Grundlage der Bodenkundlichen Kartieranleitung (KA5; Ad-hoc-AG Boden (2005): Bodenkundliche Kartieranleitung (KA 5). Ad-hoc-Arbeitsgruppe Boden der geologischen Landesämter und der Bundesanstalt für Geowissenschaften und Rohstoffe der BRD, Hannover.). Eine grundsätzliche Beschreibung des methodischen Vorgehens findet sich in (Veröffentlichung Abschlussbericht). Diese Kenngröße wird aktuell für die Weiterentwicklung der Wasserhaushaltsmodellierung mit dem Modell LARSIM (der BfG) verwendet.&lt;/p&gt;\n</description><identifier xmlns=\"http://purl.org/dc/terms/\">075805c1-b86c-4158-a472-ff0c7379403d</identifier><keyword>bodenkennwert</keyword><keyword>bük200</keyword><keyword>deutschland</keyword><keyword>gesamtporenvolumen</keyword><keyword>gpv</keyword><keyword>opendata</keyword><distribution><Distribution><title xmlns=\"http://purl.org/dc/terms/\">Datensatz herunterladen (ZIP/TIFF)</title><description xmlns=\"http://purl.org/dc/terms/\">Datensatz herunterladen (ZIP/TIFF)</description><accessURL xmlns=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" resource=\"https://gis.uba.de/daten/1a451675-ede1-4980-909d-71533cf7400e_tiff.zip\" xmlns=\"http://www.w3.org/ns/dcat#\"/></Distribution></distribution></Dataset></RDF>",
+  "sort_hash": "fa75624349c008eb97fdb665636d423933ed2118",
+  "spatial": {
+    "geometries": [
+      {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.87,
+              55.05
+            ],
+            [
+              15.04,
+              55.05
+            ],
+            [
+              15.04,
+              47.27
+            ],
+            [
+              5.87,
+              47.27
+            ],
+            [
+              5.87,
+              55.05
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "t01_object": {
+    "obj_id": "075805c1-b86c-4158-a472-ff0c7379403d"
+  },
+  "temporal": {
+    "accrual_periodicity": "",
+    "accrual_periodicity_key": ""
+  },
+  "title": "Bodenkennwerte (bundesweit) aus der Bodenübersichtskarte 1:200.000 - Mittleres Gesamtporenvolumen bis 3 dm Tiefe (Datensatz)",
+  "uuid": "075805c1-b86c-4158-a472-ff0c7379403d"
+}

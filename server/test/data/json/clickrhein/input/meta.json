@@ -1,0 +1,276 @@
+{
+  "territory": [
+    {
+      "id": 1,
+      "name": "Drinnen"
+    },
+    {
+      "id": 2,
+      "name": "Draußen"
+    }
+  ],
+  "suitabilities": [
+    {
+      "id": 4,
+      "name": "inklusive Infos"
+    },
+    {
+      "id": 6,
+      "name": "familienfreundlich"
+    },
+    {
+      "id": 7,
+      "name": "für Kinder"
+    },
+    {
+      "id": 8,
+      "name": "kinderwagentauglich"
+    },
+    {
+      "id": 9,
+      "name": "für Wanderer*innen"
+    }
+  ],
+  "themes": [
+    {
+      "id": 1,
+      "name": "Architektur"
+    },
+    {
+      "id": 4,
+      "name": "Street Art"
+    },
+    {
+      "id": 7,
+      "name": "Museum"
+    },
+    {
+      "id": 8,
+      "name": "Erinnerungskultur"
+    },
+    {
+      "id": 9,
+      "name": "Glaube und Religion"
+    },
+    {
+      "id": 10,
+      "name": "Stadtgeschichte"
+    },
+    {
+      "id": 11,
+      "name": "Industriekultur"
+    },
+    {
+      "id": 12,
+      "name": "Schlösser, Burgen und Festungen"
+    },
+    {
+      "id": 13,
+      "name": "Migrationsgeschichten"
+    },
+    {
+      "id": 16,
+      "name": "Wald und Park"
+    },
+    {
+      "id": 17,
+      "name": "Seen und Flüsse"
+    },
+    {
+      "id": 18,
+      "name": "Bergbau"
+    },
+    {
+      "id": 19,
+      "name": "Umweltschutz"
+    },
+    {
+      "id": 20,
+      "name": "Tiere"
+    },
+    {
+      "id": 22,
+      "name": "Karneval"
+    },
+    {
+      "id": 23,
+      "name": "Essen und Trinken"
+    },
+    {
+      "id": 25,
+      "name": "Persönlichkeiten"
+    },
+    {
+      "id": 29,
+      "name": "Feste und Feiern"
+    },
+    {
+      "id": 31,
+      "name": "Sport"
+    },
+    {
+      "id": 33,
+      "name": "Lost Place"
+    },
+    {
+      "id": 35,
+      "name": "Kunst"
+    },
+    {
+      "id": 36,
+      "name": "Ländliche Kultur"
+    },
+    {
+      "id": 37,
+      "name": "Sagen und Legenden"
+    },
+    {
+      "id": 38,
+      "name": "Bildung"
+    },
+    {
+      "id": 39,
+      "name": "Denkmal"
+    },
+    {
+      "id": 40,
+      "name": "Politik"
+    },
+    {
+      "id": 41,
+      "name": "Sprache"
+    }
+  ],
+  "themes_spot": [
+    {
+      "id": 1,
+      "name": "Siedlung"
+    },
+    {
+      "id": 2,
+      "name": "Religion, Kult, Brauchtum"
+    },
+    {
+      "id": 3,
+      "name": "Wirtschaft, Technik, Verkehr"
+    },
+    {
+      "id": 4,
+      "name": "Befestigung, Militär, Wehrwesen"
+    },
+    {
+      "id": 5,
+      "name": "Staat, Herrschaft, Recht, Verwaltung"
+    },
+    {
+      "id": 6,
+      "name": "Kunst und Kultur"
+    },
+    {
+      "id": 7,
+      "name": "Gesundheitswesen und Sozialwesen"
+    },
+    {
+      "id": 8,
+      "name": "Sport, Freizeit, Tourismus"
+    },
+    {
+      "id": 9,
+      "name": "Natur und Umwelt"
+    },
+    {
+      "id": 10,
+      "name": "Bildung und Wissenschaft"
+    }
+  ],
+  "epochs": [
+    {
+      "id": 1,
+      "name": "Zeit des Neandertalers"
+    },
+    {
+      "id": 2,
+      "name": "Römer und Germanen"
+    },
+    {
+      "id": 3,
+      "name": "Mittelalter"
+    },
+    {
+      "id": 4,
+      "name": "Neuzeit"
+    },
+    {
+      "id": 5,
+      "name": "Industrialisierung"
+    },
+    {
+      "id": 6,
+      "name": "Zeitgeschichte"
+    },
+    {
+      "id": 7,
+      "name": "Kaiserreich"
+    },
+    {
+      "id": 8,
+      "name": "Erster Weltkrieg"
+    },
+    {
+      "id": 9,
+      "name": "Weimarer Republik"
+    },
+    {
+      "id": 10,
+      "name": "Zweiter Weltkrieg"
+    },
+    {
+      "id": 11,
+      "name": "Nachkriegszeit"
+    },
+    {
+      "id": 12,
+      "name": "Kalter Krieg"
+    },
+    {
+      "id": 13,
+      "name": "1960er"
+    },
+    {
+      "id": 14,
+      "name": "1970er"
+    },
+    {
+      "id": 15,
+      "name": "1980er"
+    },
+    {
+      "id": 16,
+      "name": "1990er"
+    },
+    {
+      "id": 17,
+      "name": "2000er"
+    },
+    {
+      "id": 19,
+      "name": "1920er"
+    },
+    {
+      "id": 20,
+      "name": "1930er"
+    },
+    {
+      "id": 21,
+      "name": "Nationalsozialismus"
+    },
+    {
+      "id": 22,
+      "name": "1950er"
+    },
+    {
+      "id": 26,
+      "name": "Antike"
+    }
+  ]
+}

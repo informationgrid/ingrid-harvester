@@ -12,6 +12,17 @@ pipeline {
     }
 
     stages {
+        stage ('Run Tests') {
+            steps {
+                nodejs(nodeJSInstallationName: 'nodejs20') {
+                    dir('server') {
+                        sh 'npm ci'
+                        sh 'npm test'
+                    }
+                }
+            }
+        }
+
         stage('Build and Push Image') {
             steps {
                 sh 'if [ -d build ]; then rm -rf build; fi'
@@ -43,7 +54,7 @@ pipeline {
             when { expression { return shouldBuildDevOrRelease() } }
             agent {
                 docker {
-                    image 'docker-registry.wemove.com/ingrid-rpmbuilder-jdk21-improved'
+                    image 'docker-registry.wemove.com/ingrid-rpmbuilder'
                     reuseNode true
                 }
             }

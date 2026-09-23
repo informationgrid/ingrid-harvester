@@ -1,0 +1,29 @@
+{
+  "Ident": {
+    "Service": "catalogue",
+    "Method": "tables"
+  },
+  "Status": {
+    "Code": 0,
+    "Content": "erfolgreich",
+    "Type": "Information"
+  },
+  "Parameter": {
+    "username": "********************",
+    "password": "********************",
+    "selection": "11111*",
+    "area": "Alle",
+    "searchcriterion": "Code",
+    "sortcriterion": "Code",
+    "pagelength": "2500",
+    "language": "de"
+  },
+  "List": [
+    {
+      "Code": "11111-0001",
+      "Content": "Bodenflächen der Gemeinden am 31.12.",
+      "Time": "1992 - 31.12.2024"
+    }
+  ],
+  "Copyright": "© Statistisches Landesamt Sachsen-Anhalt, Halle (Saale), 2026"
+}

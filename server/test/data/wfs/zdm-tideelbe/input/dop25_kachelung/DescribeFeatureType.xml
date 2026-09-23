@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://mapserver.gis.umn.edu/mapserver" xmlns:ms="http://mapserver.gis.umn.edu/mapserver" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml/3.2" elementFormDefault="qualified" version="0.1">
+    <import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
+    <element name="dop25_kachelung" type="ms:dop25_kachelungType" substitutionGroup="gml:AbstractFeature"/>
+    <complexType name="dop25_kachelungType">
+        <complexContent>
+            <extension base="gml:AbstractFeatureType">
+                <sequence>
+                    <element name="msGeometry" type="gml:GeometryPropertyType" minOccurs="0" maxOccurs="1"/>
+                    <element name="IMAGE_" minOccurs="0" type="string"/>
+                    <element name="DGK5BLNR" minOccurs="0" type="string"/>
+                    <element name="DGK5BLNAME" minOccurs="0" type="string"/>
+                    <element name="FILENAME" minOccurs="0" type="string"/>
+                    <element name="HMIN" minOccurs="0" type="string"/>
+                    <element name="HMAX" minOccurs="0" type="string"/>
+                    <element name="DATE_DATAC" minOccurs="0" type="string"/>
+                    <element name="WSD" minOccurs="0" type="string"/>
+                    <element name="WSA" minOccurs="0" type="string"/>
+                    <element name="BNDSLD" minOccurs="0" type="string"/>
+                    <element name="FILEPATH" minOccurs="0" type="string"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+</schema>

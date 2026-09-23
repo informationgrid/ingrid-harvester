@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="https://rheinpublika.lvr.de/mir/oai/oai2.xsl" type="text/xsl"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:str="http://exslt.org/strings" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+    <responseDate>2026-09-10T14:57:39Z</responseDate>
+    <request verb="ListRecords" metadataPrefix="mods">https://rheinpublika.lvr.de/mir/servlets/OAIDataProvider</request>
+    <ListRecords>
+        <record>
+            <header>
+                <identifier>oai:www.mycore.de:mir_mods_00000848</identifier>
+                <datestamp>2026-09-02</datestamp>
+                <setSpec>GENRE:journal_issue</setSpec>
+                <setSpec>ddc:060</setSpec>
+                <setSpec>driver</setSpec>
+                <setSpec>institute:Dez9</setSpec>
+                <setSpec>open_access</setSpec>
+            </header>
+            <metadata>
+                <mods:mods ID="mir_mods_00000848"><mods:location><mods:url access="object in context">https://rheinpublika.lvr.de/mir/receive/mir_mods_00000848</mods:url><mods:url access="raw object">https://rheinpublika.lvr.de/mir/servlets/MCRFileNodeServlet/mir_derivate_00000987/2018-02_rheinform_02_2018-1_bf.pdf</mods:url><mods:url access="preview">https://rheinpublika.lvr.de/mir/rsc/thumbnail/mir_mods_00000848.png</mods:url></mods:location>
+                    <mods:typeOfResource>text</mods:typeOfResource>
+                    <mods:originInfo eventType="publication"><mods:issuance>continuing</mods:issuance></mods:originInfo><mods:genre authority="marcgt">journal</mods:genre><mods:genre authorityURI="http://www.mycore.org/classifications/mir_genres" type="intern" valueURI="http://www.mycore.org/classifications/mir_genres#journal_issue" />
+                    <mods:titleInfo xlink:type="simple" xml:lang="de">
+                        <mods:title>Rheinform : Informationen für die rheinischen Museen</mods:title>
+                    </mods:titleInfo>
+                    <mods:name type="corporate" xlink:type="simple">
+                        <mods:displayForm>Landschaftsverband Rheinland. Dezernat Kultur und Umwelt</mods:displayForm>
+                        <mods:role>
+                            <mods:roleTerm authority="marcrelator" type="code">isb</mods:roleTerm>
+                            <mods:roleTerm authority="marcrelator" type="text" /></mods:role>
+                        <mods:nameIdentifier type="gnd">10368693-9</mods:nameIdentifier>
+                    </mods:name>
+                    <mods:name type="personal" xlink:type="simple">
+                        <mods:displayForm>Kohlenbach, Guido</mods:displayForm>
+                        <mods:role>
+                            <mods:roleTerm authority="marcrelator" type="code">red</mods:roleTerm>
+                            <mods:roleTerm authority="marcrelator" type="text">Redactor</mods:roleTerm></mods:role>
+                        <mods:namePart type="family">Kohlenbach</mods:namePart>
+                        <mods:namePart type="given">Guido</mods:namePart>
+                    </mods:name>
+                    <mods:name type="personal" xlink:type="simple">
+                        <mods:displayForm>Martini, Thilo</mods:displayForm>
+                        <mods:role>
+                            <mods:roleTerm authority="marcrelator" type="code">red</mods:roleTerm>
+                            <mods:roleTerm authority="marcrelator" type="text">Redactor</mods:roleTerm></mods:role>
+                        <mods:namePart type="family">Martini</mods:namePart>
+                        <mods:namePart type="given">Thilo</mods:namePart>
+                        <mods:nameIdentifier type="gnd">1113133716</mods:nameIdentifier>
+                    </mods:name>
+                    <mods:name type="personal" xlink:type="simple">
+                        <mods:displayForm>Türnich, Ruth</mods:displayForm>
+                        <mods:role>
+                            <mods:roleTerm authority="marcrelator" type="code">red</mods:roleTerm>
+                            <mods:roleTerm authority="marcrelator" type="text">Redactor</mods:roleTerm></mods:role>
+                        <mods:namePart type="family">Türnich</mods:namePart>
+                        <mods:namePart type="given">Ruth</mods:namePart>
+                        <mods:nameIdentifier type="gnd">1054794219</mods:nameIdentifier>
+                    </mods:name>
+                    <mods:name type="personal" xlink:type="simple">
+                        <mods:displayForm>Geuther, Katrin</mods:displayForm>
+                        <mods:role>
+                            <mods:roleTerm authority="marcrelator" type="code">red</mods:roleTerm>
+                            <mods:roleTerm authority="marcrelator" type="text">Redactor</mods:roleTerm></mods:role>
+                        <mods:namePart type="family">Geuther</mods:namePart>
+                        <mods:namePart type="termsOfAddress">Katrin</mods:namePart>
+                    </mods:name>
+                    <mods:originInfo eventType="publication">
+                        <mods:dateIssued encoding="w3cdtf">2018</mods:dateIssued>
+                        <mods:place>
+                            <mods:placeTerm type="text">Köln</mods:placeTerm>
+                        </mods:place>
+                    </mods:originInfo>
+                    <mods:originInfo eventType="creation">
+                        <mods:publisher>Landschaftsverband Rheinland, LVR-Fachbereich Regionale Kulturarbeit/Museumsberatung</mods:publisher>
+                    </mods:originInfo>
+                    <mods:physicalDescription>
+                        <mods:extent>1 Online-Ressource (82 Seiten) : Illustrationen, Pläne</mods:extent>
+                    </mods:physicalDescription>
+                    <mods:language>
+                        <mods:languageTerm authority="rfc5646" type="code">de</mods:languageTerm>
+                    </mods:language>
+                    <mods:classification authority="sdnb" displayLabel="sdnb">060</mods:classification>
+                    <mods:accessCondition type="use and reproduction" xlink:href="http://www.mycore.org/classifications/mir_licenses#cc_by_4.0" xlink:type="simple" />
+                    <mods:name authorityURI="http://www.mycore.org/classifications/mir_institutes" type="corporate" valueURI="http://www.mycore.org/classifications/mir_institutes#Dez9.fbu" xlink:type="simple">
+                        <mods:role>
+                            <mods:roleTerm authority="marcrelator" type="code">his</mods:roleTerm>
+                            <mods:roleTerm authority="marcrelator" type="text" /></mods:role>
+                    </mods:name>
+                    <mods:subject xlink:type="simple">
+                        <mods:topic authority="gnd" authorityURI="http://d-nb.info/gnd/" valueURI="http://d-nb.info/gnd/4040795-0">Museum</mods:topic>
+                        <mods:topic authority="gnd" authorityURI="http://d-nb.info/gnd/" valueURI="http://d-nb.info/gnd/4130303-9">Bauhaus</mods:topic>
+                        <mods:topic authority="gnd" authorityURI="http://d-nb.info/gnd/" valueURI="http://d-nb.info/gnd/16017480-6">LVR-Industriemuseums Oberhausen</mods:topic>
+                        <mods:topic authority="gnd" authorityURI="http://d-nb.info/gnd/" valueURI="http://d-nb.info/gnd/1160306397">LVR-Niederrheinmuseum Wesel</mods:topic>
+                        <mods:topic authority="gnd" authorityURI="http://d-nb.info/gnd/" valueURI="http://d-nb.info/gnd/806145-2">Frauenmuseum Bonn</mods:topic>
+                        <mods:topic authority="gnd" authorityURI="http://d-nb.info/gnd/" valueURI="http://d-nb.info/gnd/1209317761">MAKK</mods:topic>
+                    </mods:subject>
+                    <mods:note type="additional physical form" xlink:type="simple">Erscheint auch als Druckausgabe</mods:note>
+                    <mods:note type="creation/production credits" xlink:type="simple">Barrierearme Publikation</mods:note>
+                    <mods:relatedItem type="host" xlink:href="mir_mods_00000059" xlink:type="simple">
+                        <mods:part>
+                            <mods:detail type="issue">
+                                <mods:number>2</mods:number>
+                            </mods:detail>
+                        </mods:part>
+                        <mods:typeOfResource>text</mods:typeOfResource>
+                        <mods:originInfo eventType="publication"><mods:issuance>continuing</mods:issuance></mods:originInfo><mods:genre authority="marcgt">journal</mods:genre><mods:genre authorityURI="http://www.mycore.org/classifications/mir_genres" type="intern" valueURI="http://www.mycore.org/classifications/mir_genres#journal" />
+                        <mods:titleInfo xlink:type="simple" xml:lang="de">
+                            <mods:title>Rheinform</mods:title>
+                            <mods:subTitle>Informationen für die rheinischen Museen</mods:subTitle>
+                        </mods:titleInfo>
+                        <mods:genre authority="marcgt">journal</mods:genre>
+                        <mods:classification authorityURI="http://www.mycore.org/classifications/diniPublType" generator="mir_genres2diniPublType-mycore" valueURI="http://www.mycore.org/classifications/diniPublType#Periodical" />
+                        <mods:name type="corporate" xlink:type="simple">
+                            <mods:displayForm>Landschaftsverband Rheinland. Dezernat Kultur und Landschaftliche Kulturpflege</mods:displayForm>
+                            <mods:role>
+                                <mods:roleTerm authority="marcrelator" type="code">isb</mods:roleTerm>
+                                <mods:roleTerm authority="marcrelator" type="text" /></mods:role>
+                        </mods:name>
+                        <mods:originInfo eventType="publication">
+                            <mods:dateIssued encoding="w3cdtf" point="start">2012</mods:dateIssued>
+                            <mods:place>
+                                <mods:placeTerm type="text">Köln</mods:placeTerm>
+                            </mods:place>
+                        </mods:originInfo>
+                        <mods:language>
+                            <mods:languageTerm authority="rfc5646" type="code">de</mods:languageTerm>
+                        </mods:language>
+                        <mods:classification authority="sdnb" displayLabel="sdnb">060</mods:classification>
+                        <mods:classification authority="sdnb" displayLabel="sdnb">700</mods:classification>
+                        <mods:identifier type="uri">http://uri.gbv.de/document/gvk:ppn:718703596</mods:identifier>
+                        <mods:accessCondition type="use and reproduction" xlink:href="http://www.mycore.org/classifications/mir_licenses#cc_by_4.0" xlink:type="simple" />
+                        <mods:name authorityURI="http://www.mycore.org/classifications/mir_institutes" type="corporate" valueURI="http://www.mycore.org/classifications/mir_institutes#Dez9.fbu" xlink:type="simple">
+                            <mods:role>
+                                <mods:roleTerm authority="marcrelator" type="code">his</mods:roleTerm>
+                                <mods:roleTerm authority="marcrelator" type="text" /></mods:role>
+                        </mods:name>
+                        <mods:subject xlink:type="simple">
+                            <mods:topic authority="gnd" authorityURI="http://d-nb.info/gnd/" valueURI="http://d-nb.info/gnd/4040795-0">Museum</mods:topic>
+                            <mods:topic authority="gnd" authorityURI="http://d-nb.info/gnd/" valueURI="http://d-nb.info/gnd/040497887">Rheinland</mods:topic>
+                        </mods:subject>
+                        <mods:note type="additional physical form" xlink:type="simple">Seit 01.2018 auch als Print-Ausgabe erschienen.</mods:note>
+                        <mods:note type="creation/production credits" xlink:type="simple">Barrierearme Publikation.</mods:note>
+                        <mods:accessCondition type="restriction on access" xlink:href="http://www.mycore.org/classifications/mir_access#unlimited" xlink:type="simple" />
+                        <mods:originInfo eventType="creation">
+                            <mods:publisher>Landschaftsverband Rheinland, LVR-Fachbereich Regionale Kulturarbeit/Museumsberatung</mods:publisher>
+                        </mods:originInfo>
+                    </mods:relatedItem>
+                    <mods:identifier type="citekey">mir_mods_00000848</mods:identifier><mods:identifier type="uri">https://rheinpublika.lvr.de/mir/receive/mir_mods_00000848</mods:identifier></mods:mods></metadata>
+        </record>
+        <record>
+            <header>
+                <identifier>oai:www.mycore.de:mir_mods_00000847</identifier>
+                <datestamp>2026-09-02</datestamp>
+                <setSpec>GENRE:journal_issue</setSpec>
+                <setSpec>ddc:060</setSpec>
+                <setSpec>driver</setSpec>
+                <setSpec>institute:Dez9</setSpec>
+                <setSpec>open_access</setSpec>
+            </header>
+            <metadata>
+                <mods:mods ID="mir_mods_00000847"><mods:location><mods:url access="object in context">https://rheinpublika.lvr.de/mir/receive/mir_mods_00000847</mods:url><mods:url access="raw object">https://rheinpublika.lvr.de/mir/servlets/MCRFileNodeServlet/mir_derivate_00000986/2016-01_rheinform_magazin_v01_16_12_bf.pdf</mods:url><mods:url access="preview">https://rheinpublika.lvr.de/mir/rsc/thumbnail/mir_mods_00000847.png</mods:url></mods:location>
+                    <mods:typeOfResource>text</mods:typeOfResource>
+                    <mods:originInfo eventType="publication"><mods:issuance>continuing</mods:issuance></mods:originInfo><mods:genre authority="marcgt">journal</mods:genre><mods:genre authorityURI="http://www.mycore.org/classifications/mir_genres" type="intern" valueURI="http://www.mycore.org/classifications/mir_genres#journal_issue" />
+                    <mods:titleInfo xlink:type="simple" xml:lang="de">
+                        <mods:title>Rheinform : Informationen für die rheinischen Museen</mods:title>
+                    </mods:titleInfo>
+                    <mods:name type="corporate" xlink:type="simple">
+                        <mods:displayForm>Landschaftsverband Rheinland. Dezernat Kultur und Umwelt</mods:displayForm>
+                        <mods:role>
+                            <mods:roleTerm authority="marcrelator" type="code">isb</mods:roleTerm>
+                            <mods:roleTerm authority="marcrelator" type="text" /></mods:role>
+                        <mods:nameIdentifier type="gnd">10368693-9</mods:nameIdentifier>
+                    </mods:name>
+                    <mods:name type="personal" xlink:type="simple">
+                        <mods:displayForm>Kühn, Norbert</mods:displayForm>
+                        <mods:role>
+                            <mods:roleTerm authority="marcrelator" type="code">red</mods:roleTerm>
+                            <mods:roleTerm authority="marcrelator" type="text">Redactor</mods:roleTerm></mods:role>
+                        <mods:namePart type="family">Kühn</mods:namePart>
+                        <mods:namePart type="given">Norbert</mods:namePart>
+                        <mods:nameIdentifier type="gnd">1069688339</mods:nameIdentifier>
+                    </mods:name>
+                    <mods:name type="personal" xlink:type="simple">
+                        <mods:displayForm>Martini, Thilo</mods:displayForm>
+                        <mods:role>
+                            <mods:roleTerm authority="marcrelator" type="code">red</mods:roleTerm>
+                            <mods:roleTerm authority="marcrelator" type="text">Redactor</mods:roleTerm></mods:role>
+                        <mods:nameIdentifier type="gnd">1113133716</mods:nameIdentifier>
+                        <mods:namePart type="family">Martini</mods:namePart>
+                        <mods:namePart type="given">Thilo</mods:namePart>
+                    </mods:name>
+                    <mods:name type="personal" xlink:type="simple">
+                        <mods:displayForm>Türnich, Ruth</mods:displayForm>
+                        <mods:role>
+                            <mods:roleTerm authority="marcrelator" type="code">red</mods:roleTerm>
+                            <mods:roleTerm authority="marcrelator" type="text">Redactor</mods:roleTerm></mods:role>
+                        <mods:nameIdentifier type="gnd">1054794219</mods:nameIdentifier>
+                        <mods:namePart type="family">Türnich</mods:namePart>
+                        <mods:namePart type="given">Ruth</mods:namePart>
+                    </mods:name>
+                    <mods:name type="personal" xlink:type="simple">
+                        <mods:displayForm>Göbel, Verena</mods:displayForm>
+                        <mods:role>
+                            <mods:roleTerm authority="marcrelator" type="code">red</mods:roleTerm>
+                            <mods:roleTerm authority="marcrelator" type="text">Redactor</mods:roleTerm></mods:role>
+                        <mods:namePart type="family">Göbel</mods:namePart>
+                        <mods:namePart type="given">Verena</mods:namePart>
+                        <mods:nameIdentifier type="gnd">1138806536</mods:nameIdentifier>
+                    </mods:name>
+                    <mods:originInfo eventType="publication">
+                        <mods:dateIssued encoding="w3cdtf">2016</mods:dateIssued>
+                        <mods:place>
+                            <mods:placeTerm type="text">Köln</mods:placeTerm>
+                        </mods:place>
+                    </mods:originInfo>
+                    <mods:originInfo eventType="creation">
+                        <mods:publisher>Landschaftsverband Rheinland, LVR-Fachbereich Regionale Kulturarbeit/Museumsberatung</mods:publisher>
+                    </mods:originInfo>
+                    <mods:physicalDescription>
+                        <mods:extent>1 Online-Ressource (85 Seiten) : Illustrationen, Pläne</mods:extent>
+                    </mods:physicalDescription>
+                    <mods:language>
+                        <mods:languageTerm authority="rfc5646" type="code">de</mods:languageTerm>
+                    </mods:language>
+                    <mods:classification authority="sdnb" displayLabel="sdnb">060</mods:classification>
+                    <mods:accessCondition type="use and reproduction" xlink:href="http://www.mycore.org/classifications/mir_licenses#cc_by_4.0" xlink:type="simple" />
+                    <mods:name authorityURI="http://www.mycore.org/classifications/mir_institutes" type="corporate" valueURI="http://www.mycore.org/classifications/mir_institutes#Dez9.fbu" xlink:type="simple">
+                        <mods:role>
+                            <mods:roleTerm authority="marcrelator" type="code">his</mods:roleTerm>
+                            <mods:roleTerm authority="marcrelator" type="text" /></mods:role>
+                    </mods:name>
+                    <mods:subject xlink:type="simple">
+                        <mods:topic authority="gnd" authorityURI="http://d-nb.info/gnd/" valueURI="http://d-nb.info/gnd/4040795-0">Museum</mods:topic>
+                        <mods:topic authority="gnd" authorityURI="http://d-nb.info/gnd/" valueURI="http://d-nb.info/gnd/118510460">Beuys, Joseph</mods:topic>
+                        <mods:topic authority="gnd" authorityURI="http://d-nb.info/gnd/" valueURI="http://d-nb.info/gnd/1043940820">Kunstmuseum Solingen</mods:topic>
+                        <mods:topic>Museumsporträt</mods:topic>
+                        <mods:topic authority="gnd" authorityURI="http://d-nb.info/gnd/" valueURI="http://d-nb.info/gnd/1120049199">TextilTechnikum Mönchengladbach</mods:topic>
+                        <mods:topic authority="gnd" authorityURI="http://d-nb.info/gnd/" valueURI="http://d-nb.info/gnd/1120354226">NRW-Forum Düsseldorf</mods:topic>
+                        <mods:topic authority="gnd" authorityURI="http://d-nb.info/gnd/" valueURI="http://d-nb.info/gnd/1203408765">Schülerlabor</mods:topic>
+                    </mods:subject>
+                    <mods:note type="additional physical form" xlink:type="simple">Erscheint auch als Druckausgabe</mods:note>
+                    <mods:note type="creation/production credits" xlink:type="simple">Barrierearme Publikation</mods:note>
+                    <mods:relatedItem type="host" xlink:href="mir_mods_00000059" xlink:type="simple">
+                        <mods:part>
+                            <mods:detail type="issue">
+                                <mods:number>1</mods:number>
+                            </mods:detail>
+                        </mods:part>
+                        <mods:typeOfResource>text</mods:typeOfResource>
+                        <mods:originInfo eventType="publication"><mods:issuance>continuing</mods:issuance></mods:originInfo><mods:genre authority="marcgt">journal</mods:genre><mods:genre authorityURI="http://www.mycore.org/classifications/mir_genres" type="intern" valueURI="http://www.mycore.org/classifications/mir_genres#journal" />
+                        <mods:titleInfo xlink:type="simple" xml:lang="de">
+                            <mods:title>Rheinform</mods:title>
+                            <mods:subTitle>Informationen für die rheinischen Museen</mods:subTitle>
+                        </mods:titleInfo>
+                        <mods:genre authority="marcgt">journal</mods:genre>
+                        <mods:classification authorityURI="http://www.mycore.org/classifications/diniPublType" generator="mir_genres2diniPublType-mycore" valueURI="http://www.mycore.org/classifications/diniPublType#Periodical" />
+                        <mods:name type="corporate" xlink:type="simple">
+                            <mods:displayForm>Landschaftsverband Rheinland. Dezernat Kultur und Landschaftliche Kulturpflege</mods:displayForm>
+                            <mods:role>
+                                <mods:roleTerm authority="marcrelator" type="code">isb</mods:roleTerm>
+                                <mods:roleTerm authority="marcrelator" type="text" /></mods:role>
+                        </mods:name>
+                        <mods:originInfo eventType="publication">
+                            <mods:dateIssued encoding="w3cdtf" point="start">2012</mods:dateIssued>
+                            <mods:place>
+                                <mods:placeTerm type="text">Köln</mods:placeTerm>
+                            </mods:place>
+                        </mods:originInfo>
+                        <mods:language>
+                            <mods:languageTerm authority="rfc5646" type="code">de</mods:languageTerm>
+                        </mods:language>
+                        <mods:classification authority="sdnb" displayLabel="sdnb">060</mods:classification>
+                        <mods:classification authority="sdnb" displayLabel="sdnb">700</mods:classification>
+                        <mods:identifier type="uri">http://uri.gbv.de/document/gvk:ppn:718703596</mods:identifier>
+                        <mods:accessCondition type="use and reproduction" xlink:href="http://www.mycore.org/classifications/mir_licenses#cc_by_4.0" xlink:type="simple" />
+                        <mods:name authorityURI="http://www.mycore.org/classifications/mir_institutes" type="corporate" valueURI="http://www.mycore.org/classifications/mir_institutes#Dez9.fbu" xlink:type="simple">
+                            <mods:role>
+                                <mods:roleTerm authority="marcrelator" type="code">his</mods:roleTerm>
+                                <mods:roleTerm authority="marcrelator" type="text" /></mods:role>
+                        </mods:name>
+                        <mods:subject xlink:type="simple">
+                            <mods:topic authority="gnd" authorityURI="http://d-nb.info/gnd/" valueURI="http://d-nb.info/gnd/4040795-0">Museum</mods:topic>
+                            <mods:topic authority="gnd" authorityURI="http://d-nb.info/gnd/" valueURI="http://d-nb.info/gnd/040497887">Rheinland</mods:topic>
+                        </mods:subject>
+                        <mods:note type="additional physical form" xlink:type="simple">Seit 01.2018 auch als Print-Ausgabe erschienen.</mods:note>
+                        <mods:note type="creation/production credits" xlink:type="simple">Barrierearme Publikation.</mods:note>
+                        <mods:accessCondition type="restriction on access" xlink:href="http://www.mycore.org/classifications/mir_access#unlimited" xlink:type="simple" />
+                        <mods:originInfo eventType="creation">
+                            <mods:publisher>Landschaftsverband Rheinland, LVR-Fachbereich Regionale Kulturarbeit/Museumsberatung</mods:publisher>
+                        </mods:originInfo>
+                    </mods:relatedItem>
+                    <mods:identifier type="citekey">mir_mods_00000847</mods:identifier><mods:identifier type="uri">https://rheinpublika.lvr.de/mir/receive/mir_mods_00000847</mods:identifier></mods:mods></metadata>
+        </record>
+    </ListRecords>
+</OAI-PMH>

@@ -10,9 +10,12 @@ AutoReqProv:                no
 
 %define install_root        /opt/ingrid/ingrid-harvester
 %define target              %{buildroot}%{install_root}
-%define systemd_dir         /usr/lib/systemd/system
+%define systemd_dir         /etc/systemd/system
 %define ingrid_unit_name    ingrid-harvester.service
 %define ingrid_service      %{systemd_dir}/%{ingrid_unit_name}
+
+Requires: nodejs >= 21.0.0
+Requires: npm
 
 %description
 InGrid API
@@ -28,11 +31,11 @@ rm -Rf %{buildroot}*
 mkdir -p %{target}
 ls -al ${WORKSPACE}/build
 cp -r ${WORKSPACE}/build/* %{target}
-ls -al %{target}
 
 # Copy over the systemd unit file
 mkdir -p %{buildroot}%{systemd_dir}
 cp ${WORKSPACE}/rpm/%{ingrid_unit_name} %{buildroot}%{systemd_dir}
+install -D ${WORKSPACE}/rpm/ingrid-harvester.sysconfig %{buildroot}/%{_sysconfdir}/sysconfig/ingrid-harvester
 
 %files
 %defattr(0644,ingrid,ingrid,0755)
@@ -43,18 +46,25 @@ cp ${WORKSPACE}/rpm/%{ingrid_unit_name} %{buildroot}%{systemd_dir}
 %config(noreplace) %{install_root}/config-general.json
 %config(noreplace) %{install_root}/server-config.json
 %config(noreplace) %{install_root}/users.json
+%config(noreplace) %attr(640, root, ingrid) %{_sysconfdir}/sysconfig/ingrid-harvester
 
 ################################################################################
 %pre
 # Scriptlet that is executed just before the package is installed on the target
 # system.
-if [ -f "/etc/systemd/system/ingrid-harvester.service" ]; then
+if [ -f "%{systemd_dir}/ingrid-harvester.service" ]; then
   service ingrid-harvester stop
+fi
+
+%post
+# Check if pm2 is already installed; if not, install it globally
+if ! command -v pm2 &> /dev/null; then
+    npm install -g pm2
 fi
 
 ################################################################################
 %preun
-if [ -f "/etc/systemd/system/ingrid-harvester.service" ]; then
+if [ -f "%{systemd_dir}/ingrid-harvester.service" ]; then
   service ingrid-harvester stop
 fi
 

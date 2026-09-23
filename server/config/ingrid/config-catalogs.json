@@ -36,5 +36,20 @@
       "title": "InGrid-Harvester",
       "description": "InGrid-Harvester Katalog"
     }
+  },
+  {
+    "id": 4,
+    "type": "elasticsearch",
+    "connectionId": "default",
+    "name": "Elasticsearch (opendata)",
+    "url": "http://localhost:9200",
+    "settings": {
+      "index": "harvester-index",
+      "alias": "harvester",
+      "version": "9",
+      "user": "elastic",
+      "mappingFile": "opendata-mapping",
+      "password": "elastic"
+    }
   }
 ]

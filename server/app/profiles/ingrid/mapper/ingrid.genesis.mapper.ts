@@ -57,6 +57,10 @@ const GEOJSON_TYPE_NAMES: Record<string, string> = {
 // CRS84 when the CRS prefix is omitted, but DCAT-AP.de recommends stating it explicitly
 const CRS84 = 'http://www.opengis.net/def/crs/OGC/1.3/CRS84';
 
+// DCAT-AP.DE politicalGeocodingLevel codelist (20006) base URI; the 6 codelist keys
+// (international, european, federal, state, administrativeDistrict, municipality) are the URI path segments
+const POLITICAL_GEOCODING_LEVEL_BASE = 'http://dcat-ap.de/def/politicalGeocoding/Level/';
+
 export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
 
     private _dcatapdeDoc: string | undefined;
@@ -126,7 +130,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             distributions: this.baseMapper.getDistributions(),
             dcat: { landingPage: this.baseMapper.getLandingPageUrl() },
             legal_basis: null,
-            political_geocoding_level_uri: this.baseMapper.getSpatialUri(),
+            political_geocoding_level_uri: this.getPoliticalGeocodingLevelUri(),
             rdf: null, // assigned after
             sort_hash: this.getSortUuid(),
             content: null,
@@ -229,6 +233,11 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         const spatialWkt = this.baseMapper.settings.typeConfig?.spatialWkt;
         const geometry = spatialWkt ? this.normalizeGeometryType(this.baseMapper.wktToGeoJson(spatialWkt)) : undefined;
         return geometry ? [{ geometry, bbox: turfBbox(geometry) }] : [];
+    }
+
+    private getPoliticalGeocodingLevelUri(): string | undefined {
+        const key = this.baseMapper.getPoliticalGeocodingLevel();
+        return key ? POLITICAL_GEOCODING_LEVEL_BASE + key : undefined;
     }
 
     // baseMapper.wktToGeoJson() returns lowercase GeoJSON type names (fine for Elasticsearch's
@@ -400,11 +409,11 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             dataset.appendChild(langEl);
         }
 
-        const spatialUri = this.baseMapper.getSpatialUri();
-        if (spatialUri) {
-            const spatialEl = doc.createElement('dct:spatial');
-            spatialEl.setAttribute('rdf:resource', spatialUri);
-            dataset.appendChild(spatialEl);
+        const politicalGeocodingLevelUri = this.getPoliticalGeocodingLevelUri();
+        if (politicalGeocodingLevelUri) {
+            const levelEl = doc.createElement('dcatde:politicalGeocodingLevelURI');
+            levelEl.setAttribute('rdf:resource', politicalGeocodingLevelUri);
+            dataset.appendChild(levelEl);
         }
 
         const spatialWkt = this.baseMapper.settings.typeConfig?.spatialWkt;

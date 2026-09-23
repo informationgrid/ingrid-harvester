@@ -1,0 +1,31 @@
+{
+  "type": "CKAN",
+  "maxRecords": 10,
+  "startPosition": 1,
+  "catalogIds": [1],
+  "rejectUnauthorizedSSL": true,
+  "rules": {
+    "containsDocumentsWithData": false
+  },
+  "maxConcurrent": 1,
+  "skipUrlCheckOnHarvest": false,
+  "timeout": 60000,
+  "sourceURL": "https://ckan.govdata.de",
+  "filterTags": [],
+  "filterGroups": [],
+  "providerPrefix": "",
+  "providerField": "organization",
+  "dateSourceFormats": [],
+  "requestType": "Search",
+  "markdownAsDescription": true,
+  "groupChilds": false,
+  "defaultLicense": null,
+  "id": 29,
+  "description": "govdata.de",
+  "iPlugId": "govdata",
+  "partner": "bund",
+  "provider": "govdata",
+  "dataSourceName": "govdata",
+  "datatype": "metadata",
+  "additionalSearchFilter": "organization:umweltbundesamt"
+}

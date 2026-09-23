@@ -1,0 +1,188 @@
+{
+  "collection": {
+    "name": "govdata"
+  },
+  "contacts": [
+    {
+      "name": "Umweltbundesamt",
+      "role": 10
+    },
+    {
+      "mbox": null,
+      "name": null,
+      "role": 11
+    }
+  ],
+  "content": [
+    "govdata",
+    "bund",
+    "govdata",
+    "metadata",
+    "govdata",
+    "03f0c47f-9c2a-4370-8d45-4e2e6fa9ba1f",
+    "03f0c47f-9c2a-4370-8d45-4e2e6fa9ba1f",
+    "govdata",
+    "https://ckan.govdata.de",
+    "https://ckan.govdata.de/api/3/action/package_show?id=bundesweite-bodenabtragsmodellierung-allgemeine-bodenabtragsgleichung-k-faktor-datensatz",
+    "ckan",
+    "https://ckan.govdata.de/dataset/bundesweite-bodenabtragsmodellierung-allgemeine-bodenabtragsgleichung-k-faktor-datensatz",
+    "2b49e14bc9c8a6de622315fb7799a7a89962110a",
+    "03f0c47f-9c2a-4370-8d45-4e2e6fa9ba1f",
+    "Bundesweite Bodenabtragsmodellierung (Allgemeine Bodenabtragsgleichung) - K-Faktor (Datensatz)",
+    "<p>Der Datensatz enthält Informationen zum abgeleiteten K-Faktor (Maß der Erodierbarkeit des Bodens) für die Allgemeine Bodenantragsgleichung (ABAG). Datengrundlage für die Ausweisung des K-Faktors war die deutschlandweit harmonisiert verfügbare Bodenübersichtskarte im Maßstab 1:200.000 (BÜK 200), bereitgestellt von der BGR (2021). Der K-Faktor wurde ermitteln nach DIN 19708 2017-08. Eine grundsätzliche Beschreibung des methodischen Vorgehens findet sich in (Fuchs, S.; Brecht, K.; Gebel, M.; Bürger, S.; Uhlig, M.; Halbfaß, S. (2022): Phosphoreinträge in die Gewässer bundesweit modellieren – Neue Ansätze und aktualisierte Ergebnisse von MoRE-DE. UBA Texte | 142/2022 (Link siehe INFO-LINKS)). Diese Kenngröße wird aktuell für die bundesweite Bodenabtragsmodellierung mit der Allgemeinen Bodenabtragsgleichung (ABAG) verwendet.</p>\n",
+    "Umweltbundesamt",
+    "abag",
+    "allgemeine-bodenabtragsgleichung",
+    "bodenabtrag",
+    "deutschland",
+    "k-faktor",
+    "opendata",
+    "a29ab42d-7392-44c2-96ff-de5991d1448a",
+    "Datensatz herunterladen (ZIP/TIFF)",
+    "Datensatz herunterladen (ZIP/TIFF)",
+    "https://gis.uba.de/daten/e0329552-07c9-4a40-a151-2c8984fa6fe5_tiff.zip",
+    "TIF/TIFF",
+    "Polygon",
+    5.87,
+    55.05,
+    15.04,
+    55.05,
+    15.04,
+    47.27,
+    5.87,
+    47.27,
+    5.87,
+    55.05,
+    "",
+    ""
+  ],
+  "dataSourceName": "govdata",
+  "datatype": [
+    "metadata"
+  ],
+  "dcat": {
+    "landingPage": null
+  },
+  "description": "<p>Der Datensatz enthält Informationen zum abgeleiteten K-Faktor (Maß der Erodierbarkeit des Bodens) für die Allgemeine Bodenantragsgleichung (ABAG). Datengrundlage für die Ausweisung des K-Faktors war die deutschlandweit harmonisiert verfügbare Bodenübersichtskarte im Maßstab 1:200.000 (BÜK 200), bereitgestellt von der BGR (2021). Der K-Faktor wurde ermitteln nach DIN 19708 2017-08. Eine grundsätzliche Beschreibung des methodischen Vorgehens findet sich in (Fuchs, S.; Brecht, K.; Gebel, M.; Bürger, S.; Uhlig, M.; Halbfaß, S. (2022): Phosphoreinträge in die Gewässer bundesweit modellieren – Neue Ansätze und aktualisierte Ergebnisse von MoRE-DE. UBA Texte | 142/2022 (Link siehe INFO-LINKS)). Diese Kenngröße wird aktuell für die bundesweite Bodenabtragsmodellierung mit der Allgemeinen Bodenabtragsgleichung (ABAG) verwendet.</p>\n",
+  "distributions": [
+    {
+      "id": "a29ab42d-7392-44c2-96ff-de5991d1448a",
+      "title": "Datensatz herunterladen (ZIP/TIFF)",
+      "format": [
+        "TIF/TIFF"
+      ],
+      "issued": "2025-07-21T21:31:57.470Z",
+      "byteSize": null,
+      "modified": null,
+      "access_url": "https://gis.uba.de/daten/e0329552-07c9-4a40-a151-2c8984fa6fe5_tiff.zip",
+      "description": "Datensatz herunterladen (ZIP/TIFF)"
+    }
+  ],
+  "extras": {
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-09-02T14:53:38.717Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-09-02T14:53:38.717Z",
+      "merged_from": [],
+      "modified": null,
+      "source": {
+        "portal_link": "https://ckan.govdata.de/dataset/bundesweite-bodenabtragsmodellierung-allgemeine-bodenabtragsgleichung-k-faktor-datensatz",
+        "raw_data_source": "https://ckan.govdata.de/api/3/action/package_show?id=bundesweite-bodenabtragsmodellierung-allgemeine-bodenabtragsgleichung-k-faktor-datensatz",
+        "source_base": "https://ckan.govdata.de",
+        "source_type": "ckan"
+      }
+    }
+  },
+  "iPlugId": "govdata",
+  "id": "03f0c47f-9c2a-4370-8d45-4e2e6fa9ba1f",
+  "isfolder": "false",
+  "keywords": [
+    {
+      "id": "",
+      "term": "abag",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "allgemeine-bodenabtragsgleichung",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "bodenabtrag",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "deutschland",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "k-faktor",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "opendata",
+      "source": "FREE"
+    }
+  ],
+  "legal_basis": null,
+  "metadata": {
+    "created": null,
+    "modified": "2025-08-13T21:31:41.513Z"
+  },
+  "modified": "2025-08-13T21:31:41.513Z",
+  "partner": [
+    "bund"
+  ],
+  "political_geocoding_level_uri": null,
+  "provider": [
+    "govdata"
+  ],
+  "rdf": "<RDF xmlns=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"><Dataset xmlns=\"http://www.w3.org/ns/dcat#\"><title xmlns=\"http://purl.org/dc/terms/\">Bundesweite Bodenabtragsmodellierung (Allgemeine Bodenabtragsgleichung) - K-Faktor (Datensatz)</title><description xmlns=\"http://purl.org/dc/terms/\">&lt;p&gt;Der Datensatz enthält Informationen zum abgeleiteten K-Faktor (Maß der Erodierbarkeit des Bodens) für die Allgemeine Bodenantragsgleichung (ABAG). Datengrundlage für die Ausweisung des K-Faktors war die deutschlandweit harmonisiert verfügbare Bodenübersichtskarte im Maßstab 1:200.000 (BÜK 200), bereitgestellt von der BGR (2021). Der K-Faktor wurde ermitteln nach DIN 19708 2017-08. Eine grundsätzliche Beschreibung des methodischen Vorgehens findet sich in (Fuchs, S.; Brecht, K.; Gebel, M.; Bürger, S.; Uhlig, M.; Halbfaß, S. (2022): Phosphoreinträge in die Gewässer bundesweit modellieren – Neue Ansätze und aktualisierte Ergebnisse von MoRE-DE. UBA Texte | 142/2022 (Link siehe INFO-LINKS)). Diese Kenngröße wird aktuell für die bundesweite Bodenabtragsmodellierung mit der Allgemeinen Bodenabtragsgleichung (ABAG) verwendet.&lt;/p&gt;\n</description><identifier xmlns=\"http://purl.org/dc/terms/\">03f0c47f-9c2a-4370-8d45-4e2e6fa9ba1f</identifier><keyword>abag</keyword><keyword>allgemeine-bodenabtragsgleichung</keyword><keyword>bodenabtrag</keyword><keyword>deutschland</keyword><keyword>k-faktor</keyword><keyword>opendata</keyword><distribution><Distribution><title xmlns=\"http://purl.org/dc/terms/\">Datensatz herunterladen (ZIP/TIFF)</title><description xmlns=\"http://purl.org/dc/terms/\">Datensatz herunterladen (ZIP/TIFF)</description><accessURL xmlns=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" resource=\"https://gis.uba.de/daten/e0329552-07c9-4a40-a151-2c8984fa6fe5_tiff.zip\" xmlns=\"http://www.w3.org/ns/dcat#\"/></Distribution></distribution></Dataset></RDF>",
+  "sort_hash": "2b49e14bc9c8a6de622315fb7799a7a89962110a",
+  "spatial": {
+    "geometries": [
+      {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.87,
+              55.05
+            ],
+            [
+              15.04,
+              55.05
+            ],
+            [
+              15.04,
+              47.27
+            ],
+            [
+              5.87,
+              47.27
+            ],
+            [
+              5.87,
+              55.05
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "t01_object": {
+    "obj_id": "03f0c47f-9c2a-4370-8d45-4e2e6fa9ba1f"
+  },
+  "temporal": {
+    "accrual_periodicity": "",
+    "accrual_periodicity_key": ""
+  },
+  "title": "Bundesweite Bodenabtragsmodellierung (Allgemeine Bodenabtragsgleichung) - K-Faktor (Datensatz)",
+  "uuid": "03f0c47f-9c2a-4370-8d45-4e2e6fa9ba1f"
+}

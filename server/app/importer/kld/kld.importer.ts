@@ -112,23 +112,22 @@ export class KldImporter extends Importer<KldSettings> {
         }
 
         // collect number of totalRecords up front, so we can harvest concurrently
-        if (this.settings.maxRecords && !isNaN(this.settings.maxRecords)) {
-          this.totalRecords = this.settings.maxRecords;
+        // extract the total number of records from the first list request
+        const hitsRequestConfig = KldImporter.createRequestConfig({ ...this.settings, startPosition: 0 }, 'Objekt');
+        const hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
+        try {
+            const hitsResponse: ObjectListResponse = await this.requestWithRetries(hitsRequestDelegate);
+            this.totalRecords = hitsResponse.Gesamtanzahl;
         }
-        else {
-          // extract the total number of records from the first list request
-          const hitsRequestConfig = KldImporter.createRequestConfig({ ...this.settings, startPosition: 0 }, 'Objekt');
-          const hitsRequestDelegate = new RequestDelegate(hitsRequestConfig);
-          try {
-              const hitsResponse: ObjectListResponse = await this.requestWithRetries(hitsRequestDelegate);
-              this.totalRecords = hitsResponse.Gesamtanzahl;
-          }
-          catch (e) {
-              const message = `Received empty response when requesting total number of objects. Skipping import.`;
-              log.error(message);
-              this.summary.errors.push({ type: 'app', error: message });
-              return 0;
-          }
+        catch (e) {
+            const message = `Received empty response when requesting total number of objects. Skipping import.`;
+            log.error(message);
+            this.summary.errors.push({ type: 'app', error: message });
+            return 0;
+        }
+        // if the latter is set (and lower), limit totalRecords to maxRecords
+        if (Number.isFinite(this.settings.maxRecords)) {
+            this.totalRecords = Math.min(this.totalRecords, this.settings.maxRecords);
         }
         log.info(`Number of records to fetch: ${this.totalRecords}`);
 
@@ -311,7 +310,7 @@ export class KldImporter extends Importer<KldSettings> {
                     dataset: doc,
                     original_document: mapper.getHarvestedData()
                 };
-                promises.push(this.database.addEntityToBulk(entity));
+                promises.push(this.addEntityToBulk(entity));
             }
             else {
                 this.summary.skippedDocs.push(id);

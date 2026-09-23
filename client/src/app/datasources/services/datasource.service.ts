@@ -48,6 +48,9 @@ export class DatasourceService {
   private _importLogs = signal<Record<number, ImportLogMessage>>(undefined);
   importLogs = this._importLogs.asReadonly();
 
+  private _batchProgress = signal<{ total: number; finished: number } | null>(null);
+  batchProgress = this._batchProgress.asReadonly();
+
   constructor(
     private api: DatasourceApi,
     private socketService: SocketService,
@@ -56,6 +59,7 @@ export class DatasourceService {
     this.fetchDatasources();
     this.fetchImportLogs();
     this.listenToImportLogChangesFromServer();
+    this.socketService.batchProgress$.subscribe(data => this._batchProgress.set(data));
     this.listenToConnectionChangesFromServer();
   }
 
@@ -130,13 +134,6 @@ export class DatasourceService {
   }
 
   importAll(): Observable<void> {
-    // Reset all import logs.
-    const importLogs: Record<number, ImportLogMessage> = {};
-    for (const id of Object.keys(this.importLogs())) {
-      importLogs[id] = { complete: false };
-    }
-    this._importLogs.set(importLogs);
-
     return this.api.importAll();
   }
 
@@ -218,6 +215,10 @@ export class DatasourceService {
 
   getJobs(id: number): Observable<any> {
     return this.api.getJobs(id);
+  }
+
+  cancelImport(id: number, jobId: string): Observable<{ cancelled: boolean }> {
+    return this.api.cancelImport(id, jobId);
   }
 
   private updateImportLogs(log: ImportLogMessage) {

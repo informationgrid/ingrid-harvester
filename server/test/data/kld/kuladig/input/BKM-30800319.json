@@ -1,0 +1,251 @@
+{
+  "Punktkoordinate": {
+    "type": "Point",
+    "coordinates": [
+      14.745500271116232,
+      51.311212802233761
+    ]
+  },
+  "Polygon": {
+    "type": "MultiPolygon",
+    "coordinates": [
+      [
+        [
+          [
+            14.746750230437385,
+            51.311365889604289
+          ],
+          [
+            14.746384855439004,
+            51.311413152605553
+          ],
+          [
+            14.746356699439147,
+            51.311416796605663
+          ],
+          [
+            14.746157630440011,
+            51.311442540606336
+          ],
+          [
+            14.745949471440923,
+            51.311469470607044
+          ],
+          [
+            14.745805563441575,
+            51.311488077607557
+          ],
+          [
+            14.745817391441541,
+            51.311523495607524
+          ],
+          [
+            14.744847548445833,
+            51.31164932561088
+          ],
+          [
+            14.744836162445859,
+            51.311578371610977
+          ],
+          [
+            14.744791060446094,
+            51.311450343611149
+          ],
+          [
+            14.744728835446402,
+            51.311460854611312
+          ],
+          [
+            14.744028686449536,
+            51.311345801613754
+          ],
+          [
+            14.744406627447926,
+            51.311108140612482
+          ],
+          [
+            14.744574698447147,
+            51.311073447611911
+          ],
+          [
+            14.744656982446811,
+            51.311062880611622
+          ],
+          [
+            14.744860860445886,
+            51.311036618610885
+          ],
+          [
+            14.745332058443813,
+            51.31098169660924
+          ],
+          [
+            14.745764216441923,
+            51.310921686607706
+          ],
+          [
+            14.746186724440037,
+            51.3108630136062
+          ],
+          [
+            14.746505130438646,
+            51.31081943460515
+          ],
+          [
+            14.746609920438132,
+            51.310856304604755
+          ],
+          [
+            14.746693029437708,
+            51.311076231604439
+          ],
+          [
+            14.746736725437463,
+            51.311191873604315
+          ],
+          [
+            14.746750230437385,
+            51.311365889604289
+          ]
+        ]
+      ],
+      [
+        [
+          [
+            14.744470967447722,
+            51.310747888612269
+          ],
+          [
+            14.744540562447437,
+            51.310715039612042
+          ],
+          [
+            14.744557565447344,
+            51.310707011611953
+          ],
+          [
+            14.744645892446943,
+            51.310780929611624
+          ],
+          [
+            14.744729764446554,
+            51.310851106611331
+          ],
+          [
+            14.744601941447101,
+            51.310911110611812
+          ],
+          [
+            14.744533527447398,
+            51.310943224612018
+          ],
+          [
+            14.744443176447753,
+            51.310985658612346
+          ],
+          [
+            14.744372528448118,
+            51.310926570612608
+          ],
+          [
+            14.744271476448603,
+            51.310842058612963
+          ],
+          [
+            14.744470967447722,
+            51.310747888612269
+          ]
+        ]
+      ]
+    ]
+  },
+  "IstKulturlandschaft": false,
+  "IstKulturlandschaftbereich": false,
+  "AnfangVon": null,
+  "AnfangBis": null,
+  "EndeVon": null,
+  "EndeBis": null,
+  "Erfassungsmassstab": [
+    1,
+    "Keine Angabe"
+  ],
+  "Datenherkunft": {
+    "Id": 54,
+    "Name": "Landesamt für Denkmalpflege Sachsen",
+    "Url": "https://www.lfd.sachsen.de"
+  },
+  "Denkmalschutz": null,
+  "Schutzwuerdigkeit": null,
+  "Adresse": "Petershain",
+  "Denkmalarten": [],
+  "Erfassungsmethoden": [
+    [
+      99,
+      "Übernahme aus externer Fachdatenbank"
+    ]
+  ],
+  "Bundeslaender": [
+    "Sachsen"
+  ],
+  "Kreise": [
+    "Görlitz"
+  ],
+  "Gemeinden": [
+    "Quitzdorf am See"
+  ],
+  "Objekttyp": "Kuladigobjekt",
+  "Id": "BKM-30800319",
+  "Name": "\"Alte Ziegelei\" Petershain",
+  "Beschreibung": "Der alte Ziegeleistandort in Petershain wurde vermutlich um 1900 gegründet. Die Gebäude sind durchweg in Ziegelbauweise errichtet. Die Wohngebäude sind zweigeschossig mit Satteldach. Das ehemalige Produktionsgebäude besitzt noch einen Schornstein. Ebenfalls erhalten ist die ehemalige Tongrube in Form von vier Restlöchern nördlich und östlich der Siedlung. Die Ziegelei ist ortsgeschichtlich von Wirkkraft.\r\n \r\n (Kathrin Kruner, Landesamt für Denkmalpflege Sachsen, 2023)\r\n    \r\n    [b]Datierung:[/b]\r\n    [list]\r\n    [*] Erbauung um 1900\r\n    [/list]\r\n    \r\n    [b]Quellen/Literaturangaben:[/b]\r\n    [list]\r\n    [*] Wenzel, Wilfried/Grützmann, Erika: Unsere Heimat der Kreis Niesky; o.O. 1983.\r\n    [/list]\r\n    \r\n    [b]Bauherr / Auftraggeber:[/b]\r\n    [list]\r\n    [*] --\r\n    [/list]\r\n    \r\n    [b]BKM-Nummer:[/b] 30800319",
+  "Kurzbeschreibung": "Der alte Ziegeleistandort in Petershain wurde vermutlich um 1900 gegründet. Die Gebäude sind durchwe...",
+  "Lizenz": {
+    "Id": 4,
+    "Lizenz": "CC BY-NC 4.0",
+    "Ausgabetext": "Der hier präsentierte Inhalt steht unter der freien Lizenz CC BY-NC 4.0 (Namensnennung, nicht kommerziell). Die angezeigten Medien unterliegen möglicherweise zusätzlichen urheberrechtlichen Bedingungen, die an diesen ausgewiesen sind.",
+    "Url": "https://creativecommons.org/licenses/by-nc/4.0/deed.de"
+  },
+  "Logo": null,
+  "AlternativeLogoUrl": null,
+  "ZuletztGeaendert": "2024-01-19T00:15:45.5074016",
+  "Themen": [
+    [
+      3,
+      "Wirtschaft, Technik, Verkehr"
+    ]
+  ],
+  "AlternativeNamen": [],
+  "Schlagwoerter": {
+    "wk000934": "Ziegelei"
+  },
+  "Fachsichten": [
+    [
+      3,
+      "Denkmalpflege"
+    ]
+  ],
+  "Projekte": [
+    [
+      4107,
+      "Braunkohle-Inventar Sachsen"
+    ]
+  ],
+  "LiteraturZitate": [],
+  "UebergeordnetesObjekt": null,
+  "UntergeordneteObjekte": [],
+  "VerwandteObjekte": [],
+  "Dokumente": [
+    {
+      "Medientyp": "Bild",
+      "Dateierweiterung": "jpg",
+      "Ueberschrift": "»Alte Ziegelei«, Ansicht von Süden",
+      "Beschreibung": "»Alte Ziegelei«, Ansicht von Süden",
+      "AlternativeBeschreibung": null,
+      "Copyright": null,
+      "FotografUrheber": "Kathrin Kruner",
+      "Thumbnail1Token": "BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hONyhuCBSUzunmZ4__240rqcNVEeySqjbOGhdCcJTyoKW1Nf_sXIfGMzqu2VZO3tNVmRoCjUnGuxE5hU96JkUxcCo_ThAZm6jZmcsQHxWyW73DKRXL4kiHvwbiLG9y-jF-UBadxr1UzYZKRVqTe3w3m",
+      "Thumbnail2Token": "BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDt1bZaLG0xwG5wBGTy8OKfg2LqDM7N6TuzKMwa8_DDq0lRzsYzbwe6l0as9mm0Ig1Fu0afRyIdIzhfAGVwDWW3leJQQWrvn8ePZISPjZeFni",
+      "Thumbnail3Token": "BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDt1bZaLG0xwG5wBGTy8OKfg2LqDM7N6TuzKMwa8_DDq0lRzsYzbwe6l0as9mm0Ig1Fu0afRyIdIzhfAGVwDWW3l44y3TE3QIF5kTYdoigHaMkOrvTJpXvMbSvYb55vJrwA((",
+      "DownloadToken": null
+    }
+  ]
+}

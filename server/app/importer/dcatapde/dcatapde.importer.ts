@@ -196,7 +196,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                     original_document: mapper.getHarvestedData()
                 };
                 promises.push(
-                    this.database.addEntityToBulk(entity)
+                    this.addEntityToBulk(entity)
                         .then(response => {
                             if (!response.queued) {
                                 // numIndexDocs += ElasticsearchUtils.maxBulkSize;
@@ -209,8 +209,7 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
             }
             this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
-        await Promise.all(promises)
-            .catch(err => log.error('Error indexing DCAT record', err));
+        await Promise.all(promises).catch(err => log.error('Error indexing DCAT record', err));
     }
 
     static createRequestConfig(settings: DcatapdeSettings): RequestOptions {

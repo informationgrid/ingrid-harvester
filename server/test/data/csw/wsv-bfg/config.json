@@ -1,0 +1,30 @@
+{
+  "type": "CSW",
+  "maxRecords": 100,
+  "startPosition": 1,
+  "catalogIds": [
+    1
+  ],
+  "rejectUnauthorizedSSL": true,
+  "rules": {
+    "containsDocumentsWithData": false
+  },
+  "maxConcurrent": 2,
+  "skipUrlCheckOnHarvest": false,
+  "timeout": 60000,
+  "sourceURL": "https://geoportal.bafg.de/csw/api",
+  "maxServices": 30,
+  "resolveOgcDistributions": false,
+  "harvestingMode": "standard",
+  "eitherKeywords": [],
+  "httpMethod": "POST",
+  "resultType": "results",
+  "simplifyTolerance": 0,
+  "id": 3,
+  "description": "WSV-bfg",
+  "iPlugId": "wsv-bfg-csw",
+  "partner": "bund",
+  "provider": "wsv",
+  "dataSourceName": "wsv-bfg-csw",
+  "datatype": "csw,metadata"
+}

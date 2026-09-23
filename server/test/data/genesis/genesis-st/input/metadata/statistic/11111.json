@@ -1,0 +1,34 @@
+{
+  "Ident": {
+    "Service": "metadata",
+    "Method": "statistic"
+  },
+  "Status": {
+    "Code": 0,
+    "Content": "erfolgreich",
+    "Type": "Information"
+  },
+  "Parameter": {
+    "username": "********************",
+    "password": "********************",
+    "name": "11111",
+    "area": "Öffentlich",
+    "language": "de"
+  },
+  "Object": {
+    "Code": "11111",
+    "Content": "Feststellung des Gebietsstandes",
+    "Cubes": "2",
+    "Variables": "5",
+    "Frequency": [
+      {
+        "From": "31.12.1995",
+        "To": null,
+        "Type": "Jährlich"
+      }
+    ],
+    "Information": "Statistik\nCode: 11111\nInhalt: Feststellung des Gebietsstandes\n\nDer amtliche Gebietsstand umfasst die Gesamtheit der\nVerwaltungseinheiten in ihrer regionalen Gliederung (Land,\nLandkreis/kreisfreie Stadt, Gemeindeverband, Gemeinde) zum\nStichtag 31.12. des jeweiligen Jahres. Die Daten über die\nBodenflächen (= Gebietsflächen) der Regionaleinheiten\nstammen aus der Flächenerhebung nach Art der tatsächlichen\nNutzung (EVAS 33111), der Angaben aus dem\nLiegenschaftskataster zugrunde liegen. Die Aktualisierung\nder Daten erfolgt mittels des Amtlichen\nLiegenschaftskataster-Informationssystems (ALKIS), welches\ndas Verfahren Automatisiert geführtes Liegenschaftsbuch\n(ALB) 2016 abgelöst hat.\n\nGebietsänderungen werden in Amtlichen Gesetzes- und\nVerordnungsblätter bzw. veröffentlichten Amtsblätter\nbekanntgegeben. Rechtliche Grundlage in Sachsen-Anhalt ist\ndas Kommunalverfassungsgesetz (KVG).",
+    "Updated": "15.07.2025 11:25:39h"
+  },
+  "Copyright": "© Statistisches Landesamt Sachsen-Anhalt, Halle (Saale), 2026"
+}

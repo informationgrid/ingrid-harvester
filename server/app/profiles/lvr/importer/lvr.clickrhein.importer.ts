@@ -35,8 +35,8 @@ export class LvrClickRheinImporter extends JsonImporter {
         super(settings);
     }
 
-    getMapper(settings: JsonSettings, record: object, harvestTime: Date, summary: Summary): JsonMapper {
-        return new JsonMapper(settings, { ...record, categoryMap: this.categoryMap }, harvestTime, summary);
+    updateRecord(record: object): void {
+        record['categoryMap'] = this.categoryMap;
     }
 
     protected async preHarvestingHandling() {

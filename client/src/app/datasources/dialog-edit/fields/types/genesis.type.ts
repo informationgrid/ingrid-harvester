@@ -187,10 +187,20 @@ export abstract class GenesisType {
                     fieldGroupClassName: "ingrid-row",
                     fieldGroup: [
                       {
-                        key: "spatialUri",
-                        type: "input",
+                        key: "politicalGeocodingLevel",
+                        type: "select",
                         className: "ingrid-col-10",
-                        props: { label: "Räumliche Abdeckung (URI)" },
+                        props: {
+                          label: "Ebene der geopolitischen Abdeckung",
+                          options: [
+                            { value: "international", label: "internationale Ebene" },
+                            { value: "european", label: "EU-Ebene" },
+                            { value: "federal", label: "Bundesebene" },
+                            { value: "state", label: "Ebene der Bundesländer" },
+                            { value: "administrativeDistrict", label: "Ebene der Landkreise und Regierungsbezirke" },
+                            { value: "municipality", label: "kommunale Ebene" },
+                          ],
+                        },
                       },
                     ],
                   },

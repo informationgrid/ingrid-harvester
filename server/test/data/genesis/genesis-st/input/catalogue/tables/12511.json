@@ -1,0 +1,44 @@
+{
+  "Ident": {
+    "Service": "catalogue",
+    "Method": "tables"
+  },
+  "Status": {
+    "Code": 0,
+    "Content": "erfolgreich",
+    "Type": "Information"
+  },
+  "Parameter": {
+    "username": "********************",
+    "password": "********************",
+    "selection": "12511*",
+    "area": "Alle",
+    "searchcriterion": "Code",
+    "sortcriterion": "Code",
+    "pagelength": "2500",
+    "language": "de"
+  },
+  "List": [
+    {
+      "Code": "12511-0001",
+      "Content": "Einbürgerungen von Ausländerinnen und Ausländern nach\nKontinenten in den kreisfreien Städten und Landkreisen",
+      "Time": "2005 - 2025"
+    },
+    {
+      "Code": "12511-0002",
+      "Content": "Einbürgerungen von Ausländerinnen und Ausländern nach\nAltersgruppen in den kreisfreien Städten und Landkreisen",
+      "Time": "2005 - 2025"
+    },
+    {
+      "Code": "12511-0003",
+      "Content": "Einbürgerungen von Ausländerinnen und Ausländern nach\nAufenthaltsdauer in den kreisfreien Städten und Landkreisen",
+      "Time": "2005 - 2025"
+    },
+    {
+      "Code": "12511-0004",
+      "Content": "Einbürgerungen von Ausländerinnen und Ausländern in den\nkreisfreien Städten und Landkreisen",
+      "Time": "2005 - 2025"
+    }
+  ],
+  "Copyright": "© Statistisches Landesamt Sachsen-Anhalt, Halle (Saale), 2026"
+}

@@ -1,0 +1,251 @@
+{
+  "description": "",
+  "extras": {
+    "metadata": {
+      "deleted": null,
+      "issued": "2026-09-10T14:04:31.638Z",
+      "merged_from": [
+        "CLICKRHEIN-DISCOVERY-222"
+      ],
+      "modified": null,
+      "source": {
+        "raw_data_source": "https://www.kuladig.de/ClickRhein/api/discoveries?amount=999",
+        "source_base": "https://www.kuladig.de/ClickRhein/api/discoveries?amount=999",
+        "source_type": "json"
+      }
+    }
+  },
+  "fulltext": "{\"id\":222,\"title\":\"Stadtspaziergang in Siegburg\",\"duration\":150,\"track\":2.8,\"travel_mode\":1,\"suitabilities\":[6,7],\"themes\":[1,7,9,10,12],\"epochs\":[3,4,7,21],\"territories\":[1,2],\"location\":{\"coordinate\":[50.79612766862951,7.206402297848256],\"municipalities\":[\"Rhein-Sieg-Kreis\"],\"districts\":[\"Siegburg\"]},\"media\":[{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDjkVLEUxy-5RBl6mfPWwSb_2fpDZhaPWKJhPVT9htEpHYmPnbNppF1M5KBoh7WyUJTlzbQWB-wH3RnbCx0w0QLgRoMnZd-O4qQ3mJFU9Uz69\",\"description\":\"Luftaufnahme der Abtei Michaelsberg auf dem Michaelsberg in Siegburg (2020).\",\"description_alternative\":\"Luftaufnahme bei Sonnenaufgang von einer Abtei, die auf einem Berg steht. Im Hintergrund ist eine Stadt.\",\"copyright\":\"Bastian Ulrich\",\"author\":\"Bastian Ulrich\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPcVDIv9-o4xPzNqoFFD-td-g-4TH7644ZPNoExJUxPSg9nAzfIyeWEayTKcMnFjpMDJ_kdC-CZYL8qvjytTkK7WxKDM1nfVB6U79D7n-dITXBQeFRuo3gP_dHoxMtKm9Vg2bDkoYdwoXgq2Ej5SiEJAe2FjeEOYPuvKzID8rOQUI7gy2k5DUXdWoZavjTSIfXkZMuQVkQS3q64cmGe4JxFdQ5OcAiu-WsRZSniuul4CN-0WkyNi-WoSARTBzvJgWfKf6ynsuP2--unH6AXPh_5K-w8hIDbLtL0hKu89lzXH3A((\",\"ratio\":1.3333333333333333},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDvu7s6enKyt9SIa9YcS1gJmYrpSXZJHPAuxewANVT4jHkUzBu8ihfbu1qyDdBQmu1aFbvN0n1bUxdpUndGMmN6fI-AR0_275zLRwec6QSfYH\",\"description\":\"Frontansicht des Stadtmuseums Siegburg vom Marktplatz aus (2023).\",\"description_alternative\":\"Auf einem gepflasterten Platz steht ein historisches Gebäude mit repräsentativer Fassade hinter einem Baum, der sich rechts im Bild befindet. Vor dem Gebäude befindet sich ein kleiner Brunnen, der aus einem groben Steinblock besteht.\",\"copyright\":\"ARTICUS&ROETTGEN - CC-BY-NC-SA\",\"author\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rr-RB62XoLMXxFTBbSHScS78tR_XbnuVIx2PdN9OiBcS4pEpd2U5h9aO7rUcbvdiOS5pzK1Yn8gPhX6d7vBriDBtVp8ineyt1r-iSqU__pKZ8ykekfQE2v22qk8YsoZG4qOZeHqbsO8yfxOqFRtnv2ZHuyvhdyKn0FF3S2zorWj5Ng-_f5siCssk3oOh-a1_zz5oncbILocscjbOYs2ytjgGtffwuEovH1-Xhfx-VbwagNsQ8wNV8M_ylmssYT7mzQ(\",\"ratio\":0.8802083333333334},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDuogcopxVgogsCQmyw8rokwQ6AB60arJQMKKOKD7VeBmpgYKOKGGtUp11KWzwcrBI0nZbkzoQw0N6g_0DKo5EjGF6GhyevbFtX8UZrvt-2L8\",\"description\":\"Der Marktplatz in Siegburg vom Stadtmuseum aus gesehen (2026).\",\"description_alternative\":\"Im Vordergrund ein Brunnen, der aus einer abstrakten, blockfömrigen Steinskulptur besteht. Dahinter erstreckt sich ein gepflasterter Platz, an dessen Seiten Bäume stehen. Rechts steht im Hintergrund eine Kirche.\",\"copyright\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA\",\"author\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rop0BVP3xT_DC9uKcQvdbYFmjedLQ8JgvyGOrQs1YVsxzJFTLhClS_MZ9dy_6ykaLgrdEpnb75_Eki2rHnvd6dA6oFtPwKNp-wsooraiVMJjcCpsxrfYzo8MHaIg7xwxnas6a1AWI6vZuLjyNlR3ORbYvCgRKNdkX4_aZohGea1JfQsJPj8fbKDGHRhdatCfuIOPyTZ2hMRe5y4PakPKOZcw_hpb52WdW6B36fncr3kh1uDTut9hvd_xbxHxyBtYcE(\",\"ratio\":0.75},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDmcASTQW6J6NFOYlOkbMX6lFq6keqd64jhI_nZrhmUa3ZifzgIH05GRJbPT0wnjEz1PBs5rESkRO5CptBVH2X5Fp0R2566tPbWxF8uEwl_88\",\"description\":\"Ansicht des Johannistürmchens am Michaelsberg in Siegburg mit der Abtei dahinter (2026).\",\"description_alternative\":\"Auf einem bewaldeten Hügel steht links im Bild ein Teil der mittelalterlichen Stadtbefestigung mit rundem Türmchen, rechts im Bild die barocke Abtei mit der Abteikirche und ihrem Turm.\",\"copyright\":\"ARTICUS & ROETTGEN\",\"author\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RrIsdJoyV5UtkKZ5K7WA9IOsHl43mDz6751o1l0fwynP-fzwOWqxp9bIMNA4QQFFpM8oJwemROCRFpfPtGFfsR0U2nJVGURx15jok-YUlyeontqCuNo1m1mqFXH3rbaFlZ8DpiOjX3Iz4lt2BomunluWTErtf6Yl1WT5cWu1zWly8Sv4JChVEwXWTJxVP2b1wejNGXXaiTad4ka1MWml3-RjH4iMz5XEAtPGDMJJeQls5hvF7VIW0gEJnO1Q_EZEa4(\",\"ratio\":1.499267935578331},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDl0mKUDszUxTL5YrpIC1MLXOOMZlLbc3o4slpeG1fWcQS1nRTdxNkS3p8xctebt4HMIMn386KeQfq0ke8XsfztiShkd3VqHDfXZ01iPg8iZl\",\"description\":\"Fronansicht des Hauses zum Winter mit der Kirche Sankt Servatius im Hintergrund (2026). Das Haus zum Winter ist das älteste Profangebäude in Siegburg und wurde bereits im 13. Jahrhundert errichtet.\",\"description_alternative\":\"Vor einem Kirchturm steht ein historisches Haus, dessen Fassade schlicht gehalten und im zweiten Stock mit Fachwerk ausgekleidet ist. Die Seitenwände des Hauses bestehen aus Steinquadern verschiedener Größen.\",\"copyright\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA\",\"author\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RpYO-E43qfUMr1mlJyXSvmkItwaZTIeKynJjJAB_X88iuqNgaXfztYvTX3Jh30nLxfgweVl-Ix6yE1kM5PhX_wlxPWTxEfVMh7hX6_94WPT7X2pxyF_IcnTka8LOCkcSUHzuzn3FacmLhJJG0YohPR8HjIQqmRK-UjToLb8I-2J_7xXPERbIxXrb0pnD8Rcr0iPLTV-0T4MIFxm2KZk-gi5xoj-EssO9eFRI9RvDc6f-JfWg64unrqdoC5NWsJsdEM(\",\"ratio\":1.0338541666666667},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDmgVKVrj0C2ioJjd3ppTAwoJ8j3E0sqtbDZmBVNpc2HOAcy3cniQ1ywueSzJNQb0Kug5YvoADsOfP6sv2E0CA_aRqe19DbEMuhIWuM9nI0wZ\",\"description\":\"Ansicht des Neubaus und dahinter der barocken Abtei am Michaelsberg in Siegburg (2023).\",\"description_alternative\":\"Im Vordergrund ein eckiger Neubau mit hohen Fenstern, dahinter das barocke Abteigebäude mit dem von einer Kuppel gekrönten Turm in der Mitte.\",\"copyright\":\"Helge Articus\",\"author\":\"Helge Articus\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RoMV0P8172KFOgG4uVTbAJPW6LSH_ONwgOCnL1jq10zyhsqXGcB69kqqO6Rn2C5bFUMEVZaiEbW4TKIwfZhTwfqjmJl9_S7ZybhRix5kEwe6EVsVIEMT7vQ3cOlHtrYD-xfqYTOWfr-PcWxEH2jlTyRYOim478TGXxZcNPfa3NWUoAJT14qGFMAKboCNfQVOBU95IeEoSt-acalj4xY2JFev4PYzFIiQerg_enf532CYNCrmdlv8BPOf0WzSu6v9Ts(\",\"ratio\":1.499267935578331},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDtIwXoKEh6ViKMEfhzBQ7iXjoQw0uB-DGcdaAVNAG5TU0GpEro7JCW6UwlHi8C7z6bTsdRlE80j3tVfDuE4tHRFMirk_MnqjJHrEbzyc9xfO\",\"description\":\"Ansicht der romanisch-gotischen Kirche Sankt Servatius in Siegburg mit dem Chor im Vordergrund (2023).\",\"description_alternative\":\"Eine Kirche mit hohen Fenstern im Schiff und Chor und niedrigen Fenstern im dahinterstehenden Turm.\",\"copyright\":\"Articus & Roettgen\",\"author\":\"Helge Articus\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RqrgMCwgFdGFAJJ79yKjLxZM469Q5PZvzLO-fQc0TuJHV0NS91-mRwF63je3zJ4BDSthYsQYsefiqAs5tA6ghMvAsHsqPLop3e-Ob6rghfisZTHHemBYNq9wrLmtYaY1AqsfqEVZq30zsFB7YrI7QgGrBql7HtNQhTfQ1ym_2VuVmT9ezHJI_XhMASXb3kZL0Yj0C52pVoJYuJkZ_bEXz1z8SL_GiY2pKliAJL0t7mUizf4pHf0x6AHJyEFK4GTK5M(\",\"ratio\":1.07421875},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDrslkTHHaYVFCqhacSbIu_wgHDdrilAn6bn-QRKo5QXX5LXMQm0RipfyFkrym3iC0sYcllBs2h4_QD65fJKBDJzd_Q4cB8q4wke5KRGMp2wy\",\"description\":\"Am Standort der 1938 zerstörten Synagoge Siegburg erinnert heute eine Gedenkstätte an die ermordeten jüdischen Siegburger*innen (2026).\",\"description_alternative\":\"In einem auf den Boden gepflasterten Kreis steht mittig auf einem runden Sockel ein Gedenkstein mit einem Davidstern auf der Oberseite. In das Pflaster sind Inschriften auf Deutsch und Hebräisch eingelassen.\",\"copyright\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA\",\"author\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rq91sbehWnUgokGeBaQrwDJYi4IIE_SDd8DTbFc01hC44bU7owTzMZKXZKcrExQe0lwUNhDswdKJd5s72DvX3u8fLUTRLXgXXKgT2kq0cGk3cz5dD0NrKsg58BzKDzBXfJbtJsNi1PrQ-EQ3TNLkFv5vOCt5JVvPza4uOJwUb5g0lqHS-U1lTxHaXlhJBcwH3p-VR0H2ixoxhcyM5yNgJs3qBxsOSscVvb8pT7mudEmqHYxY4Bmy3ljRCop04OuKsw(\",\"ratio\":1.3333333333333333},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDqbKwsLIl4YwAnysndgpPDhNtboSfb06VxYGUMbhv0kTCEDp4oYRxP1ruHJSgc1PggDTM0KtbLi3qWV6-hMWfb0DdWBkp3vK1Qt4SgdWcmPv\",\"description\":\"Ansicht der alten kaiserlichen Poststation im Haus am Markt 45 in Siegburg links im Vordergrund, dahinter das Stadtmuseum Siegburg mit Glockenspiel an der Außenwand (2026).\",\"description_alternative\":\"An einem Platz stehen mehrere, teils historische Häuser. Auf dem Platz befinden sich eine alte Straßenlaterne sowie ein herbstlicher Baum.\",\"copyright\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA\",\"author\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rq1E35n7hxOEEB4vA5Du6aekrlB0Qsz6oIuv_UTZn7_btEQV09ECFSfm5twl8zTIAgZysUOtO3Qd2psEywEXccD3L2hPw8EDQdXFrkvUFf9wug-JtgxUBoJhrvtLbeNq5C00IdbGq02UFcBbwEiyfMZkaNhRh_AUUHqGP-MWxIBmQD_9QXTA8nBGwm8vI-yFZYZe-3lgU4G79Fbr5HM8E0KZ-hgWWBs74j9YPEDf-OEeA((\",\"ratio\":1.3333333333333333},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDkTrOgMpys95MKE-wG5wlzCMb_jrvSVoY-uS8mVcz9-PD8rrNcYkMeUiFTozpyD9Ggz_zcQ2GXrjEmOoMvP6yjDRQtonprxFIP1MISKtuViz\",\"description\":\"Frontalansicht des Hauses zum Tannenbaum in Siegburg (2026).\",\"description_alternative\":\"Fassade eines historischen Fachwerkhauses.\",\"copyright\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA\",\"author\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rr1j5_dGFC4ql6PT8E2DP79Ulyo3Pu8l4_-dWhApBrlEHR1yOYyjx1znuL66acblxlvhQBUza-kos0bMuaQSAj7Al4kFk-X24pylvskJlejaKQn4Nh1_IOTQDsnSwO25N7-JsLYqPbeJPhBTR3KLeilVY1lLHOHk9TnsjXLdlJnnrMWKOvNQbS4_wd7krXdJiYWdAlijiCe-52uon_jBRfLL8LPiH2vn7HGfbji2mu4tA((\",\"ratio\":0.7916666666666666},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDl7FXNpRSy36WG-hT0uz8ijWi-Tl8pXdkk5GeKije-UjelFkSTGfZSyo_ipzEEogLv4BeyvFuUNoD7E1jZXIUU1SuiBxQZBY9_eK898b_-4S\",\"description\":\"Der Hexenturm am Michaelsberg in Siegburg ist ein alter Wachturm aus dem Hochmittelalter (2026). Seinen Namen und damit den Bezug zur Hexenverfolgung erhielt er im 19. Jahrhundert. Die Prozesse fanden tatsächlich anderswo statt.\",\"description_alternative\":\"Ein runder Steinturm steht an einem gepflasterten Fußweg.\",\"copyright\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA\",\"author\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RrqlVovRW_QHcq45FdlnDl3Z44YzABqC_UVujDOU85MiE0C15vc8y5rvfyOGD89n1gIQ_x9Rbnz7wfFyMBmC8qF-3IkkjtSjnuatDs6Mw9KOlmAfSS-o9T-ZCwrLtoxYnnPbZbUCHpz7b4Oy5ND_7gg2T4J8I4eq0ujeWGVWq_CbBlv9yjZZDI36FLUmgPLtVwSUDuodxsHBwFcN5p5Lr5cvPL67bmlHxE_ZsKAjyDHCH9G1SjNO0orK0cNhqMwoo0(\",\"ratio\":1.3333333333333333},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDnEEX6MpAW9d8PqCTX7op5lWMOFOCw2iNgYo6e8Myz189izx3Um4tFp6l9R1AIkorl-gYF4McAIuXL3qcc_pCG2jmdEML-6L_gPOUEz11lpv\",\"description\":\"Der 2021 vom US-amerikanischen Künstler Brody Neuenschwander geschaffene vierte Anno-Schrein mit den sterblichen Überresten Erzbischofs Anno II. in der Abtei auf dem Michaelsberg in Siegburg (2026). Anno war der Gründer der Abtei.\",\"description_alternative\":\"Der Schrein steht in der Mitte eines schmalen Raums mit steinernem Boden. Er hat die Form eines Hauses mit spitzem Dach und besteht aus Metall, aus dem die Zeilen des Anno-Lieds geformt wurden. Dadurch ist das Innere des Schreins sichtbar und er wirft dynamische Schatten auf den Boden.\",\"copyright\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA\",\"author\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rrdim1sM-jR1DOd_Zd3_QsMk5d9dBPTS8wR0EwTn08_O2XtuWBej-Rn0M4ln-mvpQdJfBznNs9Cr6YRAciDfeAY9124q_UHF7xlw9yCU82p76O7F6DesQwGm7NBZ2_4-BZIAAdvcqAgGauydee7Tlotn0jVgQoRwwfGL9606CVcs98OkYz4OKgJW0VjpaDKRSSIrCSAGUG_z_liWgpRRnKR5IOEavfveX-_Crkr8oBeVlbKihZ8MBFiUXeElP_-yj0(\",\"ratio\":1.3333333333333333},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDlXq4NHHRjUxJzd9cnZtS4aAZ6e0H9y_wm7_EXBCJW5MebhXDKMuqKKzjl1wDtkmKs8yJMAOT5h0kRPRr_IFqNdDUTsd7IhPk5rlCd5Bq38Q\",\"description\":\"Das Tor zur Arbeit auf dem Michaelsberg in Siegburg (2023).\",\"description_alternative\":\"Ein Steinerer Bogen gibt den Blick auf den Innenhof der barocken Abtei mit der Abteikirche frei.\",\"copyright\":\"Bastian Ulrich / Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA\",\"author\":\"Bastian Ulrich\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RqsuL0_wWLdIs785Tmfk680HwVHQtFQZ-Et4XoZ0zPHgetop0yu14Bt317gI2WyLPdcm2kBN8vl3L-qEfkdSjmAFYpAtfGXrh8Kx6faeeLyNz_7F8DoYI6X14pFy1DpZ20iRRv4SFzM55Qh4mZJnkXsuUEEaDQtYx3BYPgyMpGL84BwbV12DW0Ct2KBQTf7emWr0QXFxn8ropw2kdrIqq7dhRcq_m9K_iXRfhIbqN0PGxP2Tneq-8S8a83d5n7UWDQ(\",\"ratio\":0.75390625},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDld1IbT3oYA8QXSEJo8XS3AD3ND_XWzQxI4Xpz9d-ml_0OzK9EGs_uCrOg2DPaev8QdLindkFFF07Pnhd6OMPJjqrCTxnriOSzMNOHr6ggWA\",\"description\":\"Der Mühlengraben in Siegburg im Vordergrund mit dem Mühlrad an der Mahlgasse im Hintergrund (2026).\",\"description_alternative\":\"Im Vordergrund des Bildes ist ein Abschnitt des Mühlengrabens zu sehen, der künstlich angelegt wurde. Dahinter steht ein Haus am Ufer. An der Fassade ist ein historisches Mühlrad angebracht.\",\"copyright\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA\",\"author\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RoOWt00oLKDd_EX9btiFgdL89UNv3Z5LyMuIGSXRwrvt0zA5GuQfvbWyn7jWJ1OcjITVF5j83tyBzMCu9e6LGnaXTM8fHOUOKVUkuc8mt_YGluKasYQxCWb67U9Ty9b7jczn8Ycjc6djMSL99ab0MwKWG9GEUqL2cNcD3ZB0dfQ9swFOi2D6cPruFeJ9fmDHQ6Y6Q_dWIRvqs3GXVlrw3qw1Ti-tGEbVPcwc9vQQ0wXoBxrCBNurm_rz_uVBVyaJ0g(\",\"ratio\":1.3333333333333333},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDgJW-lZmuXmj3ZgSufHOMbjbh6wwIx2k1hv7ZqyCB37OwEeLh3cHupzvqjGUWmYYt-gEE-QX7gCG5pfoxHNuk0nDPn5_ZqdmPihpRO2vg3Wy\",\"description\":\"Ein erhaltenes Fragment der Stadtmauer aus dem Hochmittelalter in einem Park nahe des S-Carrés in Siegburg (2026).\",\"description_alternative\":\"Ein kleiner Bach verläuft durch eine mit Bäumen bepflanzte Grünfläche. Rechts im Bild steht eine alte Mauer.\",\"copyright\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA\",\"author\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rrb0b4A9EP1ZoAI7JsV863NrqhxKaoYm_zq-pmn3fhKjXksPSfWCLH1itMuXogjKPhG1R20eyj8PSf-iF6cDXJGFK4FBuWsMNM8TGfVlv97SoGwi7yx-fxmWDHdMZMCHl3L0CtZVI1qndmBSWrlbsYxBBwBOzY47OW4maOLV5X_F5868WqOZ1fYTXuZnmACqKRFsqb3ncmwPZOLCgSGS5A3DHRZDpvOXeCNf3S9ng4L2k0mKvtpb1Br8WaJFV_H7BE(\",\"ratio\":1.3333333333333333},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDmCNIGR8x1njfsOwg7ydwb-ixbVBnVTWmqi8Hly-IQzcxl7VnABVly8Y9mErNMEeVEv7wZ36EsiukbVKGF3LeOik7b27beo6zjg6DmMh1tLr\",\"description\":\"Das Zeughaus an der Zeughausstraße in Siegburg (2026). Heute ist hier die Engelbert-Humperdinck-Musikschule untergebracht.\",\"description_alternative\":\"Ein historisches Haus mit steinerner Fassade steht an einer Straße. Zu seiner linken Seite führt ein Tor in einen Innenhof.\",\"copyright\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA\",\"author\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rpp1s4yukTLQv-gGR1hV5qYTVVk9vEMbg4dmWBFb2Dzf9gjJSmdPQn16K3e3FJE7GszPCElsa7i-xhNErS6SLCcbw5MEHG3yZuzxLbAdL6KxGFk69Qv-R3KRXwnlrijPUKzptlkH7bWbTf6HqthS5odlVLTJMTj2BxLT8RrwB4O0ZCSbgwHhSh_9gs9RvqV8OzKTW76Nr9Lr1UkQrkSPFQZ13hkY04LFxZNF3vThaT_P7Xo_HZHKpevoK_o8nfZqk4(\",\"ratio\":1.3333333333333333},{\"url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDma2v-xOjR96nG77pYDaMhZgEYOop82MGp9hYnN-yy86GM91-_u7jlxWJxubrTviJOo8fO427e3a4FJy6vXx69ZIDgqmlbSB82CGyaRaeOZY\",\"description\":\"Ansicht des Spielplatzes am Michaelsberg in Siegburg (2026).\",\"description_alternative\":\"Ein Spielplatz mit sandigem Untergrund, Wippen, Klettergerüsten und Rutschen.\",\"copyright\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung - CC-BY-NC-SA\",\"author\":\"Stadtbetriebe Siegburg AöR, Tourismusförderung\",\"media_type\":\"image\",\"download_url\":\"/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RpmHvX3Hx9-qziLSuHq_NejIRRXYhyYLWLwMVfCY6jxm6MgZbyAcD5O9ZxDAtNjec4qQ6CEbDdZ0D7MRzbk93pxqp_9I7_dj8dEhL0IXGvKdYS0ItWDUwhnU2Vey7ZxKIs68ahiWb9-XkROU1r_J8GtzlCKh7aFIW46-sWRPGDQVIP8v3Qdu6wu8x0Qv6MgeJfDd43LeWMhKK-KvxCPdd7hyynDJqpoxGGthNVJx8qmoYr3pCpu-1e_mnN0MYZwyWA(\",\"ratio\":1.499267935578331}],\"categoryMap\":{\"territory\":{\"1\":\"Drinnen\",\"2\":\"Draußen\"},\"suitabilities\":{\"4\":\"inklusive Infos\",\"6\":\"familienfreundlich\",\"7\":\"für Kinder\",\"8\":\"kinderwagentauglich\",\"9\":\"für Wanderer*innen\"},\"themes\":{\"1\":\"Architektur\",\"4\":\"Street Art\",\"7\":\"Museum\",\"8\":\"Erinnerungskultur\",\"9\":\"Glaube und Religion\",\"10\":\"Stadtgeschichte\",\"11\":\"Industriekultur\",\"12\":\"Schlösser, Burgen und Festungen\",\"13\":\"Migrationsgeschichten\",\"16\":\"Wald und Park\",\"17\":\"Seen und Flüsse\",\"18\":\"Bergbau\",\"19\":\"Umweltschutz\",\"20\":\"Tiere\",\"22\":\"Karneval\",\"23\":\"Essen und Trinken\",\"25\":\"Persönlichkeiten\",\"29\":\"Feste und Feiern\",\"31\":\"Sport\",\"33\":\"Lost Place\",\"35\":\"Kunst\",\"36\":\"Ländliche Kultur\",\"37\":\"Sagen und Legenden\",\"38\":\"Bildung\",\"39\":\"Denkmal\",\"40\":\"Politik\",\"41\":\"Sprache\"},\"themes_spot\":{\"1\":\"Siedlung\",\"2\":\"Religion, Kult, Brauchtum\",\"3\":\"Wirtschaft, Technik, Verkehr\",\"4\":\"Befestigung, Militär, Wehrwesen\",\"5\":\"Staat, Herrschaft, Recht, Verwaltung\",\"6\":\"Kunst und Kultur\",\"7\":\"Gesundheitswesen und Sozialwesen\",\"8\":\"Sport, Freizeit, Tourismus\",\"9\":\"Natur und Umwelt\",\"10\":\"Bildung und Wissenschaft\"},\"epochs\":{\"1\":\"Zeit des Neandertalers\",\"2\":\"Römer und Germanen\",\"3\":\"Mittelalter\",\"4\":\"Neuzeit\",\"5\":\"Industrialisierung\",\"6\":\"Zeitgeschichte\",\"7\":\"Kaiserreich\",\"8\":\"Erster Weltkrieg\",\"9\":\"Weimarer Republik\",\"10\":\"Zweiter Weltkrieg\",\"11\":\"Nachkriegszeit\",\"12\":\"Kalter Krieg\",\"13\":\"1960er\",\"14\":\"1970er\",\"15\":\"1980er\",\"16\":\"1990er\",\"17\":\"2000er\",\"19\":\"1920er\",\"20\":\"1930er\",\"21\":\"Nationalsozialismus\",\"22\":\"1950er\",\"26\":\"Antike\"}}}",
+  "id": "CLICKRHEIN-DISCOVERY-222",
+  "keywords": [
+    {
+      "id": null,
+      "term": "familienfreundlich",
+      "source": null
+    },
+    {
+      "id": null,
+      "term": "für Kinder",
+      "source": null
+    },
+    {
+      "id": null,
+      "term": "Architektur",
+      "source": null
+    },
+    {
+      "id": null,
+      "term": "Museum",
+      "source": null
+    },
+    {
+      "id": null,
+      "term": "Glaube und Religion",
+      "source": null
+    },
+    {
+      "id": null,
+      "term": "Stadtgeschichte",
+      "source": null
+    },
+    {
+      "id": null,
+      "term": "Schlösser, Burgen und Festungen",
+      "source": null
+    },
+    {
+      "id": null,
+      "term": "Mittelalter",
+      "source": null
+    },
+    {
+      "id": null,
+      "term": "Neuzeit",
+      "source": null
+    },
+    {
+      "id": null,
+      "term": "Kaiserreich",
+      "source": null
+    },
+    {
+      "id": null,
+      "term": "Nationalsozialismus",
+      "source": null
+    }
+  ],
+  "lvr": {
+    "genres": null,
+    "identifier": "CLICKRHEIN-DISCOVERY-222",
+    "licenses": null,
+    "media": [
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPcVDIv9-o4xPzNqoFFD-td-g-4TH7644ZPNoExJUxPSg9nAzfIyeWEayTKcMnFjpMDJ_kdC-CZYL8qvjytTkK7WxKDM1nfVB6U79D7n-dITXBQeFRuo3gP_dHoxMtKm9Vg2bDkoYdwoXgq2Ej5SiEJAe2FjeEOYPuvKzID8rOQUI7gy2k5DUXdWoZavjTSIfXkZMuQVkQS3q64cmGe4JxFdQ5OcAiu-WsRZSniuul4CN-0WkyNi-WoSARTBzvJgWfKf6ynsuP2--unH6AXPh_5K-w8hIDbLtL0hKu89lzXH3A((&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDjkVLEUxy-5RBl6mfPWwSb_2fpDZhaPWKJhPVT9htEpHYmPnbNppF1M5KBoh7WyUJTlzbQWB-wH3RnbCx0w0QLgRoMnZd-O4qQ3mJFU9Uz69&width=512",
+        "dimensions": null,
+        "description": "Luftaufnahme der Abtei Michaelsberg auf dem Michaelsberg in Siegburg (2020)."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rr-RB62XoLMXxFTBbSHScS78tR_XbnuVIx2PdN9OiBcS4pEpd2U5h9aO7rUcbvdiOS5pzK1Yn8gPhX6d7vBriDBtVp8ineyt1r-iSqU__pKZ8ykekfQE2v22qk8YsoZG4qOZeHqbsO8yfxOqFRtnv2ZHuyvhdyKn0FF3S2zorWj5Ng-_f5siCssk3oOh-a1_zz5oncbILocscjbOYs2ytjgGtffwuEovH1-Xhfx-VbwagNsQ8wNV8M_ylmssYT7mzQ(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDvu7s6enKyt9SIa9YcS1gJmYrpSXZJHPAuxewANVT4jHkUzBu8ihfbu1qyDdBQmu1aFbvN0n1bUxdpUndGMmN6fI-AR0_275zLRwec6QSfYH&width=512",
+        "dimensions": null,
+        "description": "Frontansicht des Stadtmuseums Siegburg vom Marktplatz aus (2023)."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rop0BVP3xT_DC9uKcQvdbYFmjedLQ8JgvyGOrQs1YVsxzJFTLhClS_MZ9dy_6ykaLgrdEpnb75_Eki2rHnvd6dA6oFtPwKNp-wsooraiVMJjcCpsxrfYzo8MHaIg7xwxnas6a1AWI6vZuLjyNlR3ORbYvCgRKNdkX4_aZohGea1JfQsJPj8fbKDGHRhdatCfuIOPyTZ2hMRe5y4PakPKOZcw_hpb52WdW6B36fncr3kh1uDTut9hvd_xbxHxyBtYcE(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDuogcopxVgogsCQmyw8rokwQ6AB60arJQMKKOKD7VeBmpgYKOKGGtUp11KWzwcrBI0nZbkzoQw0N6g_0DKo5EjGF6GhyevbFtX8UZrvt-2L8&width=512",
+        "dimensions": null,
+        "description": "Der Marktplatz in Siegburg vom Stadtmuseum aus gesehen (2026)."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RrIsdJoyV5UtkKZ5K7WA9IOsHl43mDz6751o1l0fwynP-fzwOWqxp9bIMNA4QQFFpM8oJwemROCRFpfPtGFfsR0U2nJVGURx15jok-YUlyeontqCuNo1m1mqFXH3rbaFlZ8DpiOjX3Iz4lt2BomunluWTErtf6Yl1WT5cWu1zWly8Sv4JChVEwXWTJxVP2b1wejNGXXaiTad4ka1MWml3-RjH4iMz5XEAtPGDMJJeQls5hvF7VIW0gEJnO1Q_EZEa4(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDmcASTQW6J6NFOYlOkbMX6lFq6keqd64jhI_nZrhmUa3ZifzgIH05GRJbPT0wnjEz1PBs5rESkRO5CptBVH2X5Fp0R2566tPbWxF8uEwl_88&width=512",
+        "dimensions": null,
+        "description": "Ansicht des Johannistürmchens am Michaelsberg in Siegburg mit der Abtei dahinter (2026)."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RpYO-E43qfUMr1mlJyXSvmkItwaZTIeKynJjJAB_X88iuqNgaXfztYvTX3Jh30nLxfgweVl-Ix6yE1kM5PhX_wlxPWTxEfVMh7hX6_94WPT7X2pxyF_IcnTka8LOCkcSUHzuzn3FacmLhJJG0YohPR8HjIQqmRK-UjToLb8I-2J_7xXPERbIxXrb0pnD8Rcr0iPLTV-0T4MIFxm2KZk-gi5xoj-EssO9eFRI9RvDc6f-JfWg64unrqdoC5NWsJsdEM(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDl0mKUDszUxTL5YrpIC1MLXOOMZlLbc3o4slpeG1fWcQS1nRTdxNkS3p8xctebt4HMIMn386KeQfq0ke8XsfztiShkd3VqHDfXZ01iPg8iZl&width=512",
+        "dimensions": null,
+        "description": "Fronansicht des Hauses zum Winter mit der Kirche Sankt Servatius im Hintergrund (2026). Das Haus zum Winter ist das älteste Profangebäude in Siegburg und wurde bereits im 13. Jahrhundert errichtet."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RoMV0P8172KFOgG4uVTbAJPW6LSH_ONwgOCnL1jq10zyhsqXGcB69kqqO6Rn2C5bFUMEVZaiEbW4TKIwfZhTwfqjmJl9_S7ZybhRix5kEwe6EVsVIEMT7vQ3cOlHtrYD-xfqYTOWfr-PcWxEH2jlTyRYOim478TGXxZcNPfa3NWUoAJT14qGFMAKboCNfQVOBU95IeEoSt-acalj4xY2JFev4PYzFIiQerg_enf532CYNCrmdlv8BPOf0WzSu6v9Ts(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDmgVKVrj0C2ioJjd3ppTAwoJ8j3E0sqtbDZmBVNpc2HOAcy3cniQ1ywueSzJNQb0Kug5YvoADsOfP6sv2E0CA_aRqe19DbEMuhIWuM9nI0wZ&width=512",
+        "dimensions": null,
+        "description": "Ansicht des Neubaus und dahinter der barocken Abtei am Michaelsberg in Siegburg (2023)."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RqrgMCwgFdGFAJJ79yKjLxZM469Q5PZvzLO-fQc0TuJHV0NS91-mRwF63je3zJ4BDSthYsQYsefiqAs5tA6ghMvAsHsqPLop3e-Ob6rghfisZTHHemBYNq9wrLmtYaY1AqsfqEVZq30zsFB7YrI7QgGrBql7HtNQhTfQ1ym_2VuVmT9ezHJI_XhMASXb3kZL0Yj0C52pVoJYuJkZ_bEXz1z8SL_GiY2pKliAJL0t7mUizf4pHf0x6AHJyEFK4GTK5M(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDtIwXoKEh6ViKMEfhzBQ7iXjoQw0uB-DGcdaAVNAG5TU0GpEro7JCW6UwlHi8C7z6bTsdRlE80j3tVfDuE4tHRFMirk_MnqjJHrEbzyc9xfO&width=512",
+        "dimensions": null,
+        "description": "Ansicht der romanisch-gotischen Kirche Sankt Servatius in Siegburg mit dem Chor im Vordergrund (2023)."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rq91sbehWnUgokGeBaQrwDJYi4IIE_SDd8DTbFc01hC44bU7owTzMZKXZKcrExQe0lwUNhDswdKJd5s72DvX3u8fLUTRLXgXXKgT2kq0cGk3cz5dD0NrKsg58BzKDzBXfJbtJsNi1PrQ-EQ3TNLkFv5vOCt5JVvPza4uOJwUb5g0lqHS-U1lTxHaXlhJBcwH3p-VR0H2ixoxhcyM5yNgJs3qBxsOSscVvb8pT7mudEmqHYxY4Bmy3ljRCop04OuKsw(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDrslkTHHaYVFCqhacSbIu_wgHDdrilAn6bn-QRKo5QXX5LXMQm0RipfyFkrym3iC0sYcllBs2h4_QD65fJKBDJzd_Q4cB8q4wke5KRGMp2wy&width=512",
+        "dimensions": null,
+        "description": "Am Standort der 1938 zerstörten Synagoge Siegburg erinnert heute eine Gedenkstätte an die ermordeten jüdischen Siegburger*innen (2026)."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rq1E35n7hxOEEB4vA5Du6aekrlB0Qsz6oIuv_UTZn7_btEQV09ECFSfm5twl8zTIAgZysUOtO3Qd2psEywEXccD3L2hPw8EDQdXFrkvUFf9wug-JtgxUBoJhrvtLbeNq5C00IdbGq02UFcBbwEiyfMZkaNhRh_AUUHqGP-MWxIBmQD_9QXTA8nBGwm8vI-yFZYZe-3lgU4G79Fbr5HM8E0KZ-hgWWBs74j9YPEDf-OEeA((&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDqbKwsLIl4YwAnysndgpPDhNtboSfb06VxYGUMbhv0kTCEDp4oYRxP1ruHJSgc1PggDTM0KtbLi3qWV6-hMWfb0DdWBkp3vK1Qt4SgdWcmPv&width=512",
+        "dimensions": null,
+        "description": "Ansicht der alten kaiserlichen Poststation im Haus am Markt 45 in Siegburg links im Vordergrund, dahinter das Stadtmuseum Siegburg mit Glockenspiel an der Außenwand (2026)."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rr1j5_dGFC4ql6PT8E2DP79Ulyo3Pu8l4_-dWhApBrlEHR1yOYyjx1znuL66acblxlvhQBUza-kos0bMuaQSAj7Al4kFk-X24pylvskJlejaKQn4Nh1_IOTQDsnSwO25N7-JsLYqPbeJPhBTR3KLeilVY1lLHOHk9TnsjXLdlJnnrMWKOvNQbS4_wd7krXdJiYWdAlijiCe-52uon_jBRfLL8LPiH2vn7HGfbji2mu4tA((&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDkTrOgMpys95MKE-wG5wlzCMb_jrvSVoY-uS8mVcz9-PD8rrNcYkMeUiFTozpyD9Ggz_zcQ2GXrjEmOoMvP6yjDRQtonprxFIP1MISKtuViz&width=512",
+        "dimensions": null,
+        "description": "Frontalansicht des Hauses zum Tannenbaum in Siegburg (2026)."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RrqlVovRW_QHcq45FdlnDl3Z44YzABqC_UVujDOU85MiE0C15vc8y5rvfyOGD89n1gIQ_x9Rbnz7wfFyMBmC8qF-3IkkjtSjnuatDs6Mw9KOlmAfSS-o9T-ZCwrLtoxYnnPbZbUCHpz7b4Oy5ND_7gg2T4J8I4eq0ujeWGVWq_CbBlv9yjZZDI36FLUmgPLtVwSUDuodxsHBwFcN5p5Lr5cvPL67bmlHxE_ZsKAjyDHCH9G1SjNO0orK0cNhqMwoo0(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDl7FXNpRSy36WG-hT0uz8ijWi-Tl8pXdkk5GeKije-UjelFkSTGfZSyo_ipzEEogLv4BeyvFuUNoD7E1jZXIUU1SuiBxQZBY9_eK898b_-4S&width=512",
+        "dimensions": null,
+        "description": "Der Hexenturm am Michaelsberg in Siegburg ist ein alter Wachturm aus dem Hochmittelalter (2026). Seinen Namen und damit den Bezug zur Hexenverfolgung erhielt er im 19. Jahrhundert. Die Prozesse fanden tatsächlich anderswo statt."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rrdim1sM-jR1DOd_Zd3_QsMk5d9dBPTS8wR0EwTn08_O2XtuWBej-Rn0M4ln-mvpQdJfBznNs9Cr6YRAciDfeAY9124q_UHF7xlw9yCU82p76O7F6DesQwGm7NBZ2_4-BZIAAdvcqAgGauydee7Tlotn0jVgQoRwwfGL9606CVcs98OkYz4OKgJW0VjpaDKRSSIrCSAGUG_z_liWgpRRnKR5IOEavfveX-_Crkr8oBeVlbKihZ8MBFiUXeElP_-yj0(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDnEEX6MpAW9d8PqCTX7op5lWMOFOCw2iNgYo6e8Myz189izx3Um4tFp6l9R1AIkorl-gYF4McAIuXL3qcc_pCG2jmdEML-6L_gPOUEz11lpv&width=512",
+        "dimensions": null,
+        "description": "Der 2021 vom US-amerikanischen Künstler Brody Neuenschwander geschaffene vierte Anno-Schrein mit den sterblichen Überresten Erzbischofs Anno II. in der Abtei auf dem Michaelsberg in Siegburg (2026). Anno war der Gründer der Abtei."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RqsuL0_wWLdIs785Tmfk680HwVHQtFQZ-Et4XoZ0zPHgetop0yu14Bt317gI2WyLPdcm2kBN8vl3L-qEfkdSjmAFYpAtfGXrh8Kx6faeeLyNz_7F8DoYI6X14pFy1DpZ20iRRv4SFzM55Qh4mZJnkXsuUEEaDQtYx3BYPgyMpGL84BwbV12DW0Ct2KBQTf7emWr0QXFxn8ropw2kdrIqq7dhRcq_m9K_iXRfhIbqN0PGxP2Tneq-8S8a83d5n7UWDQ(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDlXq4NHHRjUxJzd9cnZtS4aAZ6e0H9y_wm7_EXBCJW5MebhXDKMuqKKzjl1wDtkmKs8yJMAOT5h0kRPRr_IFqNdDUTsd7IhPk5rlCd5Bq38Q&width=512",
+        "dimensions": null,
+        "description": "Das Tor zur Arbeit auf dem Michaelsberg in Siegburg (2023)."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RoOWt00oLKDd_EX9btiFgdL89UNv3Z5LyMuIGSXRwrvt0zA5GuQfvbWyn7jWJ1OcjITVF5j83tyBzMCu9e6LGnaXTM8fHOUOKVUkuc8mt_YGluKasYQxCWb67U9Ty9b7jczn8Ycjc6djMSL99ab0MwKWG9GEUqL2cNcD3ZB0dfQ9swFOi2D6cPruFeJ9fmDHQ6Y6Q_dWIRvqs3GXVlrw3qw1Ti-tGEbVPcwc9vQQ0wXoBxrCBNurm_rz_uVBVyaJ0g(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDld1IbT3oYA8QXSEJo8XS3AD3ND_XWzQxI4Xpz9d-ml_0OzK9EGs_uCrOg2DPaev8QdLindkFFF07Pnhd6OMPJjqrCTxnriOSzMNOHr6ggWA&width=512",
+        "dimensions": null,
+        "description": "Der Mühlengraben in Siegburg im Vordergrund mit dem Mühlrad an der Mahlgasse im Hintergrund (2026)."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rrb0b4A9EP1ZoAI7JsV863NrqhxKaoYm_zq-pmn3fhKjXksPSfWCLH1itMuXogjKPhG1R20eyj8PSf-iF6cDXJGFK4FBuWsMNM8TGfVlv97SoGwi7yx-fxmWDHdMZMCHl3L0CtZVI1qndmBSWrlbsYxBBwBOzY47OW4maOLV5X_F5868WqOZ1fYTXuZnmACqKRFsqb3ncmwPZOLCgSGS5A3DHRZDpvOXeCNf3S9ng4L2k0mKvtpb1Br8WaJFV_H7BE(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDgJW-lZmuXmj3ZgSufHOMbjbh6wwIx2k1hv7ZqyCB37OwEeLh3cHupzvqjGUWmYYt-gEE-QX7gCG5pfoxHNuk0nDPn5_ZqdmPihpRO2vg3Wy&width=512",
+        "dimensions": null,
+        "description": "Ein erhaltenes Fragment der Stadtmauer aus dem Hochmittelalter in einem Park nahe des S-Carrés in Siegburg (2026)."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8Rpp1s4yukTLQv-gGR1hV5qYTVVk9vEMbg4dmWBFb2Dzf9gjJSmdPQn16K3e3FJE7GszPCElsa7i-xhNErS6SLCcbw5MEHG3yZuzxLbAdL6KxGFk69Qv-R3KRXwnlrijPUKzptlkH7bWbTf6HqthS5odlVLTJMTj2BxLT8RrwB4O0ZCSbgwHhSh_9gs9RvqV8OzKTW76Nr9Lr1UkQrkSPFQZ13hkY04LFxZNF3vThaT_P7Xo_HZHKpevoK_o8nfZqk4(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDmCNIGR8x1njfsOwg7ydwb-ixbVBnVTWmqi8Hly-IQzcxl7VnABVly8Y9mErNMEeVEv7wZ36EsiukbVKGF3LeOik7b27beo6zjg6DmMh1tLr&width=512",
+        "dimensions": null,
+        "description": "Das Zeughaus an der Zeughausstraße in Siegburg (2026). Heute ist hier die Engelbert-Humperdinck-Musikschule untergebracht."
+      },
+      {
+        "url": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQfs5M4p7M06mgLLynp7RZyvMH6zIXMhDSw2spRgLfj6q79NntExwFPz8LwDy3ZsWdKp6IVe0ojTg9Or3vf0faLJBupJDazdeeKxd9vFbGkgw-NOlQ9lUCin0aeu9DOf-GkcTHXtwPTRjcSXukCeVENXL7yhn0M20I3BVagMlSfTZ__IM8TzXz4CeAZtU4T5XQ68UW6OdX64sjhjAfj975lPczS1G4dFwunBmX2YcuRK4I1ajr7kd2Z9PCP7JcoZKK1ivc50yja8U_7TBhdLDz8RpmHvX3Hx9-qziLSuHq_NejIRRXYhyYLWLwMVfCY6jxm6MgZbyAcD5O9ZxDAtNjec4qQ6CEbDdZ0D7MRzbk93pxqp_9I7_dj8dEhL0IXGvKdYS0ItWDUwhnU2Vey7ZxKIs68ahiWb9-XkROU1r_J8GtzlCKh7aFIW46-sWRPGDQVIP8v3Qdu6wu8x0Qv6MgeJfDd43LeWMhKK-KvxCPdd7hyynDJqpoxGGthNVJx8qmoYr3pCpu-1e_mnN0MYZwyWA(&width=1920",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/ClickRhein/api/media?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDma2v-xOjR96nG77pYDaMhZgEYOop82MGp9hYnN-yy86GM91-_u7jlxWJxubrTviJOo8fO427e3a4FJy6vXx69ZIDgqmlbSB82CGyaRaeOZY&width=512",
+        "dimensions": null,
+        "description": "Ansicht des Spielplatzes am Michaelsberg in Siegburg (2026)."
+      }
+    ],
+    "persons": null,
+    "relations": null,
+    "source": {
+      "id": "ClickRhein"
+    },
+    "vector": null
+  },
+  "metadata": {
+    "issued": null,
+    "modified": null,
+    "source": {
+      "raw_data_source": "https://www.kuladig.de/ClickRhein/api/discoveries?amount=999",
+      "source_base": "https://www.kuladig.de/ClickRhein/api/discoveries?amount=999",
+      "source_type": "json"
+    }
+  },
+  "schema_version": "0.0.2-SNAPSHOT",
+  "sort_uuid": "1af4bf09-0b64-5012-b8e8-98c7c75ee3b7",
+  "spatial": {
+    "bbox": {
+      "coordinates": [
+        50.79612766862951,
+        7.206402297848256
+      ],
+      "type": "Point"
+    },
+    "centroid": {
+      "coordinates": [
+        50.79612766862951,
+        7.206402297848256
+      ],
+      "type": "Point"
+    },
+    "geometry": {
+      "coordinates": [
+        50.79612766862951,
+        7.206402297848256
+      ],
+      "type": "Point"
+    },
+    "title": null
+  },
+  "temporal": {
+    "data_temporal": null,
+    "issued": null,
+    "modified": null
+  },
+  "title": "Stadtspaziergang in Siegburg",
+  "uuid": "CLICKRHEIN-DISCOVERY-222"
+}

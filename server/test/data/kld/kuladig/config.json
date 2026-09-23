@@ -1,0 +1,8 @@
+{
+  "id": 1,
+  "type": "KLD",
+  "sourceURL": "https://www.kuladig.de/api/public/",
+  "catalogIds": [1],
+  "maxConcurrent": 1,
+  "timeout": 0
+}

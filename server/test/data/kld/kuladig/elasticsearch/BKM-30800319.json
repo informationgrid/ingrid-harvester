@@ -1,0 +1,267 @@
+{
+  "description": "Der alte Ziegeleistandort in Petershain wurde vermutlich um 1900 gegründet. Die Gebäude sind durchweg in Ziegelbauweise errichtet. Die Wohngebäude sind zweigeschossig mit Satteldach. Das ehemalige Produktionsgebäude besitzt noch einen Schornstein. Ebenfalls erhalten ist die ehemalige Tongrube in Form von vier Restlöchern nördlich und östlich der Siedlung. Die Ziegelei ist ortsgeschichtlich von Wirkkraft.<br> <br> (Kathrin Kruner, Landesamt für Denkmalpflege Sachsen, 2023)<br>    <br>    <strong>Datierung:</strong><br>    <ul><br>    <li> Erbauung um 1900<br>    </li></ul><br>    <br>    <strong>Quellen/Literaturangaben:</strong><br>    <ul><br>    <li> Wenzel, Wilfried/Grützmann, Erika: Unsere Heimat der Kreis Niesky; o.O. 1983.<br>    </li></ul><br>    <br>    <strong>Bauherr / Auftraggeber:</strong><br>    <ul><br>    <li> --<br>    </li></ul><br>    <br>    <strong>BKM-Nummer:</strong> 30800319",
+  "extras": {
+    "metadata": {
+      "deleted": null,
+      "issued": "2026-09-11T11:57:16.901Z",
+      "merged_from": [
+        "BKM-30800319"
+      ],
+      "modified": null,
+      "source": {
+        "raw_data_source": "https://www.kuladig.de/api/public/Objekt/BKM-30800319",
+        "source_base": "https://www.kuladig.de/api/public/",
+        "source_type": "kld"
+      }
+    }
+  },
+  "fulltext": "{\"Punktkoordinate\":{\"type\":\"Point\",\"coordinates\":[14.745500271116232,51.31121280223376]},\"Polygon\":{\"type\":\"MultiPolygon\",\"coordinates\":[[[[14.746750230437385,51.31136588960429],[14.746384855439004,51.31141315260555],[14.746356699439147,51.31141679660566],[14.746157630440011,51.311442540606336],[14.745949471440923,51.311469470607044],[14.745805563441575,51.31148807760756],[14.745817391441541,51.311523495607524],[14.744847548445833,51.31164932561088],[14.744836162445859,51.31157837161098],[14.744791060446094,51.31145034361115],[14.744728835446402,51.31146085461131],[14.744028686449536,51.311345801613754],[14.744406627447926,51.31110814061248],[14.744574698447147,51.31107344761191],[14.744656982446811,51.31106288061162],[14.744860860445886,51.311036618610885],[14.745332058443813,51.31098169660924],[14.745764216441923,51.310921686607706],[14.746186724440037,51.3108630136062],[14.746505130438646,51.31081943460515],[14.746609920438132,51.310856304604755],[14.746693029437708,51.31107623160444],[14.746736725437463,51.311191873604315],[14.746750230437385,51.31136588960429]]],[[[14.744470967447722,51.31074788861227],[14.744540562447437,51.31071503961204],[14.744557565447344,51.31070701161195],[14.744645892446943,51.310780929611624],[14.744729764446554,51.31085110661133],[14.744601941447101,51.31091111061181],[14.744533527447398,51.31094322461202],[14.744443176447753,51.310985658612346],[14.744372528448118,51.31092657061261],[14.744271476448603,51.31084205861296],[14.744470967447722,51.31074788861227]]]]},\"IstKulturlandschaft\":false,\"IstKulturlandschaftbereich\":false,\"AnfangVon\":null,\"AnfangBis\":null,\"EndeVon\":null,\"EndeBis\":null,\"Erfassungsmassstab\":[1,\"Keine Angabe\"],\"Datenherkunft\":{\"Id\":54,\"Name\":\"Landesamt für Denkmalpflege Sachsen\",\"Url\":\"https://www.lfd.sachsen.de\"},\"Denkmalschutz\":null,\"Schutzwuerdigkeit\":null,\"Adresse\":\"Petershain\",\"Denkmalarten\":[],\"Erfassungsmethoden\":[[99,\"Übernahme aus externer Fachdatenbank\"]],\"Bundeslaender\":[\"Sachsen\"],\"Kreise\":[\"Görlitz\"],\"Gemeinden\":[\"Quitzdorf am See\"],\"Objekttyp\":\"Kuladigobjekt\",\"Id\":\"BKM-30800319\",\"Name\":\"\\\"Alte Ziegelei\\\" Petershain\",\"Beschreibung\":\"Der alte Ziegeleistandort in Petershain wurde vermutlich um 1900 gegründet. Die Gebäude sind durchweg in Ziegelbauweise errichtet. Die Wohngebäude sind zweigeschossig mit Satteldach. Das ehemalige Produktionsgebäude besitzt noch einen Schornstein. Ebenfalls erhalten ist die ehemalige Tongrube in Form von vier Restlöchern nördlich und östlich der Siedlung. Die Ziegelei ist ortsgeschichtlich von Wirkkraft.\\r\\n \\r\\n (Kathrin Kruner, Landesamt für Denkmalpflege Sachsen, 2023)\\r\\n    \\r\\n    [b]Datierung:[/b]\\r\\n    [list]\\r\\n    [*] Erbauung um 1900\\r\\n    [/list]\\r\\n    \\r\\n    [b]Quellen/Literaturangaben:[/b]\\r\\n    [list]\\r\\n    [*] Wenzel, Wilfried/Grützmann, Erika: Unsere Heimat der Kreis Niesky; o.O. 1983.\\r\\n    [/list]\\r\\n    \\r\\n    [b]Bauherr / Auftraggeber:[/b]\\r\\n    [list]\\r\\n    [*] --\\r\\n    [/list]\\r\\n    \\r\\n    [b]BKM-Nummer:[/b] 30800319\",\"Kurzbeschreibung\":\"Der alte Ziegeleistandort in Petershain wurde vermutlich um 1900 gegründet. Die Gebäude sind durchwe...\",\"Lizenz\":{\"Id\":4,\"Lizenz\":\"CC BY-NC 4.0\",\"Ausgabetext\":\"Der hier präsentierte Inhalt steht unter der freien Lizenz CC BY-NC 4.0 (Namensnennung, nicht kommerziell). Die angezeigten Medien unterliegen möglicherweise zusätzlichen urheberrechtlichen Bedingungen, die an diesen ausgewiesen sind.\",\"Url\":\"https://creativecommons.org/licenses/by-nc/4.0/deed.de\"},\"Logo\":null,\"AlternativeLogoUrl\":null,\"ZuletztGeaendert\":\"2024-01-19T00:15:45.5074016\",\"Themen\":[[3,\"Wirtschaft, Technik, Verkehr\"]],\"AlternativeNamen\":[],\"Schlagwoerter\":{\"wk000934\":\"Ziegelei\"},\"Fachsichten\":[[3,\"Denkmalpflege\"]],\"Projekte\":[[4107,\"Braunkohle-Inventar Sachsen\"]],\"LiteraturZitate\":[],\"UebergeordnetesObjekt\":null,\"UntergeordneteObjekte\":[],\"VerwandteObjekte\":[],\"Dokumente\":[{\"Medientyp\":\"Bild\",\"Dateierweiterung\":\"jpg\",\"Ueberschrift\":\"»Alte Ziegelei«, Ansicht von Süden\",\"Beschreibung\":\"»Alte Ziegelei«, Ansicht von Süden\",\"AlternativeBeschreibung\":null,\"Copyright\":null,\"FotografUrheber\":\"Kathrin Kruner\",\"Thumbnail1Token\":\"BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hONyhuCBSUzunmZ4__240rqcNVEeySqjbOGhdCcJTyoKW1Nf_sXIfGMzqu2VZO3tNVmRoCjUnGuxE5hU96JkUxcCo_ThAZm6jZmcsQHxWyW73DKRXL4kiHvwbiLG9y-jF-UBadxr1UzYZKRVqTe3w3m\",\"Thumbnail2Token\":\"BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDt1bZaLG0xwG5wBGTy8OKfg2LqDM7N6TuzKMwa8_DDq0lRzsYzbwe6l0as9mm0Ig1Fu0afRyIdIzhfAGVwDWW3leJQQWrvn8ePZISPjZeFni\",\"Thumbnail3Token\":\"BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDt1bZaLG0xwG5wBGTy8OKfg2LqDM7N6TuzKMwa8_DDq0lRzsYzbwe6l0as9mm0Ig1Fu0afRyIdIzhfAGVwDWW3l44y3TE3QIF5kTYdoigHaMkOrvTJpXvMbSvYb55vJrwA((\",\"DownloadToken\":null}]}",
+  "id": "BKM-30800319",
+  "keywords": [
+    {
+      "id": "wk000934",
+      "term": "Ziegelei",
+      "thesaurus": "WNK"
+    }
+  ],
+  "lvr": {
+    "genres": null,
+    "identifier": "BKM-30800319",
+    "licenses": [
+      {
+        "url": "https://creativecommons.org/licenses/by-nc/4.0/deed.de",
+        "title": "CC BY-NC 4.0"
+      }
+    ],
+    "media": [
+      {
+        "url": "https://www.kuladig.de/api/public/Dokument?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDt1bZaLG0xwG5wBGTy8OKfg2LqDM7N6TuzKMwa8_DDq0lRzsYzbwe6l0as9mm0Ig1Fu0afRyIdIzhfAGVwDWW3l44y3TE3QIF5kTYdoigHaMkOrvTJpXvMbSvYb55vJrwA((",
+        "type": "image",
+        "thumbnail": "https://www.kuladig.de/api/public/Dokument?token=BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDt1bZaLG0xwG5wBGTy8OKfg2LqDM7N6TuzKMwa8_DDq0lRzsYzbwe6l0as9mm0Ig1Fu0afRyIdIzhfAGVwDWW3leJQQWrvn8ePZISPjZeFni",
+        "dimensions": null,
+        "description": "»Alte Ziegelei«, Ansicht von Süden"
+      }
+    ],
+    "persons": null,
+    "relations": [],
+    "source": {
+      "display_url": "https://www.kuladig.de/Objektansicht/BKM-30800319",
+      "id": "KuLaDig"
+    },
+    "vector": null
+  },
+  "metadata": {
+    "modified": 1705619745507,
+    "source": {
+      "raw_data_source": "https://www.kuladig.de/api/public/Objekt/BKM-30800319",
+      "source_base": "https://www.kuladig.de/api/public/",
+      "source_type": "kld"
+    }
+  },
+  "schema_version": "0.0.2-SNAPSHOT",
+  "sort_uuid": "90c99912-3e4c-5b7e-ba35-cbc4f3982b40",
+  "spatial": {
+    "bbox": {
+      "bbox": [
+        14.744028686449536,
+        51.31070701161195,
+        14.746750230437385,
+        51.31164932561088
+      ],
+      "coordinates": [
+        [
+          [
+            14.744028686449536,
+            51.31070701161195
+          ],
+          [
+            14.746750230437385,
+            51.31070701161195
+          ],
+          [
+            14.746750230437385,
+            51.31164932561088
+          ],
+          [
+            14.744028686449536,
+            51.31164932561088
+          ],
+          [
+            14.744028686449536,
+            51.31070701161195
+          ]
+        ]
+      ],
+      "type": "Polygon"
+    },
+    "centroid": {
+      "coordinates": [
+        14.74527116701981,
+        51.31112139539731
+      ],
+      "type": "Point"
+    },
+    "geometry": {
+      "coordinates": [
+        [
+          [
+            [
+              14.746750230437385,
+              51.31136588960429
+            ],
+            [
+              14.746384855439004,
+              51.31141315260555
+            ],
+            [
+              14.746356699439147,
+              51.31141679660566
+            ],
+            [
+              14.746157630440011,
+              51.311442540606336
+            ],
+            [
+              14.745949471440923,
+              51.311469470607044
+            ],
+            [
+              14.745805563441575,
+              51.31148807760756
+            ],
+            [
+              14.745817391441541,
+              51.311523495607524
+            ],
+            [
+              14.744847548445833,
+              51.31164932561088
+            ],
+            [
+              14.744836162445859,
+              51.31157837161098
+            ],
+            [
+              14.744791060446094,
+              51.31145034361115
+            ],
+            [
+              14.744728835446402,
+              51.31146085461131
+            ],
+            [
+              14.744028686449536,
+              51.311345801613754
+            ],
+            [
+              14.744406627447926,
+              51.31110814061248
+            ],
+            [
+              14.744574698447147,
+              51.31107344761191
+            ],
+            [
+              14.744656982446811,
+              51.31106288061162
+            ],
+            [
+              14.744860860445886,
+              51.311036618610885
+            ],
+            [
+              14.745332058443813,
+              51.31098169660924
+            ],
+            [
+              14.745764216441923,
+              51.310921686607706
+            ],
+            [
+              14.746186724440037,
+              51.3108630136062
+            ],
+            [
+              14.746505130438646,
+              51.31081943460515
+            ],
+            [
+              14.746609920438132,
+              51.310856304604755
+            ],
+            [
+              14.746693029437708,
+              51.31107623160444
+            ],
+            [
+              14.746736725437463,
+              51.311191873604315
+            ],
+            [
+              14.746750230437385,
+              51.31136588960429
+            ]
+          ]
+        ],
+        [
+          [
+            [
+              14.744470967447722,
+              51.31074788861227
+            ],
+            [
+              14.744540562447437,
+              51.31071503961204
+            ],
+            [
+              14.744557565447344,
+              51.31070701161195
+            ],
+            [
+              14.744645892446943,
+              51.310780929611624
+            ],
+            [
+              14.744729764446554,
+              51.31085110661133
+            ],
+            [
+              14.744601941447101,
+              51.31091111061181
+            ],
+            [
+              14.744533527447398,
+              51.31094322461202
+            ],
+            [
+              14.744443176447753,
+              51.310985658612346
+            ],
+            [
+              14.744372528448118,
+              51.31092657061261
+            ],
+            [
+              14.744271476448603,
+              51.31084205861296
+            ],
+            [
+              14.744470967447722,
+              51.31074788861227
+            ]
+          ]
+        ]
+      ],
+      "type": "MultiPolygon"
+    },
+    "title": null
+  },
+  "temporal": {
+    "data_temporal": {
+      "date_range": null
+    },
+    "modified": 1705619745507
+  },
+  "title": "\"Alte Ziegelei\" Petershain",
+  "uuid": "BKM-30800319"
+}

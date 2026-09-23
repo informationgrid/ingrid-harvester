@@ -1,0 +1,14 @@
+{
+  "id": 1,
+  "type": "JSON",
+  "sourceURL": "https://www.kuladig.de/ClickRhein/api/discoveries?amount=999",
+  "catalogIds": [1],
+  "maxConcurrent": 1,
+  "timeout": 0,
+  "idProperty": "id",
+  "additionalSettings": {
+    "metaURL": "https://www.kuladig.de/ClickRhein/api/meta?tables=territory,suitabilities,themes,themes_spot,epochs",
+    "imageWidth": "1920",
+    "thumbnailWidth": "512"
+  }
+}

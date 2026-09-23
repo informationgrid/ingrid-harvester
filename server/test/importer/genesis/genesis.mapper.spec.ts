@@ -233,4 +233,24 @@ describe('GenesisMapper — field extraction', function () {
             expect(makeMapper(realRecord).getLanguage()).to.equal('de');
         });
     });
+
+    describe('getPoliticalGeocodingLevel()', function () {
+        it('returns the configured codelist key', function () {
+            const settings = {
+                ...baseSettings,
+                typeConfig: {
+                    ...baseSettings.typeConfig,
+                    politicalGeocodingLevel: 'administrativeDistrict',
+                },
+            };
+            // @ts-ignore
+            const summary = new Summary('harvest', settings);
+            const mapper = new GenesisMapper(settings, realRecord, harvestTime, summary);
+            expect(mapper.getPoliticalGeocodingLevel()).to.equal('administrativeDistrict');
+        });
+
+        it('returns undefined when not configured', function () {
+            expect(makeMapper(realRecord).getPoliticalGeocodingLevel()).to.be.undefined;
+        });
+    });
 });

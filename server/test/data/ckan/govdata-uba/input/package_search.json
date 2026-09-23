@@ -1,0 +1,885 @@
+{
+  "help": "https://ckan.govdata.de/api/3/action/help_show?name=package_search",
+  "success": true,
+  "result": {
+    "count": 3,
+    "facets": {},
+    "results": [
+      {
+        "author": null,
+        "author_email": null,
+        "creator_user_id": "f512f73d-bed2-439d-8f6f-3fbc6048b24e",
+        "id": "0334a1a9-db5e-4a8d-807f-9c201532dd19",
+        "isopen": false,
+        "license_id": "",
+        "license_title": "",
+        "maintainer": null,
+        "maintainer_email": null,
+        "metadata_created": "2025-12-10T00:33:30.463114",
+        "metadata_modified": "2025-12-10T00:33:30.463125",
+        "name": "pollutant-release-and-transfer-register-prtr-abfall-datensatz",
+        "notes": "Das PRTR ist ein Schadstoffregister, das darüber informiert, wie viele Freisetzungen von Schadstoffen in Luft, Wasser und Boden, Verbringungen mit dem Abwasser sowie Entsorgung von gefährlichen und nicht gefährlichen Abfällen aus bestimmten industriellen Tätigkeiten erfolgen. Die Daten wer-den jährlich aktualisiert und auf Thru.de veröffentlicht.",
+        "num_resources": 1,
+        "num_tags": 15,
+        "organization": {
+          "id": "4092fe16-4f92-47fb-8513-f17ea93691cc",
+          "name": "umweltbundesamt",
+          "title": "Umweltbundesamt",
+          "type": "organization",
+          "description": "",
+          "image_url": "",
+          "created": "2024-06-10T12:40:48.855147",
+          "is_organization": true,
+          "approval_status": "approved",
+          "state": "active"
+        },
+        "owner_org": "4092fe16-4f92-47fb-8513-f17ea93691cc",
+        "private": false,
+        "state": "active",
+        "title": "Pollutant Release and Transfer Register (PRTR) - Abfall (Datensatz)",
+        "type": "dataset",
+        "url": null,
+        "version": null,
+        "extras": [
+          {
+            "key": "access_rights",
+            "value": "http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations"
+          },
+          {
+            "key": "alternate_identifier",
+            "value": "[\"d1e16cd3-dda8-440f-92a9-391e70647a49\"]"
+          },
+          {
+            "key": "contact_city",
+            "value": "Dessau-Roßlau"
+          },
+          {
+            "key": "contact_country",
+            "value": "Deutschland"
+          },
+          {
+            "key": "contact_email",
+            "value": "III2.7@uba.de"
+          },
+          {
+            "key": "contact_name",
+            "value": "Umweltbundesamt"
+          },
+          {
+            "key": "contact_street",
+            "value": "Wörlitzer Platz 1"
+          },
+          {
+            "key": "contact_tel",
+            "value": "+4903402103-0"
+          },
+          {
+            "key": "contact_url",
+            "value": "https://www.umweltbundesamt.de/"
+          },
+          {
+            "key": "contact_zip",
+            "value": "06844"
+          },
+          {
+            "key": "contributorID",
+            "value": "[\"http://dcat-ap.de/def/contributors/umweltbundesamt\"]"
+          },
+          {
+            "key": "dcat_type",
+            "value": "http://inspire.ec.europa.eu/metadata-codelist/ResourceType/dataset"
+          },
+          {
+            "key": "frequency",
+            "value": "http://inspire.ec.europa.eu/metadata-codelist/MaintenanceFrequencyCode/notPlanned"
+          },
+          {
+            "key": "guid",
+            "value": "https://registry.gdi-de.org/id/de.bund.uba.inspire/d1e16cd3-dda8-440f-92a9-391e70647a49"
+          },
+          {
+            "key": "identifier",
+            "value": "d1e16cd3-dda8-440f-92a9-391e70647a49"
+          },
+          {
+            "key": "issued",
+            "value": "2025-11-20"
+          },
+          {
+            "key": "language",
+            "value": "[\"http://publications.europa.eu/resource/authority/language/DEU\"]"
+          },
+          {
+            "key": "metadata_harvested_portal",
+            "value": "metadaten.uba.de"
+          },
+          {
+            "key": "modified",
+            "value": "2025-12-09"
+          },
+          {
+            "key": "publisher_email",
+            "value": "III2.7@uba.de"
+          },
+          {
+            "key": "publisher_name",
+            "value": "Umweltbundesamt"
+          },
+          {
+            "key": "publisher_url",
+            "value": "https://www.umweltbundesamt.de/"
+          },
+          {
+            "key": "spatial",
+            "value": "{\"type\": \"Polygon\", \"coordinates\": [[[5.53, 55.2], [15.99, 55.2], [15.99, 47.04], [5.53, 47.04], [5.53, 55.2]]]}"
+          },
+          {
+            "key": "temporal_end",
+            "value": "2023-12-31"
+          },
+          {
+            "key": "temporal_start",
+            "value": "2007-01-01"
+          },
+          {
+            "key": "theme",
+            "value": "[\"http://publications.europa.eu/resource/authority/data-theme/REGI\", \"http://publications.europa.eu/resource/authority/data-theme/ECON\", \"http://publications.europa.eu/resource/authority/data-theme/TRAN\"]"
+          },
+          {
+            "key": "uri",
+            "value": "https://registry.gdi-de.org/id/de.bund.uba.inspire/d1e16cd3-dda8-440f-92a9-391e70647a49"
+          },
+          {
+            "key": "harvest_object_id",
+            "value": "4f47bd41-8f3b-4f08-b700-27c4b017f28c"
+          },
+          {
+            "key": "harvest_source_id",
+            "value": "1986dbf3-b6f8-4600-bf77-21277662501f"
+          },
+          {
+            "key": "harvest_source_title",
+            "value": "Umweltbundesamt"
+          }
+        ],
+        "groups": [
+          {
+            "description": "",
+            "display_name": "Regionen und Städte",
+            "id": "regi",
+            "image_display_url": "",
+            "name": "regi",
+            "title": "Regionen und Städte"
+          },
+          {
+            "description": "",
+            "display_name": "Verkehr",
+            "id": "tran",
+            "image_display_url": "",
+            "name": "tran",
+            "title": "Verkehr"
+          },
+          {
+            "description": "",
+            "display_name": "Wirtschaft und Finanzen",
+            "id": "econ",
+            "image_display_url": "",
+            "name": "econ",
+            "title": "Wirtschaft und Finanzen"
+          }
+        ],
+        "resources": [
+          {
+            "access_url": "https://haleconnect.com/services/bsp/org.1123.8debb71f-5a95-489e-bbfa-7b04b522b13f/service/atom/id_predefined_dataset/dataset/dataset1",
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2025-12-10T00:33:30.466360",
+            "description": "Format: application/atom+xml (ZIP)",
+            "distribution_ref": "https://haleconnect.com/services/bsp/org.1123.8debb71f-5a95-489e-bbfa-7b04b522b13f/service/atom/id_predefined_dataset/dataset/dataset1#distribution",
+            "documentation": "[\"https://thru.de/\"]",
+            "download_url": "https://haleconnect.com/services/bsp/org.1123.8debb71f-5a95-489e-bbfa-7b04b522b13f/service/atom/id_predefined_dataset/dataset/dataset1",
+            "format": "http://publications.europa.eu/resource/authority/file-type/GML",
+            "hash": "",
+            "id": "7f89d6fc-c517-4e6e-8fc9-09393e27326c",
+            "last_modified": null,
+            "license": "http://dcat-ap.de/def/licenses/cc-by/4.0",
+            "licenseAttributionByText": "Umweltbundesamt",
+            "metadata_modified": "2025-12-10T00:33:30.430821",
+            "mimetype": null,
+            "mimetype_inner": null,
+            "name": "Format: application/atom+xml (ZIP)",
+            "package_id": "0334a1a9-db5e-4a8d-807f-9c201532dd19",
+            "position": 0,
+            "resource_type": null,
+            "size": null,
+            "state": "active",
+            "uri": "https://haleconnect.com/services/bsp/org.1123.8debb71f-5a95-489e-bbfa-7b04b522b13f/service/atom/id_predefined_dataset/dataset/dataset1#distribution",
+            "url": "https://haleconnect.com/services/bsp/org.1123.8debb71f-5a95-489e-bbfa-7b04b522b13f/service/atom/id_predefined_dataset/dataset/dataset1",
+            "url_type": null
+          }
+        ],
+        "tags": [
+          {
+            "display_name": "2007-bis-2023",
+            "id": "6e04b69d-505c-44e5-9745-ccdfdd226898",
+            "name": "2007-bis-2023",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "abfall",
+            "id": "4aff594f-8ff3-4def-bcbe-cc2cd1b73880",
+            "name": "abfall",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "deutschland",
+            "id": "f0be862a-d23f-48c5-912b-54bdaab84e02",
+            "name": "deutschland",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "emission",
+            "id": "b3d70ffb-028f-4032-8d47-7cffbaeb87cb",
+            "name": "emission",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "freisetzung",
+            "id": "e456948d-2d96-4024-9a44-e1237487f3c9",
+            "name": "freisetzung",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "hvd",
+            "id": "95eedb71-3467-4145-ae35-6ce1b4409708",
+            "name": "hvd",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "industrie",
+            "id": "88618a19-31a7-487d-86c8-ba6b995f3363",
+            "name": "industrie",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "inspireidentifiziert",
+            "id": "d1173897-0bb1-4a48-a51d-9c13eff8a38b",
+            "name": "inspireidentifiziert",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "national",
+            "id": "bf6e0519-6161-4978-a1d4-cf7b548d4d5f",
+            "name": "national",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "opendata",
+            "id": "2436ac6e-28f1-4ede-94b9-2ff93db4b729",
+            "name": "opendata",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "produktions--und-industrieanlagen",
+            "id": "5358ced2-d292-4464-81d7-9b06c5981044",
+            "name": "produktions--und-industrieanlagen",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "schadstoff",
+            "id": "0cd0c4bf-491c-492b-a11e-96115a9f7b83",
+            "name": "schadstoff",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "sites-and-facilities-european-pollutant-release-and-transfer-register",
+            "id": "2952b5dc-fe11-45a8-9566-ec9b0449d215",
+            "name": "sites-and-facilities-european-pollutant-release-and-transfer-register",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "uba",
+            "id": "6367fef9-b32c-4fc9-8b71-8f6a269e5bcd",
+            "name": "uba",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "umweltbundesamt",
+            "id": "16b45027-17bf-48f9-88b7-87f5d17807cf",
+            "name": "umweltbundesamt",
+            "state": "active",
+            "vocabulary_id": null
+          }
+        ],
+        "relationships_as_subject": [],
+        "relationships_as_object": []
+      },
+      {
+        "author": null,
+        "author_email": null,
+        "creator_user_id": "f512f73d-bed2-439d-8f6f-3fbc6048b24e",
+        "id": "03f0c47f-9c2a-4370-8d45-4e2e6fa9ba1f",
+        "isopen": false,
+        "license_id": "",
+        "license_title": "",
+        "maintainer": null,
+        "maintainer_email": null,
+        "metadata_created": "2025-07-21T23:31:57.468489",
+        "metadata_modified": "2025-08-13T23:31:41.513754",
+        "name": "bundesweite-bodenabtragsmodellierung-allgemeine-bodenabtragsgleichung-k-faktor-datensatz",
+        "notes": "Der Datensatz enthält Informationen zum abgeleiteten K-Faktor (Maß der Erodierbarkeit des Bodens) für die Allgemeine Bodenantragsgleichung (ABAG). Datengrundlage für die Ausweisung des K-Faktors war die deutschlandweit harmonisiert verfügbare Bodenübersichtskarte im Maßstab 1:200.000 (BÜK 200), bereitgestellt von der BGR (2021). Der K-Faktor wurde ermitteln nach DIN 19708 2017-08. Eine grundsätzliche Beschreibung des methodischen Vorgehens findet sich in (Fuchs, S.; Brecht, K.; Gebel, M.; Bürger, S.; Uhlig, M.; Halbfaß, S. (2022): Phosphoreinträge in die Gewässer bundesweit modellieren – Neue Ansätze und aktualisierte Ergebnisse von MoRE-DE. UBA Texte | 142/2022 (Link siehe INFO-LINKS)). Diese Kenngröße wird aktuell für die bundesweite Bodenabtragsmodellierung mit der Allgemeinen Bodenabtragsgleichung (ABAG) verwendet.",
+        "num_resources": 1,
+        "num_tags": 6,
+        "organization": {
+          "id": "4092fe16-4f92-47fb-8513-f17ea93691cc",
+          "name": "umweltbundesamt",
+          "title": "Umweltbundesamt",
+          "type": "organization",
+          "description": "",
+          "image_url": "",
+          "created": "2024-06-10T12:40:48.855147",
+          "is_organization": true,
+          "approval_status": "approved",
+          "state": "active"
+        },
+        "owner_org": "4092fe16-4f92-47fb-8513-f17ea93691cc",
+        "private": false,
+        "state": "active",
+        "title": "Bundesweite Bodenabtragsmodellierung (Allgemeine Bodenabtragsgleichung) - K-Faktor (Datensatz)",
+        "type": "dataset",
+        "url": null,
+        "version": null,
+        "extras": [
+          {
+            "key": "access_rights",
+            "value": "Es gelten keine Zugriffsbeschränkungen"
+          },
+          {
+            "key": "alternate_identifier",
+            "value": "[\"e0329552-07c9-4a40-a151-2c8984fa6fe5\"]"
+          },
+          {
+            "key": "contact_city",
+            "value": "Dessau-Roßlau"
+          },
+          {
+            "key": "contact_country",
+            "value": "Deutschland"
+          },
+          {
+            "key": "contact_email",
+            "value": "II2.4@uba.de"
+          },
+          {
+            "key": "contact_name",
+            "value": "Umweltbundesamt"
+          },
+          {
+            "key": "contact_street",
+            "value": "Wörlitzer Platz 1"
+          },
+          {
+            "key": "contact_tel",
+            "value": "+4903402103-0"
+          },
+          {
+            "key": "contact_url",
+            "value": "https://www.umweltbundesamt.de/"
+          },
+          {
+            "key": "contact_zip",
+            "value": "06844"
+          },
+          {
+            "key": "contributorID",
+            "value": "[\"http://dcat-ap.de/def/contributors/umweltbundesamt\"]"
+          },
+          {
+            "key": "dcat_type",
+            "value": "http://inspire.ec.europa.eu/metadata-codelist/ResourceType/dataset"
+          },
+          {
+            "key": "frequency",
+            "value": "http://inspire.ec.europa.eu/metadata-codelist/MaintenanceFrequencyCode/notPlanned"
+          },
+          {
+            "key": "guid",
+            "value": "https://registry.gdi-de.org/id/de.bund.uba/e0329552-07c9-4a40-a151-2c8984fa6fe5"
+          },
+          {
+            "key": "identifier",
+            "value": "e0329552-07c9-4a40-a151-2c8984fa6fe5"
+          },
+          {
+            "key": "issued",
+            "value": "2024-10-30"
+          },
+          {
+            "key": "language",
+            "value": "[\"http://publications.europa.eu/resource/authority/language/DEU\"]"
+          },
+          {
+            "key": "metadata_harvested_portal",
+            "value": "metadaten.uba.de"
+          },
+          {
+            "key": "modified",
+            "value": "2025-07-23"
+          },
+          {
+            "key": "publisher_email",
+            "value": "II2.4@uba.de"
+          },
+          {
+            "key": "publisher_name",
+            "value": "Umweltbundesamt"
+          },
+          {
+            "key": "publisher_url",
+            "value": "https://www.umweltbundesamt.de/"
+          },
+          {
+            "key": "spatial",
+            "value": "{\"type\": \"Polygon\", \"coordinates\": [[[5.87, 55.05], [15.04, 55.05], [15.04, 47.27], [5.87, 47.27], [5.87, 55.05]]]}"
+          },
+          {
+            "key": "temporal_end",
+            "value": "2021-12-31"
+          },
+          {
+            "key": "temporal_start",
+            "value": "2021-01-01"
+          },
+          {
+            "key": "theme",
+            "value": "[\"http://publications.europa.eu/resource/authority/data-theme/AGRI\", \"http://publications.europa.eu/resource/authority/data-theme/ENVI\", \"http://publications.europa.eu/resource/authority/data-theme/REGI\", \"http://publications.europa.eu/resource/authority/data-theme/GOVE\", \"http://publications.europa.eu/resource/authority/data-theme/TECH\"]"
+          },
+          {
+            "key": "uri",
+            "value": "https://registry.gdi-de.org/id/de.bund.uba/e0329552-07c9-4a40-a151-2c8984fa6fe5"
+          },
+          {
+            "key": "harvest_object_id",
+            "value": "9537875f-19ef-4e8f-8c5d-bbc3800eba4e"
+          },
+          {
+            "key": "harvest_source_id",
+            "value": "1986dbf3-b6f8-4600-bf77-21277662501f"
+          },
+          {
+            "key": "harvest_source_title",
+            "value": "Umweltbundesamt"
+          }
+        ],
+        "groups": [
+          {
+            "description": "",
+            "display_name": "Landwirtschaft, Fischerei, Forstwirtschaft und Nahrungsmittel",
+            "id": "agri",
+            "image_display_url": "",
+            "name": "agri",
+            "title": "Landwirtschaft, Fischerei, Forstwirtschaft und Nahrungsmittel"
+          },
+          {
+            "description": "",
+            "display_name": "Regierung und öffentlicher Sektor",
+            "id": "gove",
+            "image_display_url": "",
+            "name": "gove",
+            "title": "Regierung und öffentlicher Sektor"
+          },
+          {
+            "description": "",
+            "display_name": "Regionen und Städte",
+            "id": "regi",
+            "image_display_url": "",
+            "name": "regi",
+            "title": "Regionen und Städte"
+          },
+          {
+            "description": "",
+            "display_name": "Umwelt",
+            "id": "envi",
+            "image_display_url": "",
+            "name": "envi",
+            "title": "Umwelt"
+          },
+          {
+            "description": "",
+            "display_name": "Wissenschaft und Technologie",
+            "id": "tech",
+            "image_display_url": "",
+            "name": "tech",
+            "title": "Wissenschaft und Technologie"
+          }
+        ],
+        "resources": [
+          {
+            "access_url": "https://gis.uba.de/daten/e0329552-07c9-4a40-a151-2c8984fa6fe5_tiff.zip",
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2025-07-21T23:31:57.470557",
+            "description": "Datensatz herunterladen (ZIP/TIFF)",
+            "distribution_ref": "https://gis.uba.de/daten/e0329552-07c9-4a40-a151-2c8984fa6fe5_tiff.zip#distribution",
+            "documentation": "[\"https://stoffeintraege-more.de/\", \"https://www.umweltbundesamt.de/publikationen/phosphoreintraege-in-die-gewaesser-bundesweit\"]",
+            "download_url": "https://gis.uba.de/daten/e0329552-07c9-4a40-a151-2c8984fa6fe5_tiff.zip",
+            "format": "TIF/TIFF",
+            "hash": "",
+            "id": "a29ab42d-7392-44c2-96ff-de5991d1448a",
+            "last_modified": null,
+            "license": "Es gelten keine Zugriffsbeschränkungen",
+            "metadata_modified": "2025-07-25T00:54:48.705062",
+            "mimetype": "TIF/TIFF",
+            "mimetype_inner": null,
+            "name": "Datensatz herunterladen (ZIP/TIFF)",
+            "package_id": "03f0c47f-9c2a-4370-8d45-4e2e6fa9ba1f",
+            "position": 0,
+            "resource_type": null,
+            "size": null,
+            "state": "active",
+            "uri": "https://gis.uba.de/daten/e0329552-07c9-4a40-a151-2c8984fa6fe5_tiff.zip#distribution",
+            "url": "https://gis.uba.de/daten/e0329552-07c9-4a40-a151-2c8984fa6fe5_tiff.zip",
+            "url_type": null
+          }
+        ],
+        "tags": [
+          {
+            "display_name": "abag",
+            "id": "c03d4c9f-ea1a-4a96-abd4-2014416f6281",
+            "name": "abag",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "allgemeine-bodenabtragsgleichung",
+            "id": "a78b6a28-76c4-41e1-8c14-12fa7f2a1e73",
+            "name": "allgemeine-bodenabtragsgleichung",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "bodenabtrag",
+            "id": "4649b80a-fd9a-48a5-a541-71fdcec93afe",
+            "name": "bodenabtrag",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "deutschland",
+            "id": "f0be862a-d23f-48c5-912b-54bdaab84e02",
+            "name": "deutschland",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "k-faktor",
+            "id": "6c5d03e0-8de1-406c-945a-4ca8bb7ed27e",
+            "name": "k-faktor",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "opendata",
+            "id": "2436ac6e-28f1-4ede-94b9-2ff93db4b729",
+            "name": "opendata",
+            "state": "active",
+            "vocabulary_id": null
+          }
+        ],
+        "relationships_as_subject": [],
+        "relationships_as_object": []
+      },
+      {
+        "author": null,
+        "author_email": null,
+        "creator_user_id": "f512f73d-bed2-439d-8f6f-3fbc6048b24e",
+        "id": "075805c1-b86c-4158-a472-ff0c7379403d",
+        "isopen": false,
+        "license_id": "",
+        "license_title": "",
+        "maintainer": null,
+        "maintainer_email": null,
+        "metadata_created": "2025-07-25T00:54:37.907849",
+        "metadata_modified": "2025-08-13T23:31:31.931661",
+        "name": "bodenkennwerte-bundesweit-aus-der-bodenubersichtskarte-1-200-000-mittleres-gesamtporenvolumen-b",
+        "notes": "Der Datensatz enthält Informationen zum mittleres Gesamtporenvolumen (GPV, in mm/dm) bis maximal 3 Dezimeter Tiefe der Böden in Deutschland. Grundlage für die Erstellung des Datensatzes ist die deutschlandweit harmonisiert verfügbare Bodenübersichtskarte im Maßstab 1:200.000 (BÜK 200), bereitgestellt von der BGR (2021). Es handelt sich um Mittelwerte, die landnutzungsspezifisch aus den in der BÜK200 vorliegenden Profilen eines BÜK-Polygons abgeleitet wurden. Die Daten sind keine absolut gültigen Ergebnisse, sondern stehen im Kontext der methodischen Annahmen bei der Erstellung und Verarbeitung der Ausgangsdaten. Die Ableitung des Bodenkennwertes erfolgte auf Grundlage der Bodenkundlichen Kartieranleitung (KA5; Ad-hoc-AG Boden (2005): Bodenkundliche Kartieranleitung (KA 5). Ad-hoc-Arbeitsgruppe Boden der geologischen Landesämter und der Bundesanstalt für Geowissenschaften und Rohstoffe der BRD, Hannover.). Eine grundsätzliche Beschreibung des methodischen Vorgehens findet sich in (Veröffentlichung Abschlussbericht). Diese Kenngröße wird aktuell für die Weiterentwicklung der Wasserhaushaltsmodellierung mit dem Modell LARSIM (der BfG) verwendet.",
+        "num_resources": 1,
+        "num_tags": 6,
+        "organization": {
+          "id": "4092fe16-4f92-47fb-8513-f17ea93691cc",
+          "name": "umweltbundesamt",
+          "title": "Umweltbundesamt",
+          "type": "organization",
+          "description": "",
+          "image_url": "",
+          "created": "2024-06-10T12:40:48.855147",
+          "is_organization": true,
+          "approval_status": "approved",
+          "state": "active"
+        },
+        "owner_org": "4092fe16-4f92-47fb-8513-f17ea93691cc",
+        "private": false,
+        "state": "active",
+        "title": "Bodenkennwerte (bundesweit) aus der Bodenübersichtskarte 1:200.000 - Mittleres Gesamtporenvolumen bis 3 dm Tiefe (Datensatz)",
+        "type": "dataset",
+        "url": null,
+        "version": null,
+        "extras": [
+          {
+            "key": "access_rights",
+            "value": "Es gelten keine Zugriffsbeschränkungen"
+          },
+          {
+            "key": "alternate_identifier",
+            "value": "[\"1a451675-ede1-4980-909d-71533cf7400e\"]"
+          },
+          {
+            "key": "contact_city",
+            "value": "Dessau-Roßlau"
+          },
+          {
+            "key": "contact_country",
+            "value": "Deutschland"
+          },
+          {
+            "key": "contact_email",
+            "value": "II2.4@uba.de"
+          },
+          {
+            "key": "contact_name",
+            "value": "Umweltbundesamt"
+          },
+          {
+            "key": "contact_street",
+            "value": "Wörlitzer Platz 1"
+          },
+          {
+            "key": "contact_tel",
+            "value": "+4903402103-0"
+          },
+          {
+            "key": "contact_url",
+            "value": "https://www.umweltbundesamt.de/"
+          },
+          {
+            "key": "contact_zip",
+            "value": "06844"
+          },
+          {
+            "key": "contributorID",
+            "value": "[\"http://dcat-ap.de/def/contributors/umweltbundesamt\"]"
+          },
+          {
+            "key": "dcat_type",
+            "value": "http://inspire.ec.europa.eu/metadata-codelist/ResourceType/dataset"
+          },
+          {
+            "key": "frequency",
+            "value": "http://inspire.ec.europa.eu/metadata-codelist/MaintenanceFrequencyCode/notPlanned"
+          },
+          {
+            "key": "guid",
+            "value": "https://registry.gdi-de.org/id/de.bund.uba/1a451675-ede1-4980-909d-71533cf7400e"
+          },
+          {
+            "key": "identifier",
+            "value": "1a451675-ede1-4980-909d-71533cf7400e"
+          },
+          {
+            "key": "issued",
+            "value": "2024-10-29"
+          },
+          {
+            "key": "language",
+            "value": "[\"http://publications.europa.eu/resource/authority/language/DEU\"]"
+          },
+          {
+            "key": "metadata_harvested_portal",
+            "value": "metadaten.uba.de"
+          },
+          {
+            "key": "modified",
+            "value": "2025-07-23"
+          },
+          {
+            "key": "publisher_email",
+            "value": "II2.4@uba.de"
+          },
+          {
+            "key": "publisher_name",
+            "value": "Umweltbundesamt"
+          },
+          {
+            "key": "publisher_url",
+            "value": "https://www.umweltbundesamt.de/"
+          },
+          {
+            "key": "spatial",
+            "value": "{\"type\": \"Polygon\", \"coordinates\": [[[5.87, 55.05], [15.04, 55.05], [15.04, 47.27], [5.87, 47.27], [5.87, 55.05]]]}"
+          },
+          {
+            "key": "temporal_end",
+            "value": "2021-12-31"
+          },
+          {
+            "key": "temporal_start",
+            "value": "2021-01-01"
+          },
+          {
+            "key": "theme",
+            "value": "[\"http://publications.europa.eu/resource/authority/data-theme/AGRI\", \"http://publications.europa.eu/resource/authority/data-theme/ENVI\", \"http://publications.europa.eu/resource/authority/data-theme/REGI\", \"http://publications.europa.eu/resource/authority/data-theme/GOVE\", \"http://publications.europa.eu/resource/authority/data-theme/TECH\"]"
+          },
+          {
+            "key": "uri",
+            "value": "https://registry.gdi-de.org/id/de.bund.uba/1a451675-ede1-4980-909d-71533cf7400e"
+          },
+          {
+            "key": "harvest_object_id",
+            "value": "fcb57e15-049f-4c93-a959-d7649b70f65a"
+          },
+          {
+            "key": "harvest_source_id",
+            "value": "1986dbf3-b6f8-4600-bf77-21277662501f"
+          },
+          {
+            "key": "harvest_source_title",
+            "value": "Umweltbundesamt"
+          }
+        ],
+        "groups": [
+          {
+            "description": "",
+            "display_name": "Landwirtschaft, Fischerei, Forstwirtschaft und Nahrungsmittel",
+            "id": "agri",
+            "image_display_url": "",
+            "name": "agri",
+            "title": "Landwirtschaft, Fischerei, Forstwirtschaft und Nahrungsmittel"
+          },
+          {
+            "description": "",
+            "display_name": "Regierung und öffentlicher Sektor",
+            "id": "gove",
+            "image_display_url": "",
+            "name": "gove",
+            "title": "Regierung und öffentlicher Sektor"
+          },
+          {
+            "description": "",
+            "display_name": "Regionen und Städte",
+            "id": "regi",
+            "image_display_url": "",
+            "name": "regi",
+            "title": "Regionen und Städte"
+          },
+          {
+            "description": "",
+            "display_name": "Umwelt",
+            "id": "envi",
+            "image_display_url": "",
+            "name": "envi",
+            "title": "Umwelt"
+          },
+          {
+            "description": "",
+            "display_name": "Wissenschaft und Technologie",
+            "id": "tech",
+            "image_display_url": "",
+            "name": "tech",
+            "title": "Wissenschaft und Technologie"
+          }
+        ],
+        "resources": [
+          {
+            "access_url": "https://gis.uba.de/daten/1a451675-ede1-4980-909d-71533cf7400e_tiff.zip",
+            "cache_last_updated": null,
+            "cache_url": null,
+            "created": "2025-07-25T00:54:37.909498",
+            "description": "Datensatz herunterladen (ZIP/TIFF)",
+            "distribution_ref": "https://gis.uba.de/daten/1a451675-ede1-4980-909d-71533cf7400e_tiff.zip#distribution",
+            "documentation": "[\"https://stoffeintraege-more.de/\"]",
+            "download_url": "https://gis.uba.de/daten/1a451675-ede1-4980-909d-71533cf7400e_tiff.zip",
+            "format": "TIF/TIFF",
+            "hash": "",
+            "id": "e5c574b3-c271-489e-bc35-76a7f9e72fb6",
+            "last_modified": null,
+            "license": "Es gelten keine Zugriffsbeschränkungen",
+            "metadata_modified": "2025-07-25T00:54:37.894897",
+            "mimetype": "TIF/TIFF",
+            "mimetype_inner": null,
+            "name": "Datensatz herunterladen (ZIP/TIFF)",
+            "package_id": "075805c1-b86c-4158-a472-ff0c7379403d",
+            "position": 0,
+            "resource_type": null,
+            "size": null,
+            "state": "active",
+            "uri": "https://gis.uba.de/daten/1a451675-ede1-4980-909d-71533cf7400e_tiff.zip#distribution",
+            "url": "https://gis.uba.de/daten/1a451675-ede1-4980-909d-71533cf7400e_tiff.zip",
+            "url_type": null
+          }
+        ],
+        "tags": [
+          {
+            "display_name": "bodenkennwert",
+            "id": "6e999b75-f187-4aa6-bb4b-32abacb45a63",
+            "name": "bodenkennwert",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "bük200",
+            "id": "0940deca-5d0c-4d34-a088-8f2efee781c5",
+            "name": "bük200",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "deutschland",
+            "id": "f0be862a-d23f-48c5-912b-54bdaab84e02",
+            "name": "deutschland",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "gesamtporenvolumen",
+            "id": "ee8146fc-6714-4591-b34f-6915c0aeebf8",
+            "name": "gesamtporenvolumen",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "gpv",
+            "id": "330821b5-b4c9-4967-ac65-f99a429af5da",
+            "name": "gpv",
+            "state": "active",
+            "vocabulary_id": null
+          },
+          {
+            "display_name": "opendata",
+            "id": "2436ac6e-28f1-4ede-94b9-2ff93db4b729",
+            "name": "opendata",
+            "state": "active",
+            "vocabulary_id": null
+          }
+        ],
+        "relationships_as_subject": [],
+        "relationships_as_object": []
+      }
+    ],
+    "sort": "id asc",
+    "search_facets": {}
+  }
+}

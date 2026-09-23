@@ -1,0 +1,1268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wfs:WFS_Capabilities xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:ms="http://mapserver.gis.umn.edu/mapserver" xmlns="http://www.opengis.net/wfs/2.0" version="2.0.0" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd">
+    <ows:ServiceIdentification>
+        <ows:Title>ZDM der GDWS Standort Kiel</ows:Title>
+        <ows:Abstract>Der WMS des Zentralen Datenmanagement zeigt Daten von Aus- und Neubauvorhaben an den Bundeswasserstraßen im Zuständigkeitsbereich der Generaldirektion Wasserstraßen und Schifffahrt - Standorte Kiel und Aurich. Dieser Service ist ein öffentlicher und kostenfreier Dienst der Wasserstraßen- und Schifffahrtsverwaltung des Bundes.</ows:Abstract>
+        <ows:Keywords>
+            <ows:Keyword>Portal Tideelbe</ows:Keyword>
+            <ows:Keyword> Portal-Tideelbe</ows:Keyword>
+            <ows:Keyword> Portaltideelbe</ows:Keyword>
+            <ows:Keyword> Portal Ostseeküste</ows:Keyword>
+            <ows:Keyword> Portalosk</ows:Keyword>
+            <ows:Keyword> Portal Nordseeküste</ows:Keyword>
+            <ows:Keyword> Portalnsk</ows:Keyword>
+            <ows:Keyword> Portal Nord-Ostsee-Kanal</ows:Keyword>
+            <ows:Keyword> Portalnok</ows:Keyword>
+            <ows:Keyword> Nord-Ostsee-Kanal</ows:Keyword>
+            <ows:Keyword> Kiel-canal</ows:Keyword>
+            <ows:Keyword> BS-Elbe</ows:Keyword>
+            <ows:Keyword> Beweissicherung</ows:Keyword>
+            <ows:Keyword> Monitoring</ows:Keyword>
+            <ows:Keyword> Unterelbe</ows:Keyword>
+            <ows:Keyword> Zeitreihen</ows:Keyword>
+            <ows:Keyword> Außenelbe</ows:Keyword>
+            <ows:Keyword> Tideelbe</ows:Keyword>
+            <ows:Keyword> WSV</ows:Keyword>
+            <ows:Keyword> Ausbauprojekt</ows:Keyword>
+            <ows:Keyword> Neubauprojekt</ows:Keyword>
+            <ows:Keyword> Strombau</ows:Keyword>
+            <ows:Keyword> Sediment</ows:Keyword>
+            <ows:Keyword> Fahrrinnenanpassung</ows:Keyword>
+            <ows:Keyword> Fahrrinnenausbau</ows:Keyword>
+            <ows:Keyword> Elbvertiefung</ows:Keyword>
+            <ows:Keyword> Kompensation</ows:Keyword>
+            <ows:Keyword> Röhricht</ows:Keyword>
+            <ows:Keyword> Ästuar</ows:Keyword>
+            <ows:Keyword> Salzgehaltsmessung</ows:Keyword>
+            <ows:Keyword> Salzgehalt</ows:Keyword>
+            <ows:Keyword> Zeitreihen</ows:Keyword>
+            <ows:Keyword> Umweltüberwachung</ows:Keyword>
+            <ows:Keyword> Deutsche Küste</ows:Keyword>
+            <ows:Keyword> Küstendaten</ows:Keyword>
+        </ows:Keywords>
+        <ows:ServiceType codeSpace="OGC">WFS</ows:ServiceType>
+        <ows:ServiceTypeVersion>2.0.0</ows:ServiceTypeVersion>
+        <ows:Fees>keine / none</ows:Fees>
+        <ows:AccessConstraints>keine</ows:AccessConstraints>
+    </ows:ServiceIdentification>
+    <ows:ServiceProvider>
+        <ows:ProviderName>Informationstechnikzentrum Bund, Dienstsitz Ilmenau</ows:ProviderName>
+        <ows:ProviderSite xlink:type="simple" xlink:href=""/>
+        <!--WARNING: Optional metadata "ows_service_onlineresource" was missing for ows:ProviderSite/@xlink:href-->
+        <ows:ServiceContact>
+            <ows:IndividualName/>
+            <!--WARNING: Optional metadata "ows_contactperson" was missing for ows:IndividualName-->
+            <ows:PositionName/>
+            <!--WARNING: Optional metadata "ows_contactposition" was missing for ows:PositionName-->
+            <ows:ContactInfo>
+                <ows:Phone>
+                    <ows:Voice>+49 40 44110-461</ows:Voice>
+                    <ows:Facsimile>+49 40 44110-365</ows:Facsimile>
+                </ows:Phone>
+                <ows:Address>
+                    <ows:DeliveryPoint>Zentrales Datenmanagement der GDWS Standort Kiel beim Wasserstraßen- und Schifffahrtsamt Elbe-Nordsee, Fachbereich Fachdienste und Projekte, Moorweidenstrasse 14</ows:DeliveryPoint>
+                    <ows:City>Hamburg</ows:City>
+                    <ows:AdministrativeArea>Hamburg</ows:AdministrativeArea>
+                    <ows:PostalCode>20148</ows:PostalCode>
+                    <ows:Country>Germany</ows:Country>
+                    <ows:ElectronicMailAddress>zdm.gdws@wsv.bund.de</ows:ElectronicMailAddress>
+                </ows:Address>
+                <ows:OnlineResource xlink:type="simple" xlink:href=""/>
+                <!--WARNING: Optional metadata "ows_service_onlineresource" was missing for ows:OnlineResource/@xlink:href-->
+                <ows:HoursOfService/>
+                <!--WARNING: Optional metadata "ows_hoursofservice" was missing for ows:HoursOfService-->
+                <ows:ContactInstructions/>
+                <!--WARNING: Optional metadata "ows_contactinstructions" was missing for ows:ContactInstructions-->
+            </ows:ContactInfo>
+            <ows:Role/>
+            <!--WARNING: Optional metadata "ows_role" was missing for ows:Role-->
+        </ows:ServiceContact>
+    </ows:ServiceProvider>
+    <ows:OperationsMetadata>
+        <ows:Operation name="GetCapabilities">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:type="simple" xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?"/>
+                    <ows:Post xlink:type="simple" xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="AcceptVersions">
+                <ows:AllowedValues>
+                    <ows:Value>2.0.0</ows:Value>
+                    <ows:Value>1.1.0</ows:Value>
+                    <ows:Value>1.0.0</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="AcceptFormats">
+                <ows:AllowedValues>
+                    <ows:Value>text/xml</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="Sections">
+                <ows:AllowedValues>
+                    <ows:Value>ServiceIdentification</ows:Value>
+                    <ows:Value>ServiceProvider</ows:Value>
+                    <ows:Value>OperationsMetadata</ows:Value>
+                    <ows:Value>FeatureTypeList</ows:Value>
+                    <ows:Value>Filter_Capabilities</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+        </ows:Operation>
+        <ows:Operation name="DescribeFeatureType">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:type="simple" xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?"/>
+                    <ows:Post xlink:type="simple" xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="outputFormat">
+                <ows:AllowedValues>
+                    <ows:Value>application/gml+xml; version=3.2</ows:Value>
+                    <ows:Value>text/xml; subtype=gml/3.2.1</ows:Value>
+                    <ows:Value>text/xml; subtype=gml/3.1.1</ows:Value>
+                    <ows:Value>text/xml; subtype=gml/2.1.2</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+        </ows:Operation>
+        <ows:Operation name="GetFeature">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:type="simple" xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?"/>
+                    <ows:Post xlink:type="simple" xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="outputFormat">
+                <ows:AllowedValues>
+                    <ows:Value>application/gml+xml; version=3.2</ows:Value>
+                    <ows:Value>text/xml; subtype=gml/3.2.1</ows:Value>
+                    <ows:Value>text/xml; subtype=gml/3.1.1</ows:Value>
+                    <ows:Value>text/xml; subtype=gml/2.1.2</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+        </ows:Operation>
+        <ows:Operation name="GetPropertyValue">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:type="simple" xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?"/>
+                    <ows:Post xlink:type="simple" xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="outputFormat">
+                <ows:AllowedValues>
+                    <ows:Value>application/gml+xml; version=3.2</ows:Value>
+                    <ows:Value>text/xml; subtype=gml/3.2.1</ows:Value>
+                    <ows:Value>text/xml; subtype=gml/3.1.1</ows:Value>
+                    <ows:Value>text/xml; subtype=gml/2.1.2</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+        </ows:Operation>
+        <ows:Operation name="ListStoredQueries">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:type="simple" xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?"/>
+                    <ows:Post xlink:type="simple" xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?"/>
+                </ows:HTTP>
+            </ows:DCP>
+        </ows:Operation>
+        <ows:Operation name="DescribeStoredQueries">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:type="simple" xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?"/>
+                    <ows:Post xlink:type="simple" xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?"/>
+                </ows:HTTP>
+            </ows:DCP>
+        </ows:Operation>
+        <ows:Parameter name="version">
+            <ows:AllowedValues>
+                <ows:Value>2.0.0</ows:Value>
+                <ows:Value>1.1.0</ows:Value>
+                <ows:Value>1.0.0</ows:Value>
+            </ows:AllowedValues>
+        </ows:Parameter>
+        <ows:Constraint name="ImplementsBasicWFS">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+        </ows:Constraint>
+        <ows:Constraint name="ImplementsTransactionalWFS">
+            <ows:NoValues/>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>
+        <ows:Constraint name="ImplementsLockingWFS">
+            <ows:NoValues/>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>
+        <ows:Constraint name="KVPEncoding">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+        </ows:Constraint>
+        <ows:Constraint name="XMLEncoding">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+        </ows:Constraint>
+        <ows:Constraint name="SOAPEncoding">
+            <ows:NoValues/>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>
+        <ows:Constraint name="ImplementsInheritance">
+            <ows:NoValues/>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>
+        <ows:Constraint name="ImplementsRemoteResolve">
+            <ows:NoValues/>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>
+        <ows:Constraint name="ImplementsResultPaging">
+            <ows:NoValues/>
+            <ows:DefaultValue>TRUE</ows:DefaultValue>
+        </ows:Constraint>
+        <ows:Constraint name="ImplementsStandardJoins">
+            <ows:NoValues/>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>
+        <ows:Constraint name="ImplementsSpatialJoins">
+            <ows:NoValues/>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>
+        <ows:Constraint name="ImplementsTemporalJoins">
+            <ows:NoValues/>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>
+        <ows:Constraint name="ImplementsFeatureVersioning">
+            <ows:NoValues/>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>
+        <ows:Constraint name="ManageStoredQueries">
+            <ows:NoValues/>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>
+        <ows:Constraint name="PagingIsTransactionSafe">
+            <ows:NoValues/>
+            <ows:DefaultValue>FALSE</ows:DefaultValue>
+        </ows:Constraint>
+        <ows:Constraint name="QueryExpressions">
+            <ows:AllowedValues>
+                <ows:Value>wfs:Query</ows:Value>
+                <ows:Value>wfs:StoredQuery</ows:Value>
+            </ows:AllowedValues>
+        </ows:Constraint>
+    </ows:OperationsMetadata>
+    <FeatureTypeList>
+        <FeatureType>
+            <Name>ms:topographie_ems_2010_isolinien</Name>
+            <Title>Topographie Ems 2010 - Isolinien</Title>
+            <Abstract>Topographie der Unter- und Außenems und der Ostfriesischen Küstengewässer aus dem Jahr 2010 abgeleitet aus einem Digitalen Geländemodell (DGM) mit 5m Rasterauflösung. Die Datengrundlage des DGM sind u.a.: -Peildaten der WSV (10/2019-02/2011) -Laserscanningdaten (Befliegungen Frühjahr 2010 und Frühjahr 2011) Im Maßstab 1:2.000 - 1:20.000 sind zusätzlich Isolinien dargestellt. Bitte beachten Sie die Informationen und weitere Datenformate im Downloadbereich! Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.3705136168844 52.9434681394178</ows:LowerCorner>
+                <ows:UpperCorner>7.49628851431922 53.7337283101829</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=topographie_ems_2010_isolinien"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:Vorhabensbereich</Name>
+            <Title>Vorhabensbereich (Ems-km 40,7 - 74,6)</Title>
+            <Abstract>Vorhabensbereich (Ems-km 40,7 - 74,6). Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.1466816383253 52.9610084095847</ows:LowerCorner>
+                <ows:UpperCorner>7.85590047867697 53.8071834730473</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=Vorhabensbereich"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:Gebiet_UVU</Name>
+            <Title>Gebiet der Umweltverträglichkeitsuntersuchung</Title>
+            <Abstract>Gebiet der Umweltverträglichkeitsuntersuchung. Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.1466816383253 52.9610084095847</ows:LowerCorner>
+                <ows:UpperCorner>7.85590047867697 53.8071834730473</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=Gebiet_UVU"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:Klappstellen</Name>
+            <Title>Vorgesehene Klappstellen</Title>
+            <Abstract>Vorgesehene Klappstellen. Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.1466816383253 52.9610084095847</ows:LowerCorner>
+                <ows:UpperCorner>7.85590047867697 53.8071834730473</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=Klappstellen"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:BR_Lebensstaetten</Name>
+            <Title>BR Teilaspekt Lebens- und Arbeisstätten sowie Immissionen (Lärm und Erschütterungen)</Title>
+            <Abstract>Betrachtungsraum Teilaspekt Lebens- und Arbeisstätten sowie Immissionen (Lärm und Erschütterungen). Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.1466816383253 52.9610084095847</ows:LowerCorner>
+                <ows:UpperCorner>7.85590047867697 53.8071834730473</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=BR_Lebensstaetten"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:BR_Immissionen</Name>
+            <Title>BR Teilaspekt Immissionen (Luftschadstoffe)</Title>
+            <Abstract>Betrachtungsraum Teilaspekt Immissionen (Luftschadstoffe). Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.1466816383253 52.9610084095847</ows:LowerCorner>
+                <ows:UpperCorner>7.85590047867697 53.8071834730473</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=BR_Immissionen"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:BR_Freizeit</Name>
+            <Title>BR Teilaspekt Freizeit und Erholung</Title>
+            <Abstract>Betrachtungsraum Teilaspekt Freizeit und Erholung. Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.1466816383253 52.9610084095847</ows:LowerCorner>
+                <ows:UpperCorner>7.85590047867697 53.8071834730473</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=BR_Freizeit"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:BR_Avifauna</Name>
+            <Title>BR Avifauna</Title>
+            <Abstract>Betrachtungsraum Avifauna. Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.1466816383253 52.9610084095847</ows:LowerCorner>
+                <ows:UpperCorner>7.85590047867697 53.8071834730473</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=BR_Avifauna"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:BR_Meeressaeuger</Name>
+            <Title>BR Meeressäuger</Title>
+            <Abstract>Betrachtungsraum Meeressäuger. Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.50037648927388 53.222427720896</ows:LowerCorner>
+                <ows:UpperCorner>7.31033089430335 53.6534398378579</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=BR_Meeressaeuger"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:BR_Fische</Name>
+            <Title>BR Fische, Rundmäuler, Makrozoobenthos, Zooplankton</Title>
+            <Abstract>Betrachtungsraum Fische, Rundmäuler, Makrozoobenthos, Zooplankton. Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.1466816383253 52.9610084095847</ows:LowerCorner>
+                <ows:UpperCorner>7.85590047867697 53.8071834730473</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=BR_Fische"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:BR_Phytoplankton</Name>
+            <Title>BR Phytoplankton und Phytobenthos</Title>
+            <Abstract>Betrachtungsraum Phytoplankton und Phytobenthos. H: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.1466816383253 52.9610084095847</ows:LowerCorner>
+                <ows:UpperCorner>7.85590047867697 53.8071834730473</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=BR_Phytoplankton"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:BR_Hydrologie</Name>
+            <Title>BR Aspekte Hydrologie, Gewässermorphologie, Wasserbeschaffenheit</Title>
+            <Abstract>Betrachtungsraum Aspekte Hydrologie, Gewässermorphologie, Wasserbeschaffenheit. Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.1466816383253 52.9610084095847</ows:LowerCorner>
+                <ows:UpperCorner>7.85590047867697 53.8071834730473</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=BR_Hydrologie"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:BR_Schadstoffe</Name>
+            <Title>BR Aspekt Schadstoffe in Sedimenten und ökotoxikologisches Wirkungspotenzial</Title>
+            <Abstract>Betrachtungsraum Aspekt Schadstoffe in Sedimenten und ökotoxikologisches Wirkungspotenzial. Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.50037702049628 53.1120716122706</ows:LowerCorner>
+                <ows:UpperCorner>7.69169154204488 53.6582628511111</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=BR_Schadstoffe"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:BR_Grundwasser</Name>
+            <Title>BR Aspekt Grundwasser</Title>
+            <Abstract>Betrachtungsraum Aspekt Grundwasser. Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.50037648927388 53.1120716122706</ows:LowerCorner>
+                <ows:UpperCorner>7.69170648407158 53.658272004506</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=BR_Grundwasser"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:BR_Kultur</Name>
+            <Title>BR Kultur- und sonstige Sachgüter</Title>
+            <Abstract>Betrachtungsraum Kultur- und sonstige Sachgüter. Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.51483526810503 53.3039060663951</ows:LowerCorner>
+                <ows:UpperCorner>7.18311680570439 53.6333826253078</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=BR_Kultur"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:BR_Klima</Name>
+            <Title>BR Klima und Landschaft, Schutzgut Landschaft</Title>
+            <Abstract>Betrachtungsraum Klima und Landschaft, Schutzgut Landschaft. Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.1466816383253 52.9610084095847</ows:LowerCorner>
+                <ows:UpperCorner>7.85590047867697 53.8071834730473</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=BR_Klima"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:BR_Pflanzen</Name>
+            <Title>BR Aspekt Höhere Pflanzen, Schutzgut Boden</Title>
+            <Abstract>Betrachtungsraum Aspekt Höhere Pflanzen, Schutzgut Boden. Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.1466816383253 52.9610084095847</ows:LowerCorner>
+                <ows:UpperCorner>7.85590047867697 53.8071834730473</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=BR_Pflanzen"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:Topographie2015_isolinien</Name>
+            <Title>Topographie Ems 2015 - Isolinien</Title>
+            <Abstract>Topographie der Unter- und Außenems und der Ostfriesischen Küstengewässer aus dem Jahr 2015 abgeleitet aus einem Digitalen Geländemodell (DGM) mit 5m Rasterauflösung. Die Datengrundlage des DGM sind u.a.: -Peildaten der WSV (10/2019-02/2011) -Modelldaten NLWKN (01-12/2014) -Laserscanningdaten (Befliegungen 04/2014 - 07/2015) Im Maßstab 1:2.000 - 1:20.000 sind zusätzlich Isolinien dargestellt. Bitte beachten Sie die Informationen und weitere Datenformate im Downloadbereich! Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.36409932259812 52.8553509142245</ows:LowerCorner>
+                <ows:UpperCorner>7.81121941953165 53.8273059557715</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=Topographie2015_isolinien"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:Topographie_ems_2021_isolinien</Name>
+            <Title>Topographie Ems 2021 - Isolinien</Title>
+            <Abstract>Topographie der Unter- und Außenems und der Ostfriesischen Küstengewässer aus dem Jahr 2020/2021 abgeleitet aus einem Digitalen Geländemodell (DGM) mit 2m Rasterauflösung. Die Datengrundlage des DGM sind u.a.:
+                -Peildaten der WSV (01/2020-05/2022)
+                -Peildaten des BSH (07/2020-06/2021)
+                -Peildaten des NLWKN (08/2020-11/2021)
+                -Laserscanningdaten (Befliegungen 04-06/2021)
+                Bitte beachten Sie die Informationen und weitere Datenformate im Downloadbereich! Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.37500349833048 52.852892014774</ows:LowerCorner>
+                <ows:UpperCorner>7.49943118960895 53.7877734570558</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=Topographie_ems_2021_isolinien"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:Topographie_ems_2021_ueb_isolinien</Name>
+            <Title>Topographie Ems 2021 - Übergangsmodell Isolinien</Title>
+            <Abstract>Topographie der Unter- und Außenems und der Ostfriesischen Küstengewässer aus dem Jahr 2020/2021 abgeleitet aus einem Digitalen Geländemodell (DGM) mit 2m Rasterauflösung. Übergangsmodell vom DGM-W 2020/21 zum DGM 2019/20 vom RWS NL.
+                Bitte beachten Sie die Informationen und weitere Datenformate im Downloadbereich! Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.23667082249563 53.3962483632065</ows:LowerCorner>
+                <ows:UpperCorner>6.83259267167266 53.6435388107295</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=Topographie_ems_2021_ueb_isolinien"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:Topographie_ems_2019_isolinien</Name>
+            <Title>Topographie Ems 2019/20 - RWS NL Isolinien</Title>
+            <Abstract>Topographie der Außenems und der westseitig gelegenen niederländischen Küstengewässer bis Groningerwad aus dem Jahr 2019/20 abgeleitet aus einem Digitalen Geländemodell (DGM) mit 20m Rasterauflösung.
+                Bitte beachten Sie die Informationen und weitere Datenformate im Downloadbereich! Herausgeber: WSA Ems-Nordsee
+                Primärdatenquelle: Rijkswaterstaat, Niederlande</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.23667082249563 53.3962483632065</ows:LowerCorner>
+                <ows:UpperCorner>6.83259267167266 53.6435388107295</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=Topographie_ems_2019_isolinien"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:Luftbildbefliegung_2022_Kachelung</Name>
+            <Title>Luftbildbefliegung 2022 - Kachelung</Title>
+            <Abstract>Eine hochauflösende Luftbildbefliegung von 2022 deckt das Gebiet der Außenems und der Niedersächsischen Küste von Borkum bis Wangerooge ab. Die Bodenauflösung beträgt 20cm. Herausgeber: WSA Ems-Nordsee </Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>6.55586522189241 53.332634928236</ows:LowerCorner>
+                <ows:UpperCorner>7.9934033980816 53.8112341373228</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=Luftbildbefliegung_2022_Kachelung"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:Luftbildbefliegung_2021_Kachelung</Name>
+            <Title>Luftbildbefliegung 2021 - Kachelung</Title>
+            <Abstract>Eine hochauflösende Luftbildbefliegung von 2021 im Gebiet des Dollart in der Außenems. Die Bodenauflösung beträgt 20cm. Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>7.04735873084546 53.2153850234158</ows:LowerCorner>
+                <ows:UpperCorner>7.27761046248325 53.3446313779571</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=Luftbildbefliegung_2021_Kachelung"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:BiotoptypenkartierungEms_Pilot</Name>
+            <Title>Biotoptypenkarten 2020 Pilotstrecken</Title>
+            <Abstract>Biotoptypenkarten 2020 Ems an den Pilotstrecken der Ufer im Rahmen des Masterplan Ems 2050.
+                Bitte beachten Sie die Informationen und weitere Datenformate im Downloadbereich! Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>7.27548249757857 53.0476744586865</ows:LowerCorner>
+                <ows:UpperCorner>7.41420365198757 53.3197648326133</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=BiotoptypenkartierungEms_Pilot"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:BiotoptypenkartierungEms_Referenz</Name>
+            <Title>Biotoptypenkarten 2020 Referenzstrecken</Title>
+            <Abstract>Biotoptypenkarten 2020 Ems an den Pilotstrecken der Ufer im Rahmen des Masterplan Ems 2050.
+                Bitte beachten Sie die Informationen und weitere Datenformate im Downloadbereich! Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>7.27548249757857 53.0476744586865</ows:LowerCorner>
+                <ows:UpperCorner>7.41420365198757 53.3197648326133</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=BiotoptypenkartierungEms_Referenz"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:MasterplanEms_Umringe_Massnahmen</Name>
+            <Title>Umringe der Maßnahmengebiete</Title>
+            <Abstract>Die Pilotstrecken und Referenzstrecken der Ufer im Rahmen des Masterplan Ems 2050.
+                Bitte beachten Sie die Informationen und weitere Datenformate im Downloadbereich! Herausgeber: WSA Ems-Nordsee</Abstract>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox dimensions="2">
+                <ows:LowerCorner>7.27548213529083 53.0476654733529</ows:LowerCorner>
+                <ows:UpperCorner>7.41497941416297 53.3197842549513</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=MasterplanEms_Umringe_Massnahmen"/>
+        </FeatureType>
+        <FeatureType>
+            <Name>ms:copyright</Name>
+            <Title>Copyright</Title>
+            <DefaultCRS>urn:ogc:def:crs:EPSG::25832</DefaultCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3044</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4326</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4258</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::4647</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3857</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31466</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31467</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31468</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::31469</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2397</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2398</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::2399</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25831</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::25833</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3034</OtherCRS>
+            <OtherCRS>urn:ogc:def:crs:EPSG::3035</OtherCRS>
+            <OutputFormats>
+                <Format>application/gml+xml; version=3.2</Format>
+                <Format>text/xml; subtype=gml/3.2.1</Format>
+                <Format>text/xml; subtype=gml/3.1.1</Format>
+                <Format>text/xml; subtype=gml/2.1.2</Format>
+            </OutputFormats>
+            <ows:WGS84BoundingBox/>
+            <!--WARNING: Optional WGS84BoundingBox could not be established for this layer.  Consider setting the EXTENT in the LAYER object, or wfs_extent metadata. Also check that your data exists in the DATA statement-->
+            <MetadataURL xlink:href="https://www.kuestendaten.de/DE/dynamisch/tideems_ogc/bs?request=GetMetadata&amp;layer=copyright"/>
+        </FeatureType>
+    </FeatureTypeList>
+    <fes:Filter_Capabilities>
+        <fes:Conformance>
+            <fes:Constraint name="ImplementsQuery">
+                <ows:NoValues/>
+                <ows:DefaultValue>TRUE</ows:DefaultValue>
+            </fes:Constraint>
+            <fes:Constraint name="ImplementsAdHocQuery">
+                <ows:NoValues/>
+                <ows:DefaultValue>TRUE</ows:DefaultValue>
+            </fes:Constraint>
+            <fes:Constraint name="ImplementsFunctions">
+                <ows:NoValues/>
+                <ows:DefaultValue>FALSE</ows:DefaultValue>
+            </fes:Constraint>
+            <fes:Constraint name="ImplementsResourceId">
+                <ows:NoValues/>
+                <ows:DefaultValue>TRUE</ows:DefaultValue>
+            </fes:Constraint>
+            <fes:Constraint name="ImplementsMinStandardFilter">
+                <ows:NoValues/>
+                <ows:DefaultValue>TRUE</ows:DefaultValue>
+            </fes:Constraint>
+            <fes:Constraint name="ImplementsStandardFilter">
+                <ows:NoValues/>
+                <ows:DefaultValue>TRUE</ows:DefaultValue>
+            </fes:Constraint>
+            <fes:Constraint name="ImplementsMinSpatialFilter">
+                <ows:NoValues/>
+                <ows:DefaultValue>TRUE</ows:DefaultValue>
+            </fes:Constraint>
+            <fes:Constraint name="ImplementsSpatialFilter">
+                <ows:NoValues/>
+                <ows:DefaultValue>FALSE</ows:DefaultValue>
+            </fes:Constraint>
+            <fes:Constraint name="ImplementsMinTemporalFilter">
+                <ows:NoValues/>
+                <ows:DefaultValue>TRUE</ows:DefaultValue>
+            </fes:Constraint>
+            <fes:Constraint name="ImplementsTemporalFilter">
+                <ows:NoValues/>
+                <ows:DefaultValue>FALSE</ows:DefaultValue>
+            </fes:Constraint>
+            <fes:Constraint name="ImplementsVersionNav">
+                <ows:NoValues/>
+                <ows:DefaultValue>FALSE</ows:DefaultValue>
+            </fes:Constraint>
+            <fes:Constraint name="ImplementsSorting">
+                <ows:NoValues/>
+                <ows:DefaultValue>TRUE</ows:DefaultValue>
+            </fes:Constraint>
+            <fes:Constraint name="ImplementsExtendedOperators">
+                <ows:NoValues/>
+                <ows:DefaultValue>FALSE</ows:DefaultValue>
+            </fes:Constraint>
+            <fes:Constraint name="ImplementsMinimumXPath">
+                <ows:NoValues/>
+                <ows:DefaultValue>TRUE</ows:DefaultValue>
+            </fes:Constraint>
+            <fes:Constraint name="ImplementsSchemaElementFunc">
+                <ows:NoValues/>
+                <ows:DefaultValue>FALSE</ows:DefaultValue>
+            </fes:Constraint>
+        </fes:Conformance>
+        <fes:Id_Capabilities>
+            <fes:ResourceIdentifier name="fes:ResourceId"/>
+        </fes:Id_Capabilities>
+        <fes:Scalar_Capabilities>
+            <fes:LogicalOperators/>
+            <fes:ComparisonOperators>
+                <fes:ComparisonOperator name="PropertyIsEqualTo"/>
+                <fes:ComparisonOperator name="PropertyIsNotEqualTo"/>
+                <fes:ComparisonOperator name="PropertyIsLessThan"/>
+                <fes:ComparisonOperator name="PropertyIsGreaterThan"/>
+                <fes:ComparisonOperator name="PropertyIsLessThanOrEqualTo"/>
+                <fes:ComparisonOperator name="PropertyIsGreaterThanOrEqualTo"/>
+                <fes:ComparisonOperator name="PropertyIsLike"/>
+                <fes:ComparisonOperator name="PropertyIsBetween"/>
+            </fes:ComparisonOperators>
+        </fes:Scalar_Capabilities>
+        <fes:Spatial_Capabilities>
+            <fes:GeometryOperands>
+                <fes:GeometryOperand name="gml:Point"/>
+                <fes:GeometryOperand name="gml:MultiPoint"/>
+                <fes:GeometryOperand name="gml:LineString"/>
+                <fes:GeometryOperand name="gml:MultiLineString"/>
+                <fes:GeometryOperand name="gml:Curve"/>
+                <fes:GeometryOperand name="gml:MultiCurve"/>
+                <fes:GeometryOperand name="gml:Polygon"/>
+                <fes:GeometryOperand name="gml:MultiPolygon"/>
+                <fes:GeometryOperand name="gml:Surface"/>
+                <fes:GeometryOperand name="gml:MultiSurface"/>
+                <fes:GeometryOperand name="gml:Box"/>
+                <fes:GeometryOperand name="gml:Envelope"/>
+            </fes:GeometryOperands>
+            <fes:SpatialOperators>
+                <fes:SpatialOperator name="Equals"/>
+                <fes:SpatialOperator name="Disjoint"/>
+                <fes:SpatialOperator name="Touches"/>
+                <fes:SpatialOperator name="Within"/>
+                <fes:SpatialOperator name="Overlaps"/>
+                <fes:SpatialOperator name="Crosses"/>
+                <fes:SpatialOperator name="Intersects"/>
+                <fes:SpatialOperator name="Contains"/>
+                <fes:SpatialOperator name="DWithin"/>
+                <fes:SpatialOperator name="Beyond"/>
+                <fes:SpatialOperator name="BBOX"/>
+            </fes:SpatialOperators>
+        </fes:Spatial_Capabilities>
+        <fes:Temporal_Capabilities>
+            <fes:TemporalOperands>
+                <fes:TemporalOperand name="gml:TimePeriod"/>
+                <fes:TemporalOperand name="gml:TimeInstant"/>
+            </fes:TemporalOperands>
+            <fes:TemporalOperators>
+                <fes:TemporalOperator name="During"/>
+            </fes:TemporalOperators>
+        </fes:Temporal_Capabilities>
+    </fes:Filter_Capabilities>
+</wfs:WFS_Capabilities>

@@ -1,0 +1,242 @@
+{
+  "collection": {
+    "name": "govdata"
+  },
+  "contacts": [
+    {
+      "name": "Umweltbundesamt",
+      "role": 10
+    },
+    {
+      "mbox": null,
+      "name": null,
+      "role": 11
+    }
+  ],
+  "content": [
+    "govdata",
+    "bund",
+    "govdata",
+    "metadata",
+    "govdata",
+    "0334a1a9-db5e-4a8d-807f-9c201532dd19",
+    "0334a1a9-db5e-4a8d-807f-9c201532dd19",
+    "govdata",
+    "https://ckan.govdata.de",
+    "https://ckan.govdata.de/api/3/action/package_show?id=pollutant-release-and-transfer-register-prtr-abfall-datensatz",
+    "ckan",
+    "https://ckan.govdata.de/dataset/pollutant-release-and-transfer-register-prtr-abfall-datensatz",
+    "c37f418057e5abb8829012c31e785479f2a80775",
+    "0334a1a9-db5e-4a8d-807f-9c201532dd19",
+    "Pollutant Release and Transfer Register (PRTR) - Abfall (Datensatz)",
+    "<p>Das PRTR ist ein Schadstoffregister, das darüber informiert, wie viele Freisetzungen von Schadstoffen in Luft, Wasser und Boden, Verbringungen mit dem Abwasser sowie Entsorgung von gefährlichen und nicht gefährlichen Abfällen aus bestimmten industriellen Tätigkeiten erfolgen. Die Daten wer-den jährlich aktualisiert und auf Thru.de veröffentlicht.</p>\n",
+    "Umweltbundesamt",
+    "2007-bis-2023",
+    "abfall",
+    "deutschland",
+    "emission",
+    "freisetzung",
+    "hvd",
+    "industrie",
+    "inspireidentifiziert",
+    "national",
+    "opendata",
+    "produktions--und-industrieanlagen",
+    "schadstoff",
+    "sites-and-facilities-european-pollutant-release-and-transfer-register",
+    "uba",
+    "umweltbundesamt",
+    "7f89d6fc-c517-4e6e-8fc9-09393e27326c",
+    "Format: application/atom+xml (ZIP)",
+    "Format: application/atom+xml (ZIP)",
+    "https://haleconnect.com/services/bsp/org.1123.8debb71f-5a95-489e-bbfa-7b04b522b13f/service/atom/id_predefined_dataset/dataset/dataset1",
+    "GML",
+    "Polygon",
+    5.53,
+    55.2,
+    15.99,
+    55.2,
+    15.99,
+    47.04,
+    5.53,
+    47.04,
+    5.53,
+    55.2,
+    "",
+    ""
+  ],
+  "dataSourceName": "govdata",
+  "datatype": [
+    "metadata"
+  ],
+  "dcat": {
+    "landingPage": null
+  },
+  "description": "<p>Das PRTR ist ein Schadstoffregister, das darüber informiert, wie viele Freisetzungen von Schadstoffen in Luft, Wasser und Boden, Verbringungen mit dem Abwasser sowie Entsorgung von gefährlichen und nicht gefährlichen Abfällen aus bestimmten industriellen Tätigkeiten erfolgen. Die Daten wer-den jährlich aktualisiert und auf Thru.de veröffentlicht.</p>\n",
+  "distributions": [
+    {
+      "id": "7f89d6fc-c517-4e6e-8fc9-09393e27326c",
+      "title": "Format: application/atom+xml (ZIP)",
+      "format": [
+        "GML"
+      ],
+      "issued": "2025-12-09T23:33:30.466Z",
+      "byteSize": null,
+      "modified": null,
+      "access_url": "https://haleconnect.com/services/bsp/org.1123.8debb71f-5a95-489e-bbfa-7b04b522b13f/service/atom/id_predefined_dataset/dataset/dataset1",
+      "description": "Format: application/atom+xml (ZIP)"
+    }
+  ],
+  "extras": {
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-09-02T14:52:38.682Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-09-02T14:52:38.682Z",
+      "merged_from": [],
+      "modified": null,
+      "source": {
+        "portal_link": "https://ckan.govdata.de/dataset/pollutant-release-and-transfer-register-prtr-abfall-datensatz",
+        "raw_data_source": "https://ckan.govdata.de/api/3/action/package_show?id=pollutant-release-and-transfer-register-prtr-abfall-datensatz",
+        "source_base": "https://ckan.govdata.de",
+        "source_type": "ckan"
+      }
+    }
+  },
+  "iPlugId": "govdata",
+  "id": "0334a1a9-db5e-4a8d-807f-9c201532dd19",
+  "isfolder": "false",
+  "keywords": [
+    {
+      "id": "",
+      "term": "2007-bis-2023",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "abfall",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "deutschland",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "emission",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "freisetzung",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "hvd",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "industrie",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "inspireidentifiziert",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "national",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "opendata",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "produktions--und-industrieanlagen",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "schadstoff",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "sites-and-facilities-european-pollutant-release-and-transfer-register",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "uba",
+      "source": "FREE"
+    },
+    {
+      "id": "",
+      "term": "umweltbundesamt",
+      "source": "FREE"
+    }
+  ],
+  "legal_basis": null,
+  "metadata": {
+    "created": null,
+    "modified": "2025-12-09T23:33:30.463Z"
+  },
+  "modified": "2025-12-09T23:33:30.463Z",
+  "partner": [
+    "bund"
+  ],
+  "political_geocoding_level_uri": null,
+  "provider": [
+    "govdata"
+  ],
+  "rdf": "<RDF xmlns=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"><Dataset xmlns=\"http://www.w3.org/ns/dcat#\"><title xmlns=\"http://purl.org/dc/terms/\">Pollutant Release and Transfer Register (PRTR) - Abfall (Datensatz)</title><description xmlns=\"http://purl.org/dc/terms/\">&lt;p&gt;Das PRTR ist ein Schadstoffregister, das darüber informiert, wie viele Freisetzungen von Schadstoffen in Luft, Wasser und Boden, Verbringungen mit dem Abwasser sowie Entsorgung von gefährlichen und nicht gefährlichen Abfällen aus bestimmten industriellen Tätigkeiten erfolgen. Die Daten wer-den jährlich aktualisiert und auf Thru.de veröffentlicht.&lt;/p&gt;\n</description><identifier xmlns=\"http://purl.org/dc/terms/\">0334a1a9-db5e-4a8d-807f-9c201532dd19</identifier><keyword>2007-bis-2023</keyword><keyword>abfall</keyword><keyword>deutschland</keyword><keyword>emission</keyword><keyword>freisetzung</keyword><keyword>hvd</keyword><keyword>industrie</keyword><keyword>inspireidentifiziert</keyword><keyword>national</keyword><keyword>opendata</keyword><keyword>produktions--und-industrieanlagen</keyword><keyword>schadstoff</keyword><keyword>sites-and-facilities-european-pollutant-release-and-transfer-register</keyword><keyword>uba</keyword><keyword>umweltbundesamt</keyword><distribution><Distribution><title xmlns=\"http://purl.org/dc/terms/\">Format: application/atom+xml (ZIP)</title><description xmlns=\"http://purl.org/dc/terms/\">Format: application/atom+xml (ZIP)</description><accessURL xmlns=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" resource=\"https://haleconnect.com/services/bsp/org.1123.8debb71f-5a95-489e-bbfa-7b04b522b13f/service/atom/id_predefined_dataset/dataset/dataset1\" xmlns=\"http://www.w3.org/ns/dcat#\"/></Distribution></distribution></Dataset></RDF>",
+  "sort_hash": "c37f418057e5abb8829012c31e785479f2a80775",
+  "spatial": {
+    "geometries": [
+      {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              5.53,
+              55.2
+            ],
+            [
+              15.99,
+              55.2
+            ],
+            [
+              15.99,
+              47.04
+            ],
+            [
+              5.53,
+              47.04
+            ],
+            [
+              5.53,
+              55.2
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "t01_object": {
+    "obj_id": "0334a1a9-db5e-4a8d-807f-9c201532dd19"
+  },
+  "temporal": {
+    "accrual_periodicity": "",
+    "accrual_periodicity_key": ""
+  },
+  "title": "Pollutant Release and Transfer Register (PRTR) - Abfall (Datensatz)",
+  "uuid": "0334a1a9-db5e-4a8d-807f-9c201532dd19"
+}

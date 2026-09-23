@@ -1,0 +1,138 @@
+{
+  "Ident": {
+    "Service": "metadata",
+    "Method": "table"
+  },
+  "Status": {
+    "Code": 0,
+    "Content": "erfolgreich",
+    "Type": "Information"
+  },
+  "Parameter": {
+    "username": "********************",
+    "password": "********************",
+    "name": "11911-0001",
+    "area": "Öffentlich",
+    "language": "de"
+  },
+  "Object": {
+    "Code": "11911-0001",
+    "Content": "Verwaltungsgliederung in Sachsen-Anhalt seit 31.12.1985",
+    "Time": {
+      "From": "31.12.1985",
+      "To": "01.01.2014"
+    },
+    "Valid": "false",
+    "Structure": {
+      "Head": {
+        "Code": "11911",
+        "Content": "Gemeindeverzeichnis",
+        "Type": "Statistik",
+        "Values": null,
+        "Selected": null,
+        "Functions": null,
+        "Structure": [
+          {
+            "Code": "STG",
+            "Content": "Sachsen-Anhalt Gesamt",
+            "Type": "Merkmal",
+            "Values": "1",
+            "Selected": "1",
+            "Functions": null,
+            "Structure": null,
+            "Updated": "see parent"
+          }
+        ],
+        "Updated": "see parent"
+      },
+      "Columns": [
+        {
+          "Code": "GEMANZ",
+          "Content": "Anzahl der Gemeinden",
+          "Type": "Merkmal",
+          "Values": null,
+          "Selected": null,
+          "Functions": "ID0003",
+          "Structure": null,
+          "Updated": "see parent"
+        },
+        {
+          "Code": "EINGEM",
+          "Content": "Anzahl Einheitsgemeinden",
+          "Type": "Merkmal",
+          "Values": null,
+          "Selected": null,
+          "Functions": "ID0004",
+          "Structure": null,
+          "Updated": "see parent"
+        },
+        {
+          "Code": "STAREC",
+          "Content": "Gemeinden mit Stadtrecht",
+          "Type": "Merkmal",
+          "Values": null,
+          "Selected": null,
+          "Functions": "ID0005",
+          "Structure": null,
+          "Updated": "see parent"
+        },
+        {
+          "Code": "VERWGEM",
+          "Content": "Anzahl der Verwaltungsgemeinschaften",
+          "Type": "Merkmal",
+          "Values": null,
+          "Selected": null,
+          "Functions": "ID0006",
+          "Structure": null,
+          "Updated": "see parent"
+        },
+        {
+          "Code": "VERWTRAE",
+          "Content": "Anzahl der nach dem Trägermodell arbeitenden Verwaltungsgemeinschaften",
+          "Type": "Merkmal",
+          "Values": null,
+          "Selected": null,
+          "Functions": null,
+          "Structure": null,
+          "Updated": "see parent"
+        },
+        {
+          "Code": "VERBAG",
+          "Content": "Anzahl der Verbandsgemeinden",
+          "Type": "Merkmal",
+          "Values": null,
+          "Selected": null,
+          "Functions": "ID0008",
+          "Structure": null,
+          "Updated": "see parent"
+        },
+        {
+          "Code": "KRSANZ",
+          "Content": "Anzahl der kreisfreien Städte und Landkreise",
+          "Type": "Merkmal",
+          "Values": null,
+          "Selected": null,
+          "Functions": "ID0009",
+          "Structure": null,
+          "Updated": "see parent"
+        }
+      ],
+      "Rows": [
+        {
+          "Code": "STAG",
+          "Content": "Stichtag",
+          "Type": "Merkmal",
+          "Values": null,
+          "Selected": null,
+          "Functions": null,
+          "Structure": null,
+          "Updated": "see parent"
+        }
+      ],
+      "Subtitel": null,
+      "Subheading": null
+    },
+    "Updated": "15.07.2025 11:27:48h"
+  },
+  "Copyright": "© Statistisches Landesamt Sachsen-Anhalt, Halle (Saale), 2026"
+}

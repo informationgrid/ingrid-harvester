@@ -1,0 +1,52 @@
+{
+  "type": "GENESIS",
+  "maxRecords": 100,
+  "startPosition": 0,
+  "catalogIds": [1],
+  "rejectUnauthorizedSSL": true,
+  "rules": {
+    "containsDocumentsWithData": false
+  },
+  "maxConcurrent": 10,
+  "skipUrlCheckOnHarvest": false,
+  "timeout": 60000,
+  "sourceURL": "https://genesis.sachsen-anhalt.de/webservice/rest/2020",
+  "typeConfig": {
+    "requestDelayMs": 500,
+    "statisticCodes": [
+      "*"
+    ],
+    "tableSelections": [
+      "12*"
+    ],
+    "username": "ST000160",
+    "password": "c4QPRAb5cGoZQ6XITssFhB",
+    "downloadUrlTemplate": "https://genesis.sachsen-anhalt.de/genesis/online?operation=table&code={code}",
+    "theme": "http://publications.europa.eu/resource/authority/data-theme/GOVE",
+    "licenseUrl": "http://dcat-ap.de/def/licenses/dl-by-de/2.0",
+    "contributorId": "http://dcat-ap.de/def/contributors/genesisLsa",
+    "publisher": {
+      "email": "mailto:poststelle@stala.mi.sachsen-anhalt.de",
+      "name": "Statistisches Landesamt Sachsen-Anhalt"
+    },
+    "politicalGeocodingLevel": "administrativeDistrict",
+    "landingPageUrl": "Configurable landingPageUrl here",
+    "statisticUrlTemplate": "https://genesis.sachsen-anhalt.de/genesis/online?operation=statistic&code={code}",
+    "tableUrlTemplate": "https://genesis.sachsen-anhalt.de/genesis/online?operation=table&code={code}"
+  },
+  "priority": 0,
+  "customCode": "",
+  "defaultMcloudSubgroup": [],
+  "defaultDCATCategory": [],
+  "dateSourceFormats": [],
+  "blacklistedIds": [],
+  "whitelistedIds": [],
+  "catalogId": "genesis-lsa",
+  "id": 22,
+  "iPlugId": "genesis-lsa",
+  "description": "GENESIS Online – Statistisches Landesamt Sachsen-Anhalt",
+  "partner": "st",
+  "provider": "ST",
+  "datatype": "research,metadata",
+  "dataSourceName": "GENESIS Online Sachsen-Anhalt"
+}

@@ -58,6 +58,7 @@
     "importStarted": "Import gestartet.",
     "allImportStarted": "Import aller Datenquellen gestartet.",
     "importing": "Import läuft...",
+    "cancelling": "Abbruch...",
     "lastImport": "Letzte Ausführung",
     "durationImport": "Dauer der Ausführung",
     "nextImport": "Nächste Ausführung",
@@ -90,6 +91,11 @@
         "title": "Wird importiert",
         "tooltip": "Datensätze werden gerade importiert"
       },
+      "queued": {
+        "icon": "schedule",
+        "title": "Warteschlange",
+        "tooltip": "Import wartet auf Ausführung"
+      },
       "error": {
         "icon": "error",
         "title": "Fehler",
@@ -101,7 +107,7 @@
         "tooltip": "Import abgeschlossen, aber einige Datensätze wurden übersprungen"
       },
       "cancelled": {
-        "icon": "cancel",
+        "icon": "close",
         "title": "Abgebrochen",
         "tooltip": "Import wurde abgebrochen"
       }

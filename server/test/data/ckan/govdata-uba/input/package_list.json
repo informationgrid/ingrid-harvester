@@ -1,0 +1,9 @@
+{
+  "help": "https://ckan.govdata.de/api/3/action/help_show?name=package_list",
+  "success": true,
+  "result": [
+    "bodenkennwerte-bundesweit-aus-der-bodenubersichtskarte-1-200-000-mittleres-gesamtporenvolumen-b",
+    "bundesweite-bodenabtragsmodellierung-allgemeine-bodenabtragsgleichung-k-faktor-datensatz",
+    "pollutant-release-and-transfer-register-prtr-abfall-datensatz"
+  ]
+}

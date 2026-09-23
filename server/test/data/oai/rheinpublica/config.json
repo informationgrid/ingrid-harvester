@@ -1,0 +1,29 @@
+{
+  "type": "OAI",
+  "maxRecords": 200,
+  "startPosition": 1,
+  "catalogIds": [1],
+  "rejectUnauthorizedSSL": true,
+  "rules": {
+    "containsDocumentsWithData": null
+  },
+  "maxConcurrent": 1,
+  "skipUrlCheckOnHarvest": false,
+  "timeout": 60000,
+  "sourceURL": "https://rheinpublika.lvr.de/mir/servlets/OAIDataProvider",
+  "filterTags": [],
+  "filterGroups": [],
+  "providerPrefix": "",
+  "metadataPrefix": "mods",
+  "set": null,
+  "id": 1,
+  "description": "rheinpublika",
+  "iPlugId": "rheinpublika",
+  "partner": null,
+  "provider": null,
+  "dataSourceName": null,
+  "datatype": null,
+  "from": null,
+  "until": null,
+  "eitherKeywords": []
+}

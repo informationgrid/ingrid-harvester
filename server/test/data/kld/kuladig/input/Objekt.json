@@ -1,0 +1,65 @@
+{
+  "Anzahl": 3,
+  "Gesamtanzahl": 3,
+  "Seite": 0,
+  "AnzahlSeiten": 1,
+  "Ergebnis": [
+    {
+      "Objekttyp": "Objektgruppe",
+      "Id": "SWB-268925",
+      "Name": "\"100 jahre bauhaus im westen\"",
+      "Beschreibung": "Das Bauhaus war revolutionär. Das große Laboratorium der Moderne inspiriert und prägt uns bis heute. Es geht um die „Gestaltung von Lebensvorgängen“ (Walter Gropius), um den neuen Menschen, die neue Welt. Bauhaus ist noch immer Mythos.",
+      "Projekte": [
+        [
+          1051,
+          "Bauhaus 100 im Westen"
+        ]
+      ],
+      "ThumbnailToken": "BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDn3wwiItiJ85Idws4cf_NPo2qYgi7syD0EJg_CUCiNzoPuXrxOsChR1p6onI8wg8fmFgBscrgg2ad9xoME0l6g6ENu98ypUSbNnCCeY85OQA9O2_RT2oCaRyGARmLXnJRQ((",
+      "Punktkoordinate": null,
+      "ZuletztGeaendert": "2026-07-08T16:43:41.983401"
+    },
+    {
+      "Objekttyp": "Kuladigobjekt",
+      "Id": "BKM-30800319",
+      "Name": "\"Alte Ziegelei\" Petershain",
+      "Beschreibung": "Der alte Ziegeleistandort in Petershain wurde vermutlich um 1900 gegründet. Die Gebäude sind durchwe...",
+      "Projekte": [
+        [
+          4107,
+          "Braunkohle-Inventar Sachsen"
+        ]
+      ],
+      "ThumbnailToken": "BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDt1bZaLG0xwG5wBGTy8OKfg2LqDM7N6TuzKMwa8_DDq0lRzsYzbwe6l0as9mm0Ig1Fu0afRyIdIzhfAGVwDWW3leJQQWrvn8ePZISPjZeFni",
+      "Punktkoordinate": {
+        "type": "Point",
+        "coordinates": [
+          14.745500271116232,
+          51.311212802233761
+        ]
+      },
+      "ZuletztGeaendert": "2024-01-19T00:15:45.5074016"
+    },
+    {
+      "Objekttyp": "Kuladigobjekt",
+      "Id": "BKM-30400004",
+      "Name": "\"Die Gruben\", Grechwitz",
+      "Beschreibung": "Anhand des Meilenblattes und verschiedener Messtischblätter konnte an dieser Stelle eine vermutliche \"Bauerngrube\" identifiziert werden.",
+      "Projekte": [
+        [
+          4107,
+          "Braunkohle-Inventar Sachsen"
+        ]
+      ],
+      "ThumbnailToken": "BI2aXCqgCsa4lsWamUKQflbUYGYIPm0QsThGcUdivZq1sb1oFABzaBHt1uH3QyIU4YClT5S-O6GS2meHuwREma65g6d_0sUw56CDY0727hNatVX9H2V2VM_KQeSGU1YNqZowTXnitJuc8EQNWSVaDsXPYfEHb_zVXe0kn5hOD-qf-RiIuNh2U3P4KNhUZGK3XXcBMI5fCQfFA1nN9eXG_Flbavh3lvDlU8_nL1BG1Zc2rT9RHF1o_JP6BrEni93D",
+      "Punktkoordinate": {
+        "type": "Point",
+        "coordinates": [
+          12.780011430265327,
+          51.228632210080626
+        ]
+      },
+      "ZuletztGeaendert": "2024-02-07T11:58:30.2951433"
+    }
+  ]
+}
