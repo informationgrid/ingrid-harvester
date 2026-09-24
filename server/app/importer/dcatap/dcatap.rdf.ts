@@ -24,43 +24,25 @@
 import type { Quad } from '@rdfjs/types';
 import log4js from 'log4js';
 import { Store } from 'n3';
-import { rdfParser } from 'rdf-parse';
+import { type ParseOptions, rdfParser } from 'rdf-parse';
 import { Readable } from 'stream';
-import { namespaces } from '../namespaces.js';
 
 const log = log4js.getLogger(import.meta.filename);
-
-export const RDF_PREFIX_MAP: Record<string, string> = {
-    [namespaces.RDF]: 'rdf',
-    [namespaces.RDFS]: 'rdfs',
-    [namespaces.DCAT]: 'dcat',
-    [namespaces.DCATAP]: 'dcatap',
-    [namespaces.DCATDE]: 'dcatde',
-    [namespaces.DCT]: 'dct',
-    [namespaces.FOAF]: 'foaf',
-    [namespaces.LOCN]: 'locn',
-    [namespaces.HYDRA]: 'hydra',
-    [namespaces.SKOS]: 'skos',
-    [namespaces.SCHEMA]: 'schema',
-    [namespaces.VCARD]: 'vcard',
-    [namespaces.OGC]: 'ogc',
-    [namespaces.ADMS]: 'adms',
-    [namespaces.GEOSPARQL]: 'geosparql',
-    [namespaces.OWL]: 'owl',
-    [namespaces.XSD]: 'xsd'
-};
 
 /**
  * Parses an RDF payload string into an in-memory N3/RDF.js Quad Store.
  */
-export async function parseRdfPayload(payload: string, contentType = 'application/rdf+xml'): Promise<Store & { rawQuads?: Quad[] }> {
+export async function parseRdfPayload(payload: string, baseIRI: string): Promise<Store & { rawQuads?: Quad[] }> {
     const store: Store & { rawQuads?: Quad[] } = new Store();
     store.rawQuads = [];
     if (!payload || !payload.trim()) {
         return store;
     }
+
     const stream = Readable.from([payload]);
-    const quadStream = rdfParser.parse(stream, { contentType });
+    // TODO if more fine grained content type detection is needed, inject its result into parseOptions
+    const parseOptions: ParseOptions = { path: new URL(baseIRI).pathname.toLowerCase(), baseIRI };
+    const quadStream = rdfParser.parse(stream, parseOptions);
 
     return new Promise((resolve, reject) => {
         quadStream.on('data', (quad: Quad) => {

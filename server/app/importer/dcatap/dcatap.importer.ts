@@ -40,6 +40,12 @@ import { dcatapDefaults, type DcatapSettings } from './dcatap.settings.js';
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
 
+export interface DcatapPageResult {
+    response: string;
+    store: Store;
+    harvestTime: Date;
+}
+
 export class DcatapImporter extends Importer<DcatapSettings> {
 
     private totalRecords = 0;
@@ -58,23 +64,32 @@ export class DcatapImporter extends Importer<DcatapSettings> {
         await super.exec(observer);
     }
 
+    protected async fetchAndParse(url: string): Promise<DcatapPageResult> {
+        const requestConfig = DcatapImporter.createRequestConfig(this.settings, url);
+        const requestDelegate = new RequestDelegate(requestConfig);
+        const responseText = await requestDelegate.doRequest();
+        const harvestTime = new Date();
+        const store = await parseRdfPayload(responseText, url);
+
+        return {
+            response: responseText,
+            store,
+            harvestTime
+        };
+    }
+
     protected async harvest(): Promise<number> {
         let retries = 0;
+        let currentUrl: string | undefined = this.settings.sourceURL;
 
-        const requestConfig = DcatapImporter.createRequestConfig(this.settings);
-        let requestDelegate = new RequestDelegate(requestConfig);
-
-        while (true) {
-            log.debug('Requesting next records');
-            let response = await requestDelegate.doRequest();
-            let harvestTime = new Date();
-
-            let store: Store;
+        while (currentUrl) {
+            log.debug(`Requesting records from ${currentUrl}`);
+            let pageResult: DcatapPageResult;
             try {
-                store = await parseRdfPayload(response, 'application/rdf+xml');
+                pageResult = await this.fetchAndParse(currentUrl);
             }
             catch (err) {
-                const message = `Error parsing RDF payload. Server response: ${MiscUtils.truncateErrorMessage(response)}. Error: ${err.message}`;
+                const message = `Error fetching or parsing RDF payload from ${currentUrl}. Error: ${err.message}`;
                 log.error(message, err);
                 this.summary.errors.push({ type: 'app', error: message });
                 if (retries++ > 3) {
@@ -84,6 +99,7 @@ export class DcatapImporter extends Importer<DcatapSettings> {
                 continue;
             }
 
+            const { response, store, harvestTime } = pageResult;
             let isLastPage = false;
 
             const pagedCollections = store.getSubjects(
@@ -116,8 +132,7 @@ export class DcatapImporter extends Importer<DcatapSettings> {
                 if (!isLastPage) {
                     const nextPageTerms = store.getObjects(pagedCollection, DataFactory.namedNode(namespaces.HYDRA + 'nextPage'), null);
                     if (nextPageTerms.length > 0) {
-                        requestConfig.uri = nextPageTerms[0].value;
-                        requestDelegate = new RequestDelegate(requestConfig);
+                        currentUrl = nextPageTerms[0].value;
                     }
                     else {
                         isLastPage = true;
@@ -135,6 +150,10 @@ export class DcatapImporter extends Importer<DcatapSettings> {
                 );
                 const numReturned = datasetSubjects.length;
                 if (numReturned > 0) {
+                    if (this.totalRecords === 0) {
+                        this.totalRecords = numReturned;
+                    }
+                    log.debug(`Received ${numReturned} records from ${currentUrl}`);
                     await this.extractRecords(response, store, harvestTime);
                     isLastPage = true;
                 }
@@ -228,10 +247,10 @@ export class DcatapImporter extends Importer<DcatapSettings> {
         await Promise.all(promises).catch(err => log.error('Error indexing DCAT record', err));
     }
 
-    static createRequestConfig(settings: DcatapSettings): RequestOptions {
+    static createRequestConfig(settings: DcatapSettings, url?: string): RequestOptions {
         let requestConfig: RequestOptions = {
             method: "GET",
-            uri: settings.sourceURL,
+            uri: url || settings.sourceURL,
             json: false,
             timeout: settings.timeout
         };
