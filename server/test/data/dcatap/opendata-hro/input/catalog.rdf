@@ -1,0 +1,1549 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+  xmlns:dcatap="http://data.europa.eu/r5r/"
+  xmlns:hydra="http://www.w3.org/ns/hydra/core#"
+  xmlns:dcat="http://www.w3.org/ns/dcat#"
+  xmlns:dct="http://purl.org/dc/terms/"
+  xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
+  xmlns:dcatde="http://dcat-ap.de/def/dcatde/"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:locn="http://www.w3.org/ns/locn#"
+  xmlns:foaf="http://xmlns.com/foaf/0.1/"
+  xmlns:adms="http://www.w3.org/ns/adms#"
+  xmlns:spdx="http://spdx.org/rdf/terms#"
+>
+    <hydra:PagedCollection rdf:about="https://www.opendata-hro.de/catalog.rdf?page=1">
+        <hydra:nextPage>https://www.opendata-hro.de/catalog.rdf?page=1</hydra:nextPage>
+        <hydra:next>https://www.opendata-hro.de/catalog.rdf?page=1</hydra:next>
+        <hydra:previousPage>https://www.opendata-hro.de/catalog.rdf?page=1</hydra:previousPage>
+        <hydra:previous>https://www.opendata-hro.de/catalog.rdf?page=1</hydra:previous>
+        <hydra:firstPage>https://www.opendata-hro.de/catalog.rdf?page=1</hydra:firstPage>
+        <hydra:first>https://www.opendata-hro.de/catalog.rdf?page=1</hydra:first>
+        <hydra:lastPage>https://www.opendata-hro.de/catalog.rdf?page=1</hydra:lastPage>
+        <hydra:last>https://www.opendata-hro.de/catalog.rdf?page=1</hydra:last>
+        <hydra:totalItems rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</hydra:totalItems>
+        <hydra:itemsPerPage rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">100</hydra:itemsPerPage>
+    </hydra:PagedCollection>
+  <dcat:Dataset rdf:about="https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0">
+    <dct:title>Trinkwasserspender</dct:title>
+    <dct:description>Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock</dct:description>
+    <dct:identifier>98155429-d260-4d6c-b1d0-3dd0c94d6ee0</dct:identifier>
+    <dcat:keyword>Brunnen</dcat:keyword>
+    <dcat:keyword>Infrastruktur</dcat:keyword>
+    <dcat:keyword>Planung</dcat:keyword>
+    <dcat:keyword>Stadtplanung</dcat:keyword>
+    <dcat:keyword>Trinkwasser</dcat:keyword>
+    <dcat:keyword>Trinkwasserversorgung</dcat:keyword>
+    <dcat:keyword>Wasserbrunnen</dcat:keyword>
+    <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2024-07-16T09:21:56.254051</dct:issued>
+    <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-20T12:07:17.229554</dct:modified>
+    <dcat:contactPoint>
+      <vcard:Organization rdf:nodeID="N1d93f1400d4f4b0a95198a468ca6ce8a">
+        <vcard:fn>Hanse- und Universitätsstadt Rostock</vcard:fn>
+        <vcard:hasEmail rdf:resource="mailto:geodienste@rostock.de"/>
+        <vcard:hasEmail rdf:resource="mailto:mailto:geodienste@rostock.de"/>
+      </vcard:Organization>
+    </dcat:contactPoint>
+    <dct:publisher>
+      <foaf:Agent rdf:about="https://www.opendata-hro.de/organization/b952e781-ab4c-456a-8e7a-2845f7efaf83">
+        <foaf:name>Hanse- und Universitätsstadt Rostock</foaf:name>
+      </foaf:Agent>
+    </dct:publisher>
+    <dct:spatial>
+      <dct:Location rdf:nodeID="N625e7d7dc7fa428489b30be651e7677b">
+        <locn:geometry rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral">POLYGON ((11.9914 54.0386, 11.9914 54.2620, 12.3131 54.2620, 12.3131 54.0386, 11.9914 54.0386))</locn:geometry>
+        <locn:geometry rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json">{"type":"Polygon", "coordinates":[[[11.99143, 54.03856], [11.99143, 54.26196], [12.31306, 54.26196], [12.31306, 54.03856], [11.99143, 54.03856]]]}</locn:geometry>
+      </dct:Location>
+    </dct:spatial>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0/resource/9a4ae82b-dac9-4dc8-bb9b-87f67fe60b64">
+        <dct:title>Trinkwasserspender</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/text/csv"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/CSV"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.csv"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2024-07-16T09:22:00</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-20T12:07:17.233521</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-20T12:07:14</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">378</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N588bf940798642b8bd83c2d54a657659">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">1fcb4e7f82c37227e37b1b80f60a57725dd91ada0fdb3f2cf0ef7be3073ae87c</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.csv"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0/resource/86903c0c-8c4f-49b8-8af9-05fa6bca0879">
+        <dct:title>Trinkwasserspender</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/XLSX"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.xlsx"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2024-07-16T09:22:00</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-20T12:07:17.233597</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-20T12:07:14</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">3425</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="Nb01aba7ba2a24cf1af8aba3eaeb7cc2a">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">71c7899824591761902c15c68c0a8ec640fcf365a6e0b3e0b84e0dd473d34428</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.xlsx"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0/resource/dcd1b3f5-32c9-4017-b638-8ad5872ea672">
+        <dct:title>Trinkwasserspender</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/geo+json"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GEOJSON"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.json"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2024-07-16T09:22:00</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-20T12:07:17.233651</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-20T12:07:14</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">826</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N9e7fc9c84c18466da8c2939296d16326">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">aef2859ed5302e1416f217a86c7e8dcf20daf6b070149dc9ab653c27b5284156</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.json"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0/resource/18e65cfe-e791-4146-ad59-8ffa8793e358">
+        <dct:title>Trinkwasserspender</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.google-earth.kml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/KML"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.kml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2024-07-16T09:22:00</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-20T12:07:17.233701</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-20T12:07:14</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1731</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N86b46deb17f74593a35adf7782c36703">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">3b0f7c4f93429f14a4cdf816c47b58955c707aac97dd9e420ea944f0d73d8748</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.kml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0/resource/e38e80ee-a6f6-4682-9450-7309ef574581">
+        <dct:title>Trinkwasserspender</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/gml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GML"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.gml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2024-07-16T09:22:00</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-20T12:07:17.233752</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-20T12:07:15</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">3125</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N25840c8354314dd6a7ee99709b43ba8d">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">0eb96adc2cf3a42a5623797c2b767d3b6b64c22d5ee887a5ee605ccb09846ca9</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.gml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0/resource/96ececd7-8e38-4cb2-adf3-2ee3d20b3a54">
+        <dct:title>Trinkwasserspender in der Hanse- und Universitätsstadt Rostock</dct:title>
+        <dct:description>Diese Karte umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/geodienste/trinkwasserspender/wms"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2024-07-16T09:22:00</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-20T12:07:17.233801</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-20T12:07:15</dct:modified>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0/resource/baf0a879-e904-4496-b92c-2edaab81cbe0">
+        <dct:title>Trinkwasserspender in der Hanse- und Universitätsstadt Rostock</dct:title>
+        <dct:description>Diese Daten umfassen die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/geodienste/trinkwasserspender/wfs"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2024-07-16T09:22:00</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-20T12:07:17.233849</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-20T12:07:15</dct:modified>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0/resource/f8151e7b-12d5-4b77-8085-6a95d2100fde">
+        <dct:title>Trinkwasserspender in der Hanse- und Universitätsstadt Rostock</dct:title>
+        <dct:description>Diese Karte umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/inspire/us-govserv-drinkingfountains/view?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2024-07-16T09:22:00</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-20T12:07:17.233899</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-20T12:07:15</dct:modified>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0/resource/9096c0c1-4211-4dfe-bc76-84e89b9f308b">
+        <dct:title>Trinkwasserspender in der Hanse- und Universitätsstadt Rostock</dct:title>
+        <dct:description>Diese Daten umfassen die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/inspire/us-govserv-drinkingfountains/download?service=WFS&amp;version=2.0.0&amp;request=GetCapabilities"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2024-07-16T09:22:00</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-20T12:07:17.233950</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-20T12:07:15</dct:modified>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:landingPage rdf:resource="https://www.opendata-hro.de/dataset/98155429-d260-4d6c-b1d0-3dd0c94d6ee0"/>
+    <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/GOVE"/>
+    <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/REGI"/>
+    <dcatde:contributorID rdf:resource="http://dcat-ap.de/def/contributors/openDataHRO"/>
+    <dcatde:geocodingDescription>Rostock</dcatde:geocodingDescription>
+    <dcatde:politicalGeocodingLevelURI rdf:resource="http://dcat-ap.de/def/politicalGeocoding/Level/administrativeDistrict"/>
+    <dcatde:politicalGeocodingURI rdf:resource="http://dcat-ap.de/def/politicalGeocoding/regionalKey/130030000000"/>
+    <dcatde:maintainer>
+      <foaf:Organization rdf:nodeID="N9fbe13bc8cd9440787d666f9210adf74">
+        <foaf:name>Hanse- und Universitätsstadt Rostock</foaf:name>
+        <foaf:mbox>geodienste@rostock.de</foaf:mbox>
+      </foaf:Organization>
+    </dcatde:maintainer>
+    <dct:accessRights rdf:resource="http://publications.europa.eu/resource/authority/access-right/PUBLIC"/>
+    <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+    <dct:creator>
+      <foaf:Organization rdf:nodeID="Naa7ae07333bc4449ae626cc448f01cb8">
+        <foaf:name>Hanse- und Universitätsstadt Rostock</foaf:name>
+        <foaf:mbox>geodienste@rostock.de</foaf:mbox>
+      </foaf:Organization>
+    </dct:creator>
+    <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+  </dcat:Dataset>
+  <dcat:Dataset rdf:about="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb">
+    <dct:title>Oberbürgermeisterwahl 2019</dct:title>
+    <dct:description>Ergebnisse nach Stadtbereichen, Standorte der Wahllokale sowie Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl)</dct:description>
+    <dct:identifier>5f7ddbd5-84e0-4eaf-8e24-4484e46527fb</dct:identifier>
+    <dcat:keyword>Kommunalverwaltung</dcat:keyword>
+    <dcat:keyword>Politik</dcat:keyword>
+    <dcat:keyword>Stadtverwaltung</dcat:keyword>
+    <dcat:keyword>Statistik</dcat:keyword>
+    <dcat:keyword>Statistische Daten</dcat:keyword>
+    <dcat:keyword>Statistische Information</dcat:keyword>
+    <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-29T13:17:39.646415</dct:issued>
+    <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:09.395251</dct:modified>
+    <dcat:contactPoint>
+      <vcard:Organization rdf:nodeID="N0bd172aa2b9d49469835d2aea0127311">
+        <vcard:fn>Hanse- und Universitätsstadt Rostock</vcard:fn>
+        <vcard:hasEmail rdf:resource="mailto:geodienste@rostock.de"/>
+        <vcard:hasEmail rdf:resource="mailto:mailto:geodienste@rostock.de"/>
+      </vcard:Organization>
+    </dcat:contactPoint>
+    <dct:publisher rdf:resource="https://www.opendata-hro.de/organization/b952e781-ab4c-456a-8e7a-2845f7efaf83"/>
+    <dct:spatial>
+      <dct:Location rdf:nodeID="N5bad50bf2fde4add87cd62127d0b05ae">
+        <locn:geometry rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral">POLYGON ((11.9914 54.0386, 11.9914 54.2620, 12.3131 54.2620, 12.3131 54.0386, 11.9914 54.0386))</locn:geometry>
+        <locn:geometry rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json">{"type":"Polygon", "coordinates":[[[11.99143, 54.03856], [11.99143, 54.26196], [12.31306, 54.26196], [12.31306, 54.03856], [11.99143, 54.03856]]]}</locn:geometry>
+      </dct:Location>
+    </dct:spatial>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/1b98725c-5d11-4ca8-93fe-2376c1c822c3">
+        <dct:title>Ergebnisse der Oberbürgermeisterwahl 2019</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_bachmann (Anteil der gültigen Stimmen für die Einzelbewerberin Dr. Sybille Bachmann an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_braeuer (Anteil der gültigen Stimmen für den Einzelbewerber Matthias Bräuer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_flachsmeyer (Anteil der gültigen Stimmen für den Bewerber Uwe Flachsmeyer (BÜNDNIS 90/DIE GRÜNEN) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_mueller (Anteil der gültigen Stimmen für den Bewerber Dr. Chris Müller-von Wrycz Rekowski (SPD) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_reimer (Anteil der gültigen Stimmen für den Einzelbewerber Tom Reimer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_schulze (Anteil der gültigen Stimmen für den Einzelbewerber Edgar Schulze an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_zierau (Anteil der gültigen Stimmen für den Bewerber Dr. Dirk Zierau (UFR) an den gültigen Stimmen insgesamt (in %)), stichwahl_wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %) bei der Stichwahl), stichwahl_stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %) bei der Stichwahl) und stichwahl_stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %) bei der Stichwahl).</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/text/csv"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/CSV"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.csv"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-08-15T11:31:07</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:09.398844</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:15:59</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1993</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N4355f71e16bf4eb5a1a724f85791ff9b">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">6c02baad2f1ee2830e374268f54c7c4c6d213f373206183542691e892aee8e3d</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.csv"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/8bc33fa0-ded1-447c-9ab4-1166ac9128d6">
+        <dct:title>Ergebnisse der Oberbürgermeisterwahl 2019</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_bachmann (Anteil der gültigen Stimmen für die Einzelbewerberin Dr. Sybille Bachmann an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_braeuer (Anteil der gültigen Stimmen für den Einzelbewerber Matthias Bräuer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_flachsmeyer (Anteil der gültigen Stimmen für den Bewerber Uwe Flachsmeyer (BÜNDNIS 90/DIE GRÜNEN) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_mueller (Anteil der gültigen Stimmen für den Bewerber Dr. Chris Müller-von Wrycz Rekowski (SPD) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_reimer (Anteil der gültigen Stimmen für den Einzelbewerber Tom Reimer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_schulze (Anteil der gültigen Stimmen für den Einzelbewerber Edgar Schulze an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_zierau (Anteil der gültigen Stimmen für den Bewerber Dr. Dirk Zierau (UFR) an den gültigen Stimmen insgesamt (in %)), stichwahl_wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %) bei der Stichwahl), stichwahl_stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %) bei der Stichwahl) und stichwahl_stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %) bei der Stichwahl).</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/XLSX"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.xlsx"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-08-15T11:31:07</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:09.398919</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:00</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">5199</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N08ec5415117e4fad872eeebad4981575">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">e0a87df70b053350fc77acfb7f1de08257268eb03f20040d509d6e0fcd1d5f63</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.xlsx"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/b30c2500-b841-497d-aab9-e5ba2519cf45">
+        <dct:title>Ergebnisse der Oberbürgermeisterwahl 2019</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_bachmann (Anteil der gültigen Stimmen für die Einzelbewerberin Dr. Sybille Bachmann an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_braeuer (Anteil der gültigen Stimmen für den Einzelbewerber Matthias Bräuer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_flachsmeyer (Anteil der gültigen Stimmen für den Bewerber Uwe Flachsmeyer (BÜNDNIS 90/DIE GRÜNEN) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_mueller (Anteil der gültigen Stimmen für den Bewerber Dr. Chris Müller-von Wrycz Rekowski (SPD) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_reimer (Anteil der gültigen Stimmen für den Einzelbewerber Tom Reimer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_schulze (Anteil der gültigen Stimmen für den Einzelbewerber Edgar Schulze an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_zierau (Anteil der gültigen Stimmen für den Bewerber Dr. Dirk Zierau (UFR) an den gültigen Stimmen insgesamt (in %)), stichwahl_wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %) bei der Stichwahl), stichwahl_stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %) bei der Stichwahl) und stichwahl_stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %) bei der Stichwahl).</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/json"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/JSON"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.json"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-08-15T11:31:07</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:09.398972</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:00</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">14100</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N2c319b637d574442a14137640a01a90a">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">cf90e20e25e77e58bd1d6c25e4eaa44136488c6dec8b1c1cafa3752f11d270f6</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.json"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/29632614-147d-4218-9ce2-fd90bd84edfd">
+        <dct:title>Wahllokale der Oberbürgermeisterwahl 2019</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/text/csv"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/CSV"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.csv"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-29T13:17:49</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:09.399022</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:00</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">26256</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N02847377ae25463282f51b99b1b2b1c0">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">2e1f53f207d1983ff38dfa86b7e75f16e8c40968e036ad05e7c27a16d0359b8d</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.csv"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/b6361cb7-fa1d-462a-8a60-2a13f519c1fa">
+        <dct:title>Wahllokale der Oberbürgermeisterwahl 2019</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/XLSX"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.xlsx"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-29T13:17:49</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:09.399073</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:00</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">13078</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="Nee8285f8094645868483b17fe82e337a">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">264a200c6ca326d0e8d598d7d3059d1c176694d46eea0135341434fe8b2437df</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.xlsx"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/3611f8b7-3c73-43db-b775-8e2e13940498">
+        <dct:title>Wahllokale der Oberbürgermeisterwahl 2019</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/geo+json"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GEOJSON"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.json"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-29T13:17:49</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:09.399122</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:00</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">64268</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N3206b36219474266b20e383efcfb02ef">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">a64bac47eb71155b520fe29518d01c757a5958fd866ba96380e2eb279065ce5d</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.json"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/43f7d154-a4fd-4510-bcd9-40e967e6f81c">
+        <dct:title>Wahllokale der Oberbürgermeisterwahl 2019</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.google-earth.kml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/KML"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.kml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-29T13:17:49</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:09.399171</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:01</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">110699</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="Na7d9701a7c4a4497aafb3b2745edf607">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">8ae4f0267bacb975c180a9c553a6efeafc2e9e1067ccb9a7d3856060edd21339</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.kml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/e123ff27-aca6-4b6e-9941-b2e60aff825d">
+        <dct:title>Wahllokale der Oberbürgermeisterwahl 2019</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/gml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GML"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.gml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-29T13:17:49</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:09.399219</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:01</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">150678</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N1a0e6d71867945fcbc0d458bdc07af84">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">0f5a31e04e6cbd53591423cf56680503003922b1fe1d64e20f9e36cc34b2b3c7</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.gml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/020eb299-598f-482e-bfa0-2120394dd1d6">
+        <dct:title>Wahlbezirke der Oberbürgermeisterwahl 2019</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/text/csv"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/CSV"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.csv"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-29T13:17:49</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:09.399267</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:01</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">22634</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N392b21d29a414c92afff66a49d3b3840">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">66d3b174e461bffc8cf0b06a379718243c46e22a837dd74f2c0d0315d5e9b759</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.csv"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/28a22608-04c4-44ea-9c8a-1fa42fac9dd1">
+        <dct:title>Wahlbezirke der Oberbürgermeisterwahl 2019</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/XLSX"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.xlsx"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-29T13:17:49</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:09.399316</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:01</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">8563</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="Nae5863591c7a431db1326915b118d5b9">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">38c4a729f340839d37daf2efcd0e16771635ce2ceff980cabf79fc25ef73d710</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.xlsx"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/5c402695-1cda-4b70-8222-c77789abca00">
+        <dct:title>Wahlbezirke der Oberbürgermeisterwahl 2019</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/geo+json"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GEOJSON"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.json"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-29T13:17:49</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:09.399364</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:01</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">483772</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N4befd7550e2645d29581e593d1529135">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">10b8b282177382b8ef0971d17f9e919b5c62d86d64bbbc42d6533d34e35c7549</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.json"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/66b9d7fb-1e17-4ead-8ff2-5b4b7096909d">
+        <dct:title>Wahlbezirke der Oberbürgermeisterwahl 2019</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/zip"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/SHP"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.shp.zip"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-29T13:17:49</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:09.399413</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:01</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">162331</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N3aea9cbee1f1494db666d051dcefbf0d">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">1376b0b3b6d10f9d0d6e68e23063abf869f5100970a7cbcd018acb43f1ba1bfa</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.shp.zip"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/aeb46547-981b-47c1-94b2-a07863878ba0">
+        <dct:title>Wahlbezirke der Oberbürgermeisterwahl 2019</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.google-earth.kml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/KML"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.kml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-29T13:17:49</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:09.399460</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:02</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">637286</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N3764cb7ac4b44994b0df54f413cb0a45">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">1ed127f552a7835e317e035353f810ec7c6f4ee6d44c30441fe7f4f1866741db</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.kml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/8d1b7b6b-4f9a-4d2e-8d43-6413f60b1f6b">
+        <dct:title>Wahlbezirke der Oberbürgermeisterwahl 2019</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/gml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GML"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.gml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-29T13:17:49</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:09.399506</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:02</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">683359</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N82d33d2c3aab42f485b25ad561852864">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">8b2afbb1e84d03254e10461a66e61c93bd5c64a7dab8fdacb08315b2e19939ac</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.gml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/61ebad3a-a82e-4d1b-943d-916a9b9864ab">
+        <dct:title>Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock</dct:title>
+        <dct:description>Diese Karte umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit sowie die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/geodienste/oberbuergermeisterwahl_2019/wms"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-29T13:17:49</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:09.399553</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:02</dct:modified>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/5c379268-36b6-4f8a-8bab-cad4c83e912c">
+        <dct:title>Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock</dct:title>
+        <dct:description>Diese Daten umfassen die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit sowie die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/geodienste/oberbuergermeisterwahl_2019/wfs"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-04-29T13:17:49</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:09.399600</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:02</dct:modified>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/8b04044c-55f7-463f-90ef-6fc2ae9a01ae">
+        <dct:title>Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock</dct:title>
+        <dct:description>Diese Karte umfasst die Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/inspire/su-vector-mayorelections/view?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-05-31T11:05:16</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:09.399649</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:02</dct:modified>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb/resource/d6045821-341e-4c00-b4ad-c593ad7be31f">
+        <dct:title>Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock</dct:title>
+        <dct:description>Diese Daten umfassen die Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/inspire/su-vector-mayorelections/download?service=WFS&amp;version=2.0.0&amp;request=GetCapabilities"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-05-31T11:05:16</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:09.399696</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-25T04:16:02</dct:modified>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:landingPage rdf:resource="https://www.opendata-hro.de/dataset/5f7ddbd5-84e0-4eaf-8e24-4484e46527fb"/>
+    <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/GOVE"/>
+    <dcatde:contributorID rdf:resource="http://dcat-ap.de/def/contributors/openDataHRO"/>
+    <dcatde:geocodingDescription>Rostock</dcatde:geocodingDescription>
+    <dcatde:politicalGeocodingLevelURI rdf:resource="http://dcat-ap.de/def/politicalGeocoding/Level/administrativeDistrict"/>
+    <dcatde:politicalGeocodingURI rdf:resource="http://dcat-ap.de/def/politicalGeocoding/regionalKey/130030000000"/>
+    <dcatde:maintainer>
+      <foaf:Organization rdf:nodeID="N77afc208364e4867aba8ac931183932a">
+        <foaf:name>Hanse- und Universitätsstadt Rostock</foaf:name>
+        <foaf:mbox>geodienste@rostock.de</foaf:mbox>
+      </foaf:Organization>
+    </dcatde:maintainer>
+    <dct:accessRights rdf:resource="http://publications.europa.eu/resource/authority/access-right/PUBLIC"/>
+    <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+    <dct:creator>
+      <foaf:Organization rdf:nodeID="N086b98f3f35541ae86544adbcb0023f2">
+        <foaf:name>Hanse- und Universitätsstadt Rostock</foaf:name>
+        <foaf:mbox>geodienste@rostock.de</foaf:mbox>
+      </foaf:Organization>
+    </dct:creator>
+    <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+    <dct:temporal>
+      <dct:PeriodOfTime rdf:nodeID="Ne791f66e28524ceb9e218eb336efb495">
+        <dcat:startDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-05-26T00:00:00+02:00</dcat:startDate>
+        <dcat:endDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2019-05-27T00:00:00+02:00</dcat:endDate>
+      </dct:PeriodOfTime>
+    </dct:temporal>
+  </dcat:Dataset>
+  <dcat:Dataset rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29">
+    <dct:title>Landtagswahl 2021</dct:title>
+    <dct:description>Ergebnisse nach Stadtbereichen, Standorte der Wahllokale, Wahlbezirke, Briefwahlbezirke sowie Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021</dct:description>
+    <dct:identifier>b6804103-8124-459d-9e6a-542c425d7e29</dct:identifier>
+    <dcat:keyword>Politik</dcat:keyword>
+    <dcat:keyword>Statistik</dcat:keyword>
+    <dcat:keyword>Statistische Daten</dcat:keyword>
+    <dcat:keyword>Statistische Information</dcat:keyword>
+    <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:38:51.945685</dct:issued>
+    <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.635554</dct:modified>
+    <dcat:contactPoint>
+      <vcard:Organization rdf:nodeID="Nb8c6392a543e4b4f99144c20a3b4618d">
+        <vcard:fn>Hanse- und Universitätsstadt Rostock</vcard:fn>
+        <vcard:hasEmail rdf:resource="mailto:geodienste@rostock.de"/>
+        <vcard:hasEmail rdf:resource="mailto:mailto:geodienste@rostock.de"/>
+      </vcard:Organization>
+    </dcat:contactPoint>
+    <dct:publisher rdf:resource="https://www.opendata-hro.de/organization/b952e781-ab4c-456a-8e7a-2845f7efaf83"/>
+    <dct:spatial>
+      <dct:Location rdf:nodeID="Na608e0303c5d4afcb8dff62b23ec95b7">
+        <locn:geometry rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral">POLYGON ((11.9914 54.0386, 11.9914 54.2620, 12.3131 54.2620, 12.3131 54.0386, 11.9914 54.0386))</locn:geometry>
+        <locn:geometry rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json">{"type":"Polygon", "coordinates":[[[11.99143, 54.03856], [11.99143, 54.26196], [12.31306, 54.26196], [12.31306, 54.03856], [11.99143, 54.03856]]]}</locn:geometry>
+      </dct:Location>
+    </dct:spatial>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/5ee1c8fa-0488-4511-8a15-1359e04d7461">
+        <dct:title>Ergebnisse der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_spd (Anteil der gültigen Zweitstimmen für die SPD an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_cdu (Anteil der gültigen Zweitstimmen für die CDU an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_linke (Anteil der gültigen Zweitstimmen für DIE LINKE an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_fdp (Anteil der gültigen Zweitstimmen für die FDP an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_gruene (Anteil der gültigen Zweitstimmen für BÜNDNIS 90/DIE GRÜNEN an den gültigen Zweitstimmen insgesamt (in %)) und stimmenanteil_prozent_afd (Anteil der gültigen Zweitstimmen für die AfD an den gültigen Zweitstimmen insgesamt (in %)).</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/text/csv"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/CSV"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_ergebnisse.csv"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-05-16T12:13:40</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642091</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:11</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1230</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N9f3a1b7c38ba422c8e8784e9786100eb">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">88fe7043352512cfe1a908a3131c778937de9dd336fc221a81ff904b150a2de4</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_ergebnisse.csv"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/a4931cd8-aed4-46ef-b953-48df353a3cf2">
+        <dct:title>Ergebnisse der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_spd (Anteil der gültigen Zweitstimmen für die SPD an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_cdu (Anteil der gültigen Zweitstimmen für die CDU an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_linke (Anteil der gültigen Zweitstimmen für DIE LINKE an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_fdp (Anteil der gültigen Zweitstimmen für die FDP an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_gruene (Anteil der gültigen Zweitstimmen für BÜNDNIS 90/DIE GRÜNEN an den gültigen Zweitstimmen insgesamt (in %)) und stimmenanteil_prozent_afd (Anteil der gültigen Zweitstimmen für die AfD an den gültigen Zweitstimmen insgesamt (in %)).</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/XLSX"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_ergebnisse.xlsx"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-05-16T12:13:40</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642157</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:11</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">4621</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N3d53b2754ab34ed0b0057ffda9942c6c">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">6c51e09a02084efe60ccfa7a781695e1211276842c6bdaf09742eaa700154022</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_ergebnisse.xlsx"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/256f641f-009f-4c92-b4e5-c62a596b8156">
+        <dct:title>Ergebnisse der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_spd (Anteil der gültigen Zweitstimmen für die SPD an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_cdu (Anteil der gültigen Zweitstimmen für die CDU an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_linke (Anteil der gültigen Zweitstimmen für DIE LINKE an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_fdp (Anteil der gültigen Zweitstimmen für die FDP an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_gruene (Anteil der gültigen Zweitstimmen für BÜNDNIS 90/DIE GRÜNEN an den gültigen Zweitstimmen insgesamt (in %)) und stimmenanteil_prozent_afd (Anteil der gültigen Zweitstimmen für die AfD an den gültigen Zweitstimmen insgesamt (in %)).</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/json"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/JSON"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_ergebnisse.json"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-05-16T12:13:40</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642202</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:12</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">7532</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="Ne1da14738c664afa86ed1019fb89ea30">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">f2d2252ede02ced22ebe5bbc5408584111d2c5c56f89b365f22049611dfb6b89</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_ergebnisse.json"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/72c1a6d4-afaf-47ce-9b85-91d84b8ec3d7">
+        <dct:title>Wahllokale der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/text/csv"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/CSV"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.csv"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642243</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:12</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">26510</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N388a6460eff943deade2d552bf761d4a">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">5b8cc224a14c34c8593128897722daec229a8e23cdd63094b9a286d586bdfa42</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.csv"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/2b684e4c-b3f0-4a68-bd8c-8613878aa859">
+        <dct:title>Wahllokale der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/XLSX"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.xlsx"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642285</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:12</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">14503</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N5e6d188e398541cb929d171b83899532">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">a8967e92a85defa9077beac9f4fd1280d60a3fd992019639283b92e84c4c2313</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.xlsx"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/a8c7cd20-d274-446c-9042-d31b8477f43e">
+        <dct:title>Wahllokale der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/geo+json"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GEOJSON"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.json"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642326</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:12</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">64954</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N35f7f17fdb164fcb93ad3dd95cadb5d1">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">5c614fcc57bea470a6e144fc8dd7335caa798cf318b7758be27b30eac758ead8</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.json"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/e6ed589d-5f4d-4757-b89e-e9b88450f0b7">
+        <dct:title>Wahllokale der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.google-earth.kml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/KML"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.kml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642368</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:12</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">111022</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N243d98bba1374bffb7c5d2ee73bcafbb">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">57eebd6226bce50f187d30a63d4af853545f3031fadb6b8d04b4aeb8819f42fe</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.kml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/d5fd16bc-48da-4b1a-8fb1-41a6758b6267">
+        <dct:title>Wahllokale der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/gml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GML"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.gml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642409</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:13</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">148768</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N9a03904705f44753ad246858b8e14f39">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">0452ab42647ecd51242d6b53b85c3269deae0eb9a5625b4913eb5f9866ba3233</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.gml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/f29e573d-60d1-4878-bbd0-106fc548d4c1">
+        <dct:title>Wahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/text/csv"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/CSV"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.csv"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642449</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:13</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">22634</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N9d2aad57f0ed4d43a9b8557b50e38ce0">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">77253eade88911e07cd9bfe9241bde8a19c5dbe947482c982710af27dda0fa0f</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.csv"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/6ef766d8-9483-45cd-925e-d5f5ccee8256">
+        <dct:title>Wahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/XLSX"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.xlsx"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642490</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:13</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">10794</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="Nbe2805adbb74410f9d8b85b25435fd34">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">3549fe7c1ba23baf9f37836a635d023916b79417125a1cc7ed39fae79bbe6c5c</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.xlsx"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/2aa9323b-81ef-42a7-8bc6-40c19a6d2994">
+        <dct:title>Wahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/geo+json"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GEOJSON"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.json"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642531</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:13</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">484074</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="Nca32c32c54ed45f7b1f9f522bcedd171">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">dae296a18864f29e5455938c8e5f0194fcd6730fa1b5a27a2b9774eb04bcad57</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.json"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/a873ea10-a8a8-4c4a-b431-ee408c9854e8">
+        <dct:title>Wahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/zip"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/SHP"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.shp.zip"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642575</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:13</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">166232</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="Nca1577e1e06341c0b0e4436b9bf2689c">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">14d96cab1c48487b01f3284e1da3be0f5488167e0bf6bc9726b4229fa5155807</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.shp.zip"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/cb046c50-f0c4-425d-b303-20dc55ddf912">
+        <dct:title>Wahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.google-earth.kml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/KML"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.kml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642616</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:13</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">636445</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="Nd9ede3aefc4a44e39049a6b6fd367793">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">e678d5201dc8f98dbd6b893298805f4cbcffe37e0bf8dbca3194c789fb0fb2ad</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.kml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/ae6f6eef-dd09-4130-bcdf-7a11e6ac45df">
+        <dct:title>Wahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/gml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GML"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.gml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642677</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:14</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">678501</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N2558510710bd4da0bb7d35ef56bbc0bd">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">559449f53f5daba55a05c7071ae87e30c46ac872bafcb36f64cb4b0ad9628d36</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.gml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/761eef09-e4b0-45e3-9f86-d5325d4961f7">
+        <dct:title>Briefwahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/text/csv"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/CSV"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.csv"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642718</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:14</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">8858</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N34eeef45586649d0b0842f55b0a6b3e3">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">0d0552bf3990e8e8b932ec004dbdcc4b322175a267eb2a7b67f55455154e9438</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.csv"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/5421b0bd-cd16-4535-b0ae-5c5fa818d2be">
+        <dct:title>Briefwahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/XLSX"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.xlsx"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642760</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:14</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">6223</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N843236cb899147d18e2b4d99c329b6a1">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">8c7b1748275a803781e66a5f7572967fa09c5391d9eb89ac8bda715b683f47a4</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.xlsx"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/237c8bf5-d48f-4744-8f24-e60d9af1be54">
+        <dct:title>Briefwahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/geo+json"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GEOJSON"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.json"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642801</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:14</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">341228</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N8e3821de90844424bbcdaf22abdc22b9">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">5e55f44f9a738167590230a002f10a30c6d658d1bb9d6508acae0ab108b77033</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.json"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/f7ab50b6-2d14-4836-8abc-c8003f09856f">
+        <dct:title>Briefwahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/zip"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/SHP"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.shp.zip"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642843</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:14</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">126247</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N840b74228f4b4991b561bd3b1ce8aa24">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">139130dde833e5419c698eec096c54d98f613cbe561865f2f250d906a65f01c8</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.shp.zip"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/95e6bcb5-254b-49c0-9fb0-67b1d8129b89">
+        <dct:title>Briefwahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.google-earth.kml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/KML"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.kml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642884</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:15</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">435865</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="Nb4f2066cf544413b873c0eaed6a76d69">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">a54ab796f270a6d8d4b0f484f8cc57751f40357a87b88ae67cc7356021d4a4ab</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.kml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/a061703c-e4ec-46bb-9d21-77cd833fb18b">
+        <dct:title>Briefwahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/gml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GML"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.gml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642924</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:15</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">458151</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="Na3cd4e2436db4801bca8e9caa20cdb0a">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">78d738cfbe31d3fcf3ee326fe60d5d4b550bb166c116d4add76edc2f214f7448</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.gml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/cdd99173-25c1-42d1-b3f4-d77d5aa6d205">
+        <dct:title>Wahlkreise der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/text/csv"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/CSV"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.csv"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.642964</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:15</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">939</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N262c4bc6f23e442099df60059fea34fa">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">80bd2cbc355969253a3601bb28fb5d59b239919f8d6b8788544e6166f04afee8</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.csv"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/da0c0cfc-449f-4edb-965f-05deb15ab835">
+        <dct:title>Wahlkreise der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/XLSX"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.xlsx"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.643004</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:15</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">3611</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N65ca3e11d8b4407d9f243d270155025f">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">3d34bdece7aa02b1544e14eebd13bcd5ba54d3099b6364270c09960661de14bf</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.xlsx"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/078c4d3e-5736-4d57-9b76-49eea88abcc8">
+        <dct:title>Wahlkreise der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/geo+json"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GEOJSON"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.json"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.643044</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:15</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">166403</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N81d910f5702343b3a60f89e35707dda8">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">70d6c268884da5d586abe21334de55824dc37f54f588e23db7764796f1c457d3</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.json"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/1ec25049-2848-4bb8-bdbc-dd95c2e6ec80">
+        <dct:title>Wahlkreise der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/zip"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/SHP"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.shp.zip"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.643086</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:16</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">71187</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N54ce927bd27e4d7d974a99a13fe0cfdb">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">91ef96c14dbff4a06e3b9d822b23fe0032bcf1c1b1f804a6b5b6f64934259eb2</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.shp.zip"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/bc2219a1-5fdf-4271-84d4-0daba6d3ba2e">
+        <dct:title>Wahlkreise der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.google-earth.kml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/KML"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.kml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.643126</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:16</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">204574</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N7ca1b0a2467640e6bdbce09d70cbeb5a">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">be0be58a171069ad2f71dd7bbfed870d5258cc3b2edab5b7abb7371d7b0b8c15</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.kml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/f9894cc3-375c-499d-8e7d-3066418aa6a0">
+        <dct:title>Wahlkreise der Landtagswahl 2021</dct:title>
+        <dct:description>Dieser Datensatz umfasst die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/gml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GML"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.gml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.643165</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:16</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">206270</dcat:byteSize>
+        <spdx:checksum>
+          <spdx:Checksum rdf:nodeID="N4013df949f5e4e91949877c86bccfaf5">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">35b11f5b736b5e36fd0f7d5bb6c1e21c5009c1c5c54100476919fdf229ee54c1</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.gml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/db5fa0ad-dfcd-4edc-8171-2ab820fbc9ae">
+        <dct:title>Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock</dct:title>
+        <dct:description>Diese Karte umfasst die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit, die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer, die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer sowie die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/geodienste/landtagswahl_2021/wms"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.643205</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:16</dct:modified>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/547c930e-8acd-4e5e-805f-c6a79d7a1d07">
+        <dct:title>Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock</dct:title>
+        <dct:description>Diese Daten umfassen die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit, die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer, die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer sowie die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/geodienste/landtagswahl_2021/wfs"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.643245</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:16</dct:modified>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/35063b05-dc87-4670-a936-42e3835646f2">
+        <dct:title>Wahlkreise, Wahlbezirke und Briefwahlbezirke der Landtagswahlen in der Hanse- und Universitätsstadt Rostock</dct:title>
+        <dct:description>Diese Karte umfasst die Wahlkreise, Wahlbezirke und Briefwahlbezirke der Landtagswahlen in der Hanse- und Universitätsstadt Rostock.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/inspire/su-vector-stateelections/view?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-05-31T11:05:16</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.643285</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:17</dct:modified>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/2eecc53f-4f9e-452e-aa79-9ae9244f64af">
+        <dct:title>Wahlkreise, Wahlbezirke und Briefwahlbezirke der Landtagswahlen in der Hanse- und Universitätsstadt Rostock</dct:title>
+        <dct:description>Diese Daten umfassen die Wahlkreise der Landtagswahlen in der Hanse- und Universitätsstadt Rostock mit Informationen zu Bezeichnung sowie die Wahlbezirke und Briefwahlbezirke der Landtagswahlen in der Hanse- und Universitätsstadt Rostock mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/inspire/su-vector-stateelections/download?service=WFS&amp;version=2.0.0&amp;request=GetCapabilities"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-05-31T11:05:16</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:26.643326</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-08-26T04:04:17</dct:modified>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:landingPage rdf:resource="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29"/>
+    <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/GOVE"/>
+    <dcatde:contributorID rdf:resource="http://dcat-ap.de/def/contributors/openDataHRO"/>
+    <dcatde:geocodingDescription>Rostock</dcatde:geocodingDescription>
+    <dcatde:politicalGeocodingLevelURI rdf:resource="http://dcat-ap.de/def/politicalGeocoding/Level/administrativeDistrict"/>
+    <dcatde:politicalGeocodingURI rdf:resource="http://dcat-ap.de/def/politicalGeocoding/regionalKey/130030000000"/>
+    <dcatde:maintainer>
+      <foaf:Organization rdf:nodeID="N16644ac1344041fc91ff97e788004d4e">
+        <foaf:name>Hanse- und Universitätsstadt Rostock</foaf:name>
+        <foaf:mbox>geodienste@rostock.de</foaf:mbox>
+      </foaf:Organization>
+    </dcatde:maintainer>
+    <dct:accessRights rdf:resource="http://publications.europa.eu/resource/authority/access-right/PUBLIC"/>
+    <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/"/>
+    <dct:creator>
+      <foaf:Organization rdf:nodeID="Neeccd2d6d06f48d9859a38a3afa44688">
+        <foaf:name>Hanse- und Universitätsstadt Rostock</foaf:name>
+        <foaf:mbox>geodienste@rostock.de</foaf:mbox>
+      </foaf:Organization>
+    </dct:creator>
+    <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU"/>
+    <dct:temporal>
+      <dct:PeriodOfTime rdf:nodeID="N8f5a22dd4905424ebf982009dd875694">
+        <dcat:startDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-26T00:00:00+02:00</dcat:startDate>
+        <dcat:endDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-27T00:00:00+02:00</dcat:endDate>
+      </dct:PeriodOfTime>
+    </dct:temporal>
+  </dcat:Dataset>
+</rdf:RDF>
