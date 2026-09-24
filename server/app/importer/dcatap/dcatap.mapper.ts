@@ -21,73 +21,90 @@
  * ==================================================
  */
 
+import type { Quad, Quad_Subject, Term } from '@rdfjs/types';
 import type { License } from '@shared/license.model.js';
 import log4js from 'log4js';
+import { DataFactory, type Store } from 'n3';
 import { throwError } from 'rxjs';
-import * as xpath from 'xpath';
 import type { Contact, Person } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
 import type { IndexDocument, MetadataSource } from '../../model/index.document.js';
+import type { Summary } from '../../model/summary.js';
 import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
 import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
-import type { XPathElementSelect } from '../../utils/xpath.utils.js';
+import { DCAT_LANGUAGE_URL } from '../dcatapde/dcatapde.utils.js';
 import { Mapper } from '../mapper.js';
 import { namespaces } from '../namespaces.js';
 import type { ToDcatapdeMapper } from '../to.dcatapde.mapper.js';
 import type { ToElasticMapper } from '../to.elastic.mapper.js';
 import type { DcatapSettings } from './dcatap.settings.js';
-import { DCAT_LANGUAGE_URL } from './dcatap.utils.js';
 
 export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMapper<IndexDocument>, ToDcatapdeMapper {
 
-    static select = <XPathElementSelect>xpath.useNamespaces({
-        'foaf': namespaces.FOAF,
-        'locn': namespaces.LOCN,
-        'hydra': namespaces.HYDRA,
-        'rdf': namespaces.RDF,
-        'rdfs': namespaces.RDFS,
-        'dcat': namespaces.DCAT,
-        'dcatap': namespaces.DCATAP,
-        'dct': namespaces.DCT,
-        'skos': namespaces.SKOS,
-        'schema': namespaces.SCHEMA,
-        'vcard': namespaces.VCARD,
-        'dcatde': namespaces.DCATDE,
-        'ogc': namespaces.OGC
-    });
-
-    private readonly record: any;
-    private harvestTime: any;
-
-//    protected readonly idInfo; // : SelectedValue;
+    private readonly datasetSubject: Quad_Subject;
+    private readonly store: Store;
+    private readonly rawPayload: string;
+    private harvestTime: Date;
     private readonly uuid: string;
 
-    private keywordsAlreadyFetched = false;
     private fetched: any = {
         contactPoint: null,
         publishers: null,
-        keywords: {},
+        keywords: null,
         themes: null
     };
 
-    log = log4js.getLogger();
+    log = log4js.getLogger(import.meta.filename);
 
-    constructor(settings: DcatapSettings, record, harvestTime, summary) {
+    constructor(
+        settings: DcatapSettings,
+        datasetSubject: Quad_Subject,
+        store: Store,
+        rawPayload: string,
+        harvestTime: Date,
+        summary: Summary
+    ) {
         super(settings, summary);
-        this.record = record;
+        this.datasetSubject = datasetSubject;
+        this.store = store;
+        this.rawPayload = rawPayload;
         this.harvestTime = harvestTime;
 
-        let uuid = DcatapMapper.select('./dct:identifier', record, true).textContent;
-        if(!uuid) {
-            uuid = DcatapMapper.select('./dct:identifier/@rdf:resource', record, true).textContent;
+        const idTerms = this.getObjects(this.datasetSubject, namespaces.DCT + 'identifier');
+        let uuid = idTerms.length > 0 ? idTerms[0].value : undefined;
+        if (!uuid) {
+            uuid = this.datasetSubject.value;
         }
         this.uuid = uuid;
 
         super.init();
+    }
+
+    private getObjects(subject: Quad_Subject | string, predicateUri: string): Term[] {
+        const subjNode = typeof subject === 'string'
+            ? (subject.startsWith('_:') ? DataFactory.blankNode(subject.slice(2)) : DataFactory.namedNode(subject))
+            : subject;
+        const rawQuads = (this.store as any).rawQuads as Quad[] | undefined;
+        if (rawQuads && rawQuads.length > 0) {
+            return rawQuads
+                .filter(q => q.subject.value === subjNode.value && q.predicate.value === predicateUri)
+                .map(q => q.object);
+        }
+        return this.store.getObjects(subjNode, DataFactory.namedNode(predicateUri), null);
+    }
+
+    private getFirstObject(subject: Quad_Subject | string, predicateUri: string): Term | undefined {
+        const objs = this.getObjects(subject, predicateUri);
+        return objs.length > 0 ? objs[0] : undefined;
+    }
+
+    private getFirstLiteral(subject: Quad_Subject | string, predicateUri: string): string | undefined {
+        const obj = this.getFirstObject(subject, predicateUri);
+        return obj ? obj.value : undefined;
     }
 
     async createIndexDocument(): Promise<IndexDocument> {
@@ -103,191 +120,184 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
         return this.getHarvestedData();
     }
 
-    getDescription() {
-        let description = DcatapMapper.select('./dct:description', this.record, true);
+    getDescription(): string | undefined {
+        let description = this.getFirstLiteral(this.datasetSubject, namespaces.DCT + 'description');
         if (!description) {
-            description = DcatapMapper.select('./dct:abstract', this.record, true);
+            description = this.getFirstLiteral(this.datasetSubject, namespaces.DCT + 'abstract');
         }
         if (!description) {
-            let msg = `Dataset doesn't have an description. It will not be displayed in the portal. Id: \'${this.uuid}\', title: \'${this.getTitle()}\', source: \'${this.settings.sourceURL}\'`;
+            const msg = `Dataset doesn't have an description. It will not be displayed in the portal. Id: '${this.uuid}', title: '${this.getTitle()}', source: '${this.settings.sourceURL}'`;
             this.log.warn(msg);
             this.summary.warnings.push(['No description', msg]);
             this.valid = false;
-        } else {
-            return description.textContent;
+            return undefined;
         }
-
-        return undefined;
+        return description;
     }
 
-    getLandingPage() {
-        let landingPage = DcatapMapper.select('./dcat:landingPage', this.record, true)?.getAttribute('rdf:resource');
+    getLandingPage(): string | undefined {
+        const landingPage = this.getFirstLiteral(this.datasetSubject, namespaces.DCAT + 'landingPage');
         return landingPage && landingPage.trim() !== '' ? landingPage : undefined;
     }
 
-
-    getPoliticalGeocodingLevelURI() {
-        let politicalGeocodingLevelURI = DcatapMapper.select('./dcatde:politicalGeocodingLevelURI', this.record, true)?.getAttribute('rdf:resource');
+    getPoliticalGeocodingLevelURI(): string | undefined {
+        const politicalGeocodingLevelURI = this.getFirstLiteral(this.datasetSubject, namespaces.DCATDE + 'politicalGeocodingLevelURI');
         return politicalGeocodingLevelURI && politicalGeocodingLevelURI.trim() !== '' ? politicalGeocodingLevelURI : undefined;
     }
 
-    getLegalBasis() {
-        let legalBasis = DcatapMapper.select('./dcatde:legalBasis', this.record, true)?.textContent;
+    getLegalBasis(): string | undefined {
+        const legalBasis = this.getFirstLiteral(this.datasetSubject, namespaces.DCATDE + 'legalBasis');
         return legalBasis?.trim() ? legalBasis : undefined;
     }
 
-    getDistributions():Distribution[] {
-        let dists:Distribution[] = [];
+    async getDistributions(): Promise<Distribution[]> {
+        const dists: Distribution[] = [];
+        const distributionTerms = this.getObjects(this.datasetSubject, namespaces.DCAT + 'distribution');
 
-        const distributions = DcatapMapper.select('./dcat:distribution/dcat:Distribution', this.record);
+        for (const distTerm of distributionTerms) {
+            const distSubject = distTerm as Quad_Subject;
 
-            for (const distribution of distributions) {
+            let format = 'Unbekannt';
+            const formatObj = this.getFirstObject(distSubject, namespaces.DCT + 'format');
+            const mediaTypeObj = this.getFirstObject(distSubject, namespaces.DCAT + 'mediaType');
 
-                let format: string = "Unbekannt";
-                let formatNode = DcatapMapper.select('./dct:format', distribution, true);
-                let mediaTypeNode = DcatapMapper.select('./dcat:mediaType', distribution, true);
-                if (formatNode) {
-                    let formatLabel = DcatapMapper.select('.//rdfs:label', formatNode, true);
-                    let formatValue = DcatapMapper.select('.//rdf:value', formatNode, true);
-                    if(formatLabel){
-                        format = formatLabel.textContent;
+            if (formatObj) {
+                if (formatObj.termType === 'NamedNode' || formatObj.termType === 'BlankNode') {
+                    const labelObj = this.getFirstLiteral(formatObj as Quad_Subject, namespaces.RDFS + 'label');
+                    const valueObj = this.getFirstLiteral(formatObj as Quad_Subject, namespaces.RDF + 'value');
+                    if (labelObj) {
+                        format = labelObj;
                     }
-                    else if(formatValue){
-                        format = formatValue.textContent;
+                    else if (valueObj) {
+                        format = valueObj;
                     }
-                    else if (formatNode.textContent) {
-                        format = formatNode.textContent.trim();
-                    } else {
-                        format = formatNode.getAttribute('rdf:resource');
-                    }
-                    if(format.startsWith("http://publications.europa.eu/resource/authority/file-type/")){
-                        format = format.substring("http://publications.europa.eu/resource/authority/file-type/".length)
-                    }
-                } else if (mediaTypeNode) {
-                    if (mediaTypeNode.textContent) {
-                        format = mediaTypeNode.textContent;
-                    } else {
-                        format = mediaTypeNode.getAttribute('rdf:resource');
-                    }
-                    if(format.startsWith("https://www.iana.org/assignments/media-types/")){
-                        format = format.substring("https://www.iana.org/assignments/media-types/".length)
+                    else {
+                        format = formatObj.value;
                     }
                 }
-
-
-                let license = undefined;
-                let licenseResource = DcatapMapper.select('dct:license', distribution, true);
-                if (licenseResource) {
-                    license = DcatLicensesUtils.get(licenseResource.getAttribute('rdf:resource'));
-                    license = {
-                        name: license.title,
-                        url: license.url
-                    };
-                    let licenseAttributionByText = DcatapMapper.select('dcatde:licenseAttributionByText', distribution, true)?.textContent;
-                    if (licenseAttributionByText) {
-                        license["attribution_by_text"] = licenseAttributionByText;
-                    }
+                else {
+                    format = formatObj.value.trim();
                 }
-
-                let url = DcatapMapper.select('./dcat:accessURL', distribution, true);
-                let title = DcatapMapper.select('./dct:title', distribution, true);
-                let description = DcatapMapper.select('./dct:description', distribution, true);
-                let issued = DcatapMapper.select('./dct:issued', distribution, true);
-                let modified = DcatapMapper.select('./dct:modified', distribution, true);
-                let size = DcatapMapper.select('./dcat:byteSize', distribution, true);
-                let availability = DcatapMapper.select('./dcatap:availability', distribution, true)?.getAttribute('rdf:resource');
-
-                let languages = [];
-                let languageNodes  = DcatapMapper.select('./dcat:language', distribution);
-                if (languageNodes) {
-                    for (let j = 0; j < languageNodes.length; j++) {
-                        let language = languageNodes[j].getAttribute('rdf:resource');
-                        if(language && language.startsWith(DCAT_LANGUAGE_URL)) {
-                            language = language.substring(DCAT_LANGUAGE_URL.length);
-                        }
-                        if(language && language.trim().length > 0) {
-                            languages.push(language.trim())
-                        }
-                    }
-                }
-
-
-                if(url) {
-                    let dist = {
-                        format: UrlUtils.mapFormat([format], this.summary.warnings).filter(x => x != "Unbekannt"),
-                        access_url: url.getAttribute('rdf:resource')?url.getAttribute('rdf:resource'):url.textContent,
-                        title: title ? title.textContent : undefined,
-                        description: description ? description.textContent : undefined,
-                        issued: issued ? new Date(issued.textContent) : undefined,
-                        modified: modified ? new Date(modified.textContent) : undefined,
-                        byteSize: size ? Number(size.textContent) : undefined,
-                        license,
-                        availability,
-                        languages: languages ? languages : undefined,
-                    }
-
-                    dists.push(dist);
+                if (format.startsWith('http://publications.europa.eu/resource/authority/file-type/')) {
+                    format = format.substring('http://publications.europa.eu/resource/authority/file-type/'.length);
                 }
             }
+            else if (mediaTypeObj) {
+                format = mediaTypeObj.value;
+                if (format.startsWith('https://www.iana.org/assignments/media-types/')) {
+                    format = format.substring('https://www.iana.org/assignments/media-types/'.length);
+                }
+            }
+
+            let license: any = undefined;
+            const licenseObj = this.getFirstObject(distSubject, namespaces.DCT + 'license');
+            if (licenseObj) {
+                const licenseInfo = DcatLicensesUtils.get(licenseObj.value);
+                license = {
+                    name: licenseInfo.title,
+                    url: licenseInfo.url
+                };
+                const licenseAttributionByText = this.getFirstLiteral(distSubject, namespaces.DCATDE + 'licenseAttributionByText');
+                if (licenseAttributionByText) {
+                    license['attribution_by_text'] = licenseAttributionByText;
+                }
+            }
+
+            const urlObj = this.getFirstObject(distSubject, namespaces.DCAT + 'accessURL');
+            const title = this.getFirstLiteral(distSubject, namespaces.DCT + 'title');
+            const description = this.getFirstLiteral(distSubject, namespaces.DCT + 'description');
+            const issuedStr = this.getFirstLiteral(distSubject, namespaces.DCT + 'issued');
+            const modifiedStr = this.getFirstLiteral(distSubject, namespaces.DCT + 'modified');
+            const sizeStr = this.getFirstLiteral(distSubject, namespaces.DCAT + 'byteSize');
+
+            const languages: string[] = [];
+            const languageNodes = this.getObjects(distSubject, namespaces.DCAT + 'language');
+            for (const langNode of languageNodes) {
+                let language = langNode.value;
+                if (language && language.startsWith(DCAT_LANGUAGE_URL)) {
+                    language = language.substring(DCAT_LANGUAGE_URL.length);
+                }
+                if (language && language.trim().length > 0 && !languages.includes(language.trim())) {
+                    languages.push(language.trim());
+                }
+            }
+
+            if (urlObj) {
+                const dist: Distribution = {
+                    format: UrlUtils.mapFormat([format], this.summary.warnings).filter(x => x !== 'Unbekannt'),
+                    access_url: urlObj.value,
+                    title: title ? title : undefined,
+                    description: description ? description : undefined,
+                    issued: issuedStr ? new Date(issuedStr) : undefined,
+                    modified: modifiedStr ? new Date(modifiedStr) : undefined,
+                    byteSize: sizeStr ? Number(sizeStr) : undefined,
+                    license
+                };
+                dists.push(dist);
+            }
+        }
 
         return dists;
     }
 
+    private extractAgents(predicateUri: string): Person[] {
+        const agents: Person[] = [];
+        const agentTerms = this.getObjects(this.datasetSubject, predicateUri);
 
-    getPublisher(): any[] {
-        if(this.fetched.publishers != null){
-            return this.fetched.publishers
-        }
+        for (const agentTerm of agentTerms) {
+            const agentSubject = agentTerm as Quad_Subject;
+            const typeTerms = this.getObjects(agentSubject, namespaces.RDF + 'type');
+            const isOrganization = typeTerms.some(t => t.value === namespaces.FOAF + 'Organization');
+            if (!isOrganization) {
+                continue;
+            }
 
-        let publishers = [];
+            const name = this.getFirstLiteral(agentSubject, namespaces.FOAF + 'name')
+                || this.getFirstLiteral(agentSubject, namespaces.VCARD + 'fn')
+                || this.getFirstLiteral(agentSubject, namespaces.RDFS + 'label');
+            const mboxObj = this.getFirstObject(agentSubject, namespaces.FOAF + 'mbox')
+                || this.getFirstObject(agentSubject, namespaces.VCARD + 'hasEmail');
 
-        let dctPublishers = DcatapMapper.select('./dct:publisher', this.record);
-        for (let i = 0; i < dctPublishers.length; i++) {
-            let organization = DcatapMapper.select('./foaf:Organization', dctPublishers[i], true);
-            if (organization) {
-                let name = DcatapMapper.select('./foaf:name', organization, true);
-                if(name) {
-                    let infos: any = {
-                        name: name.textContent
-                    };
-
-                    publishers.push(infos);
+            if (name) {
+                const info: Person = { name };
+                if (mboxObj) {
+                    info.mbox = mboxObj.value.replace(/^mailto:/, '');
                 }
+                agents.push(info);
             }
         }
+        return agents;
+    }
 
+    getPublisher(): Person[] {
+        if (this.fetched.publishers != null) {
+            return this.fetched.publishers;
+        }
+        const publishers = this.extractAgents(namespaces.DCT + 'publisher');
         if (publishers.length === 0) {
             this.summary.missingPublishers++;
         }
-
         this.fetched.publishers = publishers;
         return publishers;
     }
 
-    getTitle() {
-        let title = DcatapMapper.select('./dct:title', this.record, true).textContent;
+    getCreator(): Person[] {
+        return this.extractAgents(namespaces.DCT + 'creator');
+    }
+
+    getMaintainer(): Person[] {
+        return this.extractAgents(namespaces.DCT + 'maintainer');
+    }
+
+    getOriginator(): Person[] {
+        return this.extractAgents(namespaces.DCATDE + 'originator');
+    }
+
+    getTitle(): string | undefined {
+        const title = this.getFirstLiteral(this.datasetSubject, namespaces.DCT + 'title');
         return title && title.trim() !== '' ? title : undefined;
     }
 
-    /**
-     * For Open Data, GDI-DE expects access rights to be defined three times:
-     * - As text in useLimitation
-     * - As text in a useConstraints/otherConstraints combination
-     * - As a JSON-snippet in a useConstraints/otherConstraints combination
-     *
-     * Use limitations can also be defined as separate fields
-     * Plus access constraints can be set from the ISO codelist MD_RestrictionCode
-     *
-     * GeoDCAT-AP of the EU on the other had uses the
-     * useLimitation/accessConstraints=otherRestritions/otherConstraints
-     * combination and uses the accessRights field to store this information.
-     *
-     * We use a combination of these strategies:
-     * - Use the accessRights field like GeoDCAT-AP but store:
-     *    + all the useLimitation items
-     *    + all otherConstraints texts for useConstraints/otherConstraints
-     *      combinations that are not JSON-snippets.
-     */
     getAccessRights(): string[] {
         return undefined;
     }
@@ -300,74 +310,95 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
         return this.uuid;
     }
 
-    /**
-     * Extracts and returns an array of keywords defined in the ISO-XML document.
-     * This method also checks if these keywords contain at least one of the
-     * given mandatory keywords. If this is not the case, then the mapped
-     * document is flagged to be skipped from the index. By default this array
-     * contains just one entry 'opendata' i.e. if the ISO-XML document doesn't
-     * have this keyword defined, then it will be skipped from the index.
-     */
     getKeywords(): string[] {
-        let keywords = [];
-        let keywordNodes = DcatapMapper.select('./dcat:keyword', this.record);
-        if (keywordNodes) {
-            for (let i = 0; i < keywordNodes.length; i++) {
-                keywords.push(keywordNodes[i].textContent)
-            }
+        if (this.fetched.keywords != null) {
+            return this.fetched.keywords;
         }
 
-        if(this.settings.filterTags && this.settings.filterTags.length > 0 && !keywords.some(keyword => this.settings.filterTags.includes(keyword))){
+        const keywordTerms = this.getObjects(this.datasetSubject, namespaces.DCAT + 'keyword');
+        const keywords = keywordTerms.map(t => t.value).filter(Boolean);
+
+        if (this.settings.filterTags && this.settings.filterTags.length > 0 && !keywords.some(keyword => this.settings.filterTags.includes(keyword))) {
             this.skipped = true;
         }
 
+        this.fetched.keywords = keywords;
         return keywords;
     }
 
     getMetadataSource(): MetadataSource {
-        let dcatLink; //=  DcatMapper.select('.//dct:creator', this.record);
-        let portalLink = this.record.getAttribute('rdf:about');
+        const portalLink = this.datasetSubject.termType === 'NamedNode' ? this.datasetSubject.value : undefined;
         return {
             source_base: this.settings.sourceURL,
-            raw_data_source: dcatLink,
+            raw_data_source: undefined,
             source_type: 'dcat',
             portal_link: portalLink,
             attribution: this.settings.defaultAttribution
         };
     }
 
-    getModifiedDate() {
-        let modified = DcatapMapper.select('./dct:modified', this.record, true);
-        return modified?new Date(modified.textContent):undefined;
+    getModifiedDate(): Date | undefined {
+        const modified = this.getFirstLiteral(this.datasetSubject, namespaces.DCT + 'modified');
+        return modified ? new Date(modified) : undefined;
     }
 
     getSpatial(): any {
-        let geometry = DcatapMapper.select('./dct:spatial/dct:Location/locn:geometry[./@rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"]', this.record, true);
-        if(geometry){
-            return JSON.parse(geometry.textContent);
-        }
-        geometry = DcatapMapper.select('./dct:spatial/ogc:Polygon/ogc:asWKT[./@rdf:datatype="http://www.opengis.net/rdf#WKTLiteral"]', this.record, true);
-        if(geometry){
-            return this.wktToGeoJson(geometry.textContent);
+        const spatialTerms = this.getObjects(this.datasetSubject, namespaces.DCT + 'spatial');
+        for (const spatialTerm of spatialTerms) {
+            const spatialSubject = spatialTerm as Quad_Subject;
+
+            const geoTerms = [
+                ...this.getObjects(spatialSubject, namespaces.LOCN + 'geometry'),
+                ...this.getObjects(spatialSubject, namespaces.OGC + 'asWKT')
+            ];
+
+            // 1. Check GeoJSON first
+            for (const geoTerm of geoTerms) {
+                if (geoTerm.termType === 'Literal') {
+                    if (geoTerm.datatype?.value === 'https://www.iana.org/assignments/media-types/application/vnd.geo+json' || geoTerm.value.trim().startsWith('{')) {
+                        try {
+                            return JSON.parse(geoTerm.value);
+                        }
+                        catch (ignored) {}
+                    }
+                }
+            }
+
+            // 2. Check WKT fallback
+            for (const geoTerm of geoTerms) {
+                if (geoTerm.termType === 'Literal') {
+                    if (geoTerm.datatype?.value === 'http://www.opengis.net/rdf#WKTLiteral' ||
+                        geoTerm.datatype?.value === namespaces.GEOSPARQL + 'wktLiteral' ||
+                        geoTerm.value.trim().startsWith('POLYGON') ||
+                        geoTerm.value.trim().startsWith('POINT') ||
+                        geoTerm.value.trim().startsWith('MULTIPOLYGON')) {
+                        return this.wktToGeoJson(geoTerm.value);
+                    }
+                }
+            }
         }
         return undefined;
     }
 
-    getSpatialText(): string {
-        let prefLabel = DcatapMapper.select('./dct:spatial/dct:Location/skos:prefLabel', this.record, true);
-        if(prefLabel){
-            return prefLabel.textContent;
+    getSpatialText(): string | undefined {
+        const spatialTerms = this.getObjects(this.datasetSubject, namespaces.DCT + 'spatial');
+        for (const spatialTerm of spatialTerms) {
+            const prefLabel = this.getFirstLiteral(spatialTerm as Quad_Subject, namespaces.SKOS + 'prefLabel');
+            if (prefLabel) {
+                return prefLabel;
+            }
         }
         return undefined;
     }
 
-    getTemporal(): DateRange[] {
-        let result: DateRange[] = [];
+    getTemporal(): DateRange[] | undefined {
+        const result: DateRange[] = [];
+        const temporalTerms = this.getObjects(this.datasetSubject, namespaces.DCT + 'temporal');
 
-        let nodes = DcatapMapper.select('./dct:temporal/dct:PeriodOfTime', this.record);
-        for (let i = 0; i < nodes.length; i++) {
-            let begin = this.getTimeValue(nodes[i], 'startDate');
-            let end = this.getTimeValue(nodes[i], 'endDate');
+        for (const temporalTerm of temporalTerms) {
+            const temporalSubject = temporalTerm as Quad_Subject;
+            const begin = this.getTimeValue(temporalSubject, 'startDate');
+            const end = this.getTimeValue(temporalSubject, 'endDate');
 
             if (begin || end) {
                 result.push({
@@ -377,36 +408,35 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
             }
         }
 
-        if(result.length)
+        if (result.length) {
             return result;
-
+        }
         return undefined;
     }
 
-    getTimeValue(node, beginOrEnd: 'startDate' | 'endDate'): Date {
-        let dateNode = DcatapMapper.select('./schema:' + beginOrEnd, node, true);
-        if (dateNode) {
-            let text = dateNode.textContent;
-            let date = new Date(Date.parse(text));
-            if (date) {
+    private getTimeValue(temporalSubject: Quad_Subject, beginOrEnd: 'startDate' | 'endDate'): Date | undefined {
+        const dateStr = this.getFirstLiteral(temporalSubject, namespaces.SCHEMA + beginOrEnd)
+            || this.getFirstLiteral(temporalSubject, namespaces.DCAT + beginOrEnd)
+            || this.getFirstLiteral(temporalSubject, namespaces.DCT + beginOrEnd);
+        if (dateStr) {
+            const date = new Date(Date.parse(dateStr));
+            if (!isNaN(date.getTime())) {
                 return date;
-            } else {
-                this.log.warn(`Error parsing date, which was '${text}'. It will be ignored.`);
+            }
+            else {
+                this.log.warn(`Error parsing date, which was '${dateStr}'. It will be ignored.`);
             }
         }
+        return undefined;
     }
 
-
-    getThemes() {
-        // Return cached value, if present
+    getThemes(): string[] {
         if (this.fetched.themes) return this.fetched.themes;
 
-        // Evaluate the themes
-        let themes : string[] = DcatapMapper.select('./dcat:theme', this.record)
-            .map(node => node.getAttribute('rdf:resource'))
-            .filter(theme => theme); // Filter out falsy values
+        const themeTerms = this.getObjects(this.datasetSubject, namespaces.DCAT + 'theme');
+        const themes = themeTerms.map(t => t.value).filter(Boolean);
 
-        if(this.settings.filterThemes && this.settings.filterThemes.length > 0 && !themes.some(theme => this.settings.filterThemes.includes(theme.substr(theme.lastIndexOf('/')+1)))){
+        if (this.settings.filterThemes && this.settings.filterThemes.length > 0 && !themes.some(theme => this.settings.filterThemes.includes(theme.substring(theme.lastIndexOf('/') + 1)))) {
             this.skipped = true;
         }
 
@@ -418,21 +448,17 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
         return undefined;
     }
 
-    getAccrualPeriodicity(): string {
-        let accrualPeriodicity = DcatapMapper.select('./dct:accrualPeriodicity', this.record, true);
+    getAccrualPeriodicity(): string | undefined {
+        const accrualPeriodicity = this.getFirstLiteral(this.datasetSubject, namespaces.DCT + 'accrualPeriodicity');
         if (accrualPeriodicity) {
-            let res = accrualPeriodicity.getAttribute('rdf:resource');
-            let periodicity;
-            if(res.length > 0)
-                periodicity =  res.substr(res.lastIndexOf('/') + 1);
-            else if(accrualPeriodicity.textContent.trim().length > 0)
-                periodicity =  accrualPeriodicity.textContent;
+            const periodicity = accrualPeriodicity.includes('/')
+                ? accrualPeriodicity.substring(accrualPeriodicity.lastIndexOf('/') + 1)
+                : accrualPeriodicity;
 
-
-            if(periodicity){
-                let period = DcatPeriodicityUtils.getPeriodicity(periodicity)
-                if(!period){
-                    this.summary.warnings.push(["Unbekannte Periodizität", periodicity]);
+            if (periodicity) {
+                const period = DcatPeriodicityUtils.getPeriodicity(periodicity);
+                if (!period) {
+                    this.summary.warnings.push(['Unbekannte Periodizität', periodicity]);
                 }
                 return period;
             }
@@ -443,39 +469,36 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
     async getLicense(): Promise<License> {
         let license: License;
 
-        let accessRights = DcatapMapper.select('./dct:accessRights', this.record);
-        if(accessRights){
-            for(let i=0; i < accessRights.length; i++){
-                try {
-                    let json = JSON.parse(accessRights[i]?.textContent);
+        const accessRightsTerms = this.getObjects(this.datasetSubject, namespaces.DCT + 'accessRights');
+        for (const term of accessRightsTerms) {
+            try {
+                const json = JSON.parse(term.value);
+                if (!json.id || !json.url) continue;
 
-                    if (!json.id || !json.url) continue;
-
-                    let requestConfig = this.getUrlCheckRequestConfig(json.url);
-                    license = {
-                        id: json.id,
-                        title: json.name,
-                        url: await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest)
-                    };
-
-                } catch(ignored) {}
-
+                const requestConfig = this.getUrlCheckRequestConfig(json.url);
+                license = {
+                    id: json.id,
+                    title: json.name,
+                    url: await UrlUtils.urlWithProtocolFor(requestConfig, this.settings.skipUrlCheckOnHarvest)
+                };
+                break;
             }
+            catch (ignored) {}
         }
-        if(!license){
-            const distributions = DcatapMapper.select('./dcat:distribution/dcat:Distribution', this.record);
 
-            for (const distribution of distributions) {
-                let licenseResource = DcatapMapper.select('dct:license', distribution, true);
-                if(licenseResource) {
-                    license = await DcatLicensesUtils.get(licenseResource.getAttribute('rdf:resource'));
+        if (!license) {
+            const distributionTerms = this.getObjects(this.datasetSubject, namespaces.DCAT + 'distribution');
+            for (const distTerm of distributionTerms) {
+                const licenseObj = this.getFirstObject(distTerm as Quad_Subject, namespaces.DCT + 'license');
+                if (licenseObj) {
+                    license = await DcatLicensesUtils.get(licenseObj.value);
                     break;
                 }
             }
         }
 
         if (!license) {
-            let msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
+            const msg = `No license detected for dataset. ${this.getErrorSuffix(this.uuid, this.getTitle())}`;
             this.summary.missingLicense++;
 
             this.log.warn(msg);
@@ -490,139 +513,59 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
         return license;
     }
 
-    getErrorSuffix(uuid, title) {
+    getErrorSuffix(uuid: string, title: string): string {
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.sourceURL}'.`;
     }
 
     getHarvestedData(): string {
-        return this.record.toString();
-    }
-
-    getCreator(): Person[] {
-        let creators = [];
-
-        let creatorNodes = DcatapMapper.select('./dct:creator', this.record);
-        for (let i = 0; i < creatorNodes.length; i++) {
-            let organization = DcatapMapper.select('./foaf:Organization', creatorNodes[i], true);
-            if (organization) {
-                let name = DcatapMapper.select('./foaf:name', organization, true);
-                let mbox = DcatapMapper.select('./foaf:mbox', organization, true);
-                if(name) {
-                    let infos: any = {
-                        name: name.textContent
-                    };
-                    if (mbox) infos.mbox = mbox.textContent;
-
-                    creators.push(infos);
-                }
-            }
-        }
-
-        return creators;
-    }
-
-    getMaintainer(): Person[] {
-        let maintainers = [];
-
-        let maintainerNodes = DcatapMapper.select('./dct:maintainer', this.record);
-        for (let i = 0; i < maintainerNodes.length; i++) {
-            let organization = DcatapMapper.select('./foaf:Organization', maintainerNodes[i], true);
-            if (organization) {
-                let name = DcatapMapper.select('./foaf:name', organization, true);
-                let mbox = DcatapMapper.select('./foaf:mbox', organization, true);
-                if(name) {
-                    let infos: any = {
-                        name: name.textContent
-                    };
-                    if (mbox) infos.mbox = mbox.textContent;
-
-                    maintainers.push(infos);
-                }
-            }
-        }
-
-        return maintainers;
+        return this.rawPayload;
     }
 
     getGroups(): string[] {
         return undefined;
     }
 
-    getIssued(): Date {
-        let modified = DcatapMapper.select('./dct:modified', this.record, true);
-        return modified?new Date(modified.textContent):undefined;
+    getIssued(): Date | undefined {
+        const modified = this.getFirstLiteral(this.datasetSubject, namespaces.DCT + 'modified');
+        return modified ? new Date(modified) : undefined;
     }
 
     getHarvestingDate(): Date {
-        return new Date();
+        return this.harvestTime || new Date();
     }
 
     getSubSections(): any[] {
         return undefined;
     }
 
-    getOriginator(): Person[] {
-        let originators = [];
-        let originatorNode = DcatapMapper.select('./dcatde:originator', this.record);
-        for (let i = 0; i < originatorNode.length; i++) {
-            let organization = DcatapMapper.select('./foaf:Organization', originatorNode[i], true);
-            if (organization) {
-                let name = DcatapMapper.select('./foaf:name', organization, true);
-                let mbox = DcatapMapper.select('./foaf:mbox', organization, true);
-                let infos: any = {
-                    name: name.textContent
-                };
-                if(mbox) infos.mbox = mbox.textContent;
-
-                originators.push(infos);
-            }
+    getContactPoint(): Contact {
+        if (this.fetched.contactPoint) {
+            return this.fetched.contactPoint;
         }
 
-        return originators;
-    }
+        const infos: Contact = { fn: null };
+        const contactTerms = this.getObjects(this.datasetSubject, namespaces.DCAT + 'contactPoint');
 
-    getContactPoint(): any {
-        let contactPoint = this.fetched.contactPoint;
-        if (contactPoint) {
-            return contactPoint;
-        }
-        let infos: any = {};
-        let contact = DcatapMapper.select('./dcat:contactPoint', this.record, true);
-        if (contact) {
-            let organization = DcatapMapper.select('./vcard:Organization', contact, true);
-            if(organization) {
-                let name = DcatapMapper.select('./vcard:fn', organization, true);
-                let org = DcatapMapper.select('./organization-name', organization, true);
-                let region = DcatapMapper.select('./vcard:region', organization, true);
-                let country = DcatapMapper.select('./vcard:hasCountryName', organization, true);
-                let postCode = DcatapMapper.select('./vcard:hasPostalCode', organization, true);
-                let email = DcatapMapper.select('./vcard:hasEmail', organization, true);
-                let phone = DcatapMapper.select('./vcard:hasTelephone', organization, true);
-                let urlNode = DcatapMapper.select('./vcard:hasURL', organization, true);
-                let url = null;
-                if (urlNode) {
-                    url = urlNode.getAttribute('rdf:resource');
-                }
+        if (contactTerms.length > 0) {
+            const contactSubject = contactTerms[0] as Quad_Subject;
 
-                let infos: Contact = {
-                    fn: name?.textContent,
-                };
+            const name = this.getFirstLiteral(contactSubject, namespaces.VCARD + 'fn');
+            const org = this.getFirstLiteral(contactSubject, namespaces.VCARD + 'organization-name');
+            const region = this.getFirstLiteral(contactSubject, namespaces.VCARD + 'region');
+            const country = this.getFirstLiteral(contactSubject, namespaces.VCARD + 'hasCountryName');
+            const postCode = this.getFirstLiteral(contactSubject, namespaces.VCARD + 'hasPostalCode');
+            const emailObj = this.getFirstObject(contactSubject, namespaces.VCARD + 'hasEmail');
+            const phoneObj = this.getFirstObject(contactSubject, namespaces.VCARD + 'hasTelephone');
+            const urlObj = this.getFirstObject(contactSubject, namespaces.VCARD + 'hasURL');
 
-                if (contact.getAttribute('uuid')) {
-                    infos.hasUID = contact.getAttribute('uuid');
-                }
-
-                if (org) infos['organization-name'] = org.textContent;
-
-                if (region) infos.hasRegion = region.textContent;
-                if (country) infos.hasCountryName = country.textContent.trim();
-                if (postCode) infos.hasPostalCode = postCode.textContent;
-
-                if (email) infos.hasEmail = email.getAttribute('rdf:resource').replace('mailto:', '');
-                if (phone) infos.hasTelephone = phone.getAttribute('rdf:resource').replace('tel:', '');
-                if (url) infos.hasURL = url;
-            }
-
+            if (name) infos.fn = name;
+            if (org) infos['organization-name'] = org;
+            if (region) infos.hasRegion = region;
+            if (country) infos.hasCountryName = country.trim();
+            if (postCode) infos.hasPostalCode = postCode;
+            if (emailObj) infos.hasEmail = emailObj.value.replace(/^mailto:/, '');
+            if (phoneObj) infos.hasTelephone = phoneObj.value.replace(/^tel:/, '');
+            if (urlObj) infos.hasURL = urlObj.value;
         }
 
         this.fetched.contactPoint = infos;
@@ -630,14 +573,13 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
     }
 
     private getUrlCheckRequestConfig(uri: string): RequestOptions {
-        let config: RequestOptions = {
+        const config: RequestOptions = {
             method: 'HEAD',
             json: false,
             headers: RequestDelegate.defaultRequestHeaders(),
             qs: {},
             uri: uri
         };
-
         return config;
     }
 
@@ -648,16 +590,11 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
     executeCustomCode(doc: any) {
         try {
             if (this.settings.customCode) {
-                eval(this.settings.customCode);doc
+                eval(this.settings.customCode);
             }
-        } catch (error) {
+        }
+        catch (error) {
             throwError('An error occurred in custom code: ' + error.message);
         }
     }
-}
-
-// Private interface. Do not export
-interface creatorType {
-    name?: string;
-    mbox?: string;
 }

@@ -68,7 +68,7 @@ export type ImporterCapabilities = {
     supportedCatalogTypes: CatalogType[];
 };
 
-export type ImporterType = 'CKAN' | 'CSW' | 'DCATAPDE' | 'DCATAPPLU' | 'GENESIS' | 'JSON' | 'KLD' | 'OAI' | 'SPARQL' | 'WFS' | 'WFS.FIS' | 'WFS.MS' | 'WFS.XPLAN' | 'WFS.XPLAN.SYN';
+export type ImporterType = 'CKAN' | 'CSW' | 'DCATAP' | 'DCATAPDE' | 'DCATAPPLU' | 'GENESIS' | 'JSON' | 'KLD' | 'OAI' | 'SPARQL' | 'WFS' | 'WFS.FIS' | 'WFS.MS' | 'WFS.XPLAN' | 'WFS.XPLAN.SYN';
 
 export type ImporterTypeInfo = {
     type: ImporterType;

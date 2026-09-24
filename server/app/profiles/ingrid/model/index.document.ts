@@ -53,6 +53,7 @@ export type IngridIndexDocument = IndexDocument & IngridMetadata & {
         geometries: Geometry[]
     },
     idf: string,
+    rdf?: string,
     modified: Date,
     capabilities_url: string[],
     refering?: any,

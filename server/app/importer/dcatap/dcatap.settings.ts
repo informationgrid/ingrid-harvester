@@ -33,7 +33,7 @@ export type DcatapSettings = {
 
 export type DCATProviderField = 'contactPoint' | 'creator' | 'originator' | 'maintainer' | 'publisher';
 
-export const dcatapdeDefaults: DcatapSettings = {
+export const dcatapDefaults: DcatapSettings = {
     ...defaultImporterSettings
 };
 

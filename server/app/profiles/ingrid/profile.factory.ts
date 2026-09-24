@@ -28,6 +28,8 @@ import type { CkanMapper } from '../../importer/ckan/ckan.mapper.js';
 import type { CkanSettings } from '../../importer/ckan/ckan.settings.js';
 import type { CswMapper } from '../../importer/csw/csw.mapper.js';
 import type { CswSettings } from '../../importer/csw/csw.settings.js';
+import type { DcatapMapper } from '../../importer/dcatap/dcatap.mapper.js';
+import type { DcatapSettings } from "../../importer/dcatap/dcatap.settings.js";
 import type { DcatapdeMapper } from '../../importer/dcatapde/dcatapde.mapper.js';
 import type { DcatapdeSettings } from "../../importer/dcatapde/dcatapde.settings.js";
 import type { GenesisMapper } from "../../importer/genesis/genesis.mapper.js";
@@ -45,6 +47,7 @@ import { CatalogService } from '../../services/catalog/CatalogService.js';
 import { ProfileFactory } from '../profile.factory.js';
 import { ingridCkanMapper } from './mapper/ingrid.ckan.mapper.js';
 import { ingridCswMapper } from './mapper/ingrid.csw.mapper.js';
+import { ingridDcatapMapper } from "./mapper/ingrid.dcatap.mapper.js";
 import { ingridDcatapdeMapper } from "./mapper/ingrid.dcatapde.mapper.js";
 import { ingridGenesisMapper } from "./mapper/ingrid.genesis.mapper.js";
 import type { ingridMapperType } from './mapper/ingrid.mapper.js';
@@ -56,12 +59,12 @@ import { ElasticQueries } from './persistence/elastic.queries.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
-export type ingridSettings = CswSettings | WfsSettings | DcatapdeSettings | GenesisSettings;
+export type ingridSettings = CswSettings | WfsSettings | DcatapSettings | DcatapdeSettings | GenesisSettings;
 
 export class ingridFactory extends ProfileFactory<ingridSettings> {
 
     protected getSupportedTypeNames(): ImporterType[] {
-        return ["CSW", "CKAN", "DCATAPDE", "WFS", "GENESIS"];
+        return ["CSW", "CKAN", "DCATAP", "DCATAPDE", "WFS", "GENESIS"];
     }
 
     getElasticQueries(): AbstractElasticQueries {
@@ -79,6 +82,10 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
             case 'CKAN':
                 const { CkanImporter } = await import('../../importer/ckan/ckan.importer.js');
                 importer = new CkanImporter(settings as CkanSettings);
+                break;
+            case 'DCATAP':
+                const { DcatapImporter } = await import('../../importer/dcatap/dcatap.importer.js');
+                importer = new DcatapImporter(settings as DcatapSettings);
                 break;
             case 'DCATAPDE':
                 const { DcatapdeImporter } = await import('../../importer/dcatapde/dcatapde.importer.js');
@@ -106,6 +113,7 @@ export class ingridFactory extends ProfileFactory<ingridSettings> {
         switch (mapper.constructor.name) {
             case 'CswMapper': return new ingridCswMapper(mapper as CswMapper);
             case 'CkanMapper': return new ingridCkanMapper(mapper as CkanMapper);
+            case 'DcatapMapper': return new ingridDcatapMapper(mapper as DcatapMapper);
             case 'DcatapdeMapper': return new ingridDcatapdeMapper(mapper as DcatapdeMapper);
             case 'WfsMapper': {
                 let wfsProfile = (mapper as WfsMapper).settings.wfsProfile;

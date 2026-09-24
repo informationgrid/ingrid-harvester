@@ -1,18 +1,18 @@
 import { FormlyFieldConfig } from "@ngx-formly/core";
 import { SharedFields } from "../shared.fields";
 
-export abstract class DcatType {
+export abstract class DcatapType {
   static fields(): FormlyFieldConfig[] {
     return [
       {
         expressions: {
-          hide: "model.type != 'DCATAPDE'",
+          hide: "model.type != 'DCATAP'",
         },
         fieldGroup: [
           {
             wrappers: ["section"],
             props: {
-              label: "DCAT-AP.de Einstellungen",
+              label: "DCAT-AP Einstellungen",
             },
             fieldGroup: [
               {

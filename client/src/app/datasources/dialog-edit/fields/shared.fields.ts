@@ -50,6 +50,7 @@ export abstract class SharedFields {
                     const options = [
                       { label: "CKAN", value: "CKAN" },
                       { label: "CSW", value: "CSW" },
+                      { label: "DCAT-AP", value: "DCATAP" },
                       { label: "DCAT-AP.de", value: "DCATAPDE" },
                       { label: "DCAT-AP.PLU", value: "DCATAPPLU" },
                       { label: "GENESIS", value: "GENESIS" },

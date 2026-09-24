@@ -27,6 +27,7 @@ import log4js from 'log4js';
 import type { ImporterSettings } from '../../../importer/importer.settings.js';
 import type { CkanMapper } from "../../../importer/ckan/ckan.mapper.js";
 import type { CswMapper } from "../../../importer/csw/csw.mapper.js";
+import type { DcatapMapper } from '../../../importer/dcatap/dcatap.mapper.js';
 import type { DcatapdeMapper } from '../../../importer/dcatapde/dcatapde.mapper.js';
 import type { GenesisMapper } from "../../../importer/genesis/genesis.mapper.js";
 import type { ToElasticMapper } from '../../../importer/to.elastic.mapper.js';
@@ -39,7 +40,7 @@ import type { IngridIndexDocument } from "../model/index.document.js";
 import type { IngridMetadata } from '../model/ingrid.metadata.js';
 import { Codelist } from "../utils/codelist.js";
 
-export type ingridMapperType = CswMapper | CkanMapper | DcatapdeMapper | WfsMapper | GenesisMapper;
+export type ingridMapperType = CswMapper | CkanMapper | DcatapMapper | DcatapdeMapper | WfsMapper | GenesisMapper;
 
 export abstract class ingridMapper<M extends ingridMapperType> implements DocumentFactory<IndexDocument & IngridMetadata>, ToElasticMapper<IndexDocument> {
 

@@ -21,8 +21,8 @@
  * ==================================================
  */
 
-import type { DOMParser } from '@xmldom/xmldom';
 import log4js from 'log4js';
+import { DataFactory, type Store } from 'n3';
 import type { Observer } from 'rxjs';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
@@ -31,29 +31,26 @@ import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
-import { dereferenceRdfElements } from "../../utils/rdf.utils.js";
 import { Importer } from '../importer.js';
 import { namespaces } from '../namespaces.js';
 import { DcatapMapper } from './dcatap.mapper.js';
-import { dcatapdeDefaults, type DcatapSettings } from './dcatap.settings.js';
+import { parseRdfPayload } from './dcatap.rdf.js';
+import { dcatapDefaults, type DcatapSettings } from './dcatap.settings.js';
 
 const log = log4js.getLogger(import.meta.filename);
 const logRequest = log4js.getLogger('requests');
 
 export class DcatapImporter extends Importer<DcatapSettings> {
 
-    protected domParser: DOMParser;
-
     private totalRecords = 0;
     private numIndexDocs = 0;
 
     constructor(settings: DcatapSettings) {
         super(settings);
-        this.domParser = MiscUtils.getDomParser();
     }
 
     protected getDefaultSettings(): DcatapSettings {
-        return dcatapdeDefaults;
+        return dcatapDefaults;
     }
 
     // only here for documentation - use the "default" exec function
@@ -72,43 +69,82 @@ export class DcatapImporter extends Importer<DcatapSettings> {
             let response = await requestDelegate.doRequest();
             let harvestTime = new Date();
 
-            let responseDom = this.domParser.parseFromString(response);
+            let store: Store;
+            try {
+                store = await parseRdfPayload(response, 'application/rdf+xml');
+            }
+            catch (err) {
+                const message = `Error parsing RDF payload. Server response: ${MiscUtils.truncateErrorMessage(response)}. Error: ${err.message}`;
+                log.error(message, err);
+                this.summary.errors.push({ type: 'app', error: message });
+                if (retries++ > 3) {
+                    log.error('Stopped after 3 Retries');
+                    break;
+                }
+                continue;
+            }
 
             let isLastPage = false;
 
-            let pagedCollection = responseDom.getElementsByTagNameNS(namespaces.HYDRA, 'PagedCollection')[0];
-            if (pagedCollection) {
+            const pagedCollections = store.getSubjects(
+                DataFactory.namedNode(namespaces.RDF + 'type'),
+                DataFactory.namedNode(namespaces.HYDRA + 'PagedCollection'),
+                null
+            );
+
+            if (pagedCollections.length > 0) {
                 retries = 0;
+                const pagedCollection = pagedCollections[0];
 
-                let numReturned = responseDom.getElementsByTagNameNS(namespaces.DCAT, 'Dataset').length;
-                this.totalRecords = parseInt(DcatapMapper.select('./hydra:totalItems', pagedCollection, true).textContent);
+                const datasetSubjects = store.getSubjects(
+                    DataFactory.namedNode(namespaces.RDF + 'type'),
+                    DataFactory.namedNode(namespaces.DCAT + 'Dataset'),
+                    null
+                );
+                const numReturned = datasetSubjects.length;
 
-                let thisPageUrl = pagedCollection.getAttribute('rdf:about');
-                let lastPageUrl = DcatapMapper.select('./hydra:lastPage', pagedCollection, true)?.textContent;
+                const totalItemsTerms = store.getObjects(pagedCollection, DataFactory.namedNode(namespaces.HYDRA + 'totalItems'), null);
+                if (totalItemsTerms.length > 0) {
+                    this.totalRecords = parseInt(totalItemsTerms[0].value, 10);
+                }
+
+                const thisPageUrl = pagedCollection.value;
+                const lastPageTerms = store.getObjects(pagedCollection, DataFactory.namedNode(namespaces.HYDRA + 'lastPage'), null);
+                const lastPageUrl = lastPageTerms.length > 0 ? lastPageTerms[0].value : undefined;
 
                 isLastPage = thisPageUrl === lastPageUrl;
-                if(!isLastPage){
-                    let nextPageUrl = DcatapMapper.select('./hydra:nextPage', pagedCollection, true).textContent;
-                    requestConfig.uri = nextPageUrl;
-                    requestDelegate = new RequestDelegate(requestConfig);
+                if (!isLastPage) {
+                    const nextPageTerms = store.getObjects(pagedCollection, DataFactory.namedNode(namespaces.HYDRA + 'nextPage'), null);
+                    if (nextPageTerms.length > 0) {
+                        requestConfig.uri = nextPageTerms[0].value;
+                        requestDelegate = new RequestDelegate(requestConfig);
+                    }
+                    else {
+                        isLastPage = true;
+                    }
                 }
 
                 log.debug(`Received ${numReturned} records from ${this.settings.sourceURL} - Page: ${thisPageUrl}`);
-                await this.extractRecords(response, harvestTime)
+                await this.extractRecords(response, store, harvestTime);
             }
             else {
-                let numReturned = responseDom.getElementsByTagNameNS(namespaces.DCAT, 'Dataset').length;
-                if(numReturned > 0){
-                    await this.extractRecords(response, harvestTime);
+                const datasetSubjects = store.getSubjects(
+                    DataFactory.namedNode(namespaces.RDF + 'type'),
+                    DataFactory.namedNode(namespaces.DCAT + 'Dataset'),
+                    null
+                );
+                const numReturned = datasetSubjects.length;
+                if (numReturned > 0) {
+                    await this.extractRecords(response, store, harvestTime);
                     isLastPage = true;
                 }
                 else {
-                    const message = `Error while fetching DCAT Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
+                    const message = `Error while fetching DCAT Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(response)}.`;
                     log.error(message);
                     this.summary.errors.push({ type: 'app', error: message });
-                    if(retries++ > 3){
+                    if (retries++ > 3) {
                         isLastPage = true;
-                        log.error('Stopped after 3 Retries')
+                        log.error('Stopped after 3 Retries');
                     }
                 }
             }
@@ -120,34 +156,24 @@ export class DcatapImporter extends Importer<DcatapSettings> {
         return this.numIndexDocs;
     }
 
-    async extractRecords(getRecordsResponse, harvestTime) {
+    async extractRecords(response: string, store: Store, harvestTime: Date) {
         let promises = [];
-        let xml = this.domParser.parseFromString(getRecordsResponse, 'application/xml');
-        let rootNode = xml.getElementsByTagNameNS(namespaces.RDF, 'RDF')[0];
-
-        dereferenceRdfElements(rootNode, './/dcat:distribution | .//dct:publisher | .//dcat:contactPoint', DcatapMapper.select)
-
-        let records =  DcatapMapper.select('./dcat:Catalog/dcat:dataset/dcat:Dataset|./dcat:Dataset', rootNode);
-
-        /*
-        let ids = [];
-        for (let i = 0; i < records.length; i++) {
-            let uuid = DcatapdeMapper.select('./dct:identifier', records[i], true).textContent;
-            if(!uuid) {
-                uuid = DcatapdeMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
-            }
-            ids.push(uuid);
-        }
-
-         */
+        const records = store.getSubjects(
+            DataFactory.namedNode(namespaces.RDF + 'type'),
+            DataFactory.namedNode(namespaces.DCAT + 'Dataset'),
+            null
+        );
 
         for (let i = 0; i < records.length; i++) {
             this.summary.numDocs++;
+            const recordSubject = records[i];
 
-            let uuid = DcatapMapper.select('./dct:identifier', records[i], true).textContent;
-            if(!uuid) {
-                uuid = DcatapMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
+            const idTerms = store.getObjects(recordSubject, DataFactory.namedNode(namespaces.DCT + 'identifier'), null);
+            let uuid: string;
+            if (idTerms.length > 0) {
+                uuid = idTerms[0].value;
             }
+
             if (!this.filterUtils.isIdAllowed(uuid)) {
                 this.summary.skippedDocs.push(uuid);
                 continue;
@@ -157,10 +183,10 @@ export class DcatapImporter extends Importer<DcatapSettings> {
                 log.debug(`Import document ${i + 1} from ${records.length}`);
             }
             if (logRequest.isDebugEnabled()) {
-                logRequest.debug("Record content: ", records[i].toString());
+                logRequest.debug('Record subject: ', recordSubject.value);
             }
 
-            let mapper = new DcatapMapper(this.settings, records[i], harvestTime, this.summary);
+            let mapper = new DcatapMapper(this.settings, recordSubject, store, response, harvestTime, this.summary);
             let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;
@@ -193,7 +219,8 @@ export class DcatapImporter extends Importer<DcatapSettings> {
                             }
                         })
                 );
-            } else {
+            }
+            else {
                 this.summary.skippedDocs.push(uuid);
             }
             this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
@@ -210,6 +237,4 @@ export class DcatapImporter extends Importer<DcatapSettings> {
         };
         return requestConfig;
     }
-
-
 }

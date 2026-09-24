@@ -1,7 +1,7 @@
 import { FormlyFieldConfig } from "@ngx-formly/core";
 import { SharedFields } from "../shared.fields";
 
-export abstract class DecatappluType {
+export abstract class DcatappluType {
   static fields(): FormlyFieldConfig[] {
     return [
       {
@@ -12,7 +12,7 @@ export abstract class DecatappluType {
           {
             wrappers: ["section"],
             props: {
-              label: "DCATAPPLU Einstellungen",
+              label: "DCAT-AP.PLU Einstellungen",
             },
             fieldGroup: [
               {
