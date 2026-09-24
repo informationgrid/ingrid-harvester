@@ -2,6 +2,8 @@
     "extends": "./tsconfig.json",
     "exclude": ["test"],
     "compilerOptions": {
+      "rootDir": "..",
+      "rootDirs": [".", "../shared"],
       "noEmit": false,
       "skipLibCheck": true,
     }

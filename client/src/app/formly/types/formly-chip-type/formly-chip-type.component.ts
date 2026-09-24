@@ -21,11 +21,12 @@
  * ==================================================
  */
 
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import {
   MatChipGrid,
   MatChipInput,
-  MatChipInputEvent, MatChipRemove,
+  MatChipInputEvent,
+  MatChipRemove,
   MatChipRow,
 } from "@angular/material/chips";
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
@@ -36,6 +37,7 @@ import { MatIcon } from "@angular/material/icon";
 @Component({
   selector: "formly-chip-type",
   templateUrl: "./formly-chip-type.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatFormField,
     MatLabel,

@@ -21,7 +21,13 @@
  * ==================================================
  */
 
-import { Component, inject, output, signal } from "@angular/core";
+import {
+  Component,
+  inject,
+  output,
+  signal,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
@@ -39,6 +45,7 @@ type VersionInfo = {
   selector: "ige-main-header",
   templateUrl: "./main-header.component.html",
   styleUrl: "./main-header.component.scss",
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class MainHeaderComponent {
@@ -46,7 +53,9 @@ export class MainHeaderComponent {
   onSideMenuToggle = output<void>();
 
   pageTitle = signal<string>(undefined);
-  versionInfo = toSignal(inject(HttpClient).get<VersionInfo>('rest/api/version'));
+  versionInfo = toSignal(
+    inject(HttpClient).get<VersionInfo>("rest/api/version"),
+  );
 
   constructor(
     private router: Router,

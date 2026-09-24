@@ -21,7 +21,12 @@
  * ==================================================
  */
 
-import { Component, HostListener, OnInit } from "@angular/core";
+import {
+  Component,
+  HostListener,
+  OnInit,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { AuthenticationService } from "./security/authentication.service";
 import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -30,10 +35,11 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { MatIconRegistry } from "@angular/material/icon";
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    standalone: false
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class AppComponent implements OnInit {
   isLoggedIn = false;
@@ -52,13 +58,13 @@ export class AppComponent implements OnInit {
     private configService: ConfigService,
     private domSanitizer: DomSanitizer,
     private registry: MatIconRegistry,
-    ) {
-      this.loadIcons();
+  ) {
+    this.loadIcons();
 
-      const profile = "ingrid"
-      if (profile == "ingrid") {
-        this.favIcon.href = "./assets/icons/favicon.ico";
-      }
+    const profile = "ingrid";
+    if (profile == "ingrid") {
+      this.favIcon.href = "./assets/icons/favicon.ico";
+    }
   }
 
   private loadIcons() {
@@ -72,7 +78,9 @@ export class AppComponent implements OnInit {
     ];
     for (let path of paths) {
       // useful tool for merging SVG files: merge-svg-files via npm
-      this.registry.addSvgIconSet(this.domSanitizer.bypassSecurityTrustResourceUrl(path));
+      this.registry.addSvgIconSet(
+        this.domSanitizer.bypassSecurityTrustResourceUrl(path),
+      );
     }
   }
 
@@ -80,15 +88,15 @@ export class AppComponent implements OnInit {
     // Initialize the side menu state.
     this.onResize();
 
-    this.authService.currentUser.subscribe(user => {
+    this.authService.currentUser.subscribe((user) => {
       this.isLoggedIn = user !== null;
     });
   }
 
   logout() {
     this.authService.logout().subscribe(() => {
-      this.router.navigate(['login']);
-      this.snack.open('Sie wurden ausgeloggt', null, {duration: 3000});
+      this.router.navigate(["login"]);
+      this.snack.open("Sie wurden ausgeloggt", null, { duration: 3000 });
     });
   }
 

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Component, input } from "@angular/core";
+import { Component, input, ChangeDetectionStrategy } from "@angular/core";
 import { MatDialogClose, MatDialogTitle } from "@angular/material/dialog";
 import { MatIcon } from "@angular/material/icon";
 import { MatIconButton } from "@angular/material/button";
@@ -30,6 +30,7 @@ import { MatIconButton } from "@angular/material/button";
   selector: "ingrid-dialog-header",
   imports: [MatDialogTitle, MatIcon, MatIconButton, MatDialogClose],
   templateUrl: "./dialog-header.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./dialog-header.component.scss"],
 })
 export class DialogHeaderComponent {

@@ -24,7 +24,6 @@
 import type { DOMParser } from '@xmldom/xmldom';
 import log4js from 'log4js';
 import type { Observer } from 'rxjs';
-import { namespaces } from '../../importer/namespaces.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
@@ -34,6 +33,7 @@ import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { Importer } from '../importer.js';
+import { namespaces } from '../namespaces.js';
 import { DcatappluMapper } from './dcatapplu.mapper.js';
 import { dcatappluDefaults, type DcatappluSettings } from './dcatapplu.settings.js';
 
@@ -244,8 +244,6 @@ export class DcatappluImporter extends Importer<DcatappluSettings> {
             method: "GET",
             uri: settings.sourceURL,
             json: true,
-            proxy: settings.proxy || null,
-            rejectUnauthorized: settings.rejectUnauthorizedSSL,
             timeout: settings.timeout
         };
 /*

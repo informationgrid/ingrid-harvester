@@ -1,4 +1,4 @@
-ARG NODE_BASE_IMAGE="node:20-alpine"
+ARG NODE_BASE_IMAGE="node:24-alpine"
 
 #
 # IMAGE: build server

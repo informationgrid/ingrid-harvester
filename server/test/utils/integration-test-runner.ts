@@ -27,7 +27,6 @@ import { expect } from 'chai';
 import chaiExclude from 'chai-exclude';
 import deepEqualInAnyOrder from 'deep-equal-in-any-order';
 import fs from 'fs';
-import { Response } from 'node-fetch';
 import path from 'path';
 import sinon from 'sinon';
 import type { Importer } from '../../app/importer/importer.js';

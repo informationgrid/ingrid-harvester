@@ -21,7 +21,13 @@
  * ==================================================
  */
 
-import { Component, input, output, ViewChild } from "@angular/core";
+import {
+  Component,
+  input,
+  output,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { ListItemExpandableComponent } from "../../shared/list-item-expandable/list-item-expandable.component";
 import { MatIcon } from "@angular/material/icon";
 import { MatIconButton } from "@angular/material/button";
@@ -36,6 +42,7 @@ import { Catalog } from "@shared/catalog";
   selector: "harvester-catalog-entry",
   templateUrl: "./catalog-entry.component.html",
   styleUrls: ["./catalog-entry.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ListItemExpandableComponent,
     MatIcon,

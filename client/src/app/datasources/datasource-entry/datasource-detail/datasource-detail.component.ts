@@ -21,7 +21,13 @@
  * ==================================================
  */
 
-import { Component, computed, input, output } from "@angular/core";
+import {
+  Component,
+  computed,
+  input,
+  output,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { TranslocoDirective, TranslocoService } from "@ngneat/transloco";
 import { Datasource } from "@shared/datasource";
 import { ImportLogMessage } from "../../../../../../server/app/model/import.result";
@@ -36,6 +42,7 @@ import { CatalogIconComponent } from "../../../catalogs/catalog-icon/catalog-ico
   templateUrl: "./datasource-detail.component.html",
   styleUrls: ["./datasource-detail.component.scss"],
   imports: [TranslocoDirective, DetailItemComponent, CatalogIconComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [DatePipe],
 })
 export class DatasourceDetailComponent {

@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { MonitoringHarvesterComponent } from "./monitoring-harvester/monitoring-harvester.component";
 import { MonitoringIndexCheckComponent } from "./monitoring-indexcheck/monitoring-indexcheck.component";
 import { Chart, registerables } from "chart.js";
@@ -30,6 +30,7 @@ import { Chart, registerables } from "chart.js";
   selector: "app-monitoring",
   templateUrl: "./monitoring.component.html",
   styleUrls: ["./monitoring.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class MonitoringComponent implements OnInit {

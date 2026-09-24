@@ -2,8 +2,6 @@
   "compileOnSave": false,
   "compilerOptions": {
     "strict": false,
-    "baseUrl": ".",
-    "outDir": "./dist/out-tsc",
     "declaration": false,
     "esModuleInterop": true,
     "module": "esnext",
@@ -12,10 +10,10 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "typeRoots": ["node_modules/@types"],
+    "typeRoots": ["./node_modules/@types"],
     "paths": {
       "@shared/*": ["../shared/*"],
-      "tslib": ["node_modules/tslib"]
+      "tslib": ["./node_modules/tslib"]
     },
     "useDefineForClassFields": false
   },

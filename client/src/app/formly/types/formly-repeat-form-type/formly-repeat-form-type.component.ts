@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import {
   FieldArrayType,
   FieldTypeConfig,
@@ -36,6 +36,7 @@ import { MatError } from "@angular/material/input";
   selector: "formly-repeat-form-type",
   templateUrl: "./formly-repeat-form-type.component.html",
   styleUrls: ["./formly-repeat-form-type.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatButtonModule, FormlyModule, MatIconModule, MatTooltip, MatError],
 })
 export class FormlyRepeatFormTypeComponent extends FieldArrayType<FieldTypeConfig> {}

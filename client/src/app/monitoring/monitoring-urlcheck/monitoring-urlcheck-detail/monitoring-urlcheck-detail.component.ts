@@ -21,84 +21,108 @@
  * ==================================================
  */
 
-import {AfterViewInit, Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {Datasource} from '@shared/datasource';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import { Chart } from 'chart.js';
-import {STATUS_CODES} from 'http';
-import {ConfigService} from "../../../config/config.service";
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-
+import {
+  AfterViewInit,
+  Component,
+  Inject,
+  OnInit,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from "@angular/core";
+import { Datasource } from "@shared/datasource";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Chart } from "chart.js";
+import { STATUS_CODES } from "http";
+import { ConfigService } from "../../../config/config.service";
+import { CdkVirtualScrollViewport } from "@angular/cdk/scrolling";
 
 @Component({
-    selector: 'app-monitoring-urlcheck-detail',
-    templateUrl: './monitoring-urlcheck-detail.component.html',
-    styleUrls: ['./monitoring-urlcheck-detail.component.scss'],
-    standalone: false
+  selector: "app-monitoring-urlcheck-detail",
+  templateUrl: "./monitoring-urlcheck-detail.component.html",
+  styleUrls: ["./monitoring-urlcheck-detail.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class MonitoringUrlcheckDetailComponent implements OnInit {
-
-  @ViewChild(CdkVirtualScrollViewport, {static: false})
+  @ViewChild(CdkVirtualScrollViewport, { static: false })
   viewPort: CdkVirtualScrollViewport;
 
-  dialogTitle = 'UrlCheck Details';
+  dialogTitle = "UrlCheck Details";
 
-  data ;
+  data;
 
   portalUrl;
 
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public details: any,
+    public dialogRef: MatDialogRef<MonitoringUrlcheckDetailComponent>,
+    private configService: ConfigService,
+  ) {
+    this.data = details;
+    this.data.status.sort((a, b) => {
+      if (!isNaN(a.code) === !isNaN(b.code)) {
+        if (a.code === b.code) return 0;
+        return a.code < b.code ? -1 : 1;
+      } else if (!isNaN(a.code)) {
+        return -1;
+      } else if (!isNaN(b.code)) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
 
-  constructor(@Inject(MAT_DIALOG_DATA) public details: any,
-              public dialogRef: MatDialogRef<MonitoringUrlcheckDetailComponent>,
-              private configService: ConfigService) {
+    let timeStampDate = new Date(details.timestamp);
+    this.dialogTitle =
+      timeStampDate.getDate().toString().padStart(2, "0") +
+      "." +
+      (timeStampDate.getMonth() + 1).toString().padStart(2, "0") +
+      "." +
+      timeStampDate.getFullYear();
 
-      this.data = details;
-      this.data.status.sort((a, b) => {
-        if(!isNaN(a.code) === !isNaN(b.code)){
-          if(a.code === b.code) return 0;
-          return (a.code < b.code)?-1:1;
-        } else if(!isNaN(a.code)){
-          return -1
-        } else if(!isNaN(b.code)){
-          return 1
-        } else {
-          return 0;
-        }
-      });
-
-      let timeStampDate = new Date(details.timestamp);
-      this.dialogTitle = timeStampDate.getDate().toString().padStart(2, '0')+'.'+(timeStampDate.getMonth()+1).toString().padStart(2, '0')+'.'+timeStampDate.getFullYear();
-
-
-    this.configService.fetch().subscribe(data => {
+    this.configService.fetch().subscribe((data) => {
       this.portalUrl = data.portalUrl.trim();
-      if(!this.portalUrl) this.portalUrl = "https://mcloud.de/";
-      if(!this.portalUrl.endsWith('/')) this.portalUrl += '/';
+      if (!this.portalUrl) this.portalUrl = "https://mcloud.de/";
+      if (!this.portalUrl.endsWith("/")) this.portalUrl += "/";
     });
   }
 
-  ngOnInit() {
+  ngOnInit() {}
 
-  }
-
-  getLabelForStatus(status){
-    switch(status){
-      case '200' : return ' - OK';
-      case '400' : return ' - Bad Request';
-      case '401' : return ' - Unauthorized';
-      case '403' : return ' - Forbidden';
-      case '404' : return ' - Not Found';
-      case '405' : return ' - Method Not Allowed';
-      case '500' : return ' - Internal Server Error';
-      case '501' : return ' - Not Implemented';
-      case '502' : return ' - Bad Gateway';
-      case '503' : return ' - Service Unavailable';
-      case '504' : return ' - Gateway Timeout';
+  getLabelForStatus(status) {
+    switch (status) {
+      case "200":
+        return " - OK";
+      case "400":
+        return " - Bad Request";
+      case "401":
+        return " - Unauthorized";
+      case "403":
+        return " - Forbidden";
+      case "404":
+        return " - Not Found";
+      case "405":
+        return " - Method Not Allowed";
+      case "500":
+        return " - Internal Server Error";
+      case "501":
+        return " - Not Implemented";
+      case "502":
+        return " - Bad Gateway";
+      case "503":
+        return " - Service Unavailable";
+      case "504":
+        return " - Gateway Timeout";
     }
   }
 
-  goToPortal(accessURL){
-    window.open(this.portalUrl+'web/guest/suche/-/results/suche/relevance/0?_mcloudsearchportlet_query='+encodeURIComponent('distribution.accessURL:"'+accessURL+'"'), '_blank');
+  goToPortal(accessURL) {
+    window.open(
+      this.portalUrl +
+        "web/guest/suche/-/results/suche/relevance/0?_mcloudsearchportlet_query=" +
+        encodeURIComponent('distribution.accessURL:"' + accessURL + '"'),
+      "_blank",
+    );
   }
 }

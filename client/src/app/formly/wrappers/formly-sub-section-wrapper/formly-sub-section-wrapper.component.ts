@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { FieldTypeConfig, FieldWrapper } from "@ngx-formly/core";
 import { MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
@@ -32,6 +32,7 @@ import { MatTooltip } from "@angular/material/tooltip";
   selector: "formly-sub-section-wrapper",
   templateUrl: "./formly-sub-section-wrapper.component.html",
   styleUrls: ["./formly-sub-section-wrapper.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatIconButton, MatIcon, ContextHelpDirective, MatTooltip],
 })
 export class FormlySubSectionWrapperComponent extends FieldWrapper<FieldTypeConfig> {}

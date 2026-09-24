@@ -21,13 +21,19 @@
  * ==================================================
  */
 
-import { Component, computed, input } from "@angular/core";
+import {
+  Component,
+  computed,
+  input,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: "harvester-catalog-icon",
   templateUrl: "./catalog-icon.component.html",
   styleUrls: ["./catalog-icon.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatIcon],
 })
 export class CatalogIconComponent {

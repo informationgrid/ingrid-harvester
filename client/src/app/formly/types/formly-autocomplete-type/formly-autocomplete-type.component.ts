@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { FieldType } from "@ngx-formly/material/form-field";
 import {
   FieldTypeConfig,
@@ -49,6 +49,7 @@ import { ContextHelpButtonComponent } from "../../../shared/context-help/context
 @Component({
   selector: "formly-autocomplete-type",
   templateUrl: "./formly-autocomplete-type.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatFormField,
     MatLabel,

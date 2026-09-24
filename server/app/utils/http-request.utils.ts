@@ -21,18 +21,55 @@
  * ==================================================
  */
 
-import * as MiscUtils from './misc.utils.js';
-import type { HeadersInit, RequestInit, Response } from 'node-fetch';
-import fetch from 'node-fetch';
 import log4js from 'log4js';
-import { Agent } from 'https';
-import { HttpsProxyAgent } from 'https-proxy-agent';
+import { Agent, ProxyAgent, fetch, type Dispatcher, type HeadersInit, type RequestInit, type Response } from 'undici';
+import { ConfigService } from '../services/config/ConfigService.js';
 import { HarvestRunCancelledError, cancellationSignalStorage } from './cancellation.utils.js';
+import * as MiscUtils from './misc.utils.js';
 
 const log = log4js.getLogger('requests');
 
 const DEFAULT_NUM_RETRIES = 3;
 const DEFAULT_WAIT_MS = 1000;
+
+let currentDispatcher: Dispatcher | undefined;
+
+export function getDispatcher(): Dispatcher | undefined {
+    if (currentDispatcher === undefined) {
+        initDispatcher();
+    }
+    return currentDispatcher;
+}
+
+export function initDispatcher(): Dispatcher | undefined {
+    const { proxy, allowAllUnauthorizedSSL } = ConfigService.getGeneralSettings();
+    const proxyUri = proxy?.trim() || undefined;
+
+    if (proxyUri) {
+        currentDispatcher = new ProxyAgent({
+            uri: proxyUri,
+            requestTls: allowAllUnauthorizedSSL ? { rejectUnauthorized: false } : undefined
+        });
+    }
+    else if (allowAllUnauthorizedSSL) {
+        currentDispatcher = new Agent({
+            connect: { rejectUnauthorized: false }
+        });
+    }
+    else {
+        currentDispatcher = new Agent();
+    }
+    return currentDispatcher;
+}
+
+// TODO remove this function and its uses when proxy settings are made read-only (set at startup)
+export async function resetDispatcher(): Promise<void> {
+    if (currentDispatcher) {
+        await currentDispatcher.destroy().catch(() => {});
+        currentDispatcher = undefined;
+    }
+    initDispatcher();
+}
 
 /**
  * HTTP parameters configuration for CSW harvesters.
@@ -109,10 +146,9 @@ export interface RequestOptions extends RequestInit {
     rejectUnauthorized?: boolean,
     resolveWithFullResponse?: boolean,
     uri: string,
-    accept?: string
-    // We cannot give the signal directly in the config because it would start the timeout counter right away.
-    // This option will be needed when we switch to native NodeJS (>= 18) fetch, which doesn't bring its own timeout param
-    // timeout?: number
+    accept?: string,
+    timeout?: number,
+    size?: number
 }
 
 // too generous?
@@ -249,20 +285,10 @@ export class RequestDelegate {
      */
     static async doRequest(config: RequestOptions, retries: number = DEFAULT_NUM_RETRIES, waitMilliSeconds: number = DEFAULT_WAIT_MS): Promise<any> {
         log.debug('Requesting: ' + config.uri);
-        if (config.proxy) {
-            let proxyAgent = new HttpsProxyAgent(config.proxy);
-            // `=== false` is important here since rejectUnauthorized could be falsy (e.g. undefined)
-            if (config.rejectUnauthorized === false) {
-                proxyAgent.options.rejectUnauthorized = false;
-            }
-            config.agent = proxyAgent;
-        }
-        // `=== false` is important here since rejectUnauthorized could be falsy (e.g. undefined)
-        else if (config.rejectUnauthorized === false) {
-            config.agent = new Agent({
-                rejectUnauthorized: false
-            });
-        }
+        const timeoutMs = config.timeout ?? DEFAULT_TIMEOUT_MS;
+        const cancellationSignal = cancellationSignalStorage.getStore();
+
+        config.dispatcher ??= getDispatcher();
         let fullURL = RequestDelegate.getFullURL(config);
         if (log.isDebugEnabled()) {
             let addInfo = '';
@@ -274,49 +300,50 @@ export class RequestDelegate {
             }
             log.debug(`Requesting: ${fullURL}${addInfo} (retries: ${retries}, wait: ${waitMilliSeconds}ms)`);
         }
-        // set timeout for fetch
-        // this is a workaround - we want to use `signal`, but cannot give it directly as it starts running as soon as
-        // it is declared. `timeout` (which is deprecated) works different (worse). So we just take the timeout value
-        // and create the signal here directly, then remove the timeout
-        const timeoutSignal = AbortSignal.timeout(config.timeout ?? DEFAULT_TIMEOUT_MS);
-        const cancellationSignal = cancellationSignalStorage.getStore();
-        config.signal = cancellationSignal
-            ? AbortSignal.any([timeoutSignal, cancellationSignal])
-            : timeoutSignal;
-        config.timeout = null;
-        config.compress = false;
 
-        if (config.resolveWithFullResponse) {
-            return fetch(fullURL, config);
-        }
-
-        let resolvedResponse: Response;
+        let tries = 0;
         while (true) {
-            try {
-                resolvedResponse = await fetch(fullURL, config);
-                break;
+            const timeoutSignal = AbortSignal.timeout(timeoutMs);
+            const signals: AbortSignal[] = [timeoutSignal];
+            if (cancellationSignal) {
+                signals.push(cancellationSignal);
             }
-            catch (e) {
-                // if a connection error occurs, retry (but not on user-initiated cancellation)
-                if (retries > 0 && e.name !== 'AbortError') {
-                    retries -= 1;
-                    log.info(`Retrying request for ${fullURL} (waiting ${waitMilliSeconds}ms)`);
-                    await RequestDelegate.sleep(waitMilliSeconds);
+            if (config.signal) {
+                signals.push(config.signal as AbortSignal);
+            }
+            const effectiveSignal = signals.length === 1 ? signals[0] : AbortSignal.any(signals);
+
+            try {
+                const resolvedResponse = await fetch(fullURL, { ...config, signal: effectiveSignal });
+                if (config.resolveWithFullResponse) {
+                    return resolvedResponse;
+                }
+                if (config.json) {
+                    return await resolvedResponse.json();
+                }
+                return await resolvedResponse.text();
+            }
+            catch (e: any) {
+                const isUserCancelled = cancellationSignal?.aborted && (e.name === 'AbortError' || e.name === 'TimeoutError');
+                if (isUserCancelled) {
+                    throw new HarvestRunCancelledError();
+                }
+
+                // if a connection or timeout error occurs, retry (but not on user-initiated cancellation)
+                if (e.name !== 'AbortError' && !cancellationSignal?.aborted) {
+                    if (tries < retries) {
+                        tries++;
+                        log.info(`Retrying request for ${fullURL} (waiting ${waitMilliSeconds}ms)`);
+                        await RequestDelegate.sleep(waitMilliSeconds);
+                    }
+                    else {
+                        throw new Error(`Timeout after ${retries} retries while requesting ${fullURL}: ${e.message}`, { cause: e });
+                    }
                 }
                 else {
-                    if (e.name === 'AbortError' && cancellationSignalStorage.getStore()?.aborted) {
-                        throw new HarvestRunCancelledError();
-                    }
                     throw e;
                 }
             }
-        }
-
-        if (config.json) {
-            return resolvedResponse.json();
-        }
-        else {
-            return resolvedResponse.text();
         }
     }
 

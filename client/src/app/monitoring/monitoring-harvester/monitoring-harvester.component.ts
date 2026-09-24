@@ -21,49 +21,50 @@
  * ==================================================
  */
 
-import { historyChart } from '../../charts/reuseableChart';
-import { Chart } from 'chart.js';
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { MatDialog } from '@angular/material/dialog';
-import { MonitoringService } from '../monitoring.service';
-import { Observable } from 'rxjs';
+import { historyChart } from "../../charts/reuseableChart";
+import { Chart } from "chart.js";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { MatDialog } from "@angular/material/dialog";
+import { MonitoringService } from "../monitoring.service";
+import { Observable } from "rxjs";
 
 @Component({
-    selector: 'app-monitoring-harvester',
-    templateUrl: './monitoring-harvester.component.html',
-    styleUrls: ['./monitoring-harvester.component.scss'],
-    standalone: false
+  selector: "app-monitoring-harvester",
+  templateUrl: "./monitoring-harvester.component.html",
+  styleUrls: ["./monitoring-harvester.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class MonitoringHarvesterComponent implements OnInit {
+  private chart: Chart;
 
-  private chart : Chart;
-
-  constructor(private configService: MonitoringService, private dialog: MatDialog, private http: HttpClient) {
-  }
+  constructor(
+    private configService: MonitoringService,
+    private dialog: MatDialog,
+    private http: HttpClient,
+  ) {}
 
   ngOnInit() {
     // MonitoringComponent.setMonitoringHarvesterComponent(this);
   }
 
   ngAfterViewInit() {
-    this.drawChart()
+    this.drawChart();
   }
 
   getHarvesterHistory(): Observable<any> {
-    return this.http.get<any>('rest/api/monitoring/harvester');
+    return this.http.get<any>("rest/api/monitoring/harvester");
   }
 
   public async drawChart() {
     if (!this.chart) {
       this.getHarvesterHistory().subscribe((data) => {
         if (data) {
-          this.chart = historyChart('chart_harvester', data.history)
+          this.chart = historyChart("chart_harvester", data.history);
         }
       });
     } else {
     }
   }
-
-
 }

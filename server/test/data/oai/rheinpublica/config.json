@@ -3,7 +3,6 @@
   "maxRecords": 200,
   "startPosition": 1,
   "catalogIds": [1],
-  "rejectUnauthorizedSSL": true,
   "rules": {
     "containsDocumentsWithData": null
   },

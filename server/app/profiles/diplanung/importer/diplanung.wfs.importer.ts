@@ -26,7 +26,6 @@ import { CswMapper } from '../../../importer/csw/csw.mapper.js';
 import { WfsImporter } from '../../../importer/wfs/wfs.importer.js';
 import type { Contact, Organization, Person } from '../../../model/agent.js';
 import { RequestDelegate } from '../../../utils/http-request.utils.js';
-import { getProxyConfig } from '../../../utils/service.utils.js';
 import type { XPathNodeSelect } from '../../../utils/xpath.utils.js';
 
 export class DiplanungWfsImporter extends WfsImporter {
@@ -51,8 +50,7 @@ export class DiplanungWfsImporter extends WfsImporter {
         if (this.settings.contactCswUrl) {
             let response = await RequestDelegate.doRequest({
                 uri: this.settings.contactCswUrl,
-                accept: 'text/xml',
-                ...getProxyConfig()
+                accept: 'text/xml'
             });
             let responseDom = this.domParser.parseFromString(response);
             let metadata = CswMapper.select('./csw:GetRecordByIdResponse/gmd:MD_Metadata', responseDom, true);

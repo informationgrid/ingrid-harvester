@@ -21,17 +21,24 @@
  * ==================================================
  */
 
-import {Component, DestroyRef, inject, OnInit} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
-import {SessionService, Tab} from "../services/session.service";
-import {filter} from "rxjs";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from "@angular/core";
+import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
+import { SessionService, Tab } from "../services/session.service";
+import { filter } from "rxjs";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
-  selector: 'app-config',
-  templateUrl: './config.component.html',
-  styleUrls: ['./config.component.scss'],
-  standalone: false
+  selector: "app-config",
+  templateUrl: "./config.component.html",
+  styleUrls: ["./config.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class ConfigComponent implements OnInit {
   tabs: Tab[];
@@ -46,12 +53,14 @@ export class ConfigComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(() => {
-      this.handleRedirection();
-    });
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(() => {
+        this.handleRedirection();
+      });
 
     // Run redirection logic initially
     this.handleRedirection();
@@ -60,8 +69,13 @@ export class ConfigComponent implements OnInit {
   private handleRedirection() {
     // only update tab from route if it was set explicitly in URL
     // otherwise the remembered state from store is used
-    const urlSegments = this.router.parseUrl(this.router.url).root.children.primary?.segments;
-    if (urlSegments && urlSegments.length > 1 && urlSegments[0].path === 'config') {
+    const urlSegments = this.router.parseUrl(this.router.url).root.children
+      .primary?.segments;
+    if (
+      urlSegments &&
+      urlSegments.length > 1 &&
+      urlSegments[0].path === "config"
+    ) {
       const currentPath = urlSegments[1].path;
       const activeTabIndex = this.tabs.findIndex(
         (tab) => tab.path === currentPath,
@@ -71,7 +85,9 @@ export class ConfigComponent implements OnInit {
       }
     } else if (this.tabs.length > 0) {
       // Redirect to the first available tab if no specific sub-route is provided
-      this.router.navigate([this.tabs[0].path], {relativeTo: this.activeRoute});
+      this.router.navigate([this.tabs[0].path], {
+        relativeTo: this.activeRoute,
+      });
     }
   }
 
