@@ -83,6 +83,9 @@ export class ingridCkanMapper extends ingridMapper<CkanMapper> {
                     merged_from: []
                 }
             },
+            sort_hash: this.getSortUuid(),
+            content: null, // assigned after
+            rdf: null, // assigned after
             t01_object: {
                 obj_id: this.getGeneratedId()
             },
@@ -91,7 +94,7 @@ export class ingridCkanMapper extends ingridMapper<CkanMapper> {
             dcat: {
                 landingPage: null,
             },
-            contacts: this.getOldContacts(),
+            contacts: this.getContactsDeprecated(),
             keywords: this.getKeywords().map(keyword => ({ id: null, ...keyword })),
             legal_basis: null,
             // getDistributions() was retyped for the new shape (IngridOpendataDistribution) - bypass
@@ -103,9 +106,6 @@ export class ingridCkanMapper extends ingridMapper<CkanMapper> {
                 "accrual_periodicity": "",
                 "accrual_periodicity_key": ""
             },
-            sort_hash: this.getSortUuid(),
-            content: null, // assigned after
-            rdf: null, // assigned after
         };
         result.content = this.getContent(result);
         // add "rdf" at the end, so it does not get included in the "content" array
@@ -113,11 +113,11 @@ export class ingridCkanMapper extends ingridMapper<CkanMapper> {
         return result;
     }
 
-    private getOldContacts(): any[] {
+    private getContactsDeprecated(): any[] {
         const withRole = (role: string) => (contact: any) => ({ role: this.getRoleId(role), ...contact });
         return [
             ...this.baseMapper.getPublisher().map(withRole("publisher")),
-            ...this.baseMapper.getCreator().map(withRole("creator")),
+            ...this.baseMapper.getCreatorDeprecated().map(withRole("creator")),
             ...this.baseMapper.getMaintainer().map(withRole("maintainer")),
             ...this.baseMapper.getOriginator().map(withRole("originator")),
         ];

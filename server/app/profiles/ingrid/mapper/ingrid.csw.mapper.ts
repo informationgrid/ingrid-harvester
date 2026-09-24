@@ -1042,6 +1042,12 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return license_value.length ? { license_value, source } : undefined;
     }
 
+    getObjectUseConstraintDeprecated() {
+        let constraints = CswMapper.select("./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:useConstraints]/gmx:Anchor | ./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:useConstraints]/gco:CharacterString", this.baseMapper.idInfo);
+        let result = constraints?.map(constraint => constraint.textContent).filter(text => text?.trim());
+        return result?.length ? { license_value: result } : undefined;
+    }
+
     getObjectAccess() {
         let restrictionValues = CswMapper.select("./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:accessConstraints]/gco:CharacterString", this.baseMapper.idInfo);
         return {

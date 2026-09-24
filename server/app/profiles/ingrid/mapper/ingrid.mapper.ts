@@ -604,6 +604,10 @@ export abstract class ingridMapper<M extends ingridMapperType>
         return undefined;
     }
 
+    getObjectUseConstraintDeprecated() {
+        return undefined;
+    }
+
     getObjectAccess() {
         return undefined;
     }
@@ -706,7 +710,7 @@ export abstract class ingridMapper<M extends ingridMapperType>
             t017_url_ref: this.getT017_url_ref(),
             t021_communication: this.getT021_communication(),
             object_use: this.getObjectUse(),
-            object_use_constraint: this.getObjectUseConstraint(),
+            object_use_constraint: this.getObjectUseConstraintDeprecated(),
             object_access: this.getObjectAccess(),
             is_hvd: this.isHvd(),
             spatial_system: this.getSpatialSystem(),

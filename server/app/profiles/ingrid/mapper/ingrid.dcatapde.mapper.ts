@@ -80,6 +80,9 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> {
                     merged_from: []
                 }
             },
+            sort_hash: this.getSortUuid(),
+            content: null, // assigned after
+            rdf: null, // assigned after
             t01_object: {
                 obj_id: this.getGeneratedId()
             },
@@ -102,9 +105,6 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> {
                 "accrual_periodicity": "",
                 "accrual_periodicity_key": ""
             },
-            sort_hash: this.getSortUuid(),
-            content: null, // assigned after
-            rdf: null, // assigned after
         };
         result.content = this.getContent(result);
         // add "rdf" at the end, so it does not get included in the "content" array

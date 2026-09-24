@@ -462,6 +462,13 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         return creator ? [creator] : [];
     }
 
+    getCreatorDeprecated(): Agent[] {
+        return [{
+            name: this.source.author,
+            mbox: this.source.author_email
+        }];
+    }
+
     getGroups(): string[] {
         let groups = [];
 

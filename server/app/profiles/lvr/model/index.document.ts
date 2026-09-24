@@ -72,6 +72,7 @@ export type Metadata = {
 };
 
 export type LvrIndexDocument = LvrBaseDocument & {
+    uuid: string,
     extras?: {
         metadata?: {
             harvested?: Date,

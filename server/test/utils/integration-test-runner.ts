@@ -332,13 +332,23 @@ export async function runImporterIntegrationTest<T extends ImporterSettings>(
         } as any);
 
         const catalogId = testCase.settings.catalogIds[0];
+        // Which deprecated mapping/schema family an importer's documents fall into depends on its
+        // default document kind (see the getDefaultDocumentKind() overrides in
+        // ingrid.{ckan,dcatapde,genesis}.mapper.ts, which all resolve to 'opendata' - everything else,
+        // i.e. ingrid.csw.mapper.ts/ingrid.wfs.mapper.ts, falls back to the base 'ingrid' kind). Keep
+        // in sync when a new opendata-family importer type is added.
+        const OPENDATA_DEPRECATED_IMPORTER_TYPES = new Set(['CKAN', 'DCATAPDE', 'GENESIS']);
+        const mappingFile = OPENDATA_DEPRECATED_IMPORTER_TYPES.has(testCase.settings.type)
+            ? 'opendata-mapping.deprecated'
+            : 'default-mapping.deprecated';
         sandbox.stub(CatalogService, 'getCatalogSettings').withArgs(catalogId).returns({
             id: catalogId,
             name: testCase.profile,
             type: 'elasticsearch',
             url: 'http://localhost:9200',
             settings: {
-                index: 'harvester'
+                index: 'harvester',
+                mappingFile
             }
         } as ElasticsearchCatalogSettings);
 
