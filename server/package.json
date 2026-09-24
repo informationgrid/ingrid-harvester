@@ -63,6 +63,7 @@
     "iconv-lite": "^0.6.3",
     "image-size": "^2.0.4",
     "js-sha512": "^0.8.0",
+    "jsonld": "^9.0.0",
     "keycloak-connect": "^26.1.1",
     "lodash-es": "^4.18.1",
     "log4js": "^6.9.1",

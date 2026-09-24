@@ -67,12 +67,12 @@ export class DcatapImporter extends Importer<DcatapSettings> {
     protected async fetchAndParse(url: string): Promise<DcatapPageResult> {
         const requestConfig = DcatapImporter.createRequestConfig(this.settings, url);
         const requestDelegate = new RequestDelegate(requestConfig);
-        const responseText = await requestDelegate.doRequest();
+        const response = await requestDelegate.doRequest();
         const harvestTime = new Date();
-        const store = await parseRdfPayload(responseText, url);
+        const store = await parseRdfPayload(response, url);
 
         return {
-            response: responseText,
+            response,
             store,
             harvestTime
         };
@@ -251,7 +251,7 @@ export class DcatapImporter extends Importer<DcatapSettings> {
         let requestConfig: RequestOptions = {
             method: "GET",
             uri: url || settings.sourceURL,
-            json: false,
+            json: settings.sourceURL.endsWith('.json') || settings.sourceURL.endsWith('.jsonld'),
             timeout: settings.timeout
         };
         return requestConfig;
