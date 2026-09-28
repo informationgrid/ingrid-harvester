@@ -375,28 +375,31 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
     }
 
     async getDcatapde(): Promise<string> {
-        const doc = this.dom.createDocument(namespaces.RDF, 'RDF', null);
+        const doc = this.dom.createDocument(namespaces.RDF, 'rdf:RDF', null);
         const rdfRoot = doc.documentElement;
-        const dataset = doc.createElementNS(namespaces.DCAT, 'Dataset');
+        for (const ns of ['RDF', 'DCAT', 'DCT']) {
+            rdfRoot.setAttributeNS(namespaces.XMLNS, "xmlns:" + ns.toLowerCase(), namespaces[ns]);
+        }
+        const dataset = doc.createElementNS(namespaces.DCAT, 'dcat:Dataset');
         rdfRoot.appendChild(dataset);
 
-        dataset.appendChild(doc.createElementNS(namespaces.DCT, "title")).textContent = this.getTitle();
-        dataset.appendChild(doc.createElementNS(namespaces.DCT, "description")).textContent = this.getDescription();
-        dataset.appendChild(doc.createElementNS(namespaces.DCT, "identifier")).textContent = this.getGeneratedId();
+        dataset.appendChild(doc.createElementNS(namespaces.DCT, "dct:title")).textContent = this.getTitle();
+        dataset.appendChild(doc.createElementNS(namespaces.DCT, "dct:description")).textContent = this.getDescription();
+        dataset.appendChild(doc.createElementNS(namespaces.DCT, "dct:identifier")).textContent = this.getGeneratedId();
 
         const keywords = this.getKeywords();
         for(const keyword of keywords) {
-            dataset.appendChild(doc.createElementNS(namespaces.DCAT, "keyword")).textContent = keyword;
+            dataset.appendChild(doc.createElementNS(namespaces.DCAT, "dcat:keyword")).textContent = keyword;
         }
 
         const distributions = await this.getDistributions();
         for (const distribution of distributions) {
-            const dist = dataset.appendChild(doc.createElementNS(namespaces.DCAT, "distribution")).appendChild(doc.createElementNS(namespaces.DCAT, "Distribution"));
-            if(distribution.title) dist.appendChild(doc.createElementNS(namespaces.DCT, "title")).textContent = distribution.title;
-            if(distribution.description) dist.appendChild(doc.createElementNS(namespaces.DCT, "description")).textContent = distribution.description;
+            const dist = dataset.appendChild(doc.createElementNS(namespaces.DCAT, "dcat:distribution")).appendChild(doc.createElementNS(namespaces.DCAT, "dcat:Distribution"));
+            if(distribution.title) dist.appendChild(doc.createElementNS(namespaces.DCT, "dct:title")).textContent = distribution.title;
+            if(distribution.description) dist.appendChild(doc.createElementNS(namespaces.DCT, "dct:description")).textContent = distribution.description;
             if(distribution.access_url) {
-                const accessUrl = dist.appendChild(doc.createElementNS(namespaces.DCAT, "accessURL"));
-                accessUrl.setAttributeNS(namespaces.RDF, "resource", distribution.access_url);
+                const accessUrl = dist.appendChild(doc.createElementNS(namespaces.DCAT, "dcat:accessURL"));
+                accessUrl.setAttributeNS(namespaces.RDF, "rdf:resource", distribution.access_url);
             }
         }
 
@@ -404,7 +407,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         for(const theme of themes) {
             let themeUri = theme
             if(!theme.startsWith("http://publications.europa.eu/resource/authority/data-theme/")) themeUri = "http://publications.europa.eu/resource/authority/data-theme/" + theme;
-            const themeNode = dataset.appendChild(doc.createElementNS(namespaces.DCAT, "theme"));
+            const themeNode = dataset.appendChild(doc.createElementNS(namespaces.DCAT, "dcat:theme"));
             themeNode.setAttribute("rdf:ressource", themeUri);
         }
 

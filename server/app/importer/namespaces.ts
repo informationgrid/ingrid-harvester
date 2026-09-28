@@ -61,6 +61,7 @@ export const namespaces = {
     WMS: 'http://www.opengis.net/wms',
     XLINK: 'http://www.w3.org/1999/xlink',
     XML: 'http://www.w3.org/XML/1998/namespace',
+    XMLNS: 'http://www.w3.org/2000/xmlns/',
     XSD: 'http://www.w3.org/2001/XMLSchema',
     XSI: 'http://www.w3.org/2001/XMLSchema-instance',
 };
