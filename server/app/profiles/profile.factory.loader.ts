@@ -51,13 +51,13 @@ export class ProfileFactoryLoader {
     private static createInstance(profile: string) {
         switch (profile) {
             case 'ingrid':
-                this.instance = new ingridFactory();
+                this.instance = new ingridFactory() as unknown as ProfileFactory<any>;
                 break;
             case 'diplanung':
-                this.instance = new DiplanungFactory();
+                this.instance = new DiplanungFactory() as unknown as ProfileFactory<any>;
                 break;
             case 'lvr':
-                this.instance = new LvrFactory();
+                this.instance = new LvrFactory() as unknown as ProfileFactory<any>;
                 break;
             default:
                 let errorMsg = `Could not find profile: ${profile}`;
