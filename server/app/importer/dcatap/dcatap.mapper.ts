@@ -33,6 +33,7 @@ import type { IndexDocument, MetadataSource } from '../../model/index.document.j
 import type { Summary } from '../../model/summary.js';
 import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
 import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
+import { fromWkt } from '../../utils/geojson.utils.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
@@ -343,36 +344,46 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
     }
 
     getSpatial(): any {
-        const spatialTerms = this.getObjects(this.datasetSubject, namespaces.DCT + 'spatial');
+        const spatialTerms = [
+            ...this.getObjects(this.datasetSubject, namespaces.DCT + 'spatial'),
+            ...this.getObjects(this.datasetSubject, namespaces.DCT + 'location')
+        ];
+
         for (const spatialTerm of spatialTerms) {
-            const spatialSubject = spatialTerm as Quad_Subject;
-
-            const geoTerms = [
-                ...this.getObjects(spatialSubject, namespaces.LOCN + 'geometry'),
-                ...this.getObjects(spatialSubject, namespaces.OGC + 'asWKT')
-            ];
-
-            // 1. Check GeoJSON first
-            for (const geoTerm of geoTerms) {
-                if (geoTerm.termType === 'Literal') {
-                    if (geoTerm.datatype?.value === 'https://www.iana.org/assignments/media-types/application/vnd.geo+json' || geoTerm.value.trim().startsWith('{')) {
-                        try {
-                            return JSON.parse(geoTerm.value);
-                        }
-                        catch (ignored) {}
-                    }
+            if (spatialTerm.termType === 'Literal') {
+                const geom = this.parseGeoTerm(spatialTerm);
+                if (geom) {
+                    return geom;
                 }
             }
+            else {
+                const spatialSubject = spatialTerm as Quad_Subject;
 
-            // 2. Check WKT fallback
-            for (const geoTerm of geoTerms) {
-                if (geoTerm.termType === 'Literal') {
-                    if (geoTerm.datatype?.value === 'http://www.opengis.net/rdf#WKTLiteral' ||
-                        geoTerm.datatype?.value === namespaces.GEOSPARQL + 'wktLiteral' ||
-                        geoTerm.value.trim().startsWith('POLYGON') ||
-                        geoTerm.value.trim().startsWith('POINT') ||
-                        geoTerm.value.trim().startsWith('MULTIPOLYGON')) {
-                        return this.wktToGeoJson(geoTerm.value);
+                const geoTerms = [
+                    ...this.getObjects(spatialSubject, namespaces.LOCN + 'geometry'),
+                    ...this.getObjects(spatialSubject, namespaces.OGC + 'asWKT'),
+                    ...this.getObjects(spatialSubject, namespaces.GEOSPARQL + 'asWKT'),
+                    ...this.getObjects(spatialSubject, namespaces.DCAT + 'bbox'),
+                    ...this.getObjects(spatialSubject, namespaces.DCT + 'bbox'),
+                ];
+
+                // check GeoJSON
+                for (const geoTerm of geoTerms) {
+                    if (geoTerm.termType === 'Literal') {
+                        const geom = this.parseGeoJsonLiteral(geoTerm);
+                        if (geom) {
+                            return geom;
+                        }
+                    }
+                }
+
+                // fallback: check WKT
+                for (const geoTerm of geoTerms) {
+                    if (geoTerm.termType === 'Literal') {
+                        const geom = this.parseWktLiteral(geoTerm);
+                        if (geom) {
+                            return geom;
+                        }
                     }
                 }
             }
@@ -380,12 +391,45 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
         return undefined;
     }
 
+    private parseGeoTerm(term: Term): any {
+        if (term.termType !== 'Literal') {
+            return undefined;
+        }
+        return this.parseGeoJsonLiteral(term) || this.parseWktLiteral(term);
+    }
+
+    private parseGeoJsonLiteral(term: Term): any {
+        if (term.termType !== 'Literal') {
+            return undefined;
+        }
+        if (term.datatype?.value === 'https://www.iana.org/assignments/media-types/application/vnd.geo+json' || term.value.trim().startsWith('{')) {
+            try {
+                return JSON.parse(term.value);
+            }
+            catch (ignored) {}
+        }
+        return undefined;
+    }
+
+    private parseWktLiteral(term: Term): any {
+        if (term.termType == 'Literal') {
+            return fromWkt(term.value);
+        }
+        return undefined;
+    }
+
     getSpatialText(): string | undefined {
-        const spatialTerms = this.getObjects(this.datasetSubject, namespaces.DCT + 'spatial');
+        const spatialTerms = [
+            ...this.getObjects(this.datasetSubject, namespaces.DCT + 'spatial'),
+            ...this.getObjects(this.datasetSubject, namespaces.DCT + 'location')
+        ];
         for (const spatialTerm of spatialTerms) {
-            const prefLabel = this.getFirstLiteral(spatialTerm as Quad_Subject, namespaces.SKOS + 'prefLabel');
-            if (prefLabel) {
-                return prefLabel;
+            if (spatialTerm.termType !== 'Literal') {
+                const prefLabel = this.getFirstLiteral(spatialTerm as Quad_Subject, namespaces.SKOS + 'prefLabel')
+                    || this.getFirstLiteral(spatialTerm as Quad_Subject, namespaces.RDFS + 'label');
+                if (prefLabel) {
+                    return prefLabel;
+                }
             }
         }
         return undefined;

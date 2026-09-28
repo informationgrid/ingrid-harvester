@@ -21,14 +21,15 @@
  * ==================================================
  */
 
+import type { Geometry } from 'geojson';
 import log4js from 'log4js';
-import { DcatapMapper } from "../../../importer/dcatap/dcatap.mapper.js";
+import { DcatapMapper } from '../../../importer/dcatap/dcatap.mapper.js';
 import type { ToElasticMapper } from '../../../importer/to.elastic.mapper.js';
-import type { DateRange } from "../../../model/dateRange.js";
-import type { IngridOpendataIndexDocument } from "../model/opendataindex.document.js";
+import type { DateRange } from '../../../model/dateRange.js';
+import type { Distribution } from '../../../model/distribution.js';
+import type { IngridOpendataIndexDocument } from '../model/opendataindex.document.js';
+import { Codelist } from '../utils/codelist.js';
 import { ingridMapper } from './ingrid.mapper.js';
-import type { Distribution } from "../../../model/distribution.js";
-import { Codelist } from "../utils/codelist.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -72,7 +73,7 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
             distributions: await this.getDistributions(),
             political_geocoding_level_uri: this.baseMapper.getPoliticalGeocodingLevelURI(),
             spatial: {
-                geometries: [this.baseMapper.getSpatial()]
+                geometries: this.getSpatial()
             },
             // temporal: this.getTemporal(),
             temporal: {
@@ -129,6 +130,27 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
 
     getTemporal(): DateRange[] {
         return this.baseMapper.getTemporal();
+    }
+
+    getSpatial(): Geometry[] {
+        const spatial = this.baseMapper.getSpatial();
+        return spatial ? [spatial] : [];
+    }
+
+    getX1() {
+        return this.getSpatial()[0]?.bbox?.[0];
+    }
+
+    getX2() {
+        return this.getSpatial()[0]?.bbox?.[2];
+    }
+
+    getY1() {
+        return this.getSpatial()[0]?.bbox?.[1];
+    }
+
+    getY2() {
+        return this.getSpatial()[0]?.bbox?.[3];
     }
 
     getIDF() {
