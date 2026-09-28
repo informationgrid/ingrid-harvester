@@ -132,7 +132,11 @@
       "apiKey": "API-Schlüssel"
     },
     "formHint": {
-      "password": "Es wird nur eingestellt, wenn eingegeben."
+      "password": "Es wird nur eingestellt, wenn eingegeben.",
+      "mappingFile": "Nur für veraltete Index-Formate nötig. Für das aktuelle Format leer lassen."
+    },
+    "formOption": {
+      "mappingFileNotSet": "— nicht gesetzt —"
     }
   },
   "config": {

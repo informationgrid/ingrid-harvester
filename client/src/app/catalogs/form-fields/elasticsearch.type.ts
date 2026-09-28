@@ -1,6 +1,7 @@
 import { FormlyFieldConfig } from "@ngx-formly/core";
 import { inject } from "@angular/core";
 import { TranslocoPipe } from "@ngneat/transloco";
+import { map } from "rxjs";
 import { ConfigService } from "../../config/config.service";
 
 export default abstract class ElasticsearchType {
@@ -51,11 +52,16 @@ export default abstract class ElasticsearchType {
                     key: "mappingFile",
                     type: "select",
                     className: "ingrid-col-10 ingrid-col-md-auto",
-                    defaultValue: "default-mapping",
                     props: {
                       label: transloco.transform("catalogs.formLabel.mappingFile"),
-                      required: true,
-                      options: configService.getIndexMappings(),
+                      description: transloco.transform("catalogs.formHint.mappingFile"),
+                      required: false,
+                      options: configService.getIndexMappings().pipe(
+                        map((options) => [
+                          { label: transloco.transform("catalogs.formOption.mappingFileNotSet"), value: null },
+                          ...options,
+                        ]),
+                      ),
                     },
                   },
                 ],

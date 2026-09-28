@@ -2,7 +2,7 @@
 type: context
 topic: domain
 status: draft
-updated: 2026-04-24
+updated: 2026-09-28
 ---
 
 ## Overview
@@ -74,6 +74,7 @@ InGrid Harvester pulls metadata from heterogeneous sources (CSW, WFS, CKAN, JSON
 
 - Record identity is `(identifier, source)` — same identifier from two sources = two distinct records.
 - A record may publish to multiple catalogs; each publish is independent.
+- In the `ingrid` profile, a mapper's live `DocumentKind` (`'ingrid'` vs `'opendata'`) is fixed by the mapper's own class (source format), never by which catalog(s) it targets — no mapper implements both shapes. One Elasticsearch catalog may be fed by multiple datasources producing different live kinds; schema validation happens per-document in the mapper, not per-catalog. See `specs/feature/9120-indexFormatValidation/`.
 - CSW records must carry traceability keywords: `source:${datasourceId}`, `catalog:${catalogId}`, `transaction:${timestamp}`.
 - CSW deletion must filter on both `source:` AND `catalog:` — `source:` alone deletes records of other catalog instances on the same endpoint.
 - Stale deletion in `postImport()` must not affect records from other datasources or catalog instances.

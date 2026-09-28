@@ -45,7 +45,7 @@ export type PiveauCatalogSettings = CatalogSettings & {
 
 export type ElasticsearchCatalogSettings = CatalogSettings & {
   settings: ElasticsearchConfiguration & {
-    mappingFile: string,
+    mappingFile?: string,
     // settingsFile: string
   }
 }

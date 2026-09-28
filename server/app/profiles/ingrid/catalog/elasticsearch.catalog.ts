@@ -78,7 +78,18 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
      */
     async prepareImport(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         await super.prepareImport(transactionHandle, settings, observer);
-        this.schema = ProfileFactoryLoader.get().getIndexSchema(this.settings.settings.mappingFile);
+        // Schema validation now happens mapper-side, at document-build time (see ingridMapper.
+        // createIndexDocument()), independent of any catalog - each document already carries its own
+        // resolved $schema by the time it gets here. The one exception is the deprecated kinds, which
+        // have no schema files yet and still rely on this catalog's own configured mappingFile. For
+        // an unset or live (non-deprecated) mappingFile, this.schema stays null and the per-op
+        // validation block in importIntoCatalog() below is skipped entirely - which is what lets one
+        // catalog be fed by multiple live-kind datasources (see
+        // specs/feature/9120-indexFormatValidation/spec.md FR-007) without either being rejected by a
+        // schema chosen for just one of them.
+        const mappingFile = this.settings.settings.mappingFile;
+        const schemaName = ProfileFactoryLoader.get().getAvailableIndexMappings().find(o => o.value === mappingFile)?.schemaName;
+        this.schema = schemaName?.endsWith('-deprecated') ? ProfileFactoryLoader.get().getIndexSchema(mappingFile) : null;
         // ensure the InGrid-wide metadata index exists before it is used below (and later in postImport())
         await this.ensureIngridMetaIndex();
         // this.deduplicationMetadata = new Map<string, DeduplicationMetadata>();

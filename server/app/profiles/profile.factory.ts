@@ -116,7 +116,6 @@ CatalogFactory {
     }
 
     getIndexSchema(mappingName?: string): object | null {
-        const require = createRequire(import.meta.url);
         let schemaName = this.getProfileName();
         if (mappingName) {
             const option = this.getAvailableIndexMappings().find(o => o.value === mappingName);
@@ -124,6 +123,11 @@ CatalogFactory {
                 schemaName = option.schemaName;
             }
         }
+        return this.getIndexSchemaByName(schemaName);
+    }
+
+    getIndexSchemaByName(schemaName: string): object | null {
+        const require = createRequire(import.meta.url);
         try {
             return require(`../persistence/schemas/index-${schemaName}.json`);
         }

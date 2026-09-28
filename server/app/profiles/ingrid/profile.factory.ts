@@ -68,8 +68,6 @@ export class ingridFactory extends ProfileFactory<ingridSettings, IngridIndexDoc
 
     override getAvailableIndexMappings(): IndexMappingOption[] {
         return [
-            { label: 'InGrid',                value: 'default-mapping',             schemaName: 'ingrid'              },
-            { label: 'OpenData',              value: 'opendata-mapping',            schemaName: 'opendata'            },
             { label: 'InGrid (deprecated)',   value: 'default-mapping.deprecated',  schemaName: 'ingrid-deprecated'   },
             { label: 'OpenData (deprecated)', value: 'opendata-mapping.deprecated', schemaName: 'opendata-deprecated' },
         ];

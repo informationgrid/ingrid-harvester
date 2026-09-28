@@ -39,6 +39,7 @@ import type {
     IndexSpatial,
     IndexTemporal
 } from '../../../model/index.document.js';
+import { validateDocument } from '../../../persistence/elastic.validation.js';
 import { CatalogService } from '../../../services/catalog/CatalogService.js';
 import { ProfileFactoryLoader } from '../../profile.factory.loader.js';
 import type {
@@ -91,37 +92,68 @@ export abstract class ingridMapper<M extends ingridMapperType>
         return null;
     }
 
-    // 'ingrid' produces an IngridIndexDocument, 'opendata' an IngridOpendataIndexDocument.
-    // Resolved from the target catalogs' configured Elastic mapping (see resolveMappingHint());
-    // falls back to `getDefaultDocumentKind()` when that can't be resolved (e.g. dry runs, no
-    // catalogs assigned, or catalogs with mixed mappings).
+    // 'ingrid' produces an IngridIndexDocument, 'opendata' an IngridOpendataIndexDocument. Which of
+    // these two live kinds a mapper builds is fixed by its own class (see getDefaultDocumentKind()
+    // below) - no mapper subclass ever implements the getters for both (CSW/WFS never populate
+    // getDcat()/getRdf()/getDistributions()/etc., CKAN/DCAT-AP.de/Genesis never populate getIso()/
+    // getIngrid()/getCrs()). resolveMappingHint() therefore only ever answers one question: should
+    // this mapper build its *deprecated* counterpart instead, because the target catalogs say so?
     getDocumentKind(): DocumentKind {
         return this.resolveMappingHint() ?? this.getDefaultDocumentKind();
     }
 
-    // looks up which of getAvailableIndexMappings()'s schemaNames applies to this mapper's target
-    // catalogs (this.baseMapper.settings.catalogIds), so a mapper capable of producing more than
-    // one document shape (most notably CSW) knows which one to build. Returns undefined if none
-    // of the catalogs are Elasticsearch catalogs, or if they resolve to more than one distinct
-    // mapping (mixed InGrid/OpenData catalogs for the same import job).
+    // Detects whether this mapper's target catalogs (this.baseMapper.settings.catalogIds) call for
+    // the deprecated document kind matching this mapper's own family (e.g. 'ingrid-deprecated' for a
+    // CSW/WFS mapper) instead of the default live kind. Returns undefined (build the default live
+    // kind) whenever none of the target catalogs are on a deprecated mapping - the common case, and
+    // the only one possible when this mapper subclass doesn't even register a deprecated builder, in
+    // which case catalog config isn't consulted at all. Throws when catalogIds mix this mapper's own
+    // deprecated mapping with anything else (a non-deprecated catalog, or a different family's
+    // deprecated mapping) - building one document that's correct for both is impossible, so this
+    // fails loudly (aborting the harvest run, via the same throw-new-Error-and-let-the-importer's-
+    // catch-block-log-and-accumulate-it pattern every other createIndexDocument() failure already
+    // uses) instead of silently picking one and losing the other
+    // (see specs/feature/9120-indexFormatValidation/spec.md FR-003).
     private resolveMappingHint(): DocumentKind | undefined {
-        const schemaNames = new Set<string>();
+        const defaultKind = this.getDefaultDocumentKind();
+        const deprecatedKind = `${defaultKind}-deprecated` as DocumentKind;
+        if (!this.getDocumentBuilders()[deprecatedKind]) {
+            return undefined;
+        }
+        let sawOwnDeprecated = false;
+        let sawOther = false;
         for (const catalogId of this.baseMapper.settings.catalogIds ?? []) {
             const catalogSettings = CatalogService.getCatalogSettings(catalogId) as Partial<ElasticsearchCatalogSettings>;
             const mappingFile = catalogSettings?.settings?.mappingFile;
-            if (!mappingFile) continue;
-            const schemaName = ProfileFactoryLoader.get().getAvailableIndexMappings().find(o => o.value === mappingFile)?.schemaName;
-            if (schemaName && (DOCUMENT_KINDS as readonly string[]).includes(schemaName)) {
-                schemaNames.add(schemaName);
+            // unset, or any value not recognized as this mapper's own deprecated mapping (including a
+            // stale explicit 'default-mapping'/'opendata-mapping' from an old config, no longer listed
+            // in getAvailableIndexMappings()) - all of these mean "this catalog wants the live/unified
+            // format", which conflicts with a sibling catalog wanting the deprecated format just the
+            // same as an explicitly different mapping would.
+            const schemaName = mappingFile
+                ? ProfileFactoryLoader.get().getAvailableIndexMappings().find(o => o.value === mappingFile)?.schemaName
+                : undefined;
+            if (schemaName === deprecatedKind) {
+                sawOwnDeprecated = true;
+            } else {
+                sawOther = true;
             }
         }
-        if (schemaNames.size === 1) {
-            return [...schemaNames][0] as DocumentKind;
+        if (!sawOwnDeprecated) {
+            return undefined;
         }
-        if (schemaNames.size > 1) {
-            this._log.warn(`Catalogs [${this.baseMapper.settings.catalogIds}] use mixed Elastic mappings (${[...schemaNames].join(', ')}); falling back to this mapper's default document kind.`);
+        if (sawOther) {
+            throw new Error(`Catalogs [${this.baseMapper.settings.catalogIds}] mix the deprecated mapping "${deprecatedKind}" with a different Elastic mapping; a single mapper invocation cannot build documents for both.`);
         }
-        return undefined;
+        return deprecatedKind;
+    }
+
+    // resolves the JSON schema for a given DocumentKind directly by name - for the live kinds, the
+    // DocumentKind string ('ingrid'/'opendata') already *is* the schemaName, so no catalog-facing
+    // mapping-options lookup is needed here. Deprecated kinds have no schema file yet, so this
+    // naturally (and correctly) returns null for them, same as before this change.
+    private getSchemaForKind(kind: DocumentKind): object | null {
+        return ProfileFactoryLoader.get().getIndexSchemaByName(kind);
     }
 
     // the document kind a mapper subclass produces when no catalog-derived hint is available —
@@ -140,7 +172,7 @@ export abstract class ingridMapper<M extends ingridMapperType>
         return {
             ...this.getCustomEntries(),
             id: this.getGeneratedId(),
-            $schema: undefined, // set by the target catalog from the selected JSON schema's $id
+            $schema: undefined, // overwritten in createIndexDocument() once the resolved DocumentKind's JSON schema is known
             metadata: {
                 data_type: 'INGRID' as const,
                 document_type: this.getDocumentType(),
@@ -209,6 +241,20 @@ export abstract class ingridMapper<M extends ingridMapperType>
         }
         const result = await build();
         this.executeCustomCode(result);
+        // validate against the schema matching the resolved kind, independent of any catalog - a
+        // document is either valid or not, regardless of how many/which catalogs it's headed to (see
+        // specs/feature/9120-indexFormatValidation/spec.md FR-004/FR-005). Throwing here is caught,
+        // logged, and accumulated by the calling importer exactly like any other createIndexDocument()
+        // failure (e.g. csw.importer.ts/ckan.importer.ts's `catch (e) { log.error(...); this.summary.
+        // errors.push({ type: 'app', ... }); }`), which is what ultimately aborts the harvest run.
+        const schema = this.getSchemaForKind(kind);
+        if (schema) {
+            (result as any).$schema = (schema as any).$id;
+            const errors = validateDocument(result, schema);
+            if (errors.length) {
+                throw new Error(`Schema validation failed for document kind "${kind}": ${errors.join('; ')}`);
+            }
+        }
         return result;
     }
 

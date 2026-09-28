@@ -48,7 +48,6 @@
       "alias": "harvester",
       "version": "9",
       "user": "elastic",
-      "mappingFile": "opendata-mapping",
       "password": "elastic"
     }
   }

@@ -328,8 +328,75 @@
                 "iso": {
                     "type": "text",
                     "index": false
+                },
+                "rdf": {
+                    "type": "text",
+                    "index": false
                 }
             }
+        },
+        "dcat": {
+            "properties": {
+                "landing_page": {
+                    "type": "keyword"
+                }
+            }
+        },
+        "legal_basis": {
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
+            }
+        },
+        "distributions": {
+            "properties": {
+                "format": {
+                    "type": "keyword"
+                },
+                "access_url": {
+                    "type": "keyword"
+                },
+                "modified": {
+                    "type": "keyword"
+                },
+                "title": {
+                    "type": "text",
+                    "copy_to": [
+                        "fulltext"
+                    ]
+                },
+                "description": {
+                    "type": "text",
+                    "copy_to": [
+                        "fulltext"
+                    ]
+                },
+                "license": {
+                    "properties": {
+                        "url": {
+                            "type": "keyword"
+                        },
+                        "name": {
+                            "type": "keyword"
+                        },
+                        "attribution_by_text": {
+                            "type": "text"
+                        },
+                        "languages": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "availability": {
+                    "type": "keyword"
+                }
+            }
+        },
+        "political_geocoding_level_uri": {
+            "type": "keyword"
         },
         "ingrid": {
             "properties": {
