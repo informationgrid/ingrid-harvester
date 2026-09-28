@@ -105,9 +105,9 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
         });
         themes?.forEach(theme => {
             if (this.hasValue(theme)) {
-                theme = theme.substring(theme.lastIndexOf("/") + 1);
-                const themeEntry = Codelist.getInstance().getByData("6400", theme);
-                if(!result.some(r => r.id === themeEntry.id && r.source === "THEMES")) {
+                const themeCode = theme.substring(theme.lastIndexOf("/") + 1);
+                const themeEntry = Codelist.getInstance().getByData("6400", themeCode);
+                if (themeEntry && !result.some(r => r.id === themeEntry.id && r.source === "THEMES")) {
                     result.push({
                         term: themeEntry.value,
                         id: themeEntry.id,
@@ -155,6 +155,20 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
 
     getY2() {
         return this.getSpatial()[0]?.bbox?.[3];
+    }
+
+    getT04Search() {
+        const keywordTerms = [];
+        for (const keyword of this.baseMapper.getKeywords()) {
+            if (keywordTerms.some(term => term.searchterm == keyword)) {
+                continue;
+            }
+            keywordTerms.push({
+                "searchterm": keyword,
+                "type": "F"
+            });
+        }
+        return keywordTerms;
     }
 
     getIDF() {

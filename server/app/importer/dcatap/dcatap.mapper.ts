@@ -317,7 +317,13 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
         }
 
         const keywordTerms = this.getObjects(this.datasetSubject, namespaces.DCAT + 'keyword');
-        const keywords = keywordTerms.map(t => t.value).filter(Boolean);
+        const keywords: string[] = [];
+        for (const term of keywordTerms) {
+            if (term.value) {
+                const parts = term.value.split(',').map(k => k.trim()).filter(k => k.length > 0);
+                keywords.push(...parts);
+            }
+        }
 
         if (this.settings.filterTags && this.settings.filterTags.length > 0 && !keywords.some(keyword => this.settings.filterTags.includes(keyword))) {
             this.skipped = true;
@@ -475,10 +481,34 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
     }
 
     getThemes(): string[] {
-        if (this.fetched.themes) return this.fetched.themes;
+        if (this.fetched.themes != null) return this.fetched.themes;
 
         const themeTerms = this.getObjects(this.datasetSubject, namespaces.DCAT + 'theme');
-        const themes = themeTerms.map(t => t.value).filter(Boolean);
+        const themes: string[] = [];
+        for (const themeTerm of themeTerms) {
+            if (themeTerm.termType === 'Literal' || themeTerm.termType === 'NamedNode') {
+                if (themeTerm.value && themeTerm.value.trim()) {
+                    const parts = themeTerm.value.split(',').map(t => t.trim()).filter(t => t.length > 0);
+                    themes.push(...parts);
+                }
+            }
+            else if (themeTerm.termType === 'BlankNode') {
+                const label = this.getFirstLiteral(themeTerm as Quad_Subject, namespaces.SKOS + 'prefLabel')
+                    || this.getFirstLiteral(themeTerm as Quad_Subject, namespaces.RDFS + 'label')
+                    || this.getFirstLiteral(themeTerm as Quad_Subject, namespaces.DCT + 'identifier');
+                if (label && label.trim()) {
+                    const parts = label.split(',').map(t => t.trim()).filter(t => t.length > 0);
+                    themes.push(...parts);
+                }
+                else {
+                    const exactMatch = this.getFirstObject(themeTerm as Quad_Subject, namespaces.SKOS + 'exactMatch');
+                    if (exactMatch && exactMatch.value && exactMatch.value.trim()) {
+                        const parts = exactMatch.value.split(',').map(t => t.trim()).filter(t => t.length > 0);
+                        themes.push(...parts);
+                    }
+                }
+            }
+        }
 
         if (this.settings.filterThemes && this.settings.filterThemes.length > 0 && !themes.some(theme => this.settings.filterThemes.includes(theme.substring(theme.lastIndexOf('/') + 1)))) {
             this.skipped = true;
