@@ -157,6 +157,31 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
         return this.getSpatial()[0]?.bbox?.[3];
     }
 
+    getAddress() {
+        const organizations = [];
+        const contact = this.baseMapper.getContactPoint();
+        const organization = contact?.['organization-name'];
+        if (organization && !organizations.some(o => o.institution == organization)) {
+            organizations.push({
+                "institution": organization
+            });
+        }
+        return organizations;
+    }
+
+    getT021_communication() {
+        const emails = [];
+        const contact = this.baseMapper.getContactPoint();
+        const email = contact?.hasEmail;
+        if (email && !emails.some(m => m.comm_value == email)) {
+            emails.push({
+                "comm_type": "Email",
+                "comm_value": email
+            });
+        }
+        return emails;
+    }
+
     getT04Search() {
         const keywordTerms = [];
         for (const keyword of this.baseMapper.getKeywords()) {

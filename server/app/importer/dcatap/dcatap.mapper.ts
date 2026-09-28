@@ -624,7 +624,8 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
             const contactSubject = contactTerms[0] as Quad_Subject;
 
             const name = this.getFirstLiteral(contactSubject, namespaces.VCARD + 'fn');
-            const org = this.getFirstLiteral(contactSubject, namespaces.VCARD + 'organization-name');
+            const org = this.getFirstLiteral(contactSubject, namespaces.VCARD + 'organization-name')
+                || this.getFirstLiteral(contactSubject, namespaces.VCARD + 'org');
             const region = this.getFirstLiteral(contactSubject, namespaces.VCARD + 'region');
             const country = this.getFirstLiteral(contactSubject, namespaces.VCARD + 'hasCountryName');
             const postCode = this.getFirstLiteral(contactSubject, namespaces.VCARD + 'hasPostalCode');
