@@ -164,10 +164,6 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         return { landing_page: this.baseMapper.getLandingPageUrl() };
     }
 
-    getPoliticalGeocodingLevelUri(): string {
-        return this.baseMapper.getSpatialUri();
-    }
-
     async getContacts(): Promise<IndexContact[]> {
         return this.baseMapper.getContact().map(c => ({ role: 'publisher', name: c.name }));
     }
@@ -235,7 +231,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         return geometry ? [{ geometry, bbox: turfBbox(geometry) }] : [];
     }
 
-    private getPoliticalGeocodingLevelUri(): string | undefined {
+    getPoliticalGeocodingLevelUri(): string | undefined {
         const key = this.baseMapper.getPoliticalGeocodingLevel();
         return key ? POLITICAL_GEOCODING_LEVEL_BASE + key : undefined;
     }
