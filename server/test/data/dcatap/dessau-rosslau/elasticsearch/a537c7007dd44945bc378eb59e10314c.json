@@ -1,0 +1,173 @@
+{
+  "collection": {
+    "name": "Harvester"
+  },
+  "content": [
+    "dessau-rosslau",
+    "st",
+    "Stadt Dessau-Rosslau",
+    "metadata",
+    "Harvester",
+    "a537c7007dd44945bc378eb59e10314c",
+    "Harvester",
+    "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/3.0.0.json",
+    "dcat",
+    "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/a537c7007dd44945bc378eb59e10314c",
+    "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/HTML",
+    "https://open-data.stadtatlas.dessau-rosslau.de/maps/dero::stadtgliederung-3",
+    "ArcGIS Hub Dataset",
+    "Web Page",
+    "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/HTML",
+    "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c",
+    "ArcGIS Data Layer",
+    "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
+    "a537c7007dd44945bc378eb59e10314c",
+    "a537c7007dd44945bc378eb59e10314c",
+    "Kreisfreie Stadt Dessau-Roßlau",
+    "Stadtgliederung",
+    "Stadtteile, Stadtbezirke, Ortschaften, Stadtbezirksbeiräte Seit sich die Städte Dessau und Roßlau im Jahr 2007 zusammenschlossen, ist in der Hauptsatzung der Stadt Dessau-Roßlau festgelegt, dass es zwei Stadtteile gibt: Stadtteil Dessau Stadtteil Roßlau In der Hauptsatzung festgehalten ist außerdem die Bestimmung von 14 Ortschaften: Roßlau, Brambach, Großkühnau, Kleinkühnau, Kleutsch, Kochstedt, Meinsdorf, Mildensee, Mosigkau, Mühlstedt, Rodleben, Sollnitz, Streetz/Natho, Waldersee und die Bildung von 5 Stadtbezirksbeiräten: Stadtbezirksbeirat für die Stadtbezirke Ziebigk und Siedlung Stadtbezirksbeirat für die Stadtbezirke Alten, West und Zoberberg Stadtbezirksbeirat für die Stadtbezirke Süd, Haideburg und Törten Stadtbezirksbeirat für den innerstädtischen Bereich Nord Stadtbezirksbeirat für die Stadtbezirke innerstädtischer Bereich Mitte und innerstädtischer Bereich Süd Grundlage ist die Einteilung der Stadt in 25 Stadtbezirke: Innerstädt. Bereich Nord, Innerstädt. Bereich Mitte, Innerstädt. Bereich Süd, Süd, Haideburg, Törten, Mildensee, Waldersee, Ziebigk, Siedlung, Großkühnau, Kleinkühnau, West, Alten, Kochstedt, Mosigkau, Zoberberg, Kleutsch, Sollnitz, Brambach, Rodleben, Roßlau, Meinsdorf, Mühlstedt, Streetz/Natho.",
+    12.104646,
+    12.369028,
+    51.732581,
+    51.974815,
+    "Polygon",
+    12.104646,
+    51.974815,
+    12.104646,
+    51.732581,
+    12.369028,
+    51.732581,
+    12.369028,
+    51.974815,
+    12.104646,
+    51.974815,
+    12.104646,
+    51.732581,
+    12.369028,
+    51.974815,
+    "Statistische Einheiten",
+    "F",
+    "Email",
+    "gis@dessau-rosslau.de",
+    "547740d2a76ec4c2411c41671f0e2ed8c9002a18"
+  ],
+  "dataSourceName": "Harvester",
+  "datatype": [
+    "metadata"
+  ],
+  "distributions": [
+    {
+      "format": [
+        "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/HTML"
+      ],
+      "access_url": "https://open-data.stadtatlas.dessau-rosslau.de/maps/dero::stadtgliederung-3",
+      "description": "Web Page",
+      "title": "ArcGIS Hub Dataset"
+    },
+    {
+      "format": [
+        "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/HTML"
+      ],
+      "access_url": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c",
+      "description": "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
+      "title": "ArcGIS Data Layer"
+    }
+  ],
+  "extras": {
+    "hierarchy_level": "dataset",
+    "metadata": {
+      "deleted": null,
+      "harvested": "2026-09-25T08:49:08.391Z",
+      "harvesting_errors": null,
+      "is_valid": null,
+      "issued": "2026-09-25T08:45:48.479Z",
+      "merged_from": [],
+      "modified": null,
+      "source": {
+        "raw_data_source": "https://gdk.gdi-de.org/gdi-de/srv/eng/csw?REQUEST=GetRecordById&SERVICE=CSW&VERSION=2.0.2&ElementSetName=full&outputFormat=application/xml&outputSchema=http%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd&Id=a537c7007dd44945bc378eb59e10314c",
+        "source_base": "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/3.0.0.json",
+        "source_type": "csw"
+      }
+    }
+  },
+  "iPlugId": "dessau-rosslau",
+  "idf": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.portalu.de/IDF/1.0\">\n  <head/>\n  <body>\n<idf:idfMdMetadata xmlns:gts=\"http://www.isotc211.org/2005/gts\" xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:xalan=\"http://xml.apache.org/xalan\" xmlns:srv=\"http://www.isotc211.org/2005/srv\" xmlns:gmx=\"http://www.isotc211.org/2005/gmx\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:gml=\"http://www.opengis.net/gml/3.2\" xmlns=\"http://www.isotc211.org/2005/gmd\" xmlns:idf=\"http://www.portalu.de/IDF/1.0\">\n            <fileIdentifier>\n                <gco:CharacterString>a537c7007dd44945bc378eb59e10314c</gco:CharacterString>\n            </fileIdentifier>\n            <language>\n                <LanguageCode codeList=\"http://www.loc.gov/standards/iso639-2\" codeListValue=\"eng\" codeSpace=\"ISO639-2\">eng</LanguageCode>\n            </language>\n            <characterSet>\n                <MD_CharacterSetCode codeList=\"http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode\" codeListValue=\"utf8\" codeSpace=\"ISOTC211/19115\">utf8</MD_CharacterSetCode>\n            </characterSet>\n            <hierarchyLevel>\n                <MD_ScopeCode codeList=\"http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode\" codeListValue=\"dataset\" codeSpace=\"ISOTC211/19115\">dataset</MD_ScopeCode>\n            </hierarchyLevel>\n            <hierarchyLevelName>\n                <gco:CharacterString>dataset</gco:CharacterString>\n            </hierarchyLevelName>\n            <contact>\n                <idf:idfResponsibleParty>\n                    <organisationName>\n                        <gco:CharacterString>Kreisfreie Stadt Dessau-Roßlau</gco:CharacterString>\n                    </organisationName>\n                    <contactInfo>\n                        <CI_Contact>\n                            <address>\n                                <CI_Address>\n                                    <electronicMailAddress>\n                                        <gco:CharacterString>gis@dessau-rosslau.de</gco:CharacterString>\n                                    </electronicMailAddress>\n                                </CI_Address>\n                            </address>\n                        </CI_Contact>\n                    </contactInfo>\n                    <role>\n                        <CI_RoleCode codeList=\"http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode\" codeListValue=\"pointOfContact\" codeSpace=\"ISOTC211/19115\">pointOfContact</CI_RoleCode>\n                    </role>\n                </idf:idfResponsibleParty>\n            </contact>\n            <dateStamp gco:nilReason=\"missing\"/>\n            <metadataStandardName>\n                <gco:CharacterString>INSPIRE Metadata Implementing Rules: Technical Guidelines based on EN ISO 19115 and EN ISO 19119</gco:CharacterString>\n            </metadataStandardName>\n            <metadataStandardVersion>\n                <gco:CharacterString>V. 2.0.1</gco:CharacterString>\n            </metadataStandardVersion>\n            <referenceSystemInfo>\n                <MD_ReferenceSystem>\n                    <referenceSystemIdentifier>\n                        <RS_Identifier>\n                            <code>\n                                <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/25832</gco:CharacterString>\n                            </code>\n                        </RS_Identifier>\n                    </referenceSystemIdentifier>\n                </MD_ReferenceSystem>\n            </referenceSystemInfo>\n            <identificationInfo>\n                <MD_DataIdentification>\n                    <citation>\n                        <CI_Citation>\n                            <title>\n                                <gmx:Anchor xlink:href=\"https://stadtatlas.dessau-rosslau.de/\">Stadtgliederung</gmx:Anchor>\n                            </title>\n                            <date>\n                                <CI_Date>\n                                    <date>\n                                        <gco:Date>2026-08-07</gco:Date>\n                                    </date>\n                                    <dateType>\n                                        <CI_DateTypeCode codeList=\"http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"creation\" codeSpace=\"ISOTC211/19115\">creation</CI_DateTypeCode>\n                                    </dateType>\n                                </CI_Date>\n                            </date>\n                            <identifier>\n                                <MD_Identifier>\n                                    <code>\n                                        <gco:CharacterString>https://dero.maps.arcgis.com/sharing/rest/content/items/a537c7007dd44945bc378eb59e10314c/info/metadata/metadata.xml?</gco:CharacterString>\n                                    </code>\n                                </MD_Identifier>\n                            </identifier>\n                        </CI_Citation>\n                    </citation>\n                    <abstract>\n                        <gco:CharacterString>Seit sich die Städte Dessau und Roßlau im Jahr 2007 zusammenschlossen, ist in der Hauptsatzung der Stadt Dessau-Roßlau festgelegt, dass es zwei Stadtteile gibt:Stadtteil DessauStadtteil RoßlauIn der Hauptsatzung festgehalten ist außerdem die Bestimmung von 14 Ortschaften:Roßlau, Brambach, Großkühnau, Kleinkühnau, Kleutsch, Kochstedt, Meinsdorf, Mildensee, Mosigkau, Mühlstedt, Rodleben, Sollnitz, Streetz/Natho, Walderseeund die Bildung von 5 Stadtbezirksbeiräten:&amp;nbsp;Stadtbezirksbeirat für die Stadtbezirke Ziebigk und SiedlungStadtbezirksbeirat für die Stadtbezirke Alten, West und ZoberbergStadtbezirksbeirat für die Stadtbezirke Süd, Haideburg und TörtenStadtbezirksbeirat für den innerstädtischen Bereich NordStadtbezirksbeirat für die Stadtbezirke innerstädtischer Bereich Mitte und innerstädtischer Bereich SüdGrundlage ist die Einteilung der Stadt in 25 Stadtbezirke:&amp;nbsp;&amp;nbsp;Innerstädt. Bereich Nord, Innerstädt. Bereich Mitte, Innerstädt. Bereich Süd, Süd, Haideburg, Törten, Mildensee, Waldersee, Ziebigk, Siedlung, Großkühnau, Kleinkühnau, West, Alten, Kochstedt, Mosigkau, Zoberberg, Kleutsch, Sollnitz, Brambach, Rodleben, Roßlau, Meinsdorf, Mühlstedt, Streetz/Natho.</gco:CharacterString>\n                    </abstract>\n                    <purpose>\n                        <gco:CharacterString>Stadtteile, Stadtbezirke, Ortschaften, Stadtbezirksbeiräte</gco:CharacterString>\n                    </purpose>\n                    <pointOfContact>\n                        <idf:idfResponsibleParty>\n                            <organisationName>\n                                <gco:CharacterString>Kreisfreie Stadt Dessau-Roßlau</gco:CharacterString>\n                            </organisationName>\n                            <contactInfo>\n                                <CI_Contact>\n                                    <address>\n                                        <CI_Address>\n                                            <electronicMailAddress>\n                                                <gco:CharacterString>gis@dessau-rosslau.de</gco:CharacterString>\n                                            </electronicMailAddress>\n                                        </CI_Address>\n                                    </address>\n                                </CI_Contact>\n                            </contactInfo>\n                            <role>\n                                <CI_RoleCode codeList=\"http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode\" codeListValue=\"pointOfContact\" codeSpace=\"ISOTC211/19115\">pointOfContact</CI_RoleCode>\n                            </role>\n                        </idf:idfResponsibleParty>\n                    </pointOfContact>\n                    <descriptiveKeywords>\n                        <MD_Keywords>\n                            <keyword>\n                                <gco:CharacterString>Statistische Einheiten</gco:CharacterString>\n                            </keyword>\n                            <type>\n                                <MD_KeywordTypeCode codeList=\"http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode\" codeListValue=\"theme\" codeSpace=\"ISOTC211/19115\">theme</MD_KeywordTypeCode>\n                            </type>\n                            <thesaurusName>\n                                <CI_Citation>\n                                    <title>\n                                        <gco:CharacterString>GEMET - INSPIRE themes, version 1.0</gco:CharacterString>\n                                    </title>\n                                    <date>\n                                        <CI_Date>\n                                            <date>\n                                                <gco:Date>2008-06-01</gco:Date>\n                                            </date>\n                                            <dateType>\n                                                <CI_DateTypeCode codeList=\"http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\" codeSpace=\"ISOTC211/19115\">publication</CI_DateTypeCode>\n                                            </dateType>\n                                        </CI_Date>\n                                    </date>\n                                </CI_Citation>\n                            </thesaurusName>\n                        </MD_Keywords>\n                    </descriptiveKeywords>\n                    <resourceConstraints>\n                        <MD_Constraints>\n                            <useLimitation>\n                                <gco:CharacterString>Datenlizenz Deutschland Namensnennung 2.0&amp;nbsp;Quellenvermerk: © Stadt Dessau-Roßlau</gco:CharacterString>\n                            </useLimitation>\n                        </MD_Constraints>\n                    </resourceConstraints>\n                    <resourceConstraints>\n                        <MD_LegalConstraints>\n                            <useConstraints>\n                                <MD_RestrictionCode codeList=\"http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_RestrictionCode\" codeListValue=\"otherRestrictions\">otherRestrictions</MD_RestrictionCode>\n                            </useConstraints>\n                            <otherConstraints>\n                                <gmx:Anchor xlink:href=\"http://inspire.ec.europa.eu/metadata-codelist/ConditionsApplyingToAccessAndUse/noConditionsApply\">no conditions to access and use</gmx:Anchor>\n                            </otherConstraints>\n                        </MD_LegalConstraints>\n                    </resourceConstraints>\n                    <resourceConstraints>\n                        <MD_LegalConstraints>\n                            <accessConstraints>\n                                <MD_RestrictionCode codeList=\"http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_RestrictionCode\" codeListValue=\"otherRestrictions\">otherRestrictions</MD_RestrictionCode>\n                            </accessConstraints>\n                            <otherConstraints>\n                                <gmx:Anchor xlink:href=\"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations\">no limitations to public access</gmx:Anchor>\n                            </otherConstraints>\n                        </MD_LegalConstraints>\n                    </resourceConstraints>\n                    <resourceConstraints>\n                        <MD_LegalConstraints>\n                            <otherConstraints>\n                                <gco:CharacterString>no limitations on public access</gco:CharacterString>\n                            </otherConstraints>\n                        </MD_LegalConstraints>\n                    </resourceConstraints>\n                    <spatialRepresentationType>\n                        <MD_SpatialRepresentationTypeCode codeList=\"http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_SpatialRepresentationTypeCode\" codeListValue=\"vector\" codeSpace=\"ISOTC211/19115\">vector</MD_SpatialRepresentationTypeCode>\n                    </spatialRepresentationType>\n                    <language>\n                        <LanguageCode codeList=\"http://www.loc.gov/standards/iso639-2\" codeListValue=\"ger\" codeSpace=\"ISO639-2\">ger</LanguageCode>\n                    </language>\n                    <characterSet>\n                        <MD_CharacterSetCode codeList=\"http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode\" codeListValue=\"utf8\" codeSpace=\"ISOTC211/19115\">utf8</MD_CharacterSetCode>\n                    </characterSet>\n                    <topicCategory>\n                        <MD_TopicCategoryCode>boundaries</MD_TopicCategoryCode>\n                    </topicCategory>\n                    <extent>\n                        <EX_Extent>\n                            <geographicElement>\n                                <EX_GeographicBoundingBox>\n                                    <westBoundLongitude>\n                                        <gco:Decimal>12.104646</gco:Decimal>\n                                    </westBoundLongitude>\n                                    <eastBoundLongitude>\n                                        <gco:Decimal>12.369028</gco:Decimal>\n                                    </eastBoundLongitude>\n                                    <southBoundLatitude>\n                                        <gco:Decimal>51.732581</gco:Decimal>\n                                    </southBoundLatitude>\n                                    <northBoundLatitude>\n                                        <gco:Decimal>51.974815</gco:Decimal>\n                                    </northBoundLatitude>\n                                </EX_GeographicBoundingBox>\n                            </geographicElement>\n                        </EX_Extent>\n                    </extent>\n                </MD_DataIdentification>\n            </identificationInfo>\n            <distributionInfo>\n                <MD_Distribution>\n                    <distributionFormat>\n                        <MD_Format>\n                            <name>\n                                <gco:CharacterString>Esri Shapefile</gco:CharacterString>\n                            </name>\n                            <version>\n                                <gco:CharacterString>1998</gco:CharacterString>\n                            </version>\n                        </MD_Format>\n                    </distributionFormat>\n                    <transferOptions>\n                        <MD_DigitalTransferOptions>\n                            <onLine>\n                                <CI_OnlineResource>\n                                    <linkage>\n                                        <URL>https://stadtatlas.dessau-rosslau.de/</URL>\n                                    </linkage>\n                                </CI_OnlineResource>\n                            </onLine>\n                        </MD_DigitalTransferOptions>\n                    </transferOptions>\n                </MD_Distribution>\n            </distributionInfo>\n            <dataQualityInfo>\n                <DQ_DataQuality>\n                    <scope>\n                        <DQ_Scope>\n                            <level>\n                                <MD_ScopeCode codeList=\"http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode\" codeListValue=\"dataset\" codeSpace=\"ISOTC211/19115\">dataset</MD_ScopeCode>\n                            </level>\n                        </DQ_Scope>\n                    </scope>\n                    <report>\n                        <DQ_DomainConsistency>\n                            <result>\n                                <DQ_ConformanceResult>\n                                    <specification>\n                                        <CI_Citation>\n                                            <title>\n                                                <gco:CharacterString>COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</gco:CharacterString>\n                                            </title>\n                                            <date>\n                                                <CI_Date>\n                                                    <date>\n                                                        <gco:Date>2010-12-08</gco:Date>\n                                                    </date>\n                                                    <dateType>\n                                                        <CI_DateTypeCode codeList=\"http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\" codeSpace=\"ISOTC211/19115\">publication</CI_DateTypeCode>\n                                                    </dateType>\n                                                </CI_Date>\n                                            </date>\n                                        </CI_Citation>\n                                    </specification>\n                                    <explanation>\n                                        <gco:CharacterString>Geprüft auf konforme Werte</gco:CharacterString>\n                                    </explanation>\n                                    <pass>\n                                        <gco:Boolean>true</gco:Boolean>\n                                    </pass>\n                                </DQ_ConformanceResult>\n                            </result>\n                        </DQ_DomainConsistency>\n                    </report>\n                    <lineage>\n                        <LI_Lineage>\n                            <statement>\n                                <gco:CharacterString>Digitalisierung durch die Stadtverwaltung</gco:CharacterString>\n                            </statement>\n                        </LI_Lineage>\n                    </lineage>\n                </DQ_DataQuality>\n            </dataQualityInfo>\n        </idf:idfMdMetadata>\n  </body>\n</html>\n",
+  "isfolder": "false",
+  "metadata": {
+    "created": null,
+    "modified": "2026-08-07T12:26:32.000Z"
+  },
+  "modified": "2026-08-07T12:26:32.000Z",
+  "partner": [
+    "st"
+  ],
+  "provider": [
+    "Stadt Dessau-Rosslau"
+  ],
+  "sort_hash": "547740d2a76ec4c2411c41671f0e2ed8c9002a18",
+  "spatial": {
+    "geometries": [
+      {
+        "bbox": [
+          12.104646,
+          51.732581,
+          12.369028,
+          51.974815
+        ],
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              12.104646,
+              51.974815
+            ],
+            [
+              12.104646,
+              51.732581
+            ],
+            [
+              12.369028,
+              51.732581
+            ],
+            [
+              12.369028,
+              51.974815
+            ],
+            [
+              12.104646,
+              51.974815
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "summary": "Stadtteile, Stadtbezirke, Ortschaften, Stadtbezirksbeiräte Seit sich die Städte Dessau und Roßlau im Jahr 2007 zusammenschlossen, ist in der Hauptsatzung der Stadt Dessau-Roßlau festgelegt, dass es zwei Stadtteile gibt: Stadtteil Dessau Stadtteil Roßlau In der Hauptsatzung festgehalten ist außerdem die Bestimmung von 14 Ortschaften: Roßlau, Brambach, Großkühnau, Kleinkühnau, Kleutsch, Kochstedt, Meinsdorf, Mildensee, Mosigkau, Mühlstedt, Rodleben, Sollnitz, Streetz/Natho, Waldersee und die Bildung von 5 Stadtbezirksbeiräten: Stadtbezirksbeirat für die Stadtbezirke Ziebigk und Siedlung Stadtbezirksbeirat für die Stadtbezirke Alten, West und Zoberberg Stadtbezirksbeirat für die Stadtbezirke Süd, Haideburg und Törten Stadtbezirksbeirat für den innerstädtischen Bereich Nord Stadtbezirksbeirat für die Stadtbezirke innerstädtischer Bereich Mitte und innerstädtischer Bereich Süd Grundlage ist die Einteilung der Stadt in 25 Stadtbezirke: Innerstädt. Bereich Nord, Innerstädt. Bereich Mitte, Innerstädt. Bereich Süd, Süd, Haideburg, Törten, Mildensee, Waldersee, Ziebigk, Siedlung, Großkühnau, Kleinkühnau, West, Alten, Kochstedt, Mosigkau, Zoberberg, Kleutsch, Sollnitz, Brambach, Rodleben, Roßlau, Meinsdorf, Mühlstedt, Streetz/Natho.",
+  "t01_object": {
+    "obj_id": "a537c7007dd44945bc378eb59e10314c",
+    "org_obj_id": "a537c7007dd44945bc378eb59e10314c"
+  },
+  "t021_communication": [
+    {
+      "comm_type": "Email",
+      "comm_value": "gis@dessau-rosslau.de"
+    }
+  ],
+  "t02_address": [
+    {
+      "institution": "Kreisfreie Stadt Dessau-Roßlau"
+    }
+  ],
+  "t04_search": [
+    {
+      "searchterm": "Statistische Einheiten",
+      "type": "F"
+    }
+  ],
+  "title": "Stadtgliederung",
+  "uuid": "a537c7007dd44945bc378eb59e10314c",
+  "x1": 12.104646,
+  "x2": 12.369028,
+  "y1": 51.732581,
+  "y2": 51.974815
+}

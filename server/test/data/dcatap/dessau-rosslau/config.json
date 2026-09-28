@@ -1,0 +1,18 @@
+{
+  "id": 1,
+  "dataSourceName": "Harvester",
+  "type": "DCATAP",
+  "sourceURL": "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/3.0.0.json",
+  "catalogIds": [1],
+  "iPlugId": "dessau-rosslau",
+  "partner": "st",
+  "provider": "Stadt Dessau-Rosslau",
+  "datatype": "metadata",
+  "eitherKeywords": [],
+  "harvestingMode": null,
+  "httpMethod": "GET",
+  "maxConcurrent": 1,
+  "timeout": 0,
+  "createGeometadata": true,
+  "idRegex": "https:\\/\\/www\\.arcgis\\.com\\/home\\/item\\.html\\?id=([^&]*)(?:&sublayer=([^&]*))?"
+}

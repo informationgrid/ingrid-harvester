@@ -21,9 +21,10 @@
  * ==================================================
  */
 
+import type { DcatapSettings } from '../../app/importer/dcatap/dcatap.settings.js';
+import dcatapDessauRosslauSettings from '../data/dcatap/dessau-rosslau/config.json' with { type: 'json' };
 import dcatapOpendataHroSettings from '../data/dcatap/opendata-hro/config.json' with { type: 'json' };
 import { runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
-import type { DcatapSettings } from '../../app/importer/dcatap/dcatap.settings.js';
 
 describe('DCAT-AP Integration Tests', function () {
     this.timeout(60000);
@@ -44,6 +45,22 @@ describe('DCAT-AP Integration Tests', function () {
                 type: 'DCATAP'
             } as DcatapSettings,
             baseFixture: 'test/data/dcatap/opendata-hro'
+        });
+    });
+
+    it('dessau-rosslau (DCATAP with jsonld)', async () => {
+        await runImporterIntegrationTest({
+            profile,
+            expectedDocsDir: 'elasticsearch',
+            mocks: [{
+                match: { url: 'https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/3.0.0.json' },
+                fixture: 'input/3.0.0.json'
+            }],
+            settings: {
+                ...dcatapDessauRosslauSettings,
+                type: 'DCATAP'
+            } as DcatapSettings,
+            baseFixture: 'test/data/dcatap/dessau-rosslau'
         });
     });
 });
