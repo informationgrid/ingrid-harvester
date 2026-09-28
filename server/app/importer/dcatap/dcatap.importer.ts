@@ -208,11 +208,13 @@ export class DcatapImporter extends Importer<DcatapSettings> {
             let mapper = new DcatapMapper(this.settings, recordSubject, store, response, harvestTime, this.summary);
             let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
-            let doc: IndexDocument;
+            let elasticDoc: IndexDocument;
             let dcatapdeDoc: string;
+            let cswDoc: string;
             try {
-                doc = await documentFactory.createIndexDocument();
-                dcatapdeDoc = documentFactory.createDcatapdeDocument();
+                elasticDoc = await documentFactory.createIndexDocument();
+                dcatapdeDoc = await documentFactory.createDcatapdeDocument();
+                cswDoc = await documentFactory.createCswIsoDocument();
             }
             catch (e) {
                 log.error('Error creating index document', e);
@@ -225,8 +227,9 @@ export class DcatapImporter extends Importer<DcatapSettings> {
                     identifier: uuid,
                     source: this.settings.sourceURL,
                     catalog_ids: this.settings.catalogIds,
-                    dataset: doc,
+                    dataset: elasticDoc,
                     dataset_dcatapde: dcatapdeDoc,
+                    dataset_csw: cswDoc,
                     original_document: mapper.getHarvestedData()
                 };
                 promises.push(
