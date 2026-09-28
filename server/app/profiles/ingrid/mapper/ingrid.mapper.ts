@@ -241,7 +241,7 @@ export abstract class ingridMapper<M extends ingridMapperType> implements Docume
     }
 
     getDescription() {
-        return undefined;
+        return this.baseMapper.getDescription();
     }
 
     getLocation() {

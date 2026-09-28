@@ -63,7 +63,7 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
                 obj_id: this.getGeneratedId()
             },
             title: this.getTitle(),
-            description: this.baseMapper.getDescription(),
+            description: this.getDescription(),
             dcat: {
                 landingPage: this.baseMapper.getLandingPage()
             },
@@ -126,6 +126,10 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
             ...this.baseMapper.getMaintainer().map(contact => {return {role: this.getRoleId("maintainer"), ...contact}}),
             ...this.baseMapper.getOriginator().map(contact => {return {role: this.getRoleId("originator"), ...contact}}),
         ];
+    }
+
+    getDescription() {
+        return this.baseMapper.getDescription();
     }
 
     getTemporal(): DateRange[] {
