@@ -80,6 +80,14 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
         if (!uuid) {
             uuid = this.datasetSubject.value;
         }
+        if (settings.idRegex) {
+            const matches = new RegExp(settings.idRegex).exec(uuid)?.filter(Boolean);
+            if (!matches || matches.length < 2) {
+                throw new Error(`Could not extract UUID from ${uuid} using ${settings.idRegex}`);
+            }
+            matches.shift();
+            uuid = matches.join('_');
+        }
         this.uuid = uuid;
 
         super.init();

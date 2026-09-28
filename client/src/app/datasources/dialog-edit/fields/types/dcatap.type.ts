@@ -16,15 +16,47 @@ export abstract class DcatapType {
             },
             fieldGroup: [
               {
-                key: "sourceURL",
-                type: "input",
-                props: {
-                  label: "Catalog URL",
-                  required: true,
-                },
-                validators: {
-                  validation: ["url"],
-                },
+                fieldGroupClassName: "ingrid-row",
+                fieldGroup: [
+                  {
+                    key: "sourceURL",
+                    type: "input",
+                    className: "ingrid-col-10 ingrid-col-md-auto",
+                    props: {
+                      label: "Catalog URL",
+                      required: true,
+                    },
+                    validators: {
+                      validation: ["url"],
+                    },
+                  },
+                ],
+              },
+              {
+                fieldGroupClassName: "ingrid-row",
+                fieldGroup: [
+                  {
+                    key: "createGeometadata",
+                    type: "checkbox",
+                    className: "ingrid-col-10 ingrid-col-md-auto",
+                    props: {
+                      label: "Geometadaten statt Opendata erzeugen",
+                    },
+                  },
+                ],
+              },
+              {
+                fieldGroupClassName: "ingrid-row",
+                fieldGroup: [
+                  {
+                    key: "idRegex",
+                    type: "input",
+                    className: "ingrid-col-10 ingrid-col-md-auto",
+                    props: {
+                      label: "Regular Expression für die ID-Erzeugung aus dem dct:identifier",
+                    },
+                  },
+                ],
               },
             ],
           },

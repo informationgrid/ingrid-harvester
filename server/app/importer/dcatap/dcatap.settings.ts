@@ -29,6 +29,8 @@ export type DcatapSettings = {
     filterThemes?: string[],               // skip records whose DCAT themes don't include at least one of these (matched by URI fragment); UI-configurable
     providerPrefix?: string,               // Deprecated? prefix prepended to provider names; backend-only
     dcatProviderField?: DCATProviderField, // Deprecated? which DCAT agent field to use as provider; backend-only
+    createGeometadata?: boolean,           // Deprecated! if true, create a geodata metadataset instead of an opendata metadataset; UI-configurable
+    idRegex?: string,                      // regex to extract the record ID from dct:identifier, if dct:identifier contains a URL
 } & ImporterSettings;
 
 export type DCATProviderField = 'contactPoint' | 'creator' | 'originator' | 'maintainer' | 'publisher';

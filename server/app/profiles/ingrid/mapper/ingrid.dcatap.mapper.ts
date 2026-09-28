@@ -36,6 +36,10 @@ const log = log4js.getLogger(import.meta.filename);
 export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements ToElasticMapper<IngridOpendataIndexDocument> {
 
     async createIndexDocument(): Promise<IngridOpendataIndexDocument> {
+        // TODO this workaround should be removed once we have a unified index format
+        if (this.baseMapper.settings.createGeometadata) {
+            return await super.createIndexDocument() as any;
+        }
         let result: IngridOpendataIndexDocument = {
             ...this.getIngridMetadata(this.baseMapper.settings),
             metadata: this.getMetaMetadata(),
