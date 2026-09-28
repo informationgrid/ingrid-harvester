@@ -202,10 +202,12 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
             const licenseObj = this.getFirstObject(distSubject, namespaces.DCT + 'license');
             if (licenseObj) {
                 const licenseInfo = DcatLicensesUtils.get(licenseObj.value);
-                license = {
-                    name: licenseInfo.title,
-                    url: licenseInfo.url
-                };
+                if (licenseInfo) {
+                    license = {
+                        name: licenseInfo.title,
+                        url: licenseInfo.url
+                    };
+                }
                 const licenseAttributionByText = this.getFirstLiteral(distSubject, namespaces.DCATDE + 'licenseAttributionByText');
                 if (licenseAttributionByText) {
                     license['attribution_by_text'] = licenseAttributionByText;
@@ -573,7 +575,7 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
             for (const distTerm of distributionTerms) {
                 const licenseObj = this.getFirstObject(distTerm as Quad_Subject, namespaces.DCT + 'license');
                 if (licenseObj) {
-                    license = await DcatLicensesUtils.get(licenseObj.value);
+                    license = DcatLicensesUtils.get(licenseObj.value);
                     break;
                 }
             }
