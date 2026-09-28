@@ -47,6 +47,7 @@
     "@turf/flip": "^7.4.0",
     "@turf/rewind": "^7.4.0",
     "@turf/simplify": "^7.4.0",
+    "@terraformer/wkt": "^2.2.2",
     "@types/n3": "^1.26.4",
     "@xmldom/xmldom": "^0.8.15",
     "body-parser": "^1.20.8",

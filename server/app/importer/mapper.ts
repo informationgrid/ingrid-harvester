@@ -21,10 +21,11 @@
  * ==================================================
  */
 
-import type { ImporterSettings } from './importer.settings.js';
 import type { Logger } from 'log4js';
 import type { HarvestingMetadata, MetadataSource } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
+import { fromWkt } from '../utils/geojson.utils.js';
+import type { ImporterSettings } from './importer.settings.js';
 
 /**
  * Base class for all mappers.
@@ -133,25 +134,16 @@ export abstract class Mapper<S extends ImporterSettings> {
 
     executeCustomCode(doc: any) {}
 
-    wktToGeoJson(wkt: string):any{
+    wktToGeoJson(wkt: string): any {
         try {
-            var coordsPos = wkt.indexOf("(");
-            var type = wkt.substring(0, coordsPos).trim();
-            if(type.lastIndexOf(' ') > -1){
-                type = type.substring(type.lastIndexOf(' ')).trim();
+            const geom = fromWkt(wkt);
+            if (!geom && wkt) {
+                this.summary?.errors?.push({ type: 'app', error: "Can't parse WKT: " + wkt });
             }
-            type = type.toLowerCase();
-            var coords = wkt.substring(coordsPos).trim();
-            coords = coords.replace(/\(/g, "[").replace(/\)/g, "]");
-            coords = coords.replace(/\[(\s*[-0-9][^\]]*\,[^\]]*[0-9]\s*)\]/g, "[[$1]]");
-            coords = coords.replace(/([0-9])\s*\,\s*([-0-9])/g, "$1], [$2");
-            coords = coords.replace(/([0-9])\s+([-0-9])/g, "$1, $2");
-            return {
-                'type': type,
-                'coordinates': JSON.parse(coords)
-            };
-        } catch(e) {
-            this.summary.errors.push({ type: 'app', error: "Can't parse WKT: "+e.message });
+            return geom;
+        }
+        catch (e) {
+            this.summary?.errors?.push({ type: 'app', error: "Can't parse WKT: " + e.message });
         }
     }
 }
