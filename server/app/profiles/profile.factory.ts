@@ -48,6 +48,7 @@ import { ElasticsearchFactory } from '../persistence/elastic.factory.js';
 import type { ElasticQueries } from '../persistence/elastic.queries.js';
 import type { IndexSettings } from '../persistence/elastic.setting.js';
 import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
+import { validateDocument } from '../persistence/elastic.validation.js';
 import { PostgresQueries } from '../persistence/postgres.queries.js';
 import { ConfigService } from '../services/config/ConfigService.js';
 
@@ -133,6 +134,23 @@ CatalogFactory {
         }
         catch {
             return null;
+        }
+    }
+
+    // validates `document` against the JSON schema named `schemaName` (see getIndexSchemaByName()),
+    // stamping $schema from the resolved schema's own $id first. A no-op when schemaName is undefined
+    // (this profile's DocumentFactory declares no schema) or when no schema file exists for that name
+    // yet (e.g. diplanung/lvr, which don't have one today) - same tolerance getIndexSchemaByName()
+    // already has. Throws on validation failure; every importer's existing catch block around
+    // createIndexDocument() already logs and accumulates that as a `type: 'app'` Summary error.
+    validateIndexDocument(document: any, schemaName: string | undefined): void {
+        if (!schemaName) return;
+        const schema = this.getIndexSchemaByName(schemaName);
+        if (!schema) return;
+        document.$schema = (schema as any).$id;
+        const errors = validateDocument(document, schema);
+        if (errors.length) {
+            throw new Error(`Schema validation failed for schema "${schemaName}": ${errors.join('; ')}`);
         }
     }
 

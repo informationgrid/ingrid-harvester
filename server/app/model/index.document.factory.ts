@@ -30,4 +30,9 @@ export abstract class DocumentFactory<T extends CatalogColumnType> {
     abstract createDcatapdeDocument(): string;
 
     abstract createIndexDocument(): Promise<T>;
+
+    // name of the JSON schema (server/app/persistence/schemas/index-<name>.json) the document built
+    // by createIndexDocument() should validate against, or undefined if this profile has none yet.
+    // Passed to ProfileFactory.validateIndexDocument() - see server/app/profiles/profile.factory.ts.
+    abstract getSchemaName(): string | undefined;
 }

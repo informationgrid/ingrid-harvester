@@ -30,6 +30,7 @@ import type { DateRange } from '../../../model/dateRange.js';
 import type { Catalog, PluPlanState, PluPlanType, PluProcedureState, PluProcedureType, ProcessStep } from '../../../model/dcatApPlu.model.js';
 import type { Distribution } from '../../../model/distribution.js';
 import type { DocumentFactory } from '../../../model/index.document.factory.js';
+import { ProfileFactoryLoader } from '../../profile.factory.loader.js';
 import { createEsId } from '../diplanung.utils.js';
 import type { DiplanungIndexDocument } from '../model/index.document.js';
 
@@ -47,6 +48,12 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
 
     createDcatapdeDocument(): string {
         return null;
+    }
+
+    // no index-diplanung.json schema exists yet - ProfileFactory.validateIndexDocument() no-ops
+    // until one is authored (see server/app/profiles/profile.factory.ts's getIndexSchemaByName()).
+    getSchemaName(): string {
+        return ProfileFactoryLoader.get().getProfileName();
     }
 
     async createIndexDocument(): Promise<DiplanungIndexDocument> {
@@ -120,6 +127,7 @@ export abstract class DiplanungMapper<M extends CswMapper | DcatappluMapper | Wf
         //     result.extras.metadata['quality_notes'] = qualityNotes;
         // }
         this.baseMapper.executeCustomCode(result);
+        ProfileFactoryLoader.get().validateIndexDocument(result, this.getSchemaName());
 
         return result;
     }

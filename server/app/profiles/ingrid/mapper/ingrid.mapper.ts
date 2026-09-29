@@ -39,7 +39,6 @@ import type {
     IndexSpatial,
     IndexTemporal
 } from '../../../model/index.document.js';
-import { validateDocument } from '../../../persistence/elastic.validation.js';
 import { CatalogService } from '../../../services/catalog/CatalogService.js';
 import { ProfileFactoryLoader } from '../../profile.factory.loader.js';
 import type {
@@ -148,12 +147,12 @@ export abstract class ingridMapper<M extends ingridMapperType>
         return deprecatedKind;
     }
 
-    // resolves the JSON schema for a given DocumentKind directly by name - for the live kinds, the
-    // DocumentKind string ('ingrid'/'opendata') already *is* the schemaName, so no catalog-facing
-    // mapping-options lookup is needed here. Deprecated kinds have no schema file yet, so this
-    // naturally (and correctly) returns null for them, same as before this change.
-    private getSchemaForKind(kind: DocumentKind): object | null {
-        return ProfileFactoryLoader.get().getIndexSchemaByName(kind);
+    // exposes the resolved DocumentKind under the generic DocumentFactory contract name - a
+    // DocumentKind is already a string at runtime, and for the live kinds it already *is* the
+    // schemaName ProfileFactory.validateIndexDocument() needs. Deprecated kinds have no schema file
+    // yet, so validateIndexDocument() naturally (and correctly) no-ops for them, same as before.
+    getSchemaName(): string {
+        return this.getDocumentKind();
     }
 
     // the document kind a mapper subclass produces when no catalog-derived hint is available —
@@ -247,14 +246,7 @@ export abstract class ingridMapper<M extends ingridMapperType>
         // logged, and accumulated by the calling importer exactly like any other createIndexDocument()
         // failure (e.g. csw.importer.ts/ckan.importer.ts's `catch (e) { log.error(...); this.summary.
         // errors.push({ type: 'app', ... }); }`), which is what ultimately aborts the harvest run.
-        const schema = this.getSchemaForKind(kind);
-        if (schema) {
-            (result as any).$schema = (schema as any).$id;
-            const errors = validateDocument(result, schema);
-            if (errors.length) {
-                throw new Error(`Schema validation failed for document kind "${kind}": ${errors.join('; ')}`);
-            }
-        }
+        ProfileFactoryLoader.get().validateIndexDocument(result, this.getSchemaName());
         return result;
     }
 

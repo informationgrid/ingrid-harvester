@@ -26,6 +26,7 @@ import { createEsId } from '../lvr.utils.js';
 import { v5 as uuidv5 } from 'uuid';
 import type { GeometryInformation } from '../../../model/index.document.js';
 import type { DocumentFactory } from '../../../model/index.document.factory.js';
+import { ProfileFactoryLoader } from '../../profile.factory.loader.js';
 import type { JsonMapper } from '../../../importer/json/json.mapper.js';
 import type { KldMapper } from '../../../importer/kld/kld.mapper.js';
 import type { License } from '@shared/license.model.js';
@@ -49,6 +50,12 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
 
     createDcatapdeDocument(): string {
         return null;
+    }
+
+    // no index-lvr.json schema exists yet - ProfileFactory.validateIndexDocument() no-ops until
+    // one is authored (see server/app/profiles/profile.factory.ts's getIndexSchemaByName()).
+    getSchemaName(): string {
+        return ProfileFactoryLoader.get().getProfileName();
     }
 
     async createIndexDocument(): Promise<LvrIndexDocument> {
@@ -105,6 +112,7 @@ export abstract class LvrMapper<M extends OaiLidoMapper | OaiModsMapper | KldMap
         // if (qualityNotes?.length > 0) {
         // }
         this.baseMapper.executeCustomCode(result);
+        ProfileFactoryLoader.get().validateIndexDocument(result, this.getSchemaName());
 
         return result;
     }
