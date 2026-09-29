@@ -29,9 +29,13 @@ import * as MiscUtils from '../../../utils/misc.utils.js';
 import { IdfGenerator } from '../idf.generator.js';
 import { generateWfsUuid } from '../ingrid.utils.js';
 import type { IngridIndexDocument } from '../model/index.document.js';
-import { ingridMapper } from './ingrid.mapper.js';
+import { ingridMapper, type DocumentKind } from './ingrid.mapper.js';
 
 export class ingridWfsMapper extends ingridMapper<WfsMapper> {
+
+    protected getDefaultDocumentKind(): DocumentKind {
+        return 'ingrid';
+    }
 
     // 'ingrid-deprecated' (the pre-migration IGC/t0xx-column-style shape) is available for WFS-sourced
     // mappers too - see ingridMapper.buildIngridDeprecatedDocument() for the shared assembly. Only

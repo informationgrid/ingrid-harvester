@@ -27,14 +27,14 @@ import { DcatapdeMapper } from "../../../importer/dcatapde/dcatapde.mapper.js";
 import type { IndexContact, IndexSpatial } from '../../../model/index.document.js';
 import type { IngridOpendataDistribution } from "../model/opendataindex.document.js";
 import type { IngridOpendataDeprecatedIndexDocument } from "../model/opendataindex.document.deprecated.js";
-import { ingridMapper } from './ingrid.mapper.js';
+import { ingridMapper, type DocumentKind } from './ingrid.mapper.js';
 import { Codelist } from "../utils/codelist.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
 export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> {
 
-    protected getDefaultDocumentKind(): 'ingrid' | 'opendata' {
+    protected getDefaultDocumentKind(): DocumentKind {
         return 'opendata';
     }
 

@@ -155,14 +155,12 @@ export abstract class ingridMapper<M extends ingridMapperType>
         return this.getDocumentKind();
     }
 
-    // the document kind a mapper subclass produces when no catalog-derived hint is available —
-    // 'ingrid' for CSW/WFS-sourced data, 'opendata' for CKAN/DCAT-AP.de/Genesis-sourced data,
-    // since only the source format determines which fields can meaningfully be populated by
-    // default (e.g. a CSW source has no real DCAT `distributions`, a CKAN source has no real ISO
-    // `exports.iso`).
-    protected getDefaultDocumentKind(): DocumentKind {
-        return 'ingrid';
-    }
+    // the document kind a mapper subclass produces when no catalog-derived hint is available.
+    // Abstract, not defaulted - every concrete mapper must say explicitly which live kind it is
+    // ('ingrid' for CSW/WFS-sourced data, 'opendata' for CKAN/DCAT-AP.de/Genesis-sourced data), since
+    // only the source format determines which fields can meaningfully be populated by default (e.g.
+    // a CSW source has no real DCAT `distributions`, a CKAN source has no real ISO `exports.iso`).
+    protected abstract getDefaultDocumentKind(): DocumentKind;
 
     // the fields shared by every document kind. Kept separate from the kind-specific builders in
     // getDocumentBuilders() so createIndexDocument() only has to assemble this once regardless of

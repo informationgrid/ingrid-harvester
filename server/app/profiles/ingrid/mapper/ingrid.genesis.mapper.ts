@@ -39,7 +39,7 @@ import type { IndexContact, IndexSpatial } from '../../../model/index.document.j
 import type { IngridOpendataDistribution } from '../model/opendataindex.document.js';
 import type { IngridOpendataDeprecatedIndexDocument } from '../model/opendataindex.document.deprecated.js';
 import { Codelist } from '../utils/codelist.js';
-import { ingridMapper } from './ingrid.mapper.js';
+import { ingridMapper, type DocumentKind } from './ingrid.mapper.js';
 
 // baseMapper.wktToGeoJson() returns lowercase GeoJSON type names (fine for Elasticsearch's geo_shape
 // mapping), but Turf (used below for bbox/centroid) requires the canonical GeoJSON casing
@@ -65,7 +65,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
 
     private _dcatapdeDoc: string | undefined;
 
-    protected getDefaultDocumentKind(): 'ingrid' | 'opendata' {
+    protected getDefaultDocumentKind(): DocumentKind {
         return 'opendata';
     }
 

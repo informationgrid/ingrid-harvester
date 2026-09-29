@@ -27,7 +27,7 @@ import log4js from 'log4js';
 import { CswMapper } from "../../../importer/csw/csw.mapper.js";
 import * as GeoJsonUtils from "../../../utils/geojson.utils.js";
 import * as XpathUtils from "../../../utils/xpath.utils.js";
-import { ingridMapper } from "./ingrid.mapper.js";
+import { ingridMapper, type DocumentKind } from "./ingrid.mapper.js";
 import type { Distribution } from "../../../model/distribution.js";
 import type { IndexContact, IndexKeyword, IndexReference, IndexSpatial, IndexTemporalItem } from "../../../model/index.document.js";
 import type {IngridConformanceResult, IngridDataQuality, IngridDocumentType, IngridLicense, IngridSpatialRepresentation, IngridSpecific, IngridTemporal} from "../model/index.document.js";
@@ -35,6 +35,10 @@ import type {IngridConformanceResult, IngridDataQuality, IngridDocumentType, Ing
 const log = log4js.getLogger(import.meta.filename);
 
 export class ingridCswMapper extends ingridMapper<CswMapper> {
+
+    protected getDefaultDocumentKind(): DocumentKind {
+        return 'ingrid';
+    }
 
     // 'ingrid-deprecated' (the pre-migration IGC/t0xx-column-style shape) is available for CSW-sourced
     // mappers - see ingridMapper.buildIngridDeprecatedDocument() for the shared assembly and the field
