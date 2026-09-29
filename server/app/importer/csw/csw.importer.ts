@@ -333,8 +333,51 @@ export class CswImporter extends Importer<CswSettings> {
         await this.database.sendBulkCouples();
     }
 
+    // live format ('ingrid' mapping): one service link, built from the uuid-only OUT entries the CSW
+    // mapper writes into ingrid.cross_references (srv:operatesOn) and from ingrid.service
+    private getServiceLinks(document: any): Distribution[] {
+        const operatesOn = document.ingrid.cross_references
+            ?.filter(crossReference => crossReference.direction === 'OUT')
+            .map(crossReference => crossReference.uuid)
+            .filter(Boolean);
+        if (!operatesOn?.length) {
+            return [];
+        }
+        const getCapabilitiesUrl = document.ingrid.service?.operations
+            ?.find(operation => operation.name?.toLowerCase().includes('getcapabilities'))?.access_url;
+        return [{
+            title: document.title,
+            format: [this.getServiceType(document.ingrid.service?.type, getCapabilitiesUrl, document.ingrid.service?.versions)],
+            accessURL: getCapabilitiesUrl,
+            operates_on: operatesOn
+        }];
+    }
+
+    // same derivation as CswMapper.handleDistributionforService(): service type, overridden by the
+    // GetCapabilities URL, overridden by the service type versions
+    private getServiceType(serviceType: string, getCapabilitiesUrl: string, versions: string[]): string {
+        for (const value of [getCapabilitiesUrl, ...(versions ?? [])]) {
+            const lowercase = value?.toLowerCase();
+            if (!lowercase) continue;
+            if (lowercase.match(/\bwms\b/)) serviceType = 'WMS';
+            if (lowercase.match(/\bwfs\b/)) serviceType = 'WFS';
+            if (lowercase.match(/\bwcs\b/)) serviceType = 'WCS';
+            if (lowercase.match(/\bwmts\b/)) serviceType = 'WMTS';
+        }
+        return serviceType;
+    }
+
+    // deprecated format ('ingrid-deprecated' mapping): the service links are the document's
+    // `distributions`. Drop once the deprecated mapping is retired.
+    private getServiceLinksDeprecated(document: any): Distribution[] {
+        return document['distributions'] ?? [];
+    }
+
     async coupleService(serviceEntity: RecordEntity, resolveOgcDistributions: boolean, coupleSelf = false) {
-        for (let service of serviceEntity.dataset['distributions']) {
+        const serviceLinks = serviceEntity.dataset['ingrid']
+            ? this.getServiceLinks(serviceEntity.dataset)
+            : this.getServiceLinksDeprecated(serviceEntity.dataset);
+        for (let service of serviceLinks) {
             if (coupleSelf) {
                 service.operates_on = [serviceEntity.identifier];
                 // let rsidentifier = MiscUtils.extractDatasetUuid(serviceEntity.dataset.resource_identifier);

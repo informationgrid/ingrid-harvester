@@ -228,12 +228,12 @@ export abstract class ingridMapper<M extends ingridMapperType>
         return undefined;
     }
 
-    // Deliberately always undefined here: a cross_references entry needs the uuid/name/
-    // document_type of the *other*, coupled record (service<->dataset), which a single mapper
-    // invocation has no access to - only the coupled record's own source XML declares it (and
-    // only in one direction, via srv:operatesOn/srv:coupledResource on the service side, as bare
-    // UUIDs with no name/document_type). The actual, bidirectional population happens once both
-    // sides are already-mapped documents, in IngridElasticsearchCatalog.resolveCoupling()
+    // Undefined by default: a complete cross_references entry needs the uuid/name/document_type of
+    // the *other*, coupled record (service<->dataset), which a single mapper invocation has no
+    // access to. Only a service's own source XML declares the relationship (one direction, via
+    // srv:operatesOn/srv:coupledResource, as bare UUIDs) - ingridCswMapper.getCrossReferences()
+    // emits these uuid-only OUT entries for services. The bidirectional completion happens once
+    // both sides are already-mapped documents, in IngridElasticsearchCatalog.resolveCoupling()
     // (server/app/profiles/ingrid/catalog/elasticsearch.catalog.ts).
     getCrossReferences(): IngridSpecific['cross_references'] {
         return undefined;

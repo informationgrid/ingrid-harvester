@@ -411,6 +411,19 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         };
     }
 
+    // services only: the outgoing half of the service->dataset coupling, as declared by the service's
+    // own srv:operatesOn/srv:coupledResource (bare UUIDs). CswImporter.coupleService() reads it to build
+    // the coupling rows; IngridElasticsearchCatalog.resolveCoupling() completes each entry with the
+    // coupled dataset's name/document_type/description and adds the dataset-side (IN) entries.
+    getCrossReferences(): IngridSpecific['cross_references'] {
+        if (this.getHierarchyLevel()?.toLowerCase() !== 'service') return undefined;
+        return this.baseMapper.getOperatesOn()?.map(uuid => ({
+            uuid,
+            reference_type: 'Basisdaten',
+            direction: 'OUT' as const,
+        }));
+    }
+
     // language of the described dataset (root document field, distinct from the metadata record's own language)
     getLanguage(): string {
         return this.transformGeneric(this.text('./*/gmd:language/gco:CharacterString', this.baseMapper.idInfo), { deu: 'de', ger: 'de', eng: 'en' }, 'de');
