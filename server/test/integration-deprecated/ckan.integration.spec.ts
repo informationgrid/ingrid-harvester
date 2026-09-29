@@ -23,6 +23,7 @@
 
 import ckanGovdataUbaSettings from '../data/ckan/govdata-uba/config.json' with { type: 'json' };
 import { runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
+import { withDeprecatedMapping } from './deprecated.util.js';
 import type { CkanSettings } from '../../app/importer/ckan/ckan.settings.js';
 
 describe('CKAN Integration Tests', function () {
@@ -32,7 +33,7 @@ describe('CKAN Integration Tests', function () {
     setupIntegrationTestLifecycle(profile);
 
     it('govdata-uba', async () => {
-        await runImporterIntegrationTest({
+        await runImporterIntegrationTest(withDeprecatedMapping({
             profile,
             expectedDocsDir: 'elasticsearch',
             mocks: [
@@ -47,6 +48,6 @@ describe('CKAN Integration Tests', function () {
             ],
             settings: ckanGovdataUbaSettings as CkanSettings,
             baseFixture: 'test/data/ckan/govdata-uba'
-        });
+        }));
     });
 });

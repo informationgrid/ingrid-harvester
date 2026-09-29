@@ -76,9 +76,13 @@ export interface ImporterIntegrationTestCase<T extends ImporterSettings> {
     baseFixture: string,
     mocks: HttpMockRule[];
     expectedDocsDir: string;
+    /** Root for expectedDocsDir (default: baseFixture) */
+    expectedDocsBaseFixture?: string;
     expectedDocCount?: number;
     profile: string;
     catalogId?: number; // default: 1
+    /** Stubbed as the catalog's settings.mappingFile; omitted if unset */
+    mappingFile?: string;
 }
 
 /**
@@ -274,9 +278,10 @@ export function assertElasticsearchDocuments(
         const dirPath = resolveFixturePath(options.baseFixture, options.expectedDocsDir);
 
         for (const actual of documents) {
-            const expectedFilePath = path.join(dirPath, `${actual.uuid}.json`);
+            const docId = actual.uuid ?? actual.id;
+            const expectedFilePath = path.join(dirPath, `${docId}.json`);
             if (!fs.existsSync(expectedFilePath)) {
-                throw new Error(`Expected Elasticsearch fixture file not found for document UUID ${actual.uuid}: ${expectedFilePath}`);
+                throw new Error(`Expected Elasticsearch fixture file not found for document ID ${docId}: ${expectedFilePath}`);
             }
             const expected = JSON.parse(fs.readFileSync(expectedFilePath, 'utf8'));
             compareEsDocuments(actual, expected);
@@ -332,15 +337,6 @@ export async function runImporterIntegrationTest<T extends ImporterSettings>(
         } as any);
 
         const catalogId = testCase.settings.catalogIds[0];
-        // Which deprecated mapping/schema family an importer's documents fall into depends on its
-        // default document kind (see the getDefaultDocumentKind() overrides in
-        // ingrid.{ckan,dcatapde,genesis}.mapper.ts, which all resolve to 'opendata' - everything else,
-        // i.e. ingrid.csw.mapper.ts/ingrid.wfs.mapper.ts, falls back to the base 'ingrid' kind). Keep
-        // in sync when a new opendata-family importer type is added.
-        const OPENDATA_DEPRECATED_IMPORTER_TYPES = new Set(['CKAN', 'DCATAPDE', 'GENESIS']);
-        const mappingFile = OPENDATA_DEPRECATED_IMPORTER_TYPES.has(testCase.settings.type)
-            ? 'opendata-mapping.deprecated'
-            : 'default-mapping.deprecated';
         sandbox.stub(CatalogService, 'getCatalogSettings').withArgs(catalogId).returns({
             id: catalogId,
             name: testCase.profile,
@@ -348,7 +344,7 @@ export async function runImporterIntegrationTest<T extends ImporterSettings>(
             url: 'http://localhost:9200',
             settings: {
                 index: 'harvester',
-                mappingFile
+                ...(testCase.mappingFile && { mappingFile: testCase.mappingFile })
             }
         } as ElasticsearchCatalogSettings);
 
@@ -361,7 +357,7 @@ export async function runImporterIntegrationTest<T extends ImporterSettings>(
         await runImporter(importer);
 
         assertElasticsearchDocuments(elasticMock, {
-            baseFixture: testCase.baseFixture,
+            baseFixture: testCase.expectedDocsBaseFixture ?? testCase.baseFixture,
             expectedDocsDir: testCase.expectedDocsDir,
             expectedDocCount: testCase.expectedDocCount
         });

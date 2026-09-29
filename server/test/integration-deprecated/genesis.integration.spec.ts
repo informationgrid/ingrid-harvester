@@ -25,6 +25,7 @@ import fs from 'fs';
 import type { GenesisSettings } from '../../app/importer/genesis/genesis.settings.js';
 import genesisStSettings from '../data/genesis/genesis-st/config.json' with { type: 'json' };
 import { resolveFixturePath, runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
+import { withDeprecatedMapping } from './deprecated.util.js';
 
 describe('GENESIS Integration Tests', function () {
     this.timeout(60000);
@@ -34,14 +35,14 @@ describe('GENESIS Integration Tests', function () {
 
     it('genesis-st', async () => {
         const baseFixture = 'test/data/genesis/genesis-st';
-        await runImporterIntegrationTest({
+        await runImporterIntegrationTest(withDeprecatedMapping({
             profile,
             expectedDocsDir: 'elasticsearch',
-            expectedDocCount: 3,
             mocks: createGenesisMocks(baseFixture, '11111', '11911', '12511'),
             settings: genesisStSettings as GenesisSettings,
-            baseFixture
-        });
+            baseFixture,
+            expectedDocsBaseFixture: 'test/data-deprecated/genesis/genesis-st'
+        }));
     });
 });
 

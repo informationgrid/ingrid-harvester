@@ -29,6 +29,7 @@ import cswWsvBfgConfig from '../data/csw/wsv-bfg/config.json' with { type: 'json
 import cswWsvBkgConfig from '../data/csw/wsv-bkg/config.json' with { type: 'json' };
 import cswWsvWsvConfig from '../data/csw/wsv-wsv/config.json' with { type: 'json' };
 import { type ImporterIntegrationTestCase, runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
+import { withDeprecatedMapping } from './deprecated.util.js';
 
 describe('CSW Integration Tests', function () {
     this.timeout(60000);
@@ -70,50 +71,50 @@ describe('CSW Integration Tests', function () {
     } satisfies Partial<ImporterIntegrationTestCase<CswSettings>>;
 
     it('gdi-de', async () => {
-        await runImporterIntegrationTest({
+        await runImporterIntegrationTest(withDeprecatedMapping({
             ...cswTestcase,
             settings: cswGdideConfig as CswSettings,
             baseFixture: 'test/data/csw/gdi-de'
-        });
+        }));
     });
 
     it('eba', async () => {
-        await runImporterIntegrationTest({
+        await runImporterIntegrationTest(withDeprecatedMapping({
             ...cswTestcase,
             settings: cswEbaConfig as CswSettings,
             baseFixture: 'test/data/csw/eba'
-        });
+        }));
     });
 
     it('nokis', async () => {
-        await runImporterIntegrationTest({
+        await runImporterIntegrationTest(withDeprecatedMapping({
             ...cswTestcase,
             settings: cswNokisConfig as CswSettings,
             baseFixture: 'test/data/csw/nokis'
-        });
+        }));
     });
 
     it('wsv-bfg', async () => {
-        await runImporterIntegrationTest({
+        await runImporterIntegrationTest(withDeprecatedMapping({
             ...cswTestcase,
             settings: cswWsvBfgConfig as CswSettings,
             baseFixture: 'test/data/csw/wsv-bfg'
-        });
+        }));
     });
 
     it('wsv-bkg', async () => {
-        await runImporterIntegrationTest({
+        await runImporterIntegrationTest(withDeprecatedMapping({
             ...cswTestcase,
             settings: cswWsvBkgConfig as CswSettings,
             baseFixture: 'test/data/csw/wsv-bkg'
-        });
+        }));
     });
 
     it('wsv-wsv', async () => {
-        await runImporterIntegrationTest({
+        await runImporterIntegrationTest(withDeprecatedMapping({
             ...cswTestcase,
             settings: cswWsvWsvConfig as CswSettings,
             baseFixture: 'test/data/csw/wsv-wsv'
-        });
+        }));
     });
 });

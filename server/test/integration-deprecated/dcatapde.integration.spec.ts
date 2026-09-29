@@ -23,6 +23,7 @@
 
 import dcatapdeOpendataHroSettings from '../data/dcatapde/opendata-hro/config.json' with { type: 'json' };
 import { runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
+import { withDeprecatedMapping } from './deprecated.util.js';
 import type { DcatapdeSettings } from '../../app/importer/dcatapde/dcatapde.settings.js';
 
 describe('DCAT-AP.de Integration Tests', function () {
@@ -32,7 +33,7 @@ describe('DCAT-AP.de Integration Tests', function () {
     setupIntegrationTestLifecycle(profile);
 
     it('opendata-hro', async () => {
-        await runImporterIntegrationTest({
+        await runImporterIntegrationTest(withDeprecatedMapping({
             profile,
             expectedDocsDir: 'elasticsearch',
             mocks: [{
@@ -41,6 +42,6 @@ describe('DCAT-AP.de Integration Tests', function () {
             }],
             settings: dcatapdeOpendataHroSettings as DcatapdeSettings,
             baseFixture: 'test/data/dcatapde/opendata-hro'
-        });
+        }));
     });
 });
