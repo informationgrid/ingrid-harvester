@@ -29,7 +29,6 @@ import cswWsvBfgConfig from '../data/csw/wsv-bfg/config.json' with { type: 'json
 import cswWsvBkgConfig from '../data/csw/wsv-bkg/config.json' with { type: 'json' };
 import cswWsvWsvConfig from '../data/csw/wsv-wsv/config.json' with { type: 'json' };
 import { type ImporterIntegrationTestCase, runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
-import { withDeprecatedMapping } from './deprecated.util.js';
 
 describe('CSW Integration Tests', function () {
     this.timeout(60000);
@@ -71,56 +70,56 @@ describe('CSW Integration Tests', function () {
     } satisfies Partial<ImporterIntegrationTestCase<CswSettings>>;
 
     it('gdi-de', async () => {
-        await runImporterIntegrationTest(withDeprecatedMapping({
+        await runImporterIntegrationTest({
             ...cswTestcase,
+            expectedDocCount: 5,
             settings: cswGdideConfig as CswSettings,
-            baseFixture: 'test/data/csw/gdi-de',
-            expectedDocsBaseFixture: 'test/data-deprecated/csw/gdi-de'
-        }));
+            baseFixture: 'test/data/csw/gdi-de'
+        });
     });
 
     it('eba', async () => {
-        await runImporterIntegrationTest(withDeprecatedMapping({
+        await runImporterIntegrationTest({
             ...cswTestcase,
+            expectedDocCount: 3,
             settings: cswEbaConfig as CswSettings,
-            baseFixture: 'test/data/csw/eba',
-            expectedDocsBaseFixture: 'test/data-deprecated/csw/eba'
-        }));
+            baseFixture: 'test/data/csw/eba'
+        });
     });
 
     it('nokis', async () => {
-        await runImporterIntegrationTest(withDeprecatedMapping({
+        await runImporterIntegrationTest({
             ...cswTestcase,
+            expectedDocCount: 3,
             settings: cswNokisConfig as CswSettings,
-            baseFixture: 'test/data/csw/nokis',
-            expectedDocsBaseFixture: 'test/data-deprecated/csw/nokis'
-        }));
+            baseFixture: 'test/data/csw/nokis'
+        });
     });
 
     it('wsv-bfg', async () => {
-        await runImporterIntegrationTest(withDeprecatedMapping({
+        await runImporterIntegrationTest({
             ...cswTestcase,
+            expectedDocCount: 2,
             settings: cswWsvBfgConfig as CswSettings,
-            baseFixture: 'test/data/csw/wsv-bfg',
-            expectedDocsBaseFixture: 'test/data-deprecated/csw/wsv-bfg'
-        }));
+            baseFixture: 'test/data/csw/wsv-bfg'
+        });
     });
 
     it('wsv-bkg', async () => {
-        await runImporterIntegrationTest(withDeprecatedMapping({
+        await runImporterIntegrationTest({
             ...cswTestcase,
+            expectedDocCount: 2,
             settings: cswWsvBkgConfig as CswSettings,
-            baseFixture: 'test/data/csw/wsv-bkg',
-            expectedDocsBaseFixture: 'test/data-deprecated/csw/wsv-bkg'
-        }));
+            baseFixture: 'test/data/csw/wsv-bkg'
+        });
     });
 
     it('wsv-wsv', async () => {
-        await runImporterIntegrationTest(withDeprecatedMapping({
+        await runImporterIntegrationTest({
             ...cswTestcase,
+            expectedDocCount: 2,
             settings: cswWsvWsvConfig as CswSettings,
-            baseFixture: 'test/data/csw/wsv-wsv',
-            expectedDocsBaseFixture: 'test/data-deprecated/csw/wsv-wsv'
-        }));
+            baseFixture: 'test/data/csw/wsv-wsv'
+        });
     });
 });

@@ -41,7 +41,8 @@ describe('DCAT-AP.de Integration Tests', function () {
                 fixture: 'input/catalog.rdf'
             }],
             settings: dcatapdeOpendataHroSettings as DcatapdeSettings,
-            baseFixture: 'test/data/dcatapde/opendata-hro'
+            baseFixture: 'test/data/dcatapde/opendata-hro',
+            expectedDocsBaseFixture: 'test/data-deprecated/dcatapde/opendata-hro'
         }));
     });
 });

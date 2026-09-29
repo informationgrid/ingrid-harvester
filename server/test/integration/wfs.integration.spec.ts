@@ -31,7 +31,6 @@ import wfsZdmTideelbe from '../data/wfs/zdm-tideelbe/config.json' with { type: '
 import wfsZdmTideems from '../data/wfs/zdm-tideems/config.json' with { type: 'json' };
 import wfsZdmTideweser from '../data/wfs/zdm-tideweser/config.json' with { type: 'json' };
 import { type ImporterIntegrationTestCase, runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
-import { withDeprecatedMapping } from './deprecated.util.js';
 
 describe('WFS Integration Tests', function () {
     this.timeout(60000);
@@ -45,73 +44,73 @@ describe('WFS Integration Tests', function () {
     } satisfies Partial<ImporterIntegrationTestCase<WfsSettings>>;
 
     it('ZDM kuestendaten', async () => {
-        await runImporterIntegrationTest(withDeprecatedMapping({
+        await runImporterIntegrationTest({
             ...wfsTestcase,
+            expectedDocCount: 2,
             settings: wfsZdmKuestendaten as WfsSettings,
             baseFixture: 'test/data/wfs/zdm-kuestendaten',
-            expectedDocsBaseFixture: 'test/data-deprecated/wfs/zdm-kuestendaten',
             mocks: createWfsMocks(wfsZdmKuestendaten)
-        }));
+        });
     });
 
     it('ZDM nok', async () => {
-        await runImporterIntegrationTest(withDeprecatedMapping({
+        await runImporterIntegrationTest({
             ...wfsTestcase,
+            expectedDocCount: 1,
             settings: wfsZdmNok as WfsSettings,
             baseFixture: 'test/data/wfs/zdm-nok',
-            expectedDocsBaseFixture: 'test/data-deprecated/wfs/zdm-nok',
             mocks: createWfsMocks(wfsZdmNok)
-        }));
+        });
     });
 
     it('ZDM nsk', async () => {
-        await runImporterIntegrationTest(withDeprecatedMapping({
+        await runImporterIntegrationTest({
             ...wfsTestcase,
+            expectedDocCount: 1,
             settings: wfsZdmNsk as WfsSettings,
             baseFixture: 'test/data/wfs/zdm-nsk',
-            expectedDocsBaseFixture: 'test/data-deprecated/wfs/zdm-nsk',
             mocks: createWfsMocks(wfsZdmNsk)
-        }));
+        });
     });
 
     it('ZDM osk', async () => {
-        await runImporterIntegrationTest(withDeprecatedMapping({
+        await runImporterIntegrationTest({
             ...wfsTestcase,
+            expectedDocCount: 2,
             settings: wfsZdmOsk as WfsSettings,
             baseFixture: 'test/data/wfs/zdm-osk',
-            expectedDocsBaseFixture: 'test/data-deprecated/wfs/zdm-osk',
             mocks: createWfsMocks(wfsZdmOsk)
-        }));
+        });
     });
 
     it('ZDM tideelbe', async () => {
-        await runImporterIntegrationTest(withDeprecatedMapping({
+        await runImporterIntegrationTest({
             ...wfsTestcase,
+            expectedDocCount: 2,
             settings: wfsZdmTideelbe as WfsSettings,
             baseFixture: 'test/data/wfs/zdm-tideelbe',
-            expectedDocsBaseFixture: 'test/data-deprecated/wfs/zdm-tideelbe',
             mocks: createWfsMocks(wfsZdmTideelbe)
-        }));
+        });
     });
 
     it('ZDM tideems', async () => {
-        await runImporterIntegrationTest(withDeprecatedMapping({
+        await runImporterIntegrationTest({
             ...wfsTestcase,
+            expectedDocCount: 2,
             settings: wfsZdmTideems as WfsSettings,
             baseFixture: 'test/data/wfs/zdm-tideems',
-            expectedDocsBaseFixture: 'test/data-deprecated/wfs/zdm-tideems',
             mocks: createWfsMocks(wfsZdmTideems)
-        }));
+        });
     });
 
     it('ZDM tideweser', async () => {
-        await runImporterIntegrationTest(withDeprecatedMapping({
+        await runImporterIntegrationTest({
             ...wfsTestcase,
+            expectedDocCount: 2,
             settings: wfsZdmTideweser as WfsSettings,
             baseFixture: 'test/data/wfs/zdm-tideweser',
-            expectedDocsBaseFixture: 'test/data-deprecated/wfs/zdm-tideweser',
             mocks: createWfsMocks(wfsZdmTideweser)
-        }));
+        });
     });
 });
 

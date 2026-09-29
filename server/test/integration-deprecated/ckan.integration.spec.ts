@@ -47,7 +47,8 @@ describe('CKAN Integration Tests', function () {
                 }
             ],
             settings: ckanGovdataUbaSettings as CkanSettings,
-            baseFixture: 'test/data/ckan/govdata-uba'
+            baseFixture: 'test/data/ckan/govdata-uba',
+            expectedDocsBaseFixture: 'test/data-deprecated/ckan/govdata-uba'
         }));
     });
 });
