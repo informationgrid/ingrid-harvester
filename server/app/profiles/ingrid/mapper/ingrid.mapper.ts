@@ -57,18 +57,10 @@ import { Codelist } from "../utils/codelist.js";
 
 export type ingridMapperType = CswMapper | CkanMapper | DcatapdeMapper | WfsMapper | GenesisMapper;
 
-// which document shape a mapper produces. Extend this array (and getDocumentBuilders() below) when
-// a new shape is added - createIndexDocument() itself doesn't need to change. Kept as a runtime array
-// (not just a type) because resolveMappingHint() needs to check schemaName membership at runtime.
 export const DOCUMENT_KINDS = ['ingrid', 'opendata', 'ingrid-deprecated', 'opendata-deprecated'] as const;
 export type DocumentKind = typeof DOCUMENT_KINDS[number];
 
 type IngridMapperIndexDocument = IngridIndexDocument | IngridOpendataIndexDocument | IngridDeprecatedIndexDocument | IngridOpendataDeprecatedIndexDocument;
-
-// the fields shared by the current (non-deprecated) document kinds, assembled by buildCommonFields()
-// and merged into each such kind's specific fields by that kind's builder (see getDocumentBuilders()).
-// The deprecated kind shares nothing structurally with this and builds itself from scratch instead.
-type CommonIndexFields = Awaited<ReturnType<ingridMapper<any>['buildCommonFields']>>;
 
 export abstract class ingridMapper<M extends ingridMapperType>
     implements DocumentFactory<IngridMapperIndexDocument>, ToElasticMapper<IngridMapperIndexDocument> {
@@ -91,28 +83,11 @@ export abstract class ingridMapper<M extends ingridMapperType>
         return null;
     }
 
-    // 'ingrid' produces an IngridIndexDocument, 'opendata' an IngridOpendataIndexDocument. Which of
-    // these two live kinds a mapper builds is fixed by its own class (see getDefaultDocumentKind()
-    // below) - no mapper subclass ever implements the getters for both (CSW/WFS never populate
-    // getDcat()/getRdf()/getDistributions()/etc., CKAN/DCAT-AP.de/Genesis never populate getIso()/
-    // getIngrid()/getCrs()). resolveMappingHint() therefore only ever answers one question: should
-    // this mapper build its *deprecated* counterpart instead, because the target catalogs say so?
     getDocumentKind(): DocumentKind {
         return this.resolveMappingHint() ?? this.getDefaultDocumentKind();
     }
 
-    // Detects whether this mapper's target catalogs (this.baseMapper.settings.catalogIds) call for
-    // the deprecated document kind matching this mapper's own family (e.g. 'ingrid-deprecated' for a
-    // CSW/WFS mapper) instead of the default live kind. Returns undefined (build the default live
-    // kind) whenever none of the target catalogs are on a deprecated mapping - the common case, and
-    // the only one possible when this mapper subclass doesn't even register a deprecated builder, in
-    // which case catalog config isn't consulted at all. Throws when catalogIds mix this mapper's own
-    // deprecated mapping with anything else (a non-deprecated catalog, or a different family's
-    // deprecated mapping) - building one document that's correct for both is impossible, so this
-    // fails loudly (aborting the harvest run, via the same throw-new-Error-and-let-the-importer's-
-    // catch-block-log-and-accumulate-it pattern every other createIndexDocument() failure already
-    // uses) instead of silently picking one and losing the other
-    // (see specs/feature/9120-indexFormatValidation/spec.md FR-003).
+    // Relevant for deprecated DocumentKinds (opendata-deprecated, ingrid-deprecated). Can be removed if deprecated index formats are removed.
     private resolveMappingHint(): DocumentKind | undefined {
         const defaultKind = this.getDefaultDocumentKind();
         const deprecatedKind = `${defaultKind}-deprecated` as DocumentKind;
@@ -124,11 +99,6 @@ export abstract class ingridMapper<M extends ingridMapperType>
         for (const catalogId of this.baseMapper.settings.catalogIds ?? []) {
             const catalogSettings = CatalogService.getCatalogSettings(catalogId) as Partial<ElasticsearchCatalogSettings>;
             const mappingFile = catalogSettings?.settings?.mappingFile;
-            // unset, or any value not recognized as this mapper's own deprecated mapping (including a
-            // stale explicit 'default-mapping'/'opendata-mapping' from an old config, no longer listed
-            // in getAvailableIndexMappings()) - all of these mean "this catalog wants the live/unified
-            // format", which conflicts with a sibling catalog wanting the deprecated format just the
-            // same as an explicitly different mapping would.
             const schemaName = mappingFile
                 ? ProfileFactoryLoader.get().getAvailableIndexMappings().find(o => o.value === mappingFile)?.schemaName
                 : undefined;
@@ -147,24 +117,12 @@ export abstract class ingridMapper<M extends ingridMapperType>
         return deprecatedKind;
     }
 
-    // exposes the resolved DocumentKind under the generic DocumentFactory contract name - a
-    // DocumentKind is already a string at runtime, and for the live kinds it already *is* the
-    // schemaName ProfileFactory.validateIndexDocument() needs. Deprecated kinds have no schema file
-    // yet, so validateIndexDocument() naturally (and correctly) no-ops for them, same as before.
     getSchemaName(): string {
         return this.getDocumentKind();
     }
 
-    // the document kind a mapper subclass produces when no catalog-derived hint is available.
-    // Abstract, not defaulted - every concrete mapper must say explicitly which live kind it is
-    // ('ingrid' for CSW/WFS-sourced data, 'opendata' for CKAN/DCAT-AP.de/Genesis-sourced data), since
-    // only the source format determines which fields can meaningfully be populated by default (e.g.
-    // a CSW source has no real DCAT `distributions`, a CKAN source has no real ISO `exports.iso`).
     protected abstract getDefaultDocumentKind(): DocumentKind;
 
-    // the fields shared by every document kind. Kept separate from the kind-specific builders in
-    // getDocumentBuilders() so createIndexDocument() only has to assemble this once regardless of
-    // which kind ends up being built.
     private async buildCommonFields() {
         return {
             ...this.getCustomEntries(),
@@ -218,11 +176,6 @@ export abstract class ingridMapper<M extends ingridMapperType>
         };
     }
 
-    // registry of document-kind builders, keyed by DocumentKind. This is the single place new
-    // kinds get wired up - adding one means adding a union member to DOCUMENT_KINDS, a buildXyz()
-    // method, and an entry here (possibly in a subclass, see ingridCswMapper's override for
-    // 'ingrid-deprecated'); createIndexDocument() itself never needs to change. Partial, since not
-    // every mapper subclass builds every kind - createIndexDocument() throws on a missing entry.
     protected getDocumentBuilders(): Partial<Record<DocumentKind, () => Promise<IngridMapperIndexDocument>>> {
         return {
             ingrid: () => this.buildIngridDocument(),
@@ -238,12 +191,6 @@ export abstract class ingridMapper<M extends ingridMapperType>
         }
         const result = await build();
         this.executeCustomCode(result);
-        // validate against the schema matching the resolved kind, independent of any catalog - a
-        // document is either valid or not, regardless of how many/which catalogs it's headed to (see
-        // specs/feature/9120-indexFormatValidation/spec.md FR-004/FR-005). Throwing here is caught,
-        // logged, and accumulated by the calling importer exactly like any other createIndexDocument()
-        // failure (e.g. csw.importer.ts/ckan.importer.ts's `catch (e) { log.error(...); this.summary.
-        // errors.push({ type: 'app', ... }); }`), which is what ultimately aborts the harvest run.
         ProfileFactoryLoader.get().validateIndexDocument(result, this.getSchemaName());
         return result;
     }
