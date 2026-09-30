@@ -223,7 +223,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
 
         // resolve CSW coupling
         if (isCsw(entry)) {
-            for (let [id, service] of bucket.operatingServices) {
+            for (let service of sortByDocumentId(bucket.operatingServices.values())) {
                 if (isDeprecatedIngridShape(document)) {
                     this.resolveCouplingDeprecated(document as unknown as IngridDeprecatedIndexDocument, service);
                 }
@@ -510,6 +510,17 @@ function isWfs(entry: BucketDocument<IndexDocument>): boolean {
 // that use this (isCsw()/isWfs() are always false for CKAN/DCAT-AP.de/Genesis-sourced documents).
 function isDeprecatedIngridShape(document: any): boolean {
     return 'uuid' in document && !('id' in document);
+}
+
+// the bucket query (getBuckets.sql, a UNION ordered only by anchor_id) returns a bucket's coupled
+// records in arbitrary order - sorting them by document id (deprecated shape: uuid) keeps the
+// references/cross_references that resolveCoupling() appends stable across harvest runs
+function sortByDocumentId(documents: Iterable<any>): any[] {
+    const documentId = (document: any): string => String(document?.id ?? document?.uuid ?? '');
+    return [...documents].sort((a, b) => {
+        const idA = documentId(a), idB = documentId(b);
+        return idA < idB ? -1 : idA > idB ? 1 : 0;
+    });
 }
 
 function escapeIdf(literals: TemplateStringsArray, ...substitutions: any[]) {

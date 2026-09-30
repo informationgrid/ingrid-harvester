@@ -24,11 +24,8 @@
 import { DOMParser } from '@xmldom/xmldom';
 import * as chai from 'chai';
 import { expect } from 'chai';
-import chaiExclude from 'chai-exclude';
 import deepEqualInAnyOrder from 'deep-equal-in-any-order';
-import type { IngridIndexDocument } from '../../app/profiles/ingrid/model/index.document.js';
 
-chai.use(chaiExclude);
 chai.use(deepEqualInAnyOrder);
 
 // shadow DOM Node because it is not available in nodejs at runtime
@@ -47,18 +44,55 @@ const Node = {
 };
 
 /**
- * Compares two elasticsearch documents, ignoring certain properties and handling unordered arrays.
+ * Format-specific comparison rules for compareEsDocuments(), each given as dot paths into the document.
  */
-export function compareEsDocuments(actual: IngridIndexDocument, expected: IngridIndexDocument) {
-    const excludedProperties = ['extras', 'idf', 'refering', 'refering_service_uuid'];
-    // compare ES document without date properties, idf, and specific array properties
-    expect(actual).excluding(excludedProperties).to.deep.equal(expected);
+export interface EsCompareOptions {
+    /** not compared at all */
+    excluded?: string[];
+    /** arrays compared regardless of element order */
+    unordered?: string[];
+    /** XML strings compared structurally (necessary because of formatting discrepancies) */
+    xml?: string[];
+}
+
+// live index format: compared strictly; `extras` is excluded for the lvr profile's documents
+const DEFAULT_COMPARE_OPTIONS: Required<EsCompareOptions> = { excluded: ['extras'], unordered: [], xml: [] };
+
+/**
+ * Compares two elasticsearch documents; options override the defaults per rule.
+ */
+export function compareEsDocuments(actual: any, expected: any, options: EsCompareOptions = {}) {
+    const { excluded, unordered, xml } = { ...DEFAULT_COMPARE_OPTIONS, ...options };
+    // compare the document without excluded, unordered and XML paths
+    const strip = (document: any) => {
+        const copy = structuredClone(document);
+        [...excluded, ...unordered, ...xml].forEach(path => deletePath(copy, path));
+        return copy;
+    };
+    expect(strip(actual)).to.deep.equal(strip(expected));
     // compare unordered arrays separately
-    expect(actual.refering?.object_reference).to.deep.equalInAnyOrder(expected.refering?.object_reference);
-    expect(actual.refering_service_uuid).to.deep.equalInAnyOrder(expected.refering_service_uuid);
-    // compare IDF separately (necessary because of formatting discrepancies)
-    if (actual.idf || expected.idf) {
-        expectXmlEqual(actual.idf, expected.idf);
+    for (const path of unordered) {
+        expect(getPath(actual, path), path).to.deep.equalInAnyOrder(getPath(expected, path));
+    }
+    // compare XML separately
+    for (const path of xml) {
+        const actualXml = getPath(actual, path);
+        const expectedXml = getPath(expected, path);
+        if (actualXml || expectedXml) {
+            expectXmlEqual(actualXml, expectedXml);
+        }
+    }
+}
+
+function getPath(document: any, path: string): any {
+    return path.split('.').reduce((value, key) => value?.[key], document);
+}
+
+function deletePath(document: any, path: string): void {
+    const keys = path.split('.');
+    const parent = keys.slice(0, -1).reduce((value, key) => value?.[key], document);
+    if (parent && typeof parent === 'object') {
+        delete parent[keys[keys.length - 1]];
     }
 }
 

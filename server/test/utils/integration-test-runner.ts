@@ -43,7 +43,7 @@ import type { RequestOptions } from '../../app/utils/http-request.utils.js';
 import { RequestDelegate } from '../../app/utils/http-request.utils.js';
 import { setupElasticMock } from '../mocks/elastic.mock.js';
 import { dropTables, getTestDatabaseConfig, resetDatabase, startPostgresContainer } from './postgres-container.js';
-import { compareEsDocuments } from './test-utils.js';
+import { compareEsDocuments, type EsCompareOptions } from './test-utils.js';
 
 chai.use(chaiExclude);
 chai.use(deepEqualInAnyOrder);
@@ -83,6 +83,8 @@ export interface ImporterIntegrationTestCase<T extends ImporterSettings> {
     catalogId?: number; // default: 1
     /** Stubbed as the catalog's settings.mappingFile; omitted if unset */
     mappingFile?: string;
+    /** Comparison rules for the expected documents, overriding compareEsDocuments()'s defaults */
+    compareOptions?: EsCompareOptions;
 }
 
 /**
@@ -263,7 +265,7 @@ export async function runImporter<T extends ImporterSettings>(importer: Importer
  */
 export function assertElasticsearchDocuments(
     elasticMock: any,
-    options: { baseFixture: string, expectedDocsDir: string, expectedDocCount?: number }
+    options: { baseFixture: string, expectedDocsDir: string, expectedDocCount?: number, compareOptions?: EsCompareOptions }
 ): any[] {
     expect(elasticMock.addOperationChunksToBulk.called, 'ElasticsearchUtils.addOperationChunksToBulk should be called').to.be.true;
     const allOperations = elasticMock.addOperationChunksToBulk.args.flatMap((args: any[]) => args[0]);
@@ -284,7 +286,7 @@ export function assertElasticsearchDocuments(
                 throw new Error(`Expected Elasticsearch fixture file not found for document ID ${docId}: ${expectedFilePath}`);
             }
             const expected = JSON.parse(fs.readFileSync(expectedFilePath, 'utf8'));
-            compareEsDocuments(actual, expected);
+            compareEsDocuments(actual, expected, options.compareOptions);
         }
     }
 
@@ -359,7 +361,8 @@ export async function runImporterIntegrationTest<T extends ImporterSettings>(
         assertElasticsearchDocuments(elasticMock, {
             baseFixture: testCase.expectedDocsBaseFixture ?? testCase.baseFixture,
             expectedDocsDir: testCase.expectedDocsDir,
-            expectedDocCount: testCase.expectedDocCount
+            expectedDocCount: testCase.expectedDocCount,
+            compareOptions: testCase.compareOptions
         });
     }
     finally {
