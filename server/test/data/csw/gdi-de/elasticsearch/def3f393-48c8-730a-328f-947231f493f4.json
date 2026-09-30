@@ -1,0 +1,295 @@
+{
+  "id": "def3f393-48c8-730a-328f-947231f493f4",
+  "title": "INSPIRE-WMS HE Hydro - Netzwerk ATKIS Basis-DLM - Hydrografisches Netzwerk",
+  "ingrid": {
+    "service": {
+      "type": "view",
+      "versions": [
+        "OGC:WMS 1.1.1"
+      ],
+      "operations": [
+        {
+          "name": "GetCapabilities",
+          "access_url": "https://www.geoportal.hessen.de/mapbender/php/wms.php?inspire=1&layer_id=61286&withChilds=1&REQUEST=GetCapabilities&SERVICE=WMS"
+        }
+      ],
+      "has_access_constraints": false
+    },
+    "licenses": [
+      {
+        "type": "useConstraints",
+        "items": [
+          {
+            "key": null,
+            "value": "Der automatisierte Abruf und die Nutzung der Geobasisdaten und der zugehörigen Metadaten sind kostenfrei. (§ 24 Hessisches Vermessungs- und Geoinformationsgesetz - HVGG) - Lizenz: dl-zero-de/2.0 - Datenlizenz Deutschland – Zero – Version 2.0 - https://www.govdata.de/dl-de/zero-2-0"
+          }
+        ]
+      }
+    ],
+    "data_quality": {
+      "qualities": [
+        {
+          "type": "domainConsistency",
+          "measure_type": {
+            "key": null,
+            "value": null
+          }
+        },
+        {
+          "type": "domainConsistency",
+          "measure_type": {
+            "key": null,
+            "value": null
+          }
+        },
+        {
+          "type": "domainConsistency",
+          "measure_type": {
+            "key": null,
+            "value": null
+          }
+        },
+        {
+          "type": "domainConsistency",
+          "measure_type": {
+            "key": null,
+            "value": null
+          }
+        },
+        {
+          "type": "domainConsistency",
+          "measure_type": {
+            "key": null,
+            "value": null
+          }
+        },
+        {
+          "type": "domainConsistency",
+          "measure_type": {
+            "key": null,
+            "value": null
+          }
+        },
+        {
+          "type": "domainConsistency",
+          "measure_type": {
+            "key": null,
+            "value": null
+          }
+        },
+        {
+          "type": "domainConsistency",
+          "measure_type": {
+            "key": null,
+            "value": null
+          }
+        }
+      ]
+    },
+    "alternate_title": "INSPIRE Gewässernetz",
+    "cross_references": [
+      {
+        "uuid": "f1950cd0-de59-413c-93fd-b669af06c863",
+        "direction": "OUT",
+        "reference_type": "Basisdaten",
+        "name": "INSPIRE HE Hydro - Netzwerk ATKIS Basis-DLM",
+        "document_type": "InGridGeoDataset",
+        "description": "Der Datenbestand enthält aus ATKIS Basis-DLM abgeleitete Daten für das INSPIRE-Thema Hydro - Netzwerk gemäß INSPIRE-Datenspezifikation."
+      }
+    ],
+    "conformance_result": [
+      {
+        "pass": "conformant",
+        "explanation": "No explanation available",
+        "specification": {
+          "key": null,
+          "value": "VERORDNUNG (EU) Nr. 1088/2010 DER KOMMISSION vom 23. November 2010 zur Änderung der Verordnung (EG) Nr. 976/2009 hinsichtlich Downloaddiensten und Transformationsdiensten"
+        },
+        "publicationDate": "2010-12-08"
+      },
+      {
+        "pass": "conformant",
+        "explanation": "No explanation available",
+        "specification": {
+          "key": null,
+          "value": "VERORDNUNG (EG) Nr. 976/2009 DER KOMMISSION  vom 19. Oktober 2009 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Netzdienste"
+        },
+        "publicationDate": "2009-10-20"
+      },
+      {
+        "pass": "conformant",
+        "explanation": "No explanation available",
+        "specification": {
+          "key": null,
+          "value": "VERORDNUNG (EU) Nr. 1311/2014 DER KOMMISSION vom 10. Dezember 2014 zur Änderung der Verordnung (EG) Nr. 976/2009 hinsichtlich der Definition des Begriffs INSPIRE-Metadatenelement"
+        },
+        "publicationDate": "2014-12-11"
+      },
+      {
+        "pass": "conformant",
+        "explanation": "No explanation available",
+        "specification": {
+          "key": null,
+          "value": "VERORDNUNG (EG) Nr. 1205/2008 DER KOMMISSION vom 3. Dezember 2008 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich Metadaten"
+        },
+        "publicationDate": "2008-12-04"
+      },
+      {
+        "pass": "conformant",
+        "explanation": "No explanation available",
+        "specification": {
+          "key": null,
+          "value": "VERORDNUNG (EU) Nr. 1312/2014 DER KOMMISSION vom 10. Dezember 2014 zur Änderung der Verordnung (EU) Nr. 1089/2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatendiensten"
+        },
+        "publicationDate": "2014-12-11"
+      },
+      {
+        "pass": "conformant",
+        "explanation": "No explanation available",
+        "specification": {
+          "key": null,
+          "value": "VERORDNUNG (EU) Nr. 1253/2013 DER KOMMISSION vom 21. Oktober 2013 zur Änderung der Verordnung (EU) Nr. 1089/2010 zur Durchführung der Richtlinie 2007/2/EG hinsichtlich der Interoperabilität von Geodatensätzen und -diensten"
+        },
+        "publicationDate": "2013-12-10"
+      },
+      {
+        "pass": "conformant",
+        "explanation": "No explanation available",
+        "specification": {
+          "key": null,
+          "value": "VERORDNUNG (EU) Nr. 102/2011 DER KOMMISSION vom 4. Februar 2011 zur Änderung der Verordnung (EU) Nr. 1089/2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatensätzen und -diensten"
+        },
+        "publicationDate": "2011-02-05"
+      },
+      {
+        "pass": "conformant",
+        "explanation": "No explanation available",
+        "specification": {
+          "key": null,
+          "value": "VERORDNUNG (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatensätzen und -diensten"
+        },
+        "publicationDate": "2010-12-08"
+      }
+    ]
+  },
+  "$schema": "https://schema.ingrid-oss.eu/index/draft/schema/index-ingrid.json",
+  "exports": {
+    "iso": "<gmd:MD_Metadata xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gml=\"http://www.opengis.net/gml/3.2\" xmlns:gmx=\"http://www.isotc211.org/2005/gmx\" xmlns:geonet=\"http://www.fao.org/geonetwork\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.isotc211.org/2005/gmd http://schemas.opengis.net/csw/2.0.2/profiles/apiso/1.0.0/apiso.xsd\">\n            <gmd:fileIdentifier>\n                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">def3f393-48c8-730a-328f-947231f493f4</gco:CharacterString>\n            </gmd:fileIdentifier>\n            <gmd:language>\n                <gmd:LanguageCode codeList=\"http://www.loc.gov/standards/iso639-2/\" codeListValue=\"ger\">Deutsch</gmd:LanguageCode>\n            </gmd:language>\n            <gmd:characterSet>\n                <gmd:MD_CharacterSetCode codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_CharacterSetCode\" codeListValue=\"utf8\"/>\n            </gmd:characterSet>\n            <gmd:hierarchyLevel>\n                <gmd:MD_ScopeCode codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode\" codeListValue=\"service\">service</gmd:MD_ScopeCode>\n            </gmd:hierarchyLevel>\n            <gmd:hierarchyLevelName>\n                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Darstellungsdienst</gco:CharacterString>\n            </gmd:hierarchyLevelName>\n            <gmd:contact>\n                <gmd:CI_ResponsibleParty>\n                    <gmd:organisationName>\n                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">HLBG</gco:CharacterString>\n                    </gmd:organisationName>\n                    <gmd:contactInfo>\n                        <gmd:CI_Contact>\n                            <gmd:address>\n                                <gmd:CI_Address>\n                                    <gmd:electronicMailAddress>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">vertrieb-geobasisdaten@hvbg.hessen.de</gco:CharacterString>\n                                    </gmd:electronicMailAddress>\n                                </gmd:CI_Address>\n                            </gmd:address>\n                        </gmd:CI_Contact>\n                    </gmd:contactInfo>\n                    <gmd:role>\n                        <gmd:CI_RoleCode codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode\" codeListValue=\"pointOfContact\">pointOfContact</gmd:CI_RoleCode>\n                    </gmd:role>\n                </gmd:CI_ResponsibleParty>\n            </gmd:contact>\n            <gmd:dateStamp>\n                <gco:Date xmlns:gco=\"http://www.isotc211.org/2005/gco\">2026-08-11</gco:Date>\n            </gmd:dateStamp>\n            <gmd:metadataStandardName>\n                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">ISO19119</gco:CharacterString>\n            </gmd:metadataStandardName>\n            <gmd:metadataStandardVersion>\n                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">2005/PDAM 1</gco:CharacterString>\n            </gmd:metadataStandardVersion>\n            <gmd:identificationInfo>\n                <srv:SV_ServiceIdentification xmlns:srv=\"http://www.isotc211.org/2005/srv\">\n                    <gmd:citation>\n                        <gmd:CI_Citation>\n                            <gmd:title>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">INSPIRE-WMS HE Hydro - Netzwerk ATKIS Basis-DLM - Hydrografisches Netzwerk</gco:CharacterString>\n                            </gmd:title>\n                            <gmd:alternateTitle>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">INSPIRE Gewässernetz</gco:CharacterString>\n                            </gmd:alternateTitle>\n                            <gmd:date>\n                                <gmd:CI_Date>\n                                    <gmd:date>\n                                        <gco:Date xmlns:gco=\"http://www.isotc211.org/2005/gco\">2026-07-17</gco:Date>\n                                    </gmd:date>\n                                    <gmd:dateType>\n                                        <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"revision\">revision</gmd:CI_DateTypeCode>\n                                    </gmd:dateType>\n                                </gmd:CI_Date>\n                            </gmd:date>\n                        </gmd:CI_Citation>\n                    </gmd:citation>\n                    <gmd:abstract>\n                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Dieser Dienst stellt für das INSPIRE-Thema Gewässernetz (Hydro-Netzwerk) aus ATKIS Basis-DLM umgesetzte Daten bereit.:Hydrografisches Netzwerk</gco:CharacterString>\n                    </gmd:abstract>\n                    <gmd:pointOfContact>\n                        <gmd:CI_ResponsibleParty>\n                            <gmd:organisationName>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Hessisches Landesamt für Bodenmanagement und Geoinformation</gco:CharacterString>\n                            </gmd:organisationName>\n                            <gmd:contactInfo>\n                                <gmd:CI_Contact>\n                                    <gmd:address>\n                                        <gmd:CI_Address>\n                                            <gmd:administrativeArea>\n                                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Hessen</gco:CharacterString>\n                                            </gmd:administrativeArea>\n                                            <gmd:electronicMailAddress>\n                                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">vertrieb-geobasisdaten@hvbg.hessen.de</gco:CharacterString>\n                                            </gmd:electronicMailAddress>\n                                        </gmd:CI_Address>\n                                    </gmd:address>\n                                </gmd:CI_Contact>\n                            </gmd:contactInfo>\n                            <gmd:role>\n                                <gmd:CI_RoleCode codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode\" codeListValue=\"publisher\">publisher</gmd:CI_RoleCode>\n                            </gmd:role>\n                        </gmd:CI_ResponsibleParty>\n                    </gmd:pointOfContact>\n                    <gmd:descriptiveKeywords>\n                        <gmd:MD_Keywords>\n                            <gmd:keyword>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">1c349fea-924b-488f-b6a2-e896f40ac897</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:thesaurusName>\n                                <gmd:CI_Citation>\n                                    <gmd:title>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">mapbender.2.registryId</gco:CharacterString>\n                                    </gmd:title>\n                                    <gmd:date>\n                                        <gmd:CI_Date>\n                                            <gmd:date>\n                                                <gco:Date xmlns:gco=\"http://www.isotc211.org/2005/gco\">2019-10-30</gco:Date>\n                                            </gmd:date>\n                                            <gmd:dateType>\n                                                <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\">publication</gmd:CI_DateTypeCode>\n                                            </gmd:dateType>\n                                        </gmd:CI_Date>\n                                    </gmd:date>\n                                </gmd:CI_Citation>\n                            </gmd:thesaurusName>\n                        </gmd:MD_Keywords>\n                    </gmd:descriptiveKeywords>\n                    <gmd:descriptiveKeywords>\n                        <gmd:MD_Keywords>\n                            <gmd:keyword>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Hydrographic network</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Wasserlaufsegment</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Watercourse Link</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">AdVMIS</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">infoMapAccessService</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">inspireidentifiziert</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">inspireidentifiziert</gco:CharacterString>\n                            </gmd:keyword>\n                            <gmd:keyword>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">http://data.europa.eu/bna/c_dd313021</gco:CharacterString>\n                            </gmd:keyword>\n                        </gmd:MD_Keywords>\n                    </gmd:descriptiveKeywords>\n                    <gmd:resourceConstraints>\n                        <gmd:MD_LegalConstraints>\n                            <gmd:accessConstraints>\n                                <gmd:MD_RestrictionCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode\" codeListValue=\"otherRestrictions\"/>\n                            </gmd:accessConstraints>\n                            <gmd:otherConstraints>\n                                <gmx:Anchor xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations\">Es gelten keine Zugriffsbeschränkungen</gmx:Anchor>\n                            </gmd:otherConstraints>\n                        </gmd:MD_LegalConstraints>\n                    </gmd:resourceConstraints>\n                    <gmd:resourceConstraints>\n                        <gmd:MD_LegalConstraints>\n                            <gmd:useConstraints>\n                                <gmd:MD_RestrictionCode codeList=\"http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode\" codeListValue=\"otherRestrictions\"/>\n                            </gmd:useConstraints>\n                            <gmd:otherConstraints>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Der automatisierte Abruf und die Nutzung der Geobasisdaten und der zugehörigen Metadaten sind kostenfrei. (§ 24 Hessisches Vermessungs- und Geoinformationsgesetz - HVGG) - Lizenz: dl-zero-de/2.0 - Datenlizenz Deutschland – Zero – Version 2.0 - https://www.govdata.de/dl-de/zero-2-0</gco:CharacterString>\n                            </gmd:otherConstraints>\n                            <gmd:otherConstraints>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">{\"id\":\"dl-zero-de/2.0\",\"name\":\"Datenlizenz Deutschland \\u2013 Zero \\u2013 Version 2.0\",\"url\":\"https://www.govdata.de/dl-de/zero-2-0\"}</gco:CharacterString>\n                            </gmd:otherConstraints>\n                        </gmd:MD_LegalConstraints>\n                    </gmd:resourceConstraints>\n                    <srv:serviceType>\n                        <gco:LocalName xmlns:gco=\"http://www.isotc211.org/2005/gco\" codeSpace=\"http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType\">view</gco:LocalName>\n                    </srv:serviceType>\n                    <srv:serviceTypeVersion>\n                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">OGC:WMS 1.1.1</gco:CharacterString>\n                    </srv:serviceTypeVersion>\n                    <srv:extent>\n                        <gmd:EX_Extent>\n                            <gmd:geographicElement>\n                                <gmd:EX_GeographicBoundingBox>\n                                    <gmd:westBoundLongitude>\n                                        <gco:Decimal xmlns:gco=\"http://www.isotc211.org/2005/gco\">7.72989946</gco:Decimal>\n                                    </gmd:westBoundLongitude>\n                                    <gmd:eastBoundLongitude>\n                                        <gco:Decimal xmlns:gco=\"http://www.isotc211.org/2005/gco\">10.2486601</gco:Decimal>\n                                    </gmd:eastBoundLongitude>\n                                    <gmd:southBoundLatitude>\n                                        <gco:Decimal xmlns:gco=\"http://www.isotc211.org/2005/gco\">49.38901792</gco:Decimal>\n                                    </gmd:southBoundLatitude>\n                                    <gmd:northBoundLatitude>\n                                        <gco:Decimal xmlns:gco=\"http://www.isotc211.org/2005/gco\">51.65883224</gco:Decimal>\n                                    </gmd:northBoundLatitude>\n                                </gmd:EX_GeographicBoundingBox>\n                            </gmd:geographicElement>\n                        </gmd:EX_Extent>\n                    </srv:extent>\n                    <srv:couplingType>\n                        <srv:SV_CouplingType codeList=\"SV_CouplingType\" codeListValue=\"tight\"/>\n                    </srv:couplingType>\n                    <srv:containsOperations>\n                        <srv:SV_OperationMetadata>\n                            <srv:operationName>\n                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">GetCapabilities</gco:CharacterString>\n                            </srv:operationName>\n                            <srv:DCP>\n                                <srv:DCPList codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#DCPList\" codeListValue=\"WebServices\"/>\n                            </srv:DCP>\n                            <srv:connectPoint>\n                                <gmd:CI_OnlineResource>\n                                    <gmd:linkage>\n                                        <gmd:URL>https://www.geoportal.hessen.de/mapbender/php/wms.php?inspire=1&amp;layer_id=61286&amp;withChilds=1&amp;REQUEST=GetCapabilities&amp;SERVICE=WMS</gmd:URL>\n                                    </gmd:linkage>\n                                </gmd:CI_OnlineResource>\n                            </srv:connectPoint>\n                        </srv:SV_OperationMetadata>\n                    </srv:containsOperations>\n                    <srv:operatesOn xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"https://www.geoportal.hessen.de/mapbender/php/mod_dataISOMetadata.php?outputFormat=iso19139&amp;id=f1950cd0-de59-413c-93fd-b669af06c863\" uuidref=\"https://hvbg.hessen.de/registry/spatial/dataset/f1950cd0-de59-413c-93fd-b669af06c863\"/>\n                </srv:SV_ServiceIdentification>\n            </gmd:identificationInfo>\n            <gmd:distributionInfo>\n                <gmd:MD_Distribution>\n                    <gmd:distributionFormat>\n                        <gmd:MD_Format>\n                            <gmd:name xmlns:gco=\"http://www.isotc211.org/2005/gco\" gco:nilReason=\"inapplicable\"/>\n                            <gmd:version xmlns:gco=\"http://www.isotc211.org/2005/gco\" gco:nilReason=\"inapplicable\"/>\n                        </gmd:MD_Format>\n                    </gmd:distributionFormat>\n                    <gmd:transferOptions>\n                        <gmd:MD_DigitalTransferOptions>\n                            <gmd:onLine>\n                                <gmd:CI_OnlineResource>\n                                    <gmd:linkage>\n                                        <gmd:URL>https://www.geoportal.hessen.de/mapbender/php/wms.php?inspire=1&amp;layer_id=61286&amp;withChilds=1&amp;REQUEST=GetCapabilities&amp;SERVICE=WMS</gmd:URL>\n                                    </gmd:linkage>\n                                    <gmd:protocol>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">OGC:WMS-1.1.1-http-get-map</gco:CharacterString>\n                                    </gmd:protocol>\n                                    <gmd:name>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">HY.Network</gco:CharacterString>\n                                    </gmd:name>\n                                    <gmd:description>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Hydrografisches Netzwerk</gco:CharacterString>\n                                    </gmd:description>\n                                </gmd:CI_OnlineResource>\n                            </gmd:onLine>\n                        </gmd:MD_DigitalTransferOptions>\n                    </gmd:transferOptions>\n                </gmd:MD_Distribution>\n            </gmd:distributionInfo>\n            <gmd:dataQualityInfo>\n                <gmd:DQ_DataQuality>\n                    <gmd:scope>\n                        <gmd:DQ_Scope>\n                            <gmd:level>\n                                <gmd:MD_ScopeCode codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode\" codeListValue=\"service\">service</gmd:MD_ScopeCode>\n                            </gmd:level>\n                            <gmd:levelDescription>\n                                <gmd:MD_ScopeDescription>\n                                    <gmd:other>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">Dienst</gco:CharacterString>\n                                    </gmd:other>\n                                </gmd:MD_ScopeDescription>\n                            </gmd:levelDescription>\n                        </gmd:DQ_Scope>\n                    </gmd:scope>\n                    <gmd:report>\n                        <gmd:DQ_DomainConsistency xsi:type=\"gmd:DQ_DomainConsistency_Type\">\n                            <gmd:result>\n                                <gmd:DQ_ConformanceResult xsi:type=\"gmd:DQ_ConformanceResult_Type\">\n                                    <gmd:specification>\n                                        <gmd:CI_Citation>\n                                            <gmd:title>\n                                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">VERORDNUNG (EU) Nr. 1088/2010 DER KOMMISSION vom 23. November 2010 zur Änderung der Verordnung (EG) Nr. 976/2009 hinsichtlich Downloaddiensten und Transformationsdiensten</gco:CharacterString>\n                                            </gmd:title>\n                                            <gmd:date>\n                                                <gmd:CI_Date>\n                                                    <gmd:date>\n                                                        <gco:Date xmlns:gco=\"http://www.isotc211.org/2005/gco\">2010-12-08</gco:Date>\n                                                    </gmd:date>\n                                                    <gmd:dateType>\n                                                        <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\">publication</gmd:CI_DateTypeCode>\n                                                    </gmd:dateType>\n                                                </gmd:CI_Date>\n                                            </gmd:date>\n                                        </gmd:CI_Citation>\n                                    </gmd:specification>\n                                    <gmd:explanation>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">No explanation available</gco:CharacterString>\n                                    </gmd:explanation>\n                                    <gmd:pass>\n                                        <gco:Boolean xmlns:gco=\"http://www.isotc211.org/2005/gco\">true</gco:Boolean>\n                                    </gmd:pass>\n                                </gmd:DQ_ConformanceResult>\n                            </gmd:result>\n                        </gmd:DQ_DomainConsistency>\n                    </gmd:report>\n                    <gmd:report>\n                        <gmd:DQ_DomainConsistency xsi:type=\"gmd:DQ_DomainConsistency_Type\">\n                            <gmd:result>\n                                <gmd:DQ_ConformanceResult xsi:type=\"gmd:DQ_ConformanceResult_Type\">\n                                    <gmd:specification>\n                                        <gmd:CI_Citation>\n                                            <gmd:title>\n                                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">VERORDNUNG (EG) Nr. 976/2009 DER KOMMISSION  vom 19. Oktober 2009 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Netzdienste</gco:CharacterString>\n                                            </gmd:title>\n                                            <gmd:date>\n                                                <gmd:CI_Date>\n                                                    <gmd:date>\n                                                        <gco:Date xmlns:gco=\"http://www.isotc211.org/2005/gco\">2009-10-20</gco:Date>\n                                                    </gmd:date>\n                                                    <gmd:dateType>\n                                                        <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\">publication</gmd:CI_DateTypeCode>\n                                                    </gmd:dateType>\n                                                </gmd:CI_Date>\n                                            </gmd:date>\n                                        </gmd:CI_Citation>\n                                    </gmd:specification>\n                                    <gmd:explanation>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">No explanation available</gco:CharacterString>\n                                    </gmd:explanation>\n                                    <gmd:pass>\n                                        <gco:Boolean xmlns:gco=\"http://www.isotc211.org/2005/gco\">true</gco:Boolean>\n                                    </gmd:pass>\n                                </gmd:DQ_ConformanceResult>\n                            </gmd:result>\n                        </gmd:DQ_DomainConsistency>\n                    </gmd:report>\n                    <gmd:report>\n                        <gmd:DQ_DomainConsistency xsi:type=\"gmd:DQ_DomainConsistency_Type\">\n                            <gmd:result>\n                                <gmd:DQ_ConformanceResult xsi:type=\"gmd:DQ_ConformanceResult_Type\">\n                                    <gmd:specification>\n                                        <gmd:CI_Citation>\n                                            <gmd:title>\n                                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">VERORDNUNG (EU) Nr. 1311/2014 DER KOMMISSION vom 10. Dezember 2014 zur Änderung der Verordnung (EG) Nr. 976/2009 hinsichtlich der Definition des Begriffs INSPIRE-Metadatenelement</gco:CharacterString>\n                                            </gmd:title>\n                                            <gmd:date>\n                                                <gmd:CI_Date>\n                                                    <gmd:date>\n                                                        <gco:Date xmlns:gco=\"http://www.isotc211.org/2005/gco\">2014-12-11</gco:Date>\n                                                    </gmd:date>\n                                                    <gmd:dateType>\n                                                        <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\">publication</gmd:CI_DateTypeCode>\n                                                    </gmd:dateType>\n                                                </gmd:CI_Date>\n                                            </gmd:date>\n                                        </gmd:CI_Citation>\n                                    </gmd:specification>\n                                    <gmd:explanation>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">No explanation available</gco:CharacterString>\n                                    </gmd:explanation>\n                                    <gmd:pass>\n                                        <gco:Boolean xmlns:gco=\"http://www.isotc211.org/2005/gco\">true</gco:Boolean>\n                                    </gmd:pass>\n                                </gmd:DQ_ConformanceResult>\n                            </gmd:result>\n                        </gmd:DQ_DomainConsistency>\n                    </gmd:report>\n                    <gmd:report>\n                        <gmd:DQ_DomainConsistency xsi:type=\"gmd:DQ_DomainConsistency_Type\">\n                            <gmd:result>\n                                <gmd:DQ_ConformanceResult xsi:type=\"gmd:DQ_ConformanceResult_Type\">\n                                    <gmd:specification>\n                                        <gmd:CI_Citation>\n                                            <gmd:title>\n                                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">VERORDNUNG (EG) Nr. 1205/2008 DER KOMMISSION vom 3. Dezember 2008 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich Metadaten</gco:CharacterString>\n                                            </gmd:title>\n                                            <gmd:date>\n                                                <gmd:CI_Date>\n                                                    <gmd:date>\n                                                        <gco:Date xmlns:gco=\"http://www.isotc211.org/2005/gco\">2008-12-04</gco:Date>\n                                                    </gmd:date>\n                                                    <gmd:dateType>\n                                                        <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\">publication</gmd:CI_DateTypeCode>\n                                                    </gmd:dateType>\n                                                </gmd:CI_Date>\n                                            </gmd:date>\n                                        </gmd:CI_Citation>\n                                    </gmd:specification>\n                                    <gmd:explanation>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">No explanation available</gco:CharacterString>\n                                    </gmd:explanation>\n                                    <gmd:pass>\n                                        <gco:Boolean xmlns:gco=\"http://www.isotc211.org/2005/gco\">true</gco:Boolean>\n                                    </gmd:pass>\n                                </gmd:DQ_ConformanceResult>\n                            </gmd:result>\n                        </gmd:DQ_DomainConsistency>\n                    </gmd:report>\n                    <gmd:report>\n                        <gmd:DQ_DomainConsistency xsi:type=\"gmd:DQ_DomainConsistency_Type\">\n                            <gmd:result>\n                                <gmd:DQ_ConformanceResult xsi:type=\"gmd:DQ_ConformanceResult_Type\">\n                                    <gmd:specification>\n                                        <gmd:CI_Citation>\n                                            <gmd:title>\n                                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">VERORDNUNG (EU) Nr. 1312/2014 DER KOMMISSION vom 10. Dezember 2014 zur Änderung der Verordnung (EU) Nr. 1089/2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatendiensten</gco:CharacterString>\n                                            </gmd:title>\n                                            <gmd:date>\n                                                <gmd:CI_Date>\n                                                    <gmd:date>\n                                                        <gco:Date xmlns:gco=\"http://www.isotc211.org/2005/gco\">2014-12-11</gco:Date>\n                                                    </gmd:date>\n                                                    <gmd:dateType>\n                                                        <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\">publication</gmd:CI_DateTypeCode>\n                                                    </gmd:dateType>\n                                                </gmd:CI_Date>\n                                            </gmd:date>\n                                        </gmd:CI_Citation>\n                                    </gmd:specification>\n                                    <gmd:explanation>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">No explanation available</gco:CharacterString>\n                                    </gmd:explanation>\n                                    <gmd:pass>\n                                        <gco:Boolean xmlns:gco=\"http://www.isotc211.org/2005/gco\">true</gco:Boolean>\n                                    </gmd:pass>\n                                </gmd:DQ_ConformanceResult>\n                            </gmd:result>\n                        </gmd:DQ_DomainConsistency>\n                    </gmd:report>\n                    <gmd:report>\n                        <gmd:DQ_DomainConsistency xsi:type=\"gmd:DQ_DomainConsistency_Type\">\n                            <gmd:result>\n                                <gmd:DQ_ConformanceResult xsi:type=\"gmd:DQ_ConformanceResult_Type\">\n                                    <gmd:specification>\n                                        <gmd:CI_Citation>\n                                            <gmd:title>\n                                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">VERORDNUNG (EU) Nr. 1253/2013 DER KOMMISSION vom 21. Oktober 2013 zur Änderung der Verordnung (EU) Nr. 1089/2010 zur Durchführung der Richtlinie 2007/2/EG hinsichtlich der Interoperabilität von Geodatensätzen und -diensten</gco:CharacterString>\n                                            </gmd:title>\n                                            <gmd:date>\n                                                <gmd:CI_Date>\n                                                    <gmd:date>\n                                                        <gco:Date xmlns:gco=\"http://www.isotc211.org/2005/gco\">2013-12-10</gco:Date>\n                                                    </gmd:date>\n                                                    <gmd:dateType>\n                                                        <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\">publication</gmd:CI_DateTypeCode>\n                                                    </gmd:dateType>\n                                                </gmd:CI_Date>\n                                            </gmd:date>\n                                        </gmd:CI_Citation>\n                                    </gmd:specification>\n                                    <gmd:explanation>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">No explanation available</gco:CharacterString>\n                                    </gmd:explanation>\n                                    <gmd:pass>\n                                        <gco:Boolean xmlns:gco=\"http://www.isotc211.org/2005/gco\">true</gco:Boolean>\n                                    </gmd:pass>\n                                </gmd:DQ_ConformanceResult>\n                            </gmd:result>\n                        </gmd:DQ_DomainConsistency>\n                    </gmd:report>\n                    <gmd:report>\n                        <gmd:DQ_DomainConsistency xsi:type=\"gmd:DQ_DomainConsistency_Type\">\n                            <gmd:result>\n                                <gmd:DQ_ConformanceResult xsi:type=\"gmd:DQ_ConformanceResult_Type\">\n                                    <gmd:specification>\n                                        <gmd:CI_Citation>\n                                            <gmd:title>\n                                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">VERORDNUNG (EU) Nr. 102/2011 DER KOMMISSION vom 4. Februar 2011 zur Änderung der Verordnung (EU) Nr. 1089/2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatensätzen und -diensten</gco:CharacterString>\n                                            </gmd:title>\n                                            <gmd:date>\n                                                <gmd:CI_Date>\n                                                    <gmd:date>\n                                                        <gco:Date xmlns:gco=\"http://www.isotc211.org/2005/gco\">2011-02-05</gco:Date>\n                                                    </gmd:date>\n                                                    <gmd:dateType>\n                                                        <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\">publication</gmd:CI_DateTypeCode>\n                                                    </gmd:dateType>\n                                                </gmd:CI_Date>\n                                            </gmd:date>\n                                        </gmd:CI_Citation>\n                                    </gmd:specification>\n                                    <gmd:explanation>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">No explanation available</gco:CharacterString>\n                                    </gmd:explanation>\n                                    <gmd:pass>\n                                        <gco:Boolean xmlns:gco=\"http://www.isotc211.org/2005/gco\">true</gco:Boolean>\n                                    </gmd:pass>\n                                </gmd:DQ_ConformanceResult>\n                            </gmd:result>\n                        </gmd:DQ_DomainConsistency>\n                    </gmd:report>\n                    <gmd:report>\n                        <gmd:DQ_DomainConsistency xsi:type=\"gmd:DQ_DomainConsistency_Type\">\n                            <gmd:result>\n                                <gmd:DQ_ConformanceResult xsi:type=\"gmd:DQ_ConformanceResult_Type\">\n                                    <gmd:specification>\n                                        <gmd:CI_Citation>\n                                            <gmd:title>\n                                                <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">VERORDNUNG (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatensätzen und -diensten</gco:CharacterString>\n                                            </gmd:title>\n                                            <gmd:date>\n                                                <gmd:CI_Date>\n                                                    <gmd:date>\n                                                        <gco:Date xmlns:gco=\"http://www.isotc211.org/2005/gco\">2010-12-08</gco:Date>\n                                                    </gmd:date>\n                                                    <gmd:dateType>\n                                                        <gmd:CI_DateTypeCode codeList=\"http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode\" codeListValue=\"publication\">publication</gmd:CI_DateTypeCode>\n                                                    </gmd:dateType>\n                                                </gmd:CI_Date>\n                                            </gmd:date>\n                                        </gmd:CI_Citation>\n                                    </gmd:specification>\n                                    <gmd:explanation>\n                                        <gco:CharacterString xmlns:gco=\"http://www.isotc211.org/2005/gco\">No explanation available</gco:CharacterString>\n                                    </gmd:explanation>\n                                    <gmd:pass>\n                                        <gco:Boolean xmlns:gco=\"http://www.isotc211.org/2005/gco\">true</gco:Boolean>\n                                    </gmd:pass>\n                                </gmd:DQ_ConformanceResult>\n                            </gmd:result>\n                        </gmd:DQ_DomainConsistency>\n                    </gmd:report>\n                </gmd:DQ_DataQuality>\n            </gmd:dataQualityInfo>\n        </gmd:MD_Metadata>"
+  },
+  "contacts": [
+    {
+      "name": "HLBG",
+      "role": "pointOfContact",
+      "communications": [
+        {
+          "type": "email",
+          "value": "vertrieb-geobasisdaten@hvbg.hessen.de"
+        }
+      ]
+    }
+  ],
+  "keywords": [
+    {
+      "term": "1c349fea-924b-488f-b6a2-e896f40ac897",
+      "source": "frei"
+    },
+    {
+      "term": "Hydrographic network",
+      "source": "frei"
+    },
+    {
+      "term": "Wasserlaufsegment",
+      "source": "frei"
+    },
+    {
+      "term": "Watercourse Link",
+      "source": "frei"
+    },
+    {
+      "term": "AdVMIS",
+      "source": "frei"
+    },
+    {
+      "term": "infoMapAccessService",
+      "source": "frei"
+    },
+    {
+      "term": "inspireidentifiziert",
+      "source": "frei"
+    },
+    {
+      "term": "http://data.europa.eu/bna/c_dd313021",
+      "source": "frei"
+    }
+  ],
+  "language": "de",
+  "metadata": {
+    "created": null,
+    "partner": "bund",
+    "modified": "2026-08-11T00:00:00.000Z",
+    "provider": "bu_bkg",
+    "data_type": "INGRID",
+    "datasource": {
+      "id": "Harvester",
+      "name": "Harvester",
+      "type": "csw"
+    },
+    "document_type": "InGridGeoService"
+  },
+  "spatials": [
+    {
+      "bbox": [
+        7.72989946,
+        49.38901792,
+        10.2486601,
+        51.65883224
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              7.72989946,
+              49.38901792
+            ],
+            [
+              10.2486601,
+              49.38901792
+            ],
+            [
+              10.2486601,
+              51.65883224
+            ],
+            [
+              7.72989946,
+              51.65883224
+            ],
+            [
+              7.72989946,
+              49.38901792
+            ]
+          ]
+        ]
+      }
+    }
+  ],
+  "sort_uuid": "f61e1d7db1b6f07ae7199e105d0ef1af102c57e6",
+  "references": [
+    {
+      "url": "https://www.geoportal.hessen.de/mapbender/php/wms.php?inspire=1&layer_id=61286&withChilds=1&REQUEST=GetCapabilities&SERVICE=WMS",
+      "type": {
+        "key": "3600",
+        "value": "Gekoppelte Daten"
+      }
+    },
+    {
+      "url": "https://www.geoportal.hessen.de/registry/wfs/717?REQUEST=GetCapabilities&VERSION=2.0.0&SERVICE=WFS",
+      "type": {
+        "key": "9990",
+        "value": "download"
+      },
+      "title": "INSPIRE-WFS HE Hydro - Netzwerk ATKIS Basis-DLM"
+    }
+  ],
+  "description": "Dieser Dienst stellt für das INSPIRE-Thema Gewässernetz (Hydro-Netzwerk) aus ATKIS Basis-DLM umgesetzte Daten bereit.:Hydrografisches Netzwerk"
+}
