@@ -94,6 +94,10 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
         return result;
     }
 
+    createCswIsoDocument(): string {
+        return this.baseMapper.createCswIsoDocument();
+    }
+
     getKeywords() {
         let result = [];
         let keywords = this.baseMapper.getKeywords();
