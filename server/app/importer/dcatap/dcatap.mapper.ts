@@ -71,6 +71,12 @@ type IsoLink = { url: string, name?: string, description?: string, function?: st
 
 type IsoReference = { title: string, href?: string };
 
+export type DcatapContact = Contact & {
+    'organization-name'?: string,
+    isOrganization?: boolean,   // rdf:type vcard:Organization
+    role?: string               // vcard:role
+};
+
 export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMapper<IndexDocument>, ToDcatapdeMapper {
 
     private readonly datasetSubject: Quad_Subject;
@@ -80,7 +86,8 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
     private readonly uuid: string;
 
     private fetched: any = {
-        contactPoint: null,
+        contactPoints: null,
+        description: undefined,  // null = fetched, but not present
         publishers: null,
         keywords: null,
         themes: null
@@ -185,7 +192,7 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
 
         const dataIdentification = this.isoElement(this.isoElement(root, namespaces.GMD, 'gmd:identificationInfo'), namespaces.GMD, 'gmd:MD_DataIdentification');
         this.buildIsoCitation(dataIdentification);
-        this.isoCharacterString(dataIdentification, 'abstract', this.getFirstLiteral(this.datasetSubject, namespaces.DCT + 'description'));
+        this.isoCharacterString(dataIdentification, 'abstract', this.getDescription());
         this.buildIsoContacts(dataIdentification, 'pointOfContact', contacts);
         this.buildIsoKeywords(dataIdentification);
         this.buildIsoConstraints(dataIdentification);
@@ -300,7 +307,7 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
         const citation = this.isoElement(this.isoElement(dataIdentification, namespaces.GMD, 'gmd:citation'), namespaces.GMD, 'gmd:CI_Citation');
         this.isoCharacterString(citation, 'title', this.getTitle());
         const issued = this.toIsoDate(this.getFirstLiteral(this.datasetSubject, namespaces.DCT + 'issued'));
-        const modified = this.toIsoDate(this.getFirstLiteral(this.datasetSubject, namespaces.DCT + 'modified'));
+        const modified = this.toIsoDate(this.getModifiedDate());
         if (issued) {
             this.isoDate(citation, issued, 'publication');
         }
@@ -323,14 +330,12 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
             keywords.forEach(keyword => this.isoCharacterString(mdKeywords, 'keyword', keyword));
         }
 
-        const themes = this.getObjects(this.datasetSubject, namespaces.DCAT + 'theme')
-            .filter(term => term.termType == 'NamedNode')
-            .map(term => ({
-                title: this.getFirstLiteral(term as Quad_Subject, namespaces.SKOS + 'prefLabel') ?? this.getLastPathSegment(term.value),
-                href: term.value
-            }));
-        const inspireThemes = themes.filter(theme => theme.href.startsWith(INSPIRE_THEME_URL));
-        const otherThemes = themes.filter(theme => !theme.href.startsWith(INSPIRE_THEME_URL));
+        // theme IRIs become anchors, labels and literals plain keywords
+        const themes: IsoReference[] = this.getThemes().map(theme => /^https?:\/\//.test(theme)
+            ? { title: this.getFirstLiteral(theme, namespaces.SKOS + 'prefLabel') ?? this.getLastPathSegment(theme), href: theme }
+            : { title: theme });
+        const inspireThemes = themes.filter(theme => theme.href?.startsWith(INSPIRE_THEME_URL));
+        const otherThemes = themes.filter(theme => !theme.href?.startsWith(INSPIRE_THEME_URL));
         if (inspireThemes.length) {
             const mdKeywords = this.buildIsoThemeKeywords(dataIdentification, inspireThemes);
             const thesaurus = this.isoElement(this.isoElement(mdKeywords, namespaces.GMD, 'gmd:thesaurusName'), namespaces.GMD, 'gmd:CI_Citation');
@@ -412,7 +417,7 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
             const timePeriod = this.isoElement(this.isoElement(temporalExtent, namespaces.GMD, 'gmd:extent'), namespaces.GML_3_2, 'gml:TimePeriod');
             timePeriod.setAttributeNS(namespaces.GML_3_2, 'gml:id', `timePeriod_${idx + 1}`);
             for (const [name, date] of [['gml:beginPosition', range.gte], ['gml:endPosition', range.lte]] as const) {
-                const position = this.isoElement(timePeriod, namespaces.GML_3_2, name, date ? this.toIsoDate(date.toISOString()) : undefined);
+                const position = this.isoElement(timePeriod, namespaces.GML_3_2, name, this.toIsoDate(date));
                 if (!date) {
                     position.setAttribute('indeterminatePosition', 'unknown');
                 }
@@ -510,26 +515,19 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
      */
     private getIsoParties(): IsoParty[] {
         const parties: IsoParty[] = [];
-        for (const term of this.getObjects(this.datasetSubject, namespaces.DCAT + 'contactPoint')) {
-            const subject = term as Quad_Subject;
-            const isOrganization = this.getObjects(subject, namespaces.RDF + 'type').some(type => type.value == namespaces.VCARD + 'Organization');
-            const fn = this.getFirstLiteral(subject, namespaces.VCARD + 'fn');
-            const role = this.getFirstLiteral(subject, namespaces.VCARD + 'role');
-            const addressTerm = this.getFirstObject(subject, namespaces.VCARD + 'hasAddress') as Quad_Subject ?? subject;
+        for (const contact of this.getContactPoints()) {
             const party: IsoParty = {
-                individualName: isOrganization ? undefined : fn,
-                organisationName: this.getFirstLiteral(subject, namespaces.VCARD + 'organization-name')
-                    ?? this.getFirstLiteral(subject, namespaces.VCARD + 'org')
-                    ?? (isOrganization ? fn : undefined),
-                email: this.getFirstObject(subject, namespaces.VCARD + 'hasEmail')?.value.replace(/^mailto:/, ''),
-                phone: this.getFirstObject(subject, namespaces.VCARD + 'hasTelephone')?.value.replace(/^tel:/, ''),
-                url: this.getFirstObject(subject, namespaces.VCARD + 'hasURL')?.value,
-                street: this.getFirstLiteral(addressTerm, namespaces.VCARD + 'street-address'),
-                city: this.getFirstLiteral(addressTerm, namespaces.VCARD + 'locality'),
-                region: this.getFirstLiteral(addressTerm, namespaces.VCARD + 'region'),
-                postalCode: this.getFirstLiteral(addressTerm, namespaces.VCARD + 'postal-code') ?? this.getFirstLiteral(subject, namespaces.VCARD + 'hasPostalCode'),
-                country: this.getFirstLiteral(addressTerm, namespaces.VCARD + 'country-name') ?? this.getFirstLiteral(subject, namespaces.VCARD + 'hasCountryName'),
-                role: ISO_ROLE_CODES.includes(role) ? role : 'pointOfContact'
+                individualName: contact.isOrganization ? undefined : contact.fn ?? undefined,
+                organisationName: contact['organization-name'] ?? (contact.isOrganization ? contact.fn ?? undefined : undefined),
+                email: contact.hasEmail,
+                phone: contact.hasTelephone,
+                url: contact.hasURL,
+                street: contact.hasStreetAddress,
+                city: contact.hasLocality,
+                region: contact.hasRegion,
+                postalCode: contact.hasPostalCode,
+                country: contact.hasCountryName,
+                role: ISO_ROLE_CODES.includes(contact.role) ? contact.role : 'pointOfContact'
             };
             if (party.individualName || party.organisationName || party.email) {
                 parties.push(party);
@@ -570,10 +568,14 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
     }
 
     private getIsoDateStamp(): string {
-        const date = this.getFirstLiteral(this.datasetSubject, namespaces.DCT + 'modified')
-            ?? this.getFirstLiteral(this.datasetSubject, namespaces.DCT + 'issued');
-        if (date && !isNaN(Date.parse(date))) {
-            return date.includes('T') ? date : `${date}T00:00:00`;
+        const modified = this.toIsoDateTime(this.getModifiedDate());
+        if (modified) {
+            return modified;
+        }
+        // not using getIssued(), as it returns dct:modified
+        const issued = this.getFirstLiteral(this.datasetSubject, namespaces.DCT + 'issued');
+        if (issued && !isNaN(Date.parse(issued))) {
+            return issued.includes('T') ? issued : `${issued}T00:00:00`;
         }
         return this.getHarvestingDate().toISOString();
     }
@@ -609,8 +611,22 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
         return decodeURIComponent(segment.substring(Math.max(segment.lastIndexOf('/'), segment.lastIndexOf('#')) + 1));
     }
 
-    private toIsoDate(date: string | undefined): string | undefined {
+    /**
+     * @returns `YYYY-MM-DD`: the date part of a string as given, of a Date in UTC;
+     * undefined if the date is missing or invalid
+     */
+    private toIsoDate(date: string | Date | undefined): string | undefined {
+        if (date instanceof Date) {
+            return this.toIsoDateTime(date)?.substring(0, 10);
+        }
         return date && !isNaN(Date.parse(date)) ? date.substring(0, 10) : undefined;
+    }
+
+    /**
+     * @returns the date as UTC ISO string, or undefined if the date is missing or invalid
+     */
+    private toIsoDateTime(date: Date | undefined): string | undefined {
+        return date && !isNaN(date.getTime()) ? date.toISOString() : undefined;
     }
 
     /**
@@ -636,6 +652,9 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
     }
 
     getDescription(): string | undefined {
+        if (this.fetched.description !== undefined) {
+            return this.fetched.description ?? undefined;
+        }
         let description = this.getFirstLiteral(this.datasetSubject, namespaces.DCT + 'description');
         if (!description) {
             description = this.getFirstLiteral(this.datasetSubject, namespaces.DCT + 'abstract');
@@ -645,8 +664,10 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
             this.log.warn(msg);
             this.summary.warnings.push(['No description', msg]);
             this.valid = false;
+            this.fetched.description = null;
             return undefined;
         }
+        this.fetched.description = description;
         return description;
     }
 
@@ -1128,39 +1149,60 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
         return undefined;
     }
 
-    getContactPoint(): Contact {
-        if (this.fetched.contactPoint) {
-            return this.fetched.contactPoint;
+    /**
+     * @returns the first dcat:contactPoint, or `{ fn: null }` if there is none
+     */
+    getContactPoint(): DcatapContact {
+        return this.getContactPoints()[0] ?? { fn: null };
+    }
+
+    /**
+     * @returns all dcat:contactPoint nodes (vCard); address properties are read from
+     * vcard:hasAddress, falling back to the contact node itself
+     */
+    getContactPoints(): DcatapContact[] {
+        if (this.fetched.contactPoints) {
+            return this.fetched.contactPoints;
         }
 
-        const infos: Contact = { fn: null };
-        const contactTerms = this.getObjects(this.datasetSubject, namespaces.DCAT + 'contactPoint');
-
-        if (contactTerms.length > 0) {
-            const contactSubject = contactTerms[0] as Quad_Subject;
+        const contacts: DcatapContact[] = [];
+        for (const contactTerm of this.getObjects(this.datasetSubject, namespaces.DCAT + 'contactPoint')) {
+            const contactSubject = contactTerm as Quad_Subject;
+            const addressSubject = this.getFirstObject(contactSubject, namespaces.VCARD + 'hasAddress') as Quad_Subject ?? contactSubject;
 
             const name = this.getFirstLiteral(contactSubject, namespaces.VCARD + 'fn');
             const org = this.getFirstLiteral(contactSubject, namespaces.VCARD + 'organization-name')
                 || this.getFirstLiteral(contactSubject, namespaces.VCARD + 'org');
-            const region = this.getFirstLiteral(contactSubject, namespaces.VCARD + 'region');
-            const country = this.getFirstLiteral(contactSubject, namespaces.VCARD + 'hasCountryName');
-            const postCode = this.getFirstLiteral(contactSubject, namespaces.VCARD + 'hasPostalCode');
+            const street = this.getFirstLiteral(addressSubject, namespaces.VCARD + 'street-address');
+            const locality = this.getFirstLiteral(addressSubject, namespaces.VCARD + 'locality');
+            const region = this.getFirstLiteral(addressSubject, namespaces.VCARD + 'region');
+            const country = this.getFirstLiteral(addressSubject, namespaces.VCARD + 'country-name')
+                || this.getFirstLiteral(contactSubject, namespaces.VCARD + 'hasCountryName');
+            const postCode = this.getFirstLiteral(addressSubject, namespaces.VCARD + 'postal-code')
+                || this.getFirstLiteral(contactSubject, namespaces.VCARD + 'hasPostalCode');
             const emailObj = this.getFirstObject(contactSubject, namespaces.VCARD + 'hasEmail');
             const phoneObj = this.getFirstObject(contactSubject, namespaces.VCARD + 'hasTelephone');
             const urlObj = this.getFirstObject(contactSubject, namespaces.VCARD + 'hasURL');
+            const role = this.getFirstLiteral(contactSubject, namespaces.VCARD + 'role');
 
+            const infos: DcatapContact = { fn: null };
             if (name) infos.fn = name;
             if (org) infos['organization-name'] = org;
+            if (street) infos.hasStreetAddress = street;
+            if (locality) infos.hasLocality = locality;
             if (region) infos.hasRegion = region;
             if (country) infos.hasCountryName = country.trim();
             if (postCode) infos.hasPostalCode = postCode;
             if (emailObj) infos.hasEmail = emailObj.value.replace(/^mailto:/, '');
             if (phoneObj) infos.hasTelephone = phoneObj.value.replace(/^tel:/, '');
             if (urlObj) infos.hasURL = urlObj.value;
+            if (role) infos.role = role;
+            infos.isOrganization = this.getObjects(contactSubject, namespaces.RDF + 'type').some(type => type.value == namespaces.VCARD + 'Organization');
+            contacts.push(infos);
         }
 
-        this.fetched.contactPoint = infos;
-        return infos;
+        this.fetched.contactPoints = contacts;
+        return contacts;
     }
 
     private getUrlCheckRequestConfig(uri: string): RequestOptions {

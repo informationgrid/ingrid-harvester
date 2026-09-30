@@ -105,3 +105,98 @@ describe('DcatapMapper.createCswIsoDocument (dessau-rosslau, a537c7007dd44945bc3
         expect(text(`${dataQuality}/gmd:lineage`)).to.be.empty;
     });
 });
+
+describe('DcatapMapper.createCswIsoDocument (reused getters)', function () {
+
+    const sourceURL = 'https://example.com/catalog.jsonld';
+    const payload = {
+        '@context': {
+            dcat: 'http://www.w3.org/ns/dcat#',
+            dct: 'http://purl.org/dc/terms/',
+            skos: 'http://www.w3.org/2004/02/skos/core#',
+            vcard: 'http://www.w3.org/2006/vcard/ns#'
+        },
+        '@graph': [{
+            '@id': 'https://example.com/dataset/1',
+            '@type': 'dcat:Dataset',
+            'dct:identifier': 'dataset-1',
+            'dct:title': 'Test dataset',
+            'dct:abstract': 'Abstract only',
+            'dct:modified': { '@value': '2026-01-02T03:04:05Z', '@type': 'http://www.w3.org/2001/XMLSchema#dateTime' },
+            'dcat:theme': [{ '@id': 'http://inspire.ec.europa.eu/theme/au' }, 'Umwelt'],
+            'dcat:contactPoint': {
+                '@type': 'vcard:Organization',
+                'vcard:fn': 'Test Organisation',
+                'vcard:role': 'custodian',
+                'vcard:hasEmail': { '@id': 'mailto:info@example.com' },
+                'vcard:hasAddress': {
+                    'vcard:street-address': 'Hauptstraße 1',
+                    'vcard:locality': 'Dessau-Roßlau',
+                    'vcard:postal-code': '06844',
+                    'vcard:country-name': 'Deutschland'
+                }
+            }
+        }, {
+            '@id': 'http://inspire.ec.europa.eu/theme/au',
+            'skos:prefLabel': 'Verwaltungseinheiten'
+        }]
+    };
+
+    let mapper: DcatapMapper;
+    let doc: Document;
+
+    const text = (path: string): string[] => (select(path, doc) as Node[]).map(node => node.textContent);
+    const idInfo = '/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification';
+
+    before(async function () {
+        const store = await parseRdfPayload(payload, sourceURL);
+        const [datasetSubject] = store.getSubjects(
+            DataFactory.namedNode(namespaces.RDF + 'type'),
+            DataFactory.namedNode(namespaces.DCAT + 'Dataset'),
+            null
+        );
+        const testSettings = { sourceURL } as DcatapSettings;
+        mapper = new DcatapMapper(testSettings, datasetSubject, store, JSON.stringify(payload), new Date('2026-09-30T00:00:00Z'), new Summary('test', testSettings));
+        doc = new DOMParser().parseFromString(mapper.createCswIsoDocument(), 'application/xml');
+    });
+
+    it('uses getDescription() with dct:abstract fallback', function () {
+        expect(text(`${idInfo}/gmd:abstract/gco:CharacterString`)).to.deep.equal(['Abstract only']);
+    });
+
+    it('uses getModifiedDate() for dateStamp and revision date', function () {
+        expect(text('/gmd:MD_Metadata/gmd:dateStamp/gco:DateTime')).to.deep.equal(['2026-01-02T03:04:05.000Z']);
+        expect(text(`${idInfo}/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue="revision"]/gmd:date/gco:Date`)).to.deep.equal(['2026-01-02']);
+    });
+
+    it('uses getThemes() for theme keywords', function () {
+        const inspire = `${idInfo}/gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName]`;
+        expect(text(`${inspire}/gmd:keyword/gmx:Anchor`)).to.deep.equal(['Verwaltungseinheiten']);
+        expect(text(`${inspire}/gmd:keyword/gmx:Anchor/@xlink:href`)).to.deep.equal(['http://inspire.ec.europa.eu/theme/au']);
+        const other = `${idInfo}/gmd:descriptiveKeywords/gmd:MD_Keywords[not(gmd:thesaurusName)][gmd:type]`;
+        expect(text(`${other}/gmd:keyword/gco:CharacterString`)).to.deep.equal(['Umwelt']);
+    });
+
+    it('uses getContactPoints() for contacts', function () {
+        const party = '/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty';
+        expect(text(`${party}/gmd:individualName`)).to.be.empty;
+        expect(text(`${party}/gmd:organisationName/gco:CharacterString`)).to.deep.equal(['Test Organisation']);
+        const address = `${idInfo}/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address`;
+        expect(text(`${address}/gmd:deliveryPoint/gco:CharacterString`)).to.deep.equal(['Hauptstraße 1']);
+        expect(text(`${address}/gmd:city/gco:CharacterString`)).to.deep.equal(['Dessau-Roßlau']);
+        expect(text(`${address}/gmd:postalCode/gco:CharacterString`)).to.deep.equal(['06844']);
+        expect(text(`${address}/gmd:country/gco:CharacterString`)).to.deep.equal(['Deutschland']);
+        expect(text(`${address}/gmd:electronicMailAddress/gco:CharacterString`)).to.deep.equal(['info@example.com']);
+        expect(text(`${idInfo}/gmd:pointOfContact//gmd:CI_RoleCode/@codeListValue`)).to.deep.equal(['custodian']);
+        // no pointOfContact role -> first party is used as metadata contact
+        expect(text('/gmd:MD_Metadata/gmd:contact//gmd:CI_RoleCode/@codeListValue')).to.deep.equal(['custodian']);
+    });
+
+    it('keeps getContactPoint() fields used by the ES document', function () {
+        const contact = mapper.getContactPoint();
+        expect(contact.fn).to.equal('Test Organisation');
+        expect(contact.hasEmail).to.equal('info@example.com');
+        expect(contact['organization-name']).to.be.undefined;
+    });
+});
+
