@@ -26,7 +26,7 @@ import { runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../ut
 import { withDeprecatedMapping } from './deprecated.util.js';
 import type { DcatapdeSettings } from '../../app/importer/dcatapde/dcatapde.settings.js';
 
-describe('DCAT-AP.de Integration Tests', function () {
+describe('Deprecated DCAT-AP.de Integration Tests', function () {
     this.timeout(60000);
 
     const profile = 'ingrid';

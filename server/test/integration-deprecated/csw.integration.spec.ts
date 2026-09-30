@@ -31,7 +31,7 @@ import cswWsvWsvConfig from '../data/csw/wsv-wsv/config.json' with { type: 'json
 import { type ImporterIntegrationTestCase, runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
 import { withDeprecatedMapping } from './deprecated.util.js';
 
-describe('CSW Integration Tests', function () {
+describe('Deprecated CSW Integration Tests', function () {
     this.timeout(60000);
 
     const profile = 'ingrid';

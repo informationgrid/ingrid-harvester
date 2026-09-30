@@ -33,7 +33,7 @@ import wfsZdmTideweser from '../data/wfs/zdm-tideweser/config.json' with { type:
 import { type ImporterIntegrationTestCase, runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
 import { withDeprecatedMapping } from './deprecated.util.js';
 
-describe('WFS Integration Tests', function () {
+describe('Deprecated WFS Integration Tests', function () {
     this.timeout(60000);
 
     const profile = 'ingrid';

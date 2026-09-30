@@ -26,7 +26,7 @@ import { runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../ut
 import { withDeprecatedMapping } from './deprecated.util.js';
 import type { CkanSettings } from '../../app/importer/ckan/ckan.settings.js';
 
-describe('CKAN Integration Tests', function () {
+describe('Deprecated CKAN Integration Tests', function () {
     this.timeout(60000);
 
     const profile = 'ingrid';

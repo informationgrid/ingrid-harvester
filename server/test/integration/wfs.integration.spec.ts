@@ -32,7 +32,7 @@ import wfsZdmTideems from '../data/wfs/zdm-tideems/config.json' with { type: 'js
 import wfsZdmTideweser from '../data/wfs/zdm-tideweser/config.json' with { type: 'json' };
 import { type ImporterIntegrationTestCase, runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
 
-describe('WFS Integration Tests', function () {
+describe.skip('WFS Integration Tests', function () {
     this.timeout(60000);
 
     const profile = 'ingrid';

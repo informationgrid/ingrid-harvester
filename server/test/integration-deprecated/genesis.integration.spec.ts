@@ -27,7 +27,7 @@ import genesisStSettings from '../data/genesis/genesis-st/config.json' with { ty
 import { resolveFixturePath, runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
 import { withDeprecatedMapping } from './deprecated.util.js';
 
-describe('GENESIS Integration Tests', function () {
+describe('Deprecated GENESIS Integration Tests', function () {
     this.timeout(60000);
 
     const profile = 'ingrid';
