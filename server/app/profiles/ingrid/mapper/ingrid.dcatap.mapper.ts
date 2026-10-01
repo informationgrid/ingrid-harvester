@@ -23,6 +23,7 @@
 
 import type { Geometry } from 'geojson';
 import log4js from 'log4js';
+import { DcatapIsoMapper } from '../../../importer/dcatap/dcatap.iso.mapper.js';
 import { DcatapMapper } from '../../../importer/dcatap/dcatap.mapper.js';
 import type { ToElasticMapper } from '../../../importer/to.elastic.mapper.js';
 import type { DateRange } from '../../../model/dateRange.js';
@@ -95,7 +96,7 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
     }
 
     createCswIsoDocument(): string {
-        return this.baseMapper.createCswIsoDocument();
+        return new DcatapIsoMapper(this.baseMapper).createCswIsoDocument();
     }
 
     getKeywords() {

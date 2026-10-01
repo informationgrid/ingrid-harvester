@@ -26,6 +26,7 @@ import { expect } from 'chai';
 import fs from 'fs';
 import { DataFactory } from 'n3';
 import xpath from 'xpath';
+import { DcatapIsoMapper } from '../../../app/importer/dcatap/dcatap.iso.mapper.js';
 import { DcatapMapper } from '../../../app/importer/dcatap/dcatap.mapper.js';
 import { parseRdfPayload } from '../../../app/importer/dcatap/dcatap.rdf.js';
 import type { DcatapSettings } from '../../../app/importer/dcatap/dcatap.settings.js';
@@ -35,7 +36,7 @@ import settings from '../../data/dcatap/dessau-rosslau/config.json' with { type:
 
 const select = xpath.useNamespaces({ gmd: namespaces.GMD, gco: namespaces.GCO, gmx: namespaces.GMX, xlink: namespaces.XLINK });
 
-describe('DcatapMapper.createCswIsoDocument (dessau-rosslau, a537c7007dd44945bc378eb59e10314c)', function () {
+describe('DcatapIsoMapper.createCswIsoDocument (dessau-rosslau, a537c7007dd44945bc378eb59e10314c)', function () {
 
     let doc: Document;
 
@@ -50,7 +51,7 @@ describe('DcatapMapper.createCswIsoDocument (dessau-rosslau, a537c7007dd44945bc3
             null
         );
         const mapper = new DcatapMapper(settings as DcatapSettings, datasetSubject, store, payload, new Date('2026-09-30T00:00:00Z'), new Summary('test', settings as any));
-        doc = new DOMParser().parseFromString(mapper.createCswIsoDocument(), 'application/xml');
+        doc = new DOMParser().parseFromString(new DcatapIsoMapper(mapper).createCswIsoDocument(), 'application/xml');
     });
 
     it('maps metadata information', function () {
@@ -106,7 +107,7 @@ describe('DcatapMapper.createCswIsoDocument (dessau-rosslau, a537c7007dd44945bc3
     });
 });
 
-describe('DcatapMapper.createCswIsoDocument (reused getters)', function () {
+describe('DcatapIsoMapper.createCswIsoDocument (reused getters)', function () {
 
     const sourceURL = 'https://example.com/catalog.jsonld';
     const payload = {
@@ -157,7 +158,7 @@ describe('DcatapMapper.createCswIsoDocument (reused getters)', function () {
         );
         const testSettings = { sourceURL } as DcatapSettings;
         mapper = new DcatapMapper(testSettings, datasetSubject, store, JSON.stringify(payload), new Date('2026-09-30T00:00:00Z'), new Summary('test', testSettings));
-        doc = new DOMParser().parseFromString(mapper.createCswIsoDocument(), 'application/xml');
+        doc = new DOMParser().parseFromString(new DcatapIsoMapper(mapper).createCswIsoDocument(), 'application/xml');
     });
 
     it('uses getDescription() with dct:abstract fallback', function () {
