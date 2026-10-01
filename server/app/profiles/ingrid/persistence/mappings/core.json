@@ -1,0 +1,304 @@
+{
+    "dynamic": true,
+    "_source": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword",
+            "copy_to": [
+                "fulltext"
+            ]
+        },
+        "$schema": {
+            "type": "keyword"
+        },
+        "sort_uuid": {
+            "type": "keyword"
+        },
+        "metadata": {
+            "properties": {
+                "data_type": {
+                    "type": "keyword"
+                },
+                "document_type": {
+                    "type": "keyword"
+                },
+                "created": {
+                    "type": "date"
+                },
+                "modified": {
+                    "type": "date"
+                },
+                "issued": {
+                    "type": "date"
+                },
+                "partner": {
+                    "type": "keyword"
+                },
+                "provider": {
+                    "type": "keyword"
+                },
+                "language": {
+                    "type": "keyword"
+                },
+                "datasource": {
+                    "properties": {
+                        "id": {
+                            "type": "keyword"
+                        },
+                        "name": {
+                            "type": "keyword"
+                        },
+                        "type": {
+                            "type": "keyword"
+                        }
+                    }
+                }
+            }
+        },
+        "title": {
+            "type": "text",
+            "analyzer": "german",
+            "store": true,
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                },
+                "ngram": {
+                    "type": "text",
+                    "analyzer": "ngram",
+                    "search_analyzer": "german"
+                },
+                "edge_ngram": {
+                    "type": "text",
+                    "analyzer": "edge_ngram",
+                    "search_analyzer": "german"
+                }
+            },
+            "copy_to": [
+                "fulltext"
+            ]
+        },
+        "description": {
+            "type": "text",
+            "analyzer": "german",
+            "copy_to": [
+                "fulltext"
+            ]
+        },
+        "language": {
+            "type": "keyword"
+        },
+        "contacts": {
+            "properties": {
+                "role": {
+                    "type": "keyword"
+                },
+                "name": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    },
+                    "copy_to": [
+                        "fulltext"
+                    ]
+                },
+                "communications": {
+                    "properties": {
+                        "type": {
+                            "type": "keyword"
+                        },
+                        "value": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "street": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "code": {
+                    "type": "keyword"
+                },
+                "pocode": {
+                    "type": "keyword"
+                },
+                "pobox": {
+                    "type": "keyword"
+                },
+                "locality": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    },
+                    "copy_to": [
+                        "fulltext"
+                    ]
+                },
+                "country": {
+                    "type": "keyword"
+                },
+                "administrative_area": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    },
+                    "copy_to": [
+                        "fulltext"
+                    ]
+                }
+            }
+        },
+        "spatials": {
+            "properties": {
+                "name": {
+                    "type": "keyword"
+                },
+                "geometry": {
+                    "type": "geo_shape"
+                },
+                "bbox": {
+                    "type": "float"
+                },
+                "wkt": {
+                    "type": "text",
+                    "index": false
+                },
+                "toponym": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    },
+                    "copy_to": [
+                        "fulltext"
+                    ]
+                },
+                "administrative": {
+                    "properties": {
+                        "state": {
+                            "type": "keyword"
+                        },
+                        "regional_key": {
+                            "type": "keyword"
+                        }
+                    }
+                }
+            }
+        },
+        "crs": {
+            "type": "keyword"
+        },
+        "temporal": {
+            "properties": {
+                "data_temporal": {
+                    "properties": {
+                        "date": {
+                            "type": "date"
+                        },
+                        "date_range": {
+                            "type": "date_range"
+                        },
+                        "date_text": {
+                            "type": "keyword"
+                        },
+                        "date_type": {
+                            "type": "keyword"
+                        }
+                    }
+                }
+            }
+        },
+        "keywords": {
+            "properties": {
+                "term": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    },
+                    "copy_to": [
+                        "fulltext"
+                    ]
+                },
+                "id": {
+                    "type": "keyword"
+                },
+                "source": {
+                    "type": "keyword"
+                }
+            }
+        },
+        "references": {
+            "properties": {
+                "url": {
+                    "type": "keyword"
+                },
+                "type": {
+                    "properties": {
+                        "key": {
+                            "type": "keyword"
+                        },
+                        "value": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "title": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    },
+                    "copy_to": [
+                        "fulltext"
+                    ]
+                },
+                "explanation": {
+                    "type": "text",
+                    "copy_to": [
+                        "fulltext"
+                    ]
+                }
+            }
+        },
+        "fulltext": {
+            "type": "text",
+            "analyzer": "german",
+            "fields": {
+                "ngram": {
+                    "type": "text",
+                    "analyzer": "ngram",
+                    "search_analyzer": "german"
+                },
+                "edge_ngram": {
+                    "type": "text",
+                    "analyzer": "edge_ngram",
+                    "search_analyzer": "german"
+                }
+            }
+        }
+    }
+}

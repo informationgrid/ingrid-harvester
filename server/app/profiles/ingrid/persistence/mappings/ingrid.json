@@ -1,0 +1,465 @@
+{
+    "properties": {
+        "temporal": {
+            "properties": {
+                "status": {
+                    "properties": {
+                        "key": {
+                            "type": "keyword"
+                        },
+                        "value": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "maintenance_frequency": {
+                    "properties": {
+                        "key": {
+                            "type": "keyword"
+                        },
+                        "value": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "user_defined_maintenance_frequency_in_sec": {
+                    "type": "keyword"
+                }
+            }
+        },
+        "exports": {
+            "properties": {
+                "iso": {
+                    "type": "text",
+                    "index": false
+                }
+            }
+        },
+        "ingrid": {
+            "properties": {
+                "alternate_title": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    },
+                    "copy_to": [
+                        "fulltext"
+                    ]
+                },
+                "licenses": {
+                    "properties": {
+                        "type": {
+                            "type": "keyword"
+                        },
+                        "items": {
+                            "properties": {
+                                "key": {
+                                    "type": "keyword"
+                                },
+                                "value": {
+                                    "type": "keyword"
+                                },
+                                "source": {
+                                    "type": "keyword"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parent_identifier": {
+                    "type": "keyword"
+                },
+                "datasource_identifier": {
+                    "type": "keyword"
+                },
+                "spatial_representation": {
+                    "properties": {
+                        "type": {
+                            "type": "keyword"
+                        },
+                        "vector": {
+                            "properties": {
+                                "topology": {
+                                    "type": "keyword"
+                                },
+                                "geometry_type": {
+                                    "type": "keyword"
+                                },
+                                "number": {
+                                    "type": "integer"
+                                }
+                            }
+                        },
+                        "grid": {
+                            "properties": {
+                                "axes": {
+                                    "properties": {
+                                        "label": {
+                                            "type": "keyword"
+                                        },
+                                        "number": {
+                                            "type": "integer"
+                                        },
+                                        "resolution": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "available_parameters": {
+                                    "type": "boolean"
+                                },
+                                "number_dimensions": {
+                                    "type": "integer"
+                                },
+                                "cell_geometry": {
+                                    "properties": {
+                                        "key": {
+                                            "type": "keyword"
+                                        },
+                                        "value": {
+                                            "type": "keyword"
+                                        }
+                                    }
+                                },
+                                "rectified": {
+                                    "properties": {
+                                        "checkPointAvailability": {
+                                            "type": "boolean"
+                                        },
+                                        "checkPointDescription": {
+                                            "type": "text"
+                                        },
+                                        "cornerPoints": {
+                                            "type": "keyword"
+                                        },
+                                        "pointInPixel": {
+                                            "properties": {
+                                                "key": {
+                                                    "type": "keyword"
+                                                },
+                                                "value": {
+                                                    "type": "keyword"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "referenced": {
+                                    "properties": {
+                                        "orientationParameterAvailability": {
+                                            "type": "boolean"
+                                        },
+                                        "controlPointAvaliability": {
+                                            "type": "boolean"
+                                        },
+                                        "parameters": {
+                                            "type": "text"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "specific_usage": {
+                    "type": "text",
+                    "copy_to": [
+                        "fulltext"
+                    ]
+                },
+                "purpose": {
+                    "type": "text",
+                    "copy_to": [
+                        "fulltext"
+                    ]
+                },
+                "conformance_result": {
+                    "properties": {
+                        "pass": {
+                            "type": "keyword"
+                        },
+                        "specification": {
+                            "properties": {
+                                "key": {
+                                    "type": "keyword"
+                                },
+                                "value": {
+                                    "type": "keyword"
+                                }
+                            }
+                        },
+                        "publicationDate": {
+                            "type": "keyword"
+                        },
+                        "explanation": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        }
+                    }
+                },
+                "order_info": {
+                    "type": "text",
+                    "copy_to": [
+                        "fulltext"
+                    ]
+                },
+                "data_quality": {
+                    "properties": {
+                        "completeness_omission": {
+                            "type": "float"
+                        },
+                        "positional_accuracy": {
+                            "properties": {
+                                "horizontal": {
+                                    "type": "float"
+                                },
+                                "vertical": {
+                                    "type": "float"
+                                }
+                            }
+                        },
+                        "qualities": {
+                            "properties": {
+                                "type": {
+                                    "type": "keyword"
+                                },
+                                "measure_type": {
+                                    "properties": {
+                                        "key": {
+                                            "type": "keyword"
+                                        },
+                                        "value": {
+                                            "type": "keyword"
+                                        }
+                                    }
+                                },
+                                "value": {
+                                    "type": "float"
+                                },
+                                "parameter": {
+                                    "type": "text"
+                                }
+                            }
+                        }
+                    }
+                },
+                "character_set": {
+                    "properties": {
+                        "key": {
+                            "type": "keyword"
+                        },
+                        "value": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "spatial_resolution_scale": {
+                    "properties": {
+                        "scale": {
+                            "type": "integer"
+                        },
+                        "resolution_ground": {
+                            "type": "float"
+                        },
+                        "resolution_scan": {
+                            "type": "float"
+                        }
+                    }
+                },
+                "cross_references": {
+                    "properties": {
+                        "uuid": {
+                            "type": "keyword"
+                        },
+                        "name": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "document_type": {
+                            "type": "keyword"
+                        },
+                        "description": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "reference_type": {
+                            "type": "keyword"
+                        },
+                        "direction": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "lineage": {
+                    "properties": {
+                        "statement": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "source": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "process_step": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        }
+                    }
+                },
+                "process_step_description": {
+                    "type": "text",
+                    "copy_to": [
+                        "fulltext"
+                    ]
+                },
+                "symbol_catalogue": {
+                    "properties": {
+                        "title": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "date": {
+                            "type": "keyword"
+                        },
+                        "version": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "codelist_reference": {
+                    "properties": {
+                        "title": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "date": {
+                            "type": "keyword"
+                        },
+                        "version": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "attribute_description": {
+                    "type": "text",
+                    "copy_to": [
+                        "fulltext"
+                    ]
+                },
+                "spatial": {
+                    "properties": {
+                        "description": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "vertical_extent": {
+                            "properties": {
+                                "minimum": {
+                                    "type": "float"
+                                },
+                                "maximum": {
+                                    "type": "float"
+                                },
+                                "unit": {
+                                    "properties": {
+                                        "key": {
+                                            "type": "keyword"
+                                        },
+                                        "value": {
+                                            "type": "keyword"
+                                        }
+                                    }
+                                },
+                                "vdatum": {
+                                    "properties": {
+                                        "key": {
+                                            "type": "keyword"
+                                        },
+                                        "value": {
+                                            "type": "keyword"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "service": {
+                    "properties": {
+                        "type": {
+                            "type": "keyword"
+                        },
+                        "classifications": {
+                            "type": "keyword"
+                        },
+                        "versions": {
+                            "type": "keyword"
+                        },
+                        "operations": {
+                            "properties": {
+                                "name": {
+                                    "type": "keyword"
+                                },
+                                "description": {
+                                    "type": "text",
+                                    "copy_to": [
+                                        "fulltext"
+                                    ]
+                                },
+                                "access_url": {
+                                    "type": "keyword"
+                                }
+                            }
+                        },
+                        "environment_description": {
+                            "type": "text"
+                        },
+                        "service_history": {
+                            "type": "text"
+                        },
+                        "additional_information": {
+                            "type": "text"
+                        },
+                        "has_access_constraints": {
+                            "type": "boolean"
+                        },
+                        "doi": {
+                            "properties": {
+                                "identifier": {
+                                    "type": "keyword"
+                                },
+                                "general_resource_type": {
+                                    "type": "keyword"
+                                },
+                                "resource_type": {
+                                    "type": "keyword"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

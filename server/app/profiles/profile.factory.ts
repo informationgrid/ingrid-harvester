@@ -51,6 +51,7 @@ import type { ElasticsearchUtils } from '../persistence/elastic.utils.js';
 import { validateDocument } from '../persistence/elastic.validation.js';
 import { PostgresQueries } from '../persistence/postgres.queries.js';
 import { ConfigService } from '../services/config/ConfigService.js';
+import { mergeMappings } from '../utils/mapping.utils.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -106,9 +107,16 @@ CatalogFactory {
         return [{ label: 'Default', value: 'default-mapping', schemaName: this.getProfileName() }];
     }
 
+    // a mapping file with `composed_of` is a manifest: its fragments (paths relative to the profile's
+    // persistence folder) are merged into one mapping, see mergeMappings(); any other file is the mapping
     getIndexMappings(mappingName?: string): any {
         const require = createRequire(import.meta.url);
-        return require(`./${this.getProfileName()}/persistence/${mappingName ?? 'default-mapping'}.json`);
+        const persistencePath = `./${this.getProfileName()}/persistence`;
+        const mapping = require(`${persistencePath}/${mappingName ?? 'default-mapping'}.json`);
+        if (!mapping.composed_of) {
+            return mapping;
+        }
+        return mergeMappings(...mapping.composed_of.map((fragment: string) => require(`${persistencePath}/${fragment}.json`)));
     }
 
     getIndexSettings(settingsName?: string): IndexSettings {
