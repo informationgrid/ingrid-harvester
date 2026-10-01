@@ -2,7 +2,7 @@
   "name": "ingrid-harvester",
   "version": "0.0.0",
   "engines": {
-    "node": ">=24.0.0"
+    "node": ">=22.0.0"
   },
   "description": "",
   "type": "module",
