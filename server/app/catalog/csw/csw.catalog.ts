@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import type { CswCatalogSettings } from '@shared/catalog.js';
+import type { CatalogConnectionResult, CswCatalogSettings } from '@shared/catalog.js';
 import { XMLSerializer } from '@xmldom/xmldom';
 import log4js from 'log4js';
 import type { Observer } from "rxjs";
@@ -31,7 +31,7 @@ import type { ImportLogMessage } from "../../model/import.result.js";
 import type { Summary } from "../../model/summary.js";
 import type { Bucket } from '../../persistence/postgres.utils.js';
 import { RequestDelegate } from "../../utils/http-request.utils.js";
-import { getDomParser } from "../../utils/misc.utils.js";
+import { getDomParser, truncateErrorMessage } from "../../utils/misc.utils.js";
 import { Catalog, type CatalogOperation } from '../catalog.factory.js';
 
 const log = log4js.getLogger('CswCatalog');
@@ -212,6 +212,69 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
     private buildTargetUrl(): string {
         const separator = this.settings.url.includes('?') ? '&' : '?';
         return `${this.settings.url}${separator}SERVICE=CSW&REQUEST=Transaction`;
+    }
+
+    /**
+     * Ensure the configured URL is a CSW 2.0.2 endpoint that advertises the Transaction operation.
+     * A wrong URL (e.g. a pycsw OGC API landing page) otherwise answers every request with
+     * a non-CSW document, which would only surface as failing inserts.
+     * Only relies on the CSW 2.0.2 / OWS specification, not on a specific server implementation.
+     */
+    async validateConnection(): Promise<CatalogConnectionResult> {
+        const prefix = `Target URL '${this.settings.url}' of CSW catalog '${this.settings.id}'`;
+        const headers = RequestDelegate.cswRequestHeaders();
+        // GET without body: an XML Content-Type makes some servers (e.g. pycsw) expect a POST body and answer 400
+        delete headers['Content-Type'];
+        const { hasPassword, user, password, version } = this.settings.settings;
+        if (hasPassword && user && password) {
+            headers['Authorization'] = 'Basic ' + Buffer.from(`${user}:${password}`).toString('base64');
+        }
+        let status: number;
+        let redirectedTo: string;
+        let response: string;
+        try {
+            const fullResponse = await RequestDelegate.doRequest({
+                uri: this.settings.url,
+                method: 'GET',
+                headers,
+                qs: { SERVICE: 'CSW', REQUEST: 'GetCapabilities', VERSION: version },
+                resolveWithFullResponse: true
+            });
+            status = fullResponse.status;
+            redirectedTo = fullResponse.redirected ? fullResponse.url : undefined;
+            response = await fullResponse.text();
+        }
+        catch (e) {
+            return { success: false, message: `${prefix} is not reachable: ${e?.message ?? e}` };
+        }
+
+        if (status == 401 || status == 403) {
+            return { success: false, message: `${prefix} denied access (HTTP ${status}). Check user and password.` };
+        }
+
+        let root: Element | undefined;
+        try {
+            root = this.domParser.parseFromString(response, 'application/xml')?.documentElement;
+        }
+        catch (e) {
+            // not XML at all (e.g. JSON or HTML) - handled below
+        }
+
+        if (root?.localName === 'ExceptionReport') {
+            const exceptionText = Array.from(root.getElementsByTagNameNS('*', 'ExceptionText')).map(node => node.textContent?.trim()).join('; ');
+            return { success: false, message: `${prefix} returned an exception (HTTP ${status}): ${exceptionText || truncateErrorMessage(response)}` };
+        }
+        if (root?.namespaceURI !== namespaces.CSW || root?.localName !== 'Capabilities') {
+            // a redirect often points to the cause, e.g. a login page or a landing page instead of the CSW endpoint
+            const redirectInfo = redirectedTo ? `, redirected to '${redirectedTo}'` : '';
+            return { success: false, message: `${prefix} is not a CSW ${version} endpoint (HTTP ${status}${redirectInfo}). Response: ${truncateErrorMessage(response)}` };
+        }
+        // OWS namespace version may differ between implementations, so match operations by local name only
+        const operations = Array.from(root.getElementsByTagNameNS('*', 'Operation'));
+        if (!operations.some(op => op.getAttribute('name')?.toLowerCase() === 'transaction')) {
+            return { success: false, message: `${prefix} does not support the CSW Transaction operation. Is this the transactional (publication) endpoint of the catalog?` };
+        }
+        return { success: true };
     }
 
     /**

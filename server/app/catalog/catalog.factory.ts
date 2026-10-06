@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import type { CatalogSettings } from '@shared/catalog.js';
+import type { CatalogConnectionResult, CatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
 import type { Observer } from 'rxjs';
 import type { ImporterSettings } from '../importer/importer.settings.js';
@@ -65,10 +65,25 @@ export abstract class Catalog<C extends CatalogColumnType, S extends CatalogSett
     // TODO use transaction start date - type as Date
     async process(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         this.transactionTimestamp = new Date().toISOString();
+        const connection = await this.validateConnection();
+        if (!connection.success) {
+            throw new Error(connection.message);
+        }
         await this.prepareImport(transactionHandle, importerSettings, observer);
         await this.import(transactionHandle, importerSettings, observer);
         await this.postImport(transactionHandle, importerSettings, observer);
         this.summary.print(log);
+    }
+
+    /**
+     * Verify that the configured target of this catalog is reachable and of the expected type.
+     * Does not throw; failures are reported via the result, so that it can also be used
+     * for a connection test from the frontend.
+     * Is called once before every import, which is aborted if the check fails.
+     */
+    async validateConnection(): Promise<CatalogConnectionResult> {
+        // can be overwritten by child classes if necessary
+        return { success: true };
     }
 
     /**

@@ -66,3 +66,12 @@ export type Catalog = CatalogSettings
   & Partial<CswCatalogSettings>;
 
 export type CatalogType = 'elasticsearch' | 'csw' | 'piveau';
+
+/**
+ * Result of a connection check against the target of a catalog.
+ * Used before every import and for the "test connection" action in the frontend.
+ */
+export type CatalogConnectionResult = {
+  success: boolean,
+  message?: string
+};
