@@ -100,7 +100,7 @@ pipeline {
 
                 script {
                     def imageToScan = "registry.opencode.de/informationgrid/ingrid-harvester:${env.VERSION}"
-                    def sbomFilename = "ingrid-harvester-${determineVersion()}-sbom.json"
+                    def sbomFilename = "ingrid-harvester-${determineVersion()}.sbom.json"
 
                     sh """
                         docker run --rm --pull=always --volumes-from jenkins anchore/syft:latest ${imageToScan} --output cyclonedx-json=${WORKSPACE}/build/${sbomFilename}
@@ -121,12 +121,12 @@ pipeline {
                     withCredentials([string(credentialsId: 'api-token-dependency-track', variable: 'API_KEY')]) {
                         //dependencyTrackPublisher artifact: 'build/reports/sbom.json', projectName: 'ingrid-harvester', projectVersion: determineVersion(), synchronous: true, dependencyTrackApiKey: API_KEY, projectProperties: [group: 'InGrid', parentId: '4d11835d-4174-4c4a-94fd-9f48e7dad7eb',tags: ['ingrid', 'deps_prod']]
                         //dependencyTrackPublisher artifact: 'build/reports/sbom-dev.json', projectName: 'ingrid-harvester', projectVersion: determineVersion() + '-dev', synchronous: true, dependencyTrackApiKey: API_KEY, projectProperties: [group: 'InGrid', parentId: '4d11835d-4174-4c4a-94fd-9f48e7dad7eb',tags: ['ingrid', 'deps_dev']]
-                        dependencyTrackPublisher artifact: "build/ingrid-harvester-${determineVersion()}-sbom.json", projectName: 'ingrid-harvester', projectVersion: determineVersion() + '-docker-image', synchronous: true, dependencyTrackApiKey: API_KEY, projectProperties: [group: 'InGrid', parentId: '4d11835d-4174-4c4a-94fd-9f48e7dad7eb',tags: ['ingrid', 'deps_docker']]
+                        dependencyTrackPublisher artifact: "build/ingrid-harvester-${determineVersion()}.sbom.json", projectName: 'ingrid-harvester', projectVersion: determineVersion() + '-docker-image', synchronous: true, dependencyTrackApiKey: API_KEY, projectProperties: [group: 'InGrid', parentId: '4d11835d-4174-4c4a-94fd-9f48e7dad7eb',tags: ['ingrid', 'deps_docker']]
                     }
                     def repoType = env.TAG_NAME ? "rpm-ingrid-releases" : "rpm-ingrid-snapshots"
                     withCredentials([usernamePassword(credentialsId: '9623a365-d592-47eb-9029-a2de40453f68', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                         sh '''
-                            curl -f --user $USERNAME:$PASSWORD --upload-file build/*-sbom.json https://nexus.informationgrid.eu/repository/''' + repoType + '''/
+                            curl -f --user $USERNAME:$PASSWORD --upload-file build/*.sbom.json https://nexus.informationgrid.eu/repository/''' + repoType + '''/
                         '''
                     }
                 }
@@ -203,7 +203,7 @@ def determineRpmReleasePart() {
         }
         return currentBuild.number
     } else {
-        return 'dev'
+        return 'SNAPSHOT'
     }
 }
 
