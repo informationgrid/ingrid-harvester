@@ -63,7 +63,7 @@ export class UrlUtils {
      * or undefined otherwise
      */
     static async urlWithProtocolFor(requestConfig: RequestOptions, skip = false, fullCheck = false): Promise<string> {
-        let url = <string>requestConfig.uri;
+        let url = requestConfig.uri;
         if (skip) {
             return url;
         }
