@@ -212,6 +212,7 @@ export class WfsImporter extends Importer<WfsSettings> {
     }
 
     async extractFeatureType(featureTypeName: string, featureTypeNode: Node, featureTypeDescriptionNode: Node, generalInfo: FeatureInfo) {
+        this.summary.numDocs++;
         generalInfo.geometryType = this.extractGeometryType(generalInfo.select, featureTypeDescriptionNode);
         let mapper = this.getMapper(new Date(), featureTypeNode, generalInfo);
         let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
@@ -267,7 +268,10 @@ export class WfsImporter extends Importer<WfsSettings> {
             }
         }
         for (let i = 0; i < features.length; i++) {
-            this.summary.numDocs++;
+            // count FeatureTypes instead of features if harvesting FeatureTypes
+            if (!this.settings.harvestTypes) {
+                this.summary.numDocs++;
+            }
 
             // TODO use ID-property from settings (tbi)
             let gmlId = (features[i] as Element).getAttributeNS(nsMap['gml'], 'id');
