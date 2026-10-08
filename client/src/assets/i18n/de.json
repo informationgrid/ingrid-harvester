@@ -119,6 +119,7 @@
     "viewCatalog": "Katalog ansehen",
     "deleteConfirmation": "Wollen Sie diesen Katalog wirklich löschen?",
     "formLabel": {
+      "hasPassword": "Passwortgeschützt",
       "outputSchema": "Output-Schema",
       "version": "Version",
       "alias": "Alias",

@@ -45,7 +45,7 @@ export default abstract class CswType {
                 key: "hasPassword",
                 type: "checkbox",
                 props: {
-                  label: "Passwort geschützt",
+                  label: transloco.transform("catalogs.formLabel.hasPassword"),
                 },
               },
               {
