@@ -279,7 +279,9 @@ export class WfsImporter extends Importer<WfsSettings> {
                 gmlId = firstElementChild(features[i]).getAttributeNS(nsMap['gml'], 'id');
             }
             if (!gmlId || !this.filterUtils.isIdAllowed(gmlId)) {
-                this.summary.skippedDocs.push(gmlId);
+                if (!this.settings.harvestTypes) {
+                    this.summary.skippedDocs.push(gmlId);
+                }
                 continue;
             }
 
@@ -313,7 +315,7 @@ export class WfsImporter extends Importer<WfsSettings> {
                     original_document: mapper.getHarvestedData()
                 };
                 promises.push(this.addEntityToBulk(entity));
-            } else {
+            } else if (!this.settings.harvestTypes) {
                 this.summary.skippedDocs.push(gmlId);
             }
             // disable updating feature count if harvesting FeatureTypes
