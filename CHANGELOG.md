@@ -1,4 +1,19 @@
 
+## 8.5.0 (09.10.2026)
+
+### Features
+
+* Erstellung von RPM Paketen für RHEL 10 für InGrid Komponenten (#9371)
+* Update des Harvesters auf NodeJS 24 (#9267)
+* Raumbezug bei GENESIS Datensätzen (#9149)
+* Harvesting soll während der Downloadphase abgebrochen werden können & Records löschen wenn Katalog von Datenquelle entkoppelt wurde  (#9022)
+
+### Bugfixes
+
+* Harvester: UX/UI, Meldung über erlaubte Anzahl an Zeichen (#9173)
+* Anzahl Dokumente in Harvester Anzeige stimmt nicht (#9115)
+* Harvester: Zeitangaben in Log-Files und GUI weichen voneinander ab (#9106)
+    
 ## 8.4.0 (02.07.2026)
 
 ### Features
