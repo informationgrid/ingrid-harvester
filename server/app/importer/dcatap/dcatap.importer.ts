@@ -21,6 +21,7 @@
  * ==================================================
  */
 
+import type { Quad_Subject } from '@rdfjs/types';
 import log4js from 'log4js';
 import { DataFactory, type Store } from 'n3';
 import type { Observer } from 'rxjs';
@@ -230,7 +231,7 @@ export class DcatapImporter extends Importer<DcatapSettings> {
                     dataset: elasticDoc,
                     dataset_dcatapde: dcatapdeDoc,
                     dataset_csw: cswDoc,
-                    original_document: mapper.getHarvestedData()
+                    original_document: DcatapImporter.getOriginalDocument(response, recordSubject, uuid)
                 };
                 promises.push(
                     this.addEntityToBulk(entity)
@@ -248,6 +249,50 @@ export class DcatapImporter extends Importer<DcatapSettings> {
             this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.all(promises).catch(err => log.error('Error indexing DCAT record', err));
+    }
+
+    /**
+     * Returns the original document of a single record.
+     * For JSON-LD payloads, the catalog wrapper (`@context`, `@id`, `@type`, ...) is kept,
+     * but dataset lists (e.g. `dcat:dataset`) only contain the dataset of the given record.
+     * Other payloads (e.g. RDF/XML) are returned unchanged.
+     */
+    static getOriginalDocument(payload: any, recordSubject: Quad_Subject, uuid: string): any {
+        let json = payload;
+        if (typeof payload === 'string') {
+            try {
+                json = JSON.parse(payload);
+            }
+            catch {
+                return payload;
+            }
+        }
+        if (json == null || typeof json !== 'object' || Array.isArray(json)) {
+            return payload;
+        }
+
+        const isRecordDataset = (item: any): boolean => {
+            if (item == null || typeof item !== 'object') {
+                return false;
+            }
+            const identifiers = [].concat(item['dct:identifier'] ?? item['dcterms:identifier'] ?? item['identifier'] ?? []);
+            if (uuid && identifiers.some(id => (id?.['@value'] ?? id) === uuid)) {
+                return true;
+            }
+            return item['@id'] === recordSubject.value;
+        };
+
+        const document = { ...json };
+        for (const [key, value] of Object.entries(json)) {
+            if (key === '@context' || !Array.isArray(value)) {
+                continue;
+            }
+            const dataset = value.find(isRecordDataset);
+            if (dataset) {
+                document[key] = [dataset];
+            }
+        }
+        return typeof payload === 'string' ? JSON.stringify(document) : document;
     }
 
     static createRequestConfig(settings: DcatapSettings, url?: string): RequestOptions {
