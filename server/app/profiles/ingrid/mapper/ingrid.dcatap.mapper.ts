@@ -28,6 +28,8 @@ import { DcatapMapper } from '../../../importer/dcatap/dcatap.mapper.js';
 import type { ToElasticMapper } from '../../../importer/to.elastic.mapper.js';
 import type { DateRange } from '../../../model/dateRange.js';
 import type { Distribution } from '../../../model/distribution.js';
+import * as MiscUtils from '../../../utils/misc.utils.js';
+import * as XpathUtils from '../../../utils/xpath.utils.js';
 import type { IngridOpendataIndexDocument } from '../model/opendataindex.document.js';
 import { Codelist } from '../utils/codelist.js';
 import { ingridMapper } from './ingrid.mapper.js';
@@ -206,7 +208,13 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
     }
 
     getIDF() {
-        return null;
+        const isoDocument = MiscUtils.getDomParser().parseFromString(this.createCswIsoDocument(), 'application/xml');
+        let idf = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<html xmlns=\"http://www.portalu.de/IDF/1.0\">\n  <head/>\n  <body>\n";
+        let renamedDom = XpathUtils.renameNodes("gmd:MD_Metadata", "idf:idfMdMetadata", isoDocument.documentElement);
+        renamedDom = XpathUtils.renameNodes("gmd:CI_ResponsibleParty", "idf:idfResponsibleParty", renamedDom);
+        idf += renamedDom.toString();
+        idf += "\n  </body>\n</html>\n";
+        return idf;
     }
 
     getRoleId(role: string){
