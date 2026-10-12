@@ -71,7 +71,8 @@ export type Relation = {
 
 export type Source = {
     id: string,
-    display_url: string
+    display_url: string,
+    last_available?: Date
 };
 
 export type LvrDateRange = {
