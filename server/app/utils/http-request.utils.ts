@@ -333,7 +333,7 @@ export class RequestDelegate {
                 if (e.name !== 'AbortError' && !cancellationSignal?.aborted) {
                     if (tries < retries) {
                         tries++;
-                        log.info(`Retrying request for ${fullURL} (waiting ${waitMilliSeconds}ms)`);
+                        log.debug(`Retrying request for ${fullURL} (waiting ${waitMilliSeconds}ms)`);
                         await RequestDelegate.sleep(waitMilliSeconds);
                     }
                     else {
