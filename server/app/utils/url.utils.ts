@@ -33,7 +33,8 @@ export class UrlUtils {
 
     private static MAPPINGS_FILE = "mappings.json";
 
-    static cache: { [url: string]: boolean } = {};
+    private static cache: { [url: string]: { value: boolean; timestamp: number } } = {};
+    private static URL_CACHE_TTL_MS = 60 * 60 * 1000;
 
     private static formatMapping = UrlUtils.getFormatMapping();
 
@@ -101,10 +102,10 @@ export class UrlUtils {
      * @param requestConfig the configuration to use for HTTP requests
      * @private
      */
-    private static async checkUrlWithProtocol(requestConfig: RequestOptions): Promise<boolean> {
-        let urlResult = UrlUtils.cache[<string>requestConfig.uri];
-        if (urlResult !== undefined) {
-            return urlResult;
+    static async checkUrlWithProtocol(requestConfig: RequestOptions): Promise<boolean> {
+        const urlResult = UrlUtils.cache[<string>requestConfig.uri];
+        if (urlResult !== undefined && Date.now() - urlResult.timestamp < UrlUtils.URL_CACHE_TTL_MS) {
+            return urlResult.value;
         }
         requestConfig.method = 'HEAD';
         requestConfig.resolveWithFullResponse = true;
@@ -123,7 +124,8 @@ export class UrlUtils {
                 log.warn(`Error occured while testing URL '${requestConfig.uri}'. Original error message was: ${message}`);
             }
         }
-        UrlUtils.cache[<string>requestConfig.uri] = found;
+        // populate cache with the result of the URL check
+        UrlUtils.cache[<string>requestConfig.uri] = { value: found, timestamp: Date.now() };
         return found;
     }
 
