@@ -52,7 +52,7 @@ export default abstract class CswType {
                 key: "user",
                 type: "input",
                 expressions: {
-                  hide: "!model.hasPassword",
+                  hide: "!model?.hasPassword",
                 },
                 props: {
                   label: transloco.transform("catalogs.formLabel.user"),
@@ -62,7 +62,7 @@ export default abstract class CswType {
                 key: "password",
                 type: "input",
                 expressions: {
-                  hide: "!model.hasPassword",
+                  hide: "!model?.hasPassword",
                 },
                 props: {
                   label: transloco.transform("catalogs.formLabel.password"),
