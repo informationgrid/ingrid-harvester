@@ -21,9 +21,9 @@
  * ==================================================
  */
 
-import jsonClickrheinSettings from '../data/json/clickrhein/config.json' with { type: 'json' };
-import { runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
 import type { JsonSettings } from '../../app/importer/json/json.settings.js';
+import jsonClickrheinSettings from '../data/json/clickrhein/config.json' with { type: 'json' };
+import { runImporterIntegrationTest, setupIntegrationTestLifecycle, type HttpMockRule } from '../utils/integration-test-runner.js';
 
 describe('JSON Integration Tests', function () {
     this.timeout(60000);
@@ -35,19 +35,29 @@ describe('JSON Integration Tests', function () {
         await runImporterIntegrationTest({
             profile,
             expectedDocsDir: 'elasticsearch',
-            mocks: [
-                {
-                    match: { url: 'https://www.kuladig.de/ClickRhein/api/discoveries?amount=999' },
-                    fixture: 'input/discoveries.json'
-                },
-                {
-                    match: { url: 'https://www.kuladig.de/ClickRhein/api/meta?tables=territory,suitabilities,themes,themes_spot,epochs' },
-                    fixture: 'input/meta.json'
-                }
-            ],
+            mocks: createJsonMocks('CLICKRHEIN-DISCOVERY-1', 'CLICKRHEIN-DISCOVERY-2'),
             settings: jsonClickrheinSettings as JsonSettings,
             baseFixture: 'test/data/json/clickrhein'
         });
     });
 });
 
+function createJsonMocks(...ids: string[]): HttpMockRule[] {
+    const mocks: HttpMockRule[] = [];
+    mocks.push(
+        {
+            match: { url: 'https://www.kuladig.de/ClickRhein/api/discoveries?amount=999' },
+            fixture: 'input/discoveries.json'
+        },
+        {
+            match: { url: 'https://www.kuladig.de/ClickRhein/api/meta?tables=territory,suitabilities,themes,themes_spot,epochs' },
+            fixture: 'input/meta.json'
+        }
+    );
+    for (const id of ids) {
+        mocks.push({
+            match: { url: `https://click-rhein.lvr.de/detail/discovery/${id.replace('CLICKRHEIN-DISCOVERY-', '')}` }
+        });
+    }
+    return mocks;
+}

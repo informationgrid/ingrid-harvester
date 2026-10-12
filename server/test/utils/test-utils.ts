@@ -26,6 +26,7 @@ import * as chai from 'chai';
 import { expect } from 'chai';
 import chaiExclude from 'chai-exclude';
 import deepEqualInAnyOrder from 'deep-equal-in-any-order';
+import { unset } from 'lodash-es';
 import type { IngridIndexDocument } from '../../app/profiles/ingrid/model/index.document.js';
 
 chai.use(chaiExclude);
@@ -51,8 +52,9 @@ const Node = {
  */
 export function compareEsDocuments(actual: IngridIndexDocument, expected: IngridIndexDocument) {
     const excludedProperties = ['extras', 'idf', 'refering', 'refering_service_uuid'];
+    const removedProperties = ['lvr.source.last_available'];
     // compare ES document without date properties, idf, and specific array properties
-    expect(actual).excluding(excludedProperties).to.deep.equal(expected);
+    expect(omit(removedProperties, actual)).excluding(excludedProperties).to.deep.equal(omit(removedProperties, expected));
     // compare unordered arrays separately
     expect(actual.refering?.object_reference).to.deep.equalInAnyOrder(expected.refering?.object_reference);
     expect(actual.refering_service_uuid).to.deep.equalInAnyOrder(expected.refering_service_uuid);
@@ -129,6 +131,14 @@ function areXmlNodesEqual(a: Node, b: Node): boolean {
         remainingB.splice(matchIndex, 1); // remove matched node
     }
     return true;
+}
+
+function omit<T>(keys: string[], obj: T): T {
+    const result = { ...obj };
+    for (const key of keys) {
+        unset(result, key);
+    }
+    return result;
 }
 
 export function prepareStoredData(repeat: number, data: any): any[] {
