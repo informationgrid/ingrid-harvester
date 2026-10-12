@@ -36,6 +36,7 @@ import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
 import { fromWkt } from '../../utils/geojson.utils.js';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
+import * as MiscUtils from '../../utils/misc.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 import { DCAT_LANGUAGE_URL } from '../dcatapde/dcatapde.utils.js';
 import { Mapper } from '../mapper.js';
@@ -63,6 +64,9 @@ export type DcatapContact = Contact & {
 };
 
 export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMapper<IndexDocument>, ToDcatapdeMapper {
+
+    // parsed RDF/XML payload, shared by consecutive records of the same response
+    private static parsedPayload: { payload: string, document: Document };
 
     private readonly datasetSubject: Quad_Subject;
     private readonly store: Store;
@@ -625,8 +629,33 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
         return `Id: '${uuid}', title: '${title}', source: '${this.settings.sourceURL}'.`;
     }
 
+    /**
+     * For RDF/XML payloads, returns only the serialized `dcat:Dataset` element of this record.
+     * Other payloads (e.g. JSON-LD) are returned unchanged.
+     */
     getHarvestedData(): string {
-        return this.rawPayload;
+        const dataset = this.getDatasetElement();
+        return dataset ? dataset.toString() : this.rawPayload;
+    }
+
+    /**
+     * For RDF/XML payloads, returns the `dcat:Dataset` element of this record
+     * (matched by `rdf:about` or `dct:identifier`); otherwise `undefined`.
+     */
+    getDatasetElement(): Element | undefined {
+        if (typeof this.rawPayload !== 'string' || !this.rawPayload.trimStart().startsWith('<')) {
+            return undefined;
+        }
+        if (DcatapMapper.parsedPayload?.payload !== this.rawPayload) {
+            DcatapMapper.parsedPayload = {
+                payload: this.rawPayload,
+                document: MiscUtils.getDomParser().parseFromString(this.rawPayload, 'application/xml')
+            };
+        }
+        const datasets = Array.from(DcatapMapper.parsedPayload.document.getElementsByTagNameNS(namespaces.DCAT, 'Dataset'));
+        return datasets.find(element => element.getAttributeNS(namespaces.RDF, 'about') === this.datasetSubject.value)
+            ?? datasets.find(element => Array.from(element.getElementsByTagNameNS(namespaces.DCT, 'identifier'))
+                .some(identifier => identifier.parentNode === element && identifier.textContent?.trim() === this.uuid));
     }
 
     getGroups(): string[] {

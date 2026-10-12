@@ -231,7 +231,7 @@ export class DcatapImporter extends Importer<DcatapSettings> {
                     dataset: elasticDoc,
                     dataset_dcatapde: dcatapdeDoc,
                     dataset_csw: cswDoc,
-                    original_document: DcatapImporter.getOriginalDocument(response, recordSubject, uuid)
+                    original_document: DcatapImporter.getOriginalDocument(response, recordSubject, uuid, mapper.getDatasetElement())
                 };
                 promises.push(
                     this.addEntityToBulk(entity)
@@ -255,9 +255,15 @@ export class DcatapImporter extends Importer<DcatapSettings> {
      * Returns the original document of a single record.
      * For JSON-LD payloads, the catalog wrapper (`@context`, `@id`, `@type`, ...) is kept,
      * but dataset lists (e.g. `dcat:dataset`) only contain the dataset of the given record.
-     * Other payloads (e.g. RDF/XML) are returned unchanged.
+     * For RDF/XML payloads (`datasetElement` given), the root element is kept with `datasetElement`,
+     * the resources it references and the unreferenced resources (e.g. `hydra:PagedCollection`, `dcat:Catalog`),
+     * see `copyWithDatasetOnly()`.
+     * Other payloads are returned unchanged.
      */
-    static getOriginalDocument(payload: any, recordSubject: Quad_Subject, uuid: string): any {
+    static getOriginalDocument(payload: any, recordSubject: Quad_Subject, uuid: string, datasetElement?: Element): any {
+        if (datasetElement) {
+            return '<?xml version="1.0" encoding="UTF-8"?>\n' + DcatapImporter.copyWithDatasetOnly(datasetElement).toString();
+        }
         let json = payload;
         if (typeof payload === 'string') {
             try {
@@ -293,6 +299,89 @@ export class DcatapImporter extends Importer<DcatapSettings> {
             }
         }
         return typeof payload === 'string' ? JSON.stringify(document) : document;
+    }
+
+    /**
+     * Copy of the RDF/XML root element of `dataset` that only contains
+     * - `dataset` and the top-level resources it references transitively (e.g. `dcat:Distribution`),
+     * - top-level resources not referenced by any other resource (e.g. `dcat:Catalog`, `hydra:PagedCollection`),
+     *   without their properties referring to or containing other datasets (e.g. `dcat:dataset`).
+     */
+    private static copyWithDatasetOnly(dataset: Element): Element {
+        const root = dataset.ownerDocument.documentElement;
+        const getId = (element: Element) => element.getAttributeNS(namespaces.RDF, 'about') || element.getAttributeNS(namespaces.RDF, 'nodeID');
+        const getReferences = (element: Element): string[] => Array.from(element.getElementsByTagName('*'))
+            .flatMap(child => [child.getAttributeNS(namespaces.RDF, 'resource'), child.getAttributeNS(namespaces.RDF, 'nodeID')])
+            .filter(Boolean);
+
+        const otherDatasets = new Set(Array.from(root.getElementsByTagNameNS(namespaces.DCAT, 'Dataset')).filter(element => element !== dataset));
+        const otherDatasetIds = new Set(Array.from(otherDatasets).map(getId).filter(Boolean));
+        const allTopLevel = Array.from(root.childNodes).filter(node => node.nodeType === 1) as Element[];
+        // references between different resources (e.g. `dcat:Catalog` refers to itself via `foaf:homepage`)
+        const referenced = new Set(allTopLevel.flatMap(element => getReferences(element).filter(reference => reference !== getId(element))));
+        const topLevel = allTopLevel.filter(element => !otherDatasets.has(element));
+        const topLevelById = new Map(topLevel.map(element => [getId(element), element]));
+
+        const copies = new Map<Element, Element>();
+        const queue: Element[] = [dataset];
+        if (dataset.parentNode === root) {
+            copies.set(dataset, dataset.cloneNode(true) as Element);
+        }
+        for (const element of topLevel) {
+            if (element !== dataset && !referenced.has(getId(element))) {
+                const copy = DcatapImporter.copyWithoutOtherDatasets(element, dataset, otherDatasetIds);
+                copies.set(element, copy);
+                queue.push(copy);
+            }
+        }
+        while (queue.length > 0) {
+            for (const reference of getReferences(queue.shift())) {
+                const element = topLevelById.get(reference);
+                if (element && !copies.has(element)) {
+                    const copy = element.cloneNode(true) as Element;
+                    copies.set(element, copy);
+                    queue.push(copy);
+                }
+            }
+        }
+
+        const rootCopy = root.cloneNode(false) as Element;
+        for (const element of topLevel.filter(element => copies.has(element))) {
+            rootCopy.appendChild(root.ownerDocument.createTextNode('\n  '));
+            rootCopy.appendChild(copies.get(element));
+        }
+        rootCopy.appendChild(root.ownerDocument.createTextNode('\n'));
+        return rootCopy;
+    }
+
+    /**
+     * Copy of `element` without child properties that refer to (`rdf:resource`) or contain a dataset other than `dataset`.
+     * `dcat:dataset` properties are only kept if they refer to or contain `dataset`
+     * (catalogs may reference datasets of other pages).
+     */
+    private static copyWithoutOtherDatasets(element: Element, dataset: Element, otherDatasetIds: Set<string>): Element {
+        const datasetId = dataset.getAttributeNS(namespaces.RDF, 'about');
+        const copy = element.cloneNode(false) as Element;
+        for (const child of Array.from(element.childNodes)) {
+            let refersToOtherDataset = false;
+            if (child.nodeType === 1) {
+                const property = child as Element;
+                const resource = property.getAttributeNS(namespaces.RDF, 'resource');
+                const nestedDatasets = Array.from(property.getElementsByTagNameNS(namespaces.DCAT, 'Dataset'));
+                const isDatasetProperty = property.namespaceURI === namespaces.DCAT && property.localName === 'dataset';
+                refersToOtherDataset = otherDatasetIds.has(resource)
+                    || nestedDatasets.some(nested => nested !== dataset)
+                    || (isDatasetProperty && !(resource && resource === datasetId) && !nestedDatasets.includes(dataset));
+            }
+            if (!refersToOtherDataset) {
+                copy.appendChild(child.cloneNode(true));
+            }
+            else if (copy.lastChild?.nodeType === 3 && !copy.lastChild.nodeValue.trim()) {
+                // drop indentation of removed property
+                copy.removeChild(copy.lastChild);
+            }
+        }
+        return copy;
     }
 
     static createRequestConfig(settings: DcatapSettings, url?: string): RequestOptions {
