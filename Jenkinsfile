@@ -84,40 +84,51 @@ pipeline {
 
                         archiveArtifacts artifacts: "build/rpms/ingrid/ingrid-harvester-*.rpm", fingerprint: true
                     }
-
-                    withCredentials([
-                        file(credentialsId: 'itzbund-ingrid-rpm-public', variable: 'RPM_PUBLIC_KEY'),
-                        file(credentialsId: 'itzbund-ingrid-rpm-private', variable: 'RPM_PRIVATE_KEY'),
-                        string(credentialsId: 'itzbund-ingrid-rpm-passphrase', variable: 'RPM_SIGN_PASSPHRASE')
-                    ]) {
-                        sh 'rm -f ~/.gnupg/*.kbx'
-                        sh 'rm -f ~/.gnupg/*.gpg'
-                        sh 'gpg --batch --import $RPM_PUBLIC_KEY'
-                        sh 'gpg --batch --import $RPM_PRIVATE_KEY'
-                        sh "mkdir -p ./build/rpms/itzbund"
-                        sh "cp -r /root/rpmbuild/RPMS/noarch/* ${WORKSPACE}/build/rpms/itzbund/"
-                        sh "expect /rpm-sign.exp ${WORKSPACE}/build/rpms/itzbund/*.rpm"
-
-                        archiveArtifacts artifacts: 'build/rpms/itzbund/ingrid-harvester-*.rpm', fingerprint: true
-                    }
                 }
             }
         }
 
         stage('Build SBOM') {
-            when { expression { return shouldBuildDevOrRelease() } }
+            when {
+                anyOf {
+                    branch 'main'
+                    buildingTag()
+                }
+            }
             steps {
                 echo 'Generating Software Bill of Materials (SBOM)'
 
                 script {
                     def imageToScan = "registry.opencode.de/informationgrid/ingrid-harvester:${env.VERSION}"
-                    def sbomFilename = "ingrid-harvester-${determineVersion()}-sbom.json"
+                    def sbomFilename = "ingrid-harvester-${determineVersion()}.sbom.json"
 
                     sh """
                         docker run --rm --pull=always --volumes-from jenkins anchore/syft:latest ${imageToScan} --output cyclonedx-json=${WORKSPACE}/build/${sbomFilename}
                     """
-                    // Archive the SBOM file as an artifact
-                    archiveArtifacts artifacts: "build/${sbomFilename}", fingerprint: true
+                }
+            }
+        }
+
+        stage ('Upload SBOM') {
+            when {
+                anyOf {
+                    branch 'main'
+                    buildingTag()
+                }
+            }
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'api-token-dependency-track', variable: 'API_KEY')]) {
+                        //dependencyTrackPublisher artifact: 'build/reports/sbom.json', projectName: 'ingrid-harvester', projectVersion: determineVersion(), synchronous: true, dependencyTrackApiKey: API_KEY, projectProperties: [group: 'InGrid', parentId: '4d11835d-4174-4c4a-94fd-9f48e7dad7eb',tags: ['ingrid', 'deps_prod']]
+                        //dependencyTrackPublisher artifact: 'build/reports/sbom-dev.json', projectName: 'ingrid-harvester', projectVersion: determineVersion() + '-dev', synchronous: true, dependencyTrackApiKey: API_KEY, projectProperties: [group: 'InGrid', parentId: '4d11835d-4174-4c4a-94fd-9f48e7dad7eb',tags: ['ingrid', 'deps_dev']]
+                        dependencyTrackPublisher artifact: "build/ingrid-harvester-${determineVersion()}.sbom.json", projectName: 'ingrid-harvester', projectVersion: determineVersion() + '-docker-image', synchronous: true, dependencyTrackApiKey: API_KEY, projectProperties: [group: 'InGrid', parentId: '4d11835d-4174-4c4a-94fd-9f48e7dad7eb',tags: ['ingrid', 'ingrid_deps_docker']]
+                    }
+                    def repoType = env.TAG_NAME ? "rpm-ingrid-releases" : "rpm-ingrid-snapshots"
+                    withCredentials([usernamePassword(credentialsId: '9623a365-d592-47eb-9029-a2de40453f68', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                        sh '''
+                            curl -f --user $USERNAME:$PASSWORD --upload-file build/*.sbom.json https://nexus.informationgrid.eu/repository/''' + repoType + '''/
+                        '''
+                    }
                 }
             }
         }
@@ -131,26 +142,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: '9623a365-d592-47eb-9029-a2de40453f68', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                         sh '''
                             curl -f --user $USERNAME:$PASSWORD --upload-file build/rpms/ingrid/*.rpm https://nexus.informationgrid.eu/repository/''' + repoType + '''/
-                            curl -f --user $USERNAME:$PASSWORD --upload-file build/*-sbom.json https://nexus.informationgrid.eu/repository/''' + repoType + '''/
                         '''
-                    }
-                    if (repoType == 'rpm-ingrid-releases') {
-                        withCredentials([usernamePassword(credentialsId: '9623a365-d592-47eb-9029-a2de40453f68', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-                            sh '''
-                                curl -f --user $USERNAME:$PASSWORD --upload-file build/rpms/itzbund/*.rpm https://nexus.informationgrid.eu/repository/rpm-ingrid-itzbund/
-                                curl -f --user $USERNAME:$PASSWORD --upload-file build/*-sbom.json https://nexus.informationgrid.eu/repository/rpm-ingrid-itzbund/
-                            '''
-                        }
-                        if (env.TAG_NAME && env.TAG_NAME.startsWith("RPM-")) {
-                            // No upload to other ITZBund repos
-                        } else {
-                            withCredentials([usernamePassword(credentialsId: '9623a365-d592-47eb-9029-a2de40453f68', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-                                sh '''
-                                    curl -f --user $USERNAME:$PASSWORD --upload-file build/rpms/itzbund/*.rpm https://nexus.informationgrid.eu/repository/rpm-zdm_release/
-                                    curl -f --user $USERNAME:$PASSWORD --upload-file build/*-sbom.json https://nexus.informationgrid.eu/repository/rpm-zdm_release/
-                                '''
-                            }
-                        }
                     }
                 }
             }
@@ -211,7 +203,7 @@ def determineRpmReleasePart() {
         }
         return currentBuild.number
     } else {
-        return 'dev'
+        return 'SNAPSHOT'
     }
 }
 

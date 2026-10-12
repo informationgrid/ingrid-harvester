@@ -36,7 +36,7 @@ export type WfsSettings = {
     count: number,                      // Deprecated? intended as paging count; not used in importer (maxRecords is used instead); backend-only
     resultType?: 'hits' | 'results',   // WFS request result mode; 'hits' = count only; set programmatically; backend-only
     typename?: string,                  // comma-separated WFS feature type names (with namespace prefix) to harvest; UI-configurable
-    featureLimit: number,               // max features harvested per type before stopping (0 = unlimited); UI-configurable
+    featureLimit: number,               // per FeatureType: if numFeatures > featureLimit, no features are harvested (only the FeatureType if harvestTypes); otherwise all (0 = unlimited); UI-configurable
     harvestTypes: boolean,              // if true, also harvest FeatureType metadata in addition to features; backend-only
     httpMethod: 'GET' | 'POST',         // HTTP method for WFS requests; UI-configurable
     featureFilter?: string,             // OGC Filter XML to constrain feature results; backend-only
