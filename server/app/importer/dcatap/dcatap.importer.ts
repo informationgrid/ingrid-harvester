@@ -189,10 +189,23 @@ export class DcatapImporter extends Importer<DcatapSettings> {
             const recordSubject = records[i];
 
             const idTerms = store.getObjects(recordSubject, DataFactory.namedNode(namespaces.DCT + 'identifier'), null);
-            let uuid: string;
+            let sourceIdentifier: string;
             if (idTerms.length > 0) {
-                uuid = idTerms[0].value;
+                sourceIdentifier = idTerms[0].value;
             }
+
+            let mapper: DcatapMapper;
+            try {
+                mapper = new DcatapMapper(this.settings, recordSubject, store, response, harvestTime, this.summary);
+            }
+            catch (e) {
+                log.error('Error creating mapper', e);
+                this.summary.errors.push({ type: 'app', error: e.toString() });
+                this.summary.skippedDocs.push(sourceIdentifier ?? recordSubject.value);
+                continue;
+            }
+            // dct:identifier after applying idRegex, also used as ES uuid and ISO fileIdentifier
+            const uuid = mapper.getGeneratedId();
 
             if (!this.filterUtils.isIdAllowed(uuid)) {
                 this.summary.skippedDocs.push(uuid);
@@ -206,7 +219,6 @@ export class DcatapImporter extends Importer<DcatapSettings> {
                 logRequest.debug('Record subject: ', recordSubject.value);
             }
 
-            let mapper = new DcatapMapper(this.settings, recordSubject, store, response, harvestTime, this.summary);
             let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let elasticDoc: IndexDocument;
@@ -231,7 +243,7 @@ export class DcatapImporter extends Importer<DcatapSettings> {
                     dataset: elasticDoc,
                     dataset_dcatapde: dcatapdeDoc,
                     dataset_csw: cswDoc,
-                    original_document: DcatapImporter.getOriginalDocument(response, recordSubject, uuid, mapper.getDatasetElement())
+                    original_document: DcatapImporter.getOriginalDocument(response, recordSubject, sourceIdentifier, mapper.getDatasetElement())
                 };
                 promises.push(
                     this.addEntityToBulk(entity)
@@ -254,13 +266,14 @@ export class DcatapImporter extends Importer<DcatapSettings> {
     /**
      * Returns the original document of a single record.
      * For JSON-LD payloads, the catalog wrapper (`@context`, `@id`, `@type`, ...) is kept,
-     * but dataset lists (e.g. `dcat:dataset`) only contain the dataset of the given record.
+     * but dataset lists (e.g. `dcat:dataset`) only contain the dataset of the given record
+     * (matched by the raw `dct:identifier` = `sourceIdentifier` or `@id` = record subject).
      * For RDF/XML payloads (`datasetElement` given), the root element is kept with `datasetElement`,
      * the resources it references and the unreferenced resources (e.g. `hydra:PagedCollection`, `dcat:Catalog`),
      * see `copyWithDatasetOnly()`.
      * Other payloads are returned unchanged.
      */
-    static getOriginalDocument(payload: any, recordSubject: Quad_Subject, uuid: string, datasetElement?: Element): any {
+    static getOriginalDocument(payload: any, recordSubject: Quad_Subject, sourceIdentifier: string, datasetElement?: Element): any {
         if (datasetElement) {
             return '<?xml version="1.0" encoding="UTF-8"?>\n' + DcatapImporter.copyWithDatasetOnly(datasetElement).toString();
         }
@@ -282,7 +295,7 @@ export class DcatapImporter extends Importer<DcatapSettings> {
                 return false;
             }
             const identifiers = [].concat(item['dct:identifier'] ?? item['dcterms:identifier'] ?? item['identifier'] ?? []);
-            if (uuid && identifiers.some(id => (id?.['@value'] ?? id) === uuid)) {
+            if (sourceIdentifier && identifiers.some(id => (id?.['@value'] ?? id) === sourceIdentifier)) {
                 return true;
             }
             return item['@id'] === recordSubject.value;
