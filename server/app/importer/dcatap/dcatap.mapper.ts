@@ -881,6 +881,29 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
     }
 
     /**
+     * @returns the dct:alternative titles
+     */
+    getAlternativeTitles(): string[] {
+        return this.getObjects(this.datasetSubject, namespaces.DCT + 'alternative').map(term => term.value.trim()).filter(Boolean);
+    }
+
+    /**
+     * @returns the dcat:spatialResolutionInMeters values (invalid numbers are ignored)
+     */
+    getSpatialResolutions(): number[] {
+        return this.getObjects(this.datasetSubject, namespaces.DCAT + 'spatialResolutionInMeters')
+            .map(term => Number(term.value))
+            .filter(resolution => !isNaN(resolution));
+    }
+
+    /**
+     * @returns the dcatap:hvdCategory IRIs
+     */
+    getHvdCategories(): string[] {
+        return this.getObjects(this.datasetSubject, namespaces.DCATAP + 'hvdCategory').map(term => term.value);
+    }
+
+    /**
      * @returns the first dct:provenance statement (literal or label)
      */
     getProvenance(): string | undefined {

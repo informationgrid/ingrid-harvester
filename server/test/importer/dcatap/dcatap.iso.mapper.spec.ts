@@ -72,7 +72,7 @@ describe('DcatapIsoMapper.createCswIsoDocument (dessau-rosslau, a537c7007dd44945
         expect(text(`${idInfo}/gmd:abstract/gco:CharacterString`)[0]).to.match(/^Stadtteile, Stadtbezirke, Ortschaften, Stadtbezirksbeiräte Seit sich/);
         expect(text(`${idInfo}/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue`)).to.deep.equal(['pointOfContact', 'publisher']);
         expect(text(`${idInfo}/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString`)).to.deep.equal(['Kreisfreie Stadt Dessau-Roßlau', 'Stadt Dessau-Roßlau']);
-        expect(text(`${idInfo}/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString`)).to.deep.equal(['Statistische Einheiten']);
+        expect(text(`${idInfo}/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString`)).to.deep.equal(['Statistische Einheiten', 'OpenData', 'Verwaltung']);
         expect(text(`${idInfo}/gmd:resourceConstraints`)).to.be.empty;
         expect(text(`${idInfo}/gmd:language/gmd:LanguageCode/@codeListValue`)).to.deep.equal(['ger']);
         expect(text(`${idInfo}/gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue`)).to.deep.equal(['utf8']);

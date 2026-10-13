@@ -61,6 +61,7 @@ export class Codelist {
         this.readList("codelist_528.xml");
         this.readList("codelist_2000.xml");
         this.readList("codelist_6010.xml");
+        this.readList("codelist_6500.xml");
         this.readList("codelist_6400.xml", "id", "de");
     }
 
@@ -110,6 +111,10 @@ export class Codelist {
         }
         return undefined;
     }
+    getEntries(codelistId): { id: string, value: string, data: string }[] {
+        return this.lists[codelistId] ?? [];
+    }
+
     getByData(codelistId, data){
         if(data && Object.keys(this.lists).includes(codelistId)) {
             const entry = this.lists[codelistId].find(entry => entry.data === data);

@@ -30,6 +30,7 @@
     "Harvester",
     "a537c7007dd44945bc378eb59e10314c",
     "Harvester",
+    "dataset",
     "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/3.0.0.json",
     "dcat",
     "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/a537c7007dd44945bc378eb59e10314c",
@@ -43,7 +44,15 @@
     "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
     "a537c7007dd44945bc378eb59e10314c",
     "a537c7007dd44945bc378eb59e10314c",
+    "1",
+    "de",
+    "de",
+    "4",
+    "ISO 19115:2003/19139",
+    "1.0",
+    "dataset",
     "Kreisfreie Stadt Dessau-Roßlau",
+    "Stadt Dessau-Roßlau",
     "Stadtgliederung",
     "Stadtteile, Stadtbezirke, Ortschaften, Stadtbezirksbeiräte Seit sich die Städte Dessau und Roßlau im Jahr 2007 zusammenschlossen, ist in der Hauptsatzung der Stadt Dessau-Roßlau festgelegt, dass es zwei Stadtteile gibt: Stadtteil Dessau Stadtteil Roßlau In der Hauptsatzung festgehalten ist außerdem die Bestimmung von 14 Ortschaften: Roßlau, Brambach, Großkühnau, Kleinkühnau, Kleutsch, Kochstedt, Meinsdorf, Mildensee, Mosigkau, Mühlstedt, Rodleben, Sollnitz, Streetz/Natho, Waldersee und die Bildung von 5 Stadtbezirksbeiräten: Stadtbezirksbeirat für die Stadtbezirke Ziebigk und Siedlung Stadtbezirksbeirat für die Stadtbezirke Alten, West und Zoberberg Stadtbezirksbeirat für die Stadtbezirke Süd, Haideburg und Törten Stadtbezirksbeirat für den innerstädtischen Bereich Nord Stadtbezirksbeirat für die Stadtbezirke innerstädtischer Bereich Mitte und innerstädtischer Bereich Süd Grundlage ist die Einteilung der Stadt in 25 Stadtbezirke: Innerstädt. Bereich Nord, Innerstädt. Bereich Mitte, Innerstädt. Bereich Süd, Süd, Haideburg, Törten, Mildensee, Waldersee, Ziebigk, Siedlung, Großkühnau, Kleinkühnau, West, Alten, Kochstedt, Mosigkau, Zoberberg, Kleutsch, Sollnitz, Brambach, Rodleben, Roßlau, Meinsdorf, Mühlstedt, Streetz/Natho.",
     12.104646,
@@ -71,8 +80,35 @@
     "F",
     "Verwaltung",
     "F",
+    "HTML",
+    "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c",
+    "0",
+    "7",
+    "0",
+    "10",
+    "20260807000000000",
+    "2",
+    "20260807142632000",
+    "3",
+    "https://open-data.stadtatlas.dessau-rosslau.de/maps/dero::stadtgliederung-3",
+    "ArcGIS Hub Dataset",
+    "Web Page",
+    "9999",
+    "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c",
+    "ArcGIS Data Layer",
+    "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
+    "9999",
+    "https://stadtatlas.dessau-rosslau.de/server/rest/services/Verwaltung/Stadtgliederung/FeatureServer",
+    "ArcGIS REST service",
+    "",
+    "9999",
+    "https://www.arcgis.com/sharing/rest/content/items/a537c7007dd44945bc378eb59e10314c/info/metadata/metadata.xml?format=default",
+    "Source metadata",
+    "",
+    "5302",
     "Email",
     "gis@dessau-rosslau.de",
+    false,
     "547740d2a76ec4c2411c41671f0e2ed8c9002a18"
   ],
   "iPlugId": "dessau-rosslau",
@@ -135,7 +171,14 @@
   },
   "t01_object": {
     "obj_id": "a537c7007dd44945bc378eb59e10314c",
-    "org_obj_id": "a537c7007dd44945bc378eb59e10314c"
+    "mod_time": "2026-08-07T12:26:32.000Z",
+    "obj_class": "1",
+    "org_obj_id": "a537c7007dd44945bc378eb59e10314c",
+    "data_language_code": "de",
+    "metadata_character_set": "4",
+    "metadata_language_code": "de",
+    "metadata_standard_name": "ISO 19115:2003/19139",
+    "metadata_standard_version": "1.0"
   },
   "t04_search": [
     {
@@ -154,6 +197,9 @@
   "t02_address": [
     {
       "institution": "Kreisfreie Stadt Dessau-Roßlau"
+    },
+    {
+      "institution": "Stadt Dessau-Roßlau"
     }
   ],
   "distributions": [
@@ -179,6 +225,62 @@
     {
       "comm_type": "Email",
       "comm_value": "gis@dessau-rosslau.de"
+    }
+  ],
+  "is_hvd": false,
+  "t011_obj_geo": {
+    "datasource_uuid": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c"
+  },
+  "t012_obj_adr": [
+    {
+      "typ": "7",
+      "special_ref": "0"
+    },
+    {
+      "typ": "10",
+      "special_ref": "0"
+    }
+  ],
+  "t017_url_ref": [
+    {
+      "descr": "Web Page",
+      "content": "ArcGIS Hub Dataset",
+      "url_link": "https://open-data.stadtatlas.dessau-rosslau.de/maps/dero::stadtgliederung-3",
+      "special_ref": "9999"
+    },
+    {
+      "descr": "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
+      "content": "ArcGIS Data Layer",
+      "url_link": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c",
+      "special_ref": "9999"
+    },
+    {
+      "descr": "",
+      "content": "ArcGIS REST service",
+      "url_link": "https://stadtatlas.dessau-rosslau.de/server/rest/services/Verwaltung/Stadtgliederung/FeatureServer",
+      "special_ref": "9999"
+    },
+    {
+      "descr": "",
+      "content": "Source metadata",
+      "url_link": "https://www.arcgis.com/sharing/rest/content/items/a537c7007dd44945bc378eb59e10314c/info/metadata/metadata.xml?format=default",
+      "special_ref": "5302"
+    }
+  ],
+  "hierarchylevel": "dataset",
+  "t0110_avail_format": [
+    {
+      "name": "HTML"
+    }
+  ],
+  "t0113_dataset_reference": [
+    {
+      "type": "2",
+      "reference_date": "20260807000000000"
+    },
+    {
+      "type": "3",
+      "reference_date": "20260807142632000"
     }
   ]
 }

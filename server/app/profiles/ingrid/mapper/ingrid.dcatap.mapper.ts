@@ -23,11 +23,12 @@
 
 import type { Geometry } from 'geojson';
 import log4js from 'log4js';
-import { DcatapIsoMapper } from '../../../importer/dcatap/dcatap.iso.mapper.js';
+import { DcatapIsoMapper, INSPIRE_THEME_URL, ISO_METADATA_STANDARD_NAME, ISO_METADATA_STANDARD_VERSION } from '../../../importer/dcatap/dcatap.iso.mapper.js';
 import { DcatapMapper } from '../../../importer/dcatap/dcatap.mapper.js';
 import type { ToElasticMapper } from '../../../importer/to.elastic.mapper.js';
 import type { DateRange } from '../../../model/dateRange.js';
 import type { Distribution } from '../../../model/distribution.js';
+import { DcatLicensesUtils } from '../../../utils/dcat.licenses.utils.js';
 import * as MiscUtils from '../../../utils/misc.utils.js';
 import * as XpathUtils from '../../../utils/xpath.utils.js';
 import type { IngridOpendataIndexDocument } from '../model/opendataindex.document.js';
@@ -36,7 +37,19 @@ import { ingridMapper } from './ingrid.mapper.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
+// DcatPeriodicityUtils codes (EU frequency vocabulary) → ISO MD_MaintenanceFrequencyCode
+const ISO_MAINTENANCE_FREQUENCY: Record<string, string> = {
+    ANNUAL: 'annually', ANNUAL_2: 'biannually', BIWEEKLY: 'fortnightly', CONT: 'continual', UPDATE_CONT: 'continual',
+    DAILY: 'daily', IRREG: 'irregular', MONTHLY: 'monthly', NEVER: 'notPlanned', QUARTERLY: 'quarterly',
+    UNKNOWN: 'unknown', WEEKLY: 'weekly'
+};
+const HVD_LEGISLATION_URL = 'http://data.europa.eu/eli/reg_impl/2023/138';
+const EU_ACCESS_RIGHT_PUBLIC_URL = 'http://publications.europa.eu/resource/authority/access-right/PUBLIC';
+const CRS_URL_PATTERN = /^https?:\/\/www\.opengis\.net\/def\/crs\//;
+
 export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements ToElasticMapper<IngridOpendataIndexDocument> {
+
+    private isoMapper: DcatapIsoMapper;
 
     async createIndexDocument(): Promise<IngridOpendataIndexDocument> {
         // TODO this workaround should be removed once we have a unified index format
@@ -98,7 +111,14 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
     }
 
     createCswIsoDocument(): string {
-        return new DcatapIsoMapper(this.baseMapper).createCswIsoDocument();
+        return this.getIsoMapper().createCswIsoDocument();
+    }
+
+    /**
+     * Parties, links, formats and themes of the geodata index fields come from the ISO mapper, so they equal the `idf`.
+     */
+    private getIsoMapper(): DcatapIsoMapper {
+        return this.isoMapper ??= new DcatapIsoMapper(this.baseMapper);
     }
 
     getKeywords() {
@@ -168,43 +188,258 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
         return this.getSpatial()[0]?.bbox?.[3];
     }
 
-    getAddress() {
-        const organizations = [];
-        const contact = this.baseMapper.getContactPoint();
-        const organization = contact?.['organization-name'];
-        if (organization && !organizations.some(o => o.institution == organization)) {
-            organizations.push({
-                "institution": organization
-            });
+    getHierarchyLevel() {
+        return 'dataset';
+    }
+
+    getAlternateTitle() {
+        return this.baseMapper.getAlternativeTitles()[0];
+    }
+
+    getT0() {
+        const temporal = this.getTemporal()?.[0];
+        if (temporal && temporal.gte?.getTime() === temporal.lte?.getTime()) {
+            return this.formatDate(temporal.gte);
         }
-        return organizations;
+        return undefined;
+    }
+
+    getT1() {
+        const temporal = this.getTemporal()?.[0];
+        if (temporal && temporal.gte?.getTime() !== temporal.lte?.getTime()) {
+            return temporal.gte ? this.formatDate(temporal.gte) : '00000000';
+        }
+        return undefined;
+    }
+
+    getT2() {
+        const temporal = this.getTemporal()?.[0];
+        if (temporal && temporal.gte?.getTime() !== temporal.lte?.getTime()) {
+            return temporal.lte ? this.formatDate(temporal.lte) : '99999999';
+        }
+        return undefined;
+    }
+
+    getT01_object() {
+        const language = this.transformGeneric(this.getIsoMapper().getLanguage(), { ger: 'de', eng: 'en' }, 'de');
+        const result = {
+            ...super.getT01_object(),
+            obj_class: '1',
+            dataset_alternate_name: this.getAlternateTitle(),
+            data_language_code: language,
+            metadata_language_code: language,
+            metadata_character_set: this.transformToIgcDomainId('utf8', '510'),
+            metadata_standard_name: ISO_METADATA_STANDARD_NAME,
+            metadata_standard_version: ISO_METADATA_STANDARD_VERSION,
+            mod_time: this.getModifiedDate(),
+            time_type: undefined,
+            time_from: undefined,
+            time_to: undefined,
+            time_period: this.getTimePeriod()
+        };
+        const temporal = this.getTemporal()?.[0];
+        if (temporal) {
+            if (temporal.gte && temporal.lte) {
+                result.time_type = temporal.gte.getTime() === temporal.lte.getTime() ? 'am' : 'von';
+            }
+            else {
+                result.time_type = temporal.gte ? 'seit' : 'bis';
+            }
+            result.time_from = temporal.gte ? this.formatDate(temporal.gte) : '00000000';
+            result.time_to = temporal.lte ? this.formatDate(temporal.lte) : '99999999';
+        }
+        return result;
+    }
+
+    /**
+     * @returns codelist 518 id of dct:accrualPeriodicity
+     */
+    private getTimePeriod(): string | undefined {
+        const frequency = ISO_MAINTENANCE_FREQUENCY[this.baseMapper.getAccrualPeriodicity()];
+        return frequency ? this.transformToIgcDomainId(frequency, '518') : undefined;
+    }
+
+    getT0113_dataset_reference() {
+        const issued = this.baseMapper.getIssuedLiteral();
+        const references = [
+            { date: issued ? new Date(issued) : undefined, type: 'publication' },
+            { date: this.getModifiedDate(), type: 'revision' }
+        ];
+        return this.nonEmpty(references
+            .filter(reference => reference.date && !isNaN(reference.date.getTime()))
+            .map(reference => ({
+                reference_date: this.formatDate(reference.date),
+                type: this.transformToIgcDomainId(reference.type, '502')
+            })));
+    }
+
+    getAddress() {
+        return this.nonEmpty(this.getIsoMapper().getParties().map(party => ({
+            institution: party.organisationName,
+            lastname: party.individualName,
+            street: party.street,
+            postcode: party.postalCode,
+            city: party.city,
+            administrative_area_value: party.region,
+            country_code: party.country
+        })));
+    }
+
+    getT012_obj_adr() {
+        return this.nonEmpty(this.getIsoMapper().getParties().map(party => ({
+            special_ref: '0',
+            typ: this.transformToIgcDomainId(party.role, '505')
+        })));
     }
 
     getT021_communication() {
-        const emails = [];
-        const contact = this.baseMapper.getContactPoint();
-        const email = contact?.hasEmail;
-        if (email && !emails.some(m => m.comm_value == email)) {
-            emails.push({
-                "comm_type": "Email",
-                "comm_value": email
-            });
+        const communications = [];
+        for (const party of this.getIsoMapper().getParties()) {
+            for (const [commType, commValue] of [['Telefon', party.phone], ['Email', party.email], ['URL', party.url]]) {
+                if (this.hasValue(commValue)) {
+                    communications.push({ comm_type: commType, comm_value: commValue });
+                }
+            }
         }
-        return emails;
+        return this.nonEmpty(communications);
     }
 
     getT04Search() {
         const keywordTerms = [];
-        for (const keyword of this.baseMapper.getKeywords()) {
-            if (keywordTerms.some(term => term.searchterm == keyword)) {
-                continue;
+        const addTerm = (searchterm: string, type: string) => {
+            if (this.hasValue(searchterm) && !keywordTerms.some(term => term.searchterm == searchterm)) {
+                keywordTerms.push({ searchterm, type });
             }
-            keywordTerms.push({
-                "searchterm": keyword,
-                "type": "F"
-            });
+        };
+        const themes = this.getIsoMapper().getThemes();
+        themes.filter(theme => theme.uri?.startsWith(INSPIRE_THEME_URL)).forEach(theme => addTerm(theme.label, 'I'));
+        this.baseMapper.getKeywords().forEach(keyword => addTerm(keyword, 'F'));
+        themes.filter(theme => !theme.uri?.startsWith(INSPIRE_THEME_URL)).forEach(theme => addTerm(theme.label, 'F'));
+        return this.nonEmpty(keywordTerms);
+    }
+
+    getLocation() {
+        return this.baseMapper.getSpatialText();
+    }
+
+    getT011_obj_geo() {
+        const result = {
+            datasource_uuid: this.baseMapper.getIdentifiers()[0],
+            referencesystem_id: this.getReferenceSystems(),
+            special_base: this.baseMapper.getProvenance()
+        };
+        return Object.values(result).some(value => value !== undefined) ? result : undefined;
+    }
+
+    getT011_obj_geo_scale() {
+        return this.nonEmpty(this.baseMapper.getSpatialResolutions().map(resolution => ({
+            resolution_ground: String(resolution)
+        })));
+    }
+
+    getSpatialSystem() {
+        const referenceSystems = this.getReferenceSystems();
+        return referenceSystems ? { referencesystem_value: referenceSystems } : undefined;
+    }
+
+    /**
+     * @returns the CRS IRIs of dct:conformsTo
+     */
+    private getReferenceSystems(): string[] | undefined {
+        return this.nonEmpty(this.baseMapper.getConformsTo().map(reference => reference.uri).filter(uri => CRS_URL_PATTERN.test(uri ?? '')));
+    }
+
+    getT017_url_ref() {
+        return this.nonEmpty(this.getIsoMapper().getLinks().map(link => ({
+            url_link: link.url,
+            content: link.name ?? '',
+            descr: link.description ?? '',
+            special_ref: (link.function ? this.transformToIgcDomainId(link.function, '2000') : undefined) ?? '9999'
+        })));
+    }
+
+    getT0110_avail_format() {
+        return this.nonEmpty(this.getIsoMapper().getFormats().map(name => ({ name })));
+    }
+
+    getCapabilitiesURL() {
+        return this.nonEmpty(this.getIsoMapper().getLinks()
+            .map(link => link.url)
+            .filter(url => /[?&]request=getcapabilities(&|$)/i.test(url) && /[?&]service=wms(&|$)/i.test(url)));
+    }
+
+    getObjectUse() {
+        const rights = this.baseMapper.getRights();
+        return rights.length ? { terms_of_use_value: rights } : undefined;
+    }
+
+    getObjectUseConstraint() {
+        const licenseKeys = [];
+        const licenseValues = [];
+        for (const license of this.baseMapper.getLicenses()) {
+            licenseValues.push(license.label);
+            const knownLicense = DcatLicensesUtils.get(license.uri);
+            if (knownLicense) {
+                licenseValues.push(JSON.stringify({ id: knownLicense.id, name: knownLicense.title, url: knownLicense.url, quelle: '' }));
+                const entry = Codelist.getInstance().getEntries('6500').find(entry => this.parseJson(entry.data)?.id == knownLicense.id);
+                if (entry) {
+                    licenseKeys.push(entry.id);
+                }
+            }
         }
-        return keywordTerms;
+        if (!licenseValues.length) {
+            return undefined;
+        }
+        return {
+            ...(licenseKeys.length ? { license_key: licenseKeys } : {}),
+            license_value: licenseValues
+        };
+    }
+
+    getObjectAccess() {
+        const accessRights = this.baseMapper.getAccessRightsReferences();
+        if (!accessRights.length) {
+            return undefined;
+        }
+        return {
+            restriction_key: accessRights.map(accessRight => this.getRestrictionKey(accessRight.uri)),
+            restriction_value: accessRights.map(accessRight => accessRight.label),
+            terms_of_use: undefined
+        };
+    }
+
+    /**
+     * @returns codelist 6010 id of an INSPIRE LimitationsOnPublicAccess IRI, `1` for the EU access right PUBLIC, else `-1`
+     */
+    private getRestrictionKey(uri: string): string {
+        if (!uri) {
+            return '-1';
+        }
+        if (uri == EU_ACCESS_RIGHT_PUBLIC_URL) {
+            return '1';
+        }
+        return Codelist.getInstance().getEntries('6010').find(entry => this.parseJson(entry.data)?.url == uri)?.id ?? '-1';
+    }
+
+    isHvd(): boolean {
+        return this.baseMapper.getApplicableLegislation().some(legislation => legislation.uri?.startsWith(HVD_LEGISLATION_URL))
+            || this.baseMapper.getHvdCategories().length > 0;
+    }
+
+    /**
+     * @returns the array, or `undefined` if it is empty (geodata index fields without source data are omitted)
+     */
+    private nonEmpty<T>(values: T[]): T[] | undefined {
+        return values.length ? values : undefined;
+    }
+
+    private parseJson(data: string): any {
+        try {
+            return data ? JSON.parse(data) : undefined;
+        }
+        catch {
+            return undefined;
+        }
     }
 
     getIDF() {

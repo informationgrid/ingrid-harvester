@@ -30,12 +30,14 @@ import { getLastPathSegment } from './dcatap.utils.js';
 
 const ISO_CODELIST_URL = 'http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml';
 const ISO_LANGUAGE_CODELIST_URL = 'http://www.loc.gov/standards/iso639-2';
-const INSPIRE_THEME_URL = 'http://inspire.ec.europa.eu/theme/';
+export const INSPIRE_THEME_URL = 'http://inspire.ec.europa.eu/theme/';
+export const ISO_METADATA_STANDARD_NAME = 'ISO 19115:2003/19139';
+export const ISO_METADATA_STANDARD_VERSION = '1.0';
 const ISO_ROLE_CODES = ['resourceProvider', 'custodian', 'owner', 'user', 'distributor', 'originator', 'pointOfContact', 'principalInvestigator', 'processor', 'publisher', 'author'];
 // ISO 639-1 and ISO 639-2/T codes that differ from the ISO 639-2/B codes used in ISO 19139
 const ISO_LANGUAGE_MAP: Record<string, string> = { de: 'ger', deu: 'ger', en: 'eng', fr: 'fre', fra: 'fre' };
 
-type IsoParty = {
+export type IsoParty = {
     individualName?: string,
     organisationName?: string,
     email?: string,
@@ -49,7 +51,7 @@ type IsoParty = {
     role: string
 };
 
-type IsoLink = { url: string, name?: string, description?: string, function?: string };
+export type IsoLink = { url: string, name?: string, description?: string, function?: string };
 
 /**
  * Creates an ISO 19139 (gmd:MD_Metadata) document from a DCAT-AP dataset,
@@ -73,8 +75,8 @@ export class DcatapIsoMapper {
         root.setAttributeNS(namespaces.XMLNS, 'xmlns:gml', namespaces.GML_3_2);
         root.setAttributeNS(namespaces.XMLNS, 'xmlns:xlink', namespaces.XLINK);
 
-        const language = this.getIsoLanguage();
-        const contacts = this.getIsoParties();
+        const language = this.getLanguage();
+        const contacts = this.getParties();
 
         this.isoCharacterString(root, 'fileIdentifier', this.mapper.getGeneratedId());
         this.buildIsoLanguage(root, language);
@@ -84,8 +86,8 @@ export class DcatapIsoMapper {
         const metadataContacts = contacts.filter(contact => contact.role == 'pointOfContact');
         this.buildIsoContacts(root, 'contact', metadataContacts.length ? metadataContacts : contacts.slice(0, 1));
         this.isoElement(this.isoElement(root, namespaces.GMD, 'gmd:dateStamp'), namespaces.GCO, 'gco:DateTime', this.getIsoDateStamp());
-        this.isoCharacterString(root, 'metadataStandardName', 'ISO 19115:2003/19139');
-        this.isoCharacterString(root, 'metadataStandardVersion', '1.0');
+        this.isoCharacterString(root, 'metadataStandardName', ISO_METADATA_STANDARD_NAME);
+        this.isoCharacterString(root, 'metadataStandardVersion', ISO_METADATA_STANDARD_VERSION);
 
         const dataIdentification = this.isoElement(this.isoElement(root, namespaces.GMD, 'gmd:identificationInfo'), namespaces.GMD, 'gmd:MD_DataIdentification');
         this.buildIsoCitation(dataIdentification);
@@ -228,9 +230,7 @@ export class DcatapIsoMapper {
         }
 
         // theme IRIs become anchors, labels and literals plain keywords
-        const themes: DcatapReference[] = this.mapper.getThemes().map(theme => /^https?:\/\//.test(theme)
-            ? { label: this.mapper.getPrefLabel(theme) ?? getLastPathSegment(theme), uri: theme }
-            : { label: theme });
+        const themes = this.getThemes();
         const inspireThemes = themes.filter(theme => theme.uri?.startsWith(INSPIRE_THEME_URL));
         const otherThemes = themes.filter(theme => !theme.uri?.startsWith(INSPIRE_THEME_URL));
         if (inspireThemes.length) {
@@ -242,6 +242,15 @@ export class DcatapIsoMapper {
         if (otherThemes.length) {
             this.buildIsoThemeKeywords(dataIdentification, otherThemes);
         }
+    }
+
+    /**
+     * @returns the dcat:theme values; IRIs with their label (skos:prefLabel, else last path segment)
+     */
+    getThemes(): DcatapReference[] {
+        return this.mapper.getThemes().map(theme => /^https?:\/\//.test(theme)
+            ? { label: this.mapper.getPrefLabel(theme) ?? getLastPathSegment(theme), uri: theme }
+            : { label: theme });
     }
 
     private buildIsoThemeKeywords(dataIdentification: Element, themes: DcatapReference[]): Element {
@@ -296,8 +305,17 @@ export class DcatapIsoMapper {
         });
     }
 
-    private buildIsoDistributionInfo(root: Element): void {
-        const formats = new Set<string>();
+    /**
+     * @returns the distinct formats of all distributions
+     */
+    getFormats(): string[] {
+        return [...new Set(this.mapper.getDistributionInfos().map(distribution => distribution.format).filter(Boolean))];
+    }
+
+    /**
+     * @returns the online resources (distribution URLs, landing pages, foaf:page) without duplicate URLs
+     */
+    getLinks(): IsoLink[] {
         const links: IsoLink[] = [];
         const addLink = (link: IsoLink) => {
             if (link.url && !links.some(l => l.url == link.url)) {
@@ -306,9 +324,6 @@ export class DcatapIsoMapper {
         };
 
         for (const distribution of this.mapper.getDistributionInfos()) {
-            if (distribution.format) {
-                formats.add(distribution.format);
-            }
             const { title: name, description } = distribution;
             distribution.downloadURLs.forEach(url => addLink({ url, name, description, function: 'download' }));
             distribution.accessURLs.forEach(url => addLink({ url, name, description }));
@@ -316,8 +331,13 @@ export class DcatapIsoMapper {
         }
         this.mapper.getLandingPages().forEach(url => addLink({ url, function: 'information' }));
         this.mapper.getPages().forEach(page => addLink({ url: page.uri, name: page.label, function: 'information' }));
+        return links;
+    }
 
-        if (!formats.size && !links.length) {
+    private buildIsoDistributionInfo(root: Element): void {
+        const formats = this.getFormats();
+        const links = this.getLinks();
+        if (!formats.length && !links.length) {
             return;
         }
         const mdDistribution = this.isoElement(this.isoElement(root, namespaces.GMD, 'gmd:distributionInfo'), namespaces.GMD, 'gmd:MD_Distribution');
@@ -368,7 +388,7 @@ export class DcatapIsoMapper {
     /**
      * Contacts for ISO: dcat:contactPoint (vCard), dct:publisher, dct:creator, dct:rightsHolder (FOAF or vCard agents).
      */
-    private getIsoParties(): IsoParty[] {
+    getParties(): IsoParty[] {
         const parties: IsoParty[] = [];
         for (const contact of this.mapper.getContactPoints()) {
             const party: IsoParty = {
@@ -399,7 +419,7 @@ export class DcatapIsoMapper {
     /**
      * @returns the ISO 639-2/B code of the first dct:language of the dataset
      */
-    private getIsoLanguage(): string | undefined {
+    getLanguage(): string | undefined {
         for (const value of this.mapper.getLanguages()) {
             const code = getLastPathSegment(value).toLowerCase();
             const language = ISO_LANGUAGE_MAP[code] ?? code;
