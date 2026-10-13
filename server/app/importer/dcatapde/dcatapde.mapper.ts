@@ -304,12 +304,7 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
     }
 
     /**
-     * Extracts and returns an array of keywords defined in the ISO-XML document.
-     * This method also checks if these keywords contain at least one of the
-     * given mandatory keywords. If this is not the case, then the mapped
-     * document is flagged to be skipped from the index. By default this array
-     * contains just one entry 'opendata' i.e. if the ISO-XML document doesn't
-     * have this keyword defined, then it will be skipped from the index.
+     * Extracts and returns an array of keywords defined in the DCAT-AP.de document.
      */
     getKeywords(): string[] {
         let keywords = [];
@@ -320,11 +315,18 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
             }
         }
 
-        if(this.settings.filterTags && this.settings.filterTags.length > 0 && !keywords.some(keyword => this.settings.filterTags.includes(keyword))){
+        return keywords;
+    }
+
+    /**
+     * Checks if the keywords contain at least one of the configured filter tags.
+     * If this is not the case, then the document is skipped from the index.
+     */
+    shouldBeSkipped(): boolean {
+        if(this.settings.filterTags && this.settings.filterTags.length > 0 && !this.getKeywords().some(keyword => this.settings.filterTags.includes(keyword))){
             this.skipped = true;
         }
-
-        return keywords;
+        return super.shouldBeSkipped();
     }
 
     getMetadataSource(): MetadataSource {

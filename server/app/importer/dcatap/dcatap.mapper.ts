@@ -362,13 +362,21 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
                 keywords.push(...parts);
             }
         }
-
-        if (this.settings.filterTags && this.settings.filterTags.length > 0 && !keywords.some(keyword => this.settings.filterTags.includes(keyword))) {
-            this.skipped = true;
+        const subjectTerms = this.getObjects(this.datasetSubject, namespaces.DCT + 'subject');
+        for (const subject of subjectTerms) {
+            keywords.push(subject.value);
         }
+
 
         this.fetched.keywords = keywords;
         return keywords;
+    }
+
+    shouldBeSkipped(): boolean {
+        if (this.settings.filterTags && this.settings.filterTags.length > 0 && !this.getKeywords().some(keyword => this.settings.filterTags.includes(keyword))) {
+            this.skipped = true;
+        }
+        return super.shouldBeSkipped();
     }
 
     getMetadataSource(): MetadataSource {
