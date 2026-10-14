@@ -94,11 +94,11 @@
     51.732581,
     12.369028,
     51.974815,
-    "Statistische Einheiten",
+    "statistische einheiten",
     "F",
-    "OpenData",
+    "opendata",
     "F",
-    "Verwaltung",
+    "verwaltung",
     "F",
     "HTML",
     "CSV",
@@ -227,15 +227,15 @@
   "t04_search": [
     {
       "type": "F",
-      "searchterm": "Statistische Einheiten"
+      "searchterm": "statistische einheiten"
     },
     {
       "type": "F",
-      "searchterm": "OpenData"
+      "searchterm": "opendata"
     },
     {
       "type": "F",
-      "searchterm": "Verwaltung"
+      "searchterm": "verwaltung"
     }
   ],
   "t02_address": [

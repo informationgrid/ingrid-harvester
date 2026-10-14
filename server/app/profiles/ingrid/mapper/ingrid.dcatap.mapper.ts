@@ -313,7 +313,7 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
         };
         const themes = this.getIsoMapper().getThemes();
         themes.filter(theme => theme.uri?.startsWith(INSPIRE_THEME_URL)).forEach(theme => addTerm(theme.label, 'I'));
-        this.baseMapper.getKeywords().forEach(keyword => addTerm(keyword, 'F'));
+        this.baseMapper.getKeywords().forEach(keyword => addTerm(keyword.toLowerCase(), 'F'));
         themes.filter(theme => !theme.uri?.startsWith(INSPIRE_THEME_URL)).forEach(theme => addTerm(theme.label, 'F'));
         return this.nonEmpty(keywordTerms);
     }

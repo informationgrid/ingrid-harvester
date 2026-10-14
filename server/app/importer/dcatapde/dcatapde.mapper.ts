@@ -319,12 +319,15 @@ export class DcatapdeMapper extends Mapper<DcatapdeSettings> implements ToElasti
     }
 
     /**
-     * Checks if the keywords contain at least one of the configured filter tags.
+     * Checks if the keywords contain at least one of the configured filter tags (case-insensitive).
      * If this is not the case, then the document is skipped from the index.
      */
     shouldBeSkipped(): boolean {
-        if(this.settings.filterTags && this.settings.filterTags.length > 0 && !this.getKeywords().some(keyword => this.settings.filterTags.includes(keyword))){
-            this.skipped = true;
+        if(this.settings.filterTags && this.settings.filterTags.length > 0){
+            const filterTags = this.settings.filterTags.map(tag => tag.toLowerCase());
+            if(!this.getKeywords().some(keyword => filterTags.includes(keyword.toLowerCase()))){
+                this.skipped = true;
+            }
         }
         return super.shouldBeSkipped();
     }
