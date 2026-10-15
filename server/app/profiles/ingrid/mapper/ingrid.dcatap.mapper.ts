@@ -47,7 +47,7 @@ const HVD_LEGISLATION_URL = 'http://data.europa.eu/eli/reg_impl/2023/138';
 const EU_ACCESS_RIGHT_PUBLIC_URL = 'http://publications.europa.eu/resource/authority/access-right/PUBLIC';
 const CRS_URL_PATTERN = /^https?:\/\/www\.opengis\.net\/def\/crs\//;
 
-export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements ToElasticMapper<IngridOpendataIndexDocument> {
+export class ingridDcatapMapper<M extends DcatapMapper = DcatapMapper> extends ingridMapper<M> implements ToElasticMapper<IngridOpendataIndexDocument> {
 
     async createIndexDocument(): Promise<IngridOpendataIndexDocument> {
         // TODO this workaround should be removed once we have a unified index format

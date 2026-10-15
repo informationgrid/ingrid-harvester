@@ -265,7 +265,7 @@ export class DcatapMapper<S extends DcatapSettings = DcatapSettings> extends Map
         return dists;
     }
 
-    private extractAgents(predicateUri: string): Person[] {
+    protected extractAgents(predicateUri: string): Person[] {
         const agents: Person[] = [];
         const agentTerms = this.getObjects(this.datasetSubject, predicateUri);
 
