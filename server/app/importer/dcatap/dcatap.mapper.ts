@@ -38,13 +38,12 @@ import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
-import { DCAT_LANGUAGE_URL } from '../dcatapde/dcatapde.utils.js';
 import { Mapper } from '../mapper.js';
 import { namespaces } from '../namespaces.js';
 import type { ToDcatapdeMapper } from '../to.dcatapde.mapper.js';
 import type { ToElasticMapper } from '../to.elastic.mapper.js';
 import type { DcatapSettings } from './dcatap.settings.js';
-import { getLastPathSegment } from './dcatap.utils.js';
+import { DCAT_LANGUAGE_URL, getLastPathSegment } from './dcatap.utils.js';
 
 const IANA_MEDIA_TYPE_URL = 'https://www.iana.org/assignments/media-types/';
 

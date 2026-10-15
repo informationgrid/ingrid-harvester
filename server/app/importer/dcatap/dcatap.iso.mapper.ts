@@ -23,10 +23,9 @@
 
 import { DOMImplementation, XMLSerializer } from '@xmldom/xmldom';
 import type { Geometry } from 'geojson';
-import { prettyPrintXml } from '../dcatapde/dcatapde.utils.js';
 import { namespaces } from '../namespaces.js';
 import type { DcatapMapper, DcatapReference } from './dcatap.mapper.js';
-import { getLastPathSegment } from './dcatap.utils.js';
+import { getLastPathSegment, prettyPrintXml } from './dcatap.utils.js';
 
 const ISO_CODELIST_URL = 'http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml';
 const ISO_LANGUAGE_CODELIST_URL = 'http://www.loc.gov/standards/iso639-2';
