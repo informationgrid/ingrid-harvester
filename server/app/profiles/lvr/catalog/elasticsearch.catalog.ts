@@ -91,6 +91,7 @@ export class LvrElasticsearchCatalog extends ElasticsearchCatalog {
 
             // if document does not already exist, don't create it
             if (!existing) {
+                log.warn(`Display URL was not accessible for document ${esId}, and no existing source information is available. Skipping document.`);
                 return box;
             }
 
@@ -105,7 +106,7 @@ export class LvrElasticsearchCatalog extends ElasticsearchCatalog {
             }
             // otherwise use last available source information
             else {
-                log.warn(`Source URL was not accessible for document ${esId}, reusing existing source (last URL availability: ${lastAvailableStr})`);
+                log.warn(`Display URL was not accessible for document ${esId}, reusing existing source (last URL availability: ${lastAvailableStr})`);
                 document.lvr.source = existing;
             }
         }
