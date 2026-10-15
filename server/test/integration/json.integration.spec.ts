@@ -35,7 +35,7 @@ describe('JSON Integration Tests', function () {
         await runImporterIntegrationTest({
             profile,
             expectedDocsDir: 'elasticsearch',
-            mocks: createJsonMocks('CLICKRHEIN-DISCOVERY-1', 'CLICKRHEIN-DISCOVERY-2'),
+            mocks: createJsonMocks('CLICKRHEIN-DISCOVERY-218', 'CLICKRHEIN-DISCOVERY-221', 'CLICKRHEIN-DISCOVERY-222'),
             settings: jsonClickrheinSettings as JsonSettings,
             baseFixture: 'test/data/json/clickrhein'
         });
