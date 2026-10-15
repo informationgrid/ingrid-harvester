@@ -87,9 +87,9 @@ export class ingridDcatapMapper<M extends DcatapMapper = DcatapMapper> extends i
             },
             contacts: this.getContacts(),
             keywords: this.getKeywords(),
-            legal_basis: undefined,    // dcatde:legalBasis (DCAT-AP.de) is mapped by ingridDcatapdeMapper only
+            legal_basis: this.getLegalBasis(),
             distributions: await this.getDistributions(),
-            political_geocoding_level_uri: undefined,    // dcatde:politicalGeocodingLevelURI (DCAT-AP.de) is mapped by ingridDcatapdeMapper only
+            political_geocoding_level_uri: this.getPoliticalGeocodingLevelURI(),
             spatial: {
                 geometries: this.getSpatial()
             },
@@ -139,6 +139,20 @@ export class ingridDcatapMapper<M extends DcatapMapper = DcatapMapper> extends i
             }
         });
         return result;
+    }
+
+    /**
+     * `dcatde:legalBasis` is DCAT-AP.de, mapped by `ingridDcatapdeMapper` only
+     */
+    protected getLegalBasis(): string | undefined {
+        return undefined;
+    }
+
+    /**
+     * `dcatde:politicalGeocodingLevelURI` is DCAT-AP.de, mapped by `ingridDcatapdeMapper` only
+     */
+    protected getPoliticalGeocodingLevelURI(): string | undefined {
+        return undefined;
     }
 
     getContacts() {
