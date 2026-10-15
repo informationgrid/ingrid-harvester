@@ -46,6 +46,12 @@ import type { DcatapSettings } from './dcatap.settings.js';
 import { DCAT_LANGUAGE_URL, getLastPathSegment } from './dcatap.utils.js';
 
 const IANA_MEDIA_TYPE_URL = 'https://www.iana.org/assignments/media-types/';
+export const INSPIRE_THEME_URL = 'http://inspire.ec.europa.eu/theme/';
+export const ISO_METADATA_STANDARD_NAME = 'ISO 19115:2003/19139';
+export const ISO_METADATA_STANDARD_VERSION = '1.0';
+const ISO_ROLE_CODES = ['resourceProvider', 'custodian', 'owner', 'user', 'distributor', 'originator', 'pointOfContact', 'principalInvestigator', 'processor', 'publisher', 'author'];
+// ISO 639-1 and ISO 639-2/T codes that differ from the ISO 639-2/B codes used in ISO 19139
+const ISO_LANGUAGE_MAP: Record<string, string> = { de: 'ger', deu: 'ger', en: 'eng', fr: 'fre', fra: 'fre' };
 
 export type DcatapReference = { label?: string, uri?: string };
 
@@ -63,6 +69,22 @@ export type DcatapContact = Contact & {
     isOrganization?: boolean,   // rdf:type vcard:Organization
     role?: string               // vcard:role
 };
+
+export type IsoParty = {
+    individualName?: string,
+    organisationName?: string,
+    email?: string,
+    phone?: string,
+    url?: string,
+    street?: string,
+    city?: string,
+    region?: string,
+    postalCode?: string,
+    country?: string,
+    role: string
+};
+
+export type IsoLink = { url: string, name?: string, description?: string, function?: string };
 
 export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMapper<IndexDocument>, ToDcatapdeMapper {
 
@@ -891,6 +913,92 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
         return this.getObjects(this.datasetSubject, namespaces.DCT + 'provenance')
             .map(term => this.getTermLabel(term, false))
             .find(Boolean);
+    }
+
+    // ISO view: DCAT-AP data with ISO semantics (ISO roles, online functions, ISO 639-2/B language),
+    // shared by the ISO document (`DcatapIsoMapper`) and the geodata index fields, so both contain the same values
+
+    /**
+     * @returns the dcat:theme values of `getThemes()`; IRIs with their label (skos:prefLabel, else last path segment)
+     */
+    getThemeReferences(): DcatapReference[] {
+        return this.getThemes().map(theme => /^https?:\/\//.test(theme)
+            ? { label: this.getPrefLabel(theme) ?? getLastPathSegment(theme), uri: theme }
+            : { label: theme });
+    }
+
+    /**
+     * @returns the distinct formats of all distributions
+     */
+    getFormats(): string[] {
+        return [...new Set(this.getDistributionInfos().map(distribution => distribution.format).filter(Boolean))];
+    }
+
+    /**
+     * @returns the online resources (distribution URLs, landing pages, foaf:page) without duplicate URLs
+     */
+    getLinks(): IsoLink[] {
+        const links: IsoLink[] = [];
+        const addLink = (link: IsoLink) => {
+            if (link.url && !links.some(l => l.url == link.url)) {
+                links.push(link);
+            }
+        };
+
+        for (const distribution of this.getDistributionInfos()) {
+            const { title: name, description } = distribution;
+            distribution.downloadURLs.forEach(url => addLink({ url, name, description, function: 'download' }));
+            distribution.accessURLs.forEach(url => addLink({ url, name, description }));
+            distribution.endpointURLs.forEach(url => addLink({ url, name, description }));
+        }
+        this.getLandingPages().forEach(url => addLink({ url, function: 'information' }));
+        this.getPages().forEach(page => addLink({ url: page.uri, name: page.label, function: 'information' }));
+        return links;
+    }
+
+    /**
+     * Contacts for ISO: dcat:contactPoint (vCard), dct:publisher, dct:creator, dct:rightsHolder (FOAF or vCard agents).
+     */
+    getParties(): IsoParty[] {
+        const parties: IsoParty[] = [];
+        for (const contact of this.getContactPoints()) {
+            const party: IsoParty = {
+                individualName: contact.isOrganization ? undefined : contact.fn ?? undefined,
+                organisationName: contact['organization-name'] ?? (contact.isOrganization ? contact.fn ?? undefined : undefined),
+                email: contact.hasEmail,
+                phone: contact.hasTelephone,
+                url: contact.hasURL,
+                street: contact.hasStreetAddress,
+                city: contact.hasLocality,
+                region: contact.hasRegion,
+                postalCode: contact.hasPostalCode,
+                country: contact.hasCountryName,
+                role: ISO_ROLE_CODES.includes(contact.role) ? contact.role : 'pointOfContact'
+            };
+            if (party.individualName || party.organisationName || party.email) {
+                parties.push(party);
+            }
+        }
+        for (const [predicate, role] of [[namespaces.DCT + 'publisher', 'publisher'], [namespaces.DCT + 'creator', 'originator'], [namespaces.DCT + 'rightsHolder', 'owner']]) {
+            for (const agent of this.getAgents(predicate)) {
+                parties.push({ organisationName: agent.name, email: agent.mbox, url: agent.homepage, role });
+            }
+        }
+        return parties;
+    }
+
+    /**
+     * @returns the ISO 639-2/B code of the first dct:language of the dataset
+     */
+    getIsoLanguage(): string | undefined {
+        for (const value of this.getLanguages()) {
+            const code = getLastPathSegment(value).toLowerCase();
+            const language = ISO_LANGUAGE_MAP[code] ?? code;
+            if (/^[a-z]{3}$/.test(language)) {
+                return language;
+            }
+        }
+        return undefined;
     }
 
     private getTermReferences(predicateUri: string): DcatapReference[] {

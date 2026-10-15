@@ -23,8 +23,8 @@
 
 import type { Geometry } from 'geojson';
 import log4js from 'log4js';
-import { DcatapIsoMapper, INSPIRE_THEME_URL, ISO_METADATA_STANDARD_NAME, ISO_METADATA_STANDARD_VERSION } from '../../../importer/dcatap/dcatap.iso.mapper.js';
-import { DcatapMapper } from '../../../importer/dcatap/dcatap.mapper.js';
+import { DcatapIsoMapper } from '../../../importer/dcatap/dcatap.iso.mapper.js';
+import { DcatapMapper, INSPIRE_THEME_URL, ISO_METADATA_STANDARD_NAME, ISO_METADATA_STANDARD_VERSION } from '../../../importer/dcatap/dcatap.mapper.js';
 import type { ToElasticMapper } from '../../../importer/to.elastic.mapper.js';
 import type { DateRange } from '../../../model/dateRange.js';
 import type { Distribution } from '../../../model/distribution.js';
@@ -48,8 +48,6 @@ const EU_ACCESS_RIGHT_PUBLIC_URL = 'http://publications.europa.eu/resource/autho
 const CRS_URL_PATTERN = /^https?:\/\/www\.opengis\.net\/def\/crs\//;
 
 export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements ToElasticMapper<IngridOpendataIndexDocument> {
-
-    private isoMapper: DcatapIsoMapper;
 
     async createIndexDocument(): Promise<IngridOpendataIndexDocument> {
         // TODO this workaround should be removed once we have a unified index format
@@ -111,14 +109,7 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
     }
 
     createCswIsoDocument(): string {
-        return this.getIsoMapper().createCswIsoDocument();
-    }
-
-    /**
-     * Parties, links, formats and themes of the geodata index fields come from the ISO mapper, so they equal the `idf`.
-     */
-    private getIsoMapper(): DcatapIsoMapper {
-        return this.isoMapper ??= new DcatapIsoMapper(this.baseMapper);
+        return new DcatapIsoMapper(this.baseMapper).createCswIsoDocument();
     }
 
     getKeywords() {
@@ -221,7 +212,7 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
     }
 
     getT01_object() {
-        const language = this.transformGeneric(this.getIsoMapper().getLanguage(), { ger: 'de', eng: 'en' }, 'de');
+        const language = this.transformGeneric(this.baseMapper.getIsoLanguage(), { ger: 'de', eng: 'en' }, 'de');
         const result = {
             ...super.getT01_object(),
             obj_class: '1',
@@ -274,7 +265,7 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
     }
 
     getAddress() {
-        return this.nonEmpty(this.getIsoMapper().getParties().map(party => ({
+        return this.nonEmpty(this.baseMapper.getParties().map(party => ({
             institution: party.organisationName,
             lastname: party.individualName,
             street: party.street,
@@ -286,7 +277,7 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
     }
 
     getT012_obj_adr() {
-        return this.nonEmpty(this.getIsoMapper().getParties().map(party => ({
+        return this.nonEmpty(this.baseMapper.getParties().map(party => ({
             special_ref: '0',
             typ: this.transformToIgcDomainId(party.role, '505')
         })));
@@ -294,7 +285,7 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
 
     getT021_communication() {
         const communications = [];
-        for (const party of this.getIsoMapper().getParties()) {
+        for (const party of this.baseMapper.getParties()) {
             for (const [commType, commValue] of [['Telefon', party.phone], ['Email', party.email], ['URL', party.url]]) {
                 if (this.hasValue(commValue)) {
                     communications.push({ comm_type: commType, comm_value: commValue });
@@ -311,7 +302,7 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
                 keywordTerms.push({ searchterm, type });
             }
         };
-        const themes = this.getIsoMapper().getThemes();
+        const themes = this.baseMapper.getThemeReferences();
         themes.filter(theme => theme.uri?.startsWith(INSPIRE_THEME_URL)).forEach(theme => addTerm(theme.label, 'I'));
         this.baseMapper.getKeywords().forEach(keyword => addTerm(keyword.toLowerCase(), 'F'));
         themes.filter(theme => !theme.uri?.startsWith(INSPIRE_THEME_URL)).forEach(theme => addTerm(theme.label, 'F'));
@@ -350,7 +341,7 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
     }
 
     getT017_url_ref() {
-        return this.nonEmpty(this.getIsoMapper().getLinks().map(link => ({
+        return this.nonEmpty(this.baseMapper.getLinks().map(link => ({
             url_link: link.url,
             content: link.name ?? '',
             descr: link.description ?? '',
@@ -359,11 +350,11 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
     }
 
     getT0110_avail_format() {
-        return this.nonEmpty(this.getIsoMapper().getFormats().map(name => ({ name })));
+        return this.nonEmpty(this.baseMapper.getFormats().map(name => ({ name })));
     }
 
     getCapabilitiesURL() {
-        return this.nonEmpty(this.getIsoMapper().getLinks()
+        return this.nonEmpty(this.baseMapper.getLinks()
             .map(link => link.url)
             .filter(url => /[?&]request=getcapabilities(&|$)/i.test(url) && /[?&]service=wms(&|$)/i.test(url)));
     }
