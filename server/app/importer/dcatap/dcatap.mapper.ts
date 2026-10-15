@@ -209,17 +209,7 @@ export class DcatapMapper<S extends DcatapSettings = DcatapSettings> extends Map
 
             const format = this.getDistributionFormat(distSubject) || 'Unbekannt';
 
-            let license: any = undefined;
-            const licenseObj = this.getFirstObject(distSubject, namespaces.DCT + 'license');
-            if (licenseObj) {
-                const licenseInfo = DcatLicensesUtils.get(licenseObj.value);
-                if (licenseInfo) {
-                    license = {
-                        name: licenseInfo.title,
-                        url: licenseInfo.url
-                    };
-                }
-            }
+            const license = this.getDistributionLicense(distSubject);
 
             const urlObj = this.getFirstObject(distSubject, namespaces.DCAT + 'accessURL');
             const title = this.getFirstLiteral(distSubject, namespaces.DCT + 'title');
@@ -263,6 +253,24 @@ export class DcatapMapper<S extends DcatapSettings = DcatapSettings> extends Map
         }
 
         return dists;
+    }
+
+    /**
+     * @returns name and url of the known dct:license (`def_licenses.rdf`) of the distribution, else undefined
+     */
+    protected getDistributionLicense(distribution: Quad_Subject): Distribution['license'] | undefined {
+        let license: Distribution['license'] = undefined;
+        const licenseObj = this.getFirstObject(distribution, namespaces.DCT + 'license');
+        if (licenseObj) {
+            const licenseInfo = DcatLicensesUtils.get(licenseObj.value);
+            if (licenseInfo) {
+                license = {
+                    name: licenseInfo.title,
+                    url: licenseInfo.url
+                };
+            }
+        }
+        return license;
     }
 
     protected extractAgents(predicateUri: string): Person[] {

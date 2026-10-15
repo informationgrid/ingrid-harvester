@@ -23,6 +23,7 @@
 
 import type { DOMParser } from '@xmldom/xmldom';
 import log4js from 'log4js';
+import { DataFactory } from 'n3';
 import type { Observer } from 'rxjs';
 import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
@@ -32,6 +33,7 @@ import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { dereferenceRdfElements } from "../../utils/rdf.utils.js";
+import { parseRdfPayload } from '../dcatap/dcatap.rdf.js';
 import { Importer } from '../importer.js';
 import { namespaces } from '../namespaces.js';
 import { DcatapdeMapper } from './dcatapde.mapper.js';
@@ -126,7 +128,11 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
 
         dereferenceRdfElements(rootNode, './/dcat:distribution | .//dct:publisher | .//dcat:contactPoint', DcatapdeMapper.select)
 
-        let records =  DcatapdeMapper.select('./dcat:Catalog/dcat:dataset/dcat:Dataset|./dcat:Dataset', rootNode);
+        // the records are read from the RDF store of the dereferenced document,
+        // which is also the raw payload, so `getHarvestedData()` returns the dataset with its dereferenced elements
+        const payload = xml.toString();
+        const store = await parseRdfPayload(payload, this.settings.sourceURL, 'application/rdf+xml');
+        const records = store.getSubjects(DataFactory.namedNode(namespaces.RDF + 'type'), DataFactory.namedNode(namespaces.DCAT + 'Dataset'), null);
 
         /*
         let ids = [];
@@ -143,10 +149,8 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
         for (let i = 0; i < records.length; i++) {
             this.summary.numDocs++;
 
-            let uuid = DcatapdeMapper.select('./dct:identifier', records[i], true).textContent;
-            if(!uuid) {
-                uuid = DcatapdeMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
-            }
+            let mapper = new DcatapdeMapper(this.settings, records[i], store, payload, harvestTime, this.summary);
+            const uuid = mapper.getGeneratedId();
             if (!this.filterUtils.isIdAllowed(uuid)) {
                 this.summary.skippedDocs.push(uuid);
                 continue;
@@ -156,10 +160,9 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
                 log.debug(`Import document ${i + 1} from ${records.length}`);
             }
             if (logRequest.isDebugEnabled()) {
-                logRequest.debug("Record content: ", records[i].toString());
+                logRequest.debug("Record content: ", mapper.getHarvestedData());
             }
 
-            let mapper = new DcatapdeMapper(this.settings, records[i], harvestTime, this.summary);
             let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
 
             let doc: IndexDocument;

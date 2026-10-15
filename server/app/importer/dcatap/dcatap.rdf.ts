@@ -33,15 +33,17 @@ const log = log4js.getLogger(import.meta.filename);
 
 /**
  * Parses an RDF payload string into an in-memory N3/RDF.js Quad Store.
+ * The format is detected from the extension of `baseIRI`, unless `contentType` is given (e.g. `application/rdf+xml`).
  */
-export async function parseRdfPayload(payload: string | object, baseIRI: string): Promise<Store & { rawQuads?: Quad[] }> {
+export async function parseRdfPayload(payload: string | object, baseIRI: string, contentType?: string): Promise<Store & { rawQuads?: Quad[] }> {
     const store: Store & { rawQuads?: Quad[] } = new Store();
     store.rawQuads = [];
     if (!payload || (typeof payload === 'string' && !payload.trim())) {
         return store;
     }
 
-    let contentType = rdfParser.getContentTypeFromExtension(baseIRI);
+    const explicitContentType = contentType;
+    contentType ??= rdfParser.getContentTypeFromExtension(baseIRI);
     if (!contentType && baseIRI.includes('/')) {
         try {
             contentType = rdfParser.getContentTypeFromExtension(new URL(baseIRI).pathname);
@@ -66,7 +68,9 @@ export async function parseRdfPayload(payload: string | object, baseIRI: string)
     else {
         const stream = Readable.from([payload]);
         // TODO if more fine grained content type detection is needed, inject its result into parseOptions
-        const parseOptions: ParseOptions = { path: new URL(baseIRI).pathname.toLowerCase(), baseIRI };
+        const parseOptions: ParseOptions = explicitContentType
+            ? { contentType: explicitContentType, baseIRI }
+            : { path: new URL(baseIRI).pathname.toLowerCase(), baseIRI };
         const quadStream = rdfParser.parse(stream, parseOptions);
 
         return new Promise((resolve, reject) => {

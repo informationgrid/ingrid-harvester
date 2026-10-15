@@ -45,6 +45,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "XLSX",
     "https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.xlsx",
     "Trinkwasserspender",
@@ -53,6 +54,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "GEOJSON",
     "https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.json",
     "Trinkwasserspender",
@@ -61,6 +63,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "KML",
     "https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.kml",
     "Trinkwasserspender",
@@ -69,6 +72,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "GML",
     "https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.gml",
     "Trinkwasserspender",
@@ -77,30 +81,35 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "https://geo.sv.rostock.de/geodienste/trinkwasserspender/wms",
     "Trinkwasserspender in der Hanse- und Universitätsstadt Rostock",
     "Diese Karte umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "https://geo.sv.rostock.de/geodienste/trinkwasserspender/wfs",
     "Trinkwasserspender in der Hanse- und Universitätsstadt Rostock",
     "Diese Daten umfassen die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "https://geo.sv.rostock.de/inspire/us-govserv-drinkingfountains/view?service=WMS&version=1.3.0&request=GetCapabilities",
     "Trinkwasserspender in der Hanse- und Universitätsstadt Rostock",
     "Diese Karte umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock.",
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "https://geo.sv.rostock.de/inspire/us-govserv-drinkingfountains/download?service=WFS&version=2.0.0&request=GetCapabilities",
     "Trinkwasserspender in der Hanse- und Universitätsstadt Rostock",
     "Diese Daten umfassen die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock.",
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "http://dcat-ap.de/def/politicalGeocoding/Level/administrativeDistrict",
     "Polygon",
     11.99143,
@@ -137,7 +146,9 @@
       },
       "byteSize": 378,
       "modified": "2026-08-20T10:07:17.233Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.csv",
       "description": "Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -154,7 +165,9 @@
       },
       "byteSize": 3425,
       "modified": "2026-08-20T10:07:17.233Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.xlsx",
       "description": "Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -171,7 +184,9 @@
       },
       "byteSize": 826,
       "modified": "2026-08-20T10:07:17.233Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.json",
       "description": "Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -188,7 +203,9 @@
       },
       "byteSize": 1731,
       "modified": "2026-08-20T10:07:17.233Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.kml",
       "description": "Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -205,7 +222,9 @@
       },
       "byteSize": 3125,
       "modified": "2026-08-20T10:07:17.233Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/trinkwasserspender/trinkwasserspender.gml",
       "description": "Dieser Datensatz umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -219,7 +238,9 @@
         "name": "Creative Commons CC Zero License (cc-zero)"
       },
       "modified": "2026-08-20T10:07:17.233Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/geodienste/trinkwasserspender/wms",
       "description": "Diese Karte umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -233,7 +254,9 @@
         "name": "Creative Commons CC Zero License (cc-zero)"
       },
       "modified": "2026-08-20T10:07:17.233Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/geodienste/trinkwasserspender/wfs",
       "description": "Diese Daten umfassen die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock mit Informationen zu Datum der Inbetriebnahme, Betreiber und Betriebszeitraum.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -247,7 +270,9 @@
         "name": "Creative Commons CC Zero License (cc-zero)"
       },
       "modified": "2026-08-20T10:07:17.233Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/inspire/us-govserv-drinkingfountains/view?service=WMS&version=1.3.0&request=GetCapabilities",
       "description": "Diese Karte umfasst die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -261,7 +286,9 @@
         "name": "Creative Commons CC Zero License (cc-zero)"
       },
       "modified": "2026-08-20T10:07:17.233Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/inspire/us-govserv-drinkingfountains/download?service=WFS&version=2.0.0&request=GetCapabilities",
       "description": "Diese Daten umfassen die Standorte der Trinkwasserspender in der Hanse- und Universitätsstadt Rostock.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"

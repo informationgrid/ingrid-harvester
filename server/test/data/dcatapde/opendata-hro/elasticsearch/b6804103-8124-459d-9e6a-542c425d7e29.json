@@ -41,6 +41,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "XLSX",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_ergebnisse.xlsx",
     "Ergebnisse der Landtagswahl 2021",
@@ -49,6 +50,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "JSON",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_ergebnisse.json",
     "Ergebnisse der Landtagswahl 2021",
@@ -57,6 +59,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "CSV",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.csv",
     "Wahllokale der Landtagswahl 2021",
@@ -65,6 +68,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "XLSX",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.xlsx",
     "Wahllokale der Landtagswahl 2021",
@@ -73,6 +77,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "GEOJSON",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.json",
     "Wahllokale der Landtagswahl 2021",
@@ -81,6 +86,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "KML",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.kml",
     "Wahllokale der Landtagswahl 2021",
@@ -89,6 +95,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "GML",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.gml",
     "Wahllokale der Landtagswahl 2021",
@@ -97,6 +104,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "CSV",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.csv",
     "Wahlbezirke der Landtagswahl 2021",
@@ -105,6 +113,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "XLSX",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.xlsx",
     "Wahlbezirke der Landtagswahl 2021",
@@ -113,6 +122,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "GEOJSON",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.json",
     "Wahlbezirke der Landtagswahl 2021",
@@ -121,6 +131,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "Shape",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.shp.zip",
     "Wahlbezirke der Landtagswahl 2021",
@@ -129,6 +140,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "KML",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.kml",
     "Wahlbezirke der Landtagswahl 2021",
@@ -137,6 +149,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "GML",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.gml",
     "Wahlbezirke der Landtagswahl 2021",
@@ -145,6 +158,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "CSV",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.csv",
     "Briefwahlbezirke der Landtagswahl 2021",
@@ -153,6 +167,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "XLSX",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.xlsx",
     "Briefwahlbezirke der Landtagswahl 2021",
@@ -161,6 +176,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "GEOJSON",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.json",
     "Briefwahlbezirke der Landtagswahl 2021",
@@ -169,6 +185,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "Shape",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.shp.zip",
     "Briefwahlbezirke der Landtagswahl 2021",
@@ -177,6 +194,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "KML",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.kml",
     "Briefwahlbezirke der Landtagswahl 2021",
@@ -185,6 +203,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "GML",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.gml",
     "Briefwahlbezirke der Landtagswahl 2021",
@@ -193,6 +212,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "CSV",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.csv",
     "Wahlkreise der Landtagswahl 2021",
@@ -201,6 +221,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "XLSX",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.xlsx",
     "Wahlkreise der Landtagswahl 2021",
@@ -209,6 +230,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "GEOJSON",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.json",
     "Wahlkreise der Landtagswahl 2021",
@@ -217,6 +239,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "Shape",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.shp.zip",
     "Wahlkreise der Landtagswahl 2021",
@@ -225,6 +248,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "KML",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.kml",
     "Wahlkreise der Landtagswahl 2021",
@@ -233,6 +257,7 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "GML",
     "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.gml",
     "Wahlkreise der Landtagswahl 2021",
@@ -241,30 +266,35 @@
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "https://geo.sv.rostock.de/geodienste/landtagswahl_2021/wms",
     "Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock",
     "Diese Karte umfasst die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit, die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer, die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer sowie die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.",
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "https://geo.sv.rostock.de/geodienste/landtagswahl_2021/wfs",
     "Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock",
     "Diese Daten umfassen die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit, die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer, die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer sowie die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.",
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "https://geo.sv.rostock.de/inspire/su-vector-stateelections/view?service=WMS&version=1.3.0&request=GetCapabilities",
     "Wahlkreise, Wahlbezirke und Briefwahlbezirke der Landtagswahlen in der Hanse- und Universitätsstadt Rostock",
     "Diese Karte umfasst die Wahlkreise, Wahlbezirke und Briefwahlbezirke der Landtagswahlen in der Hanse- und Universitätsstadt Rostock.",
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "https://geo.sv.rostock.de/inspire/su-vector-stateelections/download?service=WFS&version=2.0.0&request=GetCapabilities",
     "Wahlkreise, Wahlbezirke und Briefwahlbezirke der Landtagswahlen in der Hanse- und Universitätsstadt Rostock",
     "Diese Daten umfassen die Wahlkreise der Landtagswahlen in der Hanse- und Universitätsstadt Rostock mit Informationen zu Bezeichnung sowie die Wahlbezirke und Briefwahlbezirke der Landtagswahlen in der Hanse- und Universitätsstadt Rostock mit Informationen zu Nummer.",
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "http://dcat-ap.de/def/politicalGeocoding/Level/administrativeDistrict",
     "Polygon",
     11.99143,
@@ -301,7 +331,9 @@
       },
       "byteSize": 1230,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_ergebnisse.csv",
       "description": "Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_spd (Anteil der gültigen Zweitstimmen für die SPD an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_cdu (Anteil der gültigen Zweitstimmen für die CDU an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_linke (Anteil der gültigen Zweitstimmen für DIE LINKE an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_fdp (Anteil der gültigen Zweitstimmen für die FDP an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_gruene (Anteil der gültigen Zweitstimmen für BÜNDNIS 90/DIE GRÜNEN an den gültigen Zweitstimmen insgesamt (in %)) und stimmenanteil_prozent_afd (Anteil der gültigen Zweitstimmen für die AfD an den gültigen Zweitstimmen insgesamt (in %)).",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -318,7 +350,9 @@
       },
       "byteSize": 4621,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_ergebnisse.xlsx",
       "description": "Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_spd (Anteil der gültigen Zweitstimmen für die SPD an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_cdu (Anteil der gültigen Zweitstimmen für die CDU an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_linke (Anteil der gültigen Zweitstimmen für DIE LINKE an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_fdp (Anteil der gültigen Zweitstimmen für die FDP an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_gruene (Anteil der gültigen Zweitstimmen für BÜNDNIS 90/DIE GRÜNEN an den gültigen Zweitstimmen insgesamt (in %)) und stimmenanteil_prozent_afd (Anteil der gültigen Zweitstimmen für die AfD an den gültigen Zweitstimmen insgesamt (in %)).",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -335,7 +369,9 @@
       },
       "byteSize": 7532,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_ergebnisse.json",
       "description": "Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_spd (Anteil der gültigen Zweitstimmen für die SPD an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_cdu (Anteil der gültigen Zweitstimmen für die CDU an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_linke (Anteil der gültigen Zweitstimmen für DIE LINKE an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_fdp (Anteil der gültigen Zweitstimmen für die FDP an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_gruene (Anteil der gültigen Zweitstimmen für BÜNDNIS 90/DIE GRÜNEN an den gültigen Zweitstimmen insgesamt (in %)) und stimmenanteil_prozent_afd (Anteil der gültigen Zweitstimmen für die AfD an den gültigen Zweitstimmen insgesamt (in %)).",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -352,7 +388,9 @@
       },
       "byteSize": 26510,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.csv",
       "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -369,7 +407,9 @@
       },
       "byteSize": 14503,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.xlsx",
       "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -386,7 +426,9 @@
       },
       "byteSize": 64954,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.json",
       "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -403,7 +445,9 @@
       },
       "byteSize": 111022,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.kml",
       "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -420,7 +464,9 @@
       },
       "byteSize": 148768,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.gml",
       "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -437,7 +483,9 @@
       },
       "byteSize": 22634,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.csv",
       "description": "Dieser Datensatz umfasst die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -454,7 +502,9 @@
       },
       "byteSize": 10794,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.xlsx",
       "description": "Dieser Datensatz umfasst die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -471,7 +521,9 @@
       },
       "byteSize": 484074,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.json",
       "description": "Dieser Datensatz umfasst die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -488,7 +540,9 @@
       },
       "byteSize": 166232,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.shp.zip",
       "description": "Dieser Datensatz umfasst die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -505,7 +559,9 @@
       },
       "byteSize": 636445,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.kml",
       "description": "Dieser Datensatz umfasst die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -522,7 +578,9 @@
       },
       "byteSize": 678501,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.gml",
       "description": "Dieser Datensatz umfasst die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -539,7 +597,9 @@
       },
       "byteSize": 8858,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.csv",
       "description": "Dieser Datensatz umfasst die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -556,7 +616,9 @@
       },
       "byteSize": 6223,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.xlsx",
       "description": "Dieser Datensatz umfasst die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -573,7 +635,9 @@
       },
       "byteSize": 341228,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.json",
       "description": "Dieser Datensatz umfasst die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -590,7 +654,9 @@
       },
       "byteSize": 126247,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.shp.zip",
       "description": "Dieser Datensatz umfasst die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -607,7 +673,9 @@
       },
       "byteSize": 435865,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.kml",
       "description": "Dieser Datensatz umfasst die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -624,7 +692,9 @@
       },
       "byteSize": 458151,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.gml",
       "description": "Dieser Datensatz umfasst die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -641,7 +711,9 @@
       },
       "byteSize": 939,
       "modified": "2026-08-26T02:04:26.642Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.csv",
       "description": "Dieser Datensatz umfasst die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -658,7 +730,9 @@
       },
       "byteSize": 3611,
       "modified": "2026-08-26T02:04:26.643Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.xlsx",
       "description": "Dieser Datensatz umfasst die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -675,7 +749,9 @@
       },
       "byteSize": 166403,
       "modified": "2026-08-26T02:04:26.643Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.json",
       "description": "Dieser Datensatz umfasst die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -692,7 +768,9 @@
       },
       "byteSize": 71187,
       "modified": "2026-08-26T02:04:26.643Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.shp.zip",
       "description": "Dieser Datensatz umfasst die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -709,7 +787,9 @@
       },
       "byteSize": 204574,
       "modified": "2026-08-26T02:04:26.643Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.kml",
       "description": "Dieser Datensatz umfasst die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -726,7 +806,9 @@
       },
       "byteSize": 206270,
       "modified": "2026-08-26T02:04:26.643Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.gml",
       "description": "Dieser Datensatz umfasst die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -740,7 +822,9 @@
         "name": "Creative Commons CC Zero License (cc-zero)"
       },
       "modified": "2026-08-26T02:04:26.643Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/geodienste/landtagswahl_2021/wms",
       "description": "Diese Karte umfasst die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit, die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer, die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer sowie die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -754,7 +838,9 @@
         "name": "Creative Commons CC Zero License (cc-zero)"
       },
       "modified": "2026-08-26T02:04:26.643Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/geodienste/landtagswahl_2021/wfs",
       "description": "Diese Daten umfassen die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit, die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer, die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer sowie die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -768,7 +854,9 @@
         "name": "Creative Commons CC Zero License (cc-zero)"
       },
       "modified": "2026-08-26T02:04:26.643Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/inspire/su-vector-stateelections/view?service=WMS&version=1.3.0&request=GetCapabilities",
       "description": "Diese Karte umfasst die Wahlkreise, Wahlbezirke und Briefwahlbezirke der Landtagswahlen in der Hanse- und Universitätsstadt Rostock.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
@@ -782,7 +870,9 @@
         "name": "Creative Commons CC Zero License (cc-zero)"
       },
       "modified": "2026-08-26T02:04:26.643Z",
-      "languages": [],
+      "languages": [
+        "DEU"
+      ],
       "access_url": "https://geo.sv.rostock.de/inspire/su-vector-stateelections/download?service=WFS&version=2.0.0&request=GetCapabilities",
       "description": "Diese Daten umfassen die Wahlkreise der Landtagswahlen in der Hanse- und Universitätsstadt Rostock mit Informationen zu Bezeichnung sowie die Wahlbezirke und Briefwahlbezirke der Landtagswahlen in der Hanse- und Universitätsstadt Rostock mit Informationen zu Nummer.",
       "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE"
