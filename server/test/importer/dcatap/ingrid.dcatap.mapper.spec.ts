@@ -170,8 +170,8 @@ describe('ingridDcatapMapper geodata index fields (FR-011)', function () {
     it('maps keywords and spatial fields', function () {
         expect(mapper.getT04Search()).to.deep.equal([
             { searchterm: 'au', type: 'I' },
-            { searchterm: 'Wasser', type: 'F' },
-            { searchterm: 'Umwelt', type: 'F' },
+            { searchterm: 'wasser', type: 'F' },
+            { searchterm: 'umwelt', type: 'F' },
             { searchterm: 'GOVE', type: 'F' }
         ]);
         expect(mapper.getLocation()).to.equal('Rostock');
