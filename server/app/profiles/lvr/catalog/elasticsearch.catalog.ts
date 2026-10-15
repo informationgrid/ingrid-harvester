@@ -38,7 +38,7 @@ const SOURCE_STALENESS_THRESHOLD_DAYS = parseInt(process.env.SOURCE_STALENESS_TH
 
 export class LvrElasticsearchCatalog extends ElasticsearchCatalog {
 
-    private existingSources: Map<string, Source | null> = new Map();
+    private existingSources: Map<string, Source> = new Map();
 
     async prepareImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
         await super.prepareImport(transactionHandle, importerSettings, observer);
@@ -47,7 +47,9 @@ export class LvrElasticsearchCatalog extends ElasticsearchCatalog {
         const generator = this.elastic.scroll<LvrIndexDocument>(this.settings.settings.index, ['lvr.source']);
 
         for await (const doc of generator) {
-            this.existingSources.set(doc.id, doc?.lvr?.source || null);
+            if (doc.lvr?.source) {
+                this.existingSources.set(doc.id, doc.lvr.source);
+            }
         }
     }
 
@@ -83,8 +85,8 @@ export class LvrElasticsearchCatalog extends ElasticsearchCatalog {
 
         const esId = createEsId(document);
 
-        // special checks if source is empty: keep/update document or delete it?
-        if (!document.lvr.source) {
+        // special checks if source.display_url is empty: keep/update document or delete it?
+        if (!document.lvr.source?.display_url) {
             const existing = this.existingSources.get(esId);
 
             // if document does not already exist, don't create it
