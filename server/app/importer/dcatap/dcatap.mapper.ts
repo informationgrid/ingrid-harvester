@@ -86,18 +86,18 @@ export type IsoParty = {
 
 export type IsoLink = { url: string, name?: string, description?: string, function?: string };
 
-export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMapper<IndexDocument>, ToDcatapdeMapper {
+export class DcatapMapper<S extends DcatapSettings = DcatapSettings> extends Mapper<S> implements ToElasticMapper<IndexDocument>, ToDcatapdeMapper {
 
     // parsed RDF/XML payload, shared by consecutive records of the same response
     private static parsedPayload: { payload: string, document: Document };
 
-    private readonly datasetSubject: Quad_Subject;
-    private readonly store: Store;
+    protected readonly datasetSubject: Quad_Subject;
+    protected readonly store: Store;
     private readonly rawPayload: string;
     private harvestTime: Date;
     private readonly uuid: string;
 
-    private fetched: any = {
+    protected fetched: any = {
         contactPoints: null,
         description: undefined,  // null = fetched, but not present
         publishers: null,
@@ -108,7 +108,7 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
     log = log4js.getLogger(import.meta.filename);
 
     constructor(
-        settings: DcatapSettings,
+        settings: S,
         datasetSubject: Quad_Subject,
         store: Store,
         rawPayload: string,
@@ -139,7 +139,7 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
         super.init();
     }
 
-    private getObjects(subject: Quad_Subject | string, predicateUri: string): Term[] {
+    protected getObjects(subject: Quad_Subject | string, predicateUri: string): Term[] {
         const subjNode = typeof subject === 'string'
             ? (subject.startsWith('_:') ? DataFactory.blankNode(subject.slice(2)) : DataFactory.namedNode(subject))
             : subject;
@@ -152,12 +152,12 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
         return this.store.getObjects(subjNode, DataFactory.namedNode(predicateUri), null);
     }
 
-    private getFirstObject(subject: Quad_Subject | string, predicateUri: string): Term | undefined {
+    protected getFirstObject(subject: Quad_Subject | string, predicateUri: string): Term | undefined {
         const objs = this.getObjects(subject, predicateUri);
         return objs.length > 0 ? objs[0] : undefined;
     }
 
-    private getFirstLiteral(subject: Quad_Subject | string, predicateUri: string): string | undefined {
+    protected getFirstLiteral(subject: Quad_Subject | string, predicateUri: string): string | undefined {
         const obj = this.getFirstObject(subject, predicateUri);
         return obj ? obj.value : undefined;
     }
@@ -814,7 +814,7 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
         }));
     }
 
-    private getDistributionFormat(distribution: Quad_Subject): string | undefined {
+    protected getDistributionFormat(distribution: Quad_Subject): string | undefined {
         const format = this.getFirstObject(distribution, namespaces.DCT + 'format') ?? this.getFirstObject(distribution, namespaces.DCAT + 'mediaType');
         if (!format) {
             return undefined;
@@ -1001,7 +1001,7 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
         return undefined;
     }
 
-    private getTermReferences(predicateUri: string): DcatapReference[] {
+    protected getTermReferences(predicateUri: string): DcatapReference[] {
         return this.getObjects(this.datasetSubject, predicateUri)
             .map(term => ({ label: this.getTermLabel(term), uri: term.termType == 'NamedNode' ? term.value : undefined }))
             .filter(reference => reference.label);
@@ -1010,7 +1010,7 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
     /**
      * @returns the literal value, the label of a node, or (if `useIri`) the IRI of a named node without label
      */
-    private getTermLabel(term: Term, useIri = true): string | undefined {
+    protected getTermLabel(term: Term, useIri = true): string | undefined {
         if (term.termType == 'Literal') {
             return term.value.trim() || undefined;
         }
