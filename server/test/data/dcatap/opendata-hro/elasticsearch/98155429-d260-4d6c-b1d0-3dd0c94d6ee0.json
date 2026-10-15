@@ -110,7 +110,6 @@
     "http://www.opendefinition.org/licenses/cc-zero",
     "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
     "DEU",
-    "http://dcat-ap.de/def/politicalGeocoding/Level/administrativeDistrict",
     "Polygon",
     11.99143,
     54.03856,
@@ -368,7 +367,6 @@
   "partner": [
     "mv"
   ],
-  "political_geocoding_level_uri": "http://dcat-ap.de/def/politicalGeocoding/Level/administrativeDistrict",
   "provider": [
     "Rostock"
   ],

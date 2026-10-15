@@ -87,9 +87,9 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
             },
             contacts: this.getContacts(),
             keywords: this.getKeywords(),
-            legal_basis: this.baseMapper.getLegalBasis(),
+            legal_basis: undefined,    // dcatde:legalBasis (DCAT-AP.de) is mapped by ingridDcatapdeMapper only
             distributions: await this.getDistributions(),
-            political_geocoding_level_uri: this.baseMapper.getPoliticalGeocodingLevelURI(),
+            political_geocoding_level_uri: undefined,    // dcatde:politicalGeocodingLevelURI (DCAT-AP.de) is mapped by ingridDcatapdeMapper only
             spatial: {
                 geometries: this.getSpatial()
             },
@@ -146,7 +146,6 @@ export class ingridDcatapMapper extends ingridMapper<DcatapMapper> implements To
             ...this.baseMapper.getPublisher().map(contact => {return {role: this.getRoleId("publisher"), ...contact}}),
             ...this.baseMapper.getCreator().map(contact => {return {role: this.getRoleId("creator"), ...contact}}),
             ...this.baseMapper.getMaintainer().map(contact => {return {role: this.getRoleId("maintainer"), ...contact}}),
-            ...this.baseMapper.getOriginator().map(contact => {return {role: this.getRoleId("originator"), ...contact}}),
         ];
     }
 

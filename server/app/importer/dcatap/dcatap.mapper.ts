@@ -200,16 +200,6 @@ export class DcatapMapper<S extends DcatapSettings = DcatapSettings> extends Map
         return landingPage && landingPage.trim() !== '' ? landingPage : undefined;
     }
 
-    getPoliticalGeocodingLevelURI(): string | undefined {
-        const politicalGeocodingLevelURI = this.getFirstLiteral(this.datasetSubject, namespaces.DCATDE + 'politicalGeocodingLevelURI');
-        return politicalGeocodingLevelURI && politicalGeocodingLevelURI.trim() !== '' ? politicalGeocodingLevelURI : undefined;
-    }
-
-    getLegalBasis(): string | undefined {
-        const legalBasis = this.getFirstLiteral(this.datasetSubject, namespaces.DCATDE + 'legalBasis');
-        return legalBasis?.trim() ? legalBasis : undefined;
-    }
-
     async getDistributions(): Promise<Distribution[]> {
         const dists: Distribution[] = [];
         const distributionTerms = this.getObjects(this.datasetSubject, namespaces.DCAT + 'distribution');
@@ -228,10 +218,6 @@ export class DcatapMapper<S extends DcatapSettings = DcatapSettings> extends Map
                         name: licenseInfo.title,
                         url: licenseInfo.url
                     };
-                }
-                const licenseAttributionByText = this.getFirstLiteral(distSubject, namespaces.DCATDE + 'licenseAttributionByText');
-                if (licenseAttributionByText) {
-                    license['attribution_by_text'] = licenseAttributionByText;
                 }
             }
 
@@ -326,10 +312,6 @@ export class DcatapMapper<S extends DcatapSettings = DcatapSettings> extends Map
 
     getMaintainer(): Person[] {
         return this.extractAgents(namespaces.DCT + 'maintainer');
-    }
-
-    getOriginator(): Person[] {
-        return this.extractAgents(namespaces.DCATDE + 'originator');
     }
 
     getTitle(): string | undefined {
