@@ -46,6 +46,8 @@ import type { ToElasticMapper } from '../to.elastic.mapper.js';
 import type { DcatapSettings } from './dcatap.settings.js';
 import { getLastPathSegment } from './dcatap.utils.js';
 
+const IANA_MEDIA_TYPE_URL = 'https://www.iana.org/assignments/media-types/';
+
 export type DcatapReference = { label?: string, uri?: string };
 
 export type DcatapDistributionInfo = {
@@ -194,37 +196,7 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
         for (const distTerm of distributionTerms) {
             const distSubject = distTerm as Quad_Subject;
 
-            let format = 'Unbekannt';
-            const formatObj = this.getFirstObject(distSubject, namespaces.DCT + 'format');
-            const mediaTypeObj = this.getFirstObject(distSubject, namespaces.DCAT + 'mediaType');
-
-            if (formatObj) {
-                if (formatObj.termType === 'NamedNode' || formatObj.termType === 'BlankNode') {
-                    const labelObj = this.getFirstLiteral(formatObj as Quad_Subject, namespaces.RDFS + 'label');
-                    const valueObj = this.getFirstLiteral(formatObj as Quad_Subject, namespaces.RDF + 'value');
-                    if (labelObj) {
-                        format = labelObj;
-                    }
-                    else if (valueObj) {
-                        format = valueObj;
-                    }
-                    else {
-                        format = formatObj.value;
-                    }
-                }
-                else {
-                    format = formatObj.value.trim();
-                }
-                if (format.startsWith('http://publications.europa.eu/resource/authority/file-type/')) {
-                    format = format.substring('http://publications.europa.eu/resource/authority/file-type/'.length);
-                }
-            }
-            else if (mediaTypeObj) {
-                format = mediaTypeObj.value;
-                if (format.startsWith('https://www.iana.org/assignments/media-types/')) {
-                    format = format.substring('https://www.iana.org/assignments/media-types/'.length);
-                }
-            }
+            const format = this.getDistributionFormat(distSubject) || 'Unbekannt';
 
             let license: any = undefined;
             const licenseObj = this.getFirstObject(distSubject, namespaces.DCT + 'license');
@@ -831,7 +803,14 @@ export class DcatapMapper extends Mapper<DcatapSettings> implements ToElasticMap
         }
         return this.getFirstLiteral(format as Quad_Subject, namespaces.RDFS + 'label')
             ?? this.getFirstLiteral(format as Quad_Subject, namespaces.RDF + 'value')
-            ?? (format.termType == 'NamedNode' ? getLastPathSegment(format.value) : undefined);
+            ?? (format.termType == 'NamedNode' ? this.getFormatName(format.value) : undefined);
+    }
+
+    /**
+     * @returns the media type of an IANA media type IRI (e.g. `text/csv`), else the last path segment (e.g. `ftype/HTML` -> `HTML`)
+     */
+    private getFormatName(iri: string): string {
+        return iri.startsWith(IANA_MEDIA_TYPE_URL) ? iri.substring(IANA_MEDIA_TYPE_URL.length) : getLastPathSegment(iri);
     }
 
     /**

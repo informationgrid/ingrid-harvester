@@ -34,31 +34,31 @@
     "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/3.0.0.json",
     "dcat",
     "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/a537c7007dd44945bc378eb59e10314c_0",
-    "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/HTML",
+    "HTML",
     "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::stadtteile-2",
     "ArcGIS Hub Dataset",
     "Web Page",
-    "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/HTML",
+    "HTML",
     "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c&sublayer=0",
     "ArcGIS Data Layer",
     "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
-    "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/CSV",
+    "CSV",
     "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/csv?layers=0",
     "CSV",
     "CSV",
-    "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/ZIP",
+    "ZIP",
     "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/shapefile?layers=0",
     "ZIP",
     "Shapefile",
-    "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/GEOJSON",
+    "GEOJSON",
     "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/geojson?layers=0",
     "GeoJSON",
     "GeoJSON",
-    "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/KML",
+    "KML",
     "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/kml?layers=0",
     "KML",
     "KML",
-    "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/ZIP",
+    "ZIP",
     "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/filegdb?layers=0",
     "ZIP",
     "File Geodatabase",
@@ -250,7 +250,7 @@
     {
       "title": "ArcGIS Hub Dataset",
       "format": [
-        "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/HTML"
+        "HTML"
       ],
       "access_url": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::stadtteile-2",
       "description": "Web Page"
@@ -258,7 +258,7 @@
     {
       "title": "ArcGIS Data Layer",
       "format": [
-        "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/HTML"
+        "HTML"
       ],
       "access_url": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c&sublayer=0",
       "description": "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services."
@@ -266,7 +266,7 @@
     {
       "title": "CSV",
       "format": [
-        "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/CSV"
+        "CSV"
       ],
       "access_url": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/csv?layers=0",
       "description": "CSV"
@@ -274,7 +274,7 @@
     {
       "title": "ZIP",
       "format": [
-        "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/ZIP"
+        "ZIP"
       ],
       "access_url": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/shapefile?layers=0",
       "description": "Shapefile"
@@ -282,7 +282,7 @@
     {
       "title": "GeoJSON",
       "format": [
-        "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/GEOJSON"
+        "GEOJSON"
       ],
       "access_url": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/geojson?layers=0",
       "description": "GeoJSON"
@@ -290,7 +290,7 @@
     {
       "title": "KML",
       "format": [
-        "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/KML"
+        "KML"
       ],
       "access_url": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/kml?layers=0",
       "description": "KML"
@@ -298,7 +298,7 @@
     {
       "title": "ZIP",
       "format": [
-        "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/ZIP"
+        "ZIP"
       ],
       "access_url": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/filegdb?layers=0",
       "description": "File Geodatabase"

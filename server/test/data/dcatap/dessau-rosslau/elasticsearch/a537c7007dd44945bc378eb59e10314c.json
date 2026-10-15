@@ -34,11 +34,11 @@
     "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/3.0.0.json",
     "dcat",
     "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/a537c7007dd44945bc378eb59e10314c",
-    "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/HTML",
+    "HTML",
     "https://open-data.stadtatlas.dessau-rosslau.de/maps/dero::stadtgliederung-3",
     "ArcGIS Hub Dataset",
     "Web Page",
-    "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/HTML",
+    "HTML",
     "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c",
     "ArcGIS Data Layer",
     "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
@@ -206,7 +206,7 @@
     {
       "title": "ArcGIS Hub Dataset",
       "format": [
-        "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/HTML"
+        "HTML"
       ],
       "access_url": "https://open-data.stadtatlas.dessau-rosslau.de/maps/dero::stadtgliederung-3",
       "description": "Web Page"
@@ -214,7 +214,7 @@
     {
       "title": "ArcGIS Data Layer",
       "format": [
-        "https://open-data.stadtatlas.dessau-rosslau.de/api/feed/dcat-ap/ftype/HTML"
+        "HTML"
       ],
       "access_url": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c",
       "description": "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services."
