@@ -33,7 +33,7 @@ import type { LvrIndexDocument, Source } from '../model/index.document.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
-const SOURCE_STALENESS_THRESHOLD_DAYS = 1;
+const SOURCE_STALENESS_THRESHOLD_DAYS = parseInt(process.env.SOURCE_STALENESS_THRESHOLD_DAYS ?? '1');
 
 
 export class LvrElasticsearchCatalog extends ElasticsearchCatalog {
