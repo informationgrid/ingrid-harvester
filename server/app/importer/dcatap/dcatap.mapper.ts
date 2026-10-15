@@ -241,9 +241,14 @@ export class DcatapMapper<S extends DcatapSettings = DcatapSettings> extends Map
             const issuedStr = this.getFirstLiteral(distSubject, namespaces.DCT + 'issued');
             const modifiedStr = this.getFirstLiteral(distSubject, namespaces.DCT + 'modified');
             const sizeStr = this.getFirstLiteral(distSubject, namespaces.DCAT + 'byteSize');
+            const availability = this.getFirstObject(distSubject, namespaces.DCATAP + 'availability')?.value;
 
+            // DCAT-AP uses dct:language; dcat:language is read as fallback
             const languages: string[] = [];
-            const languageNodes = this.getObjects(distSubject, namespaces.DCAT + 'language');
+            let languageNodes = this.getObjects(distSubject, namespaces.DCT + 'language');
+            if (!languageNodes.length) {
+                languageNodes = this.getObjects(distSubject, namespaces.DCAT + 'language');
+            }
             for (const langNode of languageNodes) {
                 let language = langNode.value;
                 if (language && language.startsWith(DCAT_LANGUAGE_URL)) {
@@ -263,7 +268,9 @@ export class DcatapMapper<S extends DcatapSettings = DcatapSettings> extends Map
                     issued: issuedStr ? new Date(issuedStr) : undefined,
                     modified: modifiedStr ? new Date(modifiedStr) : undefined,
                     byteSize: sizeStr ? Number(sizeStr) : undefined,
-                    license
+                    license,
+                    availability,
+                    languages: languages.length ? languages : undefined
                 };
                 dists.push(dist);
             }

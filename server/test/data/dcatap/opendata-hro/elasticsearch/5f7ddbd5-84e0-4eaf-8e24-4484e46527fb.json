@@ -42,6 +42,8 @@
     1993,
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "XLSX",
     "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.xlsx",
     "Ergebnisse der Oberbürgermeisterwahl 2019",
@@ -49,6 +51,8 @@
     5199,
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "JSON",
     "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.json",
     "Ergebnisse der Oberbürgermeisterwahl 2019",
@@ -56,6 +60,8 @@
     14100,
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "CSV",
     "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.csv",
     "Wahllokale der Oberbürgermeisterwahl 2019",
@@ -63,6 +69,8 @@
     26256,
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "XLSX",
     "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.xlsx",
     "Wahllokale der Oberbürgermeisterwahl 2019",
@@ -70,6 +78,8 @@
     13078,
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "GEOJSON",
     "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.json",
     "Wahllokale der Oberbürgermeisterwahl 2019",
@@ -77,6 +87,8 @@
     64268,
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "KML",
     "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.kml",
     "Wahllokale der Oberbürgermeisterwahl 2019",
@@ -84,6 +96,8 @@
     110699,
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "GML",
     "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.gml",
     "Wahllokale der Oberbürgermeisterwahl 2019",
@@ -91,6 +105,8 @@
     150678,
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "CSV",
     "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.csv",
     "Wahlbezirke der Oberbürgermeisterwahl 2019",
@@ -98,6 +114,8 @@
     22634,
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "XLSX",
     "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.xlsx",
     "Wahlbezirke der Oberbürgermeisterwahl 2019",
@@ -105,6 +123,8 @@
     8563,
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "GEOJSON",
     "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.json",
     "Wahlbezirke der Oberbürgermeisterwahl 2019",
@@ -112,6 +132,8 @@
     483772,
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "Shape",
     "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.shp.zip",
     "Wahlbezirke der Oberbürgermeisterwahl 2019",
@@ -119,6 +141,8 @@
     162331,
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "KML",
     "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.kml",
     "Wahlbezirke der Oberbürgermeisterwahl 2019",
@@ -126,6 +150,8 @@
     637286,
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "GML",
     "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.gml",
     "Wahlbezirke der Oberbürgermeisterwahl 2019",
@@ -133,26 +159,36 @@
     683359,
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "https://geo.sv.rostock.de/geodienste/oberbuergermeisterwahl_2019/wms",
     "Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock",
     "Diese Karte umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit sowie die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "https://geo.sv.rostock.de/geodienste/oberbuergermeisterwahl_2019/wfs",
     "Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock",
     "Diese Daten umfassen die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit sowie die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "https://geo.sv.rostock.de/inspire/su-vector-mayorelections/view?service=WMS&version=1.3.0&request=GetCapabilities",
     "Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock",
     "Diese Karte umfasst die Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock.",
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "https://geo.sv.rostock.de/inspire/su-vector-mayorelections/download?service=WFS&version=2.0.0&request=GetCapabilities",
     "Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock",
     "Diese Daten umfassen die Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock mit Informationen zu Nummer.",
     "Creative Commons CC Zero License (cc-zero)",
     "http://www.opendefinition.org/licenses/cc-zero",
+    "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+    "DEU",
     "http://dcat-ap.de/def/politicalGeocoding/Level/administrativeDistrict",
     "Polygon",
     11.99143,
@@ -190,7 +226,11 @@
       "byteSize": 1993,
       "modified": "2026-08-25T02:16:09.398Z",
       "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.csv",
-      "description": "Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_bachmann (Anteil der gültigen Stimmen für die Einzelbewerberin Dr. Sybille Bachmann an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_braeuer (Anteil der gültigen Stimmen für den Einzelbewerber Matthias Bräuer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_flachsmeyer (Anteil der gültigen Stimmen für den Bewerber Uwe Flachsmeyer (BÜNDNIS 90/DIE GRÜNEN) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_mueller (Anteil der gültigen Stimmen für den Bewerber Dr. Chris Müller-von Wrycz Rekowski (SPD) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_reimer (Anteil der gültigen Stimmen für den Einzelbewerber Tom Reimer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_schulze (Anteil der gültigen Stimmen für den Einzelbewerber Edgar Schulze an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_zierau (Anteil der gültigen Stimmen für den Bewerber Dr. Dirk Zierau (UFR) an den gültigen Stimmen insgesamt (in %)), stichwahl_wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %) bei der Stichwahl), stichwahl_stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %) bei der Stichwahl) und stichwahl_stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %) bei der Stichwahl)."
+      "description": "Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_bachmann (Anteil der gültigen Stimmen für die Einzelbewerberin Dr. Sybille Bachmann an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_braeuer (Anteil der gültigen Stimmen für den Einzelbewerber Matthias Bräuer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_flachsmeyer (Anteil der gültigen Stimmen für den Bewerber Uwe Flachsmeyer (BÜNDNIS 90/DIE GRÜNEN) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_mueller (Anteil der gültigen Stimmen für den Bewerber Dr. Chris Müller-von Wrycz Rekowski (SPD) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_reimer (Anteil der gültigen Stimmen für den Einzelbewerber Tom Reimer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_schulze (Anteil der gültigen Stimmen für den Einzelbewerber Edgar Schulze an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_zierau (Anteil der gültigen Stimmen für den Bewerber Dr. Dirk Zierau (UFR) an den gültigen Stimmen insgesamt (in %)), stichwahl_wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %) bei der Stichwahl), stichwahl_stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %) bei der Stichwahl) und stichwahl_stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %) bei der Stichwahl).",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+      "languages": [
+        "DEU"
+      ]
     },
     {
       "title": "Ergebnisse der Oberbürgermeisterwahl 2019",
@@ -205,7 +245,11 @@
       "byteSize": 5199,
       "modified": "2026-08-25T02:16:09.398Z",
       "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.xlsx",
-      "description": "Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_bachmann (Anteil der gültigen Stimmen für die Einzelbewerberin Dr. Sybille Bachmann an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_braeuer (Anteil der gültigen Stimmen für den Einzelbewerber Matthias Bräuer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_flachsmeyer (Anteil der gültigen Stimmen für den Bewerber Uwe Flachsmeyer (BÜNDNIS 90/DIE GRÜNEN) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_mueller (Anteil der gültigen Stimmen für den Bewerber Dr. Chris Müller-von Wrycz Rekowski (SPD) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_reimer (Anteil der gültigen Stimmen für den Einzelbewerber Tom Reimer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_schulze (Anteil der gültigen Stimmen für den Einzelbewerber Edgar Schulze an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_zierau (Anteil der gültigen Stimmen für den Bewerber Dr. Dirk Zierau (UFR) an den gültigen Stimmen insgesamt (in %)), stichwahl_wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %) bei der Stichwahl), stichwahl_stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %) bei der Stichwahl) und stichwahl_stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %) bei der Stichwahl)."
+      "description": "Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_bachmann (Anteil der gültigen Stimmen für die Einzelbewerberin Dr. Sybille Bachmann an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_braeuer (Anteil der gültigen Stimmen für den Einzelbewerber Matthias Bräuer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_flachsmeyer (Anteil der gültigen Stimmen für den Bewerber Uwe Flachsmeyer (BÜNDNIS 90/DIE GRÜNEN) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_mueller (Anteil der gültigen Stimmen für den Bewerber Dr. Chris Müller-von Wrycz Rekowski (SPD) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_reimer (Anteil der gültigen Stimmen für den Einzelbewerber Tom Reimer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_schulze (Anteil der gültigen Stimmen für den Einzelbewerber Edgar Schulze an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_zierau (Anteil der gültigen Stimmen für den Bewerber Dr. Dirk Zierau (UFR) an den gültigen Stimmen insgesamt (in %)), stichwahl_wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %) bei der Stichwahl), stichwahl_stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %) bei der Stichwahl) und stichwahl_stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %) bei der Stichwahl).",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+      "languages": [
+        "DEU"
+      ]
     },
     {
       "title": "Ergebnisse der Oberbürgermeisterwahl 2019",
@@ -220,7 +264,11 @@
       "byteSize": 14100,
       "modified": "2026-08-25T02:16:09.398Z",
       "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_ergebnisse.json",
-      "description": "Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_bachmann (Anteil der gültigen Stimmen für die Einzelbewerberin Dr. Sybille Bachmann an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_braeuer (Anteil der gültigen Stimmen für den Einzelbewerber Matthias Bräuer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_flachsmeyer (Anteil der gültigen Stimmen für den Bewerber Uwe Flachsmeyer (BÜNDNIS 90/DIE GRÜNEN) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_mueller (Anteil der gültigen Stimmen für den Bewerber Dr. Chris Müller-von Wrycz Rekowski (SPD) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_reimer (Anteil der gültigen Stimmen für den Einzelbewerber Tom Reimer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_schulze (Anteil der gültigen Stimmen für den Einzelbewerber Edgar Schulze an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_zierau (Anteil der gültigen Stimmen für den Bewerber Dr. Dirk Zierau (UFR) an den gültigen Stimmen insgesamt (in %)), stichwahl_wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %) bei der Stichwahl), stichwahl_stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %) bei der Stichwahl) und stichwahl_stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %) bei der Stichwahl)."
+      "description": "Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_bachmann (Anteil der gültigen Stimmen für die Einzelbewerberin Dr. Sybille Bachmann an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_braeuer (Anteil der gültigen Stimmen für den Einzelbewerber Matthias Bräuer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_flachsmeyer (Anteil der gültigen Stimmen für den Bewerber Uwe Flachsmeyer (BÜNDNIS 90/DIE GRÜNEN) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_mueller (Anteil der gültigen Stimmen für den Bewerber Dr. Chris Müller-von Wrycz Rekowski (SPD) an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_reimer (Anteil der gültigen Stimmen für den Einzelbewerber Tom Reimer an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_schulze (Anteil der gültigen Stimmen für den Einzelbewerber Edgar Schulze an den gültigen Stimmen insgesamt (in %)), stimmenanteil_prozent_zierau (Anteil der gültigen Stimmen für den Bewerber Dr. Dirk Zierau (UFR) an den gültigen Stimmen insgesamt (in %)), stichwahl_wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %) bei der Stichwahl), stichwahl_stimmenanteil_prozent_bockhahn (Anteil der gültigen Stimmen für den Bewerber Steffen Bockhahn (DIE LINKE) an den gültigen Stimmen insgesamt (in %) bei der Stichwahl) und stichwahl_stimmenanteil_prozent_madsen (Anteil der gültigen Stimmen für den Einzelbewerber Claus Ruhe Madsen an den gültigen Stimmen insgesamt (in %) bei der Stichwahl).",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+      "languages": [
+        "DEU"
+      ]
     },
     {
       "title": "Wahllokale der Oberbürgermeisterwahl 2019",
@@ -235,7 +283,11 @@
       "byteSize": 26256,
       "modified": "2026-08-25T02:16:09.399Z",
       "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.csv",
-      "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit."
+      "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+      "languages": [
+        "DEU"
+      ]
     },
     {
       "title": "Wahllokale der Oberbürgermeisterwahl 2019",
@@ -250,7 +302,11 @@
       "byteSize": 13078,
       "modified": "2026-08-25T02:16:09.399Z",
       "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.xlsx",
-      "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit."
+      "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+      "languages": [
+        "DEU"
+      ]
     },
     {
       "title": "Wahllokale der Oberbürgermeisterwahl 2019",
@@ -265,7 +321,11 @@
       "byteSize": 64268,
       "modified": "2026-08-25T02:16:09.399Z",
       "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.json",
-      "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit."
+      "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+      "languages": [
+        "DEU"
+      ]
     },
     {
       "title": "Wahllokale der Oberbürgermeisterwahl 2019",
@@ -280,7 +340,11 @@
       "byteSize": 110699,
       "modified": "2026-08-25T02:16:09.399Z",
       "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.kml",
-      "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit."
+      "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+      "languages": [
+        "DEU"
+      ]
     },
     {
       "title": "Wahllokale der Oberbürgermeisterwahl 2019",
@@ -295,7 +359,11 @@
       "byteSize": 150678,
       "modified": "2026-08-25T02:16:09.399Z",
       "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahllokale.gml",
-      "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit."
+      "description": "Dieser Datensatz umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+      "languages": [
+        "DEU"
+      ]
     },
     {
       "title": "Wahlbezirke der Oberbürgermeisterwahl 2019",
@@ -310,7 +378,11 @@
       "byteSize": 22634,
       "modified": "2026-08-25T02:16:09.399Z",
       "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.csv",
-      "description": "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer."
+      "description": "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+      "languages": [
+        "DEU"
+      ]
     },
     {
       "title": "Wahlbezirke der Oberbürgermeisterwahl 2019",
@@ -325,7 +397,11 @@
       "byteSize": 8563,
       "modified": "2026-08-25T02:16:09.399Z",
       "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.xlsx",
-      "description": "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer."
+      "description": "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+      "languages": [
+        "DEU"
+      ]
     },
     {
       "title": "Wahlbezirke der Oberbürgermeisterwahl 2019",
@@ -340,7 +416,11 @@
       "byteSize": 483772,
       "modified": "2026-08-25T02:16:09.399Z",
       "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.json",
-      "description": "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer."
+      "description": "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+      "languages": [
+        "DEU"
+      ]
     },
     {
       "title": "Wahlbezirke der Oberbürgermeisterwahl 2019",
@@ -355,7 +435,11 @@
       "byteSize": 162331,
       "modified": "2026-08-25T02:16:09.399Z",
       "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.shp.zip",
-      "description": "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer."
+      "description": "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+      "languages": [
+        "DEU"
+      ]
     },
     {
       "title": "Wahlbezirke der Oberbürgermeisterwahl 2019",
@@ -370,7 +454,11 @@
       "byteSize": 637286,
       "modified": "2026-08-25T02:16:09.399Z",
       "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.kml",
-      "description": "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer."
+      "description": "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+      "languages": [
+        "DEU"
+      ]
     },
     {
       "title": "Wahlbezirke der Oberbürgermeisterwahl 2019",
@@ -385,7 +473,11 @@
       "byteSize": 683359,
       "modified": "2026-08-25T02:16:09.399Z",
       "access_url": "https://geo.sv.rostock.de/download/opendata/oberbuergermeisterwahl_2019/oberbuergermeisterwahl_2019_wahlbezirke.gml",
-      "description": "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer."
+      "description": "Dieser Datensatz umfasst die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+      "languages": [
+        "DEU"
+      ]
     },
     {
       "title": "Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock",
@@ -397,7 +489,11 @@
       },
       "modified": "2026-08-25T02:16:09.399Z",
       "access_url": "https://geo.sv.rostock.de/geodienste/oberbuergermeisterwahl_2019/wms",
-      "description": "Diese Karte umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit sowie die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer."
+      "description": "Diese Karte umfasst die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit sowie die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+      "languages": [
+        "DEU"
+      ]
     },
     {
       "title": "Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock",
@@ -409,7 +505,11 @@
       },
       "modified": "2026-08-25T02:16:09.399Z",
       "access_url": "https://geo.sv.rostock.de/geodienste/oberbuergermeisterwahl_2019/wfs",
-      "description": "Diese Daten umfassen die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit sowie die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer."
+      "description": "Diese Daten umfassen die Standorte der Wahllokale der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit sowie die Wahlbezirke der Oberbürgermeisterwahl 2019 in der Hanse- und Universitätsstadt Rostock vom 26.05.2019 und 16.06.2019 (Stichwahl) mit Informationen zu Nummer.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+      "languages": [
+        "DEU"
+      ]
     },
     {
       "title": "Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock",
@@ -421,7 +521,11 @@
       },
       "modified": "2026-08-25T02:16:09.399Z",
       "access_url": "https://geo.sv.rostock.de/inspire/su-vector-mayorelections/view?service=WMS&version=1.3.0&request=GetCapabilities",
-      "description": "Diese Karte umfasst die Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock."
+      "description": "Diese Karte umfasst die Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+      "languages": [
+        "DEU"
+      ]
     },
     {
       "title": "Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock",
@@ -433,7 +537,11 @@
       },
       "modified": "2026-08-25T02:16:09.399Z",
       "access_url": "https://geo.sv.rostock.de/inspire/su-vector-mayorelections/download?service=WFS&version=2.0.0&request=GetCapabilities",
-      "description": "Diese Daten umfassen die Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock mit Informationen zu Nummer."
+      "description": "Diese Daten umfassen die Wahlbezirke der Oberbürgermeisterwahlen in der Hanse- und Universitätsstadt Rostock mit Informationen zu Nummer.",
+      "availability": "http://publications.europa.eu/resource/authority/planned-availability/STABLE",
+      "languages": [
+        "DEU"
+      ]
     }
   ],
   "extras": {
