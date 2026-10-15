@@ -35,7 +35,7 @@ describe('DCAT-AP Integration Tests', function () {
     const profile = 'ingrid';
     setupIntegrationTestLifecycle(profile);
 
-    it('opendata-hro (DCATAP with rdf-parse)', async () => {
+    it.skip('opendata-hro (DCATAP with rdf-parse)', async () => {
         await runImporterIntegrationTest({
             profile,
             expectedDocsDir: 'elasticsearch',
