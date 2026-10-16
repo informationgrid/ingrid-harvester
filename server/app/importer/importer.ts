@@ -75,6 +75,7 @@ export abstract class Importer<S extends ImporterSettings> {
 
     protected constructor(readonly settings: S) {
         this.settings = MiscUtils.merge(this.getDefaultSettings(), settings);
+        this.verifyImporterSettings();
         this.filterUtils = new FilterUtils(this.settings);
         this.generalConfig = ConfigService.getGeneralSettings();
         // TODO this needs to be refactored - see below in exec()
@@ -255,6 +256,34 @@ export abstract class Importer<S extends ImporterSettings> {
     protected abstract harvest(): Promise<number>;
 
     protected abstract getDefaultSettings(): S;
+
+    private verifyImporterSettings(): void {
+        const missingSettings = this.getMissingSettings();
+        if (missingSettings.length > 0) {
+            const description = this.settings?.description ?? this.settings?.type ?? 'Unknown Importer';
+            throw new Error(`Missing mandatory settings for importer "${description}": ${missingSettings.map(String).join(', ')}`);
+        }
+    }
+
+    /**
+     * Retrieves the keys of all mandatory settings that are missing or empty in this.settings.
+     * Mandatory settings are defined as having a null/undefined value in getDefaultSettings().
+     */
+    protected getMissingSettings(): string[] {
+        const defaults = this.getDefaultSettings();
+        const missing: string[] = [];
+
+        for (const key of Object.keys(defaults) as (keyof S)[]) {
+            const isMandatory = defaults[key] == null;
+            if (isMandatory) {
+                const val = this.settings?.[key];
+                if (val == null || val == '') {
+                    missing.push(String(key));
+                }
+            }
+        }
+        return missing;
+    }
 
     protected async postHarvestingHandling() {
         // For Profile specific Handling

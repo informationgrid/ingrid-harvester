@@ -48,8 +48,7 @@ export const ckanDefaults: CkanSettings = {
     dateSourceFormats: [],
     requestType: 'Search',
     markdownAsDescription: true,
-    groupChilds: false,
-    defaultLicense: null
+    groupChilds: false
 };
 
 export const ckanCapabilities: ImporterCapabilities = {
