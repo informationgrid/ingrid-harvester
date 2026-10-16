@@ -139,7 +139,7 @@ export class DialogEditComponent {
     const values = { ...oldValues, ...newValues };
 
     // Reverse values to the server format.
-    if (values.additionalSettings) {
+    if (Array.isArray(values.additionalSettings)) {
       values.additionalSettings = values.additionalSettings.reduce(
         (acc, cur) => {
           acc[cur.key] = cur.value;
