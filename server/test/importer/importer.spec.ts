@@ -47,6 +47,10 @@ const BASE_SETTINGS: ImporterSettings = {
 class TestImporter extends Importer<ImporterSettings> {
     harvestImpl: () => Promise<number> = () => Promise.resolve(5);
 
+    constructor(settings: ImporterSettings) {
+        super(settings);
+    }
+
     protected getDefaultSettings(): ImporterSettings {
         return BASE_SETTINGS;
     }
@@ -169,6 +173,55 @@ describe('Importer cancel paths', function () {
 
             const completeMsg = messages.find(m => m.complete === true);
             expect(completeMsg).to.exist;
+        });
+    });
+
+    describe('Settings verification', function () {
+        class SettingsTestImporter extends Importer<ImporterSettings> {
+            constructor(settings: ImporterSettings) {
+                super(settings);
+            }
+
+            protected getDefaultSettings(): ImporterSettings {
+                return {
+                    type: null,
+                    sourceURL: null,
+                    timeout: 60000,
+                    catalogIds: []
+                } as any;
+            }
+
+            protected async harvest(): Promise<number> {
+                return 0;
+            }
+
+            public testGetMissingSettings(): string[] {
+                return this.getMissingSettings();
+            }
+        }
+
+        it('throws an error if mandatory settings (null/undefined in defaults) are missing', function () {
+            expect(() => {
+                new SettingsTestImporter({} as any);
+            }).to.throw('Missing mandatory settings for importer "Unknown Importer": type, sourceURL');
+        });
+
+        it('throws an error with description if description is present', function () {
+            expect(() => {
+                new SettingsTestImporter({ description: 'My Test Harvester' } as any);
+            }).to.throw('Missing mandatory settings for importer "My Test Harvester": type, sourceURL');
+        });
+
+        it('instantiates successfully when all mandatory settings are provided', function () {
+            expect(() => {
+                new SettingsTestImporter({ type: 'TEST', sourceURL: 'http://example.com' } as any);
+            }).to.not.throw();
+        });
+
+        it('treats empty string as missing for mandatory settings', function () {
+            expect(() => {
+                new SettingsTestImporter({ type: 'TEST', sourceURL: '' } as any);
+            }).to.throw('Missing mandatory settings for importer "TEST": sourceURL');
         });
     });
 });
