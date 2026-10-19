@@ -21,17 +21,12 @@
  * ==================================================
  */
 
-import type { ImporterCapabilities, ImporterSettings } from '../importer.settings.js';
+import type { DcatapSettings } from '../dcatap/dcatap.settings.js';
+import type { ImporterCapabilities } from '../importer.settings.js';
 import { defaultImporterSettings } from '../importer.settings.js';
 
-export type DcatapdeSettings = {
-    filterTags?: string[],                 // skip records whose keywords don't include at least one of these tags; UI-configurable
-    filterThemes?: string[],               // skip records whose DCAT themes don't include at least one of these (matched by URI fragment); UI-configurable
-    providerPrefix?: string,               // Deprecated? prefix prepended to provider names; backend-only
-    dcatProviderField?: DCATProviderField, // Deprecated? which DCAT agent field to use as provider; backend-only
-} & ImporterSettings;
-
-export type DCATProviderField = 'contactPoint' | 'creator' | 'originator' | 'maintainer' | 'publisher';
+// DCAT-AP.de uses the DCAT-AP settings without the DCAT-AP-only options
+export type DcatapdeSettings = Omit<DcatapSettings, 'createGeometadata' | 'idRegex'>;
 
 export const dcatapdeDefaults: DcatapdeSettings = {
     ...defaultImporterSettings
