@@ -26,6 +26,7 @@ import log4js from 'log4js';
 import { DataFactory, type Store } from 'n3';
 import type { Observer } from 'rxjs';
 import type { RecordEntity } from '../../model/entity.js';
+import type { DocumentFactory } from '../../model/index.document.factory.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
@@ -47,17 +48,21 @@ export interface DcatapPageResult {
     harvestTime: Date;
 }
 
-export class DcatapImporter extends Importer<DcatapSettings> {
+/**
+ * DCAT-AP importer; base class of DCAT-AP profile importers (e.g. `DcatapdeImporter`), which override
+ * `fetchAndParse()`, `createMapper()`, `getRecordOriginalDocument()` and `createCswDocument()`.
+ */
+export class DcatapImporter<S extends DcatapSettings = DcatapSettings> extends Importer<S> {
 
     private totalRecords = 0;
     private numIndexDocs = 0;
 
-    constructor(settings: DcatapSettings) {
+    constructor(settings: S) {
         super(settings);
     }
 
-    protected getDefaultSettings(): DcatapSettings {
-        return dcatapDefaults;
+    protected getDefaultSettings(): S {
+        return dcatapDefaults as S;
     }
 
     // only here for documentation - use the "default" exec function
@@ -194,9 +199,9 @@ export class DcatapImporter extends Importer<DcatapSettings> {
                 sourceIdentifier = idTerms[0].value;
             }
 
-            let mapper: DcatapMapper;
+            let mapper: DcatapMapper<S>;
             try {
-                mapper = new DcatapMapper(this.settings, recordSubject, store, response, harvestTime, this.summary);
+                mapper = this.createMapper(recordSubject, store, response, harvestTime);
             }
             catch (e) {
                 log.error('Error creating mapper', e);
@@ -227,7 +232,7 @@ export class DcatapImporter extends Importer<DcatapSettings> {
             try {
                 elasticDoc = await documentFactory.createIndexDocument();
                 dcatapdeDoc = await documentFactory.createDcatapdeDocument();
-                cswDoc = await documentFactory.createCswIsoDocument();
+                cswDoc = await this.createCswDocument(documentFactory);
             }
             catch (e) {
                 log.error('Error creating index document', e);
@@ -243,7 +248,7 @@ export class DcatapImporter extends Importer<DcatapSettings> {
                     dataset: elasticDoc,
                     dataset_dcatapde: dcatapdeDoc,
                     dataset_csw: cswDoc,
-                    original_document: DcatapImporter.getOriginalDocument(response, recordSubject, sourceIdentifier, mapper.getDatasetElement())
+                    original_document: this.getRecordOriginalDocument(response, recordSubject, sourceIdentifier, mapper)
                 };
                 promises.push(
                     this.addEntityToBulk(entity)
@@ -261,6 +266,21 @@ export class DcatapImporter extends Importer<DcatapSettings> {
             this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }
         await Promise.all(promises).catch(err => log.error('Error indexing DCAT record', err));
+    }
+
+    protected createMapper(recordSubject: Quad_Subject, store: Store, response: string, harvestTime: Date): DcatapMapper<S> {
+        return new DcatapMapper<S>(this.settings, recordSubject, store, response, harvestTime, this.summary);
+    }
+
+    /**
+     * @returns the original document of the record, see `getOriginalDocument()`
+     */
+    protected getRecordOriginalDocument(response: string, recordSubject: Quad_Subject, sourceIdentifier: string, mapper: DcatapMapper<S>): any {
+        return DcatapImporter.getOriginalDocument(response, recordSubject, sourceIdentifier, mapper.getDatasetElement());
+    }
+
+    protected async createCswDocument(documentFactory: DocumentFactory<IndexDocument>): Promise<string> {
+        return documentFactory.createCswIsoDocument();
     }
 
     /**
