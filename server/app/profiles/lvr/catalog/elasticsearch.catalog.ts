@@ -91,6 +91,7 @@ export class LvrElasticsearchCatalog extends ElasticsearchCatalog {
 
             // if document does not already exist, don't create it
             if (!existing) {
+                this.summary.skippedDocs.push(document.id);
                 log.warn(`Display URL was not accessible for document ${esId}, and no existing source information is available. Skipping document.`);
                 return box;
             }
@@ -100,6 +101,7 @@ export class LvrElasticsearchCatalog extends ElasticsearchCatalog {
             // if the source is stale (no sufficiently current URL available), delete the document
             const lastAvailableStr = existing.last_available?.toISOString() ?? 'never';
             if (isStale) {
+                this.summary.skippedDocs.push(document.id);
                 log.warn(`Deleting document ${esId} due to stale source (last URL availability: ${lastAvailableStr})`);
                 box.push({ operation: 'delete', _id: esId });
                 return box;
