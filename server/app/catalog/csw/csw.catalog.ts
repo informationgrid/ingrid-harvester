@@ -265,6 +265,7 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         return this.paginatedGetRecords(this.settings.url, (start, max) => `<?xml version="1.0" encoding="UTF-8"?>
 <csw:GetRecords xmlns:csw="${namespaces.CSW}"
                 xmlns:dc="${namespaces.DC}"
+                xmlns:ogc="${namespaces.OGC}"
                 service="CSW"
                 version="2.0.2"
                 resultType="results"
@@ -272,6 +273,12 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
                 maxRecords="${max}">
     <csw:Query typeNames="csw:Record">
         <csw:ElementSetName>brief</csw:ElementSetName>
+        <ogc:SortBy>
+            <ogc:SortProperty>
+                <ogc:PropertyName>apiso:Identifier</ogc:PropertyName>
+                <ogc:SortOrder>ASC</ogc:SortOrder>
+            </ogc:SortProperty>
+        </ogc:SortBy>
     </csw:Query>
 </csw:GetRecords>`);
     }
@@ -469,14 +476,14 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         document: CswDataset,
         duplicates: Map<string | number, CswDataset>
     } {
-        let mainDocument: CswDataset;
-        let duplicates: Map<string | number, CswDataset> = new Map<string | number, CswDataset>();
+        let mainDocument = bucket.duplicates.get(bucket.anchor_id);
+        const duplicates: Map<string | number, CswDataset> = new Map<string | number, CswDataset>();
 
-        for (let [id, document] of bucket.duplicates) {
-            if (mainDocument == null) {
+        for (const [id, document] of bucket.duplicates) {
+            if (mainDocument == null && document.uuid != null) {
                 mainDocument = document;
             }
-            else {
+            else if (document !== mainDocument) {
                 duplicates.set(id, document);
             }
         }
