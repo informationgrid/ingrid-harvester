@@ -43,7 +43,7 @@ import * as MiscUtils from '../../utils/misc.utils.js';
 import * as ServiceUtils from '../../utils/service.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
 import type { XPathElementSelect } from '../../utils/xpath.utils.js';
-import { DCAT_CATEGORY_URL, DCAT_THEMES, dcatThemeUriFromKeyword } from '../dcatapde/dcatapde.utils.js';
+import { DCAT_CATEGORY_URL, DCAT_THEMES, dcatThemeUriFromKeyword } from '../dcatap/dcatap.utils.js';
 import { Mapper } from '../mapper.js';
 import { namespaces } from '../namespaces.js';
 import type { ToElasticMapper } from '../to.elastic.mapper.js';

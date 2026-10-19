@@ -28,7 +28,7 @@ import {
     DCAT_LANGUAGE_URL,
     ISO_639_1_TO_3,
     prettyPrintXml
-} from '../../../importer/dcatapde/dcatapde.utils.js';
+} from '../../../importer/dcatap/dcatap.utils.js';
 import { GenesisMapper } from '../../../importer/genesis/genesis.mapper.js';
 import { namespaces } from '../../../importer/namespaces.js';
 import * as GeoJsonUtils from '../../../utils/geojson.utils.js';

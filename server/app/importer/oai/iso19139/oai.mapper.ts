@@ -28,7 +28,7 @@ import type { License } from '@shared/license.model.js';
 import log4js from 'log4js';
 import { throwError } from 'rxjs';
 import * as xpath from 'xpath';
-import { DCAT_CATEGORY_URL, dcatThemeUriFromKeyword } from '../../dcatapde/dcatapde.utils.js';
+import { DCAT_CATEGORY_URL, dcatThemeUriFromKeyword } from '../../dcatap/dcatap.utils.js';
 import type { Agent, Contact, Organization, Person } from '../../../model/agent.js';
 import type { DateRange } from '../../../model/dateRange.js';
 import type { Distribution } from '../../../model/distribution.js';
