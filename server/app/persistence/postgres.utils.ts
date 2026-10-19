@@ -225,7 +225,7 @@ export class PostgresUtils extends DatabaseUtils {
                     };
                 }
                 if (datasetColumn != 'dataset') {
-                    currentBucket.duplicates.set(row.id, { uuid: row.identifier, dataset: row.dataset, modified: row.modified } as any);
+                    currentBucket.duplicates.set(row.id, { uuid: row.identifier, dataset: row.dataset } as any);
                 }
                 else {
                     // add service/additional distribution to current bucket
