@@ -31,14 +31,6 @@ const log = log4js.getLogger('IngridCswCatalog');
 
 export class IngridCswCatalog extends CswCatalog {
 
-    async import(transactionHandle: any, settings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
-        await super.import(transactionHandle, settings, observer);
-    }
-
-    async postImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
-        await super.postImport(transactionHandle, importerSettings, observer);
-    }
-
     protected getAdditionalKeywords(importerSettings: ImporterSettings): string[] {
         const keywords: string[] = [];
         for (const partner of importerSettings.partner?.split(',').map(p => p.trim()) ?? []) {

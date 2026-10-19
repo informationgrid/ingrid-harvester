@@ -114,7 +114,7 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         return 'dataset_csw';
     }
 
-    async deleteStaleRecords(datasourceId: number): Promise<void> {
+    private async deleteStaleRecords(datasourceId: number): Promise<void> {
         log.info(`Post-import stale cleanup for source '${datasourceId}' in CSW catalog '${this.settings.id}'`);
         const targetUrl = this.buildTargetUrl();
 
