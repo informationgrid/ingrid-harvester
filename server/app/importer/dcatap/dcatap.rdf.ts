@@ -33,7 +33,8 @@ const log = log4js.getLogger(import.meta.filename);
 
 /**
  * Parses an RDF payload string into an in-memory N3/RDF.js Quad Store.
- * The format is detected from the extension of `baseIRI`, unless `contentType` is given (e.g. `application/rdf+xml`).
+ * The format is `contentType` if given (e.g. `application/rdf+xml`), else detected from the extension of `baseIRI`
+ * (`.xml` is read as RDF/XML), else from the payload itself (see `detectContentType()`).
  */
 export async function parseRdfPayload(payload: string | object, baseIRI: string, contentType?: string): Promise<Store & { rawQuads?: Quad[] }> {
     const store: Store & { rawQuads?: Quad[] } = new Store();
@@ -42,18 +43,7 @@ export async function parseRdfPayload(payload: string | object, baseIRI: string,
         return store;
     }
 
-    const explicitContentType = contentType;
-    contentType ??= rdfParser.getContentTypeFromExtension(baseIRI);
-    if (!contentType && baseIRI.includes('/')) {
-        try {
-            contentType = rdfParser.getContentTypeFromExtension(new URL(baseIRI).pathname);
-        }
-        catch (ignored) {
-            if (baseIRI.startsWith('application/')) {
-                contentType = baseIRI;
-            }
-        }
-    }
+    contentType ??= getContentTypeFromUrl(baseIRI) ?? detectContentType(payload);
 
     // JSON-LD has to be handled separately because of streaming-related issues when using rdf-parse
     if (contentType == 'application/ld+json' || contentType == 'application/json') {
@@ -67,10 +57,7 @@ export async function parseRdfPayload(payload: string | object, baseIRI: string,
     }
     else {
         const stream = Readable.from([payload]);
-        // TODO if more fine grained content type detection is needed, inject its result into parseOptions
-        const parseOptions: ParseOptions = explicitContentType
-            ? { contentType: explicitContentType, baseIRI }
-            : { path: new URL(baseIRI).pathname.toLowerCase(), baseIRI };
+        const parseOptions: ParseOptions = { contentType, baseIRI };
         const quadStream = rdfParser.parse(stream, parseOptions);
 
         return new Promise((resolve, reject) => {
@@ -85,4 +72,47 @@ export async function parseRdfPayload(payload: string | object, baseIRI: string,
             });
         });
     }
+}
+
+/**
+ * @returns the RDF content type of the extension of `url` (also without query string), `application/rdf+xml` for `.xml`,
+ * `url` itself if it is a media type, else undefined
+ */
+function getContentTypeFromUrl(url: string): string | undefined {
+    let contentType = rdfParser.getContentTypeFromExtension(url);
+    if (!contentType && url.includes('/')) {
+        try {
+            contentType = rdfParser.getContentTypeFromExtension(new URL(url).pathname.toLowerCase());
+        }
+        catch (ignored) {
+            if (url.startsWith('application/')) {
+                contentType = url;
+            }
+        }
+    }
+    // RDF/XML is also served as plain XML (e.g. CKAN `catalog.xml`)
+    if (contentType == 'application/xml' || contentType == 'text/xml') {
+        return 'application/rdf+xml';
+    }
+    return contentType || undefined;
+}
+
+/**
+ * Detects the format of a payload without known content type (e.g. URLs without extension or with a format query parameter):
+ * parsed objects, `{` and `[{` are JSON-LD, an XML declaration, comment or tag (`<?xml`, `<!--`, `<rdf:RDF`) is RDF/XML,
+ * everything else Turtle (also `<http://...>`, an IRI as first subject).
+ */
+export function detectContentType(payload: string | object): string {
+    if (typeof payload !== 'string') {
+        return 'application/ld+json';
+    }
+    const start = payload.trimStart();
+    // `[` is also a Turtle blank node, JSON arrays start with an object (or are empty)
+    if (start.startsWith('{') || /^\[\s*[{\]]/.test(start)) {
+        return 'application/ld+json';
+    }
+    if (/^<(\?xml|!|[A-Za-z_][\w.-]*(:[A-Za-z_][\w.-]*)?[\s/>])/.test(start)) {
+        return 'application/rdf+xml';
+    }
+    return 'text/turtle';
 }
