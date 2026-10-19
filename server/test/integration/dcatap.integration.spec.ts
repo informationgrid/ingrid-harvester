@@ -22,12 +22,15 @@
  */
 
 import { expect } from 'chai';
+import fs from 'fs';
+import path from 'path';
 import pg from 'pg';
 import type { DcatapSettings } from '../../app/importer/dcatap/dcatap.settings.js';
 import dcatapDessauRosslauSettings from '../data/dcatap/dessau-rosslau/config.json' with { type: 'json' };
 import dcatapOpendataHroSettings from '../data/dcatap/opendata-hro/config.json' with { type: 'json' };
 import { runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
 import { getTestDatabaseConfig } from '../utils/postgres-container.js';
+import { expectXmlEqual } from '../utils/test-utils.js';
 
 describe('DCAT-AP Integration Tests', function () {
     this.timeout(60000);
@@ -68,15 +71,23 @@ describe('DCAT-AP Integration Tests', function () {
         });
 
         // record.identifier is the ID extracted via idRegex (same as ES uuid and ISO fileIdentifier), not the dct:identifier URL
+        // original_document is the JSON-LD catalog with only the record's dataset, dataset_csw the ISO 19139 document; no DCAT-AP.de document
         const client = new pg.Client(getTestDatabaseConfig());
         await client.connect();
         try {
-            const result = await client.query('SELECT identifier FROM public.record WHERE source = $1', [settings.sourceURL]);
+            const result = await client.query('SELECT identifier, original_document, dataset_dcatapde, dataset_csw FROM public.record WHERE source = $1', [settings.sourceURL]);
             expect(result.rows.map(row => row.identifier)).to.have.members([
                 'a537c7007dd44945bc378eb59e10314c',
                 'a537c7007dd44945bc378eb59e10314c_0',
                 'a537c7007dd44945bc378eb59e10314c_29'
             ]);
+            const fixtures = 'test/data/dcatap/dessau-rosslau';
+            for (const row of result.rows) {
+                const expectedOriginal = JSON.parse(fs.readFileSync(path.join(fixtures, 'original', `${row.identifier}.json`), 'utf8'));
+                expect(JSON.parse(row.original_document), row.identifier).to.deep.equal(expectedOriginal);
+                expectXmlEqual(row.dataset_csw, fs.readFileSync(path.join(fixtures, 'csw', `${row.identifier}.xml`), 'utf8'));
+                expect(row.dataset_dcatapde, row.identifier).to.be.null;
+            }
         }
         finally {
             await client.end();
