@@ -39,5 +39,5 @@ export const dcatapdeDefaults: DcatapdeSettings = {
 
 export const dcatapdeCapabilities: ImporterCapabilities = {
     isIncrementalSupported: false,
-    supportedCatalogTypes: ['elasticsearch', 'piveau']
+    supportedCatalogTypes: ['elasticsearch', 'piveau', 'csw']
 };
