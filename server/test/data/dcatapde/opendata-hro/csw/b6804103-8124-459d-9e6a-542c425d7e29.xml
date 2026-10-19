@@ -39,10 +39,10 @@
     <gco:DateTime>2026-08-26T02:04:26.635Z</gco:DateTime>
   </gmd:dateStamp>
   <gmd:metadataStandardName>
-    <gco:CharacterString>ISO 19115:2003/19139</gco:CharacterString>
+    <gco:CharacterString>ISO19115</gco:CharacterString>
   </gmd:metadataStandardName>
   <gmd:metadataStandardVersion>
-    <gco:CharacterString>1.0</gco:CharacterString>
+    <gco:CharacterString>2003/Cor.1:2006</gco:CharacterString>
   </gmd:metadataStandardVersion>
   <gmd:identificationInfo>
     <gmd:MD_DataIdentification>
@@ -175,6 +175,9 @@
           </gmd:useConstraints>
           <gmd:otherConstraints>
             <gmx:Anchor xlink:href="http://dcat-ap.de/def/licenses/cc-zero">Creative Commons CC Zero License (cc-zero)</gmx:Anchor>
+          </gmd:otherConstraints>
+          <gmd:otherConstraints>
+            <gco:CharacterString>{"id":"cc-zero","name":"Creative Commons CC Zero License (cc-zero)","url":"http://www.opendefinition.org/licenses/cc-zero","quelle":""}</gco:CharacterString>
           </gmd:otherConstraints>
         </gmd:MD_LegalConstraints>
       </gmd:resourceConstraints>

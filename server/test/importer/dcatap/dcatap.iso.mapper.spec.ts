@@ -58,6 +58,8 @@ describe('DcatapIsoMapper.createCswIsoDocument (dessau-rosslau, a537c7007dd44945
         expect(text('/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString')).to.deep.equal(['a537c7007dd44945bc378eb59e10314c']);
         expect(text('/gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue')).to.deep.equal(['ger']);
         expect(text('/gmd:MD_Metadata/gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue')).to.deep.equal(['dataset']);
+        // no CRS in dct:conformsTo -> no reference system (the WGS 84 geometry of the metadata is not the CRS of the data)
+        expect(text('/gmd:MD_Metadata/gmd:referenceSystemInfo')).to.be.empty;
         expect(text('/gmd:MD_Metadata/gmd:dateStamp/gco:DateTime')).to.deep.equal(['2026-08-07T12:26:32.000Z']);
         expect(text('/gmd:MD_Metadata/gmd:contact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString')).to.deep.equal(['Kreisfreie Stadt Dessau-Roßlau']);
         expect(text('/gmd:MD_Metadata/gmd:contact//gmd:electronicMailAddress/gco:CharacterString')).to.deep.equal(['gis@dessau-rosslau.de']);
@@ -68,12 +70,18 @@ describe('DcatapIsoMapper.createCswIsoDocument (dessau-rosslau, a537c7007dd44945
         const idInfo = '/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification';
         expect(text(`${idInfo}/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString`)).to.deep.equal(['Stadtgliederung']);
         expect(text(`${idInfo}/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date`)).to.deep.equal(['2026-08-07', '2026-08-07']);
-        expect(text(`${idInfo}/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString`)).to.deep.equal(['https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c']);
+        // dct:identifier is a URL, which must not be used as resolvable resource identifier (GDI-DE 3.1) -> record ID
+        expect(text(`${idInfo}/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString`)).to.deep.equal(['a537c7007dd44945bc378eb59e10314c']);
         expect(text(`${idInfo}/gmd:abstract/gco:CharacterString`)[0]).to.match(/^Stadtteile, Stadtbezirke, Ortschaften, Stadtbezirksbeiräte Seit sich/);
         expect(text(`${idInfo}/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue`)).to.deep.equal(['pointOfContact', 'publisher']);
         expect(text(`${idInfo}/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString`)).to.deep.equal(['Kreisfreie Stadt Dessau-Roßlau', 'Stadt Dessau-Roßlau']);
         expect(text(`${idInfo}/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString`)).to.deep.equal(['Statistische Einheiten', 'OpenData', 'Verwaltung']);
-        expect(text(`${idInfo}/gmd:resourceConstraints`)).to.be.empty;
+        // no license, rights or access rights: exactly one MD_LegalConstraints each for use and access (GDI-DE 2.9.1, 2.8.1)
+        const legal = `${idInfo}/gmd:resourceConstraints/gmd:MD_LegalConstraints`;
+        expect(text(`${legal}/gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue`)).to.deep.equal(['otherRestrictions']);
+        expect(text(`${legal}[gmd:useConstraints]/gmd:otherConstraints/gco:CharacterString`)).to.deep.equal(['Es gelten keine Bedingungen']);
+        expect(text(`${legal}/gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue`)).to.deep.equal(['otherRestrictions']);
+        expect(text(`${legal}[gmd:accessConstraints]/gmd:otherConstraints/gco:CharacterString`)).to.deep.equal(['Es gelten keine Zugriffsbeschränkungen']);
         expect(text(`${idInfo}/gmd:language/gmd:LanguageCode/@codeListValue`)).to.deep.equal(['ger']);
         expect(text(`${idInfo}/gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue`)).to.deep.equal(['utf8']);
     });
@@ -193,6 +201,15 @@ describe('DcatapIsoMapper.createCswIsoDocument (reused getters)', function () {
         expect(text('/gmd:MD_Metadata/gmd:contact//gmd:CI_RoleCode/@codeListValue')).to.deep.equal(['custodian']);
     });
 
+    it('uses the default metadata language and keeps non-URL identifiers', function () {
+        // no dct:language: metadata language is German (GDI-DE 2.4), the resource language stays unknown
+        expect(text('/gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue')).to.deep.equal(['ger']);
+        expect(text(`${idInfo}/gmd:language/@gco:nilReason`)).to.deep.equal(['missing']);
+        expect(text(`${idInfo}/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString`)).to.deep.equal(['dataset-1']);
+        // no geometry and no CRS -> no reference system
+        expect(text('/gmd:MD_Metadata/gmd:referenceSystemInfo')).to.be.empty;
+    });
+
     it('keeps getContactPoint() fields used by the ES document', function () {
         const contact = mapper.getContactPoint();
         expect(contact.fn).to.equal('Test Organisation');
@@ -201,3 +218,77 @@ describe('DcatapIsoMapper.createCswIsoDocument (reused getters)', function () {
     });
 });
 
+describe('DcatapIsoMapper.createCswIsoDocument (language variants, reference systems)', function () {
+
+    const sourceURL = 'https://example.com/catalog.jsonld';
+
+    async function createDocument(dataset: object): Promise<Document> {
+        const payload = {
+            '@context': { dcat: 'http://www.w3.org/ns/dcat#', dct: 'http://purl.org/dc/terms/' },
+            '@id': 'https://example.com/dataset/1',
+            '@type': 'dcat:Dataset',
+            'dct:identifier': 'dataset-1',
+            'dct:title': 'Test dataset',
+            ...dataset
+        };
+        const store = await parseRdfPayload(payload, sourceURL);
+        const [datasetSubject] = store.getSubjects(DataFactory.namedNode(namespaces.RDF + 'type'), DataFactory.namedNode(namespaces.DCAT + 'Dataset'), null);
+        const testSettings = { sourceURL } as DcatapSettings;
+        const mapper = new DcatapMapper(testSettings, datasetSubject, store, JSON.stringify(payload), new Date('2026-09-30T00:00:00Z'), new Summary('test', testSettings));
+        return new DOMParser().parseFromString(new DcatapIsoMapper(mapper).createCswIsoDocument(), 'application/xml');
+    }
+
+    const text = (doc: Document, path: string): string[] => (select(path, doc) as Node[]).map(node => node.textContent);
+    const rsCode = '/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code/gmx:Anchor';
+
+    it('maps locale and name variants of dct:language', async function () {
+        for (const [language, code] of [['de-DE', 'ger'], ['Deutsch', 'ger'], ['en-GB', 'eng']]) {
+            const doc = await createDocument({ 'dct:language': language });
+            expect(text(doc, '/gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue'), language).to.deep.equal([code]);
+            expect(text(doc, '/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language/gmd:LanguageCode/@codeListValue'), language).to.deep.equal([code]);
+        }
+    });
+
+    it('maps CRS IRIs of dct:conformsTo as reference systems', async function () {
+        const doc = await createDocument({
+            'dct:conformsTo': [{ '@id': 'http://www.opengis.net/def/crs/EPSG/0/25832' }, { '@id': 'https://example.com/spec' }],
+            'dct:spatial': { 'http://www.w3.org/ns/locn#geometry': '{"type":"Point","coordinates":[12.2,51.8]}' }
+        });
+        expect(text(doc, `${rsCode}/@xlink:href`)).to.deep.equal(['http://www.opengis.net/def/crs/EPSG/0/25832']);
+        expect(text(doc, rsCode)).to.deep.equal(['EPSG 25832']);
+    });
+});
+
+describe('DcatapIsoMapper.createCswIsoDocument (legal constraints)', function () {
+
+    it('writes licenses with GDI-DE JSON and access rights into one MD_LegalConstraints each', async function () {
+        const sourceURL = 'https://example.com/catalog.jsonld';
+        const payload = {
+            '@context': { dcat: 'http://www.w3.org/ns/dcat#', dct: 'http://purl.org/dc/terms/' },
+            '@id': 'https://example.com/dataset/1',
+            '@type': 'dcat:Dataset',
+            'dct:identifier': 'dataset-1',
+            'dct:title': 'Test dataset',
+            'dct:accessRights': { '@id': 'http://publications.europa.eu/resource/authority/access-right/PUBLIC' },
+            'dcat:distribution': {
+                '@type': 'dcat:Distribution',
+                'dcat:accessURL': { '@id': 'https://example.com/data.csv' },
+                'dct:license': { '@id': 'http://dcat-ap.de/def/licenses/dl-by-de/2.0' }
+            }
+        };
+        const store = await parseRdfPayload(payload, sourceURL);
+        const [datasetSubject] = store.getSubjects(DataFactory.namedNode(namespaces.RDF + 'type'), DataFactory.namedNode(namespaces.DCAT + 'Dataset'), null);
+        const testSettings = { sourceURL } as DcatapSettings;
+        const mapper = new DcatapMapper(testSettings, datasetSubject, store, JSON.stringify(payload), new Date('2026-09-30T00:00:00Z'), new Summary('test', testSettings));
+        const doc = new DOMParser().parseFromString(new DcatapIsoMapper(mapper).createCswIsoDocument(), 'application/xml');
+        const text = (path: string): string[] => (select(path, doc) as Node[]).map(node => node.textContent);
+
+        const legal = '/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints';
+        expect(text(`${legal}[gmd:useConstraints]/gmd:otherConstraints/gmx:Anchor/@xlink:href`)).to.deep.equal(['http://dcat-ap.de/def/licenses/dl-by-de/2.0']);
+        const json = text(`${legal}[gmd:useConstraints]/gmd:otherConstraints/gco:CharacterString`);
+        expect(json).to.have.lengthOf(1);
+        expect(JSON.parse(json[0])).to.include({ id: 'dl-by-de/2.0', quelle: '' });
+        expect(text(`${legal}[gmd:accessConstraints]/gmd:otherConstraints/gmx:Anchor/@xlink:href`)).to.deep.equal(['http://publications.europa.eu/resource/authority/access-right/PUBLIC']);
+        expect(text(`${legal}[gmd:accessConstraints]/gmd:otherConstraints/gco:CharacterString`)).to.be.empty;
+    });
+});

@@ -24,7 +24,7 @@
 import type { Geometry } from 'geojson';
 import log4js from 'log4js';
 import { DcatapIsoMapper } from '../../../importer/dcatap/dcatap.iso.mapper.js';
-import { DcatapMapper, INSPIRE_THEME_URL, ISO_METADATA_STANDARD_NAME, ISO_METADATA_STANDARD_VERSION } from '../../../importer/dcatap/dcatap.mapper.js';
+import { CRS_URL_PATTERN, DcatapMapper, INSPIRE_THEME_URL, ISO_METADATA_STANDARD_NAME, ISO_METADATA_STANDARD_VERSION } from '../../../importer/dcatap/dcatap.mapper.js';
 import type { ToElasticMapper } from '../../../importer/to.elastic.mapper.js';
 import type { DateRange } from '../../../model/dateRange.js';
 import type { Distribution } from '../../../model/distribution.js';
@@ -45,7 +45,6 @@ const ISO_MAINTENANCE_FREQUENCY: Record<string, string> = {
 };
 const HVD_LEGISLATION_URL = 'http://data.europa.eu/eli/reg_impl/2023/138';
 const EU_ACCESS_RIGHT_PUBLIC_URL = 'http://publications.europa.eu/resource/authority/access-right/PUBLIC';
-const CRS_URL_PATTERN = /^https?:\/\/www\.opengis\.net\/def\/crs\//;
 
 export class ingridDcatapMapper<M extends DcatapMapper = DcatapMapper> extends ingridMapper<M> implements ToElasticMapper<IngridOpendataIndexDocument> {
 

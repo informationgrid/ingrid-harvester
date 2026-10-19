@@ -47,11 +47,17 @@ import { DCAT_LANGUAGE_URL, getLastPathSegment } from './dcatap.utils.js';
 
 const IANA_MEDIA_TYPE_URL = 'https://www.iana.org/assignments/media-types/';
 export const INSPIRE_THEME_URL = 'http://inspire.ec.europa.eu/theme/';
-export const ISO_METADATA_STANDARD_NAME = 'ISO 19115:2003/19139';
-export const ISO_METADATA_STANDARD_VERSION = '1.0';
+// same as datasets of the InGrid Editor: ISO 19115:2003 with Technical Corrigendum 1 (also referenced by INSPIRE), encoded in ISO 19139
+export const ISO_METADATA_STANDARD_NAME = 'ISO19115';
+export const ISO_METADATA_STANDARD_VERSION = '2003/Cor.1:2006';
 const ISO_ROLE_CODES = ['resourceProvider', 'custodian', 'owner', 'user', 'distributor', 'originator', 'pointOfContact', 'principalInvestigator', 'processor', 'publisher', 'author'];
-// ISO 639-1 and ISO 639-2/T codes that differ from the ISO 639-2/B codes used in ISO 19139
-const ISO_LANGUAGE_MAP: Record<string, string> = { de: 'ger', deu: 'ger', en: 'eng', fr: 'fre', fra: 'fre' };
+// ISO 639-1, ISO 639-2/T, locale and name variants that differ from the ISO 639-2/B codes used in ISO 19139
+const ISO_LANGUAGE_MAP: Record<string, string> = {
+    de: 'ger', deu: 'ger', 'de-de': 'ger', 'de_de': 'ger', german: 'ger', deutsch: 'ger',
+    en: 'eng', 'en-gb': 'eng', 'en-us': 'eng', english: 'eng',
+    fr: 'fre', fra: 'fre'
+};
+export const CRS_URL_PATTERN = /^https?:\/\/www\.opengis\.net\/def\/crs\//;
 
 export type DcatapReference = { label?: string, uri?: string };
 
@@ -982,6 +988,28 @@ export class DcatapMapper<S extends DcatapSettings = DcatapSettings> extends Map
             }
         }
         return parties;
+    }
+
+    /**
+     * @returns the ISO resource identifiers (GDI-DE 3.1): the dct:identifier values that are no URLs
+     * (a resolvable identifier must resolve to the metadata record), else the record ID
+     */
+    getResourceIdentifiers(): string[] {
+        const identifiers = this.getIdentifiers().filter(identifier => !/^https?:\/\//i.test(identifier));
+        return identifiers.length ? identifiers : [this.getGeneratedId()];
+    }
+
+    /**
+     * @returns the CRS IRIs of dct:conformsTo (GeoDCAT-AP mapping of the ISO reference system, label `EPSG <code>` if they have none);
+     * no default: the reference system describes the data, not the (WGS 84) geometry of the metadata
+     */
+    getReferenceSystems(): DcatapReference[] {
+        return this.getConformsTo()
+            .filter(reference => CRS_URL_PATTERN.test(reference.uri ?? ''))
+            .map(reference => {
+                const epsgCode = /\/EPSG\/\d+\/(\d+)$/.exec(reference.uri)?.[1];
+                return { uri: reference.uri, label: reference.label != reference.uri ? reference.label : (epsgCode ? `EPSG ${epsgCode}` : reference.uri) };
+            });
     }
 
     /**

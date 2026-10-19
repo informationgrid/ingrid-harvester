@@ -23,12 +23,18 @@
 
 import { DOMImplementation, XMLSerializer } from '@xmldom/xmldom';
 import type { Geometry } from 'geojson';
+import { DcatLicensesUtils } from '../../utils/dcat.licenses.utils.js';
 import { namespaces } from '../namespaces.js';
 import { type DcatapMapper, type DcatapReference, INSPIRE_THEME_URL, type IsoParty, ISO_METADATA_STANDARD_NAME, ISO_METADATA_STANDARD_VERSION } from './dcatap.mapper.js';
 import { prettyPrintXml } from './dcatap.utils.js';
 
 const ISO_CODELIST_URL = 'http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml';
 const ISO_LANGUAGE_CODELIST_URL = 'http://www.loc.gov/standards/iso639-2';
+// the metadata language is mandatory (GDI-DE 2.4); harvested portals are German
+const ISO_DEFAULT_METADATA_LANGUAGE = 'ger';
+// GDI-DE texts if there are no use / access constraints (GDI-DE 2.9.1, 2.8.1)
+const ISO_NO_USE_CONSTRAINTS = 'Es gelten keine Bedingungen';
+const ISO_NO_ACCESS_CONSTRAINTS = 'Es gelten keine Zugriffsbeschränkungen';
 
 /**
  * Creates an ISO 19139 (gmd:MD_Metadata) document from a DCAT-AP dataset,
@@ -56,7 +62,7 @@ export class DcatapIsoMapper {
         const contacts = this.mapper.getParties();
 
         this.isoCharacterString(root, 'fileIdentifier', this.mapper.getGeneratedId());
-        this.buildIsoLanguage(root, language);
+        this.buildIsoLanguage(root, language ?? ISO_DEFAULT_METADATA_LANGUAGE);
         this.isoCodeListValue(root, 'characterSet', 'MD_CharacterSetCode', 'utf8');
         this.isoCodeListValue(root, 'hierarchyLevel', 'MD_ScopeCode', 'dataset');
         this.isoCharacterString(root, 'hierarchyLevelName', 'dataset');
@@ -65,6 +71,7 @@ export class DcatapIsoMapper {
         this.isoElement(this.isoElement(root, namespaces.GMD, 'gmd:dateStamp'), namespaces.GCO, 'gco:DateTime', this.getIsoDateStamp());
         this.isoCharacterString(root, 'metadataStandardName', ISO_METADATA_STANDARD_NAME);
         this.isoCharacterString(root, 'metadataStandardVersion', ISO_METADATA_STANDARD_VERSION);
+        this.buildIsoReferenceSystems(root);
 
         const dataIdentification = this.isoElement(this.isoElement(root, namespaces.GMD, 'gmd:identificationInfo'), namespaces.GMD, 'gmd:MD_DataIdentification');
         this.buildIsoCitation(dataIdentification);
@@ -193,9 +200,17 @@ export class DcatapIsoMapper {
         if (!issued && !modified) {
             this.isoNil(citation, 'date');
         }
-        for (const identifier of this.mapper.getIdentifiers()) {
+        for (const identifier of this.mapper.getResourceIdentifiers()) {
             const mdIdentifier = this.isoElement(this.isoElement(citation, namespaces.GMD, 'gmd:identifier'), namespaces.GMD, 'gmd:MD_Identifier');
             this.isoCharacterString(mdIdentifier, 'code', identifier);
+        }
+    }
+
+    private buildIsoReferenceSystems(root: Element): void {
+        for (const referenceSystem of this.mapper.getReferenceSystems()) {
+            const referenceSystemInfo = this.isoElement(this.isoElement(root, namespaces.GMD, 'gmd:referenceSystemInfo'), namespaces.GMD, 'gmd:MD_ReferenceSystem');
+            const rsIdentifier = this.isoElement(this.isoElement(referenceSystemInfo, namespaces.GMD, 'gmd:referenceSystemIdentifier'), namespaces.GMD, 'gmd:RS_Identifier');
+            this.isoAnchor(rsIdentifier, 'code', referenceSystem);
         }
     }
 
@@ -233,15 +248,31 @@ export class DcatapIsoMapper {
             const constraints = this.isoElement(this.isoElement(dataIdentification, namespaces.GMD, 'gmd:resourceConstraints'), namespaces.GMD, 'gmd:MD_Constraints');
             this.isoCharacterString(constraints, 'useLimitation', right);
         }
-        for (const license of this.mapper.getLicenses()) {
-            const constraints = this.isoElement(this.isoElement(dataIdentification, namespaces.GMD, 'gmd:resourceConstraints'), namespaces.GMD, 'gmd:MD_LegalConstraints');
-            this.isoCodeListValue(constraints, 'useConstraints', 'MD_RestrictionCode', 'otherRestrictions');
-            this.isoAnchor(constraints, 'otherConstraints', license);
+
+        // GDI-DE 2.9.1: exactly one MD_LegalConstraints with useConstraints: the licenses (known licenses also as
+        // GDI-DE JSON snippet, like the index field `object_use_constraint`), else the rights, else "no conditions"
+        const useConstraints = this.isoElement(this.isoElement(dataIdentification, namespaces.GMD, 'gmd:resourceConstraints'), namespaces.GMD, 'gmd:MD_LegalConstraints');
+        this.isoCodeListValue(useConstraints, 'useConstraints', 'MD_RestrictionCode', 'otherRestrictions');
+        const licenses = this.mapper.getLicenses();
+        for (const license of licenses) {
+            this.isoAnchor(useConstraints, 'otherConstraints', license);
+            const knownLicense = DcatLicensesUtils.get(license.uri);
+            if (knownLicense) {
+                this.isoCharacterString(useConstraints, 'otherConstraints', JSON.stringify({ id: knownLicense.id, name: knownLicense.title, url: knownLicense.url, quelle: '' }));
+            }
         }
-        for (const accessRights of this.mapper.getAccessRightsReferences()) {
-            const constraints = this.isoElement(this.isoElement(dataIdentification, namespaces.GMD, 'gmd:resourceConstraints'), namespaces.GMD, 'gmd:MD_LegalConstraints');
-            this.isoCodeListValue(constraints, 'accessConstraints', 'MD_RestrictionCode', 'otherRestrictions');
-            this.isoAnchor(constraints, 'otherConstraints', accessRights);
+        if (!licenses.length) {
+            const rights = this.mapper.getRights();
+            (rights.length ? rights : [ISO_NO_USE_CONSTRAINTS]).forEach(right => this.isoCharacterString(useConstraints, 'otherConstraints', right));
+        }
+
+        // GDI-DE 2.8.1: exactly one MD_LegalConstraints with accessConstraints, else "no access constraints"
+        const accessConstraints = this.isoElement(this.isoElement(dataIdentification, namespaces.GMD, 'gmd:resourceConstraints'), namespaces.GMD, 'gmd:MD_LegalConstraints');
+        this.isoCodeListValue(accessConstraints, 'accessConstraints', 'MD_RestrictionCode', 'otherRestrictions');
+        const accessRights = this.mapper.getAccessRightsReferences();
+        accessRights.forEach(accessRight => this.isoAnchor(accessConstraints, 'otherConstraints', accessRight));
+        if (!accessRights.length) {
+            this.isoCharacterString(accessConstraints, 'otherConstraints', ISO_NO_ACCESS_CONSTRAINTS);
         }
     }
 
