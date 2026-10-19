@@ -13,3 +13,7 @@ For size reasons, the resulting RDF file has been manually filtered to only incl
 * b6804103-8124-459d-9e6a-542c425d7e29
 
 The hydra elements have been adapted accordingly.
+
+## original/
+
+Expected `original_document` of the stored records (the `dcat:Dataset` with its dereferenced distributions, publishers and contact points), generated from the DCAT-AP.de importer before it was based on the DCAT-AP importer (TASK-039).

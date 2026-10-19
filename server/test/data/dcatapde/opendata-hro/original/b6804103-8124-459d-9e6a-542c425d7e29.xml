@@ -1,0 +1,792 @@
+<dcat:Dataset xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29" xmlns:dcat="http://www.w3.org/ns/dcat#">
+    <dct:title xmlns:dct="http://purl.org/dc/terms/">Landtagswahl 2021</dct:title>
+    <dct:description xmlns:dct="http://purl.org/dc/terms/">Ergebnisse nach Stadtbereichen, Standorte der Wahllokale, Wahlbezirke, Briefwahlbezirke sowie Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021</dct:description>
+    <dct:identifier xmlns:dct="http://purl.org/dc/terms/">b6804103-8124-459d-9e6a-542c425d7e29</dct:identifier>
+    <dcat:keyword>Politik</dcat:keyword>
+    <dcat:keyword>Statistik</dcat:keyword>
+    <dcat:keyword>Statistische Daten</dcat:keyword>
+    <dcat:keyword>Statistische Information</dcat:keyword>
+    <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:38:51.945685</dct:issued>
+    <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.635554</dct:modified>
+    <dcat:contactPoint>
+      <vcard:Organization rdf:nodeID="Nb8c6392a543e4b4f99144c20a3b4618d" xmlns:vcard="http://www.w3.org/2006/vcard/ns#">
+        <vcard:fn>Hanse- und Universitätsstadt Rostock</vcard:fn>
+        <vcard:hasEmail rdf:resource="mailto:geodienste@rostock.de"/>
+        <vcard:hasEmail rdf:resource="mailto:mailto:geodienste@rostock.de"/>
+      </vcard:Organization>
+    </dcat:contactPoint>
+    <dct:publisher rdf:resource="https://www.opendata-hro.de/organization/b952e781-ab4c-456a-8e7a-2845f7efaf83" xmlns:dct="http://purl.org/dc/terms/"/>
+    <dct:spatial xmlns:dct="http://purl.org/dc/terms/">
+      <dct:Location rdf:nodeID="Na608e0303c5d4afcb8dff62b23ec95b7">
+        <locn:geometry rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral" xmlns:locn="http://www.w3.org/ns/locn#">POLYGON ((11.9914 54.0386, 11.9914 54.2620, 12.3131 54.2620, 12.3131 54.0386, 11.9914 54.0386))</locn:geometry>
+        <locn:geometry rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json" xmlns:locn="http://www.w3.org/ns/locn#">{"type":"Polygon", "coordinates":[[[11.99143, 54.03856], [11.99143, 54.26196], [12.31306, 54.26196], [12.31306, 54.03856], [11.99143, 54.03856]]]}</locn:geometry>
+      </dct:Location>
+    </dct:spatial>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/5ee1c8fa-0488-4511-8a15-1359e04d7461">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Ergebnisse der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_spd (Anteil der gültigen Zweitstimmen für die SPD an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_cdu (Anteil der gültigen Zweitstimmen für die CDU an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_linke (Anteil der gültigen Zweitstimmen für DIE LINKE an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_fdp (Anteil der gültigen Zweitstimmen für die FDP an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_gruene (Anteil der gültigen Zweitstimmen für BÜNDNIS 90/DIE GRÜNEN an den gültigen Zweitstimmen insgesamt (in %)) und stimmenanteil_prozent_afd (Anteil der gültigen Zweitstimmen für die AfD an den gültigen Zweitstimmen insgesamt (in %)).</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/text/csv"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/CSV" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_ergebnisse.csv"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2022-05-16T12:13:40</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642091</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:11</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1230</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="N9f3a1b7c38ba422c8e8784e9786100eb">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">88fe7043352512cfe1a908a3131c778937de9dd336fc221a81ff904b150a2de4</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_ergebnisse.csv"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/a4931cd8-aed4-46ef-b953-48df353a3cf2">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Ergebnisse der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_spd (Anteil der gültigen Zweitstimmen für die SPD an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_cdu (Anteil der gültigen Zweitstimmen für die CDU an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_linke (Anteil der gültigen Zweitstimmen für DIE LINKE an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_fdp (Anteil der gültigen Zweitstimmen für die FDP an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_gruene (Anteil der gültigen Zweitstimmen für BÜNDNIS 90/DIE GRÜNEN an den gültigen Zweitstimmen insgesamt (in %)) und stimmenanteil_prozent_afd (Anteil der gültigen Zweitstimmen für die AfD an den gültigen Zweitstimmen insgesamt (in %)).</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/XLSX" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_ergebnisse.xlsx"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2022-05-16T12:13:40</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642157</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:11</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">4621</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="N3d53b2754ab34ed0b0057ffda9942c6c">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">6c51e09a02084efe60ccfa7a781695e1211276842c6bdaf09742eaa700154022</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_ergebnisse.xlsx"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/256f641f-009f-4c92-b4e5-c62a596b8156">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Ergebnisse der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Ergebnisse (einschließlich Briefwahl) der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 nach Stadtbereichen. Folgende Indikatoren sind enthalten: wahlbeteiligung_prozent (Anteil der Wähler/innen an den Wahlberechtigten (in %)), stimmenanteil_prozent_spd (Anteil der gültigen Zweitstimmen für die SPD an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_cdu (Anteil der gültigen Zweitstimmen für die CDU an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_linke (Anteil der gültigen Zweitstimmen für DIE LINKE an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_fdp (Anteil der gültigen Zweitstimmen für die FDP an den gültigen Zweitstimmen insgesamt (in %)), stimmenanteil_prozent_gruene (Anteil der gültigen Zweitstimmen für BÜNDNIS 90/DIE GRÜNEN an den gültigen Zweitstimmen insgesamt (in %)) und stimmenanteil_prozent_afd (Anteil der gültigen Zweitstimmen für die AfD an den gültigen Zweitstimmen insgesamt (in %)).</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/json"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/JSON" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_ergebnisse.json"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2022-05-16T12:13:40</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642202</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:12</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">7532</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="Ne1da14738c664afa86ed1019fb89ea30">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">f2d2252ede02ced22ebe5bbc5408584111d2c5c56f89b365f22049611dfb6b89</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_ergebnisse.json"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/72c1a6d4-afaf-47ce-9b85-91d84b8ec3d7">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Wahllokale der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/text/csv"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/CSV" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.csv"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642243</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:12</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">26510</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="N388a6460eff943deade2d552bf761d4a">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">5b8cc224a14c34c8593128897722daec229a8e23cdd63094b9a286d586bdfa42</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.csv"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/2b684e4c-b3f0-4a68-bd8c-8613878aa859">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Wahllokale der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/XLSX" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.xlsx"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642285</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:12</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">14503</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="N5e6d188e398541cb929d171b83899532">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">a8967e92a85defa9077beac9f4fd1280d60a3fd992019639283b92e84c4c2313</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.xlsx"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/a8c7cd20-d274-446c-9042-d31b8477f43e">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Wahllokale der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/geo+json"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GEOJSON" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.json"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642326</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:12</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">64954</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="N35f7f17fdb164fcb93ad3dd95cadb5d1">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">5c614fcc57bea470a6e144fc8dd7335caa798cf318b7758be27b30eac758ead8</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.json"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/e6ed589d-5f4d-4757-b89e-e9b88450f0b7">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Wahllokale der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.google-earth.kml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/KML" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.kml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642368</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:12</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">111022</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="N243d98bba1374bffb7c5d2ee73bcafbb">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">57eebd6226bce50f187d30a63d4af853545f3031fadb6b8d04b4aeb8819f42fe</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.kml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/d5fd16bc-48da-4b1a-8fb1-41a6758b6267">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Wahllokale der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/gml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GML" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.gml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642409</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:13</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">148768</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="N9a03904705f44753ad246858b8e14f39">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">0452ab42647ecd51242d6b53b85c3269deae0eb9a5625b4913eb5f9866ba3233</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahllokale.gml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/f29e573d-60d1-4878-bbd0-106fc548d4c1">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Wahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/text/csv"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/CSV" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.csv"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642449</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:13</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">22634</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="N9d2aad57f0ed4d43a9b8557b50e38ce0">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">77253eade88911e07cd9bfe9241bde8a19c5dbe947482c982710af27dda0fa0f</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.csv"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/6ef766d8-9483-45cd-925e-d5f5ccee8256">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Wahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/XLSX" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.xlsx"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642490</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:13</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">10794</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="Nbe2805adbb74410f9d8b85b25435fd34">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">3549fe7c1ba23baf9f37836a635d023916b79417125a1cc7ed39fae79bbe6c5c</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.xlsx"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/2aa9323b-81ef-42a7-8bc6-40c19a6d2994">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Wahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/geo+json"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GEOJSON" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.json"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642531</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:13</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">484074</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="Nca32c32c54ed45f7b1f9f522bcedd171">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">dae296a18864f29e5455938c8e5f0194fcd6730fa1b5a27a2b9774eb04bcad57</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.json"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/a873ea10-a8a8-4c4a-b431-ee408c9854e8">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Wahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/zip"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/SHP" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.shp.zip"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642575</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:13</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">166232</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="Nca1577e1e06341c0b0e4436b9bf2689c">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">14d96cab1c48487b01f3284e1da3be0f5488167e0bf6bc9726b4229fa5155807</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.shp.zip"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/cb046c50-f0c4-425d-b303-20dc55ddf912">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Wahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.google-earth.kml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/KML" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.kml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642616</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:13</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">636445</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="Nd9ede3aefc4a44e39049a6b6fd367793">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">e678d5201dc8f98dbd6b893298805f4cbcffe37e0bf8dbca3194c789fb0fb2ad</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.kml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/ae6f6eef-dd09-4130-bcdf-7a11e6ac45df">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Wahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/gml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GML" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.gml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642677</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:14</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">678501</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="N2558510710bd4da0bb7d35ef56bbc0bd">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">559449f53f5daba55a05c7071ae87e30c46ac872bafcb36f64cb4b0ad9628d36</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlbezirke.gml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/761eef09-e4b0-45e3-9f86-d5325d4961f7">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Briefwahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/text/csv"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/CSV" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.csv"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642718</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:14</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">8858</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="N34eeef45586649d0b0842f55b0a6b3e3">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">0d0552bf3990e8e8b932ec004dbdcc4b322175a267eb2a7b67f55455154e9438</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.csv"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/5421b0bd-cd16-4535-b0ae-5c5fa818d2be">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Briefwahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/XLSX" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.xlsx"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642760</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:14</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">6223</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="N843236cb899147d18e2b4d99c329b6a1">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">8c7b1748275a803781e66a5f7572967fa09c5391d9eb89ac8bda715b683f47a4</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.xlsx"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/237c8bf5-d48f-4744-8f24-e60d9af1be54">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Briefwahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/geo+json"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GEOJSON" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.json"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642801</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:14</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">341228</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="N8e3821de90844424bbcdaf22abdc22b9">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">5e55f44f9a738167590230a002f10a30c6d658d1bb9d6508acae0ab108b77033</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.json"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/f7ab50b6-2d14-4836-8abc-c8003f09856f">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Briefwahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/zip"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/SHP" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.shp.zip"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642843</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:14</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">126247</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="N840b74228f4b4991b561bd3b1ce8aa24">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">139130dde833e5419c698eec096c54d98f613cbe561865f2f250d906a65f01c8</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.shp.zip"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/95e6bcb5-254b-49c0-9fb0-67b1d8129b89">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Briefwahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.google-earth.kml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/KML" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.kml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642884</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:15</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">435865</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="Nb4f2066cf544413b873c0eaed6a76d69">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">a54ab796f270a6d8d4b0f484f8cc57751f40357a87b88ae67cc7356021d4a4ab</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.kml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/a061703c-e4ec-46bb-9d21-77cd833fb18b">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Briefwahlbezirke der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/gml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GML" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.gml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642924</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:15</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">458151</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="Na3cd4e2436db4801bca8e9caa20cdb0a">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">78d738cfbe31d3fcf3ee326fe60d5d4b550bb166c116d4add76edc2f214f7448</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_briefwahlbezirke.gml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/cdd99173-25c1-42d1-b3f4-d77d5aa6d205">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Wahlkreise der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/text/csv"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/CSV" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.csv"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.642964</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:15</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">939</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="N262c4bc6f23e442099df60059fea34fa">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">80bd2cbc355969253a3601bb28fb5d59b239919f8d6b8788544e6166f04afee8</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.csv"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/da0c0cfc-449f-4edb-965f-05deb15ab835">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Wahlkreise der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/XLSX" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.xlsx"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.643004</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:15</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">3611</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="N65ca3e11d8b4407d9f243d270155025f">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">3d34bdece7aa02b1544e14eebd13bcd5ba54d3099b6364270c09960661de14bf</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.xlsx"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/078c4d3e-5736-4d57-9b76-49eea88abcc8">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Wahlkreise der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/geo+json"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GEOJSON" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.json"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.643044</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:15</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">166403</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="N81d910f5702343b3a60f89e35707dda8">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">70d6c268884da5d586abe21334de55824dc37f54f588e23db7764796f1c457d3</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.json"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/1ec25049-2848-4bb8-bdbc-dd95c2e6ec80">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Wahlkreise der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/zip"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/SHP" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.shp.zip"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.643086</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:16</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">71187</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="N54ce927bd27e4d7d974a99a13fe0cfdb">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">91ef96c14dbff4a06e3b9d822b23fe0032bcf1c1b1f804a6b5b6f64934259eb2</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.shp.zip"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/bc2219a1-5fdf-4271-84d4-0daba6d3ba2e">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Wahlkreise der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/vnd.google-earth.kml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/KML" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.kml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.643126</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:16</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">204574</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="N7ca1b0a2467640e6bdbce09d70cbeb5a">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">be0be58a171069ad2f71dd7bbfed870d5258cc3b2edab5b7abb7371d7b0b8c15</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.kml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/f9894cc3-375c-499d-8e7d-3066418aa6a0">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Wahlkreise der Landtagswahl 2021</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Dieser Datensatz umfasst die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:mediaType rdf:resource="https://www.iana.org/assignments/media-types/application/gml+xml"/>
+        <dct:format rdf:resource="http://publications.europa.eu/resource/authority/file-type/GML" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.gml"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.643165</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:16</dct:modified>
+        <dcat:byteSize rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">206270</dcat:byteSize>
+        <spdx:checksum xmlns:spdx="http://spdx.org/rdf/terms#">
+          <spdx:Checksum rdf:nodeID="N4013df949f5e4e91949877c86bccfaf5">
+            <spdx:checksumValue rdf:datatype="http://www.w3.org/2001/XMLSchema#hexBinary">35b11f5b736b5e36fd0f7d5bb6c1e21c5009c1c5c54100476919fdf229ee54c1</spdx:checksumValue>
+            <spdx:algorithm rdf:resource="http://dcat-ap.de/def/hashAlgorithms/sha/256"/>
+          </spdx:Checksum>
+        </spdx:checksum>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcat:downloadURL rdf:resource="https://geo.sv.rostock.de/download/opendata/landtagswahl_2021/landtagswahl_2021_wahlkreise.gml"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/db5fa0ad-dfcd-4edc-8171-2ab820fbc9ae">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Diese Karte umfasst die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit, die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer, die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer sowie die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/geodienste/landtagswahl_2021/wms"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.643205</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:16</dct:modified>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/547c930e-8acd-4e5e-805f-c6a79d7a1d07">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Diese Daten umfassen die Standorte der Wahllokale der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Adresse, Wahlbezirksnummer(n), Lokalität und Barrierefreiheit, die Wahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer, die Briefwahlbezirke der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Nummer sowie die Wahlkreise der Landtagswahl 2021 in der Hanse- und Universitätsstadt Rostock vom 26.09.2021 mit Informationen zu Bezeichnung.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/geodienste/landtagswahl_2021/wfs"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2021-09-17T10:39:17</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.643245</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:16</dct:modified>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/35063b05-dc87-4670-a936-42e3835646f2">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Wahlkreise, Wahlbezirke und Briefwahlbezirke der Landtagswahlen in der Hanse- und Universitätsstadt Rostock</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Diese Karte umfasst die Wahlkreise, Wahlbezirke und Briefwahlbezirke der Landtagswahlen in der Hanse- und Universitätsstadt Rostock.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/inspire/su-vector-stateelections/view?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2022-05-31T11:05:16</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.643285</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:17</dct:modified>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
+      <dcat:Distribution rdf:about="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29/resource/2eecc53f-4f9e-452e-aa79-9ae9244f64af">
+        <dct:title xmlns:dct="http://purl.org/dc/terms/">Wahlkreise, Wahlbezirke und Briefwahlbezirke der Landtagswahlen in der Hanse- und Universitätsstadt Rostock</dct:title>
+        <dct:description xmlns:dct="http://purl.org/dc/terms/">Diese Daten umfassen die Wahlkreise der Landtagswahlen in der Hanse- und Universitätsstadt Rostock mit Informationen zu Bezeichnung sowie die Wahlbezirke und Briefwahlbezirke der Landtagswahlen in der Hanse- und Universitätsstadt Rostock mit Informationen zu Nummer.</dct:description>
+        <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dcat:accessURL rdf:resource="https://geo.sv.rostock.de/inspire/su-vector-stateelections/download?service=WFS&amp;version=2.0.0&amp;request=GetCapabilities"/>
+        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2022-05-31T11:05:16</dct:issued>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:26.643326</dct:modified>
+        <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime" xmlns:dct="http://purl.org/dc/terms/">2026-08-26T04:04:17</dct:modified>
+        <adms:status rdf:resource="http://purl.org/adms/status/Completed" xmlns:adms="http://www.w3.org/ns/adms#"/>
+        <dcatap:availability rdf:resource="http://publications.europa.eu/resource/authority/planned-availability/STABLE" xmlns:dcatap="http://data.europa.eu/r5r/"/>
+        <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:license rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+        <dct:rights rdf:resource="http://dcat-ap.de/def/licenses/cc-zero" xmlns:dct="http://purl.org/dc/terms/"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:landingPage rdf:resource="https://www.opendata-hro.de/dataset/b6804103-8124-459d-9e6a-542c425d7e29"/>
+    <dcat:theme rdf:resource="http://publications.europa.eu/resource/authority/data-theme/GOVE"/>
+    <dcatde:contributorID rdf:resource="http://dcat-ap.de/def/contributors/openDataHRO" xmlns:dcatde="http://dcat-ap.de/def/dcatde/"/>
+    <dcatde:geocodingDescription xmlns:dcatde="http://dcat-ap.de/def/dcatde/">Rostock</dcatde:geocodingDescription>
+    <dcatde:politicalGeocodingLevelURI rdf:resource="http://dcat-ap.de/def/politicalGeocoding/Level/administrativeDistrict" xmlns:dcatde="http://dcat-ap.de/def/dcatde/"/>
+    <dcatde:politicalGeocodingURI rdf:resource="http://dcat-ap.de/def/politicalGeocoding/regionalKey/130030000000" xmlns:dcatde="http://dcat-ap.de/def/dcatde/"/>
+    <dcatde:maintainer xmlns:dcatde="http://dcat-ap.de/def/dcatde/">
+      <foaf:Organization rdf:nodeID="N16644ac1344041fc91ff97e788004d4e" xmlns:foaf="http://xmlns.com/foaf/0.1/">
+        <foaf:name>Hanse- und Universitätsstadt Rostock</foaf:name>
+        <foaf:mbox>geodienste@rostock.de</foaf:mbox>
+      </foaf:Organization>
+    </dcatde:maintainer>
+    <dct:accessRights rdf:resource="http://publications.europa.eu/resource/authority/access-right/PUBLIC" xmlns:dct="http://purl.org/dc/terms/"/>
+    <dct:conformsTo rdf:resource="http://dcat-ap.de/def/dcatde/" xmlns:dct="http://purl.org/dc/terms/"/>
+    <dct:creator xmlns:dct="http://purl.org/dc/terms/">
+      <foaf:Organization rdf:nodeID="Neeccd2d6d06f48d9859a38a3afa44688" xmlns:foaf="http://xmlns.com/foaf/0.1/">
+        <foaf:name>Hanse- und Universitätsstadt Rostock</foaf:name>
+        <foaf:mbox>geodienste@rostock.de</foaf:mbox>
+      </foaf:Organization>
+    </dct:creator>
+    <dct:language rdf:resource="http://publications.europa.eu/resource/authority/language/DEU" xmlns:dct="http://purl.org/dc/terms/"/>
+    <dct:temporal xmlns:dct="http://purl.org/dc/terms/">
+      <dct:PeriodOfTime rdf:nodeID="N8f5a22dd4905424ebf982009dd875694">
+        <dcat:startDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-26T00:00:00+02:00</dcat:startDate>
+        <dcat:endDate rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2021-09-27T00:00:00+02:00</dcat:endDate>
+      </dct:PeriodOfTime>
+    </dct:temporal>
+  </dcat:Dataset>
