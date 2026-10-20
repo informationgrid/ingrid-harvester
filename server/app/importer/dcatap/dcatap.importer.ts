@@ -229,6 +229,7 @@ export class DcatapImporter<S extends DcatapSettings = DcatapSettings> extends I
             let elasticDoc: IndexDocument;
             let dcatapdeDoc: string;
             let cswDoc: string;
+            let documentError = false;
             try {
                 elasticDoc = await documentFactory.createIndexDocument();
                 dcatapdeDoc = await documentFactory.createDcatapdeDocument();
@@ -237,10 +238,12 @@ export class DcatapImporter<S extends DcatapSettings = DcatapSettings> extends I
             catch (e) {
                 log.error('Error creating index document', e);
                 this.summary.errors.push({ type: 'app', error: e.toString() });
+                documentError = true;
                 mapper.skipped = true;
             }
 
-            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
+            const skipped = mapper.shouldBeSkipped();
+            if (!this.settings.dryRun && !skipped) {
                 let entity: RecordEntity = {
                     identifier: uuid,
                     source: this.settings.sourceURL,
@@ -262,6 +265,10 @@ export class DcatapImporter<S extends DcatapSettings = DcatapSettings> extends I
             }
             else {
                 this.summary.skippedDocs.push(uuid);
+                // skipped by the mapper (e.g. filterTags, filterThemes) on purpose, not because of an error
+                if (skipped && !documentError) {
+                    this.summary.filteredDocs.push(uuid);
+                }
             }
             this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
         }

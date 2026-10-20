@@ -37,6 +37,9 @@ export class Summary {
 
     skippedDocs: string[] = [];
 
+    // intentionally skipped records (`Mapper.shouldBeSkipped()`, e.g. filterTags); also contained in `skippedDocs`
+    filteredDocs: string[] = [];
+
     errors: TypedError[] = [];
 
     counters: Record<string, number> = {};
@@ -71,6 +74,7 @@ export class Summary {
         logger.info(`Number of records: ${this.numDocs}`);
         logger.info(`Skipped records: ${this.skippedDocs.length}`);
         this.logArray(logger, this.skippedDocs);
+        logger.info(`Thereof filtered records: ${this.filteredDocs.length}`);
 
         logger.info(`Record-Errors: ${this.numErrors}`);
         logger.info(`Warnings: ${this.warnings.length}`);
@@ -99,6 +103,7 @@ export class Summary {
         result += `Harvest type: ${this.isIncremental ? 'incremental' : 'full'}`;
         result += `Number of records: ${this.numDocs}\n`;
         result += `Skipped records: ${this.skippedDocs.length}\n`;
+        result += `Thereof filtered records: ${this.filteredDocs.length}\n`;
 
         result += `Record-Errors: ${this.numErrors}\n`;
         result += `Warnings: ${this.warnings.length}\n`;
@@ -156,7 +161,8 @@ export class Summary {
     msgComplete(message?: string): ImportLogMessage {
         let status: JobStatus = 'success';
         if ((this.errors?.length ?? 0) > 0 || (this.numErrors ?? 0) > 0) status = 'error';
-        else if ((this.skippedDocs?.length ?? 0) > 0) status = 'partial';
+        // intentionally skipped (filtered) records do not make the import partial
+        else if ((this.skippedDocs?.length ?? 0) > (this.filteredDocs?.length ?? 0)) status = 'partial';
         return {
             stage: this.stage,
             complete: true,
