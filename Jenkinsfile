@@ -40,6 +40,8 @@ pipeline {
 
                     if (shouldBuildDockerImage()) {
                         dockerImage.push()
+                        env.IMAGE_DIGEST = sh(script: "docker inspect --format='{{index .RepoDigests 0}}' ${registry}:${env.VERSION} | cut -d'@' -f2", returnStdout: true).trim()
+                        echo "IMAGE_DIGEST: ${env.IMAGE_DIGEST}"
                     }
 
                     // copy compiled app into workspace to be used by RPM task
@@ -95,15 +97,52 @@ pipeline {
                     buildingTag()
                 }
             }
+            tools {
+                nodejs 'nodejs24'
+            }
             steps {
                 echo 'Generating Software Bill of Materials (SBOM)'
+                sh """
+                    cd ${WORKSPACE}/client
+                    npx @cyclonedx/cyclonedx-npm --package-lock-only --omit dev --output-file dist/reports/sbom.json
+                    npx @cyclonedx/cyclonedx-npm --package-lock-only --output-file dist/reports/sbom-dev.json
+                    cd ${WORKSPACE}/server
+                    npx @cyclonedx/cyclonedx-npm --package-lock-only --omit dev --output-file dist/reports/sbom.json
+                    npx @cyclonedx/cyclonedx-npm --package-lock-only --output-file dist/reports/sbom-dev.json
+                """
 
                 script {
-                    def imageToScan = "registry.opencode.de/informationgrid/ingrid-harvester:${env.VERSION}"
-                    def sbomFilename = "ingrid-harvester-${determineVersion()}.sbom.json"
+                    def imageToScan = "node:24-alpine"
 
                     sh """
-                        docker run --rm --pull=always --volumes-from jenkins anchore/syft:latest ${imageToScan} --output cyclonedx-json=${WORKSPACE}/build/${sbomFilename}
+                        docker run --rm --pull=always --volumes-from jenkins anchore/syft:latest ${imageToScan} --output cyclonedx-json=${WORKSPACE}/build/sbom-docker-image.json
+                    """
+                }
+            }
+        }
+
+        stage ('Merge SBOMs') {
+            when {
+                anyOf {
+                    branch 'main'
+                    buildingTag()
+                }
+            }
+            agent {
+                docker {
+                    image 'cyclonedx/cyclonedx-cli:latest'
+                    // CRITICAL: Overrides the entrypoint so Jenkins can run it as a regular shell agent
+                    args '-u root --entrypoint=""'
+                    reuseNode true
+                }
+            }
+            steps {
+                script {
+                    sh """
+                        mkdir -p build/reports
+                        cyclonedx merge --input-files server/dist/reports/sbom.json client/dist/reports/sbom.json --output-file build/reports/sbom.json --output-format json --output-version v1_6 --hierarchical --group de.ingrid --name ingrid-harvester --version ${determineVersion()}
+                        cyclonedx merge --input-files server/dist/reports/sbom-dev.json client/dist/reports/sbom-dev.json --output-file build/reports/sbom-dev.json --output-format json --output-version v1_6 --hierarchical --group de.ingrid --name ingrid-harvester --version ${determineVersion()}
+                        cyclonedx merge --input-files server/dist/reports/sbom.json client/dist/reports/sbom.json build/sbom-docker-image.json --output-file build/reports/sbom-docker.json --output-format json --output-version v1_6 --hierarchical --group de.ingrid --name ingrid-harvester --version ${determineVersion()}
                     """
                 }
             }
@@ -118,12 +157,49 @@ pipeline {
             }
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'api-token-dependency-track', variable: 'API_KEY')]) {
-                        //dependencyTrackPublisher artifact: 'build/reports/sbom.json', projectName: 'ingrid-harvester', projectVersion: determineVersion(), synchronous: true, dependencyTrackApiKey: API_KEY, projectProperties: [group: 'InGrid', parentId: '4d11835d-4174-4c4a-94fd-9f48e7dad7eb',tags: ['ingrid', 'deps_prod']]
-                        //dependencyTrackPublisher artifact: 'build/reports/sbom-dev.json', projectName: 'ingrid-harvester', projectVersion: determineVersion() + '-dev', synchronous: true, dependencyTrackApiKey: API_KEY, projectProperties: [group: 'InGrid', parentId: '4d11835d-4174-4c4a-94fd-9f48e7dad7eb',tags: ['ingrid', 'deps_dev']]
-                        dependencyTrackPublisher artifact: "build/ingrid-harvester-${determineVersion()}.sbom.json", projectName: 'ingrid-harvester', projectVersion: determineVersion() + '-docker-image', synchronous: true, dependencyTrackApiKey: API_KEY, projectProperties: [group: 'InGrid', parentId: '4d11835d-4174-4c4a-94fd-9f48e7dad7eb',tags: ['ingrid', 'ingrid_deps_docker']]
+                    def parentId = '4d11835d-4174-4c4a-94fd-9f48e7dad7eb'
+                    def componentName = 'ingrid-harvester'
+
+                    // Attach SBOM to Docker Image
+                    withCredentials([
+                            file(credentialsId: 'cosign-private-key', variable: 'COSIGN_KEY_FILE'),
+                            string(credentialsId: 'cosign-key-password', variable: 'COSIGN_PASSWORD'),
+                            usernamePassword(credentialsId: 'registry-opencode', usernameVariable: 'REG_USER', passwordVariable: 'REG_PASS')
+                    ]) {
+                        def imageDigest = env.IMAGE_DIGEST
+                        def imageToScan = "registry.opencode.de/informationgrid/${componentName}@${imageDigest}"
+                        sh """
+                            docker run -u 0:0 --rm \
+                              -e COSIGN_PASSWORD \
+                              --volumes-from jenkins \
+                              ghcr.io/sigstore/cosign/cosign:v3.1.3 attest \
+                              --type cyclonedx \
+                              --predicate \${WORKSPACE}/build/reports/sbom-docker.json \
+                              --key "\$COSIGN_KEY_FILE" \
+                              --registry-username "\$REG_USER" \
+                              --registry-password "\$REG_PASS" \
+                              ${imageToScan}
+                        """
                     }
+
+                    // Dependency Track
+                    withCredentials([string(credentialsId: 'api-token-dependency-track', variable: 'API_KEY')]) {
+                        def baseVersion = determineVersion()
+                        def sbomConfigs = [
+                                [artifact: 'build/reports/sbom.json',        suffix: '',              tag: 'ingrid_deps_prod'],
+                                [artifact: 'build/reports/sbom-dev.json',    suffix: '-dev',          tag: 'ingrid_deps_dev'],
+                                [artifact: 'build/reports/sbom-docker.json', suffix: '-docker-image', tag: 'ingrid_deps_docker']
+                        ]
+
+                        sbomConfigs.each { cfg ->
+                            def props = [group: 'InGrid', parentId: parentId, tags: ['ingrid', cfg.tag]]
+                            dependencyTrackPublisher(artifact: cfg.artifact, projectName: componentName, projectVersion: baseVersion + cfg.suffix, synchronous: true, dependencyTrackApiKey: API_KEY, projectProperties: props)
+                        }
+                    }
+
+                    // NEXUS
                     def repoType = env.TAG_NAME ? "rpm-ingrid-releases" : "rpm-ingrid-snapshots"
+                    sh "mv build/reports/sbom.json build/ingrid-harvester-${determineVersion()}.sbom.json"
                     withCredentials([usernamePassword(credentialsId: '9623a365-d592-47eb-9029-a2de40453f68', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                         sh '''
                             curl -f --user $USERNAME:$PASSWORD --upload-file build/*.sbom.json https://nexus.informationgrid.eu/repository/''' + repoType + '''/
