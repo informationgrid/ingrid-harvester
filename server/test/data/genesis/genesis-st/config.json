@@ -18,8 +18,8 @@
     "tableSelections": [
       "12*"
     ],
-    "username": "ST000160",
-    "password": "c4QPRAb5cGoZQ6XITssFhB",
+    "username": "GAST",
+    "password": "GAST",
     "downloadUrlTemplate": "https://genesis.sachsen-anhalt.de/genesis/online?operation=table&code={code}",
     "theme": "http://publications.europa.eu/resource/authority/data-theme/GOVE",
     "licenseUrl": "http://dcat-ap.de/def/licenses/dl-by-de/2.0",
