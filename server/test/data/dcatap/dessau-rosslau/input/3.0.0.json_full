@@ -1,0 +1,3400 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "adms": "http://www.w3.org/ns/adms#",
+    "cnt": "http://www.w3.org/2011/content#",
+    "dct": "http://purl.org/dc/terms/",
+    "dash": "http://datashapes.org/dash#",
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "dcatap": "http://data.europa.eu/r5r/",
+    "dcat-us": "http://data.resources.gov/ontology/dcat-us#",
+    "dcat-us-shp": "http://data.resources.gov/shapes/dcat-us#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "dqv": "http://www.w3.org/ns/dqv#",
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "gsp": "http://www.opengis.net/ont/geosparql#",
+    "locn": "http://www.w3.org/ns/locn#",
+    "odrs": "http://schema.theodi.org/odrs#",
+    "org": "http://www.w3c.org/ns/org#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "prov": "http://www.w3.org/ns/prov#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "schema": "http://schema.org/",
+    "sh": "http://www.w3.org/ns/shacl#",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "sdmx-attribute": "http://purl.org/linked-data/sdmx/2009/attribute#",
+    "spdx": "http://spdx.org/rdf/terms#",
+    "vcard": "http://www.w3.org/2006/vcard/ns#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "adms:Identifier": {
+      "@id": "adms:Identifier",
+      "@context": {
+        "schemaAgency": "http://www.w3.org/ns/adms#schemaAgency",
+        "creator": {
+          "@id": "dcterms:creator",
+          "@type": "@id"
+        },
+        "issued": {
+          "@id": "dcterms:issued"
+        },
+        "version": "http://purl.org/dc/terms/version",
+        "notation": "http://www.w3.org/2004/02/skos/core#notation"
+      }
+    }
+  },
+  "@id": "https://www.arcgis.com/home/item.html?id=2427a4958bcf4009b9df0a4b6a367e11",
+  "@type": "dcat:Catalog",
+  "dct:description": "Im Stadtatlas Dessau-Roßlau finden Sie zahlreiche Daten und Informationen zur Stadt Dessau-Roßlau.\nWeitere Informationen erhalten Sie auf der Homepage der Stadt Dessau-Roßlau: https://verwaltung.dessau-rosslau.de/startseite.html null",
+  "dct:title": "Stadtatlas Dessau-Rosslau",
+  "dct:publisher": {
+    "@type": "foaf:Agent",
+    "foaf:name": "Stadt Dessau-Roßlau"
+  },
+  "foaf:homepage": {
+    "@id": "https://open-data.stadtatlas.dessau-rosslau.de"
+  },
+  "dct:language": {
+    "@id": "lang/DEU"
+  },
+  "dct:creator": {
+    "@id": "https://dero.maps.arcgis.com",
+    "@type": "foaf:Agent",
+    "foaf:name": "Stadt Dessau-Roßlau"
+  },
+  "dct:spatial": {
+    "@type": "dct:Location",
+    "dct:bbox": "POLYGON((12.098730884543711,51.98850941385567,12.367196369967617,51.98850941385567,12.367196369967617,51.73166804517168,12.098730884543711,51.73166804517168,12.098730884543711,51.98850941385567))"
+  },
+  "dcat:dataset": [
+    {
+      "@type": "dcat:Dataset",
+      "@id": "2427a4958bcf4009b9df0a4b6a367e11",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=2427a4958bcf4009b9df0a4b6a367e11",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/content/dero::stadtatlas-dessau-rosslau",
+      "dct:title": "Stadtatlas Dessau-Rosslau",
+      "dct:description": "Im Stadtatlas Dessau-Roßlau finden Sie zahlreiche Daten und Informationen zur Stadt Dessau-Roßlau.\nWeitere Informationen erhalten Sie auf der Homepage der Stadt Dessau-Roßlau: https://verwaltung.dessau-rosslau.de/startseite.html ",
+      "dcat:theme": "",
+      "dcat:keyword": "Stadtatlas,OpenDataPortal,Open Data,ODP",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/2427a4958bcf4009b9df0a4b6a367e11/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox",
+        "@value": "POLYGON((12.0987,51.9885,12.3672,51.9885,12.3672,51.7317,12.0987,51.7317,12.0987,51.9885))"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-05-12T07:46:47.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-09-15T13:20:56.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/content/dero::stadtatlas-dessau-rosslau"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=2427a4958bcf4009b9df0a4b6a367e11"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          }
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "6a9bb153a03046c2831f7c6e63261061",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=6a9bb153a03046c2831f7c6e63261061",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/pages/dero::themenbereich-umwelt-und-verkehr",
+      "dct:title": "Themenbereich Umwelt und Verkehr",
+      "dct:description": " ",
+      "dcat:theme": "",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/6a9bb153a03046c2831f7c6e63261061/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox",
+        "@value": "POLYGON((12.0989,51.9737,12.3612,51.9737,12.3612,51.7027,12.0989,51.7027,12.0989,51.9737))"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-05-19T12:32:15.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-09-15T11:52:44.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/pages/dero::themenbereich-umwelt-und-verkehr"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=6a9bb153a03046c2831f7c6e63261061"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "3a5047dbebd4416da279a59599f2d652",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=3a5047dbebd4416da279a59599f2d652",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/pages/dero::themenbereich-planen-und-bauen",
+      "dct:title": "Themenbereich Planen und Bauen",
+      "dct:description": " ",
+      "dcat:theme": "",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/3a5047dbebd4416da279a59599f2d652/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox",
+        "@value": "POLYGON((12.0989,51.9737,12.3612,51.9737,12.3612,51.7027,12.0989,51.7027,12.0989,51.9737))"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-09-15T10:28:11.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-09-15T10:44:48.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/pages/dero::themenbereich-planen-und-bauen"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=3a5047dbebd4416da279a59599f2d652"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "3d2eb874d4564847ab1ced9998f2f411",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=3d2eb874d4564847ab1ced9998f2f411",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/pages/dero::themenbereich-verwaltung-1",
+      "dct:title": "Themenbereich Verwaltung",
+      "dct:description": " ",
+      "dcat:theme": "",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/3d2eb874d4564847ab1ced9998f2f411/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox",
+        "@value": "POLYGON((12.0989,51.9737,12.3612,51.9737,12.3612,51.7027,12.0989,51.7027,12.0989,51.9737))"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-09-15T10:27:45.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-09-15T10:41:55.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/pages/dero::themenbereich-verwaltung-1"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=3d2eb874d4564847ab1ced9998f2f411"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "b0deff69bc034875ba7648fdb8358bb1",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=b0deff69bc034875ba7648fdb8358bb1",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/pages/dero::themenbereich-kultur-freizeit-tourismus",
+      "dct:title": "Themenbereich Kultur, Freizeit, Tourismus",
+      "dct:description": " ",
+      "dcat:theme": "",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/b0deff69bc034875ba7648fdb8358bb1/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox",
+        "@value": "POLYGON((12.0989,51.9737,12.3612,51.9737,12.3612,51.7027,12.0989,51.7027,12.0989,51.9737))"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-09-15T10:29:06.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-09-15T10:36:06.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/pages/dero::themenbereich-kultur-freizeit-tourismus"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=b0deff69bc034875ba7648fdb8358bb1"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "1d7ceaecdc724c5c9ae5539743a288ee",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=1d7ceaecdc724c5c9ae5539743a288ee",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/pages/dero::themenbereich-jugend-familie-soziales",
+      "dct:title": "Themenbereich Jugend, Familie, Soziales",
+      "dct:description": " ",
+      "dcat:theme": "",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/1d7ceaecdc724c5c9ae5539743a288ee/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox",
+        "@value": "POLYGON((12.0989,51.9737,12.3612,51.9737,12.3612,51.7027,12.0989,51.7027,12.0989,51.9737))"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-09-15T10:29:35.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-09-15T10:32:13.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/pages/dero::themenbereich-jugend-familie-soziales"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=1d7ceaecdc724c5c9ae5539743a288ee"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "535084d72efd473b83b50cd917352e39",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=535084d72efd473b83b50cd917352e39",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/pages/dero::nutzungs-haftungsbedingungen",
+      "dct:title": "Nutzungs- & Haftungsbedingungen",
+      "dct:description": " ",
+      "dcat:theme": "",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/535084d72efd473b83b50cd917352e39/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-09-14T14:54:37.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-09-15T08:37:06.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/pages/dero::nutzungs-haftungsbedingungen"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=535084d72efd473b83b50cd917352e39"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "68f469e5427f43e6a5618217f4ea1841",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=68f469e5427f43e6a5618217f4ea1841",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::tag-des-offenen-denkmals-14-09-2025",
+      "dct:title": "Tag des offenen Denkmals 14.09.2025",
+      "dct:description": "Wert-voll: unbezahlbar oder unersetzlich? Der bundesweite Tag des offenen Denkmals findet am 14. September 2025 unter dem Motto „Wert-voll: unbezahlbar oder unersetzlich?\" statt. Mit diesem Motto sollen die Denkmale in ihrer Einzigartigkeit in den Blickpunkt gerückt werden. Die Gründe dafür, dass ein historisches Gebäude oder Objekt als besonders empfunden wird, sind unterschiedlich. Es sind nicht in erster Linie die wirtschaftlichen Werte, die ein Denkmal ausmachen. Aufwändige Handwerkskunst, die Geschichte des Objektes, damit verbundene Emotionen - die ideellen Werte, die Einzigartigkeit machen den Zeugniswert vieler Denkmale aus. Diese gilt es zu entdecken. Im Mittelpunkt eines zweijährigen Kooperationsprojektes zwischen der Ostdeutschen Sparkassenstiftung und dem Landesamt für Denkmalpflege und Archäologie Sachsen-Anhalt steht die umfängliche Erfassung und Erforschung der  baubezogenen Kunst und der Kunstwerke im öffentlichen Raum, die in Dessau in den Jahren 1949-1990 entstanden sind.",
+      "dcat:theme": "Stadtatlas Apps,Apps_Kultur, Freizeit, Tourismus,Aktiv,Denkmaltag",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/68f469e5427f43e6a5618217f4ea1841/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/grit.tannert?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "Stadtatlas Apps",
+        "Apps_Kultur, Freizeit, Tourismus",
+        "Aktiv",
+        "Denkmaltag"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2025-08-15T14:44:00.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-09-14T13:01:15.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::tag-des-offenen-denkmals-14-09-2025"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=68f469e5427f43e6a5618217f4ea1841"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          }
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://storymaps.arcgis.com/stories/68f469e5427f43e6a5618217f4ea1841"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "39ee23a2f86146179bf89c6c768d9ce7",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=39ee23a2f86146179bf89c6c768d9ce7",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/maps/39ee23a2f86146179bf89c6c768d9ce7",
+      "dct:title": "World Basemap v2",
+      "dct:description": "Vector Tile Service used to support Esri Vector Basemaps. It is not meant for stand-alone use. This is the Vector Tile Service used to support Esri Vector Basemaps. It is not meant for stand-alone use. See the ArcGIS.com Vector Basemaps group for vector tile layers and web maps designed for use in your maps and apps.",
+      "dcat:theme": "Status,General Availability",
+      "dcat:keyword": "EVB,World_Basemap_v2,WMA,2026R12",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/39ee23a2f86146179bf89c6c768d9ce7/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/esri_devops_eu?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "{{ orgName }}"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox",
+        "@value": "POLYGON((-180,85.0511,180,85.0511,180,-85.0511,-180,-85.0511,-180,85.0511))"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "Status",
+        "General Availability"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2020-10-22T00:49:42.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-09-11T01:03:59.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "eng"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/maps/39ee23a2f86146179bf89c6c768d9ce7"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=39ee23a2f86146179bf89c6c768d9ce7"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
+          "dct:title": "ArcGIS Data Layer"
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://tiles-eu1.arcgis.com/8AakNTCS2YUUx7gO/arcgis/rest/services/World_Basemap_v2/VectorTileServer"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "236710b19c6949ce917a93c08ad39d0f",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=236710b19c6949ce917a93c08ad39d0f",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::3d-viewer-dessau-roßlau",
+      "dct:title": "3D-Viewer Dessau-Roßlau",
+      "dct:description": " ",
+      "dcat:theme": "Stadtatlas Apps,Apps_Planen und Bauen",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/236710b19c6949ce917a93c08ad39d0f/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "Stadtatlas Apps",
+        "Apps_Planen und Bauen"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-05-27T08:31:55.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-09-08T04:55:47.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::3d-viewer-dessau-roßlau"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=236710b19c6949ce917a93c08ad39d0f"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          }
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://dero.maps.arcgis.com/apps/instant/3dviewer/index.html?appid=236710b19c6949ce917a93c08ad39d0f"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "80734b7274544f31b742ebed98ae4885",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=80734b7274544f31b742ebed98ae4885",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::adressen-übersicht",
+      "dct:title": "Adressen-Übersicht",
+      "dct:description": " ",
+      "dcat:theme": "",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/80734b7274544f31b742ebed98ae4885/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-09-08T04:21:42.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-09-08T04:21:43.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::adressen-übersicht"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=80734b7274544f31b742ebed98ae4885"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          }
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://geoportal.dessau-rosslau.de/Geoportal/synserver?project=Adressen"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "0a045863c0cb4ad7aaa29b83d058f299",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=0a045863c0cb4ad7aaa29b83d058f299",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::baulandkataster",
+      "dct:title": "Baulandkataster",
+      "dct:description": "Das Baulandkataster zeigt Potenzialflächen für Wohnbauland auf. Die Frage der Bebaubarkeit der Grundstücke kann nur über eine Bauvoranfrage bzw. einen Bauantrag abschließend geklärt werden.\nDer Stadt Dessau-Roßlau ist nicht bekannt, ob seitens der Grundstückseigentümer ein Verkaufsinteresse besteht. In Dessau-Roßlau gibt es eine Vielzahl unbebauter und untergenutzter bzw. geringfügig bebauter Grundstücke, die grundsätzlich mit einem Wohngebäude bebaut werden könnten. Voraussetzung ist, dass es sich um Baulücken in einem im Zusammenhang bebauten Ortsteil gemäß § 34 Baugesetzbuch (BauGB) bzw. um Bereiche handelt, welche nach den Festsetzungen eines Bebauungsplans sofort oder in absehbarer Zeit bebaubar sein könnten. Um interessierte Bauwillige auf diese Wohnbaulandpotenziale aufmerksam zu machen, hat die Stadt Dessau-Roßlau am 2. November 2022 in ihrem Geoportal ein Baulandkataster im Sinne des § 200 Abs. 3 BauGB veröffentlicht. Weitere Informationen Hinweise: Aussagen des Baulandkatasters zur sofortigen oder baldigen bauplanungs- oder bauordnungsrechtlichen Bebaubarkeit ersetzen weder eine Baugenehmigung, noch bilden sie eine diesbezügliche Zusage. Aus den Darstellungen des Katasters können somit keine bauplanungs- und bauordnungsrechtlichen Ansprüche abgeleitet werden. Die Angaben zum Planungsrecht dienen als allgemeiner Hinweis. Die Frage der Bebaubarkeit der Grundstücke kann nur über eine Bauvoranfrage bzw. einen Bauantrag abschließend geklärt werden. Der Stadt Dessau-Roßlau ist nicht bekannt, ob seitens der Grundstückseigentümer ein Verkaufsinteresse besteht.",
+      "dcat:theme": "",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/0a045863c0cb4ad7aaa29b83d058f299/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-09-08T04:13:56.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-09-08T04:19:43.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::baulandkataster"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=0a045863c0cb4ad7aaa29b83d058f299"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          }
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://geoportal.dessau-rosslau.de/Geoportal/synserver?project=Amtlicher_Stadtplan&View=Baulandkataster&map_adv=true&x=723329&y=5753109&scale=5000"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "4ff49dcfa9b9408c963784e8afe2acf2",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=4ff49dcfa9b9408c963784e8afe2acf2",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::baumkataster",
+      "dct:title": "Baumkataster",
+      "dct:description": " ",
+      "dcat:theme": "Stadtatlas Apps,Apps_Umwelt und Verkehr",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/4ff49dcfa9b9408c963784e8afe2acf2/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "Stadtatlas Apps",
+        "Apps_Umwelt und Verkehr"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-09-08T04:17:15.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-09-08T04:17:17.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::baumkataster"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=4ff49dcfa9b9408c963784e8afe2acf2"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          }
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://geoportal.dessau-rosslau.de/Geoportal/synserver?project=Baumkataster"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "d68b6f88b3ac449a988168ed3e88c4bc",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=d68b6f88b3ac449a988168ed3e88c4bc",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::geoportal-desktop",
+      "dct:title": "Geoportal (Desktop)",
+      "dct:description": " ",
+      "dcat:theme": "Stadtatlas Apps,Apps_Jugend, Familie, Soziales,Apps_Verwaltung",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/d68b6f88b3ac449a988168ed3e88c4bc/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "Stadtatlas Apps",
+        "Apps_Jugend, Familie, Soziales",
+        "Apps_Verwaltung"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-09-07T17:44:53.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-09-08T04:09:15.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::geoportal-desktop"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=d68b6f88b3ac449a988168ed3e88c4bc"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          }
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://geoportal.dessau-rosslau.de/Geoportal/synserver?project=Amtlicher_Stadtplan&client=core"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "a78b89ffd3b54ed19c64592e9cb145f6",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=a78b89ffd3b54ed19c64592e9cb145f6",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/pages/dero::open-data-dessau-roßlau",
+      "dct:title": "Open Data Dessau-Roßlau",
+      "dct:description": " ",
+      "dcat:theme": "",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/a78b89ffd3b54ed19c64592e9cb145f6/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/dennis.dahlmann?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-05-21T05:14:26.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-09-07T17:34:39.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/pages/dero::open-data-dessau-roßlau"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=a78b89ffd3b54ed19c64592e9cb145f6"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "1ffd46e88f774d0887a05c63ffa3b342",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=1ffd46e88f774d0887a05c63ffa3b342",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::tag-des-offenen-denkmals-13-09-2026",
+      "dct:title": "Tag des offenen Denkmals 13.09.2026",
+      "dct:description": "NetzWERKE: Denkmale & Infrastruktur Der bundesweite Tag des offenen Denkmals findet am 13. September 2026 unter dem Motto „NetzWERKE: Denkmale & Infrastruktur“ statt. Mit diesem Motto dreht sich beim Tag des offenen Denkmals alles um Infrastrukturen, also Versorgung, Verbindungen und Verkehr. Das Thema eröffnet Möglichkeiten, auch neue Perspektiven an Denkmalen aufzuzeigen. Die Bandbreite an Netzwerken ist groß: Energie- und Transportnetze, Infrastrukturnetze bis hin zu Eisenbahnen, Verkehrswegen und Brücken, die verbinden. Die Nutzung von Denkmalen, oft durch Vereine und Institutionen mit vielfältigen Angeboten, bereichern die städtische Infrastruktur. Die Geschichten der Denkmale in ihrer Einzigartigkeit sollen in den Blickpunkt gerückt werden.",
+      "dcat:theme": "Stadtatlas Apps,Apps_Kultur, Freizeit, Tourismus",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/1ffd46e88f774d0887a05c63ffa3b342/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "Stadtatlas Apps",
+        "Apps_Kultur, Freizeit, Tourismus"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-08-27T10:39:08.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-09-07T10:01:59.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::tag-des-offenen-denkmals-13-09-2026"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=1ffd46e88f774d0887a05c63ffa3b342"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          }
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://storymaps.arcgis.com/stories/1ffd46e88f774d0887a05c63ffa3b342"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "a537c7007dd44945bc378eb59e10314c",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/maps/dero::stadtgliederung-3",
+      "dct:title": "Stadtgliederung",
+      "dct:description": "Stadtteile, Stadtbezirke, Ortschaften, Stadtbezirksbeiräte Seit sich die Städte Dessau und Roßlau im Jahr 2007 zusammenschlossen, ist in der Hauptsatzung der Stadt Dessau-Roßlau festgelegt, dass es zwei Stadtteile gibt: Stadtteil Dessau Stadtteil Roßlau In der Hauptsatzung festgehalten ist außerdem die Bestimmung von 14 Ortschaften: Roßlau, Brambach, Großkühnau, Kleinkühnau, Kleutsch, Kochstedt, Meinsdorf, Mildensee, Mosigkau, Mühlstedt, Rodleben, Sollnitz, Streetz/Natho, Waldersee und die Bildung von 5 Stadtbezirksbeiräten: Stadtbezirksbeirat für die Stadtbezirke Ziebigk und Siedlung Stadtbezirksbeirat für die Stadtbezirke Alten, West und Zoberberg Stadtbezirksbeirat für die Stadtbezirke Süd, Haideburg und Törten Stadtbezirksbeirat für den innerstädtischen Bereich Nord Stadtbezirksbeirat für die Stadtbezirke innerstädtischer Bereich Mitte und innerstädtischer Bereich Süd Grundlage ist die Einteilung der Stadt in 25 Stadtbezirke: Innerstädt. Bereich Nord, Innerstädt. Bereich Mitte, Innerstädt. Bereich Süd, Süd, Haideburg, Törten, Mildensee, Waldersee, Ziebigk, Siedlung, Großkühnau, Kleinkühnau, West, Alten, Kochstedt, Mosigkau, Zoberberg, Kleutsch, Sollnitz, Brambach, Rodleben, Roßlau, Meinsdorf, Mühlstedt, Streetz/Natho.",
+      "dcat:theme": [
+        {
+          "@id": "Statistische Einheiten"
+        }
+      ],
+      "dcat:keyword": "Statistische Einheiten",
+      "dcatap:applicableLegislation": "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/a537c7007dd44945bc378eb59e10314c/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Kreisfreie Stadt Dessau-Roßlau",
+        "vcard:hasEmail": "gis@dessau-rosslau.de",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "vcard:role": "pointOfContact",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox",
+        "@value": "POLYGON((12.104646,51.974815,12.369028,51.974815,12.369028,51.732581,12.104646,51.732581,12.104646,51.974815))"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "OpenData",
+        "Verwaltung"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-08-07T00:00:00",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-08-07T12:26:32.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "ger"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/maps/dero::stadtgliederung-3"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {
+            "@id": "Datenlizenz Deutschland Namensnennung 2.0 Quellenvermerk: © Stadt Dessau-Roßlau"
+          },
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
+          "dct:title": "ArcGIS Data Layer"
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://stadtatlas.dessau-rosslau.de/server/rest/services/Verwaltung/Stadtgliederung/FeatureServer"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "a537c7007dd44945bc378eb59e10314c_0",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c&sublayer=0",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::stadtteile-2",
+      "dct:title": "Stadtteile",
+      "dct:description": "Stadtteile, Stadtbezirke, Ortschaften, Stadtbezirksbeiräte Seit sich die Städte Dessau und Roßlau im Jahr 2007 zusammenschlossen, ist in der Hauptsatzung der Stadt Dessau-Roßlau festgelegt, dass es zwei Stadtteile gibt: Stadtteil Dessau Stadtteil Roßlau In der Hauptsatzung festgehalten ist außerdem die Bestimmung von 14 Ortschaften: Roßlau, Brambach, Großkühnau, Kleinkühnau, Kleutsch, Kochstedt, Meinsdorf, Mildensee, Mosigkau, Mühlstedt, Rodleben, Sollnitz, Streetz/Natho, Waldersee und die Bildung von 5 Stadtbezirksbeiräten: Stadtbezirksbeirat für die Stadtbezirke Ziebigk und Siedlung Stadtbezirksbeirat für die Stadtbezirke Alten, West und Zoberberg Stadtbezirksbeirat für die Stadtbezirke Süd, Haideburg und Törten Stadtbezirksbeirat für den innerstädtischen Bereich Nord Stadtbezirksbeirat für die Stadtbezirke innerstädtischer Bereich Mitte und innerstädtischer Bereich Süd Grundlage ist die Einteilung der Stadt in 25 Stadtbezirke: Innerstädt. Bereich Nord, Innerstädt. Bereich Mitte, Innerstädt. Bereich Süd, Süd, Haideburg, Törten, Mildensee, Waldersee, Ziebigk, Siedlung, Großkühnau, Kleinkühnau, West, Alten, Kochstedt, Mosigkau, Zoberberg, Kleutsch, Sollnitz, Brambach, Rodleben, Roßlau, Meinsdorf, Mühlstedt, Streetz/Natho.",
+      "dcat:theme": [
+        {
+          "@id": "Statistische Einheiten"
+        }
+      ],
+      "dcat:keyword": "Statistische Einheiten",
+      "dcatap:applicableLegislation": "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/a537c7007dd44945bc378eb59e10314c/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Kreisfreie Stadt Dessau-Roßlau",
+        "vcard:hasEmail": "gis@dessau-rosslau.de",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "vcard:role": "pointOfContact",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox",
+        "@value": "POLYGON((12.104646,51.974815,12.369028,51.974815,12.369028,51.732581,12.104646,51.732581,12.104646,51.974815))"
+      },
+      "dct:accessRights": {},
+      "dcat:Relationship": {
+        "dct:relation": {
+          "dct:isPartOf": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c"
+        }
+      },
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "OpenData",
+        "Verwaltung"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-08-07T00:00:00",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-08-07T12:26:32.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "ger"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::stadtteile-2"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {
+            "@id": "Datenlizenz Deutschland Namensnennung 2.0 Quellenvermerk: © Stadt Dessau-Roßlau"
+          },
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c&sublayer=0"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
+          "dct:title": "ArcGIS Data Layer"
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://stadtatlas.dessau-rosslau.de/server/rest/services/Verwaltung/Stadtgliederung/FeatureServer/0"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/csv?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/CSV"
+          },
+          "dct:description": "CSV",
+          "dct:title": "CSV"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/shapefile?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/ZIP"
+          },
+          "dct:description": "Shapefile",
+          "dct:title": "ZIP"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/geojson?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/GEOJSON"
+          },
+          "dct:description": "GeoJSON",
+          "dct:title": "GeoJSON"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/kml?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/KML"
+          },
+          "dct:description": "KML",
+          "dct:title": "KML"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/filegdb?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/ZIP"
+          },
+          "dct:description": "File Geodatabase",
+          "dct:title": "ZIP"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "a537c7007dd44945bc378eb59e10314c_29",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c&sublayer=29",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::stadtbezirksbeiräte-1",
+      "dct:title": "Stadtbezirksbeiräte",
+      "dct:description": "Stadtteile, Stadtbezirke, Ortschaften, Stadtbezirksbeiräte Seit sich die Städte Dessau und Roßlau im Jahr 2007 zusammenschlossen, ist in der Hauptsatzung der Stadt Dessau-Roßlau festgelegt, dass es zwei Stadtteile gibt: Stadtteil Dessau Stadtteil Roßlau In der Hauptsatzung festgehalten ist außerdem die Bestimmung von 14 Ortschaften: Roßlau, Brambach, Großkühnau, Kleinkühnau, Kleutsch, Kochstedt, Meinsdorf, Mildensee, Mosigkau, Mühlstedt, Rodleben, Sollnitz, Streetz/Natho, Waldersee und die Bildung von 5 Stadtbezirksbeiräten: Stadtbezirksbeirat für die Stadtbezirke Ziebigk und Siedlung Stadtbezirksbeirat für die Stadtbezirke Alten, West und Zoberberg Stadtbezirksbeirat für die Stadtbezirke Süd, Haideburg und Törten Stadtbezirksbeirat für den innerstädtischen Bereich Nord Stadtbezirksbeirat für die Stadtbezirke innerstädtischer Bereich Mitte und innerstädtischer Bereich Süd Grundlage ist die Einteilung der Stadt in 25 Stadtbezirke: Innerstädt. Bereich Nord, Innerstädt. Bereich Mitte, Innerstädt. Bereich Süd, Süd, Haideburg, Törten, Mildensee, Waldersee, Ziebigk, Siedlung, Großkühnau, Kleinkühnau, West, Alten, Kochstedt, Mosigkau, Zoberberg, Kleutsch, Sollnitz, Brambach, Rodleben, Roßlau, Meinsdorf, Mühlstedt, Streetz/Natho.",
+      "dcat:theme": [
+        {
+          "@id": "Statistische Einheiten"
+        }
+      ],
+      "dcat:keyword": "Statistische Einheiten",
+      "dcatap:applicableLegislation": "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/a537c7007dd44945bc378eb59e10314c/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Kreisfreie Stadt Dessau-Roßlau",
+        "vcard:hasEmail": "gis@dessau-rosslau.de",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "vcard:role": "pointOfContact",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox",
+        "@value": "POLYGON((12.104646,51.974815,12.369028,51.974815,12.369028,51.732581,12.104646,51.732581,12.104646,51.974815))"
+      },
+      "dct:accessRights": {},
+      "dcat:Relationship": {
+        "dct:relation": {
+          "dct:isPartOf": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c"
+        }
+      },
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "OpenData",
+        "Verwaltung"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-08-07T00:00:00",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-08-07T12:26:32.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "ger"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::stadtbezirksbeiräte-1"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {
+            "@id": "Datenlizenz Deutschland Namensnennung 2.0 Quellenvermerk: © Stadt Dessau-Roßlau"
+          },
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c&sublayer=29"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
+          "dct:title": "ArcGIS Data Layer"
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://stadtatlas.dessau-rosslau.de/server/rest/services/Verwaltung/Stadtgliederung/FeatureServer/29"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/csv?layers=29"
+          },
+          "dct:format": {
+            "@id": "ftype/CSV"
+          },
+          "dct:description": "CSV",
+          "dct:title": "CSV"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/shapefile?layers=29"
+          },
+          "dct:format": {
+            "@id": "ftype/ZIP"
+          },
+          "dct:description": "Shapefile",
+          "dct:title": "ZIP"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/geojson?layers=29"
+          },
+          "dct:format": {
+            "@id": "ftype/GEOJSON"
+          },
+          "dct:description": "GeoJSON",
+          "dct:title": "GeoJSON"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/kml?layers=29"
+          },
+          "dct:format": {
+            "@id": "ftype/KML"
+          },
+          "dct:description": "KML",
+          "dct:title": "KML"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/filegdb?layers=29"
+          },
+          "dct:format": {
+            "@id": "ftype/ZIP"
+          },
+          "dct:description": "File Geodatabase",
+          "dct:title": "ZIP"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "a537c7007dd44945bc378eb59e10314c_30",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c&sublayer=30",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::ortschaften-2",
+      "dct:title": "Ortschaften",
+      "dct:description": "Stadtteile, Stadtbezirke, Ortschaften, Stadtbezirksbeiräte Seit sich die Städte Dessau und Roßlau im Jahr 2007 zusammenschlossen, ist in der Hauptsatzung der Stadt Dessau-Roßlau festgelegt, dass es zwei Stadtteile gibt: Stadtteil Dessau Stadtteil Roßlau In der Hauptsatzung festgehalten ist außerdem die Bestimmung von 14 Ortschaften: Roßlau, Brambach, Großkühnau, Kleinkühnau, Kleutsch, Kochstedt, Meinsdorf, Mildensee, Mosigkau, Mühlstedt, Rodleben, Sollnitz, Streetz/Natho, Waldersee und die Bildung von 5 Stadtbezirksbeiräten: Stadtbezirksbeirat für die Stadtbezirke Ziebigk und Siedlung Stadtbezirksbeirat für die Stadtbezirke Alten, West und Zoberberg Stadtbezirksbeirat für die Stadtbezirke Süd, Haideburg und Törten Stadtbezirksbeirat für den innerstädtischen Bereich Nord Stadtbezirksbeirat für die Stadtbezirke innerstädtischer Bereich Mitte und innerstädtischer Bereich Süd Grundlage ist die Einteilung der Stadt in 25 Stadtbezirke: Innerstädt. Bereich Nord, Innerstädt. Bereich Mitte, Innerstädt. Bereich Süd, Süd, Haideburg, Törten, Mildensee, Waldersee, Ziebigk, Siedlung, Großkühnau, Kleinkühnau, West, Alten, Kochstedt, Mosigkau, Zoberberg, Kleutsch, Sollnitz, Brambach, Rodleben, Roßlau, Meinsdorf, Mühlstedt, Streetz/Natho.",
+      "dcat:theme": [
+        {
+          "@id": "Statistische Einheiten"
+        }
+      ],
+      "dcat:keyword": "Statistische Einheiten",
+      "dcatap:applicableLegislation": "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/a537c7007dd44945bc378eb59e10314c/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Kreisfreie Stadt Dessau-Roßlau",
+        "vcard:hasEmail": "gis@dessau-rosslau.de",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "vcard:role": "pointOfContact",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox",
+        "@value": "POLYGON((12.104646,51.974815,12.369028,51.974815,12.369028,51.732581,12.104646,51.732581,12.104646,51.974815))"
+      },
+      "dct:accessRights": {},
+      "dcat:Relationship": {
+        "dct:relation": {
+          "dct:isPartOf": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c"
+        }
+      },
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "OpenData",
+        "Verwaltung"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-08-07T00:00:00",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-08-07T12:26:32.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "ger"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::ortschaften-2"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {
+            "@id": "Datenlizenz Deutschland Namensnennung 2.0 Quellenvermerk: © Stadt Dessau-Roßlau"
+          },
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c&sublayer=30"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
+          "dct:title": "ArcGIS Data Layer"
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://stadtatlas.dessau-rosslau.de/server/rest/services/Verwaltung/Stadtgliederung/FeatureServer/30"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/csv?layers=30"
+          },
+          "dct:format": {
+            "@id": "ftype/CSV"
+          },
+          "dct:description": "CSV",
+          "dct:title": "CSV"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/shapefile?layers=30"
+          },
+          "dct:format": {
+            "@id": "ftype/ZIP"
+          },
+          "dct:description": "Shapefile",
+          "dct:title": "ZIP"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/geojson?layers=30"
+          },
+          "dct:format": {
+            "@id": "ftype/GEOJSON"
+          },
+          "dct:description": "GeoJSON",
+          "dct:title": "GeoJSON"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/kml?layers=30"
+          },
+          "dct:format": {
+            "@id": "ftype/KML"
+          },
+          "dct:description": "KML",
+          "dct:title": "KML"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/filegdb?layers=30"
+          },
+          "dct:format": {
+            "@id": "ftype/ZIP"
+          },
+          "dct:description": "File Geodatabase",
+          "dct:title": "ZIP"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "a537c7007dd44945bc378eb59e10314c_31",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c&sublayer=31",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::stadtbezirke-2",
+      "dct:title": "Stadtbezirke",
+      "dct:description": "Stadtteile, Stadtbezirke, Ortschaften, Stadtbezirksbeiräte Seit sich die Städte Dessau und Roßlau im Jahr 2007 zusammenschlossen, ist in der Hauptsatzung der Stadt Dessau-Roßlau festgelegt, dass es zwei Stadtteile gibt: Stadtteil Dessau Stadtteil Roßlau In der Hauptsatzung festgehalten ist außerdem die Bestimmung von 14 Ortschaften: Roßlau, Brambach, Großkühnau, Kleinkühnau, Kleutsch, Kochstedt, Meinsdorf, Mildensee, Mosigkau, Mühlstedt, Rodleben, Sollnitz, Streetz/Natho, Waldersee und die Bildung von 5 Stadtbezirksbeiräten: Stadtbezirksbeirat für die Stadtbezirke Ziebigk und Siedlung Stadtbezirksbeirat für die Stadtbezirke Alten, West und Zoberberg Stadtbezirksbeirat für die Stadtbezirke Süd, Haideburg und Törten Stadtbezirksbeirat für den innerstädtischen Bereich Nord Stadtbezirksbeirat für die Stadtbezirke innerstädtischer Bereich Mitte und innerstädtischer Bereich Süd Grundlage ist die Einteilung der Stadt in 25 Stadtbezirke: Innerstädt. Bereich Nord, Innerstädt. Bereich Mitte, Innerstädt. Bereich Süd, Süd, Haideburg, Törten, Mildensee, Waldersee, Ziebigk, Siedlung, Großkühnau, Kleinkühnau, West, Alten, Kochstedt, Mosigkau, Zoberberg, Kleutsch, Sollnitz, Brambach, Rodleben, Roßlau, Meinsdorf, Mühlstedt, Streetz/Natho.",
+      "dcat:theme": [
+        {
+          "@id": "Statistische Einheiten"
+        }
+      ],
+      "dcat:keyword": "Statistische Einheiten",
+      "dcatap:applicableLegislation": "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/a537c7007dd44945bc378eb59e10314c/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Kreisfreie Stadt Dessau-Roßlau",
+        "vcard:hasEmail": "gis@dessau-rosslau.de",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "vcard:role": "pointOfContact",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox",
+        "@value": "POLYGON((12.104646,51.974815,12.369028,51.974815,12.369028,51.732581,12.104646,51.732581,12.104646,51.974815))"
+      },
+      "dct:accessRights": {},
+      "dcat:Relationship": {
+        "dct:relation": {
+          "dct:isPartOf": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c"
+        }
+      },
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "OpenData",
+        "Verwaltung"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-08-07T00:00:00",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-08-07T12:26:32.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "ger"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::stadtbezirke-2"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {
+            "@id": "Datenlizenz Deutschland Namensnennung 2.0 Quellenvermerk: © Stadt Dessau-Roßlau"
+          },
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c&sublayer=31"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
+          "dct:title": "ArcGIS Data Layer"
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://stadtatlas.dessau-rosslau.de/server/rest/services/Verwaltung/Stadtgliederung/FeatureServer/31"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/csv?layers=31"
+          },
+          "dct:format": {
+            "@id": "ftype/CSV"
+          },
+          "dct:description": "CSV",
+          "dct:title": "CSV"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/shapefile?layers=31"
+          },
+          "dct:format": {
+            "@id": "ftype/ZIP"
+          },
+          "dct:description": "Shapefile",
+          "dct:title": "ZIP"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/geojson?layers=31"
+          },
+          "dct:format": {
+            "@id": "ftype/GEOJSON"
+          },
+          "dct:description": "GeoJSON",
+          "dct:title": "GeoJSON"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/kml?layers=31"
+          },
+          "dct:format": {
+            "@id": "ftype/KML"
+          },
+          "dct:description": "KML",
+          "dct:title": "KML"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a537c7007dd44945bc378eb59e10314c/filegdb?layers=31"
+          },
+          "dct:format": {
+            "@id": "ftype/ZIP"
+          },
+          "dct:description": "File Geodatabase",
+          "dct:title": "ZIP"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "a3c05bc5a6704433bd20132bab89c09a_33",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=a3c05bc5a6704433bd20132bab89c09a",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::postleitzahlen",
+      "dct:title": "Postleitzahlen",
+      "dct:description": "Postleitzahlen auf dem Gebiet der Stadt Dessau-Roßlau Postleitzahlen auf dem Gebiet der Stadt Dessau-Roßlau",
+      "dcat:theme": [
+        {
+          "@id": "Statistische Einheiten"
+        }
+      ],
+      "dcat:keyword": "Statistische Einheiten",
+      "dcatap:applicableLegislation": "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/a3c05bc5a6704433bd20132bab89c09a/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Kreisfreie Stadt Dessau-Roßlau",
+        "vcard:hasEmail": "gis@dessau-rosslau.de",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "vcard:role": "pointOfContact",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox",
+        "@value": "POLYGON((12.104646,51.974815,12.369028,51.974815,12.369028,51.732581,12.104646,51.732581,12.104646,51.974815))"
+      },
+      "dct:accessRights": {},
+      "dcat:Relationship": {
+        "dct:relation": {
+          "dct:isPartOf": "https://www.arcgis.com/home/item.html?id=a3c05bc5a6704433bd20132bab89c09a"
+        }
+      },
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "OpenData",
+        "Verwaltung"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-07-21T14:38:41",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-08-07T12:20:09.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "{{ metadata:from:(metadata.mdLang.countryCode.\"@_value\"->toMetadataCodeValue, language) }}"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::postleitzahlen"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {
+            "@id": "Datenlizenz Deutschland Namensnennung 2.0 Quellenvermerk: © Stadt Dessau-Roßlau"
+          },
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=a3c05bc5a6704433bd20132bab89c09a&sublayer=33"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
+          "dct:title": "ArcGIS Data Layer"
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://stadtatlas.dessau-rosslau.de/server/rest/services/Verwaltung/Postleitzahlen/FeatureServer/33"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a3c05bc5a6704433bd20132bab89c09a/csv?layers=33"
+          },
+          "dct:format": {
+            "@id": "ftype/CSV"
+          },
+          "dct:description": "CSV",
+          "dct:title": "CSV"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a3c05bc5a6704433bd20132bab89c09a/shapefile?layers=33"
+          },
+          "dct:format": {
+            "@id": "ftype/ZIP"
+          },
+          "dct:description": "Shapefile",
+          "dct:title": "ZIP"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a3c05bc5a6704433bd20132bab89c09a/geojson?layers=33"
+          },
+          "dct:format": {
+            "@id": "ftype/GEOJSON"
+          },
+          "dct:description": "GeoJSON",
+          "dct:title": "GeoJSON"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a3c05bc5a6704433bd20132bab89c09a/kml?layers=33"
+          },
+          "dct:format": {
+            "@id": "ftype/KML"
+          },
+          "dct:description": "KML",
+          "dct:title": "KML"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/a3c05bc5a6704433bd20132bab89c09a/filegdb?layers=33"
+          },
+          "dct:format": {
+            "@id": "ftype/ZIP"
+          },
+          "dct:description": "File Geodatabase",
+          "dct:title": "ZIP"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "ad00000ef60a4550a398e86a4852f39c_39",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=ad00000ef60a4550a398e86a4852f39c",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::stolpersteine",
+      "dct:title": "Stolpersteine",
+      "dct:description": "Stolpersteine zur Erinnerung an die Opfer der NS-Diktatur Stolpersteine sind im Boden verlegte kleine Gedenktafeln zur Erinnerung an Menschen, die in der Zeit des Nationalsozialismus verfolgt, ermordet, deportiert, vertrieben oder in den Suizid getrieben wurden. Die über 100 in Dessau-Roßlau verlegten Stolpersteine werden im Geoportal der Stadt Dessau-Roßlau angezeigt. In Trägerschaft des soziokulturellen Vereins K.I.E.Z. in Dessau veröffentlicht die Arbeitsgruppe „Werkstatt Gedenkkultur“ unter gedenkkultur-dessau-rosslau.de detaillierte Informationen wie z.B. die Biographien.",
+      "dcat:theme": "society",
+      "dcat:keyword": "Stolpersteine",
+      "dcatap:applicableLegislation": "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/ad00000ef60a4550a398e86a4852f39c/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Kreisfreie Stadt Dessau-Roßlau",
+        "vcard:hasEmail": "gis@dessau-rosslau.de",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "vcard:role": "pointOfContact",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox",
+        "@value": "POLYGON((12.104646,51.974815,12.369028,51.974815,12.369028,51.732581,12.104646,51.732581,12.104646,51.974815))"
+      },
+      "dct:accessRights": {},
+      "dcat:Relationship": {
+        "dct:relation": {
+          "dct:isPartOf": "https://www.arcgis.com/home/item.html?id=ad00000ef60a4550a398e86a4852f39c"
+        }
+      },
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "OpenData",
+        "Kultur, Freizeit, Tourismus"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-07-21T14:38:41",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-08-07T12:18:29.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "{{ metadata:from:(metadata.mdLang.countryCode.\"@_value\"->toMetadataCodeValue, language) }}"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::stolpersteine"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {
+            "@id": "Datenlizenz Deutschland Namensnennung 2.0 Quellenvermerk: © Stadt Dessau-Roßlau"
+          },
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=ad00000ef60a4550a398e86a4852f39c&sublayer=39"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
+          "dct:title": "ArcGIS Data Layer"
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://stadtatlas.dessau-rosslau.de/server/rest/services/Kultur_Freizeit_Tourismus/Stolpersteine/FeatureServer/39"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/ad00000ef60a4550a398e86a4852f39c/csv?layers=39"
+          },
+          "dct:format": {
+            "@id": "ftype/CSV"
+          },
+          "dct:description": "CSV",
+          "dct:title": "CSV"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/ad00000ef60a4550a398e86a4852f39c/shapefile?layers=39"
+          },
+          "dct:format": {
+            "@id": "ftype/ZIP"
+          },
+          "dct:description": "Shapefile",
+          "dct:title": "ZIP"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/ad00000ef60a4550a398e86a4852f39c/geojson?layers=39"
+          },
+          "dct:format": {
+            "@id": "ftype/GEOJSON"
+          },
+          "dct:description": "GeoJSON",
+          "dct:title": "GeoJSON"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/ad00000ef60a4550a398e86a4852f39c/kml?layers=39"
+          },
+          "dct:format": {
+            "@id": "ftype/KML"
+          },
+          "dct:description": "KML",
+          "dct:title": "KML"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/ad00000ef60a4550a398e86a4852f39c/filegdb?layers=39"
+          },
+          "dct:format": {
+            "@id": "ftype/ZIP"
+          },
+          "dct:description": "File Geodatabase",
+          "dct:title": "ZIP"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "3f7b9fab558f4cf48fe99c904d9d5a2c",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=3f7b9fab558f4cf48fe99c904d9d5a2c",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::metadatenkatalog-des-landes-sachsen-anhalt",
+      "dct:title": "Metadatenkatalog des Landes Sachsen-Anhalt",
+      "dct:description": "Für die von den Landesbehörden geführte Daten wie z.B. Flurstücksgrenzen, Schutzgebiete, Denkmale, Hochwassergefahrenkarten, ... gibt es im Metadatenkatalog METAVER entsprechende Informationen und die Angaben zum Download. Der Metadatenkatalog Sachsen-Anhalt ist Teil des Metadatenportals MetaVer MetaVer und die zentrale Suchmaschine für Geodatensätze und Geodatendienste des Landes und der Kommunen. In METAVER finden Sie die Beschreibung, die Downloadmöglichkeiten, die Nutzungsbedingungen und Ansprechpartner der aufgeführten Geodaten. Insbesondere gibt es Informationen zu Daten der Landesbehörden: Flurstücksgrenzen (Liegenschaftskataster), Schutzgebiete (Wasserschutzgebiete, Naturschutzgebiete NSG, Landschaftsschutzgebiete LSG, …), Denkmale, Überschwemmungsgebiete und Hochwassergefahrenkarten, Bodenrichtwerte, Deichregister, … Viele dieser Daten werden im Sachsen-Anhalt-Viewer angezeigt.",
+      "dcat:theme": "Stadtatlas Apps,Apps_Verwaltung",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/3f7b9fab558f4cf48fe99c904d9d5a2c/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/grit.tannert?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "Stadtatlas Apps",
+        "Apps_Verwaltung"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-06-02T13:01:04.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-07-06T15:47:30.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::metadatenkatalog-des-landes-sachsen-anhalt"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=3f7b9fab558f4cf48fe99c904d9d5a2c"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          }
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://metaver.de/"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "e518f5257dd84feaad698d5d969f8738",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=e518f5257dd84feaad698d5d969f8738",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::werde-baumpate-1",
+      "dct:title": "Werde BaumPate!",
+      "dct:description": "Gestalte unsere grüne Zukunft! Dessau-Roßlau eine grüne Oase. Damit dies so bleibt, benötigen wir eure Hilfe! 🌳 Werde BaumPate – Gestalte unsere grüne Zukunft! Unterstütze die Neu- und Nachpflanzungen von Laub- und Nadelbäumen und trage dazu bei, die Stadt noch grüner und lebenswerter zu machen! Mit der Initiative BaumPate Dessau-Roßlau bietet die Stadt Bürgerinnen und Bürgern die Möglichkeit, aktiv an der Gestaltung einer lebenswerten Umwelt mitzuwirken. Du hast die Möglichkeit, uns mit einer Spende bei den Baumpflanzungen zu unterstützen. Durch dein Engagement trägst du dazu bei, dass neue Bäume gepflanzt werden, unsere Bäume gesund bleiben, gut gedeihen und langfristig unsere Luft reinigen, das Stadtbild verschönern und Lebensräume für Tiere schaffen. Wer kann BaumPate werden? Jeder! Ob Einzelperson, Familie, Verein oder Unternehmen – alle sind herzlich eingeladen, Teil dieser grünen Gemeinschaft zu werden.",
+      "dcat:theme": "Tests,BaumPate,öffentliche Nutzung,Stadtatlas Apps,Apps_Umwelt und Verkehr",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/e518f5257dd84feaad698d5d969f8738/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/franziska.wunderlich?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "Tests",
+        "BaumPate",
+        "öffentliche Nutzung",
+        "Stadtatlas Apps",
+        "Apps_Umwelt und Verkehr"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-03-17T15:13:52.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-06-16T10:46:56.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::werde-baumpate-1"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=e518f5257dd84feaad698d5d969f8738"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          }
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://storymaps.arcgis.com/stories/e518f5257dd84feaad698d5d969f8738"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "99fd5a7f9efe40c9b578b58f062eee92_0",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=99fd5a7f9efe40c9b578b58f062eee92",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::absperrpoints-avio-2026",
+      "dct:title": "Absperrpoints avio 2026",
+      "dct:description": " ",
+      "dcat:theme": "Aktiv,EPS,2026 Veröffentlichung",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/99fd5a7f9efe40c9b578b58f062eee92/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/felix.drigert?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox",
+        "@value": "POLYGON((12.2411,51.8565,12.2835,51.8565,12.2835,51.7844,12.2411,51.7844,12.2411,51.8565))"
+      },
+      "dct:accessRights": {},
+      "dcat:Relationship": {
+        "dct:relation": {
+          "dct:isPartOf": "https://www.arcgis.com/home/item.html?id=99fd5a7f9efe40c9b578b58f062eee92"
+        }
+      },
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "Aktiv",
+        "EPS",
+        "2026 Veröffentlichung"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-04-13T09:33:39.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-05-07T07:07:59.740Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::absperrpoints-avio-2026"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=99fd5a7f9efe40c9b578b58f062eee92&sublayer=0"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
+          "dct:title": "ArcGIS Data Layer"
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://services-eu1.arcgis.com/OqwY4WUVHMjjysis/arcgis/rest/services/Absperrpoints_avio_2026/FeatureServer/0"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/99fd5a7f9efe40c9b578b58f062eee92/csv?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/CSV"
+          },
+          "dct:description": "CSV",
+          "dct:title": "CSV"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/99fd5a7f9efe40c9b578b58f062eee92/shapefile?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/ZIP"
+          },
+          "dct:description": "Shapefile",
+          "dct:title": "ZIP"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/99fd5a7f9efe40c9b578b58f062eee92/geojson?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/GEOJSON"
+          },
+          "dct:description": "GeoJSON",
+          "dct:title": "GeoJSON"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/99fd5a7f9efe40c9b578b58f062eee92/kml?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/KML"
+          },
+          "dct:description": "KML",
+          "dct:title": "KML"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "ad8f0d7804454e3ea62ea5133941b03d_0",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=ad8f0d7804454e3ea62ea5133941b03d",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::gesperrte-wege",
+      "dct:title": "gesperrte Wege",
+      "dct:description": "Wegesperrung (Teilabschnitte) während der Befliegung zur Bekämpfung des EPS 2026 ",
+      "dcat:theme": "Aktiv,EPS,2026 Veröffentlichung",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/ad8f0d7804454e3ea62ea5133941b03d/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/felix.drigert?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox",
+        "@value": "POLYGON((12.2411,51.8565,12.2835,51.8565,12.2835,51.7842,12.2411,51.7842,12.2411,51.8565))"
+      },
+      "dct:accessRights": {},
+      "dcat:Relationship": {
+        "dct:relation": {
+          "dct:isPartOf": "https://www.arcgis.com/home/item.html?id=ad8f0d7804454e3ea62ea5133941b03d"
+        }
+      },
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "Aktiv",
+        "EPS",
+        "2026 Veröffentlichung"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-04-14T09:32:08.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-04-17T07:25:07.591Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::gesperrte-wege"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=ad8f0d7804454e3ea62ea5133941b03d&sublayer=0"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
+          "dct:title": "ArcGIS Data Layer"
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://services-eu1.arcgis.com/OqwY4WUVHMjjysis/arcgis/rest/services/gesperrte_Wege/FeatureServer/0"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/ad8f0d7804454e3ea62ea5133941b03d/csv?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/CSV"
+          },
+          "dct:description": "CSV",
+          "dct:title": "CSV"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/ad8f0d7804454e3ea62ea5133941b03d/shapefile?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/ZIP"
+          },
+          "dct:description": "Shapefile",
+          "dct:title": "ZIP"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/ad8f0d7804454e3ea62ea5133941b03d/geojson?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/GEOJSON"
+          },
+          "dct:description": "GeoJSON",
+          "dct:title": "GeoJSON"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/ad8f0d7804454e3ea62ea5133941b03d/kml?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/KML"
+          },
+          "dct:description": "KML",
+          "dct:title": "KML"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "3d1282ec50df4664a9133138434a5264_0",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=3d1282ec50df4664a9133138434a5264",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::befliegungskulisse-2026",
+      "dct:title": "Befliegungskulisse 2026",
+      "dct:description": "EPS- abgestimmte Befliegungskulisse für aviochemische Bekämpfung des Eichenprozessionsspinners. Flächen von Stadt, KSDW und LFB ",
+      "dcat:theme": "Aktiv,EPS,2026 Veröffentlichung",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/3d1282ec50df4664a9133138434a5264/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/felix.drigert?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox",
+        "@value": "POLYGON((12.1728,51.8584,12.2842,51.8584,12.2842,51.7841,12.1728,51.7841,12.1728,51.8584))"
+      },
+      "dct:accessRights": {},
+      "dcat:Relationship": {
+        "dct:relation": {
+          "dct:isPartOf": "https://www.arcgis.com/home/item.html?id=3d1282ec50df4664a9133138434a5264"
+        }
+      },
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "Aktiv",
+        "EPS",
+        "2026 Veröffentlichung"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-02-25T08:41:33.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-02-25T08:41:51.854Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "{{ metadata:from:(metadata.mdLang.countryCode.\"@_value\"->toMetadataCodeValue, language) }}"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::befliegungskulisse-2026"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=3d1282ec50df4664a9133138434a5264&sublayer=0"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
+          "dct:title": "ArcGIS Data Layer"
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://services-eu1.arcgis.com/OqwY4WUVHMjjysis/arcgis/rest/services/Befliegungskulisse_2026/FeatureServer/0"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/3d1282ec50df4664a9133138434a5264/csv?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/CSV"
+          },
+          "dct:description": "CSV",
+          "dct:title": "CSV"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/3d1282ec50df4664a9133138434a5264/shapefile?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/ZIP"
+          },
+          "dct:description": "Shapefile",
+          "dct:title": "ZIP"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/3d1282ec50df4664a9133138434a5264/geojson?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/GEOJSON"
+          },
+          "dct:description": "GeoJSON",
+          "dct:title": "GeoJSON"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/3d1282ec50df4664a9133138434a5264/kml?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/KML"
+          },
+          "dct:description": "KML",
+          "dct:title": "KML"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "4c7789f0632c46a6a956ac20b255f86d_0",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=4c7789f0632c46a6a956ac20b255f86d",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::umleitungsstrecken-avio-2026",
+      "dct:title": "Umleitungsstrecken avio 2026",
+      "dct:description": "Umleitungsstrecken Radwege Darstellung der empfohlenen temporären Umleitung der überregionalen Rad- und Wanderwege",
+      "dcat:theme": "Aktiv,EPS,2026 Veröffentlichung",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/4c7789f0632c46a6a956ac20b255f86d/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/felix.drigert?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox",
+        "@value": "POLYGON((12.2342,51.8594,12.2812,51.8594,12.2812,51.8011,12.2342,51.8011,12.2342,51.8594))"
+      },
+      "dct:accessRights": {},
+      "dcat:Relationship": {
+        "dct:relation": {
+          "dct:isPartOf": "https://www.arcgis.com/home/item.html?id=4c7789f0632c46a6a956ac20b255f86d"
+        }
+      },
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "Aktiv",
+        "EPS",
+        "2026 Veröffentlichung"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-04-13T09:29:54.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-05-08T08:36:26.019Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/datasets/dero::umleitungsstrecken-avio-2026"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=4c7789f0632c46a6a956ac20b255f86d&sublayer=0"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
+          "dct:title": "ArcGIS Data Layer"
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://services-eu1.arcgis.com/OqwY4WUVHMjjysis/arcgis/rest/services/Umleitungsstrecken_avio_2026/FeatureServer/0"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/4c7789f0632c46a6a956ac20b255f86d/csv?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/CSV"
+          },
+          "dct:description": "CSV",
+          "dct:title": "CSV"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/4c7789f0632c46a6a956ac20b255f86d/shapefile?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/ZIP"
+          },
+          "dct:description": "Shapefile",
+          "dct:title": "ZIP"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/4c7789f0632c46a6a956ac20b255f86d/geojson?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/GEOJSON"
+          },
+          "dct:description": "GeoJSON",
+          "dct:title": "GeoJSON"
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/api/download/v1/items/4c7789f0632c46a6a956ac20b255f86d/kml?layers=0"
+          },
+          "dct:format": {
+            "@id": "ftype/KML"
+          },
+          "dct:description": "KML",
+          "dct:title": "KML"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "000902210b7d41deb23c843465aa61fb",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=000902210b7d41deb23c843465aa61fb",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::kommunaler-wärmeplan-dessau-roßlau",
+      "dct:title": "Kommunaler Wärmeplan Dessau-Roßlau",
+      "dct:description": "Entwurf für die Öffentliche Beteiligung Nach dem Wärmeplanungsgesetz (WPG) ist die Stadt Dessau-Roßlau verpflichtet, bis spätestens Mitte 2028 einen kommunalen Wärmeplan zu erarbeiten. Der kommunale Wärmeplan gibt Orientierung, wie die künftige Wärmeversorgung in Dessau-Roßlau bis 2045 kosteneffizient und bezahlbar, versorgungssicher und treibhausgasneutral gestaltet werden kann. Die Stadt Dessau-Roßlau beteiligt die Bürgerinnen und Bürger, die Träger öffentlicher Belange, die Kommunalpolitik sowie die weitere interessierte Öffentlichkeit an der Erstellung des Wärmeplans. Der Stadtrat Dessau-Roßlau hat am 10.09.2025 den Entwurf für diese Beteiligung beschlossen. Die öffentliche Beteiligung erfolgt vom 01.10. bis 14.11.2025 als Online-Verfahren.",
+      "dcat:theme": "Aktiv,Wärmeplanung,Stadtatlas Apps,Apps_Planen und Bauen",
+      "dcat:keyword": "",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/000902210b7d41deb23c843465aa61fb/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Stadt Dessau-Roßlau",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/grit.tannert?f=json",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "Aktiv",
+        "Wärmeplanung",
+        "Stadtatlas Apps",
+        "Apps_Planen und Bauen"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2025-09-03T18:14:14.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2025-11-03T05:32:06.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "deu"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/apps/dero::kommunaler-wärmeplan-dessau-roßlau"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {},
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=000902210b7d41deb23c843465aa61fb"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          }
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://storymaps.arcgis.com/stories/000902210b7d41deb23c843465aa61fb"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        }
+      ]
+    }
+  ]
+}

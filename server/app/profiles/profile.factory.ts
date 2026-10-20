@@ -25,14 +25,15 @@ import type { CatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
 import { createRequire } from 'module';
 import type { Catalog, CatalogColumnType, CatalogFactory, CatalogOperation } from '../catalog/catalog.factory.js';
-import type { ImporterSettings, ImporterType, ImporterTypeInfo } from '../importer/importer.settings.js';
 import { ckanCapabilities, ckanDefaults } from '../importer/ckan/ckan.settings.js';
 import { cswCapabilities, cswDefaults } from '../importer/csw/csw.settings.js';
+import { dcatapCapabilities, dcatapDefaults } from '../importer/dcatap/dcatap.settings.js';
 import { dcatapdeCapabilities, dcatapdeDefaults } from '../importer/dcatapde/dcatapde.settings.js';
 import { dcatappluCapabilities, dcatappluDefaults } from '../importer/dcatapplu/dcatapplu.settings.js';
 import { genesisCapabilities, genesisDefaults } from '../importer/genesis/genesis.settings.js';
 import type { ImporterFactory } from '../importer/importer.factory.js';
 import type { Importer } from '../importer/importer.js';
+import type { ImporterSettings, ImporterType, ImporterTypeInfo } from '../importer/importer.settings.js';
 import { jsonCapabilities, jsonDefaults } from '../importer/json/json.settings.js';
 import { kldCapabilities, kldDefaults } from '../importer/kld/kld.settings.js';
 import type { Mapper } from '../importer/mapper.js';
@@ -68,6 +69,7 @@ CatalogFactory {
         return [
             { type: 'CKAN', defaults: ckanDefaults, capabilities: ckanCapabilities },
             { type: 'CSW', defaults: cswDefaults, capabilities: cswCapabilities },
+            { type: 'DCATAP', defaults: dcatapDefaults, capabilities: dcatapCapabilities },
             { type: 'DCATAPDE', defaults: dcatapdeDefaults, capabilities: dcatapdeCapabilities },
             { type: 'DCATAPPLU', defaults: dcatappluDefaults, capabilities: dcatappluCapabilities },
             { type: 'GENESIS', defaults: genesisDefaults, capabilities: genesisCapabilities },

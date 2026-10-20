@@ -35,8 +35,9 @@ import { SharedFields } from "./fields/shared.fields";
 import { IngridProfile } from "./fields/profiles/ingrid.profile";
 import { CkanType } from "./fields/types/ckan.type";
 import { CswType } from "./fields/types/csw.type";
-import { DcatType } from "./fields/types/dcat.type";
-import { DecatappluType } from "./fields/types/dcatapplu.type";
+import { DcatapType } from "./fields/types/dcatap.type";
+import { DcatapdeType } from "./fields/types/dcatapdeType";
+import { DcatappluType } from "./fields/types/dcatapplu.type";
 import { JsonType } from "./fields/types/json.type";
 import { KldType } from "./fields/types/kld.type";
 import { OaiType } from "./fields/types/oai.type";
@@ -67,8 +68,9 @@ export class DialogEditComponent {
     ...IngridProfile.fields(),
     ...CkanType.fields(),
     ...CswType.fields(),
-    ...DcatType.fields(),
-    ...DecatappluType.fields(),
+    ...DcatapdeType.fields(),
+    ...DcatapType.fields(),
+    ...DcatappluType.fields(),
     ...JsonType.fields(),
     ...KldType.fields(),
     ...OaiType.fields(),

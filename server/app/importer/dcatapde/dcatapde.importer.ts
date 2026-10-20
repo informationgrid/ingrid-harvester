@@ -21,31 +21,27 @@
  * ==================================================
  */
 
+import type { Quad_Subject } from '@rdfjs/types';
 import type { DOMParser } from '@xmldom/xmldom';
-import log4js from 'log4js';
-import type { Observer } from 'rxjs';
-import type { RecordEntity } from '../../model/entity.js';
-import type { ImportLogMessage } from '../../model/import.result.js';
-import type { IndexDocument } from '../../model/index.document.js';
-import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import type { Store } from 'n3';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import * as MiscUtils from '../../utils/misc.utils.js';
 import { dereferenceRdfElements } from "../../utils/rdf.utils.js";
-import { Importer } from '../importer.js';
+import { DcatapImporter, type DcatapPageResult } from '../dcatap/dcatap.importer.js';
+import type { DcatapMapper } from '../dcatap/dcatap.mapper.js';
+import { parseRdfPayload } from '../dcatap/dcatap.rdf.js';
 import { namespaces } from '../namespaces.js';
 import { DcatapdeMapper } from './dcatapde.mapper.js';
 import { dcatapdeDefaults, type DcatapdeSettings } from './dcatapde.settings.js';
 
-const log = log4js.getLogger(import.meta.filename);
-const logRequest = log4js.getLogger('requests');
-
-export class DcatapdeImporter extends Importer<DcatapdeSettings> {
+/**
+ * DCAT-AP.de importer: the harvesting of `DcatapImporter` for RDF/XML sources, with dereferenced
+ * distributions, publishers and contact points and `DcatapdeMapper` records.
+ */
+export class DcatapdeImporter extends DcatapImporter<DcatapdeSettings> {
 
     protected domParser: DOMParser;
-
-    private totalRecords = 0;
-    private numIndexDocs = 0;
 
     constructor(settings: DcatapdeSettings) {
         super(settings);
@@ -56,159 +52,46 @@ export class DcatapdeImporter extends Importer<DcatapdeSettings> {
         return dcatapdeDefaults;
     }
 
-    // only here for documentation - use the "default" exec function
-    async exec(observer: Observer<ImportLogMessage>): Promise<void> {
-        await super.exec(observer);
+    /**
+     * Inlines the referenced distributions, publishers and contact points into the datasets and parses the result as RDF/XML.
+     * The dereferenced XML is the response of the page, so `getHarvestedData()` returns the dataset with its dereferenced elements.
+     */
+    protected async fetchAndParse(url: string): Promise<DcatapPageResult> {
+        const requestDelegate = new RequestDelegate(DcatapdeImporter.createRequestConfig(this.settings, url));
+        const response = await requestDelegate.doRequest();
+        const harvestTime = new Date();
+
+        const xml = this.domParser.parseFromString(response, 'application/xml');
+        const rootNode = xml.getElementsByTagNameNS(namespaces.RDF, 'RDF')[0];
+        dereferenceRdfElements(rootNode, './/dcat:distribution | .//dct:publisher | .//dcat:contactPoint', DcatapdeMapper.select);
+        const payload = xml.toString();
+        const store = await parseRdfPayload(payload, this.settings.sourceURL, 'application/rdf+xml');
+
+        return {
+            response: payload,
+            store,
+            harvestTime
+        };
     }
 
-    protected async harvest(): Promise<number> {
-        let retries = 0;
-
-        const requestConfig = DcatapdeImporter.createRequestConfig(this.settings);
-        let requestDelegate = new RequestDelegate(requestConfig);
-
-        while (true) {
-            log.debug('Requesting next records');
-            let response = await requestDelegate.doRequest();
-            let harvestTime = new Date();
-
-            let responseDom = this.domParser.parseFromString(response);
-
-            let isLastPage = false;
-
-            let pagedCollection = responseDom.getElementsByTagNameNS(namespaces.HYDRA, 'PagedCollection')[0];
-            if (pagedCollection) {
-                retries = 0;
-
-                let numReturned = responseDom.getElementsByTagNameNS(namespaces.DCAT, 'Dataset').length;
-                this.totalRecords = parseInt(DcatapdeMapper.select('./hydra:totalItems', pagedCollection, true).textContent);
-
-                let thisPageUrl = pagedCollection.getAttribute('rdf:about');
-                let lastPageUrl = DcatapdeMapper.select('./hydra:lastPage', pagedCollection, true)?.textContent;
-
-                isLastPage = thisPageUrl === lastPageUrl;
-                if(!isLastPage){
-                    let nextPageUrl = DcatapdeMapper.select('./hydra:nextPage', pagedCollection, true).textContent;
-                    requestConfig.uri = nextPageUrl;
-                    requestDelegate = new RequestDelegate(requestConfig);
-                }
-
-                log.debug(`Received ${numReturned} records from ${this.settings.sourceURL} - Page: ${thisPageUrl}`);
-                await this.extractRecords(response, harvestTime)
-            }
-            else {
-                let numReturned = responseDom.getElementsByTagNameNS(namespaces.DCAT, 'Dataset').length;
-                if(numReturned > 0){
-                    await this.extractRecords(response, harvestTime);
-                    isLastPage = true;
-                } else {
-                    const message = `Error while fetching DCAT Records. Will continue to try and fetch next records, if any.\nServer response: ${MiscUtils.truncateErrorMessage(responseDom.toString())}.`;
-                    log.error(message);
-                    this.summary.errors.push({ type: 'app', error: message });
-                    if(retries++ > 3){
-                        isLastPage = true;
-                        log.error('Stopped after 3 Retries')
-                    }
-                }
-            }
-
-            if (isLastPage) break;
-        }
-        await this.database.sendBulkData();
-
-        return this.numIndexDocs;
+    protected createMapper(recordSubject: Quad_Subject, store: Store, response: string, harvestTime: Date): DcatapMapper<DcatapdeSettings> {
+        return new DcatapdeMapper(this.settings, recordSubject, store, response, harvestTime, this.summary);
     }
 
-    async extractRecords(getRecordsResponse, harvestTime) {
-        let promises = [];
-        let xml = this.domParser.parseFromString(getRecordsResponse, 'application/xml');
-        let rootNode = xml.getElementsByTagNameNS(namespaces.RDF, 'RDF')[0];
-
-        dereferenceRdfElements(rootNode, './/dcat:distribution | .//dct:publisher | .//dcat:contactPoint', DcatapdeMapper.select)
-
-        let records =  DcatapdeMapper.select('./dcat:Catalog/dcat:dataset/dcat:Dataset|./dcat:Dataset', rootNode);
-
-        /*
-        let ids = [];
-        for (let i = 0; i < records.length; i++) {
-            let uuid = DcatapdeMapper.select('./dct:identifier', records[i], true).textContent;
-            if(!uuid) {
-                uuid = DcatapdeMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
-            }
-            ids.push(uuid);
-        }
-
-         */
-
-        for (let i = 0; i < records.length; i++) {
-            this.summary.numDocs++;
-
-            let uuid = DcatapdeMapper.select('./dct:identifier', records[i], true).textContent;
-            if(!uuid) {
-                uuid = DcatapdeMapper.select('./dct:identifier/@rdf:resource', records[i], true).textContent;
-            }
-            if (!this.filterUtils.isIdAllowed(uuid)) {
-                this.summary.skippedDocs.push(uuid);
-                continue;
-            }
-
-            if (log.isDebugEnabled()) {
-                log.debug(`Import document ${i + 1} from ${records.length}`);
-            }
-            if (logRequest.isDebugEnabled()) {
-                logRequest.debug("Record content: ", records[i].toString());
-            }
-
-            let mapper = new DcatapdeMapper(this.settings, records[i], harvestTime, this.summary);
-            let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
-
-            let doc: IndexDocument;
-            let dcatapdeDoc: string;
-            try {
-                doc = await documentFactory.createIndexDocument();
-                dcatapdeDoc = documentFactory.createDcatapdeDocument();
-            }
-            catch (e) {
-                log.error('Error creating index document', e);
-                this.summary.errors.push({ type: 'app', error: e.toString() });
-                mapper.skipped = true;
-            }
-
-            if (!this.settings.dryRun && !mapper.shouldBeSkipped()) {
-                let entity: RecordEntity = {
-                    identifier: uuid,
-                    source: this.settings.sourceURL,
-                    catalog_ids: this.settings.catalogIds,
-                    dataset: doc,
-                    dataset_dcatapde: dcatapdeDoc,
-                    original_document: mapper.getHarvestedData()
-                };
-                promises.push(
-                    this.addEntityToBulk(entity)
-                        .then(response => {
-                            if (!response.queued) {
-                                // numIndexDocs += ElasticsearchUtils.maxBulkSize;
-                                // this.observer.next(ImportResult.running(numIndexDocs, records.length));
-                            }
-                        })
-                );
-            } else {
-                this.summary.skippedDocs.push(uuid);
-            }
-            this.observer.next(this.summary.msgRunning(++this.numIndexDocs, this.totalRecords, this.getDownloadMessage()));
-        }
-        await Promise.all(promises).catch(err => log.error('Error indexing DCAT record', err));
+    /**
+     * @returns the dereferenced `dcat:Dataset` of the record
+     */
+    protected getRecordOriginalDocument(response: string, recordSubject: Quad_Subject, sourceIdentifier: string, mapper: DcatapMapper<DcatapdeSettings>): any {
+        return mapper.getHarvestedData();
     }
 
-    static createRequestConfig(settings: DcatapdeSettings): RequestOptions {
+    static createRequestConfig(settings: DcatapdeSettings, url?: string): RequestOptions {
         let requestConfig: RequestOptions = {
             method: "GET",
-            uri: settings.sourceURL,
+            uri: url || settings.sourceURL,
             json: false,
             timeout: settings.timeout
         };
         return requestConfig;
     }
-
-
 }
