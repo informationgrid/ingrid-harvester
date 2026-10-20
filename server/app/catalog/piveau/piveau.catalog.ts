@@ -23,12 +23,12 @@
 
 import type { PiveauCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
-import type { Observer } from "rxjs";
-import type { ImporterSettings } from "../../importer/importer.settings.js";
-import type { ImportLogMessage } from "../../model/import.result.js";
-import type { Summary } from "../../model/summary.js";
-import type { Bucket } from '../../persistence/postgres.utils.js';
-import { RequestDelegate } from "../../utils/http-request.utils.js";
+import type { Observer } from 'rxjs';
+import type { ImporterSettings } from '../../importer/importer.settings.js';
+import type { Bucket, PrioritizedBucket } from '../../model/bucket.js';
+import type { ImportLogMessage } from '../../model/import.result.js';
+import type { Summary } from '../../model/summary.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
 import { Catalog, type CatalogOperation } from '../catalog.factory.js';
 
 const log = log4js.getLogger('PiveauCatalog');
@@ -78,10 +78,10 @@ export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings,
     }
 
     async processBucket(bucket: Bucket<PiveauDataset>, importerSettings: ImporterSettings): Promise<PiveauCatalogOperation[]> {
-        const { document } = this.prioritizeAndFilter(bucket);
+        const { mainDocument } = this.prioritizeAndFilter(bucket);
         return [{
-            uuid: document.uuid,
-            serializedXml: document.dataset
+            uuid: mainDocument.uuid,
+            serializedXml: mainDocument.dataset
         }];
     }
 
@@ -206,22 +206,19 @@ export class PiveauCatalog extends Catalog<PiveauDataset, PiveauCatalogSettings,
         });
     }
 
-    private prioritizeAndFilter(bucket: Bucket<PiveauDataset>): {
-        document: PiveauDataset,
-        duplicates: Map<string | number, PiveauDataset>
-    } {
+    private prioritizeAndFilter(bucket: Bucket<PiveauDataset>): PrioritizedBucket<PiveauDataset> {
         let mainDocument: PiveauDataset;
-        let duplicates: Map<string | number, PiveauDataset> = new Map<string | number, PiveauDataset>();
+        const documents: Map<string | number, PiveauDataset> = new Map<string | number, PiveauDataset>();
 
-        for (let [id, document] of bucket.duplicates) {
+        for (const [id, document] of bucket.documents) {
             if (mainDocument == null) {
                 mainDocument = document;
             }
             else {
-                duplicates.set(id, document);
+                documents.set(id, document);
             }
         }
 
-        return { document: mainDocument, duplicates };
+        return { mainDocument, documents };
     }
 }

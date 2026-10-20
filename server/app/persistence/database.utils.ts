@@ -22,12 +22,12 @@
  */
 
 import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
-import type { Observer } from "rxjs";
+import type { Observer } from 'rxjs';
 import type { CatalogColumnType } from '../catalog/catalog.factory.js';
+import type { Bucket } from '../model/bucket.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
-import type { ImportLogMessage } from "../model/import.result.js";
+import type { ImportLogMessage } from '../model/import.result.js';
 import type { Summary } from '../model/summary.js';
-import type { Bucket } from './postgres.utils.js';
 
 export interface BulkResponse {
     queued: boolean;

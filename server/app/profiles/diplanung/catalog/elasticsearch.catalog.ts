@@ -23,9 +23,9 @@
 
 import { ElasticsearchCatalog } from '../../../catalog/elasticsearch/elasticsearch.catalog.js';
 import type { ImporterSettings } from '../../../importer/importer.settings.js';
+import type { Bucket, PrioritizedBucket } from '../../../model/bucket.js';
 import type { Distribution } from '../../../model/distribution.js';
 import type { EsOperation } from '../../../persistence/elastic.utils.js';
-import type { Bucket } from '../../../persistence/postgres.utils.js';
 import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import * as MiscUtils from '../../../utils/misc.utils.js';
 import { createEsId } from '../diplanung.utils.js';
@@ -52,27 +52,27 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog {
     public async processBucket(bucket: Bucket<DiplanungIndexDocument>, importerSettings: ImporterSettings): Promise<EsOperation[]> {
         let box: EsOperation[] = [];
         // find primary document
-        let { document, duplicates } = this.prioritizeAndFilter(bucket);
+        let { mainDocument, documents } = this.prioritizeAndFilter(bucket);
 
         // shortcut - if all documents in the bucket should be deleted, delete the document from ES
-        let deleteDocument = document.extras.metadata.deleted != null;
-        bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.extras.metadata.deleted != null);
+        let deleteDocument = mainDocument.extras.metadata.deleted != null;
+        bucket.documents.forEach(duplicate => deleteDocument &&= duplicate.extras.metadata.deleted != null);
         if (deleteDocument) {
-            return [{ operation: 'delete', _id: createEsId(document) }];
+            return [{ operation: 'delete', _id: createEsId(mainDocument) }];
         }
 
         // merge service information into dataset
         for (let [id, service] of bucket.operatingServices) {
-            document = this.resolveCoupling(document, service);
+            mainDocument = this.resolveCoupling(mainDocument, service);
         }
         // deduplication
-        for (let [id, duplicate] of duplicates) {
-            let old_id = createEsId(document);
-            let duplicate_id = createEsId(duplicate);
-            document = this.deduplicate(document, duplicate);
-            let document_id = createEsId(document);
-            document.extras.metadata.merged_from ??= [];
-            document.extras.metadata.merged_from.push(duplicate_id);
+        for (const [id, duplicate] of documents) {
+            const old_id = createEsId(mainDocument);
+            const duplicate_id = createEsId(duplicate);
+            mainDocument = this.deduplicate(mainDocument, duplicate);
+            const document_id = createEsId(mainDocument);
+            mainDocument.extras.metadata.merged_from ??= [];
+            mainDocument.extras.metadata.merged_from.push(duplicate_id);
             // remove dataset with old_id if it differs from the newly created id
             if (old_id != document_id) {
                 box.push({ operation: 'delete', _id: old_id });
@@ -82,20 +82,17 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog {
                 box.push({ operation: 'delete', _id: duplicate_id });
             }
         }
-        document = this.sanitize(document);
-        document = MiscUtils.merge(document, { extras: { transformed_data: { dcat_ap_plu: DcatApPluDocumentFactory.create(document) } } });
-        box.push({ operation: 'index', _id: createEsId(document), document });
+        mainDocument = this.sanitize(mainDocument);
+        mainDocument = MiscUtils.merge(mainDocument, { extras: { transformed_data: { dcat_ap_plu: DcatApPluDocumentFactory.create(mainDocument) } } });
+        box.push({ operation: 'index', _id: createEsId(mainDocument), document: mainDocument });
         return box;
     }
 
-    private prioritizeAndFilter(bucket: Bucket<DiplanungIndexDocument>): { 
-        document: DiplanungIndexDocument, 
-        duplicates: Map<string | number, DiplanungIndexDocument>
-    } {
+    private prioritizeAndFilter(bucket: Bucket<DiplanungIndexDocument>): PrioritizedBucket<DiplanungIndexDocument> {
         // initialize records map
-        let records: Map<string, Map<string | number, DiplanungIndexDocument>> = new Map<string, Map<string | number, DiplanungIndexDocument>>();
-        for (let [id, document] of bucket.duplicates) {
-            let sourceType = document.extras.metadata.source.source_type;
+        const records: Map<string, Map<string | number, DiplanungIndexDocument>> = new Map<string, Map<string | number, DiplanungIndexDocument>>();
+        for (const [id, document] of bucket.documents) {
+            const sourceType = document.extras.metadata.source.source_type;
             let sourceMap = records.get(sourceType);
             if (sourceMap == null) {
                 sourceMap = new Map<string | number, DiplanungIndexDocument>();
@@ -105,10 +102,10 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog {
         }
 
         let mainDocument: DiplanungIndexDocument;
-        let duplicates: Map<string | number, DiplanungIndexDocument> = new Map<string | number, DiplanungIndexDocument>();
+        let documents: Map<string | number, DiplanungIndexDocument> = new Map<string | number, DiplanungIndexDocument>();
         // prio 1: handle cockpitpro - all other sources are discarded
         if (records.has("cockpitpro")) {
-            for (let [id, document] of records.get("cockpitpro")) {
+            for (const [id, document] of records.get("cockpitpro")) {
                 mainDocument = document;
                 break;
             }
@@ -120,7 +117,7 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog {
                 break;
             }
             if (records.has("beteiligungsdb")) {
-                duplicates = records.get("beteiligungsdb");
+                documents = records.get("beteiligungsdb");
             }
         }
         // prio 3: handle beteiligungsdb - all other sources are discarded
@@ -141,7 +138,7 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog {
                 break;
             }
             if (records.get("wfs")) {
-                duplicates = records.get("wfs");
+                documents = records.get("wfs");
             }
         }
         // prio 5: handle wfs - only keep other wfs sources as duplicates
@@ -151,23 +148,23 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog {
                     mainDocument = document;
                 }
                 else {
-                    duplicates.set(id, document);
+                    documents.set(id, document);
                 }
             }
         }
         // prio 6: handle all other cases - 
         else {
-            for (let [id, document] of bucket.duplicates) {
+            for (let [id, document] of bucket.documents) {
                 if (mainDocument == null) {
                     mainDocument = document;
                 }
                 else {
-                    duplicates.set(id, document);
+                    documents.set(id, document);
                 }
             }
         }
 
-        return { document: mainDocument, duplicates };
+        return { mainDocument, documents };
     }
 
     /**

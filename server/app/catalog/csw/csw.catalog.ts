@@ -24,14 +24,14 @@
 import type { CswCatalogSettings } from '@shared/catalog.js';
 import { XMLSerializer } from '@xmldom/xmldom';
 import log4js from 'log4js';
-import type { Observer } from "rxjs";
-import type { ImporterSettings } from "../../importer/importer.settings.js";
-import { namespaces } from "../../importer/namespaces.js";
-import type { ImportLogMessage } from "../../model/import.result.js";
-import type { Summary } from "../../model/summary.js";
-import type { Bucket } from '../../persistence/postgres.utils.js';
-import { RequestDelegate } from "../../utils/http-request.utils.js";
-import { getDomParser } from "../../utils/misc.utils.js";
+import type { Observer } from 'rxjs';
+import type { ImporterSettings } from '../../importer/importer.settings.js';
+import { namespaces } from '../../importer/namespaces.js';
+import type { Bucket, PrioritizedBucket } from '../../model/bucket.js';
+import type { ImportLogMessage } from '../../model/import.result.js';
+import type { Summary } from '../../model/summary.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import { getDomParser } from '../../utils/misc.utils.js';
 import { Catalog, type CatalogOperation } from '../catalog.factory.js';
 
 const log = log4js.getLogger('CswCatalog');
@@ -69,13 +69,13 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
     }
 
     async processBucket(bucket: Bucket<CswDataset>, importerSettings: ImporterSettings): Promise<CswCatalogOperation[]> {
-        const { document: record } = this.prioritizeAndFilter(bucket);
+        const { mainDocument } = this.prioritizeAndFilter(bucket);
         const additionalKeywords = this.getAdditionalKeywords(importerSettings);
-        const enrichedXml = this.addTraceability(record.dataset, this.transactionTimestamp, importerSettings.id, additionalKeywords);
+        const enrichedXml = this.addTraceability(mainDocument.dataset, this.transactionTimestamp, importerSettings.id, additionalKeywords);
         return [{
-            uuid: record.uuid,
+            uuid: mainDocument.uuid,
             serializedXml: enrichedXml,
-            isUpdate: this.existingIds.has(record.uuid)
+            isUpdate: this.existingIds.has(mainDocument.uuid)
         }];
     }
 
@@ -472,22 +472,19 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         return { success: true, inserted, updated, deleted };
     }
 
-    private prioritizeAndFilter(bucket: Bucket<CswDataset>): {
-        document: CswDataset,
-        duplicates: Map<string | number, CswDataset>
-    } {
-        let mainDocument = bucket.duplicates.get(bucket.anchor_id);
-        const duplicates: Map<string | number, CswDataset> = new Map<string | number, CswDataset>();
+    private prioritizeAndFilter(bucket: Bucket<CswDataset>): PrioritizedBucket<CswDataset> {
+        let mainDocument = bucket.documents.get(bucket.anchor_id);
+        const documents: Map<string | number, CswDataset> = new Map<string | number, CswDataset>();
 
-        for (const [id, document] of bucket.duplicates) {
+        for (const [id, document] of bucket.documents) {
             if (mainDocument == null && document.uuid != null) {
                 mainDocument = document;
             }
             else if (document !== mainDocument) {
-                duplicates.set(id, document);
+                documents.set(id, document);
             }
         }
 
-        return { document: mainDocument, duplicates };
+        return { mainDocument, documents };
     }
 }

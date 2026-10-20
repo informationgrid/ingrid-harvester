@@ -26,11 +26,11 @@ import type { Observer } from 'rxjs';
 import { APPLICATION_NAME, INGRID_META_INDEX } from '../../../../app/constants.js';
 import { ElasticsearchCatalog } from '../../../catalog/elasticsearch/elasticsearch.catalog.js';
 import type { ImporterSettings } from '../../../importer/importer.settings.js';
+import type { Bucket, PrioritizedBucket } from '../../../model/bucket.js';
 import type { ImportLogMessage } from '../../../model/import.result.js';
 import type { IndexDocument } from '../../../model/index.document.js';
 import { ElasticsearchFactory } from '../../../persistence/elastic.factory.js';
 import type { EsOperation } from '../../../persistence/elastic.utils.js';
-import type { Bucket } from '../../../persistence/postgres.utils.js';
 import { ConfigService } from '../../../services/config/ConfigService.js';
 import { camelize, escapeXml } from '../../../utils/misc.utils.js';
 import { ProfileFactoryLoader } from '../../profile.factory.loader.js';
@@ -175,32 +175,32 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
     async processBucket(bucket: Bucket<IndexDocument>, importerSettings: ImporterSettings): Promise<EsOperation[]> {
         let box: EsOperation[] = [];
         // find primary document
-        let { document, duplicates } = this.prioritizeAndFilter(bucket);
-        if (!document) {
+        let { mainDocument, documents } = this.prioritizeAndFilter(bucket);
+        if (!mainDocument) {
             return null;
         }
 
         // resolve CSW coupling
-        if (isCsw(document) && 'capabilities_url' in document) {
-            for (let [id, service] of bucket.operatingServices) {
-                this.resolveCoupling(document as IngridIndexDocument, service);
+        if (isCsw(mainDocument) && 'capabilities_url' in mainDocument) {
+            for (const [id, service] of bucket.operatingServices) {
+                this.resolveCoupling(mainDocument as IngridIndexDocument, service);
             }
         }
 
         // shortcut - if all documents in the bucket should be deleted, delete the document from ES
-        let deleteDocument = document.extras.metadata.deleted != null;
-        bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.extras.metadata.deleted != null);
+        let deleteDocument = mainDocument.extras.metadata.deleted != null;
+        bucket.documents.forEach(duplicate => deleteDocument &&= duplicate.extras.metadata.deleted != null);
         if (deleteDocument) {
-            return [{ operation: 'delete', _index: this.settings.settings.index, _id: document.uuid }];
+            return [{ operation: 'delete', _index: this.settings.settings.index, _id: mainDocument.uuid }];
         }
 
         // harvester deduplication
-        for (let [id, duplicate] of duplicates) {
-            let old_id = createEsId(document);
-            let duplicate_id = createEsId(duplicate);
-            document = this.deduplicate(document, duplicate);
-            let document_id = createEsId(document);
-            document.extras.metadata.merged_from.push(duplicate_id);
+        for (const [id, duplicate] of documents) {
+            const old_id = createEsId(mainDocument);
+            const duplicate_id = createEsId(duplicate);
+            mainDocument = this.deduplicate(mainDocument, duplicate);
+            const document_id = createEsId(mainDocument);
+            mainDocument.extras.metadata.merged_from.push(duplicate_id);
             // remove dataset with old_id if it differs from the newly created id
             if (old_id != document_id) {
                 box.push({ operation: 'delete', _index: this.settings.settings.index, _id: old_id });
@@ -220,17 +220,17 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         //         return box;
         //     }
         // }
-        if (this.externalUuids.has(document.uuid)) {
-            box.push({ operation: 'delete', _index: this.settings.settings.index, _id: createEsId(document) });
+        if (this.externalUuids.has(mainDocument.uuid)) {
+            box.push({ operation: 'delete', _index: this.settings.settings.index, _id: createEsId(mainDocument) });
             return box;
         }
 
         // handle WFS
-        if (isWfs(document)) {
-            this.createIdfForWfs(document as IngridIndexDocument, duplicates as Map<string | number, IngridIndexDocument>);
+        if (isWfs(mainDocument)) {
+            this.createIdfForWfs(mainDocument as IngridIndexDocument, documents as Map<string | number, IngridIndexDocument>);
         }
 
-        box.push({ operation: 'index', _index: this.settings.settings.index, _id: createEsId(document), document });
+        box.push({ operation: 'index', _index: this.settings.settings.index, _id: createEsId(mainDocument), document: mainDocument });
         return box;
     }
 
@@ -253,19 +253,16 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         return indices;
     }
 
-    private prioritizeAndFilter(bucket: Bucket<IndexDocument>): {
-        document: IndexDocument,
-        duplicates: Map<string | number, IndexDocument>
-    } {
+    private prioritizeAndFilter(bucket: Bucket<IndexDocument>): PrioritizedBucket<IndexDocument> {
         let mainDocument: IndexDocument;
-        let duplicates: Map<string | number, IndexDocument> = new Map<string | number, IndexDocument>();
+        const documents: Map<string | number, IndexDocument> = new Map<string | number, IndexDocument>();
 
         // Special case for WFS: if bucket contains ONLY WFS documents and there is a feature type document,
         // it should be the main document.
         let allWfs = true;
         let featureTypeDocId: string | number = null;
 
-        for (let [id, document] of bucket.duplicates) {
+        for (const [id, document] of bucket.documents) {
             if (!isWfs(document)) {
                 allWfs = false;
             }
@@ -275,25 +272,25 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         }
 
         if (allWfs && featureTypeDocId !== null) {
-            mainDocument = bucket.duplicates.get(featureTypeDocId);
-            for (let [id, document] of bucket.duplicates) {
+            mainDocument = bucket.documents.get(featureTypeDocId);
+            for (let [id, document] of bucket.documents) {
                 if (id !== featureTypeDocId) {
-                    duplicates.set(id, document);
+                    documents.set(id, document);
                 }
             }
         }
         else {
-            for (let [id, document] of bucket.duplicates) {
+            for (let [id, document] of bucket.documents) {
                 if (mainDocument == null) {
                     mainDocument = document;
                 }
                 else {
-                    duplicates.set(id, document);
+                    documents.set(id, document);
                 }
             }
         }
 
-        return { document: mainDocument, duplicates };
+        return { mainDocument, documents };
     }
 
     /**

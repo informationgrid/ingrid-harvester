@@ -24,30 +24,22 @@
 import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
 import log4js from 'log4js';
 import pg from 'pg';
-import Cursor from "pg-cursor";
-import type { Observer } from "rxjs";
+import Cursor from 'pg-cursor';
+import type { Observer } from 'rxjs';
 import type { CatalogColumnType } from '../catalog/catalog.factory.js';
+import type { Bucket } from '../model/bucket.js';
 import type { Distribution } from '../model/distribution.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
 import type { ImportLogMessage } from '../model/import.result.js';
 import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
+import { HarvestRunCancelledError, cancellationSignalStorage } from '../utils/cancellation.utils.js';
 import type { BulkResponse } from './database.utils.js';
 import { DatabaseUtils } from './database.utils.js';
-import { HarvestRunCancelledError, cancellationSignalStorage } from '../utils/cancellation.utils.js';
 import type { PostgresQueries } from './postgres.queries.js';
 
 const log = log4js.getLogger(import.meta.filename);
-
-/**
- * Contains a primary dataset, a list of duplicates, and a list of services operating on the primary dataset.
- */
-export interface Bucket<T> {
-    anchor_id: string | number,
-    duplicates: Map<string | number, T>,
-    operatingServices: Map<string | number, Distribution>
-}
 
 export class PostgresUtils extends DatabaseUtils {
 
@@ -220,12 +212,12 @@ export class PostgresUtils extends DatabaseUtils {
                     }
                     currentBucket = {
                         anchor_id: row.anchor_id,
-                        duplicates: new Map<string | number, T>(),
+                        documents: new Map<string | number, T>(),
                         operatingServices: new Map<string | number, Distribution>()
                     };
                 }
                 if (datasetColumn != 'dataset') {
-                    currentBucket.duplicates.set(row.id, { uuid: row.identifier, dataset: row.dataset } as any);
+                    currentBucket.documents.set(row.id, { uuid: row.identifier, dataset: row.dataset } as any);
                 }
                 else {
                     // add service/additional distribution to current bucket
@@ -246,7 +238,7 @@ export class PostgresUtils extends DatabaseUtils {
                         // row.dataset.extras.metadata.source.source_type = this.getSourceType(row.dataset, row.source);
                         // // TODO move - diplanung specific
                         // row.dataset.catalog = catalogs[row.catalog_id];
-                        currentBucket.duplicates.set(row.id, row.dataset);
+                        currentBucket.documents.set(row.id, row.dataset);
                     }
                 }
             }
