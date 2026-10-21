@@ -630,8 +630,7 @@
               }
             },
             "required": [
-              "term",
-              "source"
+              "term"
             ]
           }
         },
