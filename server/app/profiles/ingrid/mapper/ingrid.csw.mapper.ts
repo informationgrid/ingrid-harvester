@@ -416,6 +416,29 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return texts?.length ? texts.join('\n') : undefined;
     }
 
+    getPublication(): IngridSpecific['publication'] {
+        if (this.getDocumentType() !== 'InGridPublication') return undefined;
+        const citation = CswMapper.select("./*/gmd:citation/gmd:CI_Citation", this.baseMapper.idInfo, true);
+        const fromCitation = (xpath: string) => citation ? this.text(xpath, citation) ?? undefined : undefined;
+        // author / publisher / place_of_publication use the ISO roles originator / publisher, which real addresses in
+        // gmd:citedResponsibleParty share - not unambiguously recoverable; document_type needs codelist 3385 - left unset
+        const result = {
+            published_in: fromCitation("./gmd:series/gmd:CI_Series/gmd:name/gco:CharacterString"),
+            volume: fromCitation("./gmd:series/gmd:CI_Series/gmd:issueIdentification/gco:CharacterString"),
+            pages: fromCitation("./gmd:series/gmd:CI_Series/gmd:page/gco:CharacterString"),
+            publication_date: fromCitation("./gmd:editionDate/gco:Date"),
+            // the InGrid Editor marks the location by this fixed organisationName
+            location: fromCitation("./gmd:citedResponsibleParty/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='resourceProvider'][gmd:organisationName/gco:CharacterString='Contact instructions for the location of resource']/gmd:contactInfo/gmd:CI_Contact/gmd:contactInstructions/gco:CharacterString"),
+            isbn: fromCitation("./gmd:ISBN/gco:CharacterString"),
+            // "distribute" is an InGrid Editor role, not an ISO CI_RoleCode value
+            publishing_house: fromCitation("./gmd:citedResponsibleParty/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='distribute']/gmd:organisationName/gco:CharacterString"),
+            base_data_text: this.joinTexts("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source/gmd:LI_Source/gmd:description/gco:CharacterString"),
+            bibliographic_data: fromCitation("./gmd:otherCitationDetails/gco:CharacterString"),
+            explanation: this.text("./*/gmd:supplementalInformation/gco:CharacterString", this.baseMapper.idInfo) ?? undefined,
+        };
+        return Object.values(result).some(v => v != null) ? result : undefined;
+    }
+
     getProject(): IngridSpecific['project'] {
         if (this.getDocumentType() !== 'InGridProject') return undefined;
         // projectManager / projectParticipant are InGrid Editor roles, not ISO CI_RoleCode values
