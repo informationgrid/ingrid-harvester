@@ -21,12 +21,17 @@
  * ==================================================
  */
 
+import { Service } from '@tsed/common';
+import * as fs from 'fs';
+import { hash } from 'node:crypto';
 import { v4 as uuidv4 } from 'uuid';
-import {Service} from "@tsed/common";
-import {MemoryStorage} from "../storage/MemoryStorage.js";
-import type {IUser} from "../../model/User.js";
-import { sha512 } from 'js-sha512';
-import * as fs from "fs";
+import type { IUser } from '../../model/User.js';
+import { MemoryStorage } from '../storage/MemoryStorage.js';
+
+
+function sha512(s: string): string {
+    return hash('sha512', s, 'hex');
+}
 
 @Service()
 export class UsersService {
