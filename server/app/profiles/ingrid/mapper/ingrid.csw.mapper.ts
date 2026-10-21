@@ -411,6 +411,23 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         };
     }
 
+    getInformationSystem(): IngridSpecific['information_system'] {
+        if (this.getDocumentType() !== 'InGridInformationSystem') return undefined;
+        const joinTexts = (xpath: string) => {
+            const texts = CswMapper.select(xpath, this.baseMapper.record)?.map(n => n.textContent).filter(Boolean);
+            return texts?.length ? texts.join('\n') : undefined;
+        };
+        // service_type / version / information_system are not exported to ISO by the InGrid Editor for this class,
+        // service_urls only as gmd:onLine with function "information" - indistinguishable from getReferences()
+        const result = {
+            system_environment: this.text("./*/gmd:environmentDescription/gco:CharacterString", this.baseMapper.idInfo) ?? undefined,
+            history: joinTexts("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:processStep/gmd:LI_ProcessStep/gmd:description/gco:CharacterString"),
+            basis_data: joinTexts("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source/gmd:LI_Source/gmd:description/gco:CharacterString"),
+            explanation: this.text("./*/gmd:supplementalInformation/gco:CharacterString", this.baseMapper.idInfo) ?? undefined,
+        };
+        return Object.values(result).some(v => v != null) ? result : undefined;
+    }
+
     // services only: the outgoing half of the service->dataset coupling, as declared by the service's
     // own srv:operatesOn/srv:coupledResource (bare UUIDs). CswImporter.coupleService() reads it to build
     // the coupling rows; IngridElasticsearchCatalog.resolveCoupling() completes each entry with the
