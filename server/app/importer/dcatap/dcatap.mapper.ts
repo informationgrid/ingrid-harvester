@@ -637,12 +637,62 @@ export class DcatapMapper<S extends DcatapSettings = DcatapSettings> extends Map
     }
 
     /**
-     * For RDF/XML payloads, returns only the serialized `dcat:Dataset` element of this record.
-     * Other payloads (e.g. JSON-LD) are returned unchanged.
+     * For RDF/XML payloads, returns an RDF/XML document (XML declaration, `rdf:RDF` of the payload with its namespace
+     * declarations) that only contains the `dcat:Dataset` of this record, with the resources it references inlined
+     * (see `getDereferencedDatasetElement()`). Other payloads (e.g. JSON-LD) are returned unchanged.
      */
     getHarvestedData(): string {
+        const dataset = this.getDereferencedDatasetElement();
+        if (!dataset) {
+            return this.rawPayload;
+        }
+        const root = dataset.ownerDocument.documentElement.cloneNode(false) as Element;
+        root.appendChild(dataset.ownerDocument.createTextNode('\n  '));
+        root.appendChild(dataset);
+        root.appendChild(dataset.ownerDocument.createTextNode('\n'));
+        return '<?xml version="1.0" encoding="UTF-8"?>\n' + root.toString();
+    }
+
+    /**
+     * @returns a copy of `getDatasetElement()` in which `dcat:distribution`, `dct:publisher` and `dcat:contactPoint`
+     * properties referring to a top-level resource (`rdf:resource` = `rdf:about`) contain a copy of that resource
+     * instead of the reference (also within inlined resources; each resource at most once); the payload is not changed
+     */
+    private getDereferencedDatasetElement(): Element | undefined {
         const dataset = this.getDatasetElement();
-        return dataset ? dataset.toString() : this.rawPayload;
+        if (!dataset) {
+            return undefined;
+        }
+        const root = dataset.ownerDocument.documentElement;
+        const topLevel = new Map<string, Element>();
+        for (const node of Array.from(root.childNodes)) {
+            const about = node.nodeType === 1 ? (node as Element).getAttributeNS(namespaces.RDF, 'about') : undefined;
+            if (about) {
+                topLevel.set(about, node as Element);
+            }
+        }
+        const copy = dataset.cloneNode(true) as Element;
+        const inlined = new Set<string>();
+        const references = (element: Element) => [
+            ...Array.from(element.getElementsByTagNameNS(namespaces.DCAT, 'distribution')),
+            ...Array.from(element.getElementsByTagNameNS(namespaces.DCT, 'publisher')),
+            ...Array.from(element.getElementsByTagNameNS(namespaces.DCAT, 'contactPoint'))
+        ];
+        const queue = references(copy);
+        while (queue.length) {
+            const property = queue.shift();
+            const reference = property.getAttributeNS(namespaces.RDF, 'resource');
+            const target = reference ? topLevel.get(reference) : undefined;
+            if (!target || inlined.has(reference)) {
+                continue;
+            }
+            inlined.add(reference);
+            const resource = target.cloneNode(true) as Element;
+            property.appendChild(resource);
+            property.removeAttributeNS(namespaces.RDF, 'resource');
+            queue.push(...references(resource));
+        }
+        return copy;
     }
 
     /**

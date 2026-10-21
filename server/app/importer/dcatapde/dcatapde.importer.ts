@@ -22,30 +22,23 @@
  */
 
 import type { Quad_Subject } from '@rdfjs/types';
-import type { DOMParser } from '@xmldom/xmldom';
 import type { Store } from 'n3';
 import type { RequestOptions } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
-import * as MiscUtils from '../../utils/misc.utils.js';
-import { dereferenceRdfElements } from "../../utils/rdf.utils.js";
 import { DcatapImporter, type DcatapPageResult } from '../dcatap/dcatap.importer.js';
 import type { DcatapMapper } from '../dcatap/dcatap.mapper.js';
 import { parseRdfPayload } from '../dcatap/dcatap.rdf.js';
-import { namespaces } from '../namespaces.js';
 import { DcatapdeMapper } from './dcatapde.mapper.js';
 import { dcatapdeDefaults, type DcatapdeSettings } from './dcatapde.settings.js';
 
 /**
- * DCAT-AP.de importer: the harvesting of `DcatapImporter` for RDF/XML sources, with dereferenced
- * distributions, publishers and contact points and `DcatapdeMapper` records.
+ * DCAT-AP.de importer: the harvesting of `DcatapImporter` for RDF/XML sources with `DcatapdeMapper` records.
+ * The original document is an RDF/XML document with only the record's `dcat:Dataset`, the resources it references inlined (`getHarvestedData()`).
  */
 export class DcatapdeImporter extends DcatapImporter<DcatapdeSettings> {
 
-    protected domParser: DOMParser;
-
     constructor(settings: DcatapdeSettings) {
         super(settings);
-        this.domParser = MiscUtils.getDomParser();
     }
 
     protected getDefaultSettings(): DcatapdeSettings {
@@ -53,22 +46,16 @@ export class DcatapdeImporter extends DcatapImporter<DcatapdeSettings> {
     }
 
     /**
-     * Inlines the referenced distributions, publishers and contact points into the datasets and parses the result as RDF/XML.
-     * The dereferenced XML is the response of the page, so `getHarvestedData()` returns the dataset with its dereferenced elements.
+     * DCAT-AP.de sources are RDF/XML (also without `.rdf` extension); relative IRIs are resolved against `sourceURL`.
      */
     protected async fetchAndParse(url: string): Promise<DcatapPageResult> {
         const requestDelegate = new RequestDelegate(DcatapdeImporter.createRequestConfig(this.settings, url));
         const response = await requestDelegate.doRequest();
         const harvestTime = new Date();
-
-        const xml = this.domParser.parseFromString(response, 'application/xml');
-        const rootNode = xml.getElementsByTagNameNS(namespaces.RDF, 'RDF')[0];
-        dereferenceRdfElements(rootNode, './/dcat:distribution | .//dct:publisher | .//dcat:contactPoint', DcatapdeMapper.select);
-        const payload = xml.toString();
-        const store = await parseRdfPayload(payload, this.settings.sourceURL, 'application/rdf+xml');
+        const store = await parseRdfPayload(response, this.settings.sourceURL, 'application/rdf+xml');
 
         return {
-            response: payload,
+            response,
             store,
             harvestTime
         };
@@ -79,7 +66,7 @@ export class DcatapdeImporter extends DcatapImporter<DcatapdeSettings> {
     }
 
     /**
-     * @returns the dereferenced `dcat:Dataset` of the record
+     * @returns the RDF/XML document with only the dereferenced `dcat:Dataset` of the record
      */
     protected getRecordOriginalDocument(response: string, recordSubject: Quad_Subject, sourceIdentifier: string, mapper: DcatapMapper<DcatapdeSettings>): any {
         return mapper.getHarvestedData();

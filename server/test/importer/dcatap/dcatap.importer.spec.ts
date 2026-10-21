@@ -131,10 +131,14 @@ describe('DcatapImporter.getOriginalDocument (RDF/XML)', function () {
         expect(found).to.have.members(datasetIds);
     });
 
-    it('returns only the dataset element as harvested data', function () {
+    it('returns an rdf:RDF document with only the dataset element as harvested data', function () {
         for (const mapper of mappers) {
-            expect(mapper.getHarvestedData()).to.equal(mapper.getDatasetElement().toString());
-            expect(mapper.getHarvestedData()).to.match(/^<dcat:Dataset /);
+            const harvestedData = mapper.getHarvestedData();
+            expect(harvestedData).to.match(/^<\?xml version="1.0" encoding="UTF-8"\?>\n<rdf:RDF /);
+            const root = MiscUtils.getDomParser().parseFromString(harvestedData, 'application/xml').documentElement;
+            // no catalog, hydra or other datasets, only the record's dataset (its distributions are already nested in the test data)
+            expect(Array.from(root.childNodes).filter(node => node.nodeType === 1).map(node => (node as Element).localName)).to.deep.equal(['Dataset']);
+            expect(root.getElementsByTagNameNS(namespaces.DCAT, 'Dataset')[0].toString()).to.equal(mapper.getDatasetElement().toString());
         }
     });
 });

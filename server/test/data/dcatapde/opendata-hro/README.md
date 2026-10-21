@@ -16,7 +16,7 @@ The hydra elements have been adapted accordingly.
 
 ## original/
 
-Expected `original_document` of the stored records (the `dcat:Dataset` with its dereferenced distributions, publishers and contact points), generated from the DCAT-AP.de importer before it was based on the DCAT-AP importer (TASK-039).
+Expected `original_document` of the stored records (RDF/XML document: `rdf:RDF` of the source with only the record's `dcat:Dataset`, its referenced distributions, publishers and contact points inlined; TASK-059), generated from the DCAT-AP.de importer before it was based on the DCAT-AP importer (TASK-039).
 
 ## csw/
 
