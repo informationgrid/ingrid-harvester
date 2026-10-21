@@ -210,16 +210,16 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
                 if (name === 'MD_Georectified') {
                     const pointInPixel = this.text('./gmd:pointInPixel/gmd:MD_PixelOrientationCode', node);
                     grid.rectified = {
-                        checkPointAvailability: parseBool(this.text('./gmd:checkPointAvailability/gco:Boolean', node)),
-                        checkPointDescription: this.text('./gmd:checkPointDescription/gco:CharacterString', node) ?? undefined,
-                        cornerPoints: this.text('./gmd:cornerPoints//gml:pos', node) ?? undefined,
-                        pointInPixel: pointInPixel ? { key: this.transformToIgcDomainId(pointInPixel, '2100'), value: pointInPixel } : undefined,
+                        checkpoint_availability: parseBool(this.text('./gmd:checkPointAvailability/gco:Boolean', node)),
+                        checkpoint_description: this.text('./gmd:checkPointDescription/gco:CharacterString', node) ?? undefined,
+                        corner_points: this.text('./gmd:cornerPoints//gml:pos', node) ?? undefined,
+                        point_in_pixel: pointInPixel ? { key: this.transformToIgcDomainId(pointInPixel, '2100'), value: pointInPixel } : undefined,
                     };
                 } else if (name === 'MD_Georeferenceable') {
                     grid.available_parameters = parseBool(this.text('./gmd:transformationParameterAvailability/gco:Boolean', node));
                     grid.referenced = {
-                        orientationParameterAvailability: parseBool(this.text('./gmd:orientationParameterAvailability/gco:Boolean', node)),
-                        controlPointAvaliability: parseBool(this.text('./gmd:controlPointAvaliability/gco:Boolean', node)),
+                        orientation_parameter_availability: parseBool(this.text('./gmd:orientationParameterAvailability/gco:Boolean', node)),
+                        control_point_availability: parseBool(this.text('./gmd:controlPointAvaliability/gco:Boolean', node)),
                         parameters: this.text('./gmd:parameterCitation/gmd:CI_Citation/gmd:title/gco:CharacterString', node) ?? undefined,
                     };
                 }
@@ -971,7 +971,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             return {
                 pass: passVal === 'true' ? 'conformant' : passVal === 'false' ? 'not-conformant' : 'not-evaluated',
                 specification: specTitle ? { key: null, value: specTitle } : undefined,
-                publicationDate: this.text('./gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date', node) ?? undefined,
+                publication_date: this.text('./gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date', node) ?? undefined,
                 explanation: this.text('./gmd:explanation/gco:CharacterString', node) ?? undefined,
             };
         });

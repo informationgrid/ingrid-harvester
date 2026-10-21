@@ -105,7 +105,7 @@
           "key": null,
           "value": "VERORDNUNG (EU) Nr. 1088/2010 DER KOMMISSION vom 23. November 2010 zur Änderung der Verordnung (EG) Nr. 976/2009 hinsichtlich Downloaddiensten und Transformationsdiensten"
         },
-        "publicationDate": "2010-12-08"
+        "publication_date": "2010-12-08"
       },
       {
         "pass": "conformant",
@@ -114,7 +114,7 @@
           "key": null,
           "value": "VERORDNUNG (EG) Nr. 976/2009 DER KOMMISSION  vom 19. Oktober 2009 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Netzdienste"
         },
-        "publicationDate": "2009-10-20"
+        "publication_date": "2009-10-20"
       },
       {
         "pass": "conformant",
@@ -123,7 +123,7 @@
           "key": null,
           "value": "VERORDNUNG (EU) Nr. 1311/2014 DER KOMMISSION vom 10. Dezember 2014 zur Änderung der Verordnung (EG) Nr. 976/2009 hinsichtlich der Definition des Begriffs INSPIRE-Metadatenelement"
         },
-        "publicationDate": "2014-12-11"
+        "publication_date": "2014-12-11"
       },
       {
         "pass": "conformant",
@@ -132,7 +132,7 @@
           "key": null,
           "value": "VERORDNUNG (EG) Nr. 1205/2008 DER KOMMISSION vom 3. Dezember 2008 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich Metadaten"
         },
-        "publicationDate": "2008-12-04"
+        "publication_date": "2008-12-04"
       },
       {
         "pass": "conformant",
@@ -141,7 +141,7 @@
           "key": null,
           "value": "VERORDNUNG (EU) Nr. 1312/2014 DER KOMMISSION vom 10. Dezember 2014 zur Änderung der Verordnung (EU) Nr. 1089/2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatendiensten"
         },
-        "publicationDate": "2014-12-11"
+        "publication_date": "2014-12-11"
       },
       {
         "pass": "conformant",
@@ -150,7 +150,7 @@
           "key": null,
           "value": "VERORDNUNG (EU) Nr. 1253/2013 DER KOMMISSION vom 21. Oktober 2013 zur Änderung der Verordnung (EU) Nr. 1089/2010 zur Durchführung der Richtlinie 2007/2/EG hinsichtlich der Interoperabilität von Geodatensätzen und -diensten"
         },
-        "publicationDate": "2013-12-10"
+        "publication_date": "2013-12-10"
       },
       {
         "pass": "conformant",
@@ -159,7 +159,7 @@
           "key": null,
           "value": "VERORDNUNG (EU) Nr. 102/2011 DER KOMMISSION vom 4. Februar 2011 zur Änderung der Verordnung (EU) Nr. 1089/2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatensätzen und -diensten"
         },
-        "publicationDate": "2011-02-05"
+        "publication_date": "2011-02-05"
       },
       {
         "pass": "conformant",
@@ -168,7 +168,7 @@
           "key": null,
           "value": "VERORDNUNG (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatensätzen und -diensten"
         },
-        "publicationDate": "2010-12-08"
+        "publication_date": "2010-12-08"
       }
     ]
   },

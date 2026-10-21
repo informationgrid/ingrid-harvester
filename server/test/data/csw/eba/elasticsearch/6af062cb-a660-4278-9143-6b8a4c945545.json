@@ -152,7 +152,7 @@
           "key": null,
           "value": "VERORDNUNG (EG) Nr. 976/2009 DER KOMMISSION vom 19. Oktober 2009 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Netzdienste"
         },
-        "publicationDate": "2009-10-20"
+        "publication_date": "2009-10-20"
       },
       {
         "pass": "conformant",
@@ -161,7 +161,7 @@
           "key": null,
           "value": "INSPIRE Data Specification on Human Health and Safety - Technical Guidelines"
         },
-        "publicationDate": "2013-12-10"
+        "publication_date": "2013-12-10"
       },
       {
         "pass": "conformant",
@@ -170,7 +170,7 @@
           "key": null,
           "value": "INSPIRE Data Specification on Area Management/Restriction/Regulation Zones and Reporting Units – Technical Guidelines"
         },
-        "publicationDate": "2013-12-10"
+        "publication_date": "2013-12-10"
       },
       {
         "pass": "conformant",
@@ -179,12 +179,12 @@
           "key": null,
           "value": "Technical Guidance for the implementation of INSPIRE Download Services"
         },
-        "publicationDate": "2013-04-04"
+        "publication_date": "2013-04-04"
       },
       {
         "pass": "conformant",
         "explanation": "The dataset is conformant with the INSPIRE implementig rules for the interoperability of spatial datasets and services.",
-        "publicationDate": "2014-12-31"
+        "publication_date": "2014-12-31"
       }
     ]
   },

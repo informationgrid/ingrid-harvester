@@ -126,16 +126,16 @@
                                 },
                                 "rectified": {
                                     "properties": {
-                                        "checkPointAvailability": {
+                                        "checkpoint_availability": {
                                             "type": "boolean"
                                         },
-                                        "checkPointDescription": {
+                                        "checkpoint_description": {
                                             "type": "text"
                                         },
-                                        "cornerPoints": {
+                                        "corner_points": {
                                             "type": "keyword"
                                         },
-                                        "pointInPixel": {
+                                        "point_in_pixel": {
                                             "properties": {
                                                 "key": {
                                                     "type": "keyword"
@@ -149,10 +149,10 @@
                                 },
                                 "referenced": {
                                     "properties": {
-                                        "orientationParameterAvailability": {
+                                        "orientation_parameter_availability": {
                                             "type": "boolean"
                                         },
-                                        "controlPointAvaliability": {
+                                        "control_point_availability": {
                                             "type": "boolean"
                                         },
                                         "parameters": {
@@ -191,7 +191,7 @@
                                 }
                             }
                         },
-                        "publicationDate": {
+                        "publication_date": {
                             "type": "keyword"
                         },
                         "explanation": {
@@ -454,6 +454,197 @@
                                 },
                                 "resource_type": {
                                     "type": "keyword"
+                                }
+                            }
+                        }
+                    }
+                },
+                "publication": {
+                    "properties": {
+                        "author": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "publisher": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "published_in": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "place_of_publication": {
+                            "type": "text"
+                        },
+                        "volume": {
+                            "type": "keyword"
+                        },
+                        "pages": {
+                            "type": "keyword"
+                        },
+                        "publication_date": {
+                            "type": "keyword"
+                        },
+                        "location": {
+                            "type": "text"
+                        },
+                        "isbn": {
+                            "type": "keyword"
+                        },
+                        "publishing_house": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "document_type": {
+                            "properties": {
+                                "key": {
+                                    "type": "keyword"
+                                },
+                                "value": {
+                                    "type": "keyword"
+                                }
+                            }
+                        },
+                        "base_data_text": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "bibliographic_data": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "explanation": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        }
+                    }
+                },
+                "project": {
+                    "properties": {
+                        "participants": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "manager": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "explanation": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        }
+                    }
+                },
+                "database_collection": {
+                    "properties": {
+                        "catalog_categories": {
+                            "properties": {
+                                "title": {
+                                    "type": "text",
+                                    "copy_to": [
+                                        "fulltext"
+                                    ]
+                                },
+                                "date": {
+                                    "type": "keyword"
+                                },
+                                "edition": {
+                                    "type": "keyword"
+                                }
+                            }
+                        },
+                        "database_content": {
+                            "properties": {
+                                "parameter": {
+                                    "type": "text",
+                                    "copy_to": [
+                                        "fulltext"
+                                    ]
+                                },
+                                "more_info": {
+                                    "type": "text",
+                                    "copy_to": [
+                                        "fulltext"
+                                    ]
+                                }
+                            }
+                        },
+                        "method": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "explanation": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        }
+                    }
+                },
+                "information_system": {
+                    "properties": {
+                        "service_type": {
+                            "type": "keyword"
+                        },
+                        "version": {
+                            "type": "keyword"
+                        },
+                        "information_system": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "system_environment": {
+                            "type": "text"
+                        },
+                        "history": {
+                            "type": "text"
+                        },
+                        "basis_data": {
+                            "type": "text"
+                        },
+                        "explanation": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "service_urls": {
+                            "properties": {
+                                "name": {
+                                    "type": "text"
+                                },
+                                "url": {
+                                    "type": "keyword"
+                                },
+                                "explanation": {
+                                    "type": "text",
+                                    "copy_to": [
+                                        "fulltext"
+                                    ]
                                 }
                             }
                         }

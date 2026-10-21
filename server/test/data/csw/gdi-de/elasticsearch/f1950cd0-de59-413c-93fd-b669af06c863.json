@@ -63,7 +63,7 @@
           "key": null,
           "value": "VERORDNUNG (EU) Nr. 102/2011 DER KOMMISSION vom 4. Februar 2011 zur Änderung der Verordnung (EU) Nr. 1089/2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatensätzen und -diensten"
         },
-        "publicationDate": "2011-02-05"
+        "publication_date": "2011-02-05"
       },
       {
         "pass": "conformant",
@@ -72,7 +72,7 @@
           "key": null,
           "value": "VERORDNUNG (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatensätzen und -diensten"
         },
-        "publicationDate": "2010-12-08"
+        "publication_date": "2010-12-08"
       },
       {
         "pass": "conformant",
@@ -81,7 +81,7 @@
           "key": null,
           "value": "VERORDNUNG (EG) Nr. 1205/2008 DER KOMMISSION vom 3. Dezember 2008 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich Metadaten"
         },
-        "publicationDate": "2009-12-15"
+        "publication_date": "2009-12-15"
       },
       {
         "pass": "conformant",
@@ -90,7 +90,7 @@
           "key": null,
           "value": "VERORDNUNG (EU) Nr. 1253/2013 DER KOMMISSION vom 21. Oktober 2013 zur Änderung der Verordnung (EU) Nr. 1089/2010 zur Durchführung der Richtlinie 2007/2/EG hinsichtlich der Interoperabilität von Geodatensätzen und -diensten"
         },
-        "publicationDate": "2013-12-10"
+        "publication_date": "2013-12-10"
       }
     ],
     "datasource_identifier": "https://hvbg.hessen.de/registry/spatial/dataset/f1950cd0-de59-413c-93fd-b669af06c863",

@@ -83,7 +83,7 @@
           "key": null,
           "value": "INSPIRE Data Specification on Environmental Monitoring Facilities - Technical Guidelines"
         },
-        "publicationDate": "2013-10-12"
+        "publication_date": "2013-10-12"
       },
       {
         "pass": "not-conformant",
@@ -92,7 +92,7 @@
           "key": null,
           "value": "VERORDNUNG (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatensätzen und -diensten"
         },
-        "publicationDate": "2010-12-08"
+        "publication_date": "2010-12-08"
       }
     ],
     "datasource_identifier": "https://registry.gdi-de.org/id/de.ni.koop.mdini.csw/8a93fdbe1329eb6801132a3c37877cf2",

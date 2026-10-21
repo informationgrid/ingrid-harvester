@@ -108,9 +108,9 @@ describe('ingridMapper — DocumentKind resolution and schema validation', funct
 
         it('throws a fatal error when the built document fails schema validation', async function () {
             class InvalidMapper extends TestMapper {
-                // keywords[].source is required by both live schemas - omit it to force a validation error
+                // keywords[].term is required by both live schemas - omit it to force a validation error
                 getKeywords() {
-                    return [{ term: 'incomplete keyword' }] as any;
+                    return [{ source: 'FREE' }] as any;
                 }
             }
             const mapper = new InvalidMapper(makeBaseMapper(), 'ingrid', false);

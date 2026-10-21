@@ -88,6 +88,43 @@ export type IngridSpecific = {
         has_access_constraints?: boolean,
         doi?: { identifier?: string, general_resource_type?: string, resource_type?: string },
     },
+    publication?: {
+        author?: string,
+        publisher?: string,
+        published_in?: string,
+        place_of_publication?: string,
+        volume?: string,
+        pages?: string,
+        publication_date?: string,
+        location?: string,
+        isbn?: string,
+        publishing_house?: string,
+        document_type?: { key: string | null, value: string | null },
+        base_data_text?: string,
+        bibliographic_data?: string,
+        explanation?: string,
+    },
+    project?: {
+        participants?: string,
+        manager?: string,
+        explanation?: string,
+    },
+    database_collection?: {
+        catalog_categories?: { title?: string, date?: string, edition?: string }[],
+        database_content?: { parameter?: string, more_info?: string }[],
+        method?: string,
+        explanation?: string,
+    },
+    information_system?: {
+        service_type?: string,
+        version?: string[],
+        information_system?: string,
+        system_environment?: string,
+        history?: string,
+        basis_data?: string,
+        explanation?: string,
+        service_urls?: { name?: string, url?: string, explanation?: string }[],
+    },
 };
 
 export type IngridTemporal = IndexTemporal & {
@@ -104,7 +141,7 @@ export type IngridLicense = {
 export type IngridConformanceResult = {
     pass?: 'conformant' | 'not-conformant' | 'not-evaluated',
     specification?: { key: string | null, value: string | null },
-    publicationDate?: string,
+    publication_date?: string,
     explanation?: string,
 };
 
@@ -138,14 +175,14 @@ export type IngridSpatialRepresentation = {
         number_dimensions?: number,
         cell_geometry?: { key: string | null, value: string | null },
         rectified?: {
-            checkPointAvailability?: boolean,
-            checkPointDescription?: string,
-            cornerPoints?: string,
-            pointInPixel?: { key: string | null, value: string | null },
+            checkpoint_availability?: boolean,
+            checkpoint_description?: string,
+            corner_points?: string,
+            point_in_pixel?: { key: string | null, value: string | null },
         },
         referenced?: {
-            orientationParameterAvailability?: boolean,
-            controlPointAvaliability?: boolean,
+            orientation_parameter_availability?: boolean,
+            control_point_availability?: boolean,
             parameters?: string,
         },
     },

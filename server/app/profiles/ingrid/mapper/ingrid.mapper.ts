@@ -217,6 +217,10 @@ export abstract class ingridMapper<M extends ingridMapperType>
             attribute_description: this.getAttributeDescription(),
             spatial: this.getIngridSpatial(),
             service: this.getService(),
+            publication: this.getPublication(),
+            project: this.getProject(),
+            database_collection: this.getDatabaseCollection(),
+            information_system: this.getInformationSystem(),
         };
     }
 
@@ -265,6 +269,22 @@ export abstract class ingridMapper<M extends ingridMapperType>
     }
 
     getService(): IngridSpecific['service'] {
+        return undefined;
+    }
+
+    getPublication(): IngridSpecific['publication'] {
+        return undefined;
+    }
+
+    getProject(): IngridSpecific['project'] {
+        return undefined;
+    }
+
+    getDatabaseCollection(): IngridSpecific['database_collection'] {
+        return undefined;
+    }
+
+    getInformationSystem(): IngridSpecific['information_system'] {
         return undefined;
     }
 

@@ -49,7 +49,7 @@
           "key": null,
           "value": "INSPIRE Data Specification on Geographical Names- Guidelines"
         },
-        "publicationDate": "2014-04-17"
+        "publication_date": "2014-04-17"
       },
       {
         "pass": "conformant",
@@ -58,7 +58,7 @@
           "key": null,
           "value": "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services"
         },
-        "publicationDate": "2010-12-08"
+        "publication_date": "2010-12-08"
       }
     ],
     "datasource_identifier": "https://registry.gdi-de.org/id/de.bund.bkg.csw/DEBKG00M00000187",
