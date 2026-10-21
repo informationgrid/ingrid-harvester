@@ -52,7 +52,9 @@ export type LvrSettings = JsonSettings | KldSettings | OaiSettings;
 
 export class LvrFactory extends ProfileFactory<LvrSettings> {
 
-    dateReplacer = MiscUtils.dateReplacer;
+    dateReplacer(this: any, key: string, value: any): any {
+        return MiscUtils.millisecondDateReplacer.call(this, key, value);
+    }
 
     protected getSupportedTypeNames(): ImporterType[] {
         return ["JSON", "KLD", "OAI"];

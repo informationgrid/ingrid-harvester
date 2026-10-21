@@ -243,11 +243,11 @@ export async function getImageDimensionsFromURL(url: string): Promise<Dimensions
 }
 
 /**
- * This function is to be used as a replacer callback in JSON.stringify.
+ * This function can be used as a replacer callback in JSON.stringify.
  * It replaces the default `Date` ISO serialization with its millisecond timestamp.
  * This is useful e.g. for negative dates which trip up Elasticsearch.
  */
-export function dateReplacer(key: string, value: any): any {
+export function millisecondDateReplacer(key: string, value: any): any {
     // when used as a JSON.stringify callback, `this` refers to the to-be-stringified object
     // we cannot use `value` directly, because `Date` provides an inbuilt serialization via `Date.toJSON()`
     if (this[key] instanceof Date) {
