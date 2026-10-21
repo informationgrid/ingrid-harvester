@@ -416,6 +416,18 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return texts?.length ? texts.join('\n') : undefined;
     }
 
+    getProject(): IngridSpecific['project'] {
+        if (this.getDocumentType() !== 'InGridProject') return undefined;
+        // projectManager / projectParticipant are InGrid Editor roles, not ISO CI_RoleCode values
+        const party = (role: string) => `./gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='${role}']/gmd:individualName/gco:CharacterString`;
+        const result = {
+            participants: this.joinTexts(party('projectParticipant')),
+            manager: this.joinTexts(party('projectManager')),
+            explanation: this.text("./*/gmd:supplementalInformation/gco:CharacterString", this.baseMapper.idInfo) ?? undefined,
+        };
+        return Object.values(result).some(v => v != null) ? result : undefined;
+    }
+
     getDatabaseCollection(): IngridSpecific['database_collection'] {
         if (this.getDocumentType() !== 'InGridDataCollection') return undefined;
         const citations = CswMapper.select("./gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation/gmd:CI_Citation", this.baseMapper.record);
