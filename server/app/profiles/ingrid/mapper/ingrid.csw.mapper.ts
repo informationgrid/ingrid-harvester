@@ -411,18 +411,43 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         };
     }
 
+    private joinTexts(xpath: string): string {
+        const texts = CswMapper.select(xpath, this.baseMapper.record)?.map(n => n.textContent).filter(Boolean);
+        return texts?.length ? texts.join('\n') : undefined;
+    }
+
+    getDatabaseCollection(): IngridSpecific['database_collection'] {
+        if (this.getDocumentType() !== 'InGridDataCollection') return undefined;
+        const citations = CswMapper.select("./gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureCatalogueCitation/gmd:CI_Citation", this.baseMapper.record);
+        // the InGrid Editor writes a placeholder citation "unknown" when no category catalog is set
+        const categories = citations?.map(citation => ({
+            title: this.text("./gmd:title/gco:CharacterString", citation) ?? undefined,
+            date: this.text("./gmd:date/gmd:CI_Date/gmd:date/gco:Date|./gmd:date/gmd:CI_Date/gmd:date/gco:DateTime", citation) ?? undefined,
+            edition: this.text("./gmd:edition/gco:CharacterString", citation) ?? undefined,
+        })).filter(category => category.title !== 'unknown');
+        // the InGrid Editor writes each entry as "<parameter> (<moreInfo>)"
+        const featureTypes = CswMapper.select("./gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureTypes/gco:LocalName", this.baseMapper.record);
+        const content = featureTypes?.map(n => n.textContent).filter(Boolean).map(text => {
+            const match = /^(.*) \(([^()]*)\)$/s.exec(text);
+            return match ? { parameter: match[1], more_info: match[2] } : { parameter: text };
+        });
+        const result = {
+            catalog_categories: categories?.length ? categories : undefined,
+            database_content: content?.length ? content : undefined,
+            method: this.joinTexts("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source/gmd:LI_Source/gmd:description/gco:CharacterString"),
+            explanation: this.text("./*/gmd:supplementalInformation/gco:CharacterString", this.baseMapper.idInfo) ?? undefined,
+        };
+        return Object.values(result).some(v => v != null) ? result : undefined;
+    }
+
     getInformationSystem(): IngridSpecific['information_system'] {
         if (this.getDocumentType() !== 'InGridInformationSystem') return undefined;
-        const joinTexts = (xpath: string) => {
-            const texts = CswMapper.select(xpath, this.baseMapper.record)?.map(n => n.textContent).filter(Boolean);
-            return texts?.length ? texts.join('\n') : undefined;
-        };
         // service_type / version / information_system are not exported to ISO by the InGrid Editor for this class,
         // service_urls only as gmd:onLine with function "information" - indistinguishable from getReferences()
         const result = {
             system_environment: this.text("./*/gmd:environmentDescription/gco:CharacterString", this.baseMapper.idInfo) ?? undefined,
-            history: joinTexts("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:processStep/gmd:LI_ProcessStep/gmd:description/gco:CharacterString"),
-            basis_data: joinTexts("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source/gmd:LI_Source/gmd:description/gco:CharacterString"),
+            history: this.joinTexts("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:processStep/gmd:LI_ProcessStep/gmd:description/gco:CharacterString"),
+            basis_data: this.joinTexts("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source/gmd:LI_Source/gmd:description/gco:CharacterString"),
             explanation: this.text("./*/gmd:supplementalInformation/gco:CharacterString", this.baseMapper.idInfo) ?? undefined,
         };
         return Object.values(result).some(v => v != null) ? result : undefined;
