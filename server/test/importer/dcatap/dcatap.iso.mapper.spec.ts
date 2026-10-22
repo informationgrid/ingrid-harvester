@@ -21,7 +21,6 @@
  * ==================================================
  */
 
-import { DOMParser } from '@xmldom/xmldom';
 import { expect } from 'chai';
 import fs from 'fs';
 import { DataFactory } from 'n3';
@@ -32,6 +31,7 @@ import { parseRdfPayload } from '../../../app/importer/dcatap/dcatap.rdf.js';
 import type { DcatapSettings } from '../../../app/importer/dcatap/dcatap.settings.js';
 import { namespaces } from '../../../app/importer/namespaces.js';
 import { Summary } from '../../../app/model/summary.js';
+import * as MiscUtils from '../../../app/utils/misc.utils.js';
 import settings from '../../data/dcatap/dessau-rosslau/config.json' with { type: 'json' };
 
 const select = xpath.useNamespaces({ gmd: namespaces.GMD, gco: namespaces.GCO, gmx: namespaces.GMX, xlink: namespaces.XLINK });
@@ -51,7 +51,7 @@ describe('DcatapIsoMapper.createCswIsoDocument (dessau-rosslau, a537c7007dd44945
             null
         );
         const mapper = new DcatapMapper(settings as DcatapSettings, datasetSubject, store, payload, new Date('2026-09-30T00:00:00Z'), new Summary('test', settings as any));
-        doc = new DOMParser().parseFromString(new DcatapIsoMapper(mapper).createCswIsoDocument(), 'application/xml');
+        doc = MiscUtils.getDomParser().parseFromString(new DcatapIsoMapper(mapper).createCswIsoDocument(), 'application/xml');
     });
 
     it('maps metadata information', function () {
@@ -166,7 +166,7 @@ describe('DcatapIsoMapper.createCswIsoDocument (reused getters)', function () {
         );
         const testSettings = { sourceURL } as DcatapSettings;
         mapper = new DcatapMapper(testSettings, datasetSubject, store, JSON.stringify(payload), new Date('2026-09-30T00:00:00Z'), new Summary('test', testSettings));
-        doc = new DOMParser().parseFromString(new DcatapIsoMapper(mapper).createCswIsoDocument(), 'application/xml');
+        doc = MiscUtils.getDomParser().parseFromString(new DcatapIsoMapper(mapper).createCswIsoDocument(), 'application/xml');
     });
 
     it('uses getDescription() with dct:abstract fallback', function () {
@@ -235,7 +235,7 @@ describe('DcatapIsoMapper.createCswIsoDocument (language variants, reference sys
         const [datasetSubject] = store.getSubjects(DataFactory.namedNode(namespaces.RDF + 'type'), DataFactory.namedNode(namespaces.DCAT + 'Dataset'), null);
         const testSettings = { sourceURL } as DcatapSettings;
         const mapper = new DcatapMapper(testSettings, datasetSubject, store, JSON.stringify(payload), new Date('2026-09-30T00:00:00Z'), new Summary('test', testSettings));
-        return new DOMParser().parseFromString(new DcatapIsoMapper(mapper).createCswIsoDocument(), 'application/xml');
+        return MiscUtils.getDomParser().parseFromString(new DcatapIsoMapper(mapper).createCswIsoDocument(), 'application/xml');
     }
 
     const text = (doc: Document, path: string): string[] => (select(path, doc) as Node[]).map(node => node.textContent);
@@ -280,7 +280,7 @@ describe('DcatapIsoMapper.createCswIsoDocument (legal constraints)', function ()
         const [datasetSubject] = store.getSubjects(DataFactory.namedNode(namespaces.RDF + 'type'), DataFactory.namedNode(namespaces.DCAT + 'Dataset'), null);
         const testSettings = { sourceURL } as DcatapSettings;
         const mapper = new DcatapMapper(testSettings, datasetSubject, store, JSON.stringify(payload), new Date('2026-09-30T00:00:00Z'), new Summary('test', testSettings));
-        const doc = new DOMParser().parseFromString(new DcatapIsoMapper(mapper).createCswIsoDocument(), 'application/xml');
+        const doc = MiscUtils.getDomParser().parseFromString(new DcatapIsoMapper(mapper).createCswIsoDocument(), 'application/xml');
         const text = (path: string): string[] => (select(path, doc) as Node[]).map(node => node.textContent);
 
         const legal = '/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_LegalConstraints';
