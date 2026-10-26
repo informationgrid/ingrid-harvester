@@ -120,7 +120,7 @@
             <gco:CharacterString>Statistische Einheiten</gco:CharacterString>
           </gmd:keyword>
           <gmd:keyword>
-            <gco:CharacterString>OpenData</gco:CharacterString>
+            <gco:CharacterString>opendata</gco:CharacterString>
           </gmd:keyword>
           <gmd:keyword>
             <gco:CharacterString>Verwaltung</gco:CharacterString>

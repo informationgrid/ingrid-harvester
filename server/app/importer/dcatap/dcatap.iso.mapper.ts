@@ -218,7 +218,7 @@ export class DcatapIsoMapper {
         const keywords = this.mapper.getKeywords();
         if (keywords.length) {
             const mdKeywords = this.isoElement(this.isoElement(dataIdentification, namespaces.GMD, 'gmd:descriptiveKeywords'), namespaces.GMD, 'gmd:MD_Keywords');
-            keywords.forEach(keyword => this.isoCharacterString(mdKeywords, 'keyword', keyword));
+            keywords.forEach(keyword => this.isoCharacterString(mdKeywords, 'keyword', keyword?.toLowerCase() == 'opendata' ? 'opendata' : keyword));
         }
 
         // theme IRIs become anchors, labels and literals plain keywords
