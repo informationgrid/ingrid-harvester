@@ -293,6 +293,9 @@
             },
             "display_url": {
               "type": "keyword"
+            },
+            "last_available": {
+              "type": "date"
             }
           }
         }

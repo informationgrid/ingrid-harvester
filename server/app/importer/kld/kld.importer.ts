@@ -371,7 +371,7 @@ export class KldImporter extends Importer<KldSettings> {
                 }
                 if (retry > 0) {
                     retry -= 1;
-                    log.info(`Retrying request for ${delegate.getFullURL()} (waiting ${this.requestRetryDelay}ms)`);
+                    log.debug(`Retrying request for ${delegate.getFullURL()} (waiting ${this.requestRetryDelay}ms)`);
                     await KldImporter.sleep(this.requestRetryDelay);
                     response = await this.requestSingle(delegate);
                 }

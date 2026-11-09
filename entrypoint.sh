@@ -24,6 +24,8 @@ fi
 # Update config.json with passportEnabled and keycloakEnabled
 CONFIG_FILE="/opt/ingrid/harvester/app/webapp/assets/config.json"
 if [ -f "$CONFIG_FILE" ]; then
+    TMP_FILE=$(mktemp)
+    cp "$CONFIG_FILE" "$TMP_FILE"
     if [ -n "$BASE_URL" ]; then
         replace_in_file "s@\"contextPath\": \".*\"@\"contextPath\": \"$BASE_URL\"@" "$CONFIG_FILE" BASE_URL
     fi
@@ -33,6 +35,8 @@ if [ -f "$CONFIG_FILE" ]; then
     if [ -n "$KEYCLOAK_ENABLED" ]; then
         replace_in_file "s/\"keycloakEnabled\": [a-z]*/\"keycloakEnabled\": $KEYCLOAK_ENABLED/" "$CONFIG_FILE" KEYCLOAK_ENABLED
     fi
+    cat "$TMP_FILE" > "$CONFIG_FILE"
+    rm -f "$TMP_FILE"
 fi
 
 # Update keycloak.json with auth-server-url and credentials.secret

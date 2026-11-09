@@ -70,9 +70,10 @@ export class OaiImporter extends Importer<OaiSettings> {
     }
 
     protected async harvest(): Promise<number> {
+        log.info(`Started requesting records`);
         while (true) {
             try {
-                log.debug('Requesting next records');
+                log.info('Requesting next records');
                 let response = await this.requestDelegate.doRequest();
                 let harvestTime = new Date();
 
@@ -83,7 +84,7 @@ export class OaiImporter extends Importer<OaiSettings> {
                 }
 
                 let numReturned = resultsNode.getElementsByTagName('record').length;
-                log.debug(`Received ${numReturned} records from ${this.settings.sourceURL}`);
+                log.info(`Received ${numReturned} records from ${this.settings.sourceURL}`);
                 await this.extractRecords(responseDom, harvestTime);
 
                 let resumptionTokenNode = resultsNode.getElementsByTagName('resumptionToken')[0];
@@ -94,6 +95,7 @@ export class OaiImporter extends Importer<OaiSettings> {
                     log.info(`Next cursor: ${cursor}/${this.totalRecords}`);
                 }
                 if (!resumptionToken) {
+                    log.info(`No resumption token found, finished requesting records`);
                     break;
                 }
                 let requestConfig = OaiImporter.createRequestConfig(this.settings, resumptionToken);

@@ -204,41 +204,48 @@ export class LvrOaiLidoMapper extends LvrMapper<OaiMapper> {
     }
 
     /**
-     * See https://redmine.wemove.com/issues/5010
+     * https://redmine.wemove.com/issues/5010
+     * https://redmine.wemove.com/issues/6900
      */
     async getSource(): Promise<Source> {
-        const getSourceId = () => {
-            switch (this.baseMapper.getMetadataSource().source_base) {
-                case 'https://oamh-lvr.digicult-verbund.de/cv/sprache_lvr_13tHztt9gZr':
-                    return 'digiCULT (Sprache)';
-                case 'https://oamh-lvr.digicult-verbund.de/cv/hgrojzOf7tF53kH0a0j':
-                    return 'digiCULT (Alltagskulturen)';
-                case 'https://oamh-lvr.digicult-verbund.de/cv/hH0a0jrojzOgtF5j7u':
-                    let conceptIdNodes = OaiMapper.select('./lido:descriptiveMetadata/lido:objectClassificationWrap/lido:classificationWrap/lido:classification/lido:conceptID', this.baseMapper.record);
-                    let conceptIds = conceptIdNodes?.map(conceptIdNode => conceptIdNode.textContent) ?? [];
-                    let relationIds = this.getRelations()?.map(relation => relation.id) ?? [];
-                    if (relationIds.includes('DE-2086/lido/62b99d31aff930.75966699')
-                            || conceptIds.includes('http://digicult.vocnet.org/portal/p0330')) {
-                        return 'digiCULT (Preußen)';
-                    }
-                    else if (relationIds.includes('DE-2086/lido/57a2eb58249101.94114332')
-                            || conceptIds.includes('http://digicult.vocnet.org/portal/p0326')) {
-                        return 'digiCULT (Geschichte)';
-                    }
-                    // console.log("NO PORTAL: " + this.getIdentifier());
-                    // TODO filter out?
-                    return 'digiCULT';
-                default:
-                    return undefined;
+        let sourceId: string;
+        switch (this.baseMapper.getMetadataSource().source_base) {
+            case 'https://oamh-lvr.digicult-verbund.de/cv/sprache_lvr_13tHztt9gZr':
+                sourceId = 'digiCULT (Sprache)';
+                break;
+            case 'https://oamh-lvr.digicult-verbund.de/cv/hgrojzOf7tF53kH0a0j':
+                sourceId = 'digiCULT (Alltagskulturen)';
+                break;
+            case 'https://oamh-lvr.digicult-verbund.de/cv/hH0a0jrojzOgtF5j7u':
+                let conceptIdNodes = OaiMapper.select('./lido:descriptiveMetadata/lido:objectClassificationWrap/lido:classificationWrap/lido:classification/lido:conceptID', this.baseMapper.record);
+                let conceptIds = conceptIdNodes?.map(conceptIdNode => conceptIdNode.textContent) ?? [];
+                let relationIds = this.getRelations()?.map(relation => relation.id) ?? [];
+                if (relationIds.includes('DE-2086/lido/62b99d31aff930.75966699')
+                        || conceptIds.includes('http://digicult.vocnet.org/portal/p0330')) {
+                    sourceId = 'digiCULT (Preußen)';
+                }
+                else if (relationIds.includes('DE-2086/lido/57a2eb58249101.94114332')
+                        || conceptIds.includes('http://digicult.vocnet.org/portal/p0326')) {
+                    sourceId = 'digiCULT (Geschichte)';
+                }
+                break;
+        }
+
+        const displayUrls = new Map<string, string>([
+            [sourceId, this.baseMapper.getRecord().infos?.find(info => info.type == 'lido record')?.link],
+            ['Rheinische Geschichte', `https://rheinische-geschichte.lvr.de/link/${this.getIdentifier()}`],
+            ['Dat Portal', `https://dat-portal.lvr.de/link/${this.getIdentifier()}`]
+        ]);
+
+        for (const [portal, displayUrl] of displayUrls.entries()) {
+            if (portal && await UrlUtils.checkUrlWithProtocol({ uri: displayUrl })) {
+                return {
+                    id: portal,
+                    display_url: displayUrl
+                };
             }
-        };
-        let requestConfig = {
-            uri: this.baseMapper.getRecord().infos?.find(info => info.type == 'lido record')?.link
-        };
-        return {
-            id: getSourceId(),
-            display_url: await UrlUtils.urlWithProtocolFor(requestConfig, this.baseMapper.settings.skipUrlCheckOnHarvest, true)
-        };
+        }
+        return null;
     }
 
     getIssued(): Date {

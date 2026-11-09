@@ -163,13 +163,14 @@ export class LvrClickRheinMapper extends LvrMapper<JsonMapper> {
     }
 
     async getSource(): Promise<Source> {
-        let requestConfig = {
-            uri: `https://click-rhein.lvr.de/detail/discovery/${this.getIdentifier()}`
-        };
-        return {
-            id: 'ClickRhein',
-            display_url: await UrlUtils.urlWithProtocolFor(requestConfig, this.baseMapper.settings.skipUrlCheckOnHarvest, true)
-        };
+        const displayUrl = `https://click-rhein.lvr.de/detail/discovery/${this.baseMapper.id}`;
+        if (await UrlUtils.checkUrlWithProtocol({ uri: displayUrl })) {
+            return {
+                id: 'ClickRhein',
+                display_url: displayUrl
+            };
+        }
+        return null;
     }
 
     // TODO

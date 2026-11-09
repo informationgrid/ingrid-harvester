@@ -24,7 +24,7 @@
 import type { OaiSettings } from '../../app/importer/oai/oai.settings.js';
 import oaiDigicultSpracheSettings from '../data/oai/digicult-sprache/config.json' with { type: 'json' };
 import oaiRheinpublicaSettings from '../data/oai/rheinpublica/config.json' with { type: 'json' };
-import { type ImporterIntegrationTestCase, runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
+import { type HttpMockRule, type ImporterIntegrationTestCase, runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
 
 describe('OAI PMH Integration Tests', function () {
     this.timeout(60000);
@@ -36,16 +36,13 @@ describe('OAI PMH Integration Tests', function () {
         profile,
         expectedDocsDir: 'elasticsearch',
         mocks: [
-            {
-                match: { query: { verb: 'ListRecords' }},
-                fixture: 'input/ListRecords.xml'
-            }
         ]
     } satisfies Partial<ImporterIntegrationTestCase<OaiSettings>>;
 
     it('rheinpublica (mods)', async () => {
         await runImporterIntegrationTest({
             ...oaiTestcase,
+            mocks: createOaiMocks('mir_mods_00000847', 'mir_mods_00000848'),
             settings: oaiRheinpublicaSettings as OaiSettings,
             baseFixture: 'test/data/oai/rheinpublica'
         });
@@ -54,8 +51,26 @@ describe('OAI PMH Integration Tests', function () {
     it('digicult-sprache (lido)', async () => {
         await runImporterIntegrationTest({
             ...oaiTestcase,
+            mocks: createOaiMocks('DE-2086-lido-6a50c2fe6ca8e3.58379442', 'DE-2086-lido-6a5785db161ef0.64980336'),
             settings: oaiDigicultSpracheSettings as OaiSettings,
             baseFixture: 'test/data/oai/digicult-sprache'
         });
     });
 });
+
+function createOaiMocks(...ids: string[]): HttpMockRule[] {
+    const mocks: HttpMockRule[] = [];
+    mocks.push({
+        match: { query: { verb: 'ListRecords' }},
+        fixture: 'input/ListRecords.xml'
+    });
+    for (const id of ids) {
+        mocks.push({
+            match: { url: `https://rheinpublika.lvr.de/mir/receive/${id}` }
+        });
+        mocks.push({
+            match: { url: `https://dat-portal.lvr.de/link/${id.replace('-lido-', '/lido/')}` }
+        });
+    }
+    return mocks;
+}
