@@ -44,11 +44,14 @@ export class LvrElasticsearchCatalog extends ElasticsearchCatalog {
         await super.prepareImport(transactionHandle, importerSettings, observer);
 
         // fetch all existing documents' source info in one scroll
-        const generator = this.elastic.scroll<LvrIndexDocument>(this.settings.settings.index, ['lvr.source']);
+        const generator = this.elastic.scroll<LvrIndexDocument>(this.settings.settings.index, ['id', 'lvr.source']);
 
         for await (const doc of generator) {
             if (doc.lvr?.source) {
-                this.existingSources.set(doc.id, doc.lvr.source);
+                this.existingSources.set(doc.id, {
+                    ...doc.lvr.source,
+                    last_available: doc.lvr.source.last_available ? new Date(doc.lvr.source.last_available) : undefined
+                });
             }
         }
     }
