@@ -22,15 +22,15 @@
  */
 
 import { Controller, Get, Req, Res } from '@tsed/common';
-import { Inject } from "@tsed/di";
 import * as Express from 'express';
 import { KeycloakService } from '../../services/keycloak/KeycloakService.js';
 
 @Controller('/auth/keycloak')
 export class KeycloakCtrl {
 
-  @Inject()
-  private keycloakService: KeycloakService;
+  constructor(
+      private keycloakService: KeycloakService,
+  ) {}
 
   private baseURL = process.env.BASE_URL ?? '/';
 
