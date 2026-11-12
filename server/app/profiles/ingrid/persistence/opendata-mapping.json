@@ -1521,7 +1521,8 @@
           "search_analyzer": "german"
         },
         "keyword": {
-          "type": "keyword"
+          "type": "keyword",
+          "normalizer": "lowercase"
         }
       },
       "analyzer": "german"
