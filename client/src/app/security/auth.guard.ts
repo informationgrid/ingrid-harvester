@@ -21,10 +21,10 @@
  * ==================================================
  */
 
-import { inject } from "@angular/core";
-import { CanActivateFn, Router } from "@angular/router";
-import { AuthenticationService } from "./authentication.service";
-import { map } from "rxjs/operators";
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { map } from 'rxjs/operators';
+import { AuthenticationService } from './authentication.service';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthenticationService);
@@ -61,7 +61,7 @@ export const authGuard: CanActivateFn = (route, state) => {
             .logout(false)
             .subscribe(() =>
               router.navigate(["/login"], {
-                queryParams: { reason: "no_roles" },
+                queryParams: { error: "no_permission" },
               }),
             );
           return false;

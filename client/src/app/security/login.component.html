@@ -79,11 +79,6 @@
         @if (showErrorMessage) {
           <p class="error">Benutzername oder Passwort falsch</p>
         }
-        @if (noRolesMessage) {
-          <p class="error">
-            Ihr Benutzer hat keine Berechtigung für diese Anwendung.
-          </p>
-        }
       </form>
     }
 
@@ -105,11 +100,8 @@
         Mit Keycloak anmelden
       </button>
     }
-
-    @if (noRolesMessage && !passportEnabled) {
-      <p class="error mt-4 text-center">
-        Ihr Benutzer hat keine Berechtigung für diese Anwendung.
-      </p>
+    @if (error) {
+      <p class="error">{{ t("login.error." + error) }}</p>
     }
   </mat-card-content>
 </mat-card>

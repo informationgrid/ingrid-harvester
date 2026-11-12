@@ -21,19 +21,14 @@
  * ==================================================
  */
 
-import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
-import {
-  FormControl,
-  FormGroup,
-  UntypedFormGroup,
-  Validators,
-} from "@angular/forms";
-import { AuthenticationService } from "./authentication.service";
-import { ActivatedRoute, Router } from "@angular/router";
-import { HttpErrorResponse } from "@angular/common/http";
-import { catchError, of } from "rxjs";
-import { ConfigService } from "../config.service";
-import { AuthMethod } from "./AuthStrategy";
+import { HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { catchError, of } from 'rxjs';
+import { ConfigService } from '../config.service';
+import { AuthenticationService } from './authentication.service';
+import { AuthMethod } from './AuthStrategy';
 
 @Component({
   templateUrl: "./login.component.html",
@@ -42,12 +37,14 @@ import { AuthMethod } from "./AuthStrategy";
   standalone: false,
 })
 export class LoginComponent implements OnInit {
+  private static readonly REASONS = ["no_permission", "keycloak", "session"];
+
   form: FormGroup = new FormGroup({
     username: new FormControl("", [Validators.required]),
     password: new FormControl("", [Validators.required]),
   });
   showErrorMessage = false;
-  noRolesMessage = false;
+  error: string | null = null;
   passportEnabled = true;
   keycloakEnabled = true;
 
@@ -60,9 +57,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      if (params["reason"] === "no_roles") {
-        this.noRolesMessage = true;
-      }
+      this.error = LoginComponent.REASONS.includes(params["error"]) ? params["error"] : null;
     });
 
     this.passportEnabled = this.configService.config.passportEnabled !== false;

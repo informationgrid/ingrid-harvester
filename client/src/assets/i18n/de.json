@@ -37,6 +37,13 @@
     "log": "Log",
     "login": "Login"
   },
+  "login": {
+    "error": {
+      "no_permission": "Ihr Benutzer hat keine Berechtigung für diese Anwendung.",
+      "keycloak": "Die Anmeldung ist aufgrund eines technischen Problems fehlgeschlagen. Bitte wenden Sie sich an Ihren Administrator, falls das Problem weiterhin besteht.",
+      "session": "Die Anmeldung war erfolgreich, aber die Anwendungssitzung konnte nicht erstellt werden. Bitte versuchen Sie es erneut."
+    }
+  },
   "dashboard": {
     "welcome": "Guten Tag! Willkommen zurück.",
     "application": "INGRID",
