@@ -21,23 +21,21 @@
  * ==================================================
  */
 
-import { inject, Injectable } from "@angular/core";
-import { Observable, of } from "rxjs";
-import { AuthStrategy } from "./AuthStrategy";
-import { HttpClient } from "@angular/common/http";
+import { Injectable } from '@angular/core';
+import { NEVER, Observable, of } from 'rxjs';
+import { AuthStrategy } from './AuthStrategy';
 
 @Injectable({
   providedIn: "root",
 })
 export class KeycloakService implements AuthStrategy {
-  http = inject(HttpClient);
-
   login(_username?: string, _password?: string): Observable<any> {
     window.location.href = "rest/auth/keycloak/login";
     return of(null);
   }
 
-  logout(): Observable<any> {
-    return this.http.get("rest/auth/keycloak/logout");
+  logout(): Observable<never> {
+    window.location.href = "rest/auth/keycloak/logout";
+    return NEVER;
   }
 }

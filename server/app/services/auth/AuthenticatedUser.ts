@@ -77,21 +77,29 @@ export function hasAnyRole(user: AuthenticatedUser, requiredRoles: string[]): bo
 }
 
 export function buildCallbackUrl(request: Request, baseURL = process.env.BASE_URL ?? '/', allowHttp = false): string {
+  return buildPublicUrl(request, baseURL, allowHttp, '/rest/auth/keycloak/callback');
+}
+
+export function buildPostLogoutUrl(request: Request, baseURL = process.env.BASE_URL ?? '/', allowHttp = false): string {
+  return buildPublicUrl(request, baseURL, allowHttp, '/login');
+}
+
+function buildPublicUrl(request: Request, baseURL: string, allowHttp: boolean, path: string): string {
   const protocol = request.protocol?.toLowerCase();
   const host = (request as any).host ?? request.get('host') ?? request.headers.host;
   if ((protocol !== 'https' && !(allowHttp && protocol === 'http')) || !host ||
     /[\s\\/%?#@,\u0000-\u001f]/.test(host) || host.endsWith(':')) {
-    throw new Error('Invalid public origin for Keycloak callback');
+    throw new Error('Invalid public origin');
   }
 
   let origin: URL;
   try {
     origin = new URL(`${protocol}://${host}`);
   } catch {
-    throw new Error('Invalid public origin for Keycloak callback');
+    throw new Error('Invalid public origin');
   }
   if (origin.username || origin.password || origin.pathname !== '/' || origin.search || origin.hash || !origin.hostname) {
-    throw new Error('Invalid public origin for Keycloak callback');
+    throw new Error('Invalid public origin');
   }
 
   const basePath = baseURL.trim() || '/';
@@ -103,7 +111,7 @@ export function buildCallbackUrl(request: Request, baseURL = process.env.BASE_UR
     throw new Error('Invalid BASE_URL path');
   }
   const prefix = base.pathname.replace(/\/$/, '');
-  return new URL(`${prefix}/rest/auth/keycloak/callback`, origin).href;
+  return new URL(`${prefix}${path}`, origin).href;
 }
 
 export async function logoutRequest(request: Request, response?: Response): Promise<void> {

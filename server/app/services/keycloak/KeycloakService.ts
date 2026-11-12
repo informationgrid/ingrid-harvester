@@ -29,7 +29,7 @@ import path from 'node:path';
 import * as oidc from 'openid-client';
 import passport from 'passport';
 import type { AuthenticatedUser, OidcTransaction } from '../auth/AuthenticatedUser.js';
-import { buildCallbackUrl, logoutRequest } from '../auth/AuthenticatedUser.js';
+import { buildCallbackUrl, buildPostLogoutUrl, logoutRequest } from '../auth/AuthenticatedUser.js';
 import { KeycloakStrategy } from './KeycloakStrategy.js';
 
 export interface KeycloakConfig {
@@ -160,6 +160,26 @@ export class KeycloakService {
     public extractRoles(tokenClaims: Record<string, any> | undefined): string[] {
         const roles = tokenClaims?.resource_access?.[this.keycloakConfig.resource]?.roles;
         return Array.isArray(roles) ? [...new Set(roles.filter((role: unknown): role is string => typeof role === 'string'))] : [];
+    }
+
+    public async buildLogoutUrl(request: Request, idToken?: string): Promise<string> {
+        const postLogoutRedirectUri = buildPostLogoutUrl(
+            request,
+            process.env.BASE_URL ?? '/',
+            this.keycloakConfig['ssl-required']?.toLowerCase() === 'none'
+        );
+
+        try {
+            const config = await this.getClientConfiguration();
+            return oidc.buildEndSessionUrl(config, {
+                client_id: this.keycloakConfig.resource,
+                post_logout_redirect_uri: postLogoutRedirectUri,
+                ...(idToken ? {id_token_hint: idToken} : {})
+            }).href;
+        } catch (error) {
+            console.warn('Keycloak logout URL discovery failed; redirecting to application login', error);
+            return postLogoutRedirectUri;
+        }
     }
 
     public async ensureFreshUser(request: Request, response?: Response): Promise<void> {

@@ -27,6 +27,8 @@ Keycloak login uses the existing `server/keycloak.json` (no new settings). The K
 * root deployment: `https://harvester.example.org/rest/auth/keycloak/callback`
 * sub-path deployment (`BASE_URL=/harvester`): `https://harvester.example.org/harvester/rest/auth/keycloak/callback`
 
+For logout, also add `<public origin><BASE_URL>/login` to the Keycloak client's **Valid post logout redirect URIs** (for example, `https://harvester.example.org/harvester/login` when `BASE_URL=/harvester`).
+
 The public origin is taken from the request. Behind a reverse proxy, make sure the proxy forwards the original `Host` header (or configure Express `trust proxy` for `X-Forwarded-*`). Plain HTTP is only accepted when `ssl-required` is `none`.
 
 ### Configuration files

@@ -105,8 +105,14 @@ export class KeycloakCtrl {
   @Get('/logout')
   async logout(@Req() request: Express.Request, @Res() response: Express.Response) {
     const user = request.user as AuthenticatedUser | undefined;
+    const idToken = user?.keycloak?.idToken;
+    const redirectUrl = await this.keycloakService.buildLogoutUrl(request, idToken);
     await this.keycloakService.logout(user);
-    await logoutRequest(request, response);
-    response.status(200).send({success: true});
+    try {
+      await logoutRequest(request, response);
+    } catch (error) {
+      console.warn('Failed to clear local session during Keycloak logout', error);
+    }
+    response.redirect(redirectUrl);
   }
 }
