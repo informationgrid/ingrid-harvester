@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-export interface IUser {
+export interface LocalUser {
     _id?: string;
     firstName: string;
     lastName: string;

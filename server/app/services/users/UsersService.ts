@@ -25,8 +25,8 @@ import { Service } from '@tsed/common';
 import * as fs from 'fs';
 import { hash } from 'node:crypto';
 import { v4 as uuidv4 } from 'uuid';
-import type { IUser } from '../../model/User.js';
 import { MemoryStorage } from '../storage/MemoryStorage.js';
+import type { LocalUser } from './LocalUser.js';
 
 
 function sha512(s: string): string {
@@ -52,21 +52,16 @@ export class UsersService {
     /**
      * Find a user by his ID.
      * @param id
-     * @returns {undefined|IUser}
+     * @returns {undefined|LocalUser}
      */
     async find(id: string) {
-        const users: IUser[] = await this.query();
-        return users.find((value: IUser) => value._id === id);
-    }
-
-    async findByEmail(username: string) {
-        const users: IUser[] = await this.query();
-        return users.find((value: IUser) => value.username === username);
+        const users: LocalUser[] = await this.query();
+        return users.find((value: LocalUser) => value._id === id);
     }
 
     async findByCredential(username: string, password: string) {
-        const users: IUser[] = await this.query();
-        return users.find((value: IUser) => value.username === username && value.password === sha512(password));
+        const users: LocalUser[] = await this.query();
+        return users.find((value: LocalUser) => value.username === username && value.password === sha512(password));
     }
 
     /**
@@ -74,9 +69,9 @@ export class UsersService {
      * @param name
      * @returns {{id: any, name: string}}
      */
-    async create(user: IUser) {
+    async create(user: LocalUser) {
         user._id = uuidv4();
-        const users = this.memoryStorage.get<IUser[]>("users");
+        const users = this.memoryStorage.get<LocalUser[]>("users");
 
         users.push(user);
 
@@ -87,22 +82,22 @@ export class UsersService {
 
     /**
      *
-     * @returns {IUser[]}
+     * @returns {LocalUser[]}
      */
-    async query(): Promise<IUser[]> {
-        return this.memoryStorage.get<IUser[]>("users");
+    async query(): Promise<LocalUser[]> {
+        return this.memoryStorage.get<LocalUser[]>("users");
     }
 
     /**
      *
      * @param user
-     * @returns {IUser}
+     * @returns {LocalUser}
      */
-    async update(user: IUser): Promise<IUser> {
+    async update(user: LocalUser): Promise<LocalUser> {
 
         const users = await this.query();
 
-        const index = users.findIndex((value: IUser) => value._id === user._id);
+        const index = users.findIndex((value: LocalUser) => value._id === user._id);
 
         users[index] = user;
 

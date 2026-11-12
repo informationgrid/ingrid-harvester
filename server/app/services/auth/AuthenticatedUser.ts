@@ -22,7 +22,7 @@
  */
 
 import type { Request, Response } from 'express';
-import type { IUser } from '../../model/User.js';
+import type { LocalUser } from '../users/LocalUser.js';
 
 export interface AuthenticatedUser {
   username: string;
@@ -52,7 +52,7 @@ declare module 'express-session' {
   }
 }
 
-export function toLocalUser(user: IUser): AuthenticatedUser {
+export function toLocalUser(user: LocalUser): AuthenticatedUser {
   return {
     username: user.username,
     name: [user.firstName, user.lastName].filter(Boolean).join(' ') || undefined,
