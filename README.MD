@@ -29,7 +29,12 @@ Keycloak login uses the existing `server/keycloak.json` (no new settings). The K
 
 For logout, also add `<public origin><BASE_URL>/login` to the Keycloak client's **Valid post logout redirect URIs** (for example, `https://harvester.example.org/harvester/login` when `BASE_URL=/harvester`).
 
-The public origin is taken from the request. Behind a reverse proxy, make sure the proxy forwards the original `Host` header (or configure Express `trust proxy` for `X-Forwarded-*`). Plain HTTP is only accepted when `ssl-required` is `none`.
+The public origin is taken from the request. Behind a TLS-terminating reverse proxy, set `TRUST_PROXY` to explicitly configure Express proxy trust; it defaults to `false`, so forwarded headers are ignored. Prefer the proxy's source IP/CIDR (for example, in a Kubernetes Deployment set `TRUST_PROXY=10.42.8.0/24`, replacing this with the ingress controller's actual source range). `TRUST_PROXY=1` is also supported when the application is reachable only through exactly one proxy hop. The proxy must set the public `Host` (or `X-Forwarded-Host`) and `X-Forwarded-Proto: https` headers. Restrict direct access to the application; avoid `TRUST_PROXY=true`, which trusts forwarded headers from every source. Plain HTTP is only accepted when `ssl-required` is `none`.
+
+Typical values (`TRUST_PROXY` accepts `false`, a hop count, or a comma-separated list of IPs/CIDRs/`loopback`/`linklocal`/`uniquelocal`):
+* Kubernetes Ingress (ingress-nginx): `TRUST_PROXY=<pod CIDR of the ingress controller>`; ingress-nginx sets `X-Forwarded-Proto`/`X-Forwarded-Host` by default.
+* Nginx on the same host: `TRUST_PROXY=loopback` with `proxy_set_header Host $host;` and `proxy_set_header X-Forwarded-Proto $scheme;`.
+* AWS ALB: `TRUST_PROXY=<subnet CIDR(s) of the ALB>` (or `TRUST_PROXY=1` if the ALB is the only hop); ALB sets `X-Forwarded-Proto` and preserves `Host`.
 
 ### Configuration files
 

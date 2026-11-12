@@ -39,6 +39,7 @@ import { ConfigService } from './services/config/ConfigService.js';
 import { configure as harvestJobConfigure } from './utils/harvest-log-appender.js';
 import { jsonLayout } from './utils/log4js.json.layout.js';
 import { merge } from './utils/misc.utils.js';
+import { parseTrustProxy } from './utils/trust-proxy.utils.js';
 import './utils/tsed.log4js.forwarder.js';
 
 const rootDir = import.meta.dirname;
@@ -128,8 +129,13 @@ export class Server implements BeforeRoutesInit, OnInit, OnReady {
     async $beforeRoutesInit(): Promise<any> {
         // on startup make sure the configuration has IDs for each harvester
         ConfigService.fixIDs();
-      let cookieConfig = ConfigService.getGeneralSettings().session.cookie;
-      this.app
+        const trustProxy = parseTrustProxy(process.env.TRUST_PROXY);
+        this.app.getApp().set('trust proxy', trustProxy);
+        if (trustProxy !== false) {
+            log.info(`Express trust proxy enabled: ${Array.isArray(trustProxy) ? trustProxy.join(',') : trustProxy}`);
+        }
+        let cookieConfig = ConfigService.getGeneralSettings().session.cookie;
+        this.app
             .use(PlatformAcceptMimesMiddleware)
             .use(cookieParser())
             .use(compress({}))
