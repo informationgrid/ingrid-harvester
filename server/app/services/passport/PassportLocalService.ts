@@ -21,12 +21,13 @@
  * ==================================================
  */
 
-import passport from 'passport';
-import { Inject, PlatformApplication, PlatformConfiguration, Service } from '@tsed/common';
 import type { AfterRoutesInit, BeforeRoutesInit } from '@tsed/common';
-import type { IUser } from '../../model/User.js';
+import { Inject, PlatformApplication, PlatformConfiguration, Service } from '@tsed/common';
 import { NotFound } from '@tsed/exceptions';
+import passport from 'passport';
 import { Strategy } from 'passport-local';
+import type { AuthenticatedUser } from '../auth/AuthenticatedUser.js';
+import { toLocalUser } from '../auth/AuthenticatedUser.js';
 import { UsersService } from '../users/UsersService.js';
 
 @Service()
@@ -60,18 +61,17 @@ export class PassportLocalService implements BeforeRoutesInit, AfterRoutesInit {
      * @param user
      * @param done
      */
-    static serialize(user: IUser, done) {
-        delete user.password;
-        done(null, user.username);
+    static serialize(user: AuthenticatedUser, done) {
+        done(null, user);
     }
 
     /**
      *
-     * @param id
+     * @param user
      * @param done
      */
-    public deserialize(id, done) {
-        done(null, this.usersService.find(id));
+    public deserialize(user: AuthenticatedUser, done) {
+        done(null, user);
     };
 
 
@@ -97,10 +97,10 @@ export class PassportLocalService implements BeforeRoutesInit, AfterRoutesInit {
      * @param password
      * @returns {Promise<boolean>}
      */
-    async login(username: string, password: string): Promise<IUser> {
+    async login(username: string, password: string): Promise<AuthenticatedUser> {
         const user = await this.usersService.findByCredential(username, password);
         if (user) {
-            return user;
+            return toLocalUser(user);
         }
 
         throw new NotFound('User not found');

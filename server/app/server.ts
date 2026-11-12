@@ -27,7 +27,7 @@ import { PlatformAcceptMimesMiddleware } from '@tsed/platform-accept-mimes';
 import bodyParser from 'body-parser';
 import compress from 'compression';
 import cookieParser from 'cookie-parser';
-import session from 'express-session';
+import session, { MemoryStore } from 'express-session';
 import log4js from 'log4js';
 import methodOverride from 'method-override';
 import * as path from 'path';
@@ -36,7 +36,6 @@ import serverConfig from '../server-config.json' with { type: 'json' };
 import { LogMiddleware } from './middlewares/LogMiddleware.js';
 import { ProfileFactoryLoader } from './profiles/profile.factory.loader.js';
 import { ConfigService } from './services/config/ConfigService.js';
-import { KeycloakService } from './services/keycloak/KeycloakService.js';
 import { configure as harvestJobConfigure } from './utils/harvest-log-appender.js';
 import { jsonLayout } from './utils/log4js.json.layout.js';
 import { merge } from './utils/misc.utils.js';
@@ -114,8 +113,7 @@ export class Server implements BeforeRoutesInit, OnInit, OnReady {
     @Configuration()
     settings: PlatformConfiguration;
 
-    constructor(@Inject(PlatformApplication) public app: PlatformApplication,
-                @Inject(KeycloakService) protected keycloakService: KeycloakService) {
+    constructor(@Inject(PlatformApplication) public app: PlatformApplication) {
     }
 
     async $onInit(): Promise<any> {
@@ -152,12 +150,8 @@ export class Server implements BeforeRoutesInit, OnInit, OnReady {
                     secure: cookieConfig.secure,
                     maxAge: cookieConfig.maxAge
                 },
-                store: this.keycloakService.getMemoryStore()
-                // store: new MemoryStore({
-                //     checkPeriod: 86400000 // prune expired entries every 24h
-                // })
-            }))
-            .use(this.keycloakService.getKeycloakInstance().middleware());
+                store: new MemoryStore()
+            }));
     }
 
     async $onReady(): Promise<any> {

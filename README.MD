@@ -20,6 +20,15 @@ The InGrid Harvester runs two components in a single docker container: the actua
   * set `contextPath` in the client config file to the same value
 * This is in addition to appropriate webserver settings
 
+### Keycloak
+
+Keycloak login uses the existing `server/keycloak.json` (no new settings). The Keycloak client must allow the redirect URI
+`<public origin><BASE_URL>/rest/auth/keycloak/callback`, e.g.
+* root deployment: `https://harvester.example.org/rest/auth/keycloak/callback`
+* sub-path deployment (`BASE_URL=/harvester`): `https://harvester.example.org/harvester/rest/auth/keycloak/callback`
+
+The public origin is taken from the request. Behind a reverse proxy, make sure the proxy forwards the original `Host` header (or configure Express `trust proxy` for `X-Forwarded-*`). Plain HTTP is only accepted when `ssl-required` is `none`.
+
 ### Configuration files
 
 | Config file location (project) | Config file location (docker container)                    | Purpose                                         |

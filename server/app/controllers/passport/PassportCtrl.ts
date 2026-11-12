@@ -21,11 +21,12 @@
  * ==================================================
  */
 
+import { BodyParams, Controller, Get, Post, Req, Res } from '@tsed/common';
+import { Required } from '@tsed/schema';
 import * as Express from 'express';
 import passport from 'passport';
-import { BodyParams, Controller, Get, Post, Req, Res } from '@tsed/common';
-import type { IUser } from '../../model/User.js';
-import { Required } from '@tsed/schema';
+import type { AuthenticatedUser } from '../../services/auth/AuthenticatedUser.js';
+import { logoutRequest, toPublicUser } from '../../services/auth/AuthenticatedUser.js';
 
 @Controller('/passport')
 export class PassportCtrl {
@@ -42,21 +43,24 @@ export class PassportCtrl {
                 @Req() request: Express.Request,
                 @Res() response: Express.Response) {
 
-        return new Promise<IUser>((resolve, reject) => {
+        return new Promise<ReturnType<typeof toPublicUser>>((resolve, reject) => {
             passport
-                .authenticate('login', (err, user: IUser) => {
+                .authenticate('login', (err, user: AuthenticatedUser) => {
                     if (err) {
                         reject(err);
                         return;
                     }
+                    if (!user) {
+                        reject(new Error('Invalid username or password'));
+                        return;
+                    }
 
-                    request.logIn(user, (err) => {
+                    request.logIn(user as Express.User, (err) => {
 
                         if (err) {
                             reject(err);
                         } else {
-                            user.roles = ['admin'];
-                            resolve(user);
+                            resolve(toPublicUser(user));
                         }
                     });
 
@@ -69,10 +73,11 @@ export class PassportCtrl {
     /**
      * Disconnect user
      * @param request
+     * @param response
      */
     @Get('/logout')
-    public logout(@Req() request: Express.Request): string {
-        request.logout(()  => {});
+    public async logout(@Req() request: Express.Request, @Res() response: Express.Response): Promise<string> {
+        await logoutRequest(request, response);
         return 'Disconnected';
     }
 

@@ -21,21 +21,14 @@
  * ==================================================
  */
 
-import * as Express from 'express';
 import { Controller, Get, Req } from '@tsed/common';
-import { KeycloakService } from '../services/keycloak/KeycloakService.js';
-import { UsersService } from '../services/users/UsersService.js';
 import { Unauthorized } from '@tsed/exceptions';
-import log4js from "log4js";
-
-const log = log4js.getLogger(import.meta.filename);
+import * as Express from 'express';
+import type { AuthenticatedUser } from '../services/auth/AuthenticatedUser.js';
+import { toPublicUser } from '../services/auth/AuthenticatedUser.js';
 
 @Controller('/auth')
 export class AuthCtrl {
-    constructor(
-        private keycloakService: KeycloakService,
-        private usersService: UsersService
-    ) {}
 
     /**
      * Unified endpoint to check if a user is authenticated (either Passport or Keycloak)
@@ -43,54 +36,9 @@ export class AuthCtrl {
      */
     @Get('/check')
     async check(@Req() request: Express.Request) {
-        // 1. Check Passport authentication
-        if (request.isAuthenticated && request.isAuthenticated()) {
-            const user: any = request.user;
-            if (user) {
-                const { password, ...userInfo } = user;
-                return {
-                    ...userInfo,
-                    roles: user.roles || ['admin'], // Default to admin for passport users if roles not set
-                    authMethod: 'local'
-                };
-            }
+        if (request.isAuthenticated?.() && request.user) {
+            return toPublicUser(request.user as AuthenticatedUser);
         }
-
-        // 2. Check Keycloak authentication
-        if (request.session && request.session['keycloak-token']) {
-            let token = JSON.parse(request.session['keycloak-token'])?.access_token;
-
-            // If it's a string, it's probably the JWT itself and needs decoding
-            if (typeof token === 'string') {
-                const base64Url = token.split('.')[1];
-                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                const jsonPayload = Buffer.from(base64, 'base64').toString();
-                token = JSON.parse(jsonPayload);
-            }
-
-            const content = token.content || token;
-            const username = content.preferred_username || content.sub;
-            const user = await this.usersService.findByEmail(username);
-            const roles = this.keycloakService.getRoles(token);
-
-            if (user) {
-                const { password, ...userInfo } = user;
-                return {
-                    ...userInfo,
-                    roles,
-                    authMethod: 'keycloak'
-                };
-            }
-            return {
-                username,
-                roles,
-                authMethod: 'keycloak'
-            };
-        }
-
-        log.debug('No authentication cookie found');
-        log.debug('Session', request.session);
-        log.debug('Cookies', request.cookies);
         throw new Unauthorized('User not authenticated');
     }
 }
