@@ -49,6 +49,7 @@ export interface OidcTransaction {
 declare module 'express-session' {
   interface SessionData {
     oidcStates?: Record<string, OidcTransaction>;
+    passport?: { user?: AuthenticatedUser };
   }
 }
 

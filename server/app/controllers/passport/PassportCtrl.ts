@@ -55,7 +55,7 @@ export class PassportCtrl {
                         return;
                     }
 
-                    request.logIn(user as Express.User, (err) => {
+                    request.logIn(user, (err) => {
 
                         if (err) {
                             reject(err);

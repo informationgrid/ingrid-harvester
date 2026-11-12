@@ -22,7 +22,7 @@
  */
 
 import type { Request } from 'express';
-import Strategy from 'passport-strategy';
+import { Strategy } from 'passport-strategy';
 import type { KeycloakService } from './KeycloakService.js';
 
 export class KeycloakStrategy extends Strategy {

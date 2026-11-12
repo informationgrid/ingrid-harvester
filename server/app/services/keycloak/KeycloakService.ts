@@ -209,7 +209,7 @@ export class KeycloakService {
             };
             request.user = refreshed;
             if (request.session?.passport) {
-                (request.session.passport as any).user = refreshed;
+                request.session.passport.user = refreshed;
                 await new Promise<void>((resolve, reject) => {
                     request.session.save(error => error ? reject(error) : resolve());
                 });

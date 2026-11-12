@@ -33,7 +33,7 @@ export class AuthMiddleware implements MiddlewareMethods {
   constructor(protected keycloakService: KeycloakService) {
   }
 
-  public async use(@Req() request: Express.Request, @Context() ctx: Context) {
+  public async use(@Req() request: Req, @Context() ctx: Context) {
     const user = request.user as AuthenticatedUser | undefined;
     if (!request.isAuthenticated?.() || !user) {
       throw new Unauthorized('Session expired, please login again');

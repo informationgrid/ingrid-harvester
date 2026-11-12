@@ -87,7 +87,7 @@ export class KeycloakCtrl {
           return;
         }
         // passport >= 0.6 regenerates the session in logIn (session fixation protection)
-        request.logIn(user as Express.User, (loginError) => {
+        request.logIn(user, (loginError) => {
           if (loginError) {
             console.error('Error establishing Keycloak session:', loginError);
             redirectToLogin('session');
