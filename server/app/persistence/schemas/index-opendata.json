@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schema.ingrid-oss.eu/index/draft/schema/index-opendata.json",
   "title": "InGrid Index - OpenData",
+  "description": "Schema for InGrid Index - OpenData\nHinweise:\n* Webseite als Reference\n* Qualitätssicherungsprozess URI als Reference\n* Schlagworte, HVD-Kategorien und Open Data Kategorien als keywords\n* ist HVD, sobald mindestens eine Open Data Kategorie vorhanden ist\n* \n",
   "type": "object",
   "allOf": [
     {
@@ -35,14 +36,6 @@
                 "UmweltNAVI Datensatz ['UMWELTNAVI']",
                 "InGrid Datensatz ['INGRID']",
                 "UVP Datensatz ['UVP']"
-              ]
-            },
-            "document_type": {
-              "type": "string",
-              "description": "Beschreibt den genauen Typ des Metadatensatzes. Dies kann als Unterkategorie im Profil definiert werden.",
-              "examples": [
-                "InGridGeoDataset",
-                "InGridGeoService"
               ]
             },
             "created": {
@@ -95,22 +88,12 @@
             },
             "language": {
               "title": "language",
-              "description": "Enthält die Sprache des Metadatensatzes.",
-              "additionalProperties": false,
-              "properties": {
-                "key": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "value": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                }
-              }
+              "type": "string",
+              "description": "Angabe der Sprache des Metadatensatzes im ISO 639-1 Format",
+              "examples": [
+                "de",
+                "en"
+              ]
             },
             "datasource": {
               "properties": {
@@ -161,7 +144,11 @@
         },
         "language": {
           "type": "string",
-          "description": "Welches Format hat die Sprache, wo wird es verwendet."
+          "description": "Angabe der Sprache des Datensatzes im ISO 639-1 Format",
+          "examples": [
+            "de",
+            "en"
+          ]
         },
         "contacts": {
           "type": "array",
@@ -646,29 +633,21 @@
                 "description": "Die URL zur externen Ressource oder Download."
               },
               "type": {
-                "type": "object",
+                "type": "string",
                 "title": "type",
                 "description": "Gibt den Typ der externen Ressource oder Download an.",
                 "examples": [
                   "3600 - Gekoppelte Daten",
                   "5304 - Bestellung",
                   "3535 - Schlüsselkatalog"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                  "key": {
-                    "type": [
-                      "string",
-                      "null"
-                    ]
-                  },
-                  "value": {
-                    "type": [
-                      "string",
-                      "null"
-                    ]
-                  }
-                }
+                ]
+              },
+              "type_ref_uri": {
+                "type": "string",
+                "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                "examples": [
+                  "/codelist/1234/3"
+                ]
               },
               "title": {
                 "type": "string",
@@ -1011,14 +990,6 @@
                 "UVP Datensatz ['UVP']"
               ]
             },
-            "document_type": {
-              "type": "string",
-              "description": "Beschreibt den genauen Typ des Metadatensatzes. Dies kann als Unterkategorie im Profil definiert werden.",
-              "examples": [
-                "InGridGeoDataset",
-                "InGridGeoService"
-              ]
-            },
             "created": {
               "type": [
                 "string",
@@ -1069,22 +1040,12 @@
             },
             "language": {
               "title": "language",
-              "description": "Enthält die Sprache des Metadatensatzes.",
-              "additionalProperties": false,
-              "properties": {
-                "key": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "value": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                }
-              }
+              "type": "string",
+              "description": "Angabe der Sprache des Metadatensatzes im ISO 639-1 Format",
+              "examples": [
+                "de",
+                "en"
+              ]
             },
             "datasource": {
               "properties": {
@@ -1129,29 +1090,21 @@
               "description": "Die URL zur externen Ressource oder Download."
             },
             "type": {
-              "type": "object",
+              "type": "string",
               "title": "type",
               "description": "Gibt den Typ der externen Ressource oder Download an.",
               "examples": [
                 "3600 - Gekoppelte Daten",
                 "5304 - Bestellung",
                 "3535 - Schlüsselkatalog"
-              ],
-              "additionalProperties": false,
-              "properties": {
-                "key": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "value": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                }
-              }
+              ]
+            },
+            "type_ref_uri": {
+              "type": "string",
+              "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+              "examples": [
+                "/codelist/1234/3"
+              ]
             },
             "title": {
               "type": "string",
@@ -1178,65 +1131,66 @@
             }
           }
         },
-        "dcat": {
+        "opendata": {
           "type": "object",
           "properties": {
             "landing_page": {
               "type": "string"
-            }
-          }
-        },
-        "legal_basis": {
-          "type": "string"
-        },
-        "distributions": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "format": {
-                "type": "string"
-              },
-              "access_url": {
-                "type": "string"
-              },
-              "modified": {
-                "type": "string"
-              },
-              "title": {
-                "type": "string"
-              },
-              "description": {
-                "type": "string"
-              },
-              "license": {
+            },
+            "legal_basis": {
+              "type": "string"
+            },
+            "distributions": {
+              "type": "array",
+              "items": {
                 "type": "object",
                 "properties": {
-                  "url": {
+                  "format": {
                     "type": "string"
                   },
-                  "name": {
+                  "access_url": {
                     "type": "string"
                   },
-                  "attribution_by_text": {
+                  "modified": {
                     "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "license": {
+                    "type": "object",
+                    "properties": {
+                      "url": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "attribution_by_text": {
+                        "type": "string"
+                      }
+                    }
                   },
                   "languages": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     }
+                  },
+                  "availability": {
+                    "type": "string"
                   }
                 }
-              },
-              "availability": {
-                "type": "string"
               }
+            },
+            "political_geocoding_level": {
+              "type": "string",
+              "description": "Werte kommen aus der Katalog-Codeliste 20006. TODO enum verwenden oder flexibel bleiben?"
             }
           }
-        },
-        "political_geocoding_level_uri": {
-          "type": "string"
         }
       }
     }

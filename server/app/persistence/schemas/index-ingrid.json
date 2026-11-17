@@ -39,14 +39,6 @@
                 "UVP Datensatz ['UVP']"
               ]
             },
-            "document_type": {
-              "type": "string",
-              "description": "Beschreibt den genauen Typ des Metadatensatzes. Dies kann als Unterkategorie im Profil definiert werden.",
-              "examples": [
-                "InGridGeoDataset",
-                "InGridGeoService"
-              ]
-            },
             "created": {
               "type": [
                 "string",
@@ -97,22 +89,12 @@
             },
             "language": {
               "title": "language",
-              "description": "Enthält die Sprache des Metadatensatzes.",
-              "additionalProperties": false,
-              "properties": {
-                "key": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "value": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                }
-              }
+              "type": "string",
+              "description": "Angabe der Sprache des Metadatensatzes im ISO 639-1 Format",
+              "examples": [
+                "de",
+                "en"
+              ]
             },
             "datasource": {
               "properties": {
@@ -163,7 +145,11 @@
         },
         "language": {
           "type": "string",
-          "description": "Welches Format hat die Sprache, wo wird es verwendet."
+          "description": "Angabe der Sprache des Datensatzes im ISO 639-1 Format",
+          "examples": [
+            "de",
+            "en"
+          ]
         },
         "contacts": {
           "type": "array",
@@ -648,29 +634,21 @@
                 "description": "Die URL zur externen Ressource oder Download."
               },
               "type": {
-                "type": "object",
+                "type": "string",
                 "title": "type",
                 "description": "Gibt den Typ der externen Ressource oder Download an.",
                 "examples": [
                   "3600 - Gekoppelte Daten",
                   "5304 - Bestellung",
                   "3535 - Schlüsselkatalog"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                  "key": {
-                    "type": [
-                      "string",
-                      "null"
-                    ]
-                  },
-                  "value": {
-                    "type": [
-                      "string",
-                      "null"
-                    ]
-                  }
-                }
+                ]
+              },
+              "type_ref_uri": {
+                "type": "string",
+                "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                "examples": [
+                  "/codelist/1234/3"
+                ]
               },
               "title": {
                 "type": "string",
@@ -1013,14 +991,6 @@
                 "UVP Datensatz ['UVP']"
               ]
             },
-            "document_type": {
-              "type": "string",
-              "description": "Beschreibt den genauen Typ des Metadatensatzes. Dies kann als Unterkategorie im Profil definiert werden.",
-              "examples": [
-                "InGridGeoDataset",
-                "InGridGeoService"
-              ]
-            },
             "created": {
               "type": [
                 "string",
@@ -1071,22 +1041,12 @@
             },
             "language": {
               "title": "language",
-              "description": "Enthält die Sprache des Metadatensatzes.",
-              "additionalProperties": false,
-              "properties": {
-                "key": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "value": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                }
-              }
+              "type": "string",
+              "description": "Angabe der Sprache des Metadatensatzes im ISO 639-1 Format",
+              "examples": [
+                "de",
+                "en"
+              ]
             },
             "datasource": {
               "properties": {
@@ -1131,29 +1091,21 @@
               "description": "Die URL zur externen Ressource oder Download."
             },
             "type": {
-              "type": "object",
+              "type": "string",
               "title": "type",
               "description": "Gibt den Typ der externen Ressource oder Download an.",
               "examples": [
                 "3600 - Gekoppelte Daten",
                 "5304 - Bestellung",
                 "3535 - Schlüsselkatalog"
-              ],
-              "additionalProperties": false,
-              "properties": {
-                "key": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "value": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                }
-              }
+              ]
+            },
+            "type_ref_uri": {
+              "type": "string",
+              "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+              "examples": [
+                "/codelist/1234/3"
+              ]
             },
             "title": {
               "type": "string",
@@ -1170,6 +1122,22 @@
     {
       "type": "object",
       "title": "InGrid",
+      "if": {
+        "properties": {
+          "metadata": {
+            "properties": {
+              "data_type": {
+                "const": "INGRID"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "ingrid"
+        ]
+      },
       "properties": {
         "metadata": {
           "type": "object",
@@ -1186,14 +1154,6 @@
                     "UmweltNAVI Datensatz ['UMWELTNAVI']",
                     "InGrid Datensatz ['INGRID']",
                     "UVP Datensatz ['UVP']"
-                  ]
-                },
-                "document_type": {
-                  "type": "string",
-                  "description": "Beschreibt den genauen Typ des Metadatensatzes. Dies kann als Unterkategorie im Profil definiert werden.",
-                  "examples": [
-                    "InGridGeoDataset",
-                    "InGridGeoService"
                   ]
                 },
                 "created": {
@@ -1246,22 +1206,12 @@
                 },
                 "language": {
                   "title": "language",
-                  "description": "Enthält die Sprache des Metadatensatzes.",
-                  "additionalProperties": false,
-                  "properties": {
-                    "key": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "value": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    }
-                  }
+                  "type": "string",
+                  "description": "Angabe der Sprache des Metadatensatzes im ISO 639-1 Format",
+                  "examples": [
+                    "de",
+                    "en"
+                  ]
                 },
                 "datasource": {
                   "properties": {
@@ -1309,14 +1259,6 @@
                     "UMWELTNAVI"
                   ]
                 },
-                "document_type": {
-                  "type": "string",
-                  "description": "Beschreibt den Typ des Metadatensatzes."
-                },
-                "language": {
-                  "type": "string",
-                  "description": "Enthält die Sprache des Metadatensatzes. Hier wird die Codeliste 99999999 verwendet."
-                },
                 "partner": {
                   "type": "string",
                   "description": "Der Partner der Datenquelle als Kürzel. Siehe auch Codeliste 110."
@@ -1328,35 +1270,7 @@
                     "ni_gll"
                   ]
                 }
-              },
-              "if": {
-                "properties": {
-                  "data_type": {
-                    "const": "INGRID"
-                  }
-                },
-                "required": [
-                  "data_type"
-                ]
-              },
-              "then": {
-                "properties": {
-                  "document_type": {
-                    "enum": [
-                      "InGridGeoDataset",
-                      "InGridDataCollection",
-                      "InGridGeoService",
-                      "InGridInformationSystem",
-                      "InGridPublication",
-                      "InGridProject",
-                      "InGridSpecialisedTask"
-                    ]
-                  }
-                }
-              },
-              "required": [
-                "data_type"
-              ]
+              }
             }
           ]
         },
@@ -1438,49 +1352,35 @@
               "title": "InGrid Temporal",
               "properties": {
                 "status": {
+                  "type": "string",
                   "description": "In welchem Zustand ist der Datensatz? Hier wird die Codeliste 523 verwendet.",
                   "examples": [
                     "1 - abgeschlossen",
                     "2 - historisches Archiv"
-                  ],
-                  "additionalProperties": false,
-                  "properties": {
-                    "key": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "value": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    }
-                  }
+                  ]
+                },
+                "status_ref_uri": {
+                  "type": "string",
+                  "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                  "examples": [
+                    "/codelist/1234/3"
+                  ]
                 },
                 "maintenance_frequency": {
+                  "type": "string",
                   "description": "Enthält das Pflegeintervall des Datensatzes. Es wird die Codeliste 518 verwendet.",
                   "examples": [
                     "2 - täglich",
                     "3 - wöchentlich",
                     "5 - monatlich"
-                  ],
-                  "additionalProperties": false,
-                  "properties": {
-                    "key": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "value": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    }
-                  }
+                  ]
+                },
+                "maintenance_frequency_ref_uri": {
+                  "type": "string",
+                  "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                  "examples": [
+                    "/codelist/1234/3"
+                  ]
                 },
                 "user_defined_maintenance_frequency_in_sec": {
                   "type": "string",
@@ -1503,7 +1403,29 @@
           }
         },
         "ingrid": {
+          "unevaluatedProperties": false,
+          "required": [
+            "document_type"
+          ],
           "properties": {
+            "document_type": {
+              "type": "string",
+              "description": "Beschreibt den Typ des Metadatensatzes.",
+              "enum": [
+                "InGridGeoDataset",
+                "InGridDataCollection",
+                "InGridGeoService",
+                "InGridInformationSystem",
+                "InGridPublication",
+                "InGridProject",
+                "InGridSpecialisedTask",
+                "InGridAlgorithm"
+              ],
+              "examples": [
+                "InGridGeoDataset",
+                "InGridGeoService"
+              ]
+            },
             "alternate_title": {
               "type": "string",
               "description": "Ermöglicht das Setzen eines alternativen Titels oder eine Kurzbeschreibung des Datensatzes."
@@ -1530,16 +1452,18 @@
                     "items": {
                       "title": "item",
                       "properties": {
-                        "key": {
+                        "name": {
                           "type": [
                             "string",
                             "null"
-                          ]
+                          ],
+                          "description": "Name der Einschränkung oder Nutzungsbedingung."
                         },
-                        "value": {
-                          "type": [
-                            "string",
-                            "null"
+                        "name_ref_uri": {
+                          "type": "string",
+                          "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                          "examples": [
+                            "/codelist/1234/3"
                           ]
                         },
                         "source": {
@@ -1564,15 +1488,15 @@
               ]
             },
             "spatial_representation": {
-              "type": "array",
+              "type": "object",
               "title": "Digitale Repräsentation",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "type": {
+              "properties": {
+                "types": {
+                  "type": "array",
+                  "title": "Typen",
+                  "description": "Beschreibt die Typen der Repräsentation",
+                  "items": {
                     "type": "string",
-                    "title": "Typ",
-                    "description": "Beschreibt den Typ der Repräsentation",
                     "enum": [
                       "text",
                       "vector",
@@ -1581,126 +1505,112 @@
                       "stereomodel",
                       "grid"
                     ]
-                  },
-                  "vector": {
-                    "type": "array",
-                    "title": "Vector",
-                    "description": "Beschreibt die digitale Repräsentation als eine Liste von Vektor-Daten.",
-                    "items": {
-                      "properties": {
-                        "topology": {
-                          "type": "string",
-                          "description": "Beschreibt die Topologie des Vektor-Datensatzes"
-                        },
-                        "geometry_type": {
-                          "type": "string",
-                          "description": "Beschreibt den Typ der Geometrie"
-                        },
-                        "number": {
-                          "type": "integer",
-                          "description": "Beschreibt die Anzahl der Punkt- oder Vektortypelemente im Datensatz"
-                        }
+                  }
+                },
+                "vector": {
+                  "type": "array",
+                  "title": "Vector",
+                  "description": "Beschreibt die digitale Repräsentation als eine Liste von Vektor-Daten.",
+                  "items": {
+                    "properties": {
+                      "topology": {
+                        "type": "string",
+                        "description": "Beschreibt die Topologie des Vektor-Datensatzes"
+                      },
+                      "geometry_type": {
+                        "type": "string",
+                        "description": "Beschreibt den Typ der Geometrie"
+                      },
+                      "number": {
+                        "type": "integer",
+                        "description": "Beschreibt die Anzahl der Punkt- oder Vektortypelemente im Datensatz"
                       }
                     }
-                  },
-                  "grid": {
-                    "title": "Raster/Gitter",
-                    "description": "Enthält die Information über die Strukturelemente der Rasterdaten. Aktuell nicht im Portal angezeigt?",
-                    "properties": {
-                      "axes": {
-                        "type": "array",
-                        "items": {
-                          "properties": {
-                            "label": {
-                              "type": "string",
-                              "description": "Beschreibt den Namen der Achse"
-                            },
-                            "number": {
-                              "type": "integer",
-                              "description": "Beschreibt die Anzahl der Achsen im Raster"
-                            },
-                            "resolution": {
-                              "type": "integer",
-                              "description": "Beschreibt die Auflösung der Achsen im Raster in Metern"
-                            }
-                          }
-                        }
-                      },
-                      "available_parameters": {
-                        "type": "boolean",
-                        "description": "Beschreibt, ob Parameter für das Raster verfügbar sind"
-                      },
-                      "number_dimensions": {
-                        "type": "integer",
-                        "description": "Beschreibt die Anzahl der unabhängigen räumlich-zeitlichen Achsen"
-                      },
-                      "cell_geometry": {
-                        "description": "Angabe, ob die Rasterdatenzelle einen Punkt oder eine Fläche beschreibt. Hier wird die Codeliste 509 verwendet.",
-                        "additionalProperties": false,
+                  }
+                },
+                "grid": {
+                  "title": "Raster/Gitter",
+                  "description": "Enthält die Information über die Strukturelemente der Rasterdaten. Aktuell nicht im Portal angezeigt?",
+                  "properties": {
+                    "axes": {
+                      "type": "array",
+                      "items": {
                         "properties": {
-                          "key": {
-                            "type": [
-                              "string",
-                              "null"
-                            ]
-                          },
-                          "value": {
-                            "type": [
-                              "string",
-                              "null"
-                            ]
-                          }
-                        }
-                      },
-                      "rectified": {
-                        "title": "Georektifiziertes Raster",
-                        "properties": {
-                          "checkpoint_availability": {
-                            "type": "boolean",
-                            "description": "Beschreibt, ob die Punkte für die Rasterdatenzelle geprüft werden."
-                          },
-                          "checkpoint_description": {
+                          "label": {
                             "type": "string",
-                            "description": "Beschreibt die Beschreibung der Punkte, die für die Rasterdatenzelle verwendet werden. Hier wird die Codeliste 510 verwendet."
+                            "description": "Beschreibt den Namen der Achse"
                           },
-                          "corner_points": {
-                            "type": "string"
+                          "number": {
+                            "type": "integer",
+                            "description": "Beschreibt die Anzahl der Achsen im Raster"
                           },
-                          "point_in_pixel": {
-                            "description": "Enthält den Punkt im Pixel, an welchem der Bezug zur Erde besteht. Hier wird die Codeliste 2100 verwendet.",
-                            "additionalProperties": false,
-                            "properties": {
-                              "key": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "value": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              }
-                            }
+                          "resolution": {
+                            "type": "integer",
+                            "description": "Beschreibt die Auflösung der Achsen im Raster in Metern"
                           }
                         }
-                      },
-                      "referenced": {
-                        "title": "Georeferenzierbares Raster",
-                        "properties": {
-                          "orientation_parameter_availability": {
-                            "type": "boolean",
-                            "description": "Angabe, ob Orientierungsparameter verfügbar sind."
-                          },
-                          "control_point_availability": {
-                            "type": "boolean",
-                            "description": "Angabe, ob Passpunkte existieren."
-                          },
-                          "parameters": {
-                            "type": "string",
-                            "description": "Parameter, die die Georeferenzierung der Rasterdaten ermöglichen"
-                          }
+                      }
+                    },
+                    "available_parameters": {
+                      "type": "boolean",
+                      "description": "Beschreibt, ob Parameter für das Raster verfügbar sind"
+                    },
+                    "number_dimensions": {
+                      "type": "integer",
+                      "description": "Beschreibt die Anzahl der unabhängigen räumlich-zeitlichen Achsen"
+                    },
+                    "cell_geometry": {
+                      "type": "string",
+                      "description": "Angabe, ob die Rasterdatenzelle einen Punkt oder eine Fläche beschreibt. Hier wird die Codeliste 509 verwendet."
+                    },
+                    "cell_geometry_ref_uri": {
+                      "type": "string",
+                      "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                      "examples": [
+                        "/codelist/1234/3"
+                      ]
+                    },
+                    "rectified": {
+                      "title": "Georektifiziertes Raster",
+                      "properties": {
+                        "checkpoint_availability": {
+                          "type": "boolean",
+                          "description": "Beschreibt, ob die Punkte für die Rasterdatenzelle geprüft werden."
+                        },
+                        "checkpoint_description": {
+                          "type": "string",
+                          "description": "Beschreibt die Beschreibung der Punkte, die für die Rasterdatenzelle verwendet werden. Hier wird die Codeliste 510 verwendet."
+                        },
+                        "corner_points": {
+                          "type": "string"
+                        },
+                        "point_in_pixel": {
+                          "type": "string",
+                          "description": "Enthält den Punkt im Pixel, an welchem der Bezug zur Erde besteht. Hier wird die Codeliste 2100 verwendet."
+                        },
+                        "point_in_pixel_ref_uri": {
+                          "type": "string",
+                          "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                          "examples": [
+                            "/codelist/1234/3"
+                          ]
+                        }
+                      }
+                    },
+                    "referenced": {
+                      "title": "Georeferenzierbares Raster",
+                      "properties": {
+                        "orientation_parameter_availability": {
+                          "type": "boolean",
+                          "description": "Angabe, ob Orientierungsparameter verfügbar sind."
+                        },
+                        "control_point_availability": {
+                          "type": "boolean",
+                          "description": "Angabe, ob Passpunkte existieren."
+                        },
+                        "parameters": {
+                          "type": "string",
+                          "description": "Parameter, die die Georeferenzierung der Rasterdaten ermöglichen"
                         }
                       }
                     }
@@ -1745,7 +1655,7 @@
                   },
                   "document_type": {
                     "type": "string",
-                    "description": "`metadata.document_type` des verknüpften Dokuments."
+                    "description": "Dokumenttyp des verknüpften Dokuments (`ingrid.document_type` bzw. `address.document_type`)."
                   },
                   "description": {
                     "type": "string",
@@ -1862,42 +1772,26 @@
                       "description": "Maximaler Wert der vertikalen Ausdehnung"
                     },
                     "unit": {
-                      "type": "object",
-                      "description": "Maßeinheit der vertikalen Ausdehnung. Hier wird die Codeliste 102 verwendet.",
-                      "additionalProperties": false,
-                      "properties": {
-                        "key": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        },
-                        "value": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        }
-                      }
+                      "type": "string",
+                      "description": "Maßeinheit der vertikalen Ausdehnung. Hier wird die Codeliste 102 verwendet."
+                    },
+                    "unit_ref_uri": {
+                      "type": "string",
+                      "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                      "examples": [
+                        "/codelist/1234/3"
+                      ]
                     },
                     "vdatum": {
-                      "type": "object",
-                      "description": "Bezugssystem (vertikales Datum) der Höhenangabe. Hier wird die Codeliste 101 verwendet.",
-                      "additionalProperties": false,
-                      "properties": {
-                        "key": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        },
-                        "value": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        }
-                      }
+                      "type": "string",
+                      "description": "Bezugssystem (vertikales Datum) der Höhenangabe. Hier wird die Codeliste 101 verwendet."
+                    },
+                    "vdatum_ref_uri": {
+                      "type": "string",
+                      "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                      "examples": [
+                        "/codelist/1234/3"
+                      ]
                     }
                   }
                 }
@@ -1923,22 +1817,14 @@
                     ]
                   },
                   "specification": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "properties": {
-                      "key": {
-                        "type": [
-                          "string",
-                          "null"
-                        ]
-                      },
-                      "value": {
-                        "type": [
-                          "string",
-                          "null"
-                        ]
-                      }
-                    }
+                    "type": "string"
+                  },
+                  "specification_ref_uri": {
+                    "type": "string",
+                    "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                    "examples": [
+                      "/codelist/1234/3"
+                    ]
                   },
                   "publication_date": {
                     "type": "string"
@@ -1988,22 +1874,14 @@
                         ]
                       },
                       "measure_type": {
-                        "type": "object",
-                        "additionalProperties": false,
-                        "properties": {
-                          "key": {
-                            "type": [
-                              "string",
-                              "null"
-                            ]
-                          },
-                          "value": {
-                            "type": [
-                              "string",
-                              "null"
-                            ]
-                          }
-                        }
+                        "type": "string"
+                      },
+                      "measure_type_ref_uri": {
+                        "type": "string",
+                        "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                        "examples": [
+                          "/codelist/1234/3"
+                        ]
                       },
                       "value": {
                         "type": "number"
@@ -2017,23 +1895,15 @@
               }
             },
             "character_set": {
-              "type": "object",
-              "description": "Angaben zu dem im beschriebenen Datensatz benutzten Zeichensatz.",
-              "additionalProperties": false,
-              "properties": {
-                "key": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "value": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                }
-              }
+              "type": "string",
+              "description": "Angaben zu dem im beschriebenen Datensatz benutzten Zeichensatz."
+            },
+            "character_set_ref_uri": {
+              "type": "string",
+              "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+              "examples": [
+                "/codelist/1234/3"
+              ]
             },
             "service": {
               "type": "object",
@@ -2155,25 +2025,17 @@
                 },
                 "publishing_house": {
                   "type": "string",
-                  "description": "Name des Verlagsgesellschaften"
+                  "description": "Name des Verlags"
                 },
                 "document_type": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "properties": {
-                    "key": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "value": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    }
-                  }
+                  "type": "string"
+                },
+                "document_type_ref_uri": {
+                  "type": "string",
+                  "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                  "examples": [
+                    "/codelist/1234/3"
+                  ]
                 },
                 "base_data_text": {
                   "type": "string",
@@ -2321,6 +2183,22 @@
     "InGrid": {
       "type": "object",
       "title": "InGrid",
+      "if": {
+        "properties": {
+          "metadata": {
+            "properties": {
+              "data_type": {
+                "const": "INGRID"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "ingrid"
+        ]
+      },
       "properties": {
         "metadata": {
           "type": "object",
@@ -2337,14 +2215,6 @@
                     "UmweltNAVI Datensatz ['UMWELTNAVI']",
                     "InGrid Datensatz ['INGRID']",
                     "UVP Datensatz ['UVP']"
-                  ]
-                },
-                "document_type": {
-                  "type": "string",
-                  "description": "Beschreibt den genauen Typ des Metadatensatzes. Dies kann als Unterkategorie im Profil definiert werden.",
-                  "examples": [
-                    "InGridGeoDataset",
-                    "InGridGeoService"
                   ]
                 },
                 "created": {
@@ -2397,22 +2267,12 @@
                 },
                 "language": {
                   "title": "language",
-                  "description": "Enthält die Sprache des Metadatensatzes.",
-                  "additionalProperties": false,
-                  "properties": {
-                    "key": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "value": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    }
-                  }
+                  "type": "string",
+                  "description": "Angabe der Sprache des Metadatensatzes im ISO 639-1 Format",
+                  "examples": [
+                    "de",
+                    "en"
+                  ]
                 },
                 "datasource": {
                   "properties": {
@@ -2460,14 +2320,6 @@
                     "UMWELTNAVI"
                   ]
                 },
-                "document_type": {
-                  "type": "string",
-                  "description": "Beschreibt den Typ des Metadatensatzes."
-                },
-                "language": {
-                  "type": "string",
-                  "description": "Enthält die Sprache des Metadatensatzes. Hier wird die Codeliste 99999999 verwendet."
-                },
                 "partner": {
                   "type": "string",
                   "description": "Der Partner der Datenquelle als Kürzel. Siehe auch Codeliste 110."
@@ -2479,35 +2331,7 @@
                     "ni_gll"
                   ]
                 }
-              },
-              "if": {
-                "properties": {
-                  "data_type": {
-                    "const": "INGRID"
-                  }
-                },
-                "required": [
-                  "data_type"
-                ]
-              },
-              "then": {
-                "properties": {
-                  "document_type": {
-                    "enum": [
-                      "InGridGeoDataset",
-                      "InGridDataCollection",
-                      "InGridGeoService",
-                      "InGridInformationSystem",
-                      "InGridPublication",
-                      "InGridProject",
-                      "InGridSpecialisedTask"
-                    ]
-                  }
-                }
-              },
-              "required": [
-                "data_type"
-              ]
+              }
             }
           ]
         },
@@ -2589,49 +2413,35 @@
               "title": "InGrid Temporal",
               "properties": {
                 "status": {
+                  "type": "string",
                   "description": "In welchem Zustand ist der Datensatz? Hier wird die Codeliste 523 verwendet.",
                   "examples": [
                     "1 - abgeschlossen",
                     "2 - historisches Archiv"
-                  ],
-                  "additionalProperties": false,
-                  "properties": {
-                    "key": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "value": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    }
-                  }
+                  ]
+                },
+                "status_ref_uri": {
+                  "type": "string",
+                  "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                  "examples": [
+                    "/codelist/1234/3"
+                  ]
                 },
                 "maintenance_frequency": {
+                  "type": "string",
                   "description": "Enthält das Pflegeintervall des Datensatzes. Es wird die Codeliste 518 verwendet.",
                   "examples": [
                     "2 - täglich",
                     "3 - wöchentlich",
                     "5 - monatlich"
-                  ],
-                  "additionalProperties": false,
-                  "properties": {
-                    "key": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "value": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    }
-                  }
+                  ]
+                },
+                "maintenance_frequency_ref_uri": {
+                  "type": "string",
+                  "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                  "examples": [
+                    "/codelist/1234/3"
+                  ]
                 },
                 "user_defined_maintenance_frequency_in_sec": {
                   "type": "string",
@@ -2654,7 +2464,29 @@
           }
         },
         "ingrid": {
+          "unevaluatedProperties": false,
+          "required": [
+            "document_type"
+          ],
           "properties": {
+            "document_type": {
+              "type": "string",
+              "description": "Beschreibt den Typ des Metadatensatzes.",
+              "enum": [
+                "InGridGeoDataset",
+                "InGridDataCollection",
+                "InGridGeoService",
+                "InGridInformationSystem",
+                "InGridPublication",
+                "InGridProject",
+                "InGridSpecialisedTask",
+                "InGridAlgorithm"
+              ],
+              "examples": [
+                "InGridGeoDataset",
+                "InGridGeoService"
+              ]
+            },
             "alternate_title": {
               "type": "string",
               "description": "Ermöglicht das Setzen eines alternativen Titels oder eine Kurzbeschreibung des Datensatzes."
@@ -2681,16 +2513,18 @@
                     "items": {
                       "title": "item",
                       "properties": {
-                        "key": {
+                        "name": {
                           "type": [
                             "string",
                             "null"
-                          ]
+                          ],
+                          "description": "Name der Einschränkung oder Nutzungsbedingung."
                         },
-                        "value": {
-                          "type": [
-                            "string",
-                            "null"
+                        "name_ref_uri": {
+                          "type": "string",
+                          "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                          "examples": [
+                            "/codelist/1234/3"
                           ]
                         },
                         "source": {
@@ -2718,18 +2552,21 @@
               "type": "object",
               "title": "Digitale Repräsentation",
               "properties": {
-                "type": {
-                  "type": "string",
-                  "title": "Typ",
-                  "description": "Beschreibt den Typ der Repräsentation",
-                  "enum": [
-                    "text",
-                    "vector",
-                    "tin",
-                    "video",
-                    "stereomodel",
-                    "grid"
-                  ]
+                "types": {
+                  "type": "array",
+                  "title": "Typen",
+                  "description": "Beschreibt die Typen der Repräsentation",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "text",
+                      "vector",
+                      "tin",
+                      "video",
+                      "stereomodel",
+                      "grid"
+                    ]
+                  }
                 },
                 "vector": {
                   "type": "array",
@@ -2784,22 +2621,15 @@
                       "description": "Beschreibt die Anzahl der unabhängigen räumlich-zeitlichen Achsen"
                     },
                     "cell_geometry": {
-                      "description": "Angabe, ob die Rasterdatenzelle einen Punkt oder eine Fläche beschreibt. Hier wird die Codeliste 509 verwendet.",
-                      "additionalProperties": false,
-                      "properties": {
-                        "key": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        },
-                        "value": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        }
-                      }
+                      "type": "string",
+                      "description": "Angabe, ob die Rasterdatenzelle einen Punkt oder eine Fläche beschreibt. Hier wird die Codeliste 509 verwendet."
+                    },
+                    "cell_geometry_ref_uri": {
+                      "type": "string",
+                      "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                      "examples": [
+                        "/codelist/1234/3"
+                      ]
                     },
                     "rectified": {
                       "title": "Georektifiziertes Raster",
@@ -2816,22 +2646,15 @@
                           "type": "string"
                         },
                         "point_in_pixel": {
-                          "description": "Enthält den Punkt im Pixel, an welchem der Bezug zur Erde besteht. Hier wird die Codeliste 2100 verwendet.",
-                          "additionalProperties": false,
-                          "properties": {
-                            "key": {
-                              "type": [
-                                "string",
-                                "null"
-                              ]
-                            },
-                            "value": {
-                              "type": [
-                                "string",
-                                "null"
-                              ]
-                            }
-                          }
+                          "type": "string",
+                          "description": "Enthält den Punkt im Pixel, an welchem der Bezug zur Erde besteht. Hier wird die Codeliste 2100 verwendet."
+                        },
+                        "point_in_pixel_ref_uri": {
+                          "type": "string",
+                          "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                          "examples": [
+                            "/codelist/1234/3"
+                          ]
                         }
                       }
                     },
@@ -2893,7 +2716,7 @@
                   },
                   "document_type": {
                     "type": "string",
-                    "description": "`metadata.document_type` des verknüpften Dokuments."
+                    "description": "Dokumenttyp des verknüpften Dokuments (`ingrid.document_type` bzw. `address.document_type`)."
                   },
                   "description": {
                     "type": "string",
@@ -3010,42 +2833,26 @@
                       "description": "Maximaler Wert der vertikalen Ausdehnung"
                     },
                     "unit": {
-                      "type": "object",
-                      "description": "Maßeinheit der vertikalen Ausdehnung. Hier wird die Codeliste 102 verwendet.",
-                      "additionalProperties": false,
-                      "properties": {
-                        "key": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        },
-                        "value": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        }
-                      }
+                      "type": "string",
+                      "description": "Maßeinheit der vertikalen Ausdehnung. Hier wird die Codeliste 102 verwendet."
+                    },
+                    "unit_ref_uri": {
+                      "type": "string",
+                      "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                      "examples": [
+                        "/codelist/1234/3"
+                      ]
                     },
                     "vdatum": {
-                      "type": "object",
-                      "description": "Bezugssystem (vertikales Datum) der Höhenangabe. Hier wird die Codeliste 101 verwendet.",
-                      "additionalProperties": false,
-                      "properties": {
-                        "key": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        },
-                        "value": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
-                        }
-                      }
+                      "type": "string",
+                      "description": "Bezugssystem (vertikales Datum) der Höhenangabe. Hier wird die Codeliste 101 verwendet."
+                    },
+                    "vdatum_ref_uri": {
+                      "type": "string",
+                      "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                      "examples": [
+                        "/codelist/1234/3"
+                      ]
                     }
                   }
                 }
@@ -3071,22 +2878,14 @@
                     ]
                   },
                   "specification": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "properties": {
-                      "key": {
-                        "type": [
-                          "string",
-                          "null"
-                        ]
-                      },
-                      "value": {
-                        "type": [
-                          "string",
-                          "null"
-                        ]
-                      }
-                    }
+                    "type": "string"
+                  },
+                  "specification_ref_uri": {
+                    "type": "string",
+                    "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                    "examples": [
+                      "/codelist/1234/3"
+                    ]
                   },
                   "publication_date": {
                     "type": "string"
@@ -3136,22 +2935,14 @@
                         ]
                       },
                       "measure_type": {
-                        "type": "object",
-                        "additionalProperties": false,
-                        "properties": {
-                          "key": {
-                            "type": [
-                              "string",
-                              "null"
-                            ]
-                          },
-                          "value": {
-                            "type": [
-                              "string",
-                              "null"
-                            ]
-                          }
-                        }
+                        "type": "string"
+                      },
+                      "measure_type_ref_uri": {
+                        "type": "string",
+                        "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                        "examples": [
+                          "/codelist/1234/3"
+                        ]
                       },
                       "value": {
                         "type": "number"
@@ -3165,23 +2956,15 @@
               }
             },
             "character_set": {
-              "type": "object",
-              "description": "Angaben zu dem im beschriebenen Datensatz benutzten Zeichensatz.",
-              "additionalProperties": false,
-              "properties": {
-                "key": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "value": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                }
-              }
+              "type": "string",
+              "description": "Angaben zu dem im beschriebenen Datensatz benutzten Zeichensatz."
+            },
+            "character_set_ref_uri": {
+              "type": "string",
+              "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+              "examples": [
+                "/codelist/1234/3"
+              ]
             },
             "service": {
               "type": "object",
@@ -3303,25 +3086,17 @@
                 },
                 "publishing_house": {
                   "type": "string",
-                  "description": "Name des Verlagsgesellschaften"
+                  "description": "Name des Verlags"
                 },
                 "document_type": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "properties": {
-                    "key": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    },
-                    "value": {
-                      "type": [
-                        "string",
-                        "null"
-                      ]
-                    }
-                  }
+                  "type": "string"
+                },
+                "document_type_ref_uri": {
+                  "type": "string",
+                  "description": "Beschreibt eine URI, die auf eine Codeliste aus dem InGrid-Codelist-Repository verweist.",
+                  "examples": [
+                    "/codelist/1234/3"
+                  ]
                 },
                 "base_data_text": {
                   "type": "string",
