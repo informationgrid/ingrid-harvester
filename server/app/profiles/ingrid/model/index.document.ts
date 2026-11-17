@@ -47,7 +47,7 @@ export type IngridSpecific = {
     licenses?: IngridLicense[],
     parent_identifier?: string,
     datasource_identifier?: string,
-    spatial_representation?: IngridSpatialRepresentation[],
+    spatial_representation?: IngridSpatialRepresentation,
     specific_usage?: string,
     purpose?: string,
     conformance_result?: IngridConformanceResult[],
@@ -162,8 +162,10 @@ export type IngridDataQuality = {
     }[],
 };
 
+export type IngridSpatialRepresentationType = 'text' | 'vector' | 'tin' | 'video' | 'stereomodel' | 'grid';
+
 export type IngridSpatialRepresentation = {
-    type?: 'text' | 'vector' | 'tin' | 'video' | 'stereomodel' | 'grid',
+    types?: IngridSpatialRepresentationType[],
     vector?: {
         topology?: string,
         geometry_type?: string,

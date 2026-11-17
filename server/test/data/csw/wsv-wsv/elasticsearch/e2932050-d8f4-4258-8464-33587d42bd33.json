@@ -46,6 +46,11 @@
       }
     ],
     "datasource_identifier": "https://registry.gdi-de.org/id/de.bund.wsv.csw/DE.WSV.PEGELINFO",
+    "spatial_representation": {
+      "types": [
+        "vector"
+      ]
+    },
     "process_step_description": [
       "Zur Messung der Daten stehen der WSV stationäre und mobile, mechanische und digital aufzeichnende elektronische Messgeräte zur Verfügung. Die Messwerte werden z.T. online-digital fernübertragen. Es stehen nur unplausibilisierte Rohdaten zur Verfügung, für deren Richtigkeit keine Garantie gegeben wird."
     ],

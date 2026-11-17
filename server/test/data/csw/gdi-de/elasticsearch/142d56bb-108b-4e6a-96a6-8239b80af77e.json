@@ -62,6 +62,11 @@
       }
     ],
     "datasource_identifier": "https://registry.gdi-de.org/id/de.bund.bkg.csw/DEBKG00M00000187",
+    "spatial_representation": {
+      "types": [
+        "vector"
+      ]
+    },
     "process_step_description": [
       "Transformation from national name database into INSPIRE"
     ],

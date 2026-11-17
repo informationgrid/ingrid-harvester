@@ -16,7 +16,12 @@
         ]
       }
     ],
-    "datasource_identifier": "http://dx.doi.org/10.5676/BfG-1682-2011"
+    "datasource_identifier": "http://dx.doi.org/10.5676/BfG-1682-2011",
+    "spatial_representation": {
+      "types": [
+        "text"
+      ]
+    }
   },
   "$schema": "https://schema.ingrid-oss.eu/index/draft/schema/index-ingrid.json",
   "exports": {

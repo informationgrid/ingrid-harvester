@@ -30,7 +30,7 @@ import * as XpathUtils from "../../../utils/xpath.utils.js";
 import { ingridMapper, type DocumentKind } from "./ingrid.mapper.js";
 import type { Distribution } from "../../../model/distribution.js";
 import type { IndexContact, IndexKeyword, IndexReference, IndexSpatial, IndexTemporalItem } from "../../../model/index.document.js";
-import type {IngridConformanceResult, IngridDataQuality, IngridDocumentType, IngridLicense, IngridSpatialRepresentation, IngridSpecific, IngridTemporal} from "../model/index.document.js";
+import type {IngridConformanceResult, IngridDataQuality, IngridDocumentType, IngridLicense, IngridSpatialRepresentation, IngridSpatialRepresentationType, IngridSpecific, IngridTemporal} from "../model/index.document.js";
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -177,56 +177,95 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return this.baseMapper.record.toString();
     }
 
-    getSpatialRepresentation(): IngridSpatialRepresentation[] {
-        const nodes = CswMapper.select('./gmd:spatialRepresentationInfo/*', this.baseMapper.record);
-        if (!nodes?.length) return undefined;
+    // ISO MD_SpatialRepresentationTypeCode -> index value (see index-ingrid: ingrid.spatial_representation.types)
+    private static readonly SPATIAL_REPRESENTATION_TYPES: Record<string, IngridSpatialRepresentationType> = {
+        vector: 'vector',
+        grid: 'grid',
+        textTable: 'text',
+        tin: 'tin',
+        stereoModel: 'stereomodel',
+        video: 'video',
+    };
 
+    // Raster elements, incl. their ISO 19115-2 counterparts (gmi:MI_Georectified, gmi:MI_Georeferenceable)
+    private static readonly GRID_ELEMENTS = ['MD_GridSpatialRepresentation', 'MD_Georectified', 'MD_Georeferenceable', 'MI_Georectified', 'MI_Georeferenceable'];
+
+    getSpatialRepresentation(): IngridSpatialRepresentation {
         const parseBool = (val: string | undefined) => val != null ? val === 'true' : undefined;
         const parseNum  = (val: string | undefined) => { const n = Number(val); return isNaN(n) || val == null ? undefined : n; };
 
-        const result: IngridSpatialRepresentation[] = [];
-        for (const node of nodes) {
-            const name = node.localName;
-            if (name === 'MD_VectorSpatialRepresentation') {
-                const topology = this.text('./gmd:topologyLevel/gmd:MD_TopologyLevelCode/@codeListValue', node);
-                const vector = CswMapper.select('./gmd:geometricObjects/gmd:MD_GeometricObjects', node)?.map(go => ({
+        const types = new Set<IngridSpatialRepresentationType>();
+        // gmd:spatialRepresentationType only exists in gmd:MD_DataIdentification
+        for (const code of CswMapper.select('./gmd:MD_DataIdentification/gmd:spatialRepresentationType/gmd:MD_SpatialRepresentationTypeCode/@codeListValue', this.baseMapper.idInfo) ?? []) {
+            const type = ingridCswMapper.SPATIAL_REPRESENTATION_TYPES[code.textContent?.trim()];
+            if (type) types.add(type);
+        }
+
+        const nodes = CswMapper.select('./gmd:spatialRepresentationInfo/*', this.baseMapper.record) ?? [];
+
+        // one entry per gmd:MD_GeometricObjects of all vector elements; topology from the enclosing element
+        const vector: IngridSpatialRepresentation['vector'] = [];
+        for (const node of nodes.filter(n => n.localName === 'MD_VectorSpatialRepresentation')) {
+            types.add('vector');
+            const topology = this.text('./gmd:topologyLevel/gmd:MD_TopologyLevelCode/@codeListValue', node) ?? undefined;
+            const objects = CswMapper.select('./gmd:geometricObjects/gmd:MD_GeometricObjects', node) ?? [];
+            for (const go of objects) {
+                vector.push({
                     topology,
                     geometry_type: this.text('./gmd:geometricObjectType/gmd:MD_GeometricObjectTypeCode/@codeListValue', go) ?? undefined,
                     number: parseNum(this.text('./gmd:geometricObjectCount/gco:Integer', go)),
-                }));
-                result.push({ type: 'vector', vector: vector?.length ? vector : undefined });
-            } else if (name === 'MD_GridSpatialRepresentation' || name === 'MD_Georectified' || name === 'MD_Georeferenceable') {
-                const axes = CswMapper.select('./gmd:axisDimensionProperties/gmd:MD_Dimension', node)?.map(dim => ({
-                    label: this.text('./gmd:dimensionName/gmd:MD_DimensionNameTypeCode/@codeListValue', dim) ?? undefined,
-                    number: parseNum(this.text('./gmd:dimensionSize/gco:Integer', dim)),
-                    resolution: parseNum(this.text('./gmd:resolution/gco:Length', dim)),
-                }));
-                const cellCode = this.text('./gmd:cellGeometry/gmd:MD_CellGeometryCode/@codeListValue', node);
-                const grid: IngridSpatialRepresentation['grid'] = {
-                    axes: axes?.length ? axes : undefined,
-                    number_dimensions: parseNum(this.text('./gmd:numberOfDimensions/gco:Integer', node)),
-                    cell_geometry: cellCode ? { key: this.transformToIgcDomainId(cellCode, '509'), value: cellCode } : undefined,
-                };
-                if (name === 'MD_Georectified') {
-                    const pointInPixel = this.text('./gmd:pointInPixel/gmd:MD_PixelOrientationCode', node);
-                    grid.rectified = {
-                        checkpoint_availability: parseBool(this.text('./gmd:checkPointAvailability/gco:Boolean', node)),
-                        checkpoint_description: this.text('./gmd:checkPointDescription/gco:CharacterString', node) ?? undefined,
-                        corner_points: this.text('./gmd:cornerPoints//gml:pos', node) ?? undefined,
-                        point_in_pixel: pointInPixel ? { key: this.transformToIgcDomainId(pointInPixel, '2100'), value: pointInPixel } : undefined,
-                    };
-                } else if (name === 'MD_Georeferenceable') {
-                    grid.available_parameters = parseBool(this.text('./gmd:transformationParameterAvailability/gco:Boolean', node));
-                    grid.referenced = {
-                        orientation_parameter_availability: parseBool(this.text('./gmd:orientationParameterAvailability/gco:Boolean', node)),
-                        control_point_availability: parseBool(this.text('./gmd:controlPointAvaliability/gco:Boolean', node)),
-                        parameters: this.text('./gmd:parameterCitation/gmd:CI_Citation/gmd:title/gco:CharacterString', node) ?? undefined,
-                    };
-                }
-                result.push({ type: 'grid', grid });
+                });
+            }
+            if (!objects.length && topology) {
+                vector.push({ topology });
             }
         }
-        return result.length ? result : undefined;
+
+        // the index holds a single grid: the first raster element
+        const gridNodes = nodes.filter(n => ingridCswMapper.GRID_ELEMENTS.includes(n.localName));
+        let grid: IngridSpatialRepresentation['grid'];
+        if (gridNodes.length) {
+            types.add('grid');
+            const node = gridNodes[0];
+            const name = node.localName;
+            const axes = CswMapper.select('./gmd:axisDimensionProperties/gmd:MD_Dimension', node)?.map(dim => ({
+                label: this.text('./gmd:dimensionName/gmd:MD_DimensionNameTypeCode/@codeListValue', dim) ?? undefined,
+                number: parseNum(this.text('./gmd:dimensionSize/gco:Integer', dim)),
+                resolution: parseNum(this.text('./gmd:resolution/gco:Length', dim)),
+            }));
+            const cellCode = this.text('./gmd:cellGeometry/gmd:MD_CellGeometryCode/@codeListValue', node);
+            grid = {
+                axes: axes?.length ? axes : undefined,
+                available_parameters: parseBool(this.text('./gmd:transformationParameterAvailability/gco:Boolean', node)),
+                number_dimensions: parseNum(this.text('./gmd:numberOfDimensions/gco:Integer', node)),
+                cell_geometry: cellCode ? { key: this.transformToIgcDomainId(cellCode, '509'), value: cellCode } : undefined,
+            };
+            if (name === 'MD_Georectified' || name === 'MI_Georectified') {
+                const pointInPixel = this.text('./gmd:pointInPixel/gmd:MD_PixelOrientationCode', node);
+                grid.rectified = {
+                    checkpoint_availability: parseBool(this.text('./gmd:checkPointAvailability/gco:Boolean', node)),
+                    checkpoint_description: this.text('./gmd:checkPointDescription/gco:CharacterString', node) ?? undefined,
+                    corner_points: this.text('./gmd:cornerPoints//gml:pos', node) ?? undefined,
+                    point_in_pixel: pointInPixel ? { key: this.transformToIgcDomainId(pointInPixel, '2100'), value: pointInPixel } : undefined,
+                };
+            } else if (name === 'MD_Georeferenceable' || name === 'MI_Georeferenceable') {
+                grid.referenced = {
+                    orientation_parameter_availability: parseBool(this.text('./gmd:orientationParameterAvailability/gco:Boolean', node)),
+                    control_point_availability: parseBool(this.text('./gmd:controlPointAvailability/gco:Boolean', node)),
+                    // gco:Record content; without gmd:georeferencedParameters the title of the first gmd:parameterCitation
+                    parameters: this.text('./gmd:georeferencedParameters/gco:Record', node)?.trim()
+                        || this.text('./gmd:parameterCitation/gmd:CI_Citation/gmd:title/gco:CharacterString', node)
+                        || undefined,
+                };
+            }
+        }
+
+        if (!types.size && !vector.length && !grid) return undefined;
+        return {
+            types: types.size ? [...types] : undefined,
+            vector: vector.length ? vector : undefined,
+            grid,
+        };
     }
 
     getSpecificUsage(): string {

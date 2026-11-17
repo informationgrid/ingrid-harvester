@@ -296,7 +296,7 @@ export abstract class ingridMapper<M extends ingridMapperType>
         return undefined;
     }
 
-    getSpatialRepresentation(): IngridSpatialRepresentation[] {
+    getSpatialRepresentation(): IngridSpatialRepresentation {
         return undefined;
     }
 

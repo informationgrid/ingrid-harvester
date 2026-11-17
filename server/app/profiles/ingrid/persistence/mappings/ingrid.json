@@ -77,7 +77,7 @@
                 },
                 "spatial_representation": {
                     "properties": {
-                        "type": {
+                        "types": {
                             "type": "keyword"
                         },
                         "vector": {

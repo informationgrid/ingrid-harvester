@@ -96,18 +96,18 @@
       }
     ],
     "datasource_identifier": "https://registry.gdi-de.org/id/de.ni.koop.mdini.csw/8a93fdbe1329eb6801132a38a5034d4b",
-    "spatial_representation": [
-      {
-        "type": "vector",
-        "vector": [
-          {
-            "number": 207,
-            "topology": "geometryOnly",
-            "geometry_type": "point"
-          }
-        ]
-      }
-    ],
+    "spatial_representation": {
+      "types": [
+        "vector"
+      ],
+      "vector": [
+        {
+          "number": 207,
+          "topology": "geometryOnly",
+          "geometry_type": "point"
+        }
+      ]
+    },
     "spatial_resolution_scale": {
       "scale": 100000
     }

@@ -63,6 +63,11 @@
       }
     ],
     "datasource_identifier": "https://registry.gdi-de.org/id/de.bund.eba/fee82268-9d8c-4134-8123-9f9a8f728306",
+    "spatial_representation": {
+      "types": [
+        "vector"
+      ]
+    },
     "spatial_resolution_scale": {},
     "cross_references": [
       {

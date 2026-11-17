@@ -94,6 +94,11 @@
       }
     ],
     "datasource_identifier": "https://hvbg.hessen.de/registry/spatial/dataset/f1950cd0-de59-413c-93fd-b669af06c863",
+    "spatial_representation": {
+      "types": [
+        "vector"
+      ]
+    },
     "cross_references": [
       {
         "uuid": "def3f393-48c8-730a-328f-947231f493f4",
