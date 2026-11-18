@@ -193,18 +193,13 @@
   "references": [
     {
       "url": "https://advmis.geodatenzentrum.de",
-      "type": {
-        "key": "5302",
-        "value": "information"
-      },
+      "type": "information",
+      "type_ref_uri": "/codelist/2000/5302",
       "title": "Startseite des AdV MetadatenInformationsSystems"
     },
     {
       "url": "/documents/igc_bkg/BD6C2EFB-09DA-40FC-AA42-001FD85342BF/ScreenShot_AdVMIS.PNG",
-      "type": {
-        "key": null,
-        "value": "previewGraphic"
-      },
+      "type": "previewGraphic",
       "explanation": "ScreenShot_AdVMIS"
     }
   ],

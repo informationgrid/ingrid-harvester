@@ -95,7 +95,8 @@ export type IndexTemporalItem = {
 
 export type IndexReference = {
     url?: string,
-    type?: { key: string | null, value: string | null },
+    type?: string,
+    type_ref_uri?: string,
     title?: string,
     explanation?: string,
 };

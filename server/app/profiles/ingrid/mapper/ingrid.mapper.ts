@@ -781,6 +781,12 @@ export abstract class ingridMapper<M extends ingridMapperType>
             +date.getMilliseconds().toString().padStart(3, "0").substring(0,3);
     }
 
+    // URI of a codelist entry in the InGrid codelist repository, as IGE's IngridModelTransformer.codelistRef();
+    // undefined without a resolvable key (transformToIgcDomainId() returns undefined, some callers use "-1")
+    protected codelistRef(codelistId: string, key: string | null | undefined): string | undefined {
+        return key && key !== '-1' ? `/codelist/${codelistId}/${key}` : undefined;
+    }
+
     protected transformToIgcDomainId(value, codelist) {
         var id = Codelist.getInstance().getId(codelist, value)
         return id

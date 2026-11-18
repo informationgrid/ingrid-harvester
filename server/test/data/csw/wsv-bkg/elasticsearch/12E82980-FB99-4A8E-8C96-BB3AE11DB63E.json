@@ -207,26 +207,19 @@
   "references": [
     {
       "url": "https://gdz.bkg.bund.de/index.php/default/software/geocoderplus.html",
-      "type": {
-        "key": "5302",
-        "value": "information"
-      },
+      "type": "information",
+      "type_ref_uri": "/codelist/2000/5302",
       "title": "Produktseite des Geodatenzentrum"
     },
     {
       "url": "https://daten.gdz.bkg.bund.de/software/geocoder-plus",
-      "type": {
-        "key": "5302",
-        "value": "information"
-      },
+      "type": "information",
+      "type_ref_uri": "/codelist/2000/5302",
       "title": "GeocoderPlus Download"
     },
     {
       "url": "/documents/igc_bkg/12E82980-FB99-4A8E-8C96-BB3AE11DB63E/geocoderplus_detail.png",
-      "type": {
-        "key": null,
-        "value": "previewGraphic"
-      }
+      "type": "previewGraphic"
     }
   ],
   "description": "Die Anwendung GeocoderPlus ermöglicht die Geokodierung von amtlichen bzw. postalischen Adressen, Ortsnamen, Straßennamen oder Postleitzahlen. Mit dieser Anwendung können Register mit massenhaften adressbezogenen Einträgen über eine Datenaustauschnittstelle (CSV-Datei) einfach automatisch geokodiert werden. Dabei wird den Registereinträgen eine räumliche Lagebeschreibung in Form einer Koordinate (Geokodierung) zugeordnet und die Ergebnisse in einer interaktiven Karte visualisiert. Ebenso wird die Reverse Geokodierung unterstützt, d.h. die Suche von Adressen ausgehend von einer Koordinate.\n\n                            Wesentliche Funktionen und Merkmale:\n                            • Geokodierung und Reverse Geokodierung\n                            • Einzelsuche und Batch-Suche\n                            • Massenverarbeitung von über 100.000 Adressen\n                            • Ergebniskorrekturmöglichkeiten\n                            • interaktive Kartenkomponente\n                            • Parallelisierung mehrerer Verarbeitungsprozesse\n                            • Suchen und Ergebnisse sind persistierbar\n\n                            Die Desktop-Anwendung kann auf mehreren Betriebssystemen genutzt werden. Die Bereitstellung erfolgt als Download (*.exe, *.deb, *.rpm).\n\n                            Die Voraussetzung für die Nutzung des GeocoderPlus ist der Erwerb einer Lizenz für den Dienst gdz_geokodierung bzw. gdz_geokodierung_bund beim Dienstleistungszentrum des BKG.\n\n                            Die Authentifizierung erfolgt über einen eindeutigen Nutzeridentifikator (UUID) oder über Ihre bei uns registrierte IP-Adresse."

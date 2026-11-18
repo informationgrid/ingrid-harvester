@@ -277,17 +277,13 @@
   "references": [
     {
       "url": "https://www.geoportal.hessen.de/mapbender/php/wms.php?inspire=1&layer_id=61286&withChilds=1&REQUEST=GetCapabilities&SERVICE=WMS",
-      "type": {
-        "key": "3600",
-        "value": "Gekoppelte Daten"
-      }
+      "type": "Gekoppelte Daten",
+      "type_ref_uri": "/codelist/2000/3600"
     },
     {
       "url": "https://www.geoportal.hessen.de/registry/wfs/717?REQUEST=GetCapabilities&VERSION=2.0.0&SERVICE=WFS",
-      "type": {
-        "key": "9990",
-        "value": "download"
-      },
+      "type": "download",
+      "type_ref_uri": "/codelist/2000/9990",
       "title": "INSPIRE-WFS HE Hydro - Netzwerk ATKIS Basis-DLM"
     }
   ],

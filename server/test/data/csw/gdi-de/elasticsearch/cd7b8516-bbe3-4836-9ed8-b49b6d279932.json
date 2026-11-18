@@ -185,25 +185,18 @@
   "references": [
     {
       "url": "https://sg.geodatenzentrum.de/wms_gn250_inspire?",
-      "type": {
-        "key": "3600",
-        "value": "Gekoppelte Daten"
-      }
+      "type": "Gekoppelte Daten",
+      "type_ref_uri": "/codelist/2000/3600"
     },
     {
       "url": "https://gdz.bkg.bund.de/index.php/default/inspire-wms-geographical-names-gn250-wms-gn250-inspire.html",
-      "type": {
-        "key": "5302",
-        "value": "information"
-      },
+      "type": "information",
+      "type_ref_uri": "/codelist/2000/5302",
       "title": "Service Center"
     },
     {
       "url": "https://mis.bkg.bund.de/preview/GeographicalNames.png",
-      "type": {
-        "key": null,
-        "value": "previewGraphic"
-      },
+      "type": "previewGraphic",
       "explanation": "grafische Darstellung"
     },
     {
@@ -216,10 +209,7 @@
     },
     {
       "url": "https://mis.bkg.bund.de/preview/GeographicalNames.png",
-      "type": {
-        "key": null,
-        "value": "previewGraphic"
-      },
+      "type": "previewGraphic",
       "explanation": "overview"
     }
   ],

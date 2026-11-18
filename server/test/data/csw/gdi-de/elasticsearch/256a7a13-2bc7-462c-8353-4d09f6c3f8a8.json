@@ -185,26 +185,19 @@
   "references": [
     {
       "url": "https://gdz.bkg.bund.de/index.php/default/inspire-wfs-geographical-names-gn250-wfs-gn250-inspire.html",
-      "type": {
-        "key": "5302",
-        "value": "information"
-      },
+      "type": "information",
+      "type_ref_uri": "/codelist/2000/5302",
       "title": "Service Center"
     },
     {
       "url": "https://sg.geodatenzentrum.de/wfs_gn250_inspire?",
-      "type": {
-        "key": "5302",
-        "value": "information"
-      },
+      "type": "information",
+      "type_ref_uri": "/codelist/2000/5302",
       "title": "Dienst \"INSPIRE-WFS Geographical Names GN250\" (GetCapabilities)"
     },
     {
       "url": "https://mis.bkg.bund.de/preview/GeographicalNames.png",
-      "type": {
-        "key": null,
-        "value": "previewGraphic"
-      },
+      "type": "previewGraphic",
       "explanation": "grafische Darstellung"
     },
     {
@@ -217,10 +210,7 @@
     },
     {
       "url": "https://mis.bkg.bund.de/preview/GeographicalNames.png",
-      "type": {
-        "key": null,
-        "value": "previewGraphic"
-      },
+      "type": "previewGraphic",
       "explanation": "overview"
     }
   ],

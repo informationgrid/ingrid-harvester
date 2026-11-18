@@ -213,24 +213,18 @@
   "references": [
     {
       "url": "http://geoportal.bafg.de/dokumente/m2/produkte/owlk/Krahe_et_al_2010_BfG-Bericht_1682.pdf",
-      "type": {
-        "key": "5302",
-        "value": "information"
-      }
+      "type": "information",
+      "type_ref_uri": "/codelist/2000/5302"
     },
     {
       "url": "ftp://owlk:w13n4vi@ftp.kliwas.de",
-      "type": {
-        "key": "9990",
-        "value": "download"
-      }
+      "type": "download",
+      "type_ref_uri": "/codelist/2000/9990"
     },
     {
       "url": "http://geoportal.bafg.de/dokumente/m2/produkte/owlk/Nutzungsbedingungen_oWLK_GCM_BfG.pdf",
-      "type": {
-        "key": "5302",
-        "value": "information"
-      }
+      "type": "information",
+      "type_ref_uri": "/codelist/2000/5302"
     }
   ],
   "description": "Dieser Datenbestand dient der Analyse atmosphärischer Zirkulationsbedingungen (Wetterlagen, NAO) im nordatlantisch-mitteleuropäischen Sektor wie sie von Reanalyse- und globalen Klimamodellen (Status: 2010) simuliert werden. Ausgewählt wurden solche Klimamodelläufe, die für Mitteleuropa oder Deutschland regionalisiert wurden. Mit dem Datenbestand kann einerseits die Eignung der verschiedenen Modelle zur Reproduktion der beobachteten Zirkulationsverhälnisse (1950-2000) geprüft werden. Andererseits können simulierte Änderungen (2001-2100) ausgewertet werden. Zusätzlich werden Temperatur -und Niederschlagsdaten bereitgestellt, mit denen die Wetterwirksamkeit der Wetterlagen je GCM bewertet werden kann."

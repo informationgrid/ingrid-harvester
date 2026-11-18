@@ -295,7 +295,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         this.getCapabilitiesURL()?.forEach(url => {
             if (seenUrls.has(url)) return;
             seenUrls.add(url);
-            references.push({ url, type: { key: '3600', value: 'Gekoppelte Daten' } });
+            references.push({ url, type: 'Gekoppelte Daten', type_ref_uri: this.codelistRef('2000', '3600') });
         });
 
         const onlineResources = CswMapper.select('./gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource', this.baseMapper.record);
@@ -308,7 +308,8 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
                 url,
                 title: this.text('./gmd:name/gco:CharacterString', onlineResource) ?? undefined,
                 explanation: this.text('./gmd:description/gco:CharacterString', onlineResource) ?? undefined,
-                type: functionCode ? { key: this.transformToIgcDomainId(functionCode, '2000'), value: functionCode } : undefined,
+                type: functionCode ?? undefined,
+                type_ref_uri: functionCode ? this.codelistRef('2000', this.transformToIgcDomainId(functionCode, '2000')) : undefined,
             });
         });
 
@@ -320,7 +321,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             references.push({
                 url,
                 explanation: this.text('./gmd:fileDescription/gco:CharacterString', mdBrowseGraphic) ?? undefined,
-                type: { key: null, value: 'previewGraphic' },
+                type: 'previewGraphic',
             });
         });
 

@@ -205,18 +205,13 @@
   "references": [
     {
       "url": "https://via.res.bund.de/wsv/3darchiv/app",
-      "type": {
-        "key": "5302",
-        "value": "information"
-      },
+      "type": "information",
+      "type_ref_uri": "/codelist/2000/5302",
       "title": "https://via.res.bund.de/wsv/3darchiv/app"
     },
     {
       "url": "https://geoportal.wsv.res.bund.de/documents/wsv-igc/e84178b6-7364-439a-861d-8a29259c0772/3dda.png",
-      "type": {
-        "key": null,
-        "value": "previewGraphic"
-      }
+      "type": "previewGraphic"
     }
   ],
   "description": "Das 3D-Datenarchiv BWaStr dient der zentralen mittel- und langfristigen Archivierung und Bereitstellung von Topografiedaten der Bundeswasserstraßen (BWaStr). Als Topografiedaten sind z.B. Daten aus der hydrografischen Vermessung, Befliegungsdaten, Profile und digitale Geländemodelle zu verstehen. Das IT-Verfahren ersetzt die Peildatenbanken Binnen und Küste und zeichnet sich durch folgende Funktionalität aus: _*_ Komfortable Recherche über Schlagworte, Metadaten, Karte etc., _*_ Visualisierung der Daten (Lage, Situationsdarstellung, Profilansichten, Sachdatenkopplung), _*_ Download der Daten, _*_ Lückenloser Metadatennachweis, _*_ Überblick über den gesamten Bestand an relevanten Geodaten der WSV, _*_ Kontinuierliche Datenübernahme von den datenerhebenden WSV-Dienststellen Diese WebApplikation der Wasserstraßen- und Schifffahrtsverwaltung des Bundes ist nur im Intranet der Bundesverwaltung für Verkehr, Bau und Stadtentwicklung (BVBS) erreichbar. Recherche-Rechte hat jeder angemeldete WSV-Mitarbeiter. Die Anmeldung am 3D-Datenarchiv erfolgt über den WSV-Verzeichnisdienst durch Eingabe der Eimailadresse und dem Arbeitsplatzpasswort. Download- oder weitere Rechte sind an die Rechtevergabe im IT-Verfahren gebunden."

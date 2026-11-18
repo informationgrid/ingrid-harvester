@@ -255,14 +255,10 @@
                     "type": "keyword"
                 },
                 "type": {
-                    "properties": {
-                        "key": {
-                            "type": "keyword"
-                        },
-                        "value": {
-                            "type": "keyword"
-                        }
-                    }
+                    "type": "keyword"
+                },
+                "type_ref_uri": {
+                    "type": "keyword"
                 },
                 "title": {
                     "type": "text",

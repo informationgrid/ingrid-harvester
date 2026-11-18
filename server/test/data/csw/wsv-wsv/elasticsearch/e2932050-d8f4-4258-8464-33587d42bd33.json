@@ -917,18 +917,14 @@
   "references": [
     {
       "url": "https://www.pegelonline.wsv.de/gast/pegelinformationen",
-      "type": {
-        "key": "5302",
-        "value": "information"
-      },
+      "type": "information",
+      "type_ref_uri": "/codelist/2000/5302",
       "title": "Aktuelle Wasserstände"
     },
     {
       "url": "https://www.pegelonline.wsv.de/gast/pegeltabelle",
-      "type": {
-        "key": "9990",
-        "value": "download"
-      },
+      "type": "download",
+      "type_ref_uri": "/codelist/2000/9990",
       "title": "Pegel Zeitreihen-Download"
     },
     {
@@ -945,10 +941,7 @@
     },
     {
       "url": "https://www.pegelonline.wsv.de/img/pegelonline.gif",
-      "type": {
-        "key": null,
-        "value": "previewGraphic"
-      },
+      "type": "previewGraphic",
       "explanation": "grafische Darstellung"
     }
   ],

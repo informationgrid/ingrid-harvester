@@ -363,65 +363,49 @@
   "references": [
     {
       "url": "https://geoinformation.eisenbahn-bundesamt.de/wms/flut_2021?service=WMS&version=1.3.0&request=GetCapabilities",
-      "type": {
-        "key": "3600",
-        "value": "Gekoppelte Daten"
-      }
+      "type": "Gekoppelte Daten",
+      "type_ref_uri": "/codelist/2000/3600"
     },
     {
       "url": "http://geoportal.eisenbahn-bundesamt.de",
-      "type": {
-        "key": "5302",
-        "value": "information"
-      },
+      "type": "information",
+      "type_ref_uri": "/codelist/2000/5302",
       "title": "Link zum Geodatenviewer"
     },
     {
       "url": "http://www.eba.bund.de/DE/Themen/Laerm_an_Schienenwegen/laerm_an_schienenwegen_node.html",
-      "type": {
-        "key": "5302",
-        "value": "information"
-      },
+      "type": "information",
+      "type_ref_uri": "/codelist/2000/5302",
       "title": "Weitere Informationen zum Inhalt der beschriebenen Daten"
     },
     {
       "url": "https://geoportal.eisenbahn-bundesamt.de",
-      "type": {
-        "key": "5302",
-        "value": "information"
-      },
+      "type": "information",
+      "type_ref_uri": "/codelist/2000/5302",
       "title": "Link zum Geodatenviewer"
     },
     {
       "url": "https://www.eba.bund.de/DE/Themen/Laerm_an_Schienenwegen/laerm_an_schienenwegen_node.html",
-      "type": {
-        "key": "5302",
-        "value": "information"
-      },
+      "type": "information",
+      "type_ref_uri": "/codelist/2000/5302",
       "title": "Weitere Informationen zum Inhalt der beschriebenen Daten"
     },
     {
       "url": "https://geoinformation.eisenbahn-bundesamt.de/wms/flut_2021?service=WMS&version=1.3.0&request=GetCapabilities",
-      "type": {
-        "key": "5302",
-        "value": "information"
-      },
+      "type": "information",
+      "type_ref_uri": "/codelist/2000/5302",
       "title": "INSPIRE WMS"
     },
     {
       "url": "https://geoinformation.eisenbahn-bundesamt.de/wmts/eba/WMTSCapabilities.xml",
-      "type": {
-        "key": "5302",
-        "value": "information"
-      },
+      "type": "information",
+      "type_ref_uri": "/codelist/2000/5302",
       "title": "INSPIRE WMTS"
     },
     {
       "url": "https://geoinformation.eisenbahn-bundesamt.de/wfs/eba/services/wfs?service=WFS&request=GetCapabilities",
-      "type": {
-        "key": "9990",
-        "value": "download"
-      },
+      "type": "download",
+      "type_ref_uri": "/codelist/2000/9990",
       "title": "INSPIRE Download Service (WFS)"
     }
   ],
