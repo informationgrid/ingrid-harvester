@@ -47,7 +47,6 @@ export type IndexDocument = {
 
 export type IndexDocumentMetadata = {
     data_type: string,
-    document_type?: string,
     created: string | null,     // ISO 8601
     modified: string | null,    // ISO 8601
     issued?: string | null,     // ISO 8601

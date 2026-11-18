@@ -3,13 +3,13 @@
  * depending on which mapping produced it, so this unions the two ways to recognize one.
  */
 
--- current ('ingrid' mapping): metadata.document_type marks the service
+-- current ('ingrid' mapping): ingrid.document_type marks the service
 (
     SELECT id, dataset
     FROM public.record
     WHERE source = $1
         AND deleted_on IS NULL
-        AND dataset->'metadata'->>'document_type' = 'InGridGeoService'
+        AND dataset->'ingrid'->>'document_type' = 'InGridGeoService'
 )
 UNION
 -- deprecated ('ingrid-deprecated' / default-mapping.deprecated mapping): a top-level

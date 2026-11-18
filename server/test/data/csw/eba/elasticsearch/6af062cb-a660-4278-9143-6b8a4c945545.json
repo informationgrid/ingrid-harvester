@@ -5,6 +5,7 @@
   ],
   "title": "(WFS) Geoinformation Eisenbahn-Bundesamt",
   "ingrid": {
+    "document_type": "InGridGeoService",
     "service": {
       "type": "download",
       "versions": [
@@ -453,8 +454,7 @@
       "id": "Harvester",
       "name": "Harvester",
       "type": "csw"
-    },
-    "document_type": "InGridGeoService"
+    }
   },
   "spatials": [
     {

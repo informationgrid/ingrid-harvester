@@ -2,6 +2,7 @@
   "id": "f1950cd0-de59-413c-93fd-b669af06c863",
   "title": "INSPIRE HE Hydro - Netzwerk ATKIS Basis-DLM",
   "ingrid": {
+    "document_type": "InGridGeoDataset",
     "lineage": {
       "source": "ATKIS Basis-DLM",
       "statement": "Der Datenbestand enthält aus ATKIS Basis-DLM abgeleitete Daten für das INSPIRE-Thema Hydro - Netzwerk gemäß INSPIRE-Datenspezifikation."
@@ -245,8 +246,7 @@
       "id": "Harvester",
       "name": "Harvester",
       "type": "csw"
-    },
-    "document_type": "InGridGeoDataset"
+    }
   },
   "spatials": [
     {

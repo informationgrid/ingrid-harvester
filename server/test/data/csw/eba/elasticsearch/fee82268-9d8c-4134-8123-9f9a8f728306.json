@@ -5,6 +5,7 @@
   ],
   "title": "Beeinträchtigung Flut 2021",
   "ingrid": {
+    "document_type": "InGridGeoDataset",
     "lineage": {
       "statement": "Darstellung der von der Flutkatastrophe im Sommer 2021 dauerhaft oder vorübergehend im Betrieb beeinträchtigten Strecken. Erhoben im Rahmen der Umgebungslärmkartierung Runde 4."
     },
@@ -283,8 +284,7 @@
       "id": "Harvester",
       "name": "Harvester",
       "type": "csw"
-    },
-    "document_type": "InGridGeoDataset"
+    }
   },
   "spatials": [
     {

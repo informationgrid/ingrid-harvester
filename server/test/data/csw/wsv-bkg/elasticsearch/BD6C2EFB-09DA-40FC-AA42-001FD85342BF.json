@@ -2,6 +2,7 @@
   "id": "BD6C2EFB-09DA-40FC-AA42-001FD85342BF",
   "title": "AdV MetadatenInformationsSystem",
   "ingrid": {
+    "document_type": "InGridInformationSystem",
     "licenses": [
       {
         "type": "useConstraints",
@@ -138,8 +139,7 @@
       "id": "wsv-bkg-csw",
       "name": "wsv-bkg-csw",
       "type": "csw"
-    },
-    "document_type": "InGridInformationSystem"
+    }
   },
   "spatials": [
     {

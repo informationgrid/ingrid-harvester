@@ -22,14 +22,13 @@
  */
 
 import type { IndexDocument, IndexDocumentMetadata } from '../../../model/index.document.js';
-import type { IngridDocumentType } from './index.document.js';
 
 // ---------------------------------------------------------------------------
 // OpenData/DCAT document — produced by the CKAN/DCAT-AP.de/Genesis mappers
 // ---------------------------------------------------------------------------
 
 export type IngridOpendataIndexDocument = IndexDocument & {
-    metadata: IndexDocumentMetadata & { data_type: string, document_type?: IngridDocumentType },
+    metadata: IndexDocumentMetadata & { data_type: string },
 } & IngridOpendataFields;
 
 export type IngridOpendataFields = {

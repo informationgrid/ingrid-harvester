@@ -25,14 +25,14 @@ import type { IndexDocument, IndexDocumentMetadata, IndexTemporal } from '../../
 
 export type IngridDocumentType = 'InGridGeoDataset' | 'InGridDataCollection' | 'InGridGeoService'
     | 'InGridInformationSystem' | 'InGridPublication' | 'InGridProject'
-    | 'InGridSpecialisedTask';
+    | 'InGridSpecialisedTask' | 'InGridAlgorithm';
 
 // ---------------------------------------------------------------------------
 // InGrid/ISO document — produced by the CSW/WFS mappers
 // ---------------------------------------------------------------------------
 
 export type IngridIndexDocument = IndexDocument & {
-    metadata: IndexDocumentMetadata & { data_type: 'INGRID' | 'UMWELTNAVI', document_type?: IngridDocumentType },
+    metadata: IndexDocumentMetadata & { data_type: 'INGRID' | 'UMWELTNAVI' },
 } & IngridFields;
 
 export type IngridFields = {
@@ -43,6 +43,7 @@ export type IngridFields = {
 };
 
 export type IngridSpecific = {
+    document_type?: IngridDocumentType,
     alternate_title?: string,
     licenses?: IngridLicense[],
     parent_identifier?: string,

@@ -130,7 +130,6 @@ export abstract class ingridMapper<M extends ingridMapperType>
             $schema: undefined, // overwritten in createIndexDocument() once the resolved DocumentKind's JSON schema is known
             metadata: {
                 data_type: 'INGRID' as const,
-                document_type: this.getDocumentType(),
                 created: null,  // TODO: populate from source record
                 modified: this.getModifiedDate()?.toISOString() ?? null,
                 partner: this.baseMapper.settings.partner?.split(',').map(p => p.trim())[0],
@@ -197,6 +196,7 @@ export abstract class ingridMapper<M extends ingridMapperType>
 
     getIngrid(): IngridSpecific {
         return {
+            document_type: this.getDocumentType(),
             alternate_title: this.getAlternateTitle(),
             licenses: this.getLicenses(),
             parent_identifier: this.getParentIdentifier(),

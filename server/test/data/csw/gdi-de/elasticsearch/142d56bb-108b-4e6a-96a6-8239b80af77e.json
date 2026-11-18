@@ -2,6 +2,7 @@
   "id": "142d56bb-108b-4e6a-96a6-8239b80af77e",
   "title": "INSPIRE Geographical Names GN250",
   "ingrid": {
+    "document_type": "InGridGeoDataset",
     "lineage": {
       "statement": "Transformation from national name database into INSPIRE. Sources: Geographisches Namenbuch Bundesrepublik Deutschland, IfAG 1981, Ergänzung 1991 bis 1996 Auswahl der Namen: Übersichtskarten 1:500.000, 1:250.000, 1:25.000",
       "process_step": "Transformation from national name database into INSPIRE"
@@ -217,8 +218,7 @@
       "id": "Harvester",
       "name": "Harvester",
       "type": "csw"
-    },
-    "document_type": "InGridGeoDataset"
+    }
   },
   "spatials": [
     {

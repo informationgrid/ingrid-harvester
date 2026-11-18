@@ -28,7 +28,7 @@ import * as GeojsonUtils from '../../../utils/geojson.utils.js';
 import * as MiscUtils from '../../../utils/misc.utils.js';
 import { IdfGenerator } from '../idf.generator.js';
 import { generateWfsUuid } from '../ingrid.utils.js';
-import type { IngridIndexDocument } from '../model/index.document.js';
+import type { IngridDocumentType, IngridIndexDocument } from '../model/index.document.js';
 import { ingridMapper, type DocumentKind } from './ingrid.mapper.js';
 
 export class ingridWfsMapper extends ingridMapper<WfsMapper> {
@@ -63,6 +63,11 @@ export class ingridWfsMapper extends ingridMapper<WfsMapper> {
 
     getDescription() {
         return "";
+    }
+
+    // WFS features/feature types are always geodata ('ingrid.document_type' is required by the schema)
+    getDocumentType(): IngridDocumentType {
+        return 'InGridGeoDataset';
     }
 
     getSpatial(): Geometry[] {

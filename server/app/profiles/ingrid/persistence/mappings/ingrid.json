@@ -37,6 +37,9 @@
         },
         "ingrid": {
             "properties": {
+                "document_type": {
+                    "type": "keyword"
+                },
                 "alternate_title": {
                     "type": "text",
                     "fields": {

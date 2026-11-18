@@ -2,6 +2,7 @@
   "id": "12E82980-FB99-4A8E-8C96-BB3AE11DB63E",
   "title": "GeocoderPlus",
   "ingrid": {
+    "document_type": "InGridInformationSystem",
     "licenses": [
       {
         "type": "useConstraints",
@@ -140,8 +141,7 @@
       "id": "wsv-bkg-csw",
       "name": "wsv-bkg-csw",
       "type": "csw"
-    },
-    "document_type": "InGridInformationSystem"
+    }
   },
   "spatials": [
     {

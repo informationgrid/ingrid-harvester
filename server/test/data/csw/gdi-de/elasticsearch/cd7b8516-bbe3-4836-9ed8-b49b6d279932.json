@@ -2,6 +2,7 @@
   "id": "cd7b8516-bbe3-4836-9ed8-b49b6d279932",
   "title": "INSPIRE-WMS Geographical Names GN250",
   "ingrid": {
+    "document_type": "InGridGeoService",
     "service": {
       "type": "view",
       "versions": [
@@ -138,8 +139,7 @@
       "id": "Harvester",
       "name": "Harvester",
       "type": "csw"
-    },
-    "document_type": "InGridGeoService"
+    }
   },
   "spatials": [
     {

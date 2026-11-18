@@ -21,9 +21,6 @@
                 "data_type": {
                     "type": "keyword"
                 },
-                "document_type": {
-                    "type": "keyword"
-                },
                 "created": {
                     "type": "date"
                 },

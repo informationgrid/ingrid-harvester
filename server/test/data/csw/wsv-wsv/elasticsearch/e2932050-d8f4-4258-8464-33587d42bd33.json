@@ -2,6 +2,7 @@
   "id": "e2932050-d8f4-4258-8464-33587d42bd33",
   "title": "PEGELONLINE Aktuelle Wasserstände",
   "ingrid": {
+    "document_type": "InGridGeoDataset",
     "lineage": {
       "statement": "Nähere Informationen zu Sensoren und Messtechnik erhält man in den gewässerkundlichen Büros der Wasser- und Schifffahrtsämter.",
       "process_step": "Zur Messung der Daten stehen der WSV stationäre und mobile, mechanische und digital aufzeichnende elektronische Messgeräte zur Verfügung. Die Messwerte werden z.T. online-digital fernübertragen. Es stehen nur unplausibilisierte Rohdaten zur Verfügung, für deren Richtigkeit keine Garantie gegeben wird."
@@ -202,8 +203,7 @@
       "id": "wsv-geokat-csw",
       "name": "wsv-geokat-csw",
       "type": "csw"
-    },
-    "document_type": "InGridGeoDataset"
+    }
   },
   "spatials": [
     {

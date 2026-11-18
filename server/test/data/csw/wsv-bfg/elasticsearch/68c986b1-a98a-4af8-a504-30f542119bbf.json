@@ -2,6 +2,7 @@
   "id": "68c986b1-a98a-4af8-a504-30f542119bbf",
   "title": "Kartendienste LGRB Baden-Württemberg - Geologie",
   "ingrid": {
+    "document_type": "InGridInformationSystem",
     "lineage": {
       "statement": "Verantwortlich für den Inhalt ist das Regierungspräsidium Freiburg, Landesamt für Geologie, Rohstoffe und Bergbau"
     },
@@ -73,8 +74,7 @@
       "id": "wsv-bfg-csw",
       "name": "wsv-bfg-csw",
       "type": "csw"
-    },
-    "document_type": "InGridInformationSystem"
+    }
   },
   "spatials": [
     {

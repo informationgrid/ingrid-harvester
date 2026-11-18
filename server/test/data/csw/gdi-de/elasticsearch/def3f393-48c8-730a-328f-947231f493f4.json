@@ -2,6 +2,7 @@
   "id": "def3f393-48c8-730a-328f-947231f493f4",
   "title": "INSPIRE-WMS HE Hydro - Netzwerk ATKIS Basis-DLM - Hydrografisches Netzwerk",
   "ingrid": {
+    "document_type": "InGridGeoService",
     "service": {
       "type": "view",
       "versions": [
@@ -233,8 +234,7 @@
       "id": "Harvester",
       "name": "Harvester",
       "type": "csw"
-    },
-    "document_type": "InGridGeoService"
+    }
   },
   "spatials": [
     {

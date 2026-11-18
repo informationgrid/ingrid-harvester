@@ -368,11 +368,11 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         // additionalDoc is another already-mapped IngridIndexDocument from the same coupling
         // (service<->dataset), resolved via the `coupling` table / getBuckets.sql join - only
         // there (not in a per-record mapper) are both sides of the relationship available at once
-        const additionalDocIsService = additionalDoc.metadata?.document_type === 'InGridGeoService';
+        const additionalDocIsService = additionalDoc.ingrid?.document_type === 'InGridGeoService';
         const crossReference = {
             uuid: additionalDoc.id,
             name: additionalDoc.title,
-            document_type: additionalDoc.metadata?.document_type,
+            document_type: additionalDoc.ingrid?.document_type,
             description: additionalDoc.description,
             // matches the old codelist-2000 labels: 3600 "Gekoppelte Daten" when the coupled
             // record is the service (viewed from the dataset), 3345 "Basisdaten" when it's the

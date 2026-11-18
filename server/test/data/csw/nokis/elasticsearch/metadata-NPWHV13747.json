@@ -5,6 +5,7 @@
   ],
   "title": "[1991] Eiderentenbestandserfassung (Jan/Feb) Monitoring of migratory birds (Eiders) in the Wadden Sea of Lower Saxony in winter 1991",
   "ingrid": {
+    "document_type": "InGridGeoDataset",
     "lineage": {
       "source": "Maßstab der Zählkarten 1:100000; die beobachteten Trupps der Eiderenten werden zu Punktdaten zusammengefasst und manuell in die Zählkarten übertragen.",
       "statement": "Zählflug bei Niedrigwasser. Zählung erfolgt durch Teams mit mehrjähriger Erfahrung bei niedriger Flughöhe."
@@ -267,8 +268,7 @@
       "id": "Harvester",
       "name": "Harvester",
       "type": "csw"
-    },
-    "document_type": "InGridGeoDataset"
+    }
   },
   "spatials": [
     {

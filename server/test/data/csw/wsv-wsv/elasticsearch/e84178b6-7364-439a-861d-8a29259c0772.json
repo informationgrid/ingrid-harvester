@@ -2,6 +2,7 @@
   "id": "e84178b6-7364-439a-861d-8a29259c0772",
   "title": "3D-Datenarchiv BWaStr - WebApplikation der WSV im BMVI-Intranet",
   "ingrid": {
+    "document_type": "InGridInformationSystem",
     "licenses": [
       {
         "type": "accessConstraints",
@@ -146,8 +147,7 @@
       "id": "wsv-geokat-csw",
       "name": "wsv-geokat-csw",
       "type": "csw"
-    },
-    "document_type": "InGridInformationSystem"
+    }
   },
   "spatials": [
     {
