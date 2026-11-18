@@ -347,9 +347,8 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return 'InGridGeoDataset';
     }
 
-    getCharacterSet(): { key: string | null, value: string | null } {
-        const characterSet = this.text('./gmd:MD_DataIdentification/gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue', this.baseMapper.idInfo);
-        return characterSet ? { key: this.transformToIgcDomainId(characterSet, '510'), value: characterSet } : undefined;
+    getCharacterSet(): string {
+        return this.text('./gmd:MD_DataIdentification/gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue', this.baseMapper.idInfo) || undefined;
     }
 
     getCrs(): string[] {

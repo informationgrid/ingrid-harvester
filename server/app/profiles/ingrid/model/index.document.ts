@@ -54,7 +54,8 @@ export type IngridSpecific = {
     conformance_result?: IngridConformanceResult[],
     order_info?: string,
     data_quality?: IngridDataQuality,
-    character_set?: { key: string | null, value: string | null },
+    character_set?: string,
+    character_set_ref_uri?: string,
     spatial_resolution_scale?: { scale?: number, resolution_ground?: number, resolution_scan?: number },
     cross_references?: {
         uuid?: string,

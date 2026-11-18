@@ -218,11 +218,12 @@ design: ./design.md
   - Acceptance: no `/temporal/status`/`/temporal/maintenance_frequency` errors left; checks as TASK-028.
   - Verified: `IngridTemporal.status`/`maintenance_frequency` are strings (ISO codeListValue, e.g. `onGoing`, `annually`) plus `status_ref_uri` (523) / `maintenance_frequency_ref_uri` (518) via `codelistRef(transformToIgcDomainId(...))`; CSW `getStatus()`/`getMaintenanceFrequency()` return the plain value; `ingrid.json` mapping: four `keyword` fields. 9 live csw fixtures converted (8 status, 7 maintenance frequency, each with ref from the former key). Schema check: both temporal errors gone, no new error kinds. `tsc` 14 (baseline). Specs deferred to TASK-041.
 
-- [ ] TASK-032: `ingrid.character_set` → string + `character_set_ref_uri`
+- [x] TASK-032: `ingrid.character_set` → string + `character_set_ref_uri`
   - Refs: FR-004, TASK-028
   - File: `server/app/profiles/ingrid/model/index.document.ts`, `server/app/profiles/ingrid/mapper/ingrid.mapper.ts` (`getCharacterSet()` signature, `getIngrid()`), `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts`, `server/app/profiles/ingrid/persistence/mappings/ingrid.json`, live csw fixtures
   - Details: convention of TASK-028; codelist 510.
   - Acceptance: no `/ingrid/character_set` errors left; checks as TASK-028.
+  - Verified: `getCharacterSet(): string` (base + CSW, ISO codeListValue e.g. `utf8`); `getIngrid()` adds `character_set_ref_uri` via `codelistRef('510', transformToIgcDomainId(...))`; `IngridSpecific.character_set: string` + `character_set_ref_uri`; `ingrid.json` mapping: two `keyword` fields. 5 live csw fixtures converted (`utf8` → `/codelist/510/4`). Schema check: `/ingrid/character_set` gone, no new error kinds. `tsc` 14 (baseline). Specs deferred to TASK-041.
 
 - [ ] TASK-033: `ingrid.licenses[].items` → `name` / `name_ref_uri` / `source`
   - Refs: FR-004, TASK-028

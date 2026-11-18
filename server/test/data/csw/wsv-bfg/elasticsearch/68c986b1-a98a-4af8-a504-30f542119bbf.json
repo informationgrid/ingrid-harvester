@@ -6,10 +6,8 @@
     "lineage": {
       "statement": "Verantwortlich für den Inhalt ist das Regierungspräsidium Freiburg, Landesamt für Geologie, Rohstoffe und Bergbau"
     },
-    "character_set": {
-      "key": "4",
-      "value": "utf8"
-    }
+    "character_set": "utf8",
+    "character_set_ref_uri": "/codelist/510/4"
   },
   "$schema": "https://schema.ingrid-oss.eu/index/draft/schema/index-ingrid.json",
   "exports": {

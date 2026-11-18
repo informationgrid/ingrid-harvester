@@ -244,14 +244,10 @@
                     }
                 },
                 "character_set": {
-                    "properties": {
-                        "key": {
-                            "type": "keyword"
-                        },
-                        "value": {
-                            "type": "keyword"
-                        }
-                    }
+                    "type": "keyword"
+                },
+                "character_set_ref_uri": {
+                    "type": "keyword"
                 },
                 "spatial_resolution_scale": {
                     "properties": {
