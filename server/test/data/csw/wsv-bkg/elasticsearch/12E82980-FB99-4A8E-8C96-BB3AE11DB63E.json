@@ -8,8 +8,7 @@
         "type": "useConstraints",
         "items": [
           {
-            "key": null,
-            "value": "Die Software ist urheberrechtlich geschützt. Die Software wird Nutzungsberechtigten nach V GeoBund und Dritten geldleistungsfrei zur Verfügung gestellt. Bitte informieren Sie sich unter den nachfolgenden Links über die Lizenzvereinbarung: https://sg.geodatenzentrum.de/web_public/gdz/lizenz/deu/lizenz_geocoderplus_bund.pdf und https://sg.geodatenzentrum.de/web_public/gdz/lizenz/deu/lizenz_geocoderplus_dritte.pdf. Der Quellenvermerk ist zu beachten.",
+            "name": "Die Software ist urheberrechtlich geschützt. Die Software wird Nutzungsberechtigten nach V GeoBund und Dritten geldleistungsfrei zur Verfügung gestellt. Bitte informieren Sie sich unter den nachfolgenden Links über die Lizenzvereinbarung: https://sg.geodatenzentrum.de/web_public/gdz/lizenz/deu/lizenz_geocoderplus_bund.pdf und https://sg.geodatenzentrum.de/web_public/gdz/lizenz/deu/lizenz_geocoderplus_dritte.pdf. Der Quellenvermerk ist zu beachten.",
             "source": "© BKG (Jahr des letzten Softwarebezugs)"
           }
         ]
@@ -18,8 +17,7 @@
         "type": "accessConstraints",
         "items": [
           {
-            "key": "-1",
-            "value": "Es gelten Zugriffsbeschränkungen. Für den Erwerb von Nutzungsrechten wenden Sie sich deshalb bitte an die Zentrale Stelle Geotopographie der AdV (ZSGT) / Dienstleistungszentrum (DLZ) des Bundesamtes für Kartographie und Geodäsie: https://www.bkg.bund.de/DE/Service/Kontakt/kontakt.html."
+            "name": "Es gelten Zugriffsbeschränkungen. Für den Erwerb von Nutzungsrechten wenden Sie sich deshalb bitte an die Zentrale Stelle Geotopographie der AdV (ZSGT) / Dienstleistungszentrum (DLZ) des Bundesamtes für Kartographie und Geodäsie: https://www.bkg.bund.de/DE/Service/Kontakt/kontakt.html."
           }
         ]
       }

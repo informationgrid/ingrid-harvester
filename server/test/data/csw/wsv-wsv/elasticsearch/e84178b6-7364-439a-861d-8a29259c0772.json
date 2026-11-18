@@ -8,8 +8,7 @@
         "type": "accessConstraints",
         "items": [
           {
-            "key": "-1",
-            "value": "restricted"
+            "name": "restricted"
           }
         ]
       }

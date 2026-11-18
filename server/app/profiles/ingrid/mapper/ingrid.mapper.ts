@@ -208,7 +208,7 @@ export abstract class ingridMapper<M extends ingridMapperType>
             order_info: this.getOrderInfo(),
             data_quality: this.getDataQuality(),
             character_set: this.getCharacterSet(),
-            character_set_ref_uri: this.codelistRef('510', this.transformToIgcDomainId(this.getCharacterSet(), '510')),
+            character_set_ref_uri: this.getCharacterSet() ? this.codelistRef('510', this.transformToIgcDomainId(this.getCharacterSet(), '510')) : undefined,
             spatial_resolution_scale: this.getSpatialResolutionScale(),
             cross_references: this.getCrossReferences(),
             lineage: this.getLineage(),

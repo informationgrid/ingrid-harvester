@@ -14,8 +14,7 @@
         "type": "useConstraints",
         "items": [
           {
-            "key": null,
-            "value": "Nutzungsbedingungen: Die Daten sind urheberrechtlich geschützt. Der Datensatz wird entgeltfrei mit der Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0) zur Verfügung gestellt. Der Quellenvermerk ist zu beachten. Quellenvermerk: © Eisenbahn-Bundesamt (www.eba.bund.de/). Diese Karten finden Sie unter www.eba.bund.de/kartendienst.",
+            "name": "Nutzungsbedingungen: Die Daten sind urheberrechtlich geschützt. Der Datensatz wird entgeltfrei mit der Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0) zur Verfügung gestellt. Der Quellenvermerk ist zu beachten. Quellenvermerk: © Eisenbahn-Bundesamt (www.eba.bund.de/). Diese Karten finden Sie unter www.eba.bund.de/kartendienst.",
             "source": "Eisenbahn-Bundesamt"
           }
         ]

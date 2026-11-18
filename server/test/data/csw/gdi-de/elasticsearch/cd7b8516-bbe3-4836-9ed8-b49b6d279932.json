@@ -29,8 +29,7 @@
         "type": "useConstraints",
         "items": [
           {
-            "key": null,
-            "value": "The data are protected by copyright. In accordance with the \"Geodatenzugangsgesetz\" (Geodata Access Act), the data are made available free of charge for download and online use, see https://sgx.geodatenzentrum.de/web_public/gdz/lizenz/geozg.pdf. The use of the data is regulat-ed by the \"Verordnung zur Festlegung der Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes – GeoNutzV\" (Regulation on the Determination of the Terms of Use for the Provision of Federal Geodata) of 19 March 2013 (Bundesgesetzblatt Jahrgang 2013 Teil I Nr. 14), see https://sgx.geodatenzentrum.de/web_public/gdz/lizenz/eng/geonutzv.pdf. The source note must be observed.",
+            "name": "The data are protected by copyright. In accordance with the \"Geodatenzugangsgesetz\" (Geodata Access Act), the data are made available free of charge for download and online use, see https://sgx.geodatenzentrum.de/web_public/gdz/lizenz/geozg.pdf. The use of the data is regulat-ed by the \"Verordnung zur Festlegung der Nutzungsbestimmungen für die Bereitstellung von Geodaten des Bundes – GeoNutzV\" (Regulation on the Determination of the Terms of Use for the Provision of Federal Geodata) of 19 March 2013 (Bundesgesetzblatt Jahrgang 2013 Teil I Nr. 14), see https://sgx.geodatenzentrum.de/web_public/gdz/lizenz/eng/geonutzv.pdf. The source note must be observed.",
             "source": "© GeoBasis-DE / BKG"
           }
         ]

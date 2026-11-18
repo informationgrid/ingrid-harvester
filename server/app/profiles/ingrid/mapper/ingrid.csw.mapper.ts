@@ -671,9 +671,10 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return {
             data_temporal: data_temporal.length ? data_temporal : undefined,
             status,
-            status_ref_uri: this.codelistRef('523', this.transformToIgcDomainId(status, '523')),
+            // guarded: Codelist.getId() matches entries without an ISO value when looked up with undefined (523 -> 900001)
+            status_ref_uri: status ? this.codelistRef('523', this.transformToIgcDomainId(status, '523')) : undefined,
             maintenance_frequency,
-            maintenance_frequency_ref_uri: this.codelistRef('518', this.transformToIgcDomainId(maintenance_frequency, '518')),
+            maintenance_frequency_ref_uri: maintenance_frequency ? this.codelistRef('518', this.transformToIgcDomainId(maintenance_frequency, '518')) : undefined,
         };
     }
 
@@ -1052,7 +1053,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         if (objectUse?.terms_of_use_value?.length) {
             licenses.push({
                 type: 'useLimitations',
-                items: objectUse.terms_of_use_value.map(v => ({ key: null, value: v }))
+                items: objectUse.terms_of_use_value.map(v => ({ name: v }))
             });
         }
 
@@ -1060,7 +1061,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         if (objectUseConstraint?.license_value?.length) {
             licenses.push({
                 type: 'useConstraints',
-                items: objectUseConstraint.license_value.map(v => ({ key: null, value: v, source: objectUseConstraint.source }))
+                items: objectUseConstraint.license_value.map(v => ({ name: v, source: objectUseConstraint.source }))
             });
         }
 
@@ -1069,8 +1070,8 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             licenses.push({
                 type: 'accessConstraints',
                 items: objectAccess.restriction_value.map((v, i) => ({
-                    key: objectAccess.restriction_key?.[i] ?? null,
-                    value: v
+                    name: v,
+                    name_ref_uri: this.codelistRef('6010', objectAccess.restriction_key?.[i])
                 }))
             });
         }

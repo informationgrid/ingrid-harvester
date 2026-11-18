@@ -12,8 +12,7 @@
         "type": "useConstraints",
         "items": [
           {
-            "key": null,
-            "value": "Datenlizenz Deutschland – Zero – Version 2.0",
+            "name": "Datenlizenz Deutschland – Zero – Version 2.0",
             "source": "© www.pegelonline.wsv.de (2024)"
           }
         ]

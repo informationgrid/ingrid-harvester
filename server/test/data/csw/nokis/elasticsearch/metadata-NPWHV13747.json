@@ -16,12 +16,10 @@
         "type": "useLimitations",
         "items": [
           {
-            "key": null,
-            "value": "{ \"id\": \"dl-de-by-2.0\", \"name\": \"Datenlizenz Deutschland – Namensnennung – Version 2.0\", \"url\": \"https://www.govdata.de/dl-de/by-2-0\", \"quelle\": \"Nationalparkverwaltung Niedersächsisches Wattenmeer\" }"
+            "name": "{ \"id\": \"dl-de-by-2.0\", \"name\": \"Datenlizenz Deutschland – Namensnennung – Version 2.0\", \"url\": \"https://www.govdata.de/dl-de/by-2-0\", \"quelle\": \"Nationalparkverwaltung Niedersächsisches Wattenmeer\" }"
           },
           {
-            "key": null,
-            "value": "Nutzungsbedingungen: Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0). Die Namensnennung lautet: Nationalparkverwaltung Niedersächsisches Wattenmeer"
+            "name": "Nutzungsbedingungen: Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0). Die Namensnennung lautet: Nationalparkverwaltung Niedersächsisches Wattenmeer"
           }
         ]
       },
@@ -29,8 +27,7 @@
         "type": "useConstraints",
         "items": [
           {
-            "key": null,
-            "value": "Nutzungsbedingungen: Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0). Die Namensnennung lautet: Nationalparkverwaltung Niedersächsisches Wattenmeer",
+            "name": "Nutzungsbedingungen: Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0). Die Namensnennung lautet: Nationalparkverwaltung Niedersächsisches Wattenmeer",
             "source": "Nationalparkverwaltung Niedersächsisches Wattenmeer"
           }
         ]
@@ -39,12 +36,10 @@
         "type": "accessConstraints",
         "items": [
           {
-            "key": "-1",
-            "value": "{ \"id\": \"dl-de-by-2.0\", \"name\": \"Datenlizenz Deutschland – Namensnennung – Version 2.0\", \"url\": \"https://www.govdata.de/dl-de/by-2-0\", \"quelle\": \"Nationalparkverwaltung Niedersächsisches Wattenmeer\" }"
+            "name": "{ \"id\": \"dl-de-by-2.0\", \"name\": \"Datenlizenz Deutschland – Namensnennung – Version 2.0\", \"url\": \"https://www.govdata.de/dl-de/by-2-0\", \"quelle\": \"Nationalparkverwaltung Niedersächsisches Wattenmeer\" }"
           },
           {
-            "key": "-1",
-            "value": "Nutzungsbedingungen: Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0). Die Namensnennung lautet: Nationalparkverwaltung Niedersächsisches Wattenmeer"
+            "name": "Nutzungsbedingungen: Datenlizenz Deutschland – Namensnennung – Version 2.0 (https://www.govdata.de/dl-de/by-2-0). Die Namensnennung lautet: Nationalparkverwaltung Niedersächsisches Wattenmeer"
           }
         ]
       }

@@ -11,8 +11,7 @@
         "type": "accessConstraints",
         "items": [
           {
-            "key": "-1",
-            "value": "keine Angaben"
+            "name": "keine Angaben"
           }
         ]
       }

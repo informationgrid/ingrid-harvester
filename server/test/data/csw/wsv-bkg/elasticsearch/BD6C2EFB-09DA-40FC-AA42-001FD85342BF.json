@@ -8,8 +8,7 @@
         "type": "useConstraints",
         "items": [
           {
-            "key": null,
-            "value": "Die Arbeitsgemeinschaft der Vermessungsverwaltungen der Länder der Bundesrepublik Deutschland (AdV) stellt Telemedien im Sinne des Telemediengesetztes (TMG) bereit. Die AdV unterliegt den Bestimmungen des TMGs in der jeweils gültigen Fassung. Anwendung finden daneben die Bestimmungen der EU-Datenschutzgrundverordnung (DSGVO) und des Bundesdatenschutzgesetzes (BDSG) in der jeweiligen gültigen Fassung. Das Copyright für Texte liegt, soweit nicht anders vermerkt, beim Bundesamt für Kartographie und Geodäsie. Das Copyright für Bilder liegt, soweit nicht im Bildnachweis anders vermerkt, beim Bundesamt für Kartographie und Geodäsie."
+            "name": "Die Arbeitsgemeinschaft der Vermessungsverwaltungen der Länder der Bundesrepublik Deutschland (AdV) stellt Telemedien im Sinne des Telemediengesetztes (TMG) bereit. Die AdV unterliegt den Bestimmungen des TMGs in der jeweils gültigen Fassung. Anwendung finden daneben die Bestimmungen der EU-Datenschutzgrundverordnung (DSGVO) und des Bundesdatenschutzgesetzes (BDSG) in der jeweiligen gültigen Fassung. Das Copyright für Texte liegt, soweit nicht anders vermerkt, beim Bundesamt für Kartographie und Geodäsie. Das Copyright für Bilder liegt, soweit nicht im Bildnachweis anders vermerkt, beim Bundesamt für Kartographie und Geodäsie."
           }
         ]
       }

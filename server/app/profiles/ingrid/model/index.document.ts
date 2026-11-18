@@ -139,7 +139,7 @@ export type IngridTemporal = IndexTemporal & {
 
 export type IngridLicense = {
     type?: 'accessConstraints' | 'useConstraints' | 'useLimitations',
-    items?: { key: string | null, value: string | null, source?: string }[],
+    items?: { name: string | null, name_ref_uri?: string, source?: string }[],
 };
 
 export type IngridConformanceResult = {

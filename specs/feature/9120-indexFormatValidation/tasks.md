@@ -217,6 +217,7 @@ design: ./design.md
   - Details: convention of TASK-028; codelists 523 (status) and 518 (maintenance frequency).
   - Acceptance: no `/temporal/status`/`/temporal/maintenance_frequency` errors left; checks as TASK-028.
   - Verified: `IngridTemporal.status`/`maintenance_frequency` are strings (ISO codeListValue, e.g. `onGoing`, `annually`) plus `status_ref_uri` (523) / `maintenance_frequency_ref_uri` (518) via `codelistRef(transformToIgcDomainId(...))`; CSW `getStatus()`/`getMaintenanceFrequency()` return the plain value; `ingrid.json` mapping: four `keyword` fields. 9 live csw fixtures converted (8 status, 7 maintenance frequency, each with ref from the former key). Schema check: both temporal errors gone, no new error kinds. `tsc` 14 (baseline). Specs deferred to TASK-041.
+  - Fix (found during TASK-033): `Codelist.getId(id, undefined)` matches entries without an ISO value (523 → `900001`), so `getTemporal()` emitted `status_ref_uri: /codelist/523/900001` for records without a status. Ref lookups are now guarded by the value (`status`, `maintenance_frequency`; `character_set_ref_uri` in `getIngrid()` likewise). `Codelist.getId()` itself unchanged (deprecated `getT*` path relies on it).
 
 - [x] TASK-032: `ingrid.character_set` → string + `character_set_ref_uri`
   - Refs: FR-004, TASK-028
@@ -225,11 +226,13 @@ design: ./design.md
   - Acceptance: no `/ingrid/character_set` errors left; checks as TASK-028.
   - Verified: `getCharacterSet(): string` (base + CSW, ISO codeListValue e.g. `utf8`); `getIngrid()` adds `character_set_ref_uri` via `codelistRef('510', transformToIgcDomainId(...))`; `IngridSpecific.character_set: string` + `character_set_ref_uri`; `ingrid.json` mapping: two `keyword` fields. 5 live csw fixtures converted (`utf8` → `/codelist/510/4`). Schema check: `/ingrid/character_set` gone, no new error kinds. `tsc` 14 (baseline). Specs deferred to TASK-041.
 
-- [ ] TASK-033: `ingrid.licenses[].items` → `name` / `name_ref_uri` / `source`
+- [x] TASK-033: `ingrid.licenses[].items` → `name` / `name_ref_uri` / `source`
   - Refs: FR-004, TASK-028
   - File: `server/app/profiles/ingrid/model/index.document.ts` (`IngridLicense`), `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getLicenses()`), `server/app/profiles/ingrid/persistence/mappings/ingrid.json`, live csw fixtures
   - Details: `key`/`value` → `name` (string or null) + `name_ref_uri`. accessConstraints: ref via codelist 6010 from `restriction_key` (`-1` = no ref); useConstraints/useLimitations: no ref (6500 not loaded, keys are `null` today). `source` unchanged. Not caught by validation today (license items allow extra properties), so verify via fixture diff.
   - Acceptance: live csw fixtures contain no `licenses[].items[].key`/`value`; checks as TASK-028.
+  - Verified: `IngridLicense.items`: `{ name, name_ref_uri?, source? }`; CSW `getLicenses()`: useLimitations/useConstraints → `name` only (useConstraints keep `source`), accessConstraints → `name` + `name_ref_uri` via `codelistRef('6010', restriction_key)` (`-1` → no ref); helpers `getObjectAccess()`/`getObjectUse*()` (shared with the deprecated `getT*` path) unchanged. `ingrid.json` mapping: `name`/`name_ref_uri`/`source` keyword. 16 live csw fixtures converted (14 useConstraints, 6 useLimitations, 9 accessConstraints - all with key `-1`, so no ref in the fixtures); no `key`/`value` left. Schema check: no new error kinds. `tsc` 14 (baseline). `test/data-deprecated` unchanged. Specs deferred to TASK-041.
+  - Note: `name_ref_uri` appears in no fixture. `Codelist` reads codelist 6010 by its `iso` localisation, which 6010 doesn't have (only `de`/`en` + `data.url`), so `restriction_key` is always `-1` (pre-existing). Besides, `getObjectAccess()` only selects `gco:CharacterString`, so INSPIRE `gmx:Anchor` access constraints (eba, gdi-de) are missing from `licenses` entirely (pre-existing).
 
 - [ ] TASK-034: `conformance_result[].specification` / `data_quality.qualities[].measure_type` → string
   - Refs: FR-004, TASK-028
@@ -260,21 +263,25 @@ design: ./design.md
   - File: `server/app/profiles/ingrid/model/opendataindex.document.ts`, `server/app/profiles/ingrid/mapper/ingrid.mapper.ts` (`buildOpendataDocument()`, `getDcat()` → `getLandingPage()`), `server/app/profiles/ingrid/mapper/{ingrid.ckan,ingrid.dcatapde,ingrid.genesis}.mapper.ts`, `server/app/profiles/ingrid/persistence/mappings/opendata.json`, genesis fixtures
   - Details: new `opendata` section in `index-opendata.json`; deprecated builders keep their own fields.
   - Acceptance: genesis fixtures carry `opendata.landing_page`, no root `dcat`/`legal_basis`; genesis spec, deprecated 16/16, `tsc` no new errors.
+  - Deprecated guard: the deprecated ckan/dcatapde/genesis builders don't call `getDcat()`/`getLegalBasis()` (they read `baseMapper.getLandingPage()`/`getLandingPageUrl()`/`getLegalBasis()` or set `null`); their `dcat.landingPage`/`legal_basis` output stays untouched.
 
 - [ ] TASK-039: opendata `distributions` → `opendata.distributions`, `languages` per distribution
   - Refs: FR-004, TASK-038
   - File: `server/app/profiles/ingrid/model/opendataindex.document.ts` (`IngridOpendataDistribution`), `server/app/profiles/ingrid/mapper/ingrid.mapper.ts` (`buildOpendataDocument()`), `server/app/profiles/ingrid/persistence/mappings/opendata.json`, genesis fixtures
   - Details: `license.languages` moves to `distributions[].languages`. Forwarding license/languages from the base `Distribution` stays a TODO (update the existing TODO comments).
   - Acceptance: as TASK-038.
+  - Deprecated guard: change only `IngridOpendataDistribution`; `server/app/model/distribution.ts` (`Distribution`, imported by `index.document.deprecated.ts`) stays unchanged; the deprecated builders keep bypassing via `baseMapper.getDistributions()`.
 
 - [ ] TASK-040: opendata `political_geocoding_level_uri` → `opendata.political_geocoding_level`
   - Refs: FR-004, TASK-038
   - File: `server/app/profiles/ingrid/model/opendataindex.document.ts`, `server/app/profiles/ingrid/mapper/ingrid.mapper.ts`, `server/app/profiles/ingrid/mapper/{ingrid.ckan,ingrid.dcatapde,ingrid.genesis}.mapper.ts`, `server/app/profiles/ingrid/persistence/mappings/opendata.json`, genesis fixtures
   - Details: value stays the full URI (dcatapde: from source; genesis: base URI + key). Getter renamed to `getPoliticalGeocodingLevel()`; deprecated builders only adapt the call, their output field `political_geocoding_level_uri` stays.
   - Acceptance: as TASK-038.
+  - Deprecated guard: the only deprecated caller is the genesis deprecated builder (`ingrid.genesis.mapper.ts`, `political_geocoding_level_uri: this.getPoliticalGeocodingLevelUri()`) - adapt the call only, output field name and value unchanged; the dcatapde deprecated builder reads `baseMapper.getPoliticalGeocodingLevelURI()` directly and ckan sets `null` - both untouched.
 
 - [ ] TASK-041: Schema regression pass for schema commit bef2ed5f
   - Refs: TASK-028 – TASK-040
   - File: (n/a — verification only)
   - Details: validate all live fixtures against their schema (Ajv2020 + ajv-formats, as `elastic.validation.ts`); schema-vs-merged-mapping path diff.
   - Acceptance: 0 validation errors; path diff empty (except the documented `resolution` mismatch, if any); `tsc` 14 (baseline); live + deprecated specs green.
+  - Deprecated guard: TASK-028 – TASK-040 must not change the deprecated format (`buildIngridDeprecatedDocument()`, deprecated opendata builders, `resolveCouplingDeprecated()`, `*.deprecated.ts` types, `test/data-deprecated`). Deprecated specs (16/16) are the proof; `git diff` of `test/data-deprecated` must be empty (ignoring CRLF).

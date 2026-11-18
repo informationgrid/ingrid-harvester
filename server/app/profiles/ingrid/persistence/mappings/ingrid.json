@@ -51,10 +51,10 @@
                         },
                         "items": {
                             "properties": {
-                                "key": {
+                                "name": {
                                     "type": "keyword"
                                 },
-                                "value": {
+                                "name_ref_uri": {
                                     "type": "keyword"
                                 },
                                 "source": {
