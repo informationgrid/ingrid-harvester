@@ -3,24 +3,16 @@
         "temporal": {
             "properties": {
                 "status": {
-                    "properties": {
-                        "key": {
-                            "type": "keyword"
-                        },
-                        "value": {
-                            "type": "keyword"
-                        }
-                    }
+                    "type": "keyword"
+                },
+                "status_ref_uri": {
+                    "type": "keyword"
                 },
                 "maintenance_frequency": {
-                    "properties": {
-                        "key": {
-                            "type": "keyword"
-                        },
-                        "value": {
-                            "type": "keyword"
-                        }
-                    }
+                    "type": "keyword"
+                },
+                "maintenance_frequency_ref_uri": {
+                    "type": "keyword"
                 },
                 "user_defined_maintenance_frequency_in_sec": {
                     "type": "keyword"

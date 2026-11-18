@@ -129,8 +129,10 @@ export type IngridSpecific = {
 };
 
 export type IngridTemporal = IndexTemporal & {
-    status?: { key: string | null, value: string | null },
-    maintenance_frequency?: { key: string | null, value: string | null },
+    status?: string,
+    status_ref_uri?: string,
+    maintenance_frequency?: string,
+    maintenance_frequency_ref_uri?: string,
     user_defined_maintenance_frequency_in_sec?: string,
 };
 

@@ -211,11 +211,12 @@ design: ./design.md
   - Acceptance: live csw fixtures carry `metadata.language: "de"`; checks as TASK-028.
   - Verified: CSW `getMetadataLanguage()` maps `baseMapper.getLanguage()` (`gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue`, the only encoding in the fixture inputs) via `transformGeneric` (`deu`/`ger` → `de`, `eng` → `en`, otherwise undefined); `IndexDocumentMetadata.language` comment updated; `core.json` mapping already `keyword`. Live csw fixtures: 13 × `de`, 3 × `en` (gdi-de records with `eng`), wsv-bfg `68c986b1…` has no metadata language and stays without the field. Schema check: no new error kinds. `tsc` 14 (baseline). Specs deferred to TASK-041.
 
-- [ ] TASK-031: `temporal.status` / `temporal.maintenance_frequency` → string + `*_ref_uri`
+- [x] TASK-031: `temporal.status` / `temporal.maintenance_frequency` → string + `*_ref_uri`
   - Refs: FR-004, TASK-028
   - File: `server/app/profiles/ingrid/model/index.document.ts` (`IngridTemporal`), `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getStatus()`, `getMaintenanceFrequency()`), `server/app/profiles/ingrid/persistence/mappings/ingrid.json`, live csw fixtures
   - Details: convention of TASK-028; codelists 523 (status) and 518 (maintenance frequency).
   - Acceptance: no `/temporal/status`/`/temporal/maintenance_frequency` errors left; checks as TASK-028.
+  - Verified: `IngridTemporal.status`/`maintenance_frequency` are strings (ISO codeListValue, e.g. `onGoing`, `annually`) plus `status_ref_uri` (523) / `maintenance_frequency_ref_uri` (518) via `codelistRef(transformToIgcDomainId(...))`; CSW `getStatus()`/`getMaintenanceFrequency()` return the plain value; `ingrid.json` mapping: four `keyword` fields. 9 live csw fixtures converted (8 status, 7 maintenance frequency, each with ref from the former key). Schema check: both temporal errors gone, no new error kinds. `tsc` 14 (baseline). Specs deferred to TASK-041.
 
 - [ ] TASK-032: `ingrid.character_set` → string + `character_set_ref_uri`
   - Refs: FR-004, TASK-028

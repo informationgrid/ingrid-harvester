@@ -310,10 +310,8 @@
     }
   ],
   "temporal": {
-    "status": {
-      "key": "1",
-      "value": "completed"
-    },
+    "status": "completed",
+    "status_ref_uri": "/codelist/523/1",
     "data_temporal": [
       {
         "date_range": {
@@ -332,10 +330,8 @@
         "date_type": "last_updated"
       }
     ],
-    "maintenance_frequency": {
-      "key": "8",
-      "value": "annually"
-    }
+    "maintenance_frequency": "annually",
+    "maintenance_frequency_ref_uri": "/codelist/518/8"
   },
   "sort_uuid": "e0344e19eec19f32fe28574877343e3277c6f09f",
   "references": [

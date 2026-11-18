@@ -302,10 +302,8 @@
         "date_type": "last_updated"
       }
     ],
-    "maintenance_frequency": {
-      "key": "7",
-      "value": "biannually"
-    }
+    "maintenance_frequency": "biannually",
+    "maintenance_frequency_ref_uri": "/codelist/518/7"
   },
   "sort_uuid": "ec8f5965fdb6fc464c875ef95903f6bab61cb267",
   "references": [

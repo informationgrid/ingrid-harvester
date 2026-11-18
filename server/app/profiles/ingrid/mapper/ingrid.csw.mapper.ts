@@ -669,7 +669,13 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         if (!data_temporal.length && !status && !maintenance_frequency) {
             return undefined;
         }
-        return { data_temporal: data_temporal.length ? data_temporal : undefined, status, maintenance_frequency };
+        return {
+            data_temporal: data_temporal.length ? data_temporal : undefined,
+            status,
+            status_ref_uri: this.codelistRef('523', this.transformToIgcDomainId(status, '523')),
+            maintenance_frequency,
+            maintenance_frequency_ref_uri: this.codelistRef('518', this.transformToIgcDomainId(maintenance_frequency, '518')),
+        };
     }
 
     // citation dates (creation/publication/revision) mapped onto the InGrid Index date_type enum
@@ -692,14 +698,12 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         }).filter(Boolean);
     }
 
-    private getStatus(): { key: string | null, value: string | null } {
-        const status = this.text('./gmd:MD_DataIdentification/gmd:status/gmd:MD_ProgressCode/@codeListValue', this.baseMapper.idInfo);
-        return status ? { key: this.transformToIgcDomainId(status, '523'), value: status } : undefined;
+    private getStatus(): string {
+        return this.text('./gmd:MD_DataIdentification/gmd:status/gmd:MD_ProgressCode/@codeListValue', this.baseMapper.idInfo) || undefined;
     }
 
-    private getMaintenanceFrequency(): { key: string | null, value: string | null } {
-        const frequency = this.text('./gmd:MD_DataIdentification/gmd:resourceMaintenance/gmd:MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode/@codeListValue', this.baseMapper.idInfo);
-        return frequency ? { key: this.transformToIgcDomainId(frequency, '518'), value: frequency } : undefined;
+    private getMaintenanceFrequency(): string {
+        return this.text('./gmd:MD_DataIdentification/gmd:resourceMaintenance/gmd:MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode/@codeListValue', this.baseMapper.idInfo) || undefined;
     }
 
     getCapabilitiesURL(): string[] {

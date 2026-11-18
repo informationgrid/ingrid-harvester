@@ -262,10 +262,8 @@
     }
   ],
   "temporal": {
-    "status": {
-      "key": "4",
-      "value": "onGoing"
-    },
+    "status": "onGoing",
+    "status_ref_uri": "/codelist/523/4",
     "data_temporal": [
       {
         "date": "2015-11-14T23:00:00.000Z",
@@ -276,10 +274,8 @@
         "date_type": "last_updated"
       }
     ],
-    "maintenance_frequency": {
-      "key": "8",
-      "value": "annually"
-    }
+    "maintenance_frequency": "annually",
+    "maintenance_frequency_ref_uri": "/codelist/518/8"
   },
   "sort_uuid": "487ac652c6d48d198b0c8c1dd9db00fb2f8f0cfd",
   "references": [

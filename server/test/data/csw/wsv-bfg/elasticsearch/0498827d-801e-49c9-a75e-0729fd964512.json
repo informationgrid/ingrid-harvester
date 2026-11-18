@@ -189,10 +189,8 @@
     }
   ],
   "temporal": {
-    "status": {
-      "key": "1",
-      "value": "completed"
-    },
+    "status": "completed",
+    "status_ref_uri": "/codelist/523/1",
     "data_temporal": [
       {
         "date_range": {
