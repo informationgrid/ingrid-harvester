@@ -28,6 +28,15 @@
             "source": "Eisenbahn-Bundesamt"
           }
         ]
+      },
+      {
+        "type": "accessConstraints",
+        "items": [
+          {
+            "name": "Es gelten keine Zugriffsbeschränkungen",
+            "name_ref_uri": "/codelist/6010/1"
+          }
+        ]
       }
     ],
     "data_quality": {

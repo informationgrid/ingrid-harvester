@@ -16,6 +16,15 @@
             "source": "© www.pegelonline.wsv.de (2024)"
           }
         ]
+      },
+      {
+        "type": "accessConstraints",
+        "items": [
+          {
+            "name": "Es gelten keine Zugriffsbeschränkungen",
+            "name_ref_uri": "/codelist/6010/1"
+          }
+        ]
       }
     ],
     "data_quality": {

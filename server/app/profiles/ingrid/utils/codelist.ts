@@ -81,7 +81,8 @@ export class Codelist {
             list.push({
                 id: indexKey === 'id' ? entryId : localisations[indexKey],
                 value: localisations[valueKey],
-                data: entryData
+                data: entryData,
+                localisations
             });
         }
         this.lists[codelistId] = list;
@@ -99,6 +100,32 @@ export class Codelist {
             }
         }
         return undefined;
+    }
+
+    // for codelists without an ISO value (e.g. 6010): match the url in <data> first, then a text
+    // against the localisations or the de/en texts in <data>
+    getIdByUrlOrText(codelistId: string, url?: string, text?: string): string | undefined {
+        const entries = this.lists[codelistId];
+        if (!entries) {
+            return undefined;
+        }
+        const parseData = (data: string) => {
+            try {
+                return data ? JSON.parse(data) : {};
+            }
+            catch {
+                return {};
+            }
+        };
+        const byUrl = url ? entries.find(entry => parseData(entry.data).url === url) : undefined;
+        if (byUrl) {
+            return byUrl.id;
+        }
+        const byText = text ? entries.find(entry => {
+            const data = parseData(entry.data);
+            return [data.de, data.en, ...Object.values(entry.localisations ?? {})].includes(text);
+        }) : undefined;
+        return byText?.id;
     }
 
     getById(codelistId, id){

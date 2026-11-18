@@ -27,6 +27,7 @@ import log4js from 'log4js';
 import { CswMapper } from "../../../importer/csw/csw.mapper.js";
 import * as GeoJsonUtils from "../../../utils/geojson.utils.js";
 import * as XpathUtils from "../../../utils/xpath.utils.js";
+import { Codelist } from "../utils/codelist.js";
 import { ingridMapper, type DocumentKind } from "./ingrid.mapper.js";
 import type { Distribution } from "../../../model/distribution.js";
 import type { IndexContact, IndexKeyword, IndexReference, IndexSpatial, IndexTemporalItem } from "../../../model/index.document.js";
@@ -1065,15 +1066,16 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             });
         }
 
-        const objectAccess = this.getObjectAccess();
-        if (objectAccess?.restriction_value?.length) {
-            licenses.push({
-                type: 'accessConstraints',
-                items: objectAccess.restriction_value.map((v, i) => ({
-                    name: v,
-                    name_ref_uri: this.codelistRef('6010', objectAccess.restriction_key?.[i])
-                }))
-            });
+        // not via getObjectAccess() (shared with the deprecated shape): also reads INSPIRE gmx:Anchor values
+        // and resolves codelist 6010, which has no ISO value, by the anchor url or the text
+        const accessNodes = CswMapper.select('./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:accessConstraints]/*[self::gco:CharacterString or self::gmx:Anchor]', this.baseMapper.idInfo);
+        const accessItems = accessNodes?.map(node => {
+            const name = node.textContent?.trim();
+            const url = node.getAttribute('xlink:href') || undefined;
+            return { name, name_ref_uri: this.codelistRef('6010', Codelist.getInstance().getIdByUrlOrText('6010', url, name)) };
+        }).filter(item => item.name);
+        if (accessItems?.length) {
+            licenses.push({ type: 'accessConstraints', items: accessItems });
         }
 
         return licenses.length ? licenses : undefined;

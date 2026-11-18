@@ -16,6 +16,15 @@
             "source": "© GeoBasis-DE / BKG (year of last data download)"
           }
         ]
+      },
+      {
+        "type": "accessConstraints",
+        "items": [
+          {
+            "name": "no limitations to public access",
+            "name_ref_uri": "/codelist/6010/1"
+          }
+        ]
       }
     ],
     "data_quality": {

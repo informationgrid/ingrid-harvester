@@ -24,6 +24,15 @@
             "name": "Der automatisierte Abruf und die Nutzung der Geobasisdaten und der zugehörigen Metadaten sind kostenfrei. (§ 24 Hessisches Vermessungs- und Geoinformationsgesetz - HVGG) - Lizenz: dl-zero-de/2.0 - Datenlizenz Deutschland – Zero – Version 2.0 - https://www.govdata.de/dl-de/zero-2-0"
           }
         ]
+      },
+      {
+        "type": "accessConstraints",
+        "items": [
+          {
+            "name": "Es gelten keine Zugriffsbeschränkungen",
+            "name_ref_uri": "/codelist/6010/1"
+          }
+        ]
       }
     ],
     "data_quality": {
