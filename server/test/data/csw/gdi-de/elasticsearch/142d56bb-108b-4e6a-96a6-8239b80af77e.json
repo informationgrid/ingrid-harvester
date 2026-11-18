@@ -51,6 +51,7 @@
         "pass": "conformant",
         "explanation": "see the referenced specification",
         "specification": "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services",
+        "specification_ref_uri": "/codelist/6005/12",
         "publication_date": "2010-12-08"
       }
     ],

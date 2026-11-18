@@ -138,6 +138,7 @@
         "pass": "conformant",
         "explanation": "Der Dienst wurde mit dem EU-Validator überprüft.",
         "specification": "VERORDNUNG (EG) Nr. 976/2009 DER KOMMISSION vom 19. Oktober 2009 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Netzdienste",
+        "specification_ref_uri": "/codelist/6005/10",
         "publication_date": "2009-10-20"
       },
       {

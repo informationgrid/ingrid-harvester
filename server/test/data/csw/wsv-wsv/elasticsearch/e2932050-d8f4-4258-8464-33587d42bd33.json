@@ -42,6 +42,7 @@
         "pass": "not-conformant",
         "explanation": "erfüllt nicht die Anforderungen",
         "specification": "VERORDNUNG (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatensätzen und -diensten",
+        "specification_ref_uri": "/codelist/6005/12",
         "publication_date": "2010-12-08"
       }
     ],
