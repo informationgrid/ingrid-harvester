@@ -241,11 +241,13 @@ design: ./design.md
   - Acceptance: eba/gdi-de fixtures carry accessConstraints items with `name_ref_uri: /codelist/6010/1`; free-text items keep no ref; `test/data-deprecated` unchanged; schema check no new error kinds; `tsc` 14 (baseline). Specs deferred to TASK-041.
   - Verified: `Codelist.getIdByUrlOrText()` added (entries additionally keep their `localisations`; `getId()`/`getById()`/`getByData()` unchanged); `getLicenses()` selects `gco:CharacterString` or `gmx:Anchor` itself and resolves 6010 by `xlink:href`, else by text. Fixtures updated from the input records with the same XPath (scratch script): 10 fixtures gain an accessConstraints item `name_ref_uri: /codelist/6010/1` (eba 3, gdi-de 5, wsv-bkg 1, wsv-wsv 1 - all INSPIRE `noLimitations` anchors); the 6 existing free-text items are unchanged and keep no ref. `service.has_access_constraints` still comes from `getObjectAccess()` (unchanged, `false` for the `noLimitations` services). Schema check: no new error kinds. `tsc` 14 (baseline). `test/data-deprecated` unchanged. Specs deferred to TASK-041.
 
-- [ ] TASK-034: `conformance_result[].specification` / `data_quality.qualities[].measure_type` → string
+- [x] TASK-034: `conformance_result[].specification` / `data_quality.qualities[].measure_type` → string
   - Refs: FR-004, TASK-028
   - File: `server/app/profiles/ingrid/model/index.document.ts` (`IngridConformanceResult`, `IngridDataQuality`), `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getConformanceResult()`, `getDataQuality()`), `server/app/profiles/ingrid/persistence/mappings/ingrid.json`, live csw fixtures
   - Details: both carry no key today (always `null`; IGE uses codelists 6005/6006 and per-quality-type lists, none loaded), so `specification_ref_uri`/`measure_type_ref_uri` stay unset; type + mapping get the `*_ref_uri` fields.
   - Acceptance: no `/ingrid/conformance_result/N/specification` and `/ingrid/data_quality/qualities/N/measure_type` errors left; checks as TASK-028.
+  - Verified: `IngridConformanceResult.specification` and `qualities[].measure_type` are strings (+ `*_ref_uri` in type and `ingrid.json` mapping, left unset); CSW `getConformanceResult()`/`getDataQuality()` emit the plain text or undefined (`measure_type` was `{ key: null, value: null }` before when `gmd:nameOfMeasure` is missing). 12 live csw fixtures converted: 33 specifications → string, 35 measure types had `value: null` → field dropped. Schema check: 0 errors on all 17 live csw fixtures. `tsc` 14 (baseline). `test/data-deprecated` unchanged. Specs deferred to TASK-041.
+  - Note: codelist 6005 (INSPIRE conformity specifications, 3 entries, with `iso` value) exists but is not loaded by `Codelist.init()`; 14 of the 35 fixture specifications match an entry by `iso`/`en` text, so `specification_ref_uri` could be filled in a follow-up task.
 
 - [ ] TASK-035: `ingrid.spatial.vertical_extent.unit` / `vdatum` → string + `*_ref_uri`
   - Refs: FR-004, TASK-028

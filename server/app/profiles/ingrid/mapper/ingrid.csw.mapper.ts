@@ -1092,7 +1092,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             const specTitle = this.text('./gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString', node);
             return {
                 pass: passVal === 'true' ? 'conformant' : passVal === 'false' ? 'not-conformant' : 'not-evaluated',
-                specification: specTitle ? { key: null, value: specTitle } : undefined,
+                specification: specTitle || undefined,
                 publication_date: this.text('./gmd:specification/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date', node) ?? undefined,
                 explanation: this.text('./gmd:explanation/gco:CharacterString', node) ?? undefined,
             };
@@ -1132,7 +1132,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             ?.filter(node => node.localName in qualityTypeMap)
             .map(node => ({
                 type: qualityTypeMap[node.localName],
-                measure_type: { key: null as string | null, value: this.text('./gmd:nameOfMeasure/gco:CharacterString', node) ?? null },
+                measure_type: this.text('./gmd:nameOfMeasure/gco:CharacterString', node) || undefined,
                 value: parseNum(this.text('./gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record', node)),
                 parameter: this.text('./gmd:measureDescription/gco:CharacterString', node) ?? undefined,
             }));

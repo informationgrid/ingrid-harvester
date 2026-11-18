@@ -177,14 +177,10 @@
                             "type": "keyword"
                         },
                         "specification": {
-                            "properties": {
-                                "key": {
-                                    "type": "keyword"
-                                },
-                                "value": {
-                                    "type": "keyword"
-                                }
-                            }
+                            "type": "keyword"
+                        },
+                        "specification_ref_uri": {
+                            "type": "keyword"
                         },
                         "publication_date": {
                             "type": "keyword"
@@ -224,14 +220,10 @@
                                     "type": "keyword"
                                 },
                                 "measure_type": {
-                                    "properties": {
-                                        "key": {
-                                            "type": "keyword"
-                                        },
-                                        "value": {
-                                            "type": "keyword"
-                                        }
-                                    }
+                                    "type": "keyword"
+                                },
+                                "measure_type_ref_uri": {
+                                    "type": "keyword"
                                 },
                                 "value": {
                                     "type": "float"

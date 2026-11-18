@@ -144,7 +144,8 @@ export type IngridLicense = {
 
 export type IngridConformanceResult = {
     pass?: 'conformant' | 'not-conformant' | 'not-evaluated',
-    specification?: { key: string | null, value: string | null },
+    specification?: string,
+    specification_ref_uri?: string,
     publication_date?: string,
     explanation?: string,
 };
@@ -160,7 +161,8 @@ export type IngridDataQuality = {
              | 'formatConsistency' | 'topologicalConsistency' | 'temporalConsistency'
              | 'thematicClassificationCorrectness' | 'nonQuantitativeAttributeAccuracy'
              | 'quantitativeAttributeAccuracy' | 'relativeInternalPositionalAccuracy',
-        measure_type?: { key: string | null, value: string | null },
+        measure_type?: string,
+        measure_type_ref_uri?: string,
         value?: number,
         parameter?: string,
     }[],

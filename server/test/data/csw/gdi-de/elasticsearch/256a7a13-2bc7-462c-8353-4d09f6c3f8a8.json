@@ -47,11 +47,7 @@
     "data_quality": {
       "qualities": [
         {
-          "type": "domainConsistency",
-          "measure_type": {
-            "key": null,
-            "value": null
-          }
+          "type": "domainConsistency"
         }
       ]
     },
@@ -70,10 +66,7 @@
       {
         "pass": "conformant",
         "explanation": "see the referenced specification",
-        "specification": {
-          "key": null,
-          "value": "COMMISSION REGULATION (EC) No 976/2009 of 19 October 2009 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards the Network Services"
-        },
+        "specification": "COMMISSION REGULATION (EC) No 976/2009 of 19 October 2009 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards the Network Services",
         "publication_date": "2009-10-20"
       }
     ]
