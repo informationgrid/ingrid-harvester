@@ -204,11 +204,12 @@ design: ./design.md
   - Acceptance: no `metadata`/`ingrid` `document_type` errors left; live csw eba/gdi-de couplings unchanged; checks as TASK-028.
   - Verified: `document_type` removed from `IndexDocumentMetadata` and the ingrid/opendata metadata types, added as first field of `IngridSpecific` (`IngridDocumentType` + `InGridAlgorithm`); emitted first in `getIngrid()`; WFS `getDocumentType()` → `InGridGeoDataset`; `resolveCoupling()` and the 3 SQL queries read `ingrid.document_type`; mapping moved `core.json` → `ingrid.json`. 17 live csw fixtures: `metadata.document_type` moved to `ingrid.document_type`. Schema check of the fixtures: both `document_type` errors gone, no new error kinds. `tsc` 14 (baseline). Specs not run (user decision: run all tests once in TASK-041).
 
-- [ ] TASK-030: `metadata.language` as ISO 639-1
+- [x] TASK-030: `metadata.language` as ISO 639-1
   - Refs: FR-004, schema commit bef2ed5f
   - File: `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getMetadataLanguage()`), `server/app/profiles/ingrid/persistence/mappings/core.json` (check), live csw fixtures
   - Details: Schema: `metadata.language` is a string in ISO 639-1. Today it is the key of codelist 99999999, which `Codelist.init()` does not load, so the field is always empty. Map `gmd:MD_Metadata/gmd:language` via `transformGeneric` (`deu`/`ger` → `de`, `eng` → `en`), undefined otherwise. Opendata mappers unchanged.
   - Acceptance: live csw fixtures carry `metadata.language: "de"`; checks as TASK-028.
+  - Verified: CSW `getMetadataLanguage()` maps `baseMapper.getLanguage()` (`gmd:MD_Metadata/gmd:language/gmd:LanguageCode/@codeListValue`, the only encoding in the fixture inputs) via `transformGeneric` (`deu`/`ger` → `de`, `eng` → `en`, otherwise undefined); `IndexDocumentMetadata.language` comment updated; `core.json` mapping already `keyword`. Live csw fixtures: 13 × `de`, 3 × `en` (gdi-de records with `eng`), wsv-bfg `68c986b1…` has no metadata language and stays without the field. Schema check: no new error kinds. `tsc` 14 (baseline). Specs deferred to TASK-041.
 
 - [ ] TASK-031: `temporal.status` / `temporal.maintenance_frequency` → string + `*_ref_uri`
   - Refs: FR-004, TASK-028

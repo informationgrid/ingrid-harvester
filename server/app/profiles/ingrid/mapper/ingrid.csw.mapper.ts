@@ -546,10 +546,9 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return this.transformGeneric(this.text('./*/gmd:language/gco:CharacterString', this.baseMapper.idInfo), { deu: 'de', ger: 'de', eng: 'en' }, 'de');
     }
 
-    // language of the metadata record itself
+    // language of the metadata record itself, as ISO 639-1 (schema: metadata.language)
     getMetadataLanguage(): string {
-        const language = this.baseMapper.getLanguage();
-        return language ? this.transformToIgcDomainId(language, '99999999') : undefined;
+        return this.transformGeneric(this.baseMapper.getLanguage(), { deu: 'de', ger: 'de', eng: 'en' }, undefined);
     }
 
     getSpatials(): IndexSpatial[] {

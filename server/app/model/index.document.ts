@@ -52,7 +52,7 @@ export type IndexDocumentMetadata = {
     issued?: string | null,     // ISO 8601
     partner?: string,
     provider?: string,
-    language?: string,   // codelist 99999999 key
+    language?: string,   // ISO 639-1
     datasource?: { id: string, name: string, type?: string },
 };
 

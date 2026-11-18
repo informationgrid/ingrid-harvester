@@ -263,6 +263,7 @@
     "modified": "2023-11-20T18:01:44.000Z",
     "provider": "nokis",
     "data_type": "INGRID",
+    "language": "de",
     "datasource": {
       "id": "Harvester",
       "name": "Harvester",

@@ -135,6 +135,7 @@
     "modified": "2026-07-20T00:00:00.000Z",
     "provider": "bu_bkg",
     "data_type": "INGRID",
+    "language": "en",
     "datasource": {
       "id": "Harvester",
       "name": "Harvester",

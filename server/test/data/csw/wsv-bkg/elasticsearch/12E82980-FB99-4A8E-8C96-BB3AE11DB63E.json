@@ -137,6 +137,7 @@
     "modified": "2026-07-01T00:00:00.000Z",
     "provider": "wsv",
     "data_type": "INGRID",
+    "language": "de",
     "datasource": {
       "id": "wsv-bkg-csw",
       "name": "wsv-bkg-csw",
