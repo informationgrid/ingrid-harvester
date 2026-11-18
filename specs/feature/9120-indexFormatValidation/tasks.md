@@ -1,0 +1,275 @@
+---
+spec: ./spec.md
+design: ./design.md
+---
+
+- [x] TASK-001: Unify the two live ES mappings, drop deprecated-only leftover fields
+  - Refs: FR-006, FR-007, FR-008
+  - File: server/app/profiles/ingrid/persistence/default-mapping.json, server/app/profiles/ingrid/persistence/opendata-mapping.json
+  - Details: Add `dcat`, `legal_basis`, `distributions`, `political_geocoding_level_uri` and merge `exports.properties` to `{iso, rdf}` in `default-mapping.json`. Remove `uuid`, `collection`, `t01_object`, root-level `modified`, `sort_hash` from `opendata-mapping.json`. Do not touch `.deprecated.json` mapping files.
+  - Acceptance: `diff` shows `default-mapping.json` and `opendata-mapping.json` are content-identical; neither contains the 5 removed fields; both `jq .` parse cleanly.
+  - **Superseded by TASK-012**: `opendata-mapping.json` (having become a byte-identical duplicate here) was deleted entirely once recognized as redundant — see TASK-012.
+
+- [x] TASK-002: Make `mappingFile` optional
+  - Refs: FR-006
+  - File: shared/catalog.ts
+  - Details: `mappingFile: string,` → `mappingFile?: string,` on `ElasticsearchCatalogSettings.settings`.
+  - Acceptance: `cd server && npx tsc --noEmit` and `cd client && npx tsc --noEmit` pass with no new errors.
+
+- [x] TASK-003: Mapper-side kind resolution — deprecated-only catalog hint
+  - Refs: FR-001, FR-002, FR-003
+  - File: server/app/profiles/ingrid/mapper/ingrid.mapper.ts
+  - Details: Rewrite `resolveMappingHint()` to only detect a deprecated override for this mapper's own family (early-return `undefined` if no deprecated builder registered; classify each target catalog's schemaName as own-deprecated/other-deprecated/non-deprecated; return `undefined` if none deprecated, the deprecated kind if all own-deprecated, otherwise throw). Originally threw via a private `fail(message): never` helper (log + `.fatal`-decorated `Error`) — **removed in TASK-011**, now a plain `throw new Error(...)`.
+  - Acceptance: unit tests in TASK-007 cover none/all-deprecated/mixed cases.
+
+- [x] TASK-004: Mapper-side schema validation
+  - Refs: FR-004, FR-005
+  - File: server/app/profiles/ingrid/mapper/ingrid.mapper.ts
+  - Details: Add `getSchemaForKind(kind)` private helper. In `createIndexDocument()`, after building, stamp `$schema` from the resolved schema's `$id` and run `validateDocument()`; throw on validation errors. Update `buildCommonFields()`'s `$schema` comment. `getSchemaForKind()` itself simplified in TASK-010; the throw simplified in TASK-011.
+  - Acceptance: unit tests in TASK-007 cover valid-document and invalid-document cases for both live kinds.
+
+- [x] TASK-005: Catalog-side simplification
+  - Refs: FR-006, FR-007
+  - File: server/app/profiles/ingrid/catalog/elasticsearch.catalog.ts
+  - Details: In `prepareImport()`, only resolve `this.schema` when the catalog's own `mappingFile` is a deprecated mapping; otherwise `null`. No other changes to `importIntoCatalog()`/`processBucket()`/`resolveCoupling()` (already schema-agnostic).
+  - Acceptance: integration test in TASK-007 confirms a catalog with unset/live `mappingFile` performs no catalog-level validation and accepts both live kinds.
+
+- [x] TASK-006: ~~Close the WFS `harvestTypes` fatal-error gap~~ — attempted, then reverted in TASK-011
+  - Refs: FR-003, FR-005, NFR-002
+  - File: server/app/importer/wfs/wfs.importer.ts
+  - Details: Originally added a `(e as any).fatal` check in `extractCompleteFeatureType()`'s catch block to route a fatal mapper error to `summary.errors` (`type: 'app'`) instead of a warning. Reverted in TASK-011 once the `.fatal` marker itself was removed (its only consumer) — see `design.md`'s Key Decisions for why this narrow, optional-feature gap is accepted rather than fixed.
+  - Acceptance: n/a — reverted to original behavior.
+
+- [x] TASK-007: Unit tests for mapper-side resolution/validation
+  - Refs: FR-001 through FR-005
+  - File: server/test/profiles/ingrid/ingrid.mapper.spec.ts (new)
+  - Details: Cover — (a) an 'ingrid'-family and an 'opendata'-family mapper with no/non-deprecated catalogIds build successfully with correct `$schema` against the real index-ingrid.json/index-opendata.json; (b) invalid document throws a fatal error; (c) none/non-deprecated/all-own-deprecated/mixed-deprecated catalogIds cases in `resolveMappingHint()`, including the early-return-without-catalog-lookup case.
+  - Acceptance: `npx mocha test/profiles/ingrid/ingrid.mapper.spec.ts` → 9/9 passing, verified.
+  - Note: `npm test`'s glob (`mocha test/**/*.spec.ts`, unquoted) silently only matches one directory level under `test/` (bash `globstar` is off) — this pre-existing bug already excludes `test/importer/genesis/genesis.mapper.spec.ts`, `test/importer/genesis/genesis.importer.spec.ts` and `test/catalog/csw/csw.catalog.spec.ts` from every `npm test` run, and now also excludes this new file the same way. Quoting the glob (the fix) surfaces a separate, pre-existing, unrelated conflict: `genesis.importer.spec.ts` and `csw.catalog.spec.ts` both stub `DatabaseFactory.getDatabaseUtils` in a way that collides when actually run in the same process ("already wrapped" sinon error) — they were never exercised together before. Fixing the glob and that stub conflict is out of scope for this feature; flagged to the user as a separate, pre-existing issue.
+
+- [x] TASK-008: Client UI — make `mappingFile` optional
+  - Refs: FR-006
+  - File: client/src/app/catalogs/form-fields/elasticsearch.type.ts
+  - Details: `required: true` → `required: false` on the `mappingFile` field.
+  - Acceptance: manual check — new Elasticsearch catalog form saves with `mappingFile` left blank.
+
+- [x] TASK-010: Remove the now-unnecessary 'InGrid'/'OpenData' entries from getAvailableIndexMappings()
+  - Refs: FR-006, FR-007
+  - File: server/app/profiles/profile.factory.ts (new `getIndexSchemaByName()`, `getIndexSchema()` delegates to it), server/app/profiles/ingrid/mapper/ingrid.mapper.ts (`getSchemaForKind()` simplified, `resolveMappingHint()`'s catalog classification fixed to a binary own-deprecated-vs-everything-else check), server/app/profiles/ingrid/profile.factory.ts (`getAvailableIndexMappings()` trimmed to the 2 deprecated entries), client/src/app/catalogs/form-fields/elasticsearch.type.ts + client/src/assets/i18n/de.json (explicit blank/"not set" option, since a mat-select has no built-in clear affordance and the dropdown no longer contains a blank-equivalent entry once 'InGrid'/'OpenData' were removed)
+  - Details: `getSchemaForKind()` no longer reverse-looks-up through `getAvailableIndexMappings()` (kind already equals schemaName for live kinds); the 2 non-deprecated entries were only ever kept there to support that indirection. Removing them exposed a real classification bug in `resolveMappingHint()`: an old-style explicit `mappingFile: 'default-mapping'`/`'opendata-mapping'` (or unset) now resolves to no matching entry, which the old `schemaName && DOCUMENT_KINDS.includes(schemaName)` check silently failed to count as "wants non-deprecated" - fixed by classifying every catalog as either "this mapper's own deprecated kind" or "everything else" (no longer gated on the schemaName being present in a list).
+  - Acceptance: `npx mocha test/profiles/ingrid/ingrid.mapper.spec.ts` → 9/9 passing (including the previously-broken mixed-catalog case); `tsc --noEmit` clean in both server and client (diffed against the pre-existing baseline, zero new errors); `npm test` → 29/29 unchanged.
+
+- [x] TASK-011: Remove `ingridMapper.fail()` — use plain `throw new Error()` matching the file's existing pattern
+  - Refs: NFR-002
+  - File: server/app/profiles/ingrid/mapper/ingrid.mapper.ts (delete `fail()`, both call sites become `throw new Error(...)`), server/app/importer/wfs/wfs.importer.ts (revert TASK-006's `.fatal` check), server/test/profiles/ingrid/ingrid.mapper.spec.ts (drop the two `expect(caught.fatal).to.be.true` assertions)
+  - Details: `fail()`'s own `this._log.error(...)` call duplicated logging every importer's `catch` block around `createIndexDocument()` already does (confirmed identical in `csw.importer.ts`/`ckan.importer.ts`: `log.error(...); this.summary.errors.push({type:'app', ...})`). Its `.fatal` marker was consulted only by the one WFS special-case from TASK-006. Removed both; both throw sites now match `createIndexDocument()`'s own pre-existing `throw new Error(\`No document builder registered for kind "${kind}"\`)`.
+  - Acceptance: `npx mocha test/profiles/ingrid/ingrid.mapper.spec.ts` → 9/9 passing; `tsc --noEmit` diffed clean against baseline; `npm test` → 29/29 unchanged.
+
+- [x] TASK-012: Delete `opendata-mapping.json` (breaking change, deliberately not backward-compatible)
+  - Refs: FR-008, NFR-001
+  - File: server/app/profiles/ingrid/persistence/opendata-mapping.json (deleted), server/config/ingrid/config-catalogs.json (removed `"mappingFile": "opendata-mapping"` from catalog id 4)
+  - Details: Once `default-mapping.json` held the full live union (TASK-001), `opendata-mapping.json` was a byte-identical duplicate with no remaining purpose. User explicitly chose deletion over keeping the duplicate or adding a `getIndexSchema()`-style fallback to `getIndexMappings()`. This is a deliberate breaking change: `getIndexMappings()` (`profile.factory.ts`) has no fallback for a missing mapping file and throws — any deployment's `config-catalogs.json` still referencing `mappingFile: "opendata-mapping"` must remove/replace that value before upgrading. This repo's own sample config is migrated; external deployments are not and must self-migrate.
+  - Acceptance: grep confirms no remaining code reference to the literal `'opendata-mapping'` value (only historical mentions in comments/specs); `npx mocha test/profiles/ingrid/ingrid.mapper.spec.ts` → 9/9 passing (unaffected, uses `getIndexSchemaByName()` not `getIndexMappings()`); `npm test` → 29/29 unchanged (no test exercises the deleted `mappingFile` value).
+
+- [x] TASK-013: Generalize schema validation to the shared `DocumentFactory` contract (ingrid, diplanung, lvr)
+  - Refs: FR-009
+  - File: server/app/model/index.document.factory.ts (new abstract `getSchemaName(): string | undefined`), server/app/profiles/profile.factory.ts (new concrete `validateIndexDocument(document, schemaName)`, reusing `getIndexSchemaByName()` + `validateDocument()`), server/app/profiles/ingrid/mapper/ingrid.mapper.ts (`getSchemaForKind()` removed, replaced by `getSchemaName() { return this.getDocumentKind(); }` + a call to `ProfileFactoryLoader.get().validateIndexDocument(...)`), server/app/profiles/diplanung/mapper/diplanung.mapper.ts and server/app/profiles/lvr/mapper/lvr.mapper.ts (each gets `getSchemaName()` returning `ProfileFactoryLoader.get().getProfileName()` and a `validateIndexDocument()` call at the end of `createIndexDocument()`)
+  - Details: Moving validation into `Mapper<S>` (`server/app/importer/mapper.ts`, Level 2) was considered and rejected — it's shared *by format* across profiles, has no notion of `ProfileFactoryLoader`/schemas, and its own `createIndexDocument()` is dead code for every profile (confirmed: every importer calls `documentFactory.createIndexDocument()` on the Level-3 profile wrapper, never on the raw Level-2 mapper). `DocumentFactory<T>` (`model/index.document.factory.ts`) is the actual shared, cross-profile contract every Level-3 mapper implements — the new abstract method lives there (pure signature, no behavior, per `architecture.md`'s Model boundary), while the concrete validation call lives in `ProfileFactory` next to `getIndexSchemaByName()`. `diplanung`/`lvr` have no JSON schema file yet, so `validateIndexDocument()` is a verified no-op for them today (see Acceptance) — the mechanism is wired up and ready, not retroactively applied.
+  - Acceptance: `npx mocha test/profiles/ingrid/ingrid.mapper.spec.ts` → 9/9 passing; `tsc --noEmit` diffed clean against baseline (both `DiplanungMapper`/`LvrMapper` compile with the new abstract method implemented); `npm test` → 29/29 unchanged; manually verified via a one-off script under `IMPORTER_PROFILE=diplanung`/`=lvr` that `ProfileFactoryLoader.get().validateIndexDocument(doc, factory.getProfileName())` returns without throwing or mutating `doc` (no schema file exists for either profile yet).
+
+- [x] TASK-014: Make `getDefaultDocumentKind()` abstract — every mapper declares its own family explicitly
+  - Refs: (code clarity, no FR/NFR — no behavior change)
+  - File: server/app/profiles/ingrid/mapper/ingrid.mapper.ts (`protected getDefaultDocumentKind(): DocumentKind { return 'ingrid'; }` → `protected abstract getDefaultDocumentKind(): DocumentKind;`), server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts and ingrid.wfs.mapper.ts (new explicit override returning `'ingrid'`), server/app/profiles/ingrid/mapper/ingrid.ckan.mapper.ts, ingrid.dcatapde.mapper.ts, ingrid.genesis.mapper.ts (existing override's return type tightened from `'ingrid' | 'opendata'` to `DocumentKind`)
+  - Details: Previously only 3 of 5 concrete mappers stated their family explicitly (ckan/dcatapde/genesis → 'opendata'); csw/wfs silently inherited the base's concrete `'ingrid'` default. Reading `ingrid.csw.mapper.ts` in isolation gave no indication of which family it belongs to. Making the base method abstract removes the implicit fallback — every concrete mapper must say what it is, compiler-enforced. Pure type-level/explicitness change; every mapper returns exactly the same literal as before.
+  - Acceptance: `tsc --noEmit` diffed clean against baseline (would fail to compile if any concrete mapper were missing its override); `npx mocha test/profiles/ingrid/ingrid.mapper.spec.ts` → 9/9 passing; `npm test` → 29/29 unchanged.
+
+- [x] TASK-015: Split ingrid integration tests into live-format and deprecated-format suites (structure + Genesis reference implementation)
+  - Refs: FR-001 through FR-009 (regression coverage for this whole feature), NFR-003
+  - File: `server/test/utils/integration-test-runner.ts`, `server/test/integration-deprecated/` (new: `deprecated.util.ts` + the 5 `git mv`'d `csw`/`ckan`/`dcatapde`/`wfs`/`genesis.integration.spec.ts`), `server/test/integration/genesis.integration.spec.ts` (new, live format), `server/test/data-deprecated/genesis/genesis-st/elasticsearch/` (`git mv`'d deprecated expected output), `server/test/data/genesis/genesis-st/elasticsearch/` (new live expected output)
+  - Details: Goal — removing deprecated support later = exactly `rm -rf server/test/integration-deprecated/ server/test/data-deprecated/`, nothing else. The runner is fully deprecated-agnostic (`grep deprecated` on it is empty): its hard-coded `OPENDATA_DEPRECATED_IMPORTER_TYPES` → `mappingFile` switch moves to `integration-deprecated/deprecated.util.ts` (`withDeprecatedMapping(testCase)`); the runner only gains 2 generic optional fields on `ImporterIntegrationTestCase<T>` — `mappingFile` (stubbed as the catalog's `settings.mappingFile` when set, omitted otherwise) and `expectedDocsBaseFixture` (default `baseFixture`; lets expected output live under `test/data-deprecated/` while `input/` stays shared under `test/data/`). `runImporterIntegrationTest(testCase)` keeps its single-parameter signature. `assertElasticsearchDocuments()` names fixture files `actual.uuid ?? actual.id` (live documents have no `uuid`). All 5 ingrid deprecated specs had to move now (not only Genesis): once the runner stops injecting a deprecated `mappingFile`, a spec left in `test/integration/` would silently run in live format against deprecated fixtures. Their only edit is the `withDeprecatedMapping()` wrapper (+ `expectedDocsBaseFixture` for Genesis). lvr specs (`json`/`kld`/`oai`) and `integration.spec.ts` are untouched — dropping the implicit `mappingFile` doesn't affect them (elastic mock's `isIndexPresent` → `true`, so `getIndexMappings()` is never called; lvr mapper never reads `mappingFile`). A live spec has no `mappingFile`, so the mapper resolves the live `DocumentKind` and runs `validateIndexDocument()` — it is also a real schema-validation test; `expectedDocCount` guards against validation silently dropping every document.
+  - Acceptance: `grep -rn deprecated server/test/utils/integration-test-runner.ts` → empty; live + deprecated Genesis specs pass; deprecated csw/ckan/dcatapde/wfs and lvr specs pass unchanged; with both deprecated folders temporarily moved out, `tsc --noEmit` shows no new errors vs. baseline and `mocha test/integration/*.spec.ts` passes.
+  - Verified: all of the above; live Genesis spec passes twice in a row (deterministic) and fails on a deliberately corrupted fixture; all 22 integration specs (deprecated + live + lvr + generic) pass; end-goal simulation → `tsc` no new errors, `test/integration/*.spec.ts` 6/6; `npm test` → 30/30 (29 previous + live Genesis). Live Genesis `id` is the statistic code (`11111.json`, …), not the deprecated format's UUID — mapper behavior, not changed here.
+
+- [x] TASK-016: Relocate deprecated expected output for csw, wfs, ckan, dcatapde (follow-up to TASK-015, same recipe as Genesis)
+  - Refs: TASK-015
+  - File: `server/test/integration-deprecated/{csw,ckan,dcatapde,wfs}.integration.spec.ts`, `server/test/data{,-deprecated}/<type>/<source>/elasticsearch/`
+  - Details (for every source dir — csw: eba, gdi-de, nokis, wsv-bfg, wsv-bkg, wsv-wsv; ckan: govdata-uba; dcatapde: opendata-hro; wfs: zdm-kuestendaten, zdm-nok, zdm-nsk, zdm-osk, zdm-tideelbe, zdm-tideems, zdm-tideweser):
+    1. Move deprecated expected output: `mkdir -p server/test/data-deprecated/<type>/<source>/elasticsearch` **first**, then plain `mv` (not `git mv` — changes stay unstaged) each `server/test/data/<type>/<source>/elasticsearch/*.json` into it individually (moving `<dir>` onto a not-yet-existing parent collapses the target path). `input/`, `config.json`, `README.md` stay in `test/data/` (shared).
+    2. Deprecated spec: add `expectedDocsBaseFixture: 'test/data-deprecated/<type>/<source>'` to each test case (csw/wfs: next to `baseFixture` in each per-source test case; the shared base object only holds `expectedDocsDir`). Keep the `withDeprecatedMapping()` wrapper.
+  - Acceptance: all deprecated specs pass; `server/test/data/{csw,ckan,dcatapde,wfs}/*/elasticsearch/` contain no deprecated documents.
+  - Verified: 35 fixtures moved (csw 17, wfs 12, ckan 3, dcatapde 3); `mocha test/integration-deprecated/*.spec.ts` → 16/16 passing. Specs keep their pre-existing CRLF line endings.
+
+- [ ] TASK-017: Live-format suites for csw, wfs
+  - Refs: TASK-015, TASK-016
+  - File: `server/test/integration/{csw,wfs}.integration.spec.ts` (new), `server/test/data/{csw,wfs}/<source>/elasticsearch/` (new live expected output)
+  - Details:
+    1. Live spec: copy the deprecated spec to `server/test/integration/`, drop `withDeprecatedMapping()`/`expectedDocsBaseFixture` and the `deprecated.util.js` import, add `expectedDocCount` per source (= number of deprecated fixture files, unless the live mapper legitimately differs). wfs: keep `createWfsMocks()` as is.
+    2. Generate live expected output: run the importer the same way the runner does (stubs, `setupRequestMock`, `runImporter`), collect `elasticMock.addOperationChunksToBulk` index-op documents and write `<doc.id>.json` (2-space JSON) into `server/test/data/<type>/<source>/elasticsearch/`, building the target path with `path.join` + `fs.mkdirSync(dir, { recursive: true })` — never via `resolveFixturePath()` (it throws for not-yet-existing dirs). Generator is a one-off script outside the repo. Review each fixture (`id`, `$schema`, no `uuid`, no run-dependent timestamps) and run the live spec twice to confirm determinism.
+    3. csw only: live `ingrid` documents carry `idf`; `compareEsDocuments()` already compares it XML-structurally.
+  - Status: BLOCKED by two live-format defects found during fixture generation (no mapper/importer code changed under this task):
+    - ~~csw gdi-de, eba (0/5, 0/3 docs)~~ fixed in TASK-019: `CswImporter.coupleService()` iterates `serviceEntity.dataset['distributions']`, but live `ingrid` documents have no top-level `distributions`. The ingrid `getServices.sql` now matches live services (`metadata.document_type = 'InGridGeoService'`), so it throws `serviceEntity.dataset.distributions is not iterable`, an `app` error that aborts and rolls back the whole harvest. Only sources containing service records are affected.
+    - wfs all 7 sources (0 docs): `ingrid` schema rejects WFS-specific top-level fields (checked for zdm-nok: `is_feature_type`, `typename`, `number_of_features`, `map_iframe` — "must NOT have unevaluated properties"; other sources not yet itemized), so every feature type is dropped → "No results during WFS import".
+    - Live fixtures generated: all 6 csw sources (reviewed, see Verified below). eba/gdi-de flapped: `references`/`ingrid.cross_references` order varied between runs (fixed at the source in TASK-020).
+    - `compareEsDocuments()` (`server/test/utils/test-utils.ts`) typed its params as `IngridIndexDocument` but read deprecated-only fields (`refering`, `refering_service_uuid`; 4 tsc errors) and held all deprecated comparison rules. Now format-neutral via `EsCompareOptions` (`excluded`/`unordered`/`xml` dot paths; default `excluded: ['extras']` for lvr, live format compared strictly), passed through `ImporterIntegrationTestCase.compareOptions`; the deprecated rules (`extras`/`refering`/`refering_service_uuid` excluded, `refering.object_reference`/`refering_service_uuid` unordered, `idf` as XML) are set by `withDeprecatedMapping()` in `integration-deprecated/deprecated.util.ts`.
+    - Verified (csw part): `tsc` 18 → 14 errors (the 4 in `test-utils.ts` gone, none new); `grep -rn deprecated server/test/utils/` empty; deprecated 16/16; json/kld/oai/integration/genesis 6/6; live csw 6/6 ×3; a corrupted value in `gdi-de/142d56bb` fails the spec. All 17 csw fixtures reviewed: `id` = filename, live `$schema`, no `uuid`, all timestamps from source data. Remaining for this task: wfs (schema blocker).
+  - Acceptance: live + deprecated csw/wfs specs pass; `grep -rn deprecated server/test/utils/integration-test-runner.ts` still empty; the end-goal check from TASK-015 (both deprecated folders moved out → `tsc` + `mocha test/integration/*.spec.ts` green) passes.
+
+- [ ] TASK-018: Live-format suites for ckan, dcatapde (deferred)
+  - Refs: TASK-016, TASK-017
+  - Details: Same recipe as TASK-017. Blocked until the opendata JSON schema for ckan/dcatapde/genesis mappers is settled; no live spec/fixtures until then.
+
+- [x] TASK-019: Fix live-format CSW service coupling
+  - Refs: TASK-017 (blocker: csw eba, gdi-de)
+  - File: `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getCrossReferences()`), `server/app/profiles/ingrid/mapper/ingrid.mapper.ts` (comment), `server/app/importer/csw/csw.importer.ts` (`coupleService()`, new `getServiceLinks()`/`getServiceType()`/`getServiceLinksDeprecated()`), `server/app/profiles/ingrid/catalog/elasticsearch.catalog.ts` (`resolveCoupling()`)
+  - Details: `coupleService()` iterated `serviceEntity.dataset['distributions']`, which only the deprecated ingrid shape carries (not in `index-ingrid.json`); any live harvest containing service records threw "not iterable" → `app` error → full rollback. A `?? []` guard is not enough: `IngridElasticsearchCatalog.resolveCoupling()` builds live `ingrid.cross_references`/`references` from the `coupling` rows.
+    - Fix (live format preferred, deprecated as `…Deprecated` fallback): the CSW mapper writes the outgoing half of the coupling for services into `ingrid.cross_references` (`{uuid, reference_type: 'Basisdaten', direction: 'OUT'}` per `CswMapper.getOperatesOn()` UUID). `coupleService()` builds one service link per live document (`dataset.ingrid` present) from `cross_references` (OUT uuids), `ingrid.service.operations` (GetCapabilities URL) and a service type derived like `CswMapper.handleDistributionforService()` (`ingrid.service.type`, then URL, then `versions`; wms/wfs/wcs/wmts regex); deprecated documents keep `getServiceLinksDeprecated()` (`distributions`). `resolveCoupling()` completes an existing entry with the same `uuid` instead of appending a duplicate.
+    - Rejected first approach: re-deriving `distributions` from `original_document` via `CswMapper.getDistributions()` (extra column in ingrid `getServices.sql`, second parse + URL checks per service) — reverted.
+    - Consequences: operatesOn UUIDs without a harvested dataset stay in the index as uuid-only entries; live service type ignores the online resource `protocol` (deprecated path gives it precedence). `coupling.distribution` is never read by the ingrid profile (its `getBuckets.sql` loads `service.dataset`).
+  - Acceptance: live csw eba/gdi-de harvests produce 3/5 documents with no `app` error and the same couplings as before; services carry exactly one complete `cross_references` entry per coupled dataset (no duplicates); deprecated specs 16/16; `ingrid.mapper.spec.ts` green; `tsc --noEmit` no new errors vs. baseline.
+  - Verified: eba 3 / gdi-de 5 docs, no `app` error; all 8 documents identical to the first approach's output (ignoring array order) except eba service `6af062cb`, which additionally carries 13 uuid-only OUT entries (its srv:operatesOn lists 14 datasets, only 1 harvested) — the documented consequence; no duplicate uuids in any `cross_references`; deprecated specs 16/16; `ingrid.mapper.spec.ts` 9/9; `tsc` 18 errors before/after, identical. Minor side effects: `getServiceLinksDeprecated()` tolerates a deprecated service without `distributions` (`?? []`, previously a crash); `resolveCoupling()` also dedupes repeated couplings of the same pair (e.g. WFS+WMS rows).
+
+- [x] TASK-020: Deterministic coupling order in the ingrid ES catalog
+  - Refs: TASK-017, TASK-019
+  - File: `server/app/profiles/ingrid/catalog/elasticsearch.catalog.ts` (`processBucket()`)
+  - Details: `getServices.sql`/`getBuckets.sql` combine sub-queries with `UNION` and `getBuckets` only orders by `anchor_id`, so a bucket's `operatingServices` arrive in arbitrary order and `resolveCoupling()` appended `references`/`ingrid.cross_references` in a different order per run (observed over 3 runs, importer itself sequential with `maxConcurrent: 1`). `processBucket()` now iterates the coupled records sorted by their document id (`id`, deprecated: `uuid`; plain string comparison). User decision: deterministic output instead of order-insensitive test comparison.
+  - Acceptance: live csw spec passes 3× in a row with strict comparison; deprecated specs 16/16.
+  - Verified: live csw spec 6/6 three times in a row (strict comparison, fixtures regenerated); deprecated specs 16/16.
+
+- [x] TASK-021: Compose the ingrid profile's live ES mapping from fragments (core / ingrid / opendata)
+  - Refs: TASK-001 (unified live mapping)
+  - File: `server/app/profiles/ingrid/persistence/default-mapping.json` (becomes a `composed_of` manifest), `server/app/profiles/ingrid/persistence/mappings/{core,ingrid,opendata}.json` (new), `server/app/utils/mapping.utils.ts` (new, `mergeMappings()`), `server/app/profiles/profile.factory.ts` (`getIndexMappings()`), `server/test/utils/mapping.utils.spec.ts` (new)
+  - Details: One unified mapping must serve both live formats (and future ones) but is hard to maintain as a single file. Split along the JSON schemas' `allOf` parts: core = "Root fields" (identical in both schemas) + `dynamic`/`_source`; ingrid = `ingrid`, `temporal.status`/`maintenance_frequency`/`user_defined_maintenance_frequency_in_sec`, `exports.iso`; opendata = `dcat`, `distributions`, `legal_basis`, `political_geocoding_level_uri`, `exports.rdf`. `getIndexMappings()` resolves a `composed_of` manifest (paths relative to the profile's `persistence/` folder) via `mergeMappings()`; files without `composed_of` are returned unchanged (deprecated, meta, diplanung/lvr mappings unaffected). Merge rule: containers merge recursively; a field (object with `type`) or scalar defined in several fragments must be identical, else throw — one index can only hold one definition per path. Inputs are not mutated (`require()` caches them).
+  - Acceptance: composed `default-mapping` deep-equals the previous single-file mapping; unit tests for merge/conflict/no-mutation green; deprecated + live integration specs unchanged; `tsc --noEmit` no new errors vs. baseline (14); build copies `mappings/*.json`.
+  - Verified: composed `default-mapping` deep-equals the previous file (one-off comparison against a pre-change copy); `mapping.utils.spec.ts` 8/8; `tsc` 14 errors before/after, identical; deprecated specs 16/16; live specs 12 passing, 7 pending (WFS `describe.skip`, commit d906fca6); `copyfiles 'app/**/*.json'` (postbuild pattern) copies `mappings/{core,ingrid,opendata}.json`. Files without `composed_of` verified to load unchanged (deep-equal to the file): `default-mapping.deprecated`, `opendata-mapping.deprecated`, `ingrid-meta-mapping` (one-off check; integration specs never call `getIndexMappings()` because the elastic mock reports the index as present). The repo unit test uses `ingrid-meta-mapping` for this case, so no shared test depends on a deprecated mapping.
+
+- [x] TASK-022: Align ingrid live mapping, types and mappers with schema commit 77f1a8a6
+  - Refs: FR-004, TASK-021
+  - File: `server/app/profiles/ingrid/persistence/mappings/ingrid.json`, `server/app/profiles/ingrid/model/index.document.ts`, `server/app/profiles/ingrid/mapper/ingrid.mapper.ts`, `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts`, `server/test/data/csw/*/elasticsearch/*.json`
+  - Details: `ingrid.conformance_result[].publicationDate` → `publication_date` (mapping, type, CSW mapper, live fixtures). New `ingrid.publication`/`project`/`database_collection`/`information_system`: mapping + `IngridSpecific` type + base getters returning `undefined` (no ISO source agreed yet; extraction is a separate task). `keywords[].source` no longer required: no mapper/mapping change; `ingrid.mapper.spec.ts`'s invalid-document case relied on it and now omits `term` instead. `spatial_representation` excluded → TASK-023.
+  - Acceptance: schema-vs-mapping path diff only shows the `spatial_representation` renames; composed `default-mapping` merges; sample document with all new sections validates against `index-ingrid.json`; `tsc` no new errors vs. baseline; deprecated specs 16/16; live csw eba/gdi-de/wsv-* pass.
+  - Verified: path diff = only the 8 `spatial_representation.grid.rectified/referenced` renames; `mergeMappings()` of core/ingrid/opendata ok; sample doc with all 4 new sections + `publication_date` validates; 35 `publicationDate` keys renamed in 12 live csw fixtures; `mapping.utils.spec.ts` + `ingrid.mapper.spec.ts` 17/17; deprecated 16/16; `tsc` 14 errors, none in touched files; live csw 5/6 — nokis fails, all 3 documents rejected solely for `/ingrid/spatial_representation must be object` (TASK-023).
+
+- [x] TASK-023: `ingrid.spatial_representation` array → object
+  - Refs: TASK-022
+  - Details: Schema commit 77f1a8a6 changed `spatial_representation` from array to a single object (one `type` string) and renamed `grid.rectified`/`grid.referenced` fields to snake_case. Blocked until the schema itself is clarified (user decision); mapping, type and CSW mapper still produce the old array shape. Consequence: live CSW documents with `gmd:spatialRepresentationInfo` fail schema validation (live csw nokis: all 3 documents).
+  - Interim (user decision): `index-ingrid.json` `spatial_representation` set back to `type: array` (the object schema moved unchanged into `items`). Live csw now 6/6 incl. nokis. The `grid.rectified`/`grid.referenced` snake_case renames are done in mapping, `IngridSpatialRepresentation` and CSW mapper (`checkpoint_availability`, `checkpoint_description`, `corner_points`, `point_in_pixel`, `orientation_parameter_availability`, `control_point_availability`; ISO XPaths unchanged). Verified: schema-vs-mapping path diff empty; `tsc` 14 (baseline); mapping.utils + ingrid.mapper + live csw 23/23; deprecated specs green (user-run). Remaining open: array → object, pending schema clarification.
+  - Resolved (schema commit bef2ed5f, harvester commit f0155f38): `spatial_representation` is a single object with `types[]` (enum array, as IGE `LuceneModel.SpatialRepresentation`), `vector[]`, `grid`. `types` ← `gmd:MD_DataIdentification/gmd:spatialRepresentationType` (`textTable`→`text`, `stereoModel`→`stereomodel`) plus types implied by `gmd:spatialRepresentationInfo` (vector/grid), deduplicated in a stable order; `vector` = all `MD_GeometricObjects` of all vector elements (topology per entry, topology-only entry kept); `grid` = first raster element incl. `gmi:MI_Georectified`/`MI_Georeferenceable`; `available_parameters` for every raster type; `controlPointAvaliability` XPath typo fixed (`gmd:controlPointAvailability`, as written by IGE); `parameters` ← `georeferencedParameters/gco:Record`, fallback `parameterCitation` title. Live csw nokis fixtures regenerated.
+  - Open (moved): `grid.cell_geometry`/`grid.rectified.point_in_pixel` still `{key, value}` → TASK-036. Known schema/source mismatch, not changed in the harvester: `grid.axes[].resolution` is `integer` in the schema, but `gco:Length` (and IGE's `Double`) can be decimal. No live fixture contains a grid.
+
+- [x] TASK-024: Fill `ingrid.information_system` from ISO (CSW)
+  - Refs: TASK-022
+  - File: `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getInformationSystem()`); ingrid-index repo `src/index-ingrid.yaml` (`x-transform`)
+  - Details: Reference is ingrid-editor branch `feature/i6680-indexFormat`: `InformationSystemModelTransformer.toLuceneDocument()` (what the section holds) and `idf-informationSystem.jte`/`shared-general.jte`/`IngridModelTransformer.kt` (where it lands in ISO; class 6 is exported as `gmd:MD_DataIdentification`). Only for `metadata.document_type` `InGridInformationSystem`. Filled: `system_environment` ← `gmd:environmentDescription`, `history` ← `LI_ProcessStep/description`, `basis_data` ← `LI_Source/description`, `explanation` ← `gmd:supplementalInformation`; section `undefined` when all are empty. Not recoverable, left unset: `service_type`/`version`/`information_system` (IGE does not export them for class 6), `service_urls` (exported as `onLine` with function `information`, indistinguishable from `references`).
+  - Acceptance: ingrid-index `npm run check` OK; `tsc` no new errors vs. baseline; live csw 6/6 with unchanged fixtures (no class 6 test record contains these elements); scratch check of an enriched class 6 record fills all 4 fields and validates against `index-ingrid.json`, a geodataset yields no `information_system`.
+  - Verified: ingrid-index `npm run check` OK; `tsc` 14 (baseline), none in `ingrid.csw.mapper.ts`; `ingrid.mapper.spec.ts` + live csw 15/15 (fixtures unchanged); deprecated 16/16; scratch check: wsv-wsv class 6 record enriched with `environmentDescription`/`supplementalInformation`/2× `LI_ProcessStep`/`LI_Source` → all 4 fields filled (`history` joined by `\n`), document validates; original record and a geodataset → no `information_system`.
+
+- [x] TASK-025: Fill `ingrid.database_collection` from ISO (CSW)
+  - Refs: TASK-022, TASK-024
+  - File: `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getDatabaseCollection()`, shared `joinTexts()`); ingrid-index repo `src/index-ingrid.yaml` (`x-transform`)
+  - Details: Reference is ingrid-editor branch `feature/i6680-indexFormat`: `DataCollectionModelTransformer.toLuceneDocument()` and `idf-dataCollection.jte`. Only for `metadata.document_type` `InGridDataCollection`. `catalog_categories` ← `MD_FeatureCatalogueDescription/featureCatalogueCitation/CI_Citation` (title/date incl. `gco:DateTime`/edition; IGE's placeholder citation `unknown` is skipped; same source as `codelist_reference`). `database_content` ← `featureTypes/gco:LocalName`, IGE writes `parameter (moreInfo)` → split at the trailing ` (…)`. `method` ← all `LI_Source/description` joined by `\n` (same source as `lineage.source`). `explanation` ← `supplementalInformation`. Section `undefined` when all are empty. Known: IGE writes the literal `null` when `parameter` or `moreInfo` is missing (Kotlin `String? +`), read as-is; a parameter ending in `(…)` without `moreInfo` is split wrongly.
+  - Acceptance: ingrid-index `npm run check` OK; `tsc` no new errors vs. baseline; live csw 6/6 with unchanged fixtures (no class 5 test record); scratch check of a class 5 record fills all 4 fields (placeholder dropped, content split) and validates; class 6 result unchanged; a geodataset yields no `database_collection`.
+  - Verified: ingrid-index `npm run check` OK; `tsc` 14 (baseline), none in `ingrid.csw.mapper.ts`; `ingrid.mapper.spec.ts` + live csw 15/15 (fixtures unchanged); deprecated 16/16; scratch check: wsv-wsv geodataset turned into `nonGeographicDataset`/`database` with 2 `featureTypes` (`Pegel (cm)`, `Abfluss`), a real + an `unknown` citation, `LI_Source`, `supplementalInformation` → `InGridDataCollection`, all 4 fields filled (placeholder dropped, `Pegel`/`cm` split, `Abfluss` without `more_info`), document validates; original geodataset → no section; class 6 scratch result unchanged.
+
+- [x] TASK-026: Fill `ingrid.project` from ISO (CSW)
+  - Refs: TASK-024, TASK-025
+  - File: `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getProject()`); ingrid-index repo `src/index-ingrid.yaml` (`x-transform`)
+  - Details: Reference is ingrid-editor branch `feature/i6680-indexFormat`: `ProjectModelTransformer.toLuceneDocument()` and `idf-project.jte` (injected as `additionalCitation` into the resource citation). Only for `metadata.document_type` `InGridProject`. `manager` / `participants` ← `gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty` with role `projectManager` / `projectParticipant` (InGrid extensions, not ISO `CI_RoleCode` values) → `gmd:individualName`, all occurrences joined by `\n`. `explanation` ← `supplementalInformation`. Section `undefined` when all are empty. No overlap with `contacts` (reads only `pointOfContact`/`contact`).
+  - Acceptance: ingrid-index `npm run check` OK; `tsc` no new errors vs. baseline; live csw 6/6 with unchanged fixtures (no class 4 test record); scratch check of a class 4 record fills all 3 fields, `contacts` unchanged, validates; a geodataset yields no `project`; class 5/6 scratch results unchanged.
+  - Verified: ingrid-index `npm run check` OK; `tsc` 14 (baseline), none in `ingrid.csw.mapper.ts`; `ingrid.mapper.spec.ts` + live csw 15/15 (fixtures unchanged); deprecated 16/16; scratch check: wsv-wsv geodataset turned into `nonGeographicDataset`/`project` with `projectManager`/`projectParticipant`/`originator` cited parties + `supplementalInformation` → `InGridProject`, all 3 fields filled (`originator` ignored), `contacts` identical to the same record without the cited parties, validates; geodataset → no section; class 5/6 scratch results unchanged.
+
+- [x] TASK-027: Fill `ingrid.publication` from ISO (CSW)
+  - Refs: TASK-024, TASK-025, TASK-026
+  - File: `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getPublication()`); ingrid-index repo `src/index-ingrid.yaml` (`x-transform`)
+  - Details: Reference is ingrid-editor branch `feature/i6680-indexFormat`: `PublicationModelTransformer.toLuceneDocument()`, `idf-publication.jte`, `shared-general.jte` (the IGE ISO importer cannot import `nonGeographicDataset` at all). Only for `metadata.document_type` `InGridPublication`. From the resource `CI_Citation`: `publication_date` ← `editionDate`, `published_in`/`volume`/`pages` ← `series/CI_Series/name`/`issueIdentification`/`page`, `isbn` ← `ISBN`, `bibliographic_data` ← `otherCitationDetails`, `publishing_house` ← `citedResponsibleParty` with role `distribute` → `organisationName`, `location` ← `citedResponsibleParty` with role `resourceProvider` and IGE's fixed `organisationName` "Contact instructions for the location of resource" → `contactInstructions`. `base_data_text` ← all `LI_Source/description` joined by `\n`; `explanation` ← `supplementalInformation`. Section `undefined` when all are empty. Left out as UNKLAR (user decision): `author`/`publisher`/`place_of_publication` (roles `originator`/`publisher` are shared with real addresses in `citedResponsibleParty`) and `document_type` (`resourceFormat/MD_Format/name` = English value of codelist 3385, not loaded by `Codelist.init()`; not exported with DOI). IGE bug: `publishing_house`, series, `bibliographic_data`, `isbn` are only exported when `publisher` or `place_of_publication` is set (nested `@if` in `idf-publication.jte`).
+  - Acceptance: ingrid-index `npm run check` OK; `tsc` no new errors vs. baseline; live csw 6/6 with unchanged fixtures (no class 2 test record); scratch check of a class 2 record fills the 10 fields, leaves the 4 UNKLAR fields unset, `contacts` unchanged, validates; a geodataset yields no `publication`; class 4/5/6 scratch results unchanged.
+  - Verified: ingrid-index `npm run check` OK (index-ingrid iso19139-2007 coverage 176/176); `tsc` 14 (baseline), none in `ingrid.csw.mapper.ts`; `ingrid.mapper.spec.ts` + live csw 15/15 (fixtures unchanged); deprecated 16/16; scratch check: wsv-wsv geodataset turned into `nonGeographicDataset`/`document` with editionDate, series, ISBN, otherCitationDetails, `originator`/`publisher`/`distribute`/`resourceProvider` cited parties, `resourceFormat`, `LI_Source`, `supplementalInformation` → `InGridPublication`, the 10 fields filled, `author`/`publisher`/`place_of_publication`/`document_type` unset, `contacts` identical to the record without these additions, validates; geodataset → no section; class 4/5/6 scratch results unchanged.
+
+- [x] TASK-009: Full regression pass
+  - Refs: NFR-001, NFR-003
+  - File: (n/a — verification only)
+  - Details: Run `cd server && npm test` in full; confirm all existing `*.integration.spec.ts` pass unmodified (they exercise only the deprecated path via `integration-test-runner.ts`'s stubbing).
+  - Acceptance: `npm test` (as it stands today, pre-existing glob bug and all) — same 29/29 passing, byte-for-byte the same suite as before this change, no fixture changes. `npx tsc --noEmit` shows the same 25 pre-existing, unrelated errors as before (none in any file touched by this feature).
+
+- [ ] TASK-028: `references[].type` → string + `type_ref_uri`
+  - Refs: FR-004, schema commit bef2ed5f
+  - File: `server/app/model/index.document.ts` (`IndexReference`), `server/app/profiles/ingrid/mapper/ingrid.mapper.ts` (new `codelistRef()`), `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getReferences()`), `server/app/profiles/ingrid/persistence/mappings/core.json`, live csw fixtures
+  - Details: Schema replaces every codelist `{key, value}` object by a string plus `<field>_ref_uri`. Convention for all codelist tasks (TASK-028–037): the string holds today's `value` (ISO/source value; `Codelist` loads no German values, unlike IGE's `codelists.getValue()`); `<field>_ref_uri` = `/codelist/<codelistId>/<key>` as IGE `IngridModelTransformer.codelistRef()`, omitted when the key is empty, `null` or `-1`. New helper `protected codelistRef(id, key)` in `ingridMapper`. References: coupled data → `type: 'Gekoppelte Daten'`, `type_ref_uri: '/codelist/2000/3600'`; online resources → `type: <CI_OnLineFunctionCode>`, ref via codelist 2000; preview graphics → `type: 'previewGraphic'`, no ref. Check that `coupleService()`/`resolveCoupling()` do not read `references[].type`.
+  - Acceptance: no `/references/N/type` errors left when validating the live csw fixtures against `index-ingrid.json`, no new error kinds; `tsc` no new errors vs. baseline (14); `ingrid.mapper.spec.ts`, `mapping.utils.spec.ts`, live csw 6/6, deprecated 16/16.
+
+- [ ] TASK-029: `metadata.document_type` → `ingrid.document_type`
+  - Refs: FR-004, schema commit bef2ed5f
+  - File: `server/app/model/index.document.ts`, `server/app/profiles/ingrid/model/index.document.ts`, `server/app/profiles/ingrid/model/opendataindex.document.ts`, `server/app/profiles/ingrid/mapper/ingrid.mapper.ts` (`buildCommonFields()`, `getIngrid()`), `server/app/profiles/ingrid/mapper/ingrid.wfs.mapper.ts`, `server/app/profiles/ingrid/catalog/elasticsearch.catalog.ts` (`resolveCoupling()`), `server/app/profiles/ingrid/persistence/queries/{getServices,getDatasetIdentifiers,getDatasetsBySource}.sql`, `server/app/profiles/ingrid/persistence/mappings/{core,ingrid}.json`, live csw fixtures
+  - Details: `metadata.document_type` is gone (`metadata` has `unevaluatedProperties: false`); `ingrid.document_type` is required whenever `metadata.data_type` is `INGRID` (enum adds `InGridAlgorithm`). Remove it from `metadata` (also for opendata documents), emit it first in `getIngrid()`. WFS `getDocumentType()` returns `InGridGeoDataset` (user decision default). Service detection reads `dataset->'ingrid'->>'document_type'` / `additionalDoc.ingrid?.document_type`.
+  - Acceptance: no `metadata`/`ingrid` `document_type` errors left; live csw eba/gdi-de couplings unchanged; checks as TASK-028.
+
+- [ ] TASK-030: `metadata.language` as ISO 639-1
+  - Refs: FR-004, schema commit bef2ed5f
+  - File: `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getMetadataLanguage()`), `server/app/profiles/ingrid/persistence/mappings/core.json` (check), live csw fixtures
+  - Details: Schema: `metadata.language` is a string in ISO 639-1. Today it is the key of codelist 99999999, which `Codelist.init()` does not load, so the field is always empty. Map `gmd:MD_Metadata/gmd:language` via `transformGeneric` (`deu`/`ger` → `de`, `eng` → `en`), undefined otherwise. Opendata mappers unchanged.
+  - Acceptance: live csw fixtures carry `metadata.language: "de"`; checks as TASK-028.
+
+- [ ] TASK-031: `temporal.status` / `temporal.maintenance_frequency` → string + `*_ref_uri`
+  - Refs: FR-004, TASK-028
+  - File: `server/app/profiles/ingrid/model/index.document.ts` (`IngridTemporal`), `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getStatus()`, `getMaintenanceFrequency()`), `server/app/profiles/ingrid/persistence/mappings/ingrid.json`, live csw fixtures
+  - Details: convention of TASK-028; codelists 523 (status) and 518 (maintenance frequency).
+  - Acceptance: no `/temporal/status`/`/temporal/maintenance_frequency` errors left; checks as TASK-028.
+
+- [ ] TASK-032: `ingrid.character_set` → string + `character_set_ref_uri`
+  - Refs: FR-004, TASK-028
+  - File: `server/app/profiles/ingrid/model/index.document.ts`, `server/app/profiles/ingrid/mapper/ingrid.mapper.ts` (`getCharacterSet()` signature, `getIngrid()`), `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts`, `server/app/profiles/ingrid/persistence/mappings/ingrid.json`, live csw fixtures
+  - Details: convention of TASK-028; codelist 510.
+  - Acceptance: no `/ingrid/character_set` errors left; checks as TASK-028.
+
+- [ ] TASK-033: `ingrid.licenses[].items` → `name` / `name_ref_uri` / `source`
+  - Refs: FR-004, TASK-028
+  - File: `server/app/profiles/ingrid/model/index.document.ts` (`IngridLicense`), `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getLicenses()`), `server/app/profiles/ingrid/persistence/mappings/ingrid.json`, live csw fixtures
+  - Details: `key`/`value` → `name` (string or null) + `name_ref_uri`. accessConstraints: ref via codelist 6010 from `restriction_key` (`-1` = no ref); useConstraints/useLimitations: no ref (6500 not loaded, keys are `null` today). `source` unchanged. Not caught by validation today (license items allow extra properties), so verify via fixture diff.
+  - Acceptance: live csw fixtures contain no `licenses[].items[].key`/`value`; checks as TASK-028.
+
+- [ ] TASK-034: `conformance_result[].specification` / `data_quality.qualities[].measure_type` → string
+  - Refs: FR-004, TASK-028
+  - File: `server/app/profiles/ingrid/model/index.document.ts` (`IngridConformanceResult`, `IngridDataQuality`), `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getConformanceResult()`, `getDataQuality()`), `server/app/profiles/ingrid/persistence/mappings/ingrid.json`, live csw fixtures
+  - Details: both carry no key today (always `null`; IGE uses codelists 6005/6006 and per-quality-type lists, none loaded), so `specification_ref_uri`/`measure_type_ref_uri` stay unset; type + mapping get the `*_ref_uri` fields.
+  - Acceptance: no `/ingrid/conformance_result/N/specification` and `/ingrid/data_quality/qualities/N/measure_type` errors left; checks as TASK-028.
+
+- [ ] TASK-035: `ingrid.spatial.vertical_extent.unit` / `vdatum` → string + `*_ref_uri`
+  - Refs: FR-004, TASK-028
+  - File: `server/app/profiles/ingrid/model/index.document.ts`, `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getIngridSpatial()`), `server/app/profiles/ingrid/persistence/mappings/ingrid.json`, live csw fixtures (if affected)
+  - Details: convention of TASK-028; codelists 102 (unit) and 101 (vdatum).
+  - Acceptance: scratch check of a record with a vertical extent validates; checks as TASK-028.
+
+- [ ] TASK-036: `spatial_representation.grid.cell_geometry` / `grid.rectified.point_in_pixel` → string + `*_ref_uri`
+  - Refs: FR-004, TASK-023, TASK-028
+  - File: `server/app/profiles/ingrid/model/index.document.ts` (`IngridSpatialRepresentation`), `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getSpatialRepresentation()`), `server/app/profiles/ingrid/persistence/mappings/ingrid.json`
+  - Details: convention of TASK-028; codelists 509 (cell geometry) and 2100 (point in pixel). No live fixture contains a grid.
+  - Acceptance: scratch check of a record with `MD_Georectified` (cell geometry + point in pixel) validates against `index-ingrid.json`; checks as TASK-028.
+
+- [ ] TASK-037: `ingrid.publication.document_type` → string + `document_type_ref_uri`
+  - Refs: FR-004, TASK-027, TASK-028
+  - File: `server/app/profiles/ingrid/model/index.document.ts`, `server/app/profiles/ingrid/persistence/mappings/ingrid.json`
+  - Details: type and mapping only; the CSW mapper still leaves the field unset (codelist 3385 not loaded, see TASK-027).
+  - Acceptance: schema-vs-mapping path diff shows no `publication.document_type*` difference; `tsc` no new errors.
+
+- [ ] TASK-038: opendata `dcat.landing_page` / `legal_basis` → `opendata.landing_page` / `opendata.legal_basis`
+  - Refs: FR-004, schema commit bef2ed5f
+  - File: `server/app/profiles/ingrid/model/opendataindex.document.ts`, `server/app/profiles/ingrid/mapper/ingrid.mapper.ts` (`buildOpendataDocument()`, `getDcat()` → `getLandingPage()`), `server/app/profiles/ingrid/mapper/{ingrid.ckan,ingrid.dcatapde,ingrid.genesis}.mapper.ts`, `server/app/profiles/ingrid/persistence/mappings/opendata.json`, genesis fixtures
+  - Details: new `opendata` section in `index-opendata.json`; deprecated builders keep their own fields.
+  - Acceptance: genesis fixtures carry `opendata.landing_page`, no root `dcat`/`legal_basis`; genesis spec, deprecated 16/16, `tsc` no new errors.
+
+- [ ] TASK-039: opendata `distributions` → `opendata.distributions`, `languages` per distribution
+  - Refs: FR-004, TASK-038
+  - File: `server/app/profiles/ingrid/model/opendataindex.document.ts` (`IngridOpendataDistribution`), `server/app/profiles/ingrid/mapper/ingrid.mapper.ts` (`buildOpendataDocument()`), `server/app/profiles/ingrid/persistence/mappings/opendata.json`, genesis fixtures
+  - Details: `license.languages` moves to `distributions[].languages`. Forwarding license/languages from the base `Distribution` stays a TODO (update the existing TODO comments).
+  - Acceptance: as TASK-038.
+
+- [ ] TASK-040: opendata `political_geocoding_level_uri` → `opendata.political_geocoding_level`
+  - Refs: FR-004, TASK-038
+  - File: `server/app/profiles/ingrid/model/opendataindex.document.ts`, `server/app/profiles/ingrid/mapper/ingrid.mapper.ts`, `server/app/profiles/ingrid/mapper/{ingrid.ckan,ingrid.dcatapde,ingrid.genesis}.mapper.ts`, `server/app/profiles/ingrid/persistence/mappings/opendata.json`, genesis fixtures
+  - Details: value stays the full URI (dcatapde: from source; genesis: base URI + key). Getter renamed to `getPoliticalGeocodingLevel()`; deprecated builders only adapt the call, their output field `political_geocoding_level_uri` stays.
+  - Acceptance: as TASK-038.
+
+- [ ] TASK-041: Schema regression pass for schema commit bef2ed5f
+  - Refs: TASK-028 – TASK-040
+  - File: (n/a — verification only)
+  - Details: validate all live fixtures against their schema (Ajv2020 + ajv-formats, as `elastic.validation.ts`); schema-vs-merged-mapping path diff.
+  - Acceptance: 0 validation errors; path diff empty (except the documented `resolution` mismatch, if any); `tsc` 14 (baseline); live + deprecated specs green.
