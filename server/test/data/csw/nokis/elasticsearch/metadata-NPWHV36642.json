@@ -1,8 +1,8 @@
 {
   "id": "metadata-NPWHV36642",
   "crs": [
-    "31467",
-    "25832"
+    "EPSG:31467",
+    "EPSG:25832"
   ],
   "title": "[1991] Eiderentenbestandserfassung (Sommer) (Mauser) Monitoring of migratory birds (Eiders) in the Wadden Sea of Lower Saxony in summer (moulting) 1991",
   "ingrid": {

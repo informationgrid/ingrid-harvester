@@ -385,10 +385,20 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getCrs(): string[] {
-        // getReferenceSystems() can yield undefined entries when a RS_Identifier has neither
-        // a codeSpace nor a gco:CharacterString code (e.g. a gmx:Anchor-based identifier)
-        const result = this.getReferenceSystems()?.filter(Boolean);
-        return result?.length ? result : undefined;
+        // not via getReferenceSystems() (feeds the deprecated referencesystem_*), which drops gmx:Anchor codes;
+        // index-ingrid x-transform: '<codeSpace>:<code>' or the URI alone - for an Anchor its xlink:href
+        const rsIdentifiers = CswMapper.select("./gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier", this.baseMapper.record) ?? [];
+        const result = rsIdentifiers.map(rsIdentifier => {
+            const anchor = CswMapper.select("./gmd:code/gmx:Anchor", rsIdentifier, true) as Element;
+            if (anchor) {
+                return anchor.getAttribute('xlink:href')?.trim() || anchor.textContent?.trim() || undefined;
+            }
+            const code = this.text("./gmd:code/gco:CharacterString", rsIdentifier)?.trim();
+            const codeSpace = this.text("./gmd:codeSpace/gco:CharacterString", rsIdentifier)?.trim();
+            // a URI code stands alone, even with a codeSpace
+            return code && codeSpace && !/^https?:\/\//.test(code) ? `${codeSpace}:${code}` : code || undefined;
+        }).filter(Boolean);
+        return result.length ? [...new Set(result)] : undefined;
     }
 
     getSpatialResolutionScale(): IngridSpecific['spatial_resolution_scale'] {

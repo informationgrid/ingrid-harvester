@@ -1,5 +1,8 @@
 {
   "id": "4915275a-733a-47cd-b1a6-1a3f1e976948",
+  "crs": [
+    "http://www.opengis.net/def/crs/EPSG/0/3068"
+  ],
   "title": "Bebauungsplan Barmbek-Nord 18",
   "ingrid": {
     "lineage": {

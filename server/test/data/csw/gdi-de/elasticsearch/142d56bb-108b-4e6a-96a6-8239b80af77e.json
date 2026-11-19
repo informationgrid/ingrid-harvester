@@ -1,5 +1,16 @@
 {
   "id": "142d56bb-108b-4e6a-96a6-8239b80af77e",
+  "crs": [
+    "http://www.opengis.net/def/crs/EPSG/0/4258",
+    "http://www.opengis.net/def/crs/EPSG/0/32632",
+    "http://www.opengis.net/def/crs/EPSG/0/25833",
+    "http://www.opengis.net/def/crs/EPSG/0/25832",
+    "http://www.opengis.net/def/crs/EPSG/0/31469",
+    "http://www.opengis.net/def/crs/EPSG/0/31468",
+    "http://www.opengis.net/def/crs/EPSG/0/31467",
+    "http://www.opengis.net/def/crs/EPSG/0/31466",
+    "http://www.opengis.net/def/crs/EPSG/0/4326"
+  ],
   "title": "INSPIRE Geographical Names GN250",
   "ingrid": {
     "document_type": "InGridGeoDataset",

@@ -1,5 +1,8 @@
 {
   "id": "f1950cd0-de59-413c-93fd-b669af06c863",
+  "crs": [
+    "http://www.opengis.net/def/crs/EPSG/0/25832"
+  ],
   "title": "INSPIRE HE Hydro - Netzwerk ATKIS Basis-DLM",
   "ingrid": {
     "document_type": "InGridGeoDataset",
