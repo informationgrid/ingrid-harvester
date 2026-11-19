@@ -407,15 +407,20 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getIngridSpatial(): IngridSpecific['spatial'] {
-        const description = this.text("./gmd:MD_DataIdentification/gmd:EX_Extent/gmd:description/gco:CharacterString", this.baseMapper.idInfo) ?? undefined;
+        // datasets use gmd:extent, services srv:extent (as IGE writes them)
+        const extent = "./*/*[self::gmd:extent or self::srv:extent]/gmd:EX_Extent";
+        // several described extents are joined with ';' like the IGE ISO import
+        const descriptions = CswMapper.select(`${extent}/gmd:description/gco:CharacterString`, this.baseMapper.idInfo)
+            ?.map(node => node.textContent?.trim()).filter(Boolean);
+        const description = descriptions?.length ? descriptions.join(';') : undefined;
         // GML 3.1 or 3.2 (IGE writes gml/3.2), hence local-name(); the datum is named in gml:name (IGE) or gml:identifier
-        const verticalCrs = "./*/gmd:extent/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:verticalCRS/*[local-name()='VerticalCRS']";
+        const verticalCrs = `${extent}/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:verticalCRS/*[local-name()='VerticalCRS']`;
         const unit = this.text(`${verticalCrs}/*[local-name()='verticalCS']/*[local-name()='VerticalCS']/*[local-name()='axis']/*[local-name()='CoordinateSystemAxis']/@uom`, this.baseMapper.idInfo) || undefined;
         const vdatum = this.text(`${verticalCrs}/*[local-name()='verticalDatum']/*[local-name()='VerticalDatum']/*[local-name()='name']`, this.baseMapper.idInfo)
             || this.text(`${verticalCrs}/*[local-name()='verticalDatum']/*[local-name()='VerticalDatum']/*[local-name()='identifier']`, this.baseMapper.idInfo)
             || undefined;
-        const minimum = this.text("./*/gmd:extent/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:minimumValue/gco:Real", this.baseMapper.idInfo);
-        const maximum = this.text("./*/gmd:extent/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:maximumValue/gco:Real", this.baseMapper.idInfo);
+        const minimum = this.text(`${extent}/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:minimumValue/gco:Real`, this.baseMapper.idInfo);
+        const maximum = this.text(`${extent}/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:maximumValue/gco:Real`, this.baseMapper.idInfo);
         if (!description && !minimum && !maximum) return undefined;
         const parseNum = (val: string | undefined) => { const n = Number(val); return isNaN(n) || val == null ? undefined : n; };
         return {
