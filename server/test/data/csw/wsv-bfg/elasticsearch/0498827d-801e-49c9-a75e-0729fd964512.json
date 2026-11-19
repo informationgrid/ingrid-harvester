@@ -8,6 +8,14 @@
     },
     "licenses": [
       {
+        "type": "useLimitations",
+        "items": [
+          {
+            "name": "Die Nutzung der Daten ist frei unter der Bedingung der Nennung der Quelle: Krahe, P., Nilson, E., Gelhardt, U. & J. Lang (2010): Auswertungen ausgewählter globaler Klimamodelle hinsichtlich atmosphärischer Zirkulationsbedingungen im nordatlantisch-mitteleuropäischen Sektor. BfG-Bericht 1682. 38 S. DOI:http://dx.doi.org/10.5676/BfG-1682-2011"
+          }
+        ]
+      },
+      {
         "type": "accessConstraints",
         "items": [
           {

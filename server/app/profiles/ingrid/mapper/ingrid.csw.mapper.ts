@@ -1107,11 +1107,14 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     getLicenses(): IngridLicense[] {
         const licenses: IngridLicense[] = [];
 
-        const objectUse = this.getObjectUse();
-        if (objectUse?.terms_of_use_value?.length) {
+        // gmd:useLimitation itself (IGE writes it into a MD_LegalConstraints of its own); not via getObjectUse(), which
+        // feeds the deprecated object_use from the gmd:otherConstraints next to a gmd:useLimitation
+        const useLimitations = CswMapper.select('./*/gmd:resourceConstraints/*/gmd:useLimitation/gco:CharacterString', this.baseMapper.idInfo)
+            ?.map(node => node.textContent?.trim()).filter(Boolean);
+        if (useLimitations?.length) {
             licenses.push({
                 type: 'useLimitations',
-                items: objectUse.terms_of_use_value.map(v => ({ name: v }))
+                items: useLimitations.map(v => ({ name: v }))
             });
         }
 

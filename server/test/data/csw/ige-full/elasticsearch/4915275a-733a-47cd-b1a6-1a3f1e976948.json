@@ -21,6 +21,14 @@
     },
     "licenses": [
       {
+        "type": "useLimitations",
+        "items": [
+          {
+            "name": "Datenlizenz Deutschland - Namensnennung - Version 2.0; <a href=\"https://www.govdata.de/dl-de/by-2-0\">https://www.govdata.de/dl-de/by-2-0</a>; dl-de-by-2.0; Namensnennung: \"Freie und Hansestadt Hamburg, Bezirksamt Nord, Fachamt Stadt- und Landschaftsplanung\""
+          }
+        ]
+      },
+      {
         "type": "useConstraints",
         "items": [
           {

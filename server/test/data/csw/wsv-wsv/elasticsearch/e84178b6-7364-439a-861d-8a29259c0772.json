@@ -5,6 +5,14 @@
     "document_type": "InGridInformationSystem",
     "licenses": [
       {
+        "type": "useLimitations",
+        "items": [
+          {
+            "name": "Diese WebApplikation der Wasserstraßen- und Schifffahrtsverwaltung des Bundes ist nur im Intranet der Bundesverwaltung für Verkehr und digitale Infrastruktur (BMVI WAN) erreichbar. Recherche-Rechte hat jeder angemeldete WSV-Mitarbeiter. Die Anmeldung am 3D-Datenarchiv erfolgt über den WSV-Verzeichnisdienst durch Eingabe der Eimailadresse und dem Arbeitsplatzpasswort. Download- oder weitere Rechte sind an die Rechtevergabe im IT-Verfahren gebunden."
+          }
+        ]
+      },
+      {
         "type": "accessConstraints",
         "items": [
           {

@@ -9,6 +9,14 @@
     },
     "licenses": [
       {
+        "type": "useLimitations",
+        "items": [
+          {
+            "name": "Nutzungsbeschränkungen: PEGELONLINE liefert Rohwerte, die ungeprüft direkt von den Pegeln kommen. Es können Fehlwerte und Lücken auftreten. Eine Gewähr für die Daten und die Dienste wird nicht übernommen."
+          }
+        ]
+      },
+      {
         "type": "useConstraints",
         "items": [
           {
