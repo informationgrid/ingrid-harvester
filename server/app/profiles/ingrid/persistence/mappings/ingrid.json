@@ -110,14 +110,10 @@
                                     "type": "integer"
                                 },
                                 "cell_geometry": {
-                                    "properties": {
-                                        "key": {
-                                            "type": "keyword"
-                                        },
-                                        "value": {
-                                            "type": "keyword"
-                                        }
-                                    }
+                                    "type": "keyword"
+                                },
+                                "cell_geometry_ref_uri": {
+                                    "type": "keyword"
                                 },
                                 "rectified": {
                                     "properties": {
@@ -131,14 +127,10 @@
                                             "type": "keyword"
                                         },
                                         "point_in_pixel": {
-                                            "properties": {
-                                                "key": {
-                                                    "type": "keyword"
-                                                },
-                                                "value": {
-                                                    "type": "keyword"
-                                                }
-                                            }
+                                            "type": "keyword"
+                                        },
+                                        "point_in_pixel_ref_uri": {
+                                            "type": "keyword"
                                         }
                                     }
                                 },

@@ -239,7 +239,8 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
                 axes: axes?.length ? axes : undefined,
                 available_parameters: parseBool(this.text('./gmd:transformationParameterAvailability/gco:Boolean', node)),
                 number_dimensions: parseNum(this.text('./gmd:numberOfDimensions/gco:Integer', node)),
-                cell_geometry: cellCode ? { key: this.transformToIgcDomainId(cellCode, '509'), value: cellCode } : undefined,
+                cell_geometry: cellCode || undefined,
+                cell_geometry_ref_uri: cellCode ? this.codelistRef('509', this.transformToIgcDomainId(cellCode, '509')) : undefined,
             };
             if (name === 'MD_Georectified' || name === 'MI_Georectified') {
                 const pointInPixel = this.text('./gmd:pointInPixel/gmd:MD_PixelOrientationCode', node);
@@ -247,7 +248,8 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
                     checkpoint_availability: parseBool(this.text('./gmd:checkPointAvailability/gco:Boolean', node)),
                     checkpoint_description: this.text('./gmd:checkPointDescription/gco:CharacterString', node) ?? undefined,
                     corner_points: this.text('./gmd:cornerPoints//gml:pos', node) ?? undefined,
-                    point_in_pixel: pointInPixel ? { key: this.transformToIgcDomainId(pointInPixel, '2100'), value: pointInPixel } : undefined,
+                    point_in_pixel: pointInPixel || undefined,
+                    point_in_pixel_ref_uri: pointInPixel ? this.codelistRef('2100', this.transformToIgcDomainId(pointInPixel, '2100')) : undefined,
                 };
             } else if (name === 'MD_Georeferenceable' || name === 'MI_Georeferenceable') {
                 grid.referenced = {

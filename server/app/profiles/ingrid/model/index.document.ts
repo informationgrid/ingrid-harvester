@@ -183,12 +183,14 @@ export type IngridSpatialRepresentation = {
         axes?: { label?: string, number?: number, resolution?: number }[],
         available_parameters?: boolean,
         number_dimensions?: number,
-        cell_geometry?: { key: string | null, value: string | null },
+        cell_geometry?: string,
+        cell_geometry_ref_uri?: string,
         rectified?: {
             checkpoint_availability?: boolean,
             checkpoint_description?: string,
             corner_points?: string,
-            point_in_pixel?: { key: string | null, value: string | null },
+            point_in_pixel?: string,
+            point_in_pixel_ref_uri?: string,
         },
         referenced?: {
             orientation_parameter_availability?: boolean,
