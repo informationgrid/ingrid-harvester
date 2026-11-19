@@ -1118,6 +1118,19 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             'DQ_QuantitativeAttributeAccuracy':       'quantitativeAttributeAccuracy',
             'DQ_RelativeInternalPositionalAccuracy':  'relativeInternalPositionalAccuracy',
         };
+        // codelist of the measure type per quality type, as IGE GeodatasetModelTransformer.qualitytypeCodelistMap
+        const measureTypeCodelistMap: Record<string, string> = {
+            'DQ_CompletenessCommission':              '7109',
+            'DQ_ConceptualConsistency':               '7112',
+            'DQ_DomainConsistency':                   '7113',
+            'DQ_FormatConsistency':                   '7114',
+            'DQ_TopologicalConsistency':              '7115',
+            'DQ_TemporalConsistency':                 '7120',
+            'DQ_ThematicClassificationCorrectness':   '7125',
+            'DQ_NonQuantitativeAttributeAccuracy':    '7126',
+            'DQ_QuantitativeAttributeAccuracy':       '7127',
+            'DQ_RelativeInternalPositionalAccuracy':  '7128',
+        };
 
         const completenessOmission = parseNum(this.text(
             './gmd:report/gmd:DQ_CompletenessOmission/gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record', dqNode
@@ -1131,12 +1144,17 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         const reportNodes = CswMapper.select('./gmd:report/*', dqNode);
         const qualities = reportNodes
             ?.filter(node => node.localName in qualityTypeMap)
-            .map(node => ({
-                type: qualityTypeMap[node.localName],
-                measure_type: this.text('./gmd:nameOfMeasure/gco:CharacterString', node) || undefined,
-                value: parseNum(this.text('./gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record', node)),
-                parameter: this.text('./gmd:measureDescription/gco:CharacterString', node) ?? undefined,
-            }));
+            .map(node => {
+                const measureType = this.text('./gmd:nameOfMeasure/gco:CharacterString', node) || undefined;
+                const codelistId = measureTypeCodelistMap[node.localName];
+                return {
+                    type: qualityTypeMap[node.localName],
+                    measure_type: measureType,
+                    measure_type_ref_uri: measureType ? this.codelistRef(codelistId, Codelist.getInstance().getIdByUrlOrText(codelistId, undefined, measureType.trim())) : undefined,
+                    value: parseNum(this.text('./gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record', node)),
+                    parameter: this.text('./gmd:measureDescription/gco:CharacterString', node) ?? undefined,
+                };
+            });
 
         const result: IngridDataQuality = {};
         if (completenessOmission != null) result.completeness_omission = completenessOmission;
