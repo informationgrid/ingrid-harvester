@@ -190,6 +190,30 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
 
     // Raster elements, incl. their ISO 19115-2 counterparts (gmi:MI_Georectified, gmi:MI_Georeferenceable)
     private static readonly GRID_ELEMENTS = ['MD_GridSpatialRepresentation', 'MD_Georectified', 'MD_Georeferenceable', 'MI_Georectified', 'MI_Georeferenceable'];
+    // length units (@uom) -> factor to metres; EPSG unit codes 9001 m, 9002 ft, 9036 km, 1033 cm, 1025 mm
+    private static readonly UOM_TO_METRES: Record<string, number> = {
+        'm': 1, 'meter': 1, 'metre': 1, 'meters': 1, 'metres': 1, '9001': 1,
+        'km': 1000, 'kilometer': 1000, 'kilometre': 1000, '9036': 1000,
+        'cm': 0.01, '1033': 0.01,
+        'mm': 0.001, '1025': 0.001,
+        'ft': 0.3048, 'foot': 0.3048, 'feet': 0.3048, '9002': 0.3048,
+    };
+
+    /**
+     * Grid axis resolution in metres (index-ingrid: "in Metern"): any gco:Measure substitute below gmd:resolution
+     * (gco:Length, gco:Distance, gco:Scale as written by IGE, ...), converted by @uom. Angles and unknown or missing
+     * units are omitted rather than written as metres.
+     */
+    private getResolutionInMetres(dimension: Element): number | undefined {
+        const measure = CswMapper.select('./gmd:resolution/*', dimension, true) as Element;
+        const value = Number(measure?.textContent?.trim());
+        const uom = measure?.getAttribute('uom')?.trim().toLowerCase();
+        if (!uom || measure.textContent?.trim() === '' || isNaN(value)) return undefined;
+        // URN/URL forms such as urn:ogc:def:uom:EPSG::9001 or http://www.opengis.net/def/uom/EPSG/0/9001
+        const key = uom.includes('epsg') ? uom.match(/(\d+)$/)?.[1] : uom;
+        const factor = ingridCswMapper.UOM_TO_METRES[key];
+        return factor ? value * factor : undefined;
+    }
 
     getSpatialRepresentation(): IngridSpatialRepresentation {
         const parseBool = (val: string | undefined) => val != null ? val === 'true' : undefined;
@@ -232,7 +256,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             const axes = CswMapper.select('./gmd:axisDimensionProperties/gmd:MD_Dimension', node)?.map(dim => ({
                 label: this.text('./gmd:dimensionName/gmd:MD_DimensionNameTypeCode/@codeListValue', dim) ?? undefined,
                 number: parseNum(this.text('./gmd:dimensionSize/gco:Integer', dim)),
-                resolution: parseNum(this.text('./gmd:resolution/gco:Length', dim)),
+                resolution: this.getResolutionInMetres(dim),
             }));
             const cellCode = this.text('./gmd:cellGeometry/gmd:MD_CellGeometryCode/@codeListValue', node);
             grid = {
@@ -247,7 +271,9 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
                 grid.rectified = {
                     checkpoint_availability: parseBool(this.text('./gmd:checkPointAvailability/gco:Boolean', node)),
                     checkpoint_description: this.text('./gmd:checkPointDescription/gco:CharacterString', node) ?? undefined,
-                    corner_points: this.text('./gmd:cornerPoints//gml:pos', node) ?? undefined,
+                    // one gml:Point per corner, joined by comma; GML 3.1 or 3.2, gml:pos or the deprecated gml:coordinates (IGE)
+                    corner_points: CswMapper.select("./gmd:cornerPoints/*[local-name()='Point']/*[local-name()='pos' or local-name()='coordinates']", node)
+                        ?.map(n => n.textContent?.trim()).filter(Boolean).join(',') || undefined,
                     point_in_pixel: pointInPixel || undefined,
                     point_in_pixel_ref_uri: pointInPixel ? this.codelistRef('2100', this.transformToIgcDomainId(pointInPixel, '2100')) : undefined,
                 };
