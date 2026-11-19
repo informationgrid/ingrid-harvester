@@ -501,7 +501,12 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         const citation = CswMapper.select("./*/gmd:citation/gmd:CI_Citation", this.baseMapper.idInfo, true);
         const fromCitation = (xpath: string) => citation ? this.text(xpath, citation) ?? undefined : undefined;
         // author / publisher / place_of_publication use the ISO roles originator / publisher, which real addresses in
-        // gmd:citedResponsibleParty share - not unambiguously recoverable; document_type needs codelist 3385 - left unset
+        // gmd:citedResponsibleParty share - not unambiguously recoverable
+        // document_type: the InGrid Editor writes the English value of codelist 3385 as gmd:resourceFormat (only for
+        // publications, not with an active DOI); taken only if it matches 3385 (no ISO value - resolve by text), since
+        // other catalogs use gmd:resourceFormat for real formats
+        const resourceFormat = this.text("./*/gmd:resourceFormat/gmd:MD_Format/gmd:name/gco:CharacterString", this.baseMapper.idInfo)?.trim();
+        const documentTypeId = resourceFormat ? Codelist.getInstance().getIdByUrlOrText('3385', undefined, resourceFormat) : undefined;
         const result = {
             published_in: fromCitation("./gmd:series/gmd:CI_Series/gmd:name/gco:CharacterString"),
             volume: fromCitation("./gmd:series/gmd:CI_Series/gmd:issueIdentification/gco:CharacterString"),
@@ -515,6 +520,8 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             base_data_text: this.joinTexts("./gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:source/gmd:LI_Source/gmd:description/gco:CharacterString"),
             bibliographic_data: fromCitation("./gmd:otherCitationDetails/gco:CharacterString"),
             explanation: this.text("./*/gmd:supplementalInformation/gco:CharacterString", this.baseMapper.idInfo) ?? undefined,
+            document_type: documentTypeId ? resourceFormat : undefined,
+            document_type_ref_uri: this.codelistRef('3385', documentTypeId),
         };
         return Object.values(result).some(v => v != null) ? result : undefined;
     }
