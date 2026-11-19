@@ -1,0 +1,21 @@
+{
+  "id": 1,
+  "dataSourceName": "Harvester",
+  "type": "CSW",
+  "sourceURL": "https://ige-full.test/csw?SERVICE=CSW&REQUEST=GetCapabilities",
+  "catalogIds": [
+    1
+  ],
+  "iPlugId": "geoportal",
+  "partner": "ni",
+  "provider": "ige-full",
+  "datatype": "default,dsc_csw,csw,metadata,IDF_1.0",
+  "eitherKeywords": [],
+  "harvestingMode": null,
+  "httpMethod": "POST",
+  "maxConcurrent": 1,
+  "maxServices": 1,
+  "resolveOgcDistributions": false,
+  "simplifyTolerance": 0,
+  "timeout": 0
+}

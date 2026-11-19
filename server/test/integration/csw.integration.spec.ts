@@ -24,6 +24,7 @@
 import type { CswSettings } from '../../app/importer/csw/csw.settings.js';
 import cswEbaConfig from '../data/csw/eba/config.json' with { type: 'json' };
 import cswGdideConfig from '../data/csw/gdi-de/config.json' with { type: 'json' };
+import cswIgeFullConfig from '../data/csw/ige-full/config.json' with { type: 'json' };
 import cswNokisConfig from '../data/csw/nokis/config.json' with { type: 'json' };
 import cswWsvBfgConfig from '../data/csw/wsv-bfg/config.json' with { type: 'json' };
 import cswWsvBkgConfig from '../data/csw/wsv-bkg/config.json' with { type: 'json' };
@@ -120,6 +121,16 @@ describe('CSW Integration Tests', function () {
             expectedDocCount: 2,
             settings: cswWsvWsvConfig as CswSettings,
             baseFixture: 'test/data/csw/wsv-wsv'
+        });
+    });
+
+    // fully populated ISO record of the InGrid Editor (fields missing from the catalog snapshots above)
+    it('ige-full', async () => {
+        await runImporterIntegrationTest({
+            ...cswTestcase,
+            expectedDocCount: 1,
+            settings: cswIgeFullConfig as CswSettings,
+            baseFixture: 'test/data/csw/ige-full'
         });
     });
 });
