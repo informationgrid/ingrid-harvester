@@ -408,8 +408,12 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
 
     getIngridSpatial(): IngridSpecific['spatial'] {
         const description = this.text("./gmd:MD_DataIdentification/gmd:EX_Extent/gmd:description/gco:CharacterString", this.baseMapper.idInfo) ?? undefined;
-        const unit = this.text("./*/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:verticalCRS/gml:verticalCRS/gml:verticalCS/gml:VerticalCS/gml:axis/gml:CoordinateSystemAxis/@uom", this.baseMapper.idInfo);
-        const vdatum = this.text("./*/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:verticalCRS/gml:verticalCRS/gml:verticalDatum/gml:VerticalDatum/gml:identifier", this.baseMapper.idInfo);
+        // GML 3.1 or 3.2 (IGE writes gml/3.2), hence local-name(); the datum is named in gml:name (IGE) or gml:identifier
+        const verticalCrs = "./*/gmd:extent/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:verticalCRS/*[local-name()='VerticalCRS']";
+        const unit = this.text(`${verticalCrs}/*[local-name()='verticalCS']/*[local-name()='VerticalCS']/*[local-name()='axis']/*[local-name()='CoordinateSystemAxis']/@uom`, this.baseMapper.idInfo) || undefined;
+        const vdatum = this.text(`${verticalCrs}/*[local-name()='verticalDatum']/*[local-name()='VerticalDatum']/*[local-name()='name']`, this.baseMapper.idInfo)
+            || this.text(`${verticalCrs}/*[local-name()='verticalDatum']/*[local-name()='VerticalDatum']/*[local-name()='identifier']`, this.baseMapper.idInfo)
+            || undefined;
         const minimum = this.text("./*/gmd:extent/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:minimumValue/gco:Real", this.baseMapper.idInfo);
         const maximum = this.text("./*/gmd:extent/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:maximumValue/gco:Real", this.baseMapper.idInfo);
         if (!description && !minimum && !maximum) return undefined;
@@ -419,8 +423,11 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             vertical_extent: (minimum || maximum) ? {
                 minimum: parseNum(minimum),
                 maximum: parseNum(maximum),
-                unit: unit ? { key: this.transformToIgcDomainId(unit, '102'), value: unit } : undefined,
-                vdatum: vdatum ? { key: this.transformToIgcDomainId(vdatum, '101'), value: vdatum } : undefined,
+                unit,
+                unit_ref_uri: unit ? this.codelistRef('102', this.transformToIgcDomainId(unit, '102')) : undefined,
+                vdatum,
+                // codelist 101 has no ISO value - resolve by text
+                vdatum_ref_uri: vdatum ? this.codelistRef('101', Codelist.getInstance().getIdByUrlOrText('101', undefined, vdatum.trim())) : undefined,
             } : undefined,
         };
     }

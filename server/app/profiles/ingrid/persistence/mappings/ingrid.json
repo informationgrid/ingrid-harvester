@@ -365,24 +365,16 @@
                                     "type": "float"
                                 },
                                 "unit": {
-                                    "properties": {
-                                        "key": {
-                                            "type": "keyword"
-                                        },
-                                        "value": {
-                                            "type": "keyword"
-                                        }
-                                    }
+                                    "type": "keyword"
+                                },
+                                "unit_ref_uri": {
+                                    "type": "keyword"
                                 },
                                 "vdatum": {
-                                    "properties": {
-                                        "key": {
-                                            "type": "keyword"
-                                        },
-                                        "value": {
-                                            "type": "keyword"
-                                        }
-                                    }
+                                    "type": "keyword"
+                                },
+                                "vdatum_ref_uri": {
+                                    "type": "keyword"
                                 }
                             }
                         }

@@ -263,11 +263,15 @@ design: ./design.md
   - Acceptance: no live fixture contains `gmd:nameOfMeasure` (fixtures unchanged); scratch check: `DQ_CompletenessCommission` with nameOfMeasure "Rate of excess items" yields `measure_type_ref_uri: /codelist/7109/1`, an unknown text yields none; `tsc` 14 (baseline); `test/data-deprecated` unchanged. Specs deferred to TASK-041.
   - Verified: `Codelist.init()` loads the 10 measure-type codelists (2/3/1/1/11/1/1/2/1/3 entries); `getDataQuality()` maps the quality element to its codelist (`measureTypeCodelistMap`, same keys as `qualityTypeMap`) and sets `measure_type_ref_uri` via `getIdByUrlOrText()`. Scratch check with tsx on `getDataQuality()` and a sample record: "Rate of excess items" in `DQ_CompletenessCommission` → `/codelist/7109/1`, unknown text → no ref, no `nameOfMeasure` → no `measure_type`. Live csw fixtures unchanged (no `nameOfMeasure` in the inputs); schema check 0 errors; `tsc` 14 (baseline); `test/data-deprecated` unchanged. Specs deferred to TASK-041.
 
-- [ ] TASK-035: `ingrid.spatial.vertical_extent.unit` / `vdatum` → string + `*_ref_uri`
+- [x] TASK-035: `ingrid.spatial.vertical_extent.unit` / `vdatum` → string + `*_ref_uri`
   - Refs: FR-004, TASK-028
   - File: `server/app/profiles/ingrid/model/index.document.ts`, `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getIngridSpatial()`), `server/app/profiles/ingrid/persistence/mappings/ingrid.json`, live csw fixtures (if affected)
   - Details: convention of TASK-028; codelists 102 (unit) and 101 (vdatum).
   - Acceptance: scratch check of a record with a vertical extent validates; checks as TASK-028.
+  - Verified: `vertical_extent.unit`/`vdatum` are strings + `unit_ref_uri` (102, via ISO value, e.g. `Metre` → `/codelist/102/9001`) / `vdatum_ref_uri` (101 has no ISO value → `getIdByUrlOrText()` by text, e.g. `DE_AMST / NH` → `/codelist/101/900002`); type and `ingrid.json` mapping (four `keyword` fields) adapted.
+  - Scope extension (same field): the unit/vdatum XPaths in `getIngridSpatial()` never matched (missing `gmd:extent` step, `gml:verticalCRS` instead of `gmd:verticalCRS/gml:VerticalCRS`, GML 3.1 prefix only, datum read from `gml:identifier` while IGE writes `gml:name`). Corrected for the new shape only (`local-name()` for GML 3.1/3.2, `gml:name` with `gml:identifier` fallback); the deprecated `getT*` XPaths stay as they are.
+  - Scratch check with tsx on `getIngridSpatial()` using the IGE record `iso_geodataset_full.xml`: GML 3.2 → `Metre`/`9001`, `DE_AMST / NH`/`900002`; GML 3.1 namespace + `Foot` → `9002`; `gml:identifier` fallback `Baltic Sea` → `5105`; without `verticalCRS` → min/max only. No live csw fixture has a vertical extent (fixtures unchanged). Schema check 0 errors; `tsc` 14 (baseline); `test/data-deprecated` unchanged. Specs deferred to TASK-041 / TASK-045.
+  - Open (not changed): `ingrid.spatial.description` XPath `./gmd:MD_DataIdentification/gmd:EX_Extent/gmd:description` also lacks the `gmd:extent` step and never matches.
 
 - [ ] TASK-036: `spatial_representation.grid.cell_geometry` / `grid.rectified.point_in_pixel` → string + `*_ref_uri`
   - Refs: FR-004, TASK-023, TASK-028
@@ -280,6 +284,12 @@ design: ./design.md
   - File: `server/app/profiles/ingrid/model/index.document.ts`, `server/app/profiles/ingrid/persistence/mappings/ingrid.json`
   - Details: type and mapping only; the CSW mapper still leaves the field unset (codelist 3385 not loaded, see TASK-027).
   - Acceptance: schema-vs-mapping path diff shows no `publication.document_type*` difference; `tsc` no new errors.
+
+- [ ] TASK-045: Live csw test source `ige-full` with a fully populated ISO record (after TASK-037, before TASK-041)
+  - Refs: FR-004, TASK-031 – TASK-037, TASK-042 – TASK-044
+  - File: `server/test/data/csw/ige-full/{config.json,README.md,input/*,elasticsearch/*.json}` (new), `server/test/integration/csw.integration.spec.ts` (new `it(...)`)
+  - Details: the existing live csw inputs are snapshots of real catalogs and contain no `gmd:nameOfMeasure`, `EX_VerticalExtent` or `MD_Georectified`. Add a separate source (existing inputs stay untouched) with the IGE test record `ingrid-editor/server/src/test/resources/ingrid/import/iso_geodataset_full.xml` (28× `nameOfMeasure`, 2× `EX_VerticalExtent`, 2× `MD_Georectified`, 7× `gmx:Anchor`, 4× `DQ_ConformanceResult`, status / maintenance frequency / character set) wrapped as a GetRecords response, plus GetCapabilities/hits like the other sources. The expected document is generated once from the mapper output and then reviewed field by field against the record (a snapshot alone only guards regressions, not correctness).
+  - Acceptance: the expected document validates against `index-ingrid.json` with 0 errors and carries `measure_type_ref_uri`, `vertical_extent.*_ref_uri`, `grid.cell_geometry*`/`point_in_pixel*`, accessConstraints `name_ref_uri` and `specification_ref_uri` where the record provides matching values; review notes in this task; existing csw fixtures unchanged; `tsc` 14 (baseline). Spec run in TASK-041.
 
 - [ ] TASK-038: opendata `dcat.landing_page` / `legal_basis` → `opendata.landing_page` / `opendata.legal_basis`
   - Refs: FR-004, schema commit bef2ed5f

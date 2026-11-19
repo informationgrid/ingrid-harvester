@@ -75,8 +75,10 @@ export type IngridSpecific = {
         vertical_extent?: {
             minimum?: number,
             maximum?: number,
-            unit?: { key: string | null, value: string | null },
-            vdatum?: { key: string | null, value: string | null },
+            unit?: string,
+            unit_ref_uri?: string,
+            vdatum?: string,
+            vdatum_ref_uri?: string,
         },
     },
     service?: {
