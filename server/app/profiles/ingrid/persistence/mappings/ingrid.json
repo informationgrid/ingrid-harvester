@@ -471,14 +471,10 @@
                             ]
                         },
                         "document_type": {
-                            "properties": {
-                                "key": {
-                                    "type": "keyword"
-                                },
-                                "value": {
-                                    "type": "keyword"
-                                }
-                            }
+                            "type": "keyword"
+                        },
+                        "document_type_ref_uri": {
+                            "type": "keyword"
                         },
                         "base_data_text": {
                             "type": "text",

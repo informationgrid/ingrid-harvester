@@ -298,11 +298,13 @@ design: ./design.md
   - Verified: `getResolutionInMetres()` reads `gmd:resolution/*` and converts via a small unit table (`m`/`meter`/`metre`, `km`, `cm`, `mm`, `ft`/`foot`, EPSG codes 9001/9002/9036/1033/1025 incl. URN/URL forms); `corner_points` from `gmd:cornerPoints/*[local-name()='Point']/*[local-name()='pos' or local-name()='coordinates']`, joined by `,`. Scratch check with tsx on `getSpatialRepresentation()` using `iso_geodataset_full.xml`: IGE `gco:Scale uom="meter"` 3 → `3`; `gco:Distance uom="km"` 2 → `2000`; `gco:Length` `urn:ogc:def:uom:EPSG::9001` 0.5 → `0.5`; `gco:Measure` `…/EPSG/0/9002` 10 → `3.048`; `gco:Angle uom="deg"` → omitted; no `@uom` → omitted; IGE `gml:coordinates` → `"2"`; two points `gml:pos` (GML 3.2 + 3.1) → `"10 20,30 40"`. Grid output injected into a live fixture validates (0 errors); live fixtures unchanged (no grid); schema check 0 errors; `tsc` 14 (baseline); `test/data-deprecated` unchanged. Specs deferred to TASK-041 / TASK-045.
   - Open (other repos, not changed): index schema declares `resolution` as `integer` although it is "in Metern" (decimal resolutions such as `0.5` fail validation: `resolution must be integer`; harvester ES mapping `ingrid.json` is `integer` too) → `ingrid-index` should use `number`, then adapt the mapping. IGE deviates from the documented ISO mapping: writes `gco:Scale uom="meter"` instead of `gco:Length uom="m"` and `gml:coordinates` instead of `gml:pos` (single free-text point) → `ingrid-editor`.
 
-- [ ] TASK-037: `ingrid.publication.document_type` → string + `document_type_ref_uri`
+- [x] TASK-037: `ingrid.publication.document_type` → string + `document_type_ref_uri`
   - Refs: FR-004, TASK-027, TASK-028
   - File: `server/app/profiles/ingrid/model/index.document.ts`, `server/app/profiles/ingrid/persistence/mappings/ingrid.json`
   - Details: type and mapping only; the CSW mapper still leaves the field unset (codelist 3385 not loaded, see TASK-027).
   - Acceptance: schema-vs-mapping path diff shows no `publication.document_type*` difference; `tsc` no new errors.
+  - Verified: `IngridSpecific.publication.document_type` is `string` + `document_type_ref_uri`; `ingrid.json` mapping two `keyword` fields. Schema-vs-mapping diff for `ingrid.publication`: none. Mapper unchanged (field stays unset), live fixtures unchanged; schema check 0 errors; `tsc` 14 (baseline).
+  - Note: `codelist_3385.xml` exists in the harvester, but the source is ambiguous: the `ingrid-index` x-transform marks the field "UNKLAR: Kein eindeutiges Gegenstück in ISO 19139:2007" — IGE writes the English 3385 value as `gmd:resourceFormat/gmd:MD_Format/gmd:name` (not with an active DOI), i.e. the same element as real resource formats. Reading it stays out of scope.
 
 - [ ] TASK-045: Live csw test source `ige-full` with a fully populated ISO record (after TASK-037, before TASK-041)
   - Refs: FR-004, TASK-031 – TASK-037, TASK-042 – TASK-044, TASK-046, TASK-047
