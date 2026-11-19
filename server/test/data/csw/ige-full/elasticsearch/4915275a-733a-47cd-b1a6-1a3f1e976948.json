@@ -120,7 +120,8 @@
         }
       ],
       "positional_accuracy": {
-        "horizontal": 66
+        "horizontal": 654,
+        "vertical": 66
       },
       "completeness_omission": 23
     },

@@ -1182,12 +1182,22 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         const completenessOmission = parseNum(this.text(
             './gmd:report/gmd:DQ_CompletenessOmission/gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record', dqNode
         ));
-        const horizontal = parseNum(this.text(
-            './gmd:report/gmd:DQ_AbsoluteExternalPositionalAccuracy/gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record', dqNode
-        ));
-        const vertical = parseNum(this.text(
-            './gmd:report/gmd:DQ_RelativeInternalPositionalAccuracy[gmd:measureDescription/gco:CharacterString="vertical"]/gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record', dqNode
-        ));
+        // IGE writes both accuracies as DQ_AbsoluteExternalPositionalAccuracy, told apart by gmd:measureDescription
+        // ('vertical' / 'geographic') and gml:valueUnit/*/gml:quantityType (read by the IGE ISO import);
+        // an unlabeled report counts as horizontal, a 'vertical' DQ_RelativeInternalPositionalAccuracy as vertical
+        const absolute = './gmd:report/gmd:DQ_AbsoluteExternalPositionalAccuracy';
+        const quantityType = "gmd:result/gmd:DQ_QuantitativeResult/gmd:valueUnit/*/*[local-name()='quantityType']";
+        const isVertical = `(gmd:measureDescription/gco:CharacterString='vertical' or ${quantityType}='absolute external positional accuracy, vertical accuracy')`;
+        const isHorizontal = `(gmd:measureDescription/gco:CharacterString='geographic' or ${quantityType}='absolute external positional accuracy, geographic accuracy')`;
+        const value = '/gmd:result/gmd:DQ_QuantitativeResult/gmd:value/gco:Record';
+        const horizontal = parseNum(
+            this.text(`${absolute}[${isHorizontal}]${value}`, dqNode)
+            || this.text(`${absolute}[not(${isVertical})]${value}`, dqNode)
+        );
+        const vertical = parseNum(
+            this.text(`${absolute}[${isVertical}]${value}`, dqNode)
+            || this.text(`./gmd:report/gmd:DQ_RelativeInternalPositionalAccuracy[gmd:measureDescription/gco:CharacterString='vertical']${value}`, dqNode)
+        );
         const reportNodes = CswMapper.select('./gmd:report/*', dqNode);
         const qualities = reportNodes
             ?.filter(node => node.localName in qualityTypeMap)
