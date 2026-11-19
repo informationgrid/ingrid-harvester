@@ -31,6 +31,7 @@
       "code": "98693",
       "name": "ITZBund - Informationstechnikzentrum Bund, Poststelle",
       "role": "resourceProvider",
+      "street": "Am Ehrenberg 8",
       "locality": "Ilmenau",
       "communications": [
         {
@@ -67,6 +68,7 @@
       "code": "98693",
       "name": "ITZBund - Informationstechnikzentrum Bund, Poststelle",
       "role": "pointOfContact",
+      "street": "Am Ehrenberg 8",
       "locality": "Ilmenau",
       "communications": [
         {

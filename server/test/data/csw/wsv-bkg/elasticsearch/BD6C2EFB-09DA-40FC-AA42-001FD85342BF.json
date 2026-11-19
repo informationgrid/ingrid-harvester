@@ -33,6 +33,7 @@
       "code": "80538",
       "name": "Arbeitsgemeinschaft der Vermessungsverwaltungen der Länder der Bundesrepublik Deutschland (AdV)",
       "role": "pointOfContact",
+      "street": "Alexandrastraße 4",
       "locality": "München",
       "communications": [
         {
@@ -54,6 +55,7 @@
       "code": "04105",
       "name": "Bundesamt für Kartographie und Geodäsie (BKG)",
       "role": "resourceProvider",
+      "street": "Karl-Rothe-Str. 10-14",
       "country": "DEU",
       "locality": "Leipzig",
       "communications": [
@@ -76,6 +78,7 @@
       "code": "80538",
       "name": "Arbeitsgemeinschaft der Vermessungsverwaltungen der Länder der Bundesrepublik Deutschland (AdV)",
       "role": "pointOfContact",
+      "street": "Alexandrastraße 4",
       "locality": "München",
       "communications": [
         {

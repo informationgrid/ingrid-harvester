@@ -33,6 +33,7 @@
       "code": "60598",
       "name": "Bundesamt für Kartographie und Geodäsie (BKG)",
       "role": "publisher",
+      "street": "Richard-Strauss-Allee 11",
       "country": "DEU",
       "locality": "Frankfurt am Main",
       "communications": [
@@ -55,6 +56,7 @@
       "code": "04105",
       "name": "Bundesamt für Kartographie und Geodäsie (BKG)",
       "role": "pointOfContact",
+      "street": "Karl-Rothe-Str. 10-14",
       "country": "DEU",
       "locality": "Leipzig",
       "communications": [

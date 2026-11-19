@@ -40,6 +40,7 @@
       "code": "56068",
       "name": "Peter Krahe",
       "role": "author",
+      "street": "Am Mainzer Tor 1",
       "country": "Germany",
       "locality": "Koblenz",
       "communications": [
@@ -58,6 +59,7 @@
       "code": "56068 ",
       "name": "Dr. Enno Nilson",
       "role": "author",
+      "street": "Am Mainzer Tor 1",
       "country": "Germany",
       "locality": "Koblenz",
       "communications": [
@@ -76,6 +78,7 @@
       "code": "56068 ",
       "name": "Dr. Enno Nilson",
       "role": "author",
+      "street": "Am Mainzer Tor 1",
       "country": "Germany",
       "locality": "Koblenz",
       "communications": [

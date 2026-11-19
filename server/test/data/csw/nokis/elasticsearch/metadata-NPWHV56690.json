@@ -91,6 +91,7 @@
       "code": "26382",
       "name": "Gregor, Dr. Scheiffarth",
       "role": "pointOfContact",
+      "street": "Virchowstr. 1",
       "country": "Germany",
       "locality": "Wilhelmshaven",
       "communications": [
@@ -113,6 +114,7 @@
       "code": "26382",
       "name": "Michael Räder",
       "role": "pointOfContact",
+      "street": "Virchowstraße 1",
       "country": "Germany",
       "locality": "Wilhelmshaven",
       "communications": [

@@ -661,12 +661,31 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return toponyms?.length ? toponyms : undefined;
     }
 
+    /**
+     * Delivery points joined by comma, without the post box (index-ingrid x-transform of street / pobox): IGE writes
+     * the post box as its own deliveryPoint 'Postbox <number>,<zip> <city>' (AddressModelTransformer.postBoxAddress,
+     * recognized by this prefix in the IGE ISO import); the x-transform names the prefix 'Postfach'.
+     */
+    private getStreet(party: Element): string | undefined {
+        const lines = CswMapper.select('./gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:deliveryPoint/gco:CharacterString', party)
+            ?.map(node => node.textContent?.trim())
+            .filter(line => line && !/^(Postbox|Postfach) /.test(line));
+        return lines?.length ? lines.join(', ') : undefined;
+    }
+
     async getContacts(): Promise<IndexContact[]> {
         const contactPoints = await this.baseMapper.getContactPoints();
         if (!contactPoints?.length) {
             return undefined;
         }
-        return contactPoints.map(cp => {
+        // street is read here, not from the shared CswMapper.getContactPoints() (hasStreetAddress is always empty there,
+        // fixing it would change other profiles); same parties in the same order as getContactPoints()
+        const parties = [
+            ...CswMapper.select('./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty', this.baseMapper.record),
+            ...CswMapper.select('./gmd:contact/gmd:CI_ResponsibleParty', this.baseMapper.record),
+        ];
+        const streets = parties.length === contactPoints.length ? parties.map(party => this.getStreet(party)) : [];
+        return contactPoints.map((cp, index) => {
             const communications: IndexContact['communications'] = [];
             if (cp.hasEmail) communications.push({ type: 'email', value: cp.hasEmail });
             if (cp.hasTelephone) communications.push({ type: 'phone', value: cp.hasTelephone });
@@ -675,7 +694,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
                 role: cp.role,
                 name: cp.fn,
                 communications: communications.length ? communications : undefined,
-                street: cp.hasStreetAddress,
+                street: streets[index],
                 code: cp.hasPostalCode,
                 locality: cp.hasLocality,
                 country: cp.hasCountryName,
