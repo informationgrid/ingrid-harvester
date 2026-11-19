@@ -42,16 +42,6 @@
       }
     ],
     "order_info": "Die Daten sind Eigentum der Nationalparkverwaltung Niedersächsisches Wattenmeer",
-    "data_quality": {
-      "qualities": [
-        {
-          "type": "domainConsistency"
-        },
-        {
-          "type": "domainConsistency"
-        }
-      ]
-    },
     "specific_usage": "Erfassung der Eiderentenbestände als TMAP Parameter 7.4 (Monitoring of migratory birds)",
     "alternate_title": "Eiderentenzählung Winter 1991 UIG",
     "symbol_catalogue": [

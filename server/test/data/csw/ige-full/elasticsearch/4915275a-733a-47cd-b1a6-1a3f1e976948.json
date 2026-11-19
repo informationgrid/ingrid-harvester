@@ -51,12 +51,6 @@
     "data_quality": {
       "qualities": [
         {
-          "type": "domainConsistency"
-        },
-        {
-          "type": "domainConsistency"
-        },
-        {
           "type": "completenessComission",
           "value": 43,
           "parameter": "343",

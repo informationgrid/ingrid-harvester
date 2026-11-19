@@ -35,34 +35,6 @@
         ]
       }
     ],
-    "data_quality": {
-      "qualities": [
-        {
-          "type": "domainConsistency"
-        },
-        {
-          "type": "domainConsistency"
-        },
-        {
-          "type": "domainConsistency"
-        },
-        {
-          "type": "domainConsistency"
-        },
-        {
-          "type": "domainConsistency"
-        },
-        {
-          "type": "domainConsistency"
-        },
-        {
-          "type": "domainConsistency"
-        },
-        {
-          "type": "domainConsistency"
-        }
-      ]
-    },
     "alternate_title": "INSPIRE Gewässernetz",
     "cross_references": [
       {

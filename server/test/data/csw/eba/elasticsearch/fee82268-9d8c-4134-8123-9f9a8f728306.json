@@ -29,16 +29,6 @@
         ]
       }
     ],
-    "data_quality": {
-      "qualities": [
-        {
-          "type": "domainConsistency"
-        },
-        {
-          "type": "domainConsistency"
-        }
-      ]
-    },
     "character_set": "utf8",
     "character_set_ref_uri": "/codelist/510/4",
     "conformance_result": [

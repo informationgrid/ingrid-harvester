@@ -44,13 +44,6 @@
         ]
       }
     ],
-    "data_quality": {
-      "qualities": [
-        {
-          "type": "domainConsistency"
-        }
-      ]
-    },
     "alternate_title": "INSPIRE Geografische Bezeichnungen",
     "cross_references": [
       {

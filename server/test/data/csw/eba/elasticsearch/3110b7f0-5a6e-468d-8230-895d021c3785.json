@@ -39,25 +39,6 @@
         ]
       }
     ],
-    "data_quality": {
-      "qualities": [
-        {
-          "type": "domainConsistency"
-        },
-        {
-          "type": "domainConsistency"
-        },
-        {
-          "type": "domainConsistency"
-        },
-        {
-          "type": "domainConsistency"
-        },
-        {
-          "type": "domainConsistency"
-        }
-      ]
-    },
     "cross_references": [
       {
         "uuid": "fee82268-9d8c-4134-8123-9f9a8f728306",

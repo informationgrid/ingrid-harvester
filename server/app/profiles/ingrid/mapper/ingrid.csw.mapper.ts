@@ -1213,7 +1213,8 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         );
         const reportNodes = CswMapper.select('./gmd:report/*', dqNode);
         const qualities = reportNodes
-            ?.filter(node => node.localName in qualityTypeMap)
+            // only reports with a quantitative result; INSPIRE conformity reports (DQ_ConformanceResult) are conformance_result
+            ?.filter(node => node.localName in qualityTypeMap && CswMapper.select('./gmd:result/gmd:DQ_QuantitativeResult', node)?.length)
             .map(node => {
                 const measureType = this.text('./gmd:nameOfMeasure/gco:CharacterString', node) || undefined;
                 const codelistId = measureTypeCodelistMap[node.localName];

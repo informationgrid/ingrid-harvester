@@ -35,13 +35,6 @@
         ]
       }
     ],
-    "data_quality": {
-      "qualities": [
-        {
-          "type": "domainConsistency"
-        }
-      ]
-    },
     "character_set": "utf8",
     "character_set_ref_uri": "/codelist/510/4",
     "alternate_title": "PEGELONLINE Aktuelle Wasserstände",
