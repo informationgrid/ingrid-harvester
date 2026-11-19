@@ -205,7 +205,11 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
      * units are omitted rather than written as metres.
      */
     private getResolutionInMetres(dimension: Element): number | undefined {
-        const measure = CswMapper.select('./gmd:resolution/*', dimension, true) as Element;
+        return this.toMetres(CswMapper.select('./gmd:resolution/*', dimension, true) as Element);
+    }
+
+    // a gco:Measure (or substitute) converted to metres by @uom; undefined for angles and unknown or missing units
+    private toMetres(measure: Element): number | undefined {
         const value = Number(measure?.textContent?.trim());
         const uom = measure?.getAttribute('uom')?.trim().toLowerCase();
         if (!uom || measure.textContent?.trim() === '' || isNaN(value)) return undefined;
@@ -388,13 +392,19 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     getSpatialResolutionScale(): IngridSpecific['spatial_resolution_scale'] {
-        const node = CswMapper.select("./gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution", this.baseMapper.idInfo, true);
-        if (!node) return undefined;
+        // one gmd:MD_Resolution per value (scale, ground or scan resolution); the first of each kind is taken
+        const resolution = "./gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution";
+        if (!CswMapper.select(resolution, this.baseMapper.idInfo)?.length) return undefined;
         const parseNum = (val: string | undefined) => { const n = Number(val); return isNaN(n) || val == null ? undefined : n; };
+        const distances = (CswMapper.select(`${resolution}/gmd:distance/gco:Distance`, this.baseMapper.idInfo) ?? []) as Element[];
+        const isDpi = (distance: Element) => distance.getAttribute('uom')?.trim().toLowerCase() === 'dpi';
+        // ground resolution: any unit but dpi, converted to metres (index-ingrid: "in Metern")
+        const ground = distances.filter(distance => !isDpi(distance)).map(distance => this.toMetres(distance)).find(value => value != null);
+        const scan = distances.filter(isDpi).map(distance => parseNum(distance.textContent?.trim())).find(value => value != null);
         return {
-            scale: parseNum(this.text("./gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer", node)),
-            resolution_ground: parseNum(this.text("./gmd:distance/gmd:Distance[@uom='meter']", node)),
-            resolution_scan: parseNum(this.text("./gmd:distance/gmd:Distance[@uom='dpi']", node)),
+            scale: parseNum(this.text(`${resolution}/gmd:equivalentScale/gmd:MD_RepresentativeFraction/gmd:denominator/gco:Integer`, this.baseMapper.idInfo)),
+            resolution_ground: ground,
+            resolution_scan: scan,
         };
     }
 

@@ -196,7 +196,9 @@
       "Die in den Planwerken der verbindlichen Bauleitplanung dokumentierten Festsetzungen, Kennzeichnungen und Hinweise werden auf der Grundlage der aktuellen Örtlichkeit der Liegenschaftskarte (ALKIS) mit Hilfe von Fachapplikationen (AutoCAD + WS LANDCAD bzw. ArcGIS + GeoOffice) digitalisiert."
     ],
     "spatial_resolution_scale": {
-      "scale": 1000
+      "scale": 1000,
+      "resolution_ground": 100,
+      "resolution_scan": 300
     }
   },
   "$schema": "https://schema.ingrid-oss.eu/index/draft/schema/index-ingrid.json",

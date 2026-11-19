@@ -62,7 +62,9 @@
         "vector"
       ]
     },
-    "spatial_resolution_scale": {},
+    "spatial_resolution_scale": {
+      "resolution_ground": 10
+    },
     "cross_references": [
       {
         "uuid": "3110b7f0-5a6e-468d-8230-895d021c3785",
