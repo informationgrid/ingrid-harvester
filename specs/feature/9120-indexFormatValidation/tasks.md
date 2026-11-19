@@ -330,6 +330,42 @@ design: ./design.md
     - `crs` missing: `gmd:referenceSystemInfo` code is a `gmx:Anchor` (`EPSG 3068: DHDN / Soldner Berlin`, href `…/EPSG/0/3068`); `getCrs()` drops anchor identifiers (known, see comment in `getCrs()`).
   - Review — to clarify (not clearly defects): keywords from the thesauri `INSPIRE priority data set` and `Spatial scope` are missing and `Nieders. Abfallgesetz (NAbfG)` (thesaurus `Further legal basis`) has source `frei` — the x-transform only defines `inspire`/`gemet`/`umthes`/`frei`; the distributor contact `Some Organisation` is not in `contacts`; `DQ_GriddedDataPositionalAccuracy` (43) has no index field.
 
+- [ ] TASK-049: `ingrid.data_quality.positional_accuracy` horizontal / vertical as written by IGE
+  - Refs: FR-004, TASK-045
+  - File: `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getDataQuality()`), `server/test/data/csw/ige-full/elasticsearch/*.json`
+  - Details: IGE (`dataQuality.jte`, `GeodatasetModelTransformer.vertical/horizontalPositionalAccuracy`) writes both values as `gmd:DQ_AbsoluteExternalPositionalAccuracy`, told apart by `gmd:measureDescription/gco:CharacterString` `vertical` (1D) / `geographic` (2D). The mapper takes the first `DQ_AbsoluteExternalPositionalAccuracy` as horizontal (in the IGE record that is the vertical one) and reads vertical from `DQ_RelativeInternalPositionalAccuracy[measureDescription='vertical']`, following the `ingrid-index` x-transform, which does not match IGE. Read horizontal from the report with `geographic`, vertical from the one with `vertical`; decide on a fallback for reports without `measureDescription` (e.g. a single unlabeled `DQ_AbsoluteExternalPositionalAccuracy` → horizontal). New-shape only.
+  - Acceptance: `ige-full` → `horizontal: 654`, `vertical: 66`; other csw fixtures unchanged unless their inputs carry such reports; checks as TASK-028. Note for `ingrid-index`: x-transform of `positional_accuracy.vertical`/`horizontal` to be corrected.
+
+- [ ] TASK-050: `ingrid.spatial_resolution_scale.resolution_ground` / `resolution_scan`
+  - Refs: FR-004, TASK-045
+  - File: `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getSpatialResolutionScale()`), `server/test/data/csw/ige-full/elasticsearch/*.json`
+  - Details: the XPaths use `gmd:distance/gmd:Distance` instead of `gmd:distance/gco:Distance`, and only the first `gmd:MD_Resolution` is selected although ISO/IGE write one `MD_Resolution` per value (scale, ground, scan). x-transform (`ingrid-index`): `resolution_ground` = `gco:Distance` with a unit other than `dpi`, converted to metres by `@uom`; `resolution_scan` = `gco:Distance` with `@uom="dpi"`. Read across all `MD_Resolution` of the identification; reuse the unit table of TASK-047 for the conversion. New-shape only (`ingrid.mapper.ts` deprecated path untouched).
+  - Acceptance: `ige-full` → `scale: 1000`, `resolution_ground: 100`, `resolution_scan: 300`; other csw fixtures re-checked (inputs with `gco:Distance` change accordingly); checks as TASK-028.
+
+- [ ] TASK-051: `ingrid.licenses` `useLimitations` from `gmd:useLimitation`
+  - Refs: FR-004, TASK-033, TASK-045
+  - File: `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getLicenses()`), `server/test/data/csw/*/elasticsearch/*.json` (if affected)
+  - Details: `getLicenses()` builds `useLimitations` from `getObjectUse()`, which reads `gmd:otherConstraints` next to a `gmd:useLimitation` instead of `gmd:useLimitation` itself (x-transform: `useLimitations` ↔ `gmd:MD_Constraints/gmd:useLimitation`). `getObjectUse()` also feeds the deprecated `object_use` → leave it unchanged and read `./*/gmd:resourceConstraints/*/gmd:useLimitation/gco:CharacterString` directly in `getLicenses()`.
+  - Acceptance: `ige-full` → `useLimitations` item `Datenlizenz Deutschland - Namensnennung - Version 2.0; …`; changed live fixtures reviewed; `test/data-deprecated` unchanged; checks as TASK-028.
+
+- [ ] TASK-052: `ingrid.data_quality.qualities` only quantitative reports
+  - Refs: FR-004, TASK-034, TASK-045
+  - File: `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getDataQuality()`), `server/test/data/csw/*/elasticsearch/*.json` (if affected)
+  - Details: every `gmd:report` whose element is in the quality type map becomes an entry, so INSPIRE conformance reports (`DQ_DomainConsistency` with `DQ_ConformanceResult`) appear as empty `{ type: 'domainConsistency' }`. x-transform: one entry per report with `gmd:DQ_QuantitativeResult`. Filter accordingly.
+  - Acceptance: `ige-full` → no entries without value; changed live fixtures reviewed: today 12 live documents (eba 3, gdi-de 5, nokis 3, wsv-wsv 1) contain only such empty entries (35 in total) and lose `qualities` completely; checks as TASK-028.
+
+- [ ] TASK-053: `contacts[].street` from `gmd:deliveryPoint`
+  - Refs: FR-004, TASK-045
+  - File: `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getContacts()`) or `server/app/importer/csw/csw.mapper.ts` (`getContactPoints()`), `server/test/data/csw/*/elasticsearch/*.json`
+  - Details: `getContactPoints()` selects the `gmd:deliveryPoint/gco:CharacterString` nodes and then calls `getCharacterStringContent()` on them, which looks for a further `gco:CharacterString` child → every delivery point is empty, `join(', ')` yields `", "` (or `""`). x-transform (`ingrid-index` `parts/core.yaml`): several delivery points joined by comma, except the post box (→ `pobox`). `getContactPoints()` is shared with the diplanung profile (`diplanung.csw.mapper.ts`) → decide between a fix in the base mapper (diplanung tests/fixtures to check) and reading the street in the ingrid mapper only; `pobox` detection to be defined.
+  - Acceptance: `ige-full` contact `Wemove Test` → `street: "Hanauer Landstr. 52"` (post box `Postbox 123,P123 Frankfurt` not in `street`); changed fixtures reviewed; deprecated `street` (own XPath) unchanged; checks as TASK-028.
+
+- [ ] TASK-054: `crs` from `gmx:Anchor` reference system codes
+  - Refs: FR-004, TASK-045
+  - File: `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getCrs()`), `server/test/data/csw/*/elasticsearch/*.json` (if affected)
+  - Details: `getReferenceSystems()` only reads `gmd:code/gco:CharacterString`, so an Anchor code (`<gmx:Anchor xlink:href="http://www.opengis.net/def/crs/EPSG/0/3068">EPSG 3068: DHDN / Soldner Berlin</gmx:Anchor>`) yields `undefined` and `getCrs()` drops it. `getReferenceSystems()` also feeds the deprecated `referencesystem_id`/`referencesystem_value` → leave it unchanged; read Anchor codes in `getCrs()` only. Check the `ingrid-index` x-transform of `crs` for the expected value form (URI from `@xlink:href` vs. text).
+  - Acceptance: `ige-full` → `crs` contains EPSG 3068 in the documented form; other fixtures unchanged unless their inputs use Anchor codes; `test/data-deprecated` unchanged; checks as TASK-028.
+
 - [ ] TASK-038: opendata `dcat.landing_page` / `legal_basis` → `opendata.landing_page` / `opendata.legal_basis`
   - Refs: FR-004, schema commit bef2ed5f
   - File: `server/app/profiles/ingrid/model/opendataindex.document.ts`, `server/app/profiles/ingrid/mapper/ingrid.mapper.ts` (`buildOpendataDocument()`, `getDcat()` → `getLandingPage()`), `server/app/profiles/ingrid/mapper/{ingrid.ckan,ingrid.dcatapde,ingrid.genesis}.mapper.ts`, `server/app/profiles/ingrid/persistence/mappings/opendata.json`, genesis fixtures
