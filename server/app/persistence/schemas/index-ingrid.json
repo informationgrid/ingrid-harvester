@@ -29,6 +29,7 @@
         "metadata": {
           "description": "Enthält Metadaten über den Datensatz. Dies kann das Erstellungs- oder Änderungsdatum sein, oder aus welcher Quelle der Datensatz stammt.",
           "type": "object",
+          "unevaluatedProperties": false,
           "properties": {
             "data_type": {
               "type": "string",
@@ -97,6 +98,7 @@
               ]
             },
             "datasource": {
+              "unevaluatedProperties": false,
               "properties": {
                 "id": {
                   "type": "string",
@@ -154,6 +156,7 @@
         "contacts": {
           "type": "array",
           "items": {
+            "unevaluatedProperties": false,
             "properties": {
               "role": {
                 "type": "string"
@@ -164,6 +167,7 @@
               "communications": {
                 "type": "array",
                 "items": {
+                  "unevaluatedProperties": false,
                   "properties": {
                     "type": {
                       "type": "string",
@@ -212,6 +216,7 @@
           "items": {
             "type": "object",
             "title": "Spatial Core",
+            "unevaluatedProperties": false,
             "properties": {
               "name": {
                 "type": "string",
@@ -468,6 +473,7 @@
               },
               "administrative": {
                 "type": "object",
+                "unevaluatedProperties": false,
                 "properties": {
                   "state": {
                     "type": "array",
@@ -524,11 +530,13 @@
           "description": "Gültigkeitsdatumsbereich der beschriebenen Daten",
           "$comment": "Ehemaliges Indexfeld: object_date",
           "type": "object",
+          "unevaluatedProperties": true,
           "properties": {
             "data_temporal": {
               "type": "array",
               "items": {
                 "type": "object",
+                "unevaluatedProperties": false,
                 "properties": {
                   "date": {
                     "type": "string",
@@ -539,6 +547,7 @@
                     "type": "object",
                     "title": "Zeitabschnitt",
                     "description": "Zeitabschnitt des Ereignis. Diese Angabe ist optimiert für die Verwendung in Elasticsearch, welches den Typ \"date_range\" unterstützt und optimiert abgefragt werden kann.",
+                    "unevaluatedProperties": false,
                     "properties": {
                       "gte": {
                         "type": "string",
@@ -595,6 +604,7 @@
           "items": {
             "type": "object",
             "title": "item",
+            "unevaluatedProperties": false,
             "properties": {
               "term": {
                 "type": "string",
@@ -628,6 +638,7 @@
           "items": {
             "type": "object",
             "title": "item",
+            "unevaluatedProperties": false,
             "properties": {
               "url": {
                 "type": "string",
@@ -684,6 +695,7 @@
         "SpatialItem": {
           "title": "Spatial Core",
           "type": "object",
+          "unevaluatedProperties": false,
           "properties": {
             "name": {
               "type": "string",
@@ -940,6 +952,7 @@
             },
             "administrative": {
               "type": "object",
+              "unevaluatedProperties": false,
               "properties": {
                 "state": {
                   "type": "array",
@@ -981,6 +994,7 @@
         },
         "Metadata": {
           "type": "object",
+          "unevaluatedProperties": false,
           "properties": {
             "data_type": {
               "type": "string",
@@ -1049,6 +1063,7 @@
               ]
             },
             "datasource": {
+              "unevaluatedProperties": false,
               "properties": {
                 "id": {
                   "type": "string",
@@ -1085,6 +1100,7 @@
         },
         "ReferenceItem": {
           "type": "object",
+          "unevaluatedProperties": false,
           "properties": {
             "url": {
               "type": "string",
@@ -1146,6 +1162,7 @@
           "allOf": [
             {
               "type": "object",
+              "unevaluatedProperties": false,
               "properties": {
                 "data_type": {
                   "type": "string",
@@ -1214,6 +1231,7 @@
                   ]
                 },
                 "datasource": {
+                  "unevaluatedProperties": false,
                   "properties": {
                     "id": {
                       "type": "string",
@@ -1281,11 +1299,13 @@
           "allOf": [
             {
               "type": "object",
+              "unevaluatedProperties": true,
               "properties": {
                 "data_temporal": {
                   "type": "array",
                   "items": {
                     "type": "object",
+                    "unevaluatedProperties": false,
                     "properties": {
                       "date": {
                         "type": "string",
@@ -1296,6 +1316,7 @@
                         "type": "object",
                         "title": "Zeitabschnitt",
                         "description": "Zeitabschnitt des Ereignis. Diese Angabe ist optimiert für die Verwendung in Elasticsearch, welches den Typ \"date_range\" unterstützt und optimiert abgefragt werden kann.",
+                        "unevaluatedProperties": false,
                         "properties": {
                           "gte": {
                             "type": "string",
@@ -1436,6 +1457,7 @@
               "items": {
                 "type": "object",
                 "title": "item",
+                "unevaluatedProperties": false,
                 "properties": {
                   "type": {
                     "type": "string",
@@ -1451,6 +1473,7 @@
                     "description": "Liste von Einschränkungen oder Nutzungsbedingungen abhängig vom Typ. Es wird die Codeliste 6500 für useConstraints, 6010 für accessConstraints und freie Werte für useLimitations verwendet.",
                     "items": {
                       "title": "item",
+                      "unevaluatedProperties": false,
                       "properties": {
                         "name": {
                           "type": [
@@ -1512,6 +1535,7 @@
                   "title": "Vector",
                   "description": "Beschreibt die digitale Repräsentation als eine Liste von Vektor-Daten.",
                   "items": {
+                    "unevaluatedProperties": false,
                     "properties": {
                       "topology": {
                         "type": "string",
@@ -1531,10 +1555,12 @@
                 "grid": {
                   "title": "Raster/Gitter",
                   "description": "Enthält die Information über die Strukturelemente der Rasterdaten. Aktuell nicht im Portal angezeigt?",
+                  "unevaluatedProperties": false,
                   "properties": {
                     "axes": {
                       "type": "array",
                       "items": {
+                        "unevaluatedProperties": false,
                         "properties": {
                           "label": {
                             "type": "string",
@@ -1545,7 +1571,7 @@
                             "description": "Beschreibt die Anzahl der Achsen im Raster"
                           },
                           "resolution": {
-                            "type": "integer",
+                            "type": "number",
                             "description": "Beschreibt die Auflösung der Achsen im Raster in Metern"
                           }
                         }
@@ -1572,6 +1598,7 @@
                     },
                     "rectified": {
                       "title": "Georektifiziertes Raster",
+                      "unevaluatedProperties": false,
                       "properties": {
                         "checkpoint_availability": {
                           "type": "boolean",
@@ -1599,6 +1626,7 @@
                     },
                     "referenced": {
                       "title": "Georeferenzierbares Raster",
+                      "unevaluatedProperties": false,
                       "properties": {
                         "orientation_parameter_availability": {
                           "type": "boolean",
@@ -1620,6 +1648,7 @@
             },
             "spatial_resolution_scale": {
               "type": "object",
+              "unevaluatedProperties": false,
               "properties": {
                 "scale": {
                   "type": "integer",
@@ -1644,6 +1673,7 @@
                 "type": "object",
                 "title": "Verknüpfung",
                 "description": "Interne InGrid-Verknüpfung mit einem anderen Datensatz oder einer Adresse.",
+                "unevaluatedProperties": false,
                 "properties": {
                   "uuid": {
                     "type": "string",
@@ -1680,6 +1710,7 @@
               "type": "object",
               "title": "Datenherkunft",
               "description": "Angaben zur Herkunft und Entstehung der Daten (Lineage)",
+              "unevaluatedProperties": false,
               "properties": {
                 "statement": {
                   "type": "string",
@@ -1707,6 +1738,7 @@
               "description": "Für die Präsentation genormter Objekte und Sachverhalte können für die Nutzer der Daten zur Herstellung von Karten abgestimmte Symbole vorgegeben werden",
               "items": {
                 "type": "object",
+                "unevaluatedProperties": false,
                 "properties": {
                   "title": {
                     "type": "string",
@@ -1728,6 +1760,7 @@
               "description": "An dieser Stelle besteht die Möglichkeit, den Daten zugrunde liegende Klassifizierungsschlüssel zu benennen.",
               "items": {
                 "type": "object",
+                "unevaluatedProperties": false,
                 "properties": {
                   "title": {
                     "type": "string",
@@ -1753,6 +1786,7 @@
             },
             "spatial": {
               "type": "object",
+              "unevaluatedProperties": false,
               "properties": {
                 "description": {
                   "type": "string",
@@ -1762,6 +1796,7 @@
                   "type": "object",
                   "title": "Vertikale Ausdehnung",
                   "description": "Höhenbereich der beschriebenen Daten, z. B. für Höhenmodelle.",
+                  "unevaluatedProperties": false,
                   "properties": {
                     "minimum": {
                       "type": "number",
@@ -1807,6 +1842,7 @@
               "type": "array",
               "items": {
                 "title": "item",
+                "unevaluatedProperties": false,
                 "properties": {
                   "pass": {
                     "type": "string",
@@ -1839,11 +1875,13 @@
               "type": "string"
             },
             "data_quality": {
+              "unevaluatedProperties": false,
               "properties": {
                 "completeness_omission": {
                   "type": "number"
                 },
                 "positional_accuracy": {
+                  "unevaluatedProperties": false,
                   "properties": {
                     "horizontal": {
                       "type": "number"
@@ -1857,6 +1895,7 @@
                   "type": "array",
                   "items": {
                     "type": "object",
+                    "unevaluatedProperties": false,
                     "properties": {
                       "type": {
                         "type": "string",
@@ -1908,6 +1947,7 @@
             "service": {
               "type": "object",
               "description": "Angaben zu einem Geodaten-Dienst",
+              "unevaluatedProperties": false,
               "properties": {
                 "type": {
                   "type": "string",
@@ -1934,6 +1974,7 @@
                 "operations": {
                   "type": "array",
                   "items": {
+                    "unevaluatedProperties": false,
                     "properties": {
                       "name": {
                         "type": "string",
@@ -1968,6 +2009,7 @@
                 },
                 "doi": {
                   "type": "object",
+                  "unevaluatedProperties": false,
                   "properties": {
                     "identifier": {
                       "type": "string",
@@ -1987,6 +2029,7 @@
             },
             "publication": {
               "type": "object",
+              "unevaluatedProperties": false,
               "properties": {
                 "author": {
                   "type": "string",
@@ -2053,6 +2096,7 @@
             },
             "project": {
               "type": "object",
+              "unevaluatedProperties": false,
               "properties": {
                 "participants": {
                   "type": "string",
@@ -2070,11 +2114,13 @@
             },
             "database_collection": {
               "type": "object",
+              "unevaluatedProperties": false,
               "properties": {
                 "catalog_categories": {
                   "type": "array",
                   "items": {
                     "type": "object",
+                    "unevaluatedProperties": false,
                     "properties": {
                       "title": {
                         "type": "string",
@@ -2095,6 +2141,7 @@
                   "type": "array",
                   "items": {
                     "type": "object",
+                    "unevaluatedProperties": false,
                     "properties": {
                       "parameter": {
                         "type": "string",
@@ -2119,6 +2166,7 @@
             },
             "information_system": {
               "type": "object",
+              "unevaluatedProperties": false,
               "properties": {
                 "service_type": {
                   "type": "string",
@@ -2156,6 +2204,7 @@
                   "description": "URLs des Informations-Systems",
                   "items": {
                     "type": "object",
+                    "unevaluatedProperties": false,
                     "properties": {
                       "name": {
                         "type": "string",
@@ -2207,6 +2256,7 @@
           "allOf": [
             {
               "type": "object",
+              "unevaluatedProperties": false,
               "properties": {
                 "data_type": {
                   "type": "string",
@@ -2275,6 +2325,7 @@
                   ]
                 },
                 "datasource": {
+                  "unevaluatedProperties": false,
                   "properties": {
                     "id": {
                       "type": "string",
@@ -2342,11 +2393,13 @@
           "allOf": [
             {
               "type": "object",
+              "unevaluatedProperties": true,
               "properties": {
                 "data_temporal": {
                   "type": "array",
                   "items": {
                     "type": "object",
+                    "unevaluatedProperties": false,
                     "properties": {
                       "date": {
                         "type": "string",
@@ -2357,6 +2410,7 @@
                         "type": "object",
                         "title": "Zeitabschnitt",
                         "description": "Zeitabschnitt des Ereignis. Diese Angabe ist optimiert für die Verwendung in Elasticsearch, welches den Typ \"date_range\" unterstützt und optimiert abgefragt werden kann.",
+                        "unevaluatedProperties": false,
                         "properties": {
                           "gte": {
                             "type": "string",
@@ -2497,6 +2551,7 @@
               "items": {
                 "type": "object",
                 "title": "item",
+                "unevaluatedProperties": false,
                 "properties": {
                   "type": {
                     "type": "string",
@@ -2512,6 +2567,7 @@
                     "description": "Liste von Einschränkungen oder Nutzungsbedingungen abhängig vom Typ. Es wird die Codeliste 6500 für useConstraints, 6010 für accessConstraints und freie Werte für useLimitations verwendet.",
                     "items": {
                       "title": "item",
+                      "unevaluatedProperties": false,
                       "properties": {
                         "name": {
                           "type": [
@@ -2573,6 +2629,7 @@
                   "title": "Vector",
                   "description": "Beschreibt die digitale Repräsentation als eine Liste von Vektor-Daten.",
                   "items": {
+                    "unevaluatedProperties": false,
                     "properties": {
                       "topology": {
                         "type": "string",
@@ -2592,10 +2649,12 @@
                 "grid": {
                   "title": "Raster/Gitter",
                   "description": "Enthält die Information über die Strukturelemente der Rasterdaten. Aktuell nicht im Portal angezeigt?",
+                  "unevaluatedProperties": false,
                   "properties": {
                     "axes": {
                       "type": "array",
                       "items": {
+                        "unevaluatedProperties": false,
                         "properties": {
                           "label": {
                             "type": "string",
@@ -2606,7 +2665,7 @@
                             "description": "Beschreibt die Anzahl der Achsen im Raster"
                           },
                           "resolution": {
-                            "type": "integer",
+                            "type": "number",
                             "description": "Beschreibt die Auflösung der Achsen im Raster in Metern"
                           }
                         }
@@ -2633,6 +2692,7 @@
                     },
                     "rectified": {
                       "title": "Georektifiziertes Raster",
+                      "unevaluatedProperties": false,
                       "properties": {
                         "checkpoint_availability": {
                           "type": "boolean",
@@ -2660,6 +2720,7 @@
                     },
                     "referenced": {
                       "title": "Georeferenzierbares Raster",
+                      "unevaluatedProperties": false,
                       "properties": {
                         "orientation_parameter_availability": {
                           "type": "boolean",
@@ -2681,6 +2742,7 @@
             },
             "spatial_resolution_scale": {
               "type": "object",
+              "unevaluatedProperties": false,
               "properties": {
                 "scale": {
                   "type": "integer",
@@ -2705,6 +2767,7 @@
                 "type": "object",
                 "title": "Verknüpfung",
                 "description": "Interne InGrid-Verknüpfung mit einem anderen Datensatz oder einer Adresse.",
+                "unevaluatedProperties": false,
                 "properties": {
                   "uuid": {
                     "type": "string",
@@ -2741,6 +2804,7 @@
               "type": "object",
               "title": "Datenherkunft",
               "description": "Angaben zur Herkunft und Entstehung der Daten (Lineage)",
+              "unevaluatedProperties": false,
               "properties": {
                 "statement": {
                   "type": "string",
@@ -2768,6 +2832,7 @@
               "description": "Für die Präsentation genormter Objekte und Sachverhalte können für die Nutzer der Daten zur Herstellung von Karten abgestimmte Symbole vorgegeben werden",
               "items": {
                 "type": "object",
+                "unevaluatedProperties": false,
                 "properties": {
                   "title": {
                     "type": "string",
@@ -2789,6 +2854,7 @@
               "description": "An dieser Stelle besteht die Möglichkeit, den Daten zugrunde liegende Klassifizierungsschlüssel zu benennen.",
               "items": {
                 "type": "object",
+                "unevaluatedProperties": false,
                 "properties": {
                   "title": {
                     "type": "string",
@@ -2814,6 +2880,7 @@
             },
             "spatial": {
               "type": "object",
+              "unevaluatedProperties": false,
               "properties": {
                 "description": {
                   "type": "string",
@@ -2823,6 +2890,7 @@
                   "type": "object",
                   "title": "Vertikale Ausdehnung",
                   "description": "Höhenbereich der beschriebenen Daten, z. B. für Höhenmodelle.",
+                  "unevaluatedProperties": false,
                   "properties": {
                     "minimum": {
                       "type": "number",
@@ -2868,6 +2936,7 @@
               "type": "array",
               "items": {
                 "title": "item",
+                "unevaluatedProperties": false,
                 "properties": {
                   "pass": {
                     "type": "string",
@@ -2900,11 +2969,13 @@
               "type": "string"
             },
             "data_quality": {
+              "unevaluatedProperties": false,
               "properties": {
                 "completeness_omission": {
                   "type": "number"
                 },
                 "positional_accuracy": {
+                  "unevaluatedProperties": false,
                   "properties": {
                     "horizontal": {
                       "type": "number"
@@ -2918,6 +2989,7 @@
                   "type": "array",
                   "items": {
                     "type": "object",
+                    "unevaluatedProperties": false,
                     "properties": {
                       "type": {
                         "type": "string",
@@ -2969,6 +3041,7 @@
             "service": {
               "type": "object",
               "description": "Angaben zu einem Geodaten-Dienst",
+              "unevaluatedProperties": false,
               "properties": {
                 "type": {
                   "type": "string",
@@ -2995,6 +3068,7 @@
                 "operations": {
                   "type": "array",
                   "items": {
+                    "unevaluatedProperties": false,
                     "properties": {
                       "name": {
                         "type": "string",
@@ -3029,6 +3103,7 @@
                 },
                 "doi": {
                   "type": "object",
+                  "unevaluatedProperties": false,
                   "properties": {
                     "identifier": {
                       "type": "string",
@@ -3048,6 +3123,7 @@
             },
             "publication": {
               "type": "object",
+              "unevaluatedProperties": false,
               "properties": {
                 "author": {
                   "type": "string",
@@ -3114,6 +3190,7 @@
             },
             "project": {
               "type": "object",
+              "unevaluatedProperties": false,
               "properties": {
                 "participants": {
                   "type": "string",
@@ -3131,11 +3208,13 @@
             },
             "database_collection": {
               "type": "object",
+              "unevaluatedProperties": false,
               "properties": {
                 "catalog_categories": {
                   "type": "array",
                   "items": {
                     "type": "object",
+                    "unevaluatedProperties": false,
                     "properties": {
                       "title": {
                         "type": "string",
@@ -3156,6 +3235,7 @@
                   "type": "array",
                   "items": {
                     "type": "object",
+                    "unevaluatedProperties": false,
                     "properties": {
                       "parameter": {
                         "type": "string",
@@ -3180,6 +3260,7 @@
             },
             "information_system": {
               "type": "object",
+              "unevaluatedProperties": false,
               "properties": {
                 "service_type": {
                   "type": "string",
@@ -3217,6 +3298,7 @@
                   "description": "URLs des Informations-Systems",
                   "items": {
                     "type": "object",
+                    "unevaluatedProperties": false,
                     "properties": {
                       "name": {
                         "type": "string",
