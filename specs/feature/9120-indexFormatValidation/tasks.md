@@ -440,3 +440,78 @@ design: ./design.md
     - Specs: live integration 13/13 (csw ×7 incl. `ige-full`, genesis, json, kld, oai ×2, isolation; 7 pending = WFS `describe.skip`); deprecated integration 16/16; `ingrid.mapper.spec.ts` 9/9 and `mapping.utils.spec.ts` 8/8 after TASK-058; `csw.catalog.spec.ts` 4/4; `importer.spec.ts` 3/3; `harvest-log-appender.spec.ts` 5/5.
     - Deprecated format: `git diff --ignore-cr-at-eol bef2ed5f -- server/test/data-deprecated` and of the `*.deprecated.ts` types empty.
   - Not caused by this feature (pre-existing, unchanged): `genesis.mapper.spec.ts` 3 failing (`getKeywords()` ×2, `getDistributions()` URL template) and `genesis.importer.spec.ts` 8 failing (`this.requestLimit is not a function`, timeouts) — identical failures at `23d05139` (before TASK-028, checked in a temporary worktree). Running all specs in one mocha process fails in a root `before all` hook: `csw.catalog.spec.ts` and `genesis.importer.spec.ts` both stub `getDatabaseUtils` without restoring (`Attempted to wrap getDatabaseUtils which is already wrapped`) → spec groups run separately.
+
+## Open follow-ups (collected after TASK-041)
+
+Points noted during TASK-028 – TASK-058 that were out of scope there. Harvester tasks first, then points for other repositories (tracked here, implemented there).
+
+- [ ] TASK-059: `ingrid.licenses`: resolve the GDI-DE JSON license text (`useConstraints`), drop it from `accessConstraints`
+  - Refs: FR-004, TASK-033, TASK-042, TASK-051
+  - File: `server/app/profiles/ingrid/utils/codelist.ts` (`init()`), `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getLicenses()`, `getObjectUseConstraint()`), csw fixtures
+  - Details: GDI-DE convention: a license is written into `gmd:otherConstraints` up to four times — license text, optional note, optional `Quellenvermerk: <source>`, JSON `{ "id", "name", "url", "quelle" }`. Decisions (user, 2026-11-23), following IGE:
+    - `useConstraints` as the IGE ISO import (`GeneralMapper.getUseConstraints()`): when a group has a JSON text, only the JSON becomes the item — `name` ← `name`, `name_ref_uri` ← codelist 6500 entry found by `url` (fallback `name`) via `getIdByUrlOrText()` (6500 entries carry the same JSON in `data`; ids may differ, e.g. `dl-de-by-2.0` vs. `dl-by-de/2.0`, the url matches), `source` ← `quelle`; the license text (and note / `Quellenvermerk`) of that group are not items. Without JSON as today (text item, `source` from `Quellenvermerk`), additionally `name_ref_uri` via 6500 by text if it matches. The note has no index field (IGE keeps it in its own model only).
+    - `accessConstraints`: a JSON text is no item (it describes a license, which is listed under `useConstraints`). IGE has no rule for this case (its export writes access and use constraints into separate `MD_LegalConstraints`, its import takes all `otherConstraints` of an element with `accessConstraints` unfiltered).
+    - Load `codelist_6500.xml` in `Codelist.init()` (shipped, not loaded so far).
+    - Deprecated format unchanged: `getObjectAccess()`, `getObjectUse()`, `getObjectUseConstraintDeprecated()` untouched (`getObjectUseConstraint()` only feeds the new `getLicenses()`).
+  - Acceptance: nokis ×3 `useConstraints` → one item `{ name: "Datenlizenz Deutschland – Namensnennung – Version 2.0", name_ref_uri: "/codelist/6500/1", source: "Nationalparkverwaltung Niedersächsisches Wattenmeer" }`, `accessConstraints` without the JSON text; other csw fixtures reviewed (groups with/without JSON, `Quellenvermerk`); scratch check of the group variants (text; text + JSON; text + note + source + JSON; JSON with unknown url → name only, no ref); `test/data-deprecated` unchanged; checks as TASK-028.
+  - Note (not part of this task, source data): nokis records put `accessConstraints` and `useConstraints` into one `MD_LegalConstraints`. ISO 19139 attaches `gmd:otherConstraints` to the whole element, so the use-constraint text also stays an `accessConstraints` item (as in the deprecated `object_access` and in an IGE import). The GDI-DE conventions require separate `MD_LegalConstraints` for access and use constraints; the harvester cannot attribute the texts reliably → to be reported to the data provider (NOKIS), no harvester change.
+
+- [ ] TASK-060: `ingrid.service.has_access_constraints` with `gmx:Anchor` access constraints
+  - Refs: FR-004, TASK-042
+  - File: `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getService()`)
+  - Details: the flag is derived from `getObjectAccess()`, which reads only `gco:CharacterString` and is shared with the deprecated `object_access`. For INSPIRE Anchor values (`LimitationsOnPublicAccess/…`) the flag is only correct by accident (`noLimitations` → `false`); a restricting Anchor value is not detected. Derive it in the new shape from the access constraint items of TASK-042 (e.g. 6010 key ≠ `1`), leave `getObjectAccess()` unchanged.
+  - Acceptance: scratch check with an Anchor `noLimitations` → `false` and a restricting Anchor → `true`; fixtures reviewed; `test/data-deprecated` unchanged.
+
+- [ ] TASK-061: `contacts` for services and further roles
+  - Refs: FR-004, TASK-045, TASK-053
+  - File: `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getContacts()`), possibly `server/app/importer/csw/csw.mapper.ts` (`getContactPoints()`)
+  - Details: `getContactPoints()` reads only `gmd:MD_DataIdentification/gmd:pointOfContact` and `gmd:contact` — service contacts (`srv:SV_ServiceIdentification/gmd:pointOfContact`) are missing, as is the distributor (`gmd:distributionInfo/*/gmd:distributor/*/gmd:distributorContact`, `Some Organisation` in `ige-full`). Check the `ingrid-index` x-transform of `contacts` for which roles belong in the index; `getStreet()` (TASK-053) relies on the same party order as `getContactPoints()`, so both must change together. Base mapper is shared with diplanung/`getContactPoint()` → prefer the ingrid mapper.
+  - Acceptance: service fixtures (eba/gdi-de services) and `ige-full` reviewed against the x-transform; diplanung output unchanged.
+
+- [ ] TASK-062: clarify keyword sources for further thesauri
+  - Refs: FR-004, TASK-045
+  - File: `server/app/profiles/ingrid/mapper/ingrid.csw.mapper.ts` (`getKeywords()`), `ige-full` fixture
+  - Details: in `ige-full` the keywords of the thesauri `INSPIRE priority data set` and `Spatial scope` are missing and `Nieders. Abfallgesetz (NAbfG)` (thesaurus `Further legal basis`) gets source `frei`. The x-transform only defines `inspire` / `gemet` / `umthes` / `frei` (= without thesaurus). Clarify with the schema owners whether further sources exist (or whether these keywords map to other fields, e.g. legal basis / INSPIRE priority data sets), then align the mapper.
+  - Acceptance: decision documented here; mapper and `ige-full` fixture follow it.
+
+- [ ] TASK-063: clarify an index field for `DQ_GriddedDataPositionalAccuracy`
+  - Refs: FR-004, TASK-045, TASK-049
+  - File: (decision; then `index-ingrid` schema in `ingrid-index`, harvester mapper/mapping)
+  - Details: IGE writes the gridded data positional accuracy (`GeodatasetModelTransformer.griddedDataPositionalAccuracy`, `ige-full`: 43) as its own report; `positional_accuracy` has only `horizontal`/`vertical` and the quality type map does not contain it. Decide whether the schema gets a field (e.g. `positional_accuracy.gridded`) or whether it is intentionally not indexed.
+  - Acceptance: decision documented; if a field is added: schema, mapping, mapper and `ige-full` fixture.
+
+- [ ] TASK-064: shared contact street bug in the base mappers (CSW / OAI)
+  - Refs: TASK-053
+  - File: `server/app/importer/csw/csw.mapper.ts` (`getContactPoints()`), `server/app/importer/oai/iso19139/oai.mapper.ts`
+  - Details: both select `gmd:deliveryPoint/gco:CharacterString` and then call `getCharacterStringContent()` on it, which looks for another `gco:CharacterString` child → `hasStreetAddress` is always empty (or `", "`). Affects `CswMapper.getContactPoint()` users and the diplanung profile (`has_street_address`, DCAT-AP.PLU export). The ingrid profile reads the street itself since TASK-053 (decided to keep). Fix in the base (`textContent`), review the outputs of the affected profiles and their fixtures; afterwards the ingrid workaround could use `cp.hasStreetAddress` (post box filtering stays in the ingrid mapper).
+  - Acceptance: diplanung/oai fixtures and specs reviewed and green; ingrid output unchanged.
+
+- [ ] TASK-065: pre-existing GENESIS spec failures
+  - Refs: TASK-041
+  - File: `server/test/importer/genesis/genesis.mapper.spec.ts`, `server/test/importer/genesis/genesis.importer.spec.ts`, `server/app/importer/genesis/*`
+  - Details: failing already at `23d05139` (before TASK-028): `genesis.mapper.spec.ts` 3 (`getKeywords()` ×2 return `[]`, `getDistributions()` URL template returns `[]`), `genesis.importer.spec.ts` 8 (`this.requestLimit is not a function`, timeouts / `expected false to be true` in `processObject` error paths). Find out whether specs or implementation are outdated.
+  - Acceptance: both spec files green.
+
+- [ ] TASK-066: spec isolation — `getDatabaseUtils` stubbed twice in root hooks
+  - Refs: TASK-041
+  - File: `server/test/catalog/csw/csw.catalog.spec.ts` (`before`, line ~46), `server/test/importer/genesis/genesis.importer.spec.ts` (`before`, line ~56)
+  - Details: both stub `getDatabaseUtils` in a `before` hook without restoring it; in one mocha process (`npm test`) the second fails with `Attempted to wrap getDatabaseUtils which is already wrapped` and no spec runs. Restore the stubs (`after`/sandbox) or scope them to the `describe`.
+  - Acceptance: `npm test` runs all spec files in one process.
+
+- [ ] TASK-067: WFS live integration tests
+  - Refs: TASK-029, TASK-041
+  - File: `server/test/integration/wfs.integration.spec.ts` (`describe.skip`), `server/test/data/wfs/*/elasticsearch/` (empty)
+  - Details: the live WFS suite is skipped and has no expected documents, so the new-shape WFS output (e.g. `ingrid.document_type` `InGridGeoDataset`, TASK-029) is only covered by the deprecated suite. Generate and review the expected documents (as in TASK-045) and enable the suite.
+  - Acceptance: WFS live suite enabled and green; documents validate against `index-ingrid.json`.
+
+- [ ] TASK-068: (other repo: `ingrid-index`) x-transform corrections
+  - Refs: TASK-046, TASK-048, TASK-049, TASK-053
+  - File: `ingrid-index` `src/index-ingrid.yaml`, `src/parts/core.yaml`
+  - Details: (1) `ingrid.data_quality.positional_accuracy`: IGE writes horizontal and vertical as `DQ_AbsoluteExternalPositionalAccuracy` with `gmd:measureDescription` `geographic` / `vertical` (and `gml:quantityType`), not `DQ_RelativeInternalPositionalAccuracy` (TASK-049). (2) `contacts.pobox`: the x-transform names the prefix `Postfach` (marked UNKLAR), IGE writes and imports `Postbox <number>,<zip> <city>`; IGE indexes `pocode`, not `pobox` (TASK-053). (3) `ingrid.publication.document_type`: add that IGE writes `gmd:resourceFormat` only for publications (TASK-048). (4) `ingrid.spatial.description` / `vertical_extent`: mention `srv:extent` for services (TASK-046).
+  - Acceptance: x-transform updated, `npm run check` in `ingrid-index` OK; harvester comments referring to the x-transform still true.
+
+- [ ] TASK-069: (other repo: `ingrid-editor`) ISO export deviations found by the harvester
+  - Refs: TASK-047, TASK-053
+  - File: `ingrid-editor` `server/src/main/resources/templates/export/ingrid/idf/shared-general.jte`, importer `GeodatasetMapper.kt`
+  - Details: (1) grid axis resolution written as `gco:Scale uom="meter"` (dimensionless ratio) instead of `gco:Length uom="m"` as documented in `ingrid-index`; the IGE import reads only `gco:Scale`. (2) corner points written as one `gml:Point/gml:coordinates` (deprecated in GML 3.2) from a free-text field instead of `gml:pos` per corner. The harvester reads both forms (TASK-047), so a change in IGE needs no harvester change.
+  - Acceptance: decision of the IGE team documented here.
