@@ -96,7 +96,7 @@ describe('ingridMapper — DocumentKind resolution and schema validation', funct
             const doc: any = await mapper.createIndexDocument();
             expect(doc.$schema).to.equal('https://schema.ingrid-oss.eu/index/draft/schema/index-ingrid.json');
             expect(doc.ingrid).to.not.be.undefined;
-            expect(doc.dcat).to.be.undefined;
+            expect(doc.opendata).to.be.undefined;
         });
 
         it('builds an opendata-shaped document, stamps $schema from index-opendata.json, and validates cleanly', async function () {

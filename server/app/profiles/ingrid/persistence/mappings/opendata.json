@@ -8,19 +8,19 @@
                 }
             }
         },
-        "dcat": {
+        "opendata": {
             "properties": {
                 "landing_page": {
                     "type": "keyword"
-                }
-            }
-        },
-        "legal_basis": {
-            "type": "text",
-            "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 256
+                },
+                "legal_basis": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
                 }
             }
         },

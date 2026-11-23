@@ -1,8 +1,5 @@
 {
   "id": "11111",
-  "dcat": {
-    "landing_page": "https://genesis.sachsen-anhalt.de/genesis/online?operation=statistic&code=11111"
-  },
   "title": "Feststellung des Gebietsstandes",
   "$schema": "https://schema.ingrid-oss.eu/index/draft/schema/index-opendata.json",
   "exports": {
@@ -60,6 +57,9 @@
       "name": "GENESIS Online Sachsen-Anhalt",
       "type": "GENESIS"
     }
+  },
+  "opendata": {
+    "landing_page": "https://genesis.sachsen-anhalt.de/genesis/online?operation=statistic&code=11111"
   },
   "spatials": [],
   "sort_uuid": "dc3ad2b40312e2647d32c1dc5c7b1cb30fde244f",

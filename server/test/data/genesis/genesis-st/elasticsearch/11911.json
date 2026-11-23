@@ -1,8 +1,5 @@
 {
   "id": "11911",
-  "dcat": {
-    "landing_page": "https://genesis.sachsen-anhalt.de/genesis/online?operation=statistic&code=11911"
-  },
   "title": "Gemeindeverzeichnis",
   "$schema": "https://schema.ingrid-oss.eu/index/draft/schema/index-opendata.json",
   "exports": {
@@ -84,6 +81,9 @@
       "name": "GENESIS Online Sachsen-Anhalt",
       "type": "GENESIS"
     }
+  },
+  "opendata": {
+    "landing_page": "https://genesis.sachsen-anhalt.de/genesis/online?operation=statistic&code=11911"
   },
   "spatials": [],
   "sort_uuid": "91d604c42be8e51a4d7ff8ef968ee271c6835594",

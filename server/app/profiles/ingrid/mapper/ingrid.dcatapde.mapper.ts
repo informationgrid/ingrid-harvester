@@ -140,8 +140,8 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> {
         return "<?xml version='1.0' encoding='UTF-8'?><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">" + this.getHarvestedData() + "</rdf:RDF>";
     }
 
-    getDcat(): { landing_page?: string } {
-        return { landing_page: this.baseMapper.getLandingPage() };
+    getLandingPage(): string {
+        return this.baseMapper.getLandingPage();
     }
 
     getLegalBasis(): string {

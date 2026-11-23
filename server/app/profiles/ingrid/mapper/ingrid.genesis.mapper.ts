@@ -160,8 +160,8 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         return this.createDcatapdeDocument();
     }
 
-    getDcat(): { landing_page?: string } {
-        return { landing_page: this.baseMapper.getLandingPageUrl() };
+    getLandingPage(): string {
+        return this.baseMapper.getLandingPageUrl();
     }
 
     async getContacts(): Promise<IndexContact[]> {

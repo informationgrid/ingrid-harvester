@@ -50,7 +50,7 @@ import type {
     IngridSpatialRepresentation,
     IngridSpecific
 } from "../model/index.document.js";
-import type { IngridOpendataDistribution, IngridOpendataIndexDocument } from "../model/opendataindex.document.js";
+import type { IngridOpendataDistribution, IngridOpendataIndexDocument, IngridOpendataSpecific } from "../model/opendataindex.document.js";
 import type { IngridDeprecatedIndexDocument } from "../model/index.document.deprecated.js";
 import type { IngridOpendataDeprecatedIndexDocument } from "../model/opendataindex.document.deprecated.js";
 import { Codelist } from "../utils/codelist.js";
@@ -165,11 +165,14 @@ export abstract class ingridMapper<M extends ingridMapperType>
 
     private async buildOpendataDocument(): Promise<IngridOpendataIndexDocument> {
         const common = await this.buildCommonFields();
+        const opendata: IngridOpendataSpecific = {
+            landing_page: this.getLandingPage(),
+            legal_basis: this.getLegalBasis(),
+        };
         return {
             ...common,
             exports: { rdf: await this.getRdf() },
-            dcat: this.getDcat(),
-            legal_basis: this.getLegalBasis(),
+            opendata: Object.values(opendata).some(value => value != null) ? opendata : undefined,
             distributions: await this.getDistributions(),
             political_geocoding_level_uri: this.getPoliticalGeocodingLevelUri(),
         };
@@ -440,7 +443,7 @@ export abstract class ingridMapper<M extends ingridMapperType>
         return undefined;
     }
 
-    getDcat(): { landing_page?: string } {
+    getLandingPage(): string {
         return undefined;
     }
 
