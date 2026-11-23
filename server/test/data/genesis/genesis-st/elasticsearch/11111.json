@@ -59,18 +59,18 @@
     }
   },
   "opendata": {
-    "landing_page": "https://genesis.sachsen-anhalt.de/genesis/online?operation=statistic&code=11111"
+    "landing_page": "https://genesis.sachsen-anhalt.de/genesis/online?operation=statistic&code=11111",
+    "distributions": [
+      {
+        "title": "Bodenflächen der Gemeinden am 31.12.",
+        "format": "text/html",
+        "modified": "2025-07-15T09:27:48.000Z",
+        "access_url": "https://genesis.sachsen-anhalt.de/genesis/online?operation=table&code=11111-0001"
+      }
+    ]
   },
   "spatials": [],
   "sort_uuid": "dc3ad2b40312e2647d32c1dc5c7b1cb30fde244f",
   "description": "Statistik\nCode: 11111\nInhalt: Feststellung des Gebietsstandes\n\nDer amtliche Gebietsstand umfasst die Gesamtheit der\nVerwaltungseinheiten in ihrer regionalen Gliederung (Land,\nLandkreis/kreisfreie Stadt, Gemeindeverband, Gemeinde) zum\nStichtag 31.12. des jeweiligen Jahres. Die Daten über die\nBodenflächen (= Gebietsflächen) der Regionaleinheiten\nstammen aus der Flächenerhebung nach Art der tatsächlichen\nNutzung (EVAS 33111), der Angaben aus dem\nLiegenschaftskataster zugrunde liegen. Die Aktualisierung\nder Daten erfolgt mittels des Amtlichen\nLiegenschaftskataster-Informationssystems (ALKIS), welches\ndas Verfahren Automatisiert geführtes Liegenschaftsbuch\n(ALB) 2016 abgelöst hat.\n\nGebietsänderungen werden in Amtlichen Gesetzes- und\nVerordnungsblätter bzw. veröffentlichten Amtsblätter\nbekanntgegeben. Rechtliche Grundlage in Sachsen-Anhalt ist\ndas Kommunalverfassungsgesetz (KVG).",
-  "distributions": [
-    {
-      "title": "Bodenflächen der Gemeinden am 31.12.",
-      "format": "text/html",
-      "modified": "2025-07-15T09:27:48.000Z",
-      "access_url": "https://genesis.sachsen-anhalt.de/genesis/online?operation=table&code=11111-0001"
-    }
-  ],
   "political_geocoding_level_uri": "http://dcat-ap.de/def/politicalGeocoding/Level/administrativeDistrict"
 }

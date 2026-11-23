@@ -397,12 +397,13 @@ design: ./design.md
   - Acceptance: genesis fixtures unchanged; genesis fixtures' schema errors unchanged (`distributions` / `political_geocoding_level_uri` until TASK-039 / TASK-040); `tsc` 14 (baseline); `test/data-deprecated` unchanged.
   - Verified: `async getOpendata()` added next to `getIngrid()` (no subclass defines a method of that name); `buildOpendataDocument()` sets `opendata: await this.getOpendata()`. No fixture changed; genesis schema errors unchanged (`distributions` / `political_geocoding_level_uri`, 3 each); `tsc` 14 (baseline); `test/data-deprecated` unchanged.
 
-- [ ] TASK-039: opendata `distributions` → `opendata.distributions`, `languages` per distribution
+- [x] TASK-039: opendata `distributions` → `opendata.distributions`, `languages` per distribution
   - Refs: FR-004, TASK-038
   - File: `server/app/profiles/ingrid/model/opendataindex.document.ts` (`IngridOpendataDistribution`), `server/app/profiles/ingrid/mapper/ingrid.mapper.ts` (`buildOpendataDocument()`), `server/app/profiles/ingrid/persistence/mappings/opendata.json`, genesis fixtures
   - Details: `license.languages` moves to `distributions[].languages`. Forwarding license/languages from the base `Distribution` stays a TODO (update the existing TODO comments).
   - Acceptance: as TASK-038.
   - Deprecated guard: change only `IngridOpendataDistribution`; `server/app/model/distribution.ts` (`Distribution`, imported by `index.document.deprecated.ts`) stays unchanged; the deprecated builders keep bypassing via `baseMapper.getDistributions()`.
+  - Verified: `IngridOpendataSpecific.distributions` (root `distributions` removed from `IngridOpendataFields`); `IngridOpendataDistribution.languages` on the distribution, `license` without `languages`; `getOpendata()` sets `distributions: await this.getDistributions()` (`buildOpendataDocument()` no longer sets it); `opendata.json` mapping: `distributions` moved under `opendata`, `languages` (keyword) on the distribution. The TODO comments in the ckan/dcatapde/genesis `getDistributions()` now name `opendata.distributions[].license` / `.languages`. Root `distributions` is read only for the deprecated format (`csw.importer.ts` `getServiceLinksDeprecated()`) and by the diplanung/lvr profiles; `genesis.mapper.spec.ts` tests the base `GenesisMapper.getDistributions()` (unchanged). Genesis fixtures ×3: `distributions` (1 / 2 / 4 entries, none with license/languages) moved into `opendata`. Genesis fixtures against `index-opendata.json`: only `political_geocoding_level_uri` left (TASK-040). `tsc` 14 (baseline); `test/data-deprecated` unchanged; `app/model/distribution.ts` unchanged. Specs deferred to TASK-041.
 
 - [ ] TASK-040: opendata `political_geocoding_level_uri` → `opendata.political_geocoding_level`
   - Refs: FR-004, TASK-038

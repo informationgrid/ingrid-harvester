@@ -21,50 +21,50 @@
                             "ignore_above": 256
                         }
                     }
-                }
-            }
-        },
-        "distributions": {
-            "properties": {
-                "format": {
-                    "type": "keyword"
                 },
-                "access_url": {
-                    "type": "keyword"
-                },
-                "modified": {
-                    "type": "keyword"
-                },
-                "title": {
-                    "type": "text",
-                    "copy_to": [
-                        "fulltext"
-                    ]
-                },
-                "description": {
-                    "type": "text",
-                    "copy_to": [
-                        "fulltext"
-                    ]
-                },
-                "license": {
+                "distributions": {
                     "properties": {
-                        "url": {
+                        "format": {
                             "type": "keyword"
                         },
-                        "name": {
+                        "access_url": {
                             "type": "keyword"
                         },
-                        "attribution_by_text": {
-                            "type": "text"
+                        "modified": {
+                            "type": "keyword"
+                        },
+                        "title": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "description": {
+                            "type": "text",
+                            "copy_to": [
+                                "fulltext"
+                            ]
+                        },
+                        "license": {
+                            "properties": {
+                                "url": {
+                                    "type": "keyword"
+                                },
+                                "name": {
+                                    "type": "keyword"
+                                },
+                                "attribution_by_text": {
+                                    "type": "text"
+                                }
+                            }
                         },
                         "languages": {
                             "type": "keyword"
+                        },
+                        "availability": {
+                            "type": "keyword"
                         }
                     }
-                },
-                "availability": {
-                    "type": "keyword"
                 }
             }
         },

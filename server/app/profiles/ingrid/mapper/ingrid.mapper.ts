@@ -169,7 +169,6 @@ export abstract class ingridMapper<M extends ingridMapperType>
             ...common,
             exports: { rdf: await this.getRdf() },
             opendata: await this.getOpendata(),
-            distributions: await this.getDistributions(),
             political_geocoding_level_uri: this.getPoliticalGeocodingLevelUri(),
         };
     }
@@ -193,12 +192,12 @@ export abstract class ingridMapper<M extends ingridMapperType>
         return result;
     }
 
-    // async: the section will hold the async getDistributions(); undefined without any value (no field is required,
-    // unlike ingrid.document_type in getIngrid())
+    // undefined without any value (no field is required, unlike ingrid.document_type in getIngrid())
     async getOpendata(): Promise<IngridOpendataSpecific> {
         const opendata: IngridOpendataSpecific = {
             landing_page: this.getLandingPage(),
             legal_basis: this.getLegalBasis(),
+            distributions: await this.getDistributions(),
         };
         return Object.values(opendata).some(value => value != null) ? opendata : undefined;
     }

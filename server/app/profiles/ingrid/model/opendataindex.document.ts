@@ -34,13 +34,13 @@ export type IngridOpendataIndexDocument = IndexDocument & {
 export type IngridOpendataFields = {
     exports?: { rdf?: string },
     opendata?: IngridOpendataSpecific,
-    distributions?: IngridOpendataDistribution[],
     political_geocoding_level_uri?: string,
 };
 
 export type IngridOpendataSpecific = {
     landing_page?: string,
     legal_basis?: string,
+    distributions?: IngridOpendataDistribution[],
 };
 
 export type IngridOpendataDistribution = {
@@ -53,7 +53,7 @@ export type IngridOpendataDistribution = {
         url?: string,
         name?: string,
         attribution_by_text?: string,
-        languages?: string[],
     },
+    languages?: string[],
     availability?: string,
 };
