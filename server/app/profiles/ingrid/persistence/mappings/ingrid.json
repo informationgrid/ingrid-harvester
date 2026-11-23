@@ -99,7 +99,7 @@
                                             "type": "integer"
                                         },
                                         "resolution": {
-                                            "type": "integer"
+                                            "type": "float"
                                         }
                                     }
                                 },
