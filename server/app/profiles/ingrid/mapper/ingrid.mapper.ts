@@ -464,6 +464,18 @@ export abstract class ingridMapper<M extends ingridMapperType>
         return undefined;
     }
 
+    // license of a base Distribution for opendata.distributions[].license; CKAN passes a License (@shared, `title`)
+    // although the Distribution type declares `name`, hence both
+    protected getDistributionLicense(license: Distribution['license'] & { title?: string }): IngridOpendataDistribution['license'] {
+        if (!license) return undefined;
+        const result = {
+            name: license.name ?? license.title,
+            url: license.url,
+            attribution_by_text: license.attribution_by_text,
+        };
+        return Object.values(result).some(value => value != null) ? result : undefined;
+    }
+
     getIDF(): string {
         return undefined;
     };

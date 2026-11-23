@@ -211,13 +211,16 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> {
 
     async getDistributions(): Promise<IngridOpendataDistribution[]> {
         const distributions = await this.baseMapper.getDistributions();
-        // TODO: license and languages (opendata.distributions[].license / .languages) from the base Distribution are not forwarded here
-        return distributions?.map(d => ({
+        // DcatapdeMapper also sets languages and availability, which the base Distribution type does not declare
+        return (distributions as (typeof distributions[number] & { languages?: string[], availability?: string })[])?.map(d => ({
             format: d.format?.[0],
             access_url: d.accessURL ?? d.access_url,
             modified: d.modified?.toISOString(),
             title: d.title,
             description: d.description,
+            license: this.getDistributionLicense(d.license),
+            languages: d.languages?.length ? d.languages : undefined,
+            availability: d.availability || undefined,
         }));
     }
 }

@@ -68,24 +68,40 @@
       {
         "title": "Einbürgerungen von Ausländerinnen und Ausländern nach\nKontinenten in den kreisfreien Städten und Landkreisen",
         "format": "text/html",
+        "license": {
+          "url": "https://www.govdata.de/dl-de/by-2-0",
+          "name": "Datenlizenz Deutschland Namensnennung 2.0"
+        },
         "modified": "2026-06-02T07:55:00.000Z",
         "access_url": "https://genesis.sachsen-anhalt.de/genesis/online?operation=table&code=12511-0001"
       },
       {
         "title": "Einbürgerungen von Ausländerinnen und Ausländern nach\nAltersgruppen in den kreisfreien Städten und Landkreisen",
         "format": "text/html",
+        "license": {
+          "url": "https://www.govdata.de/dl-de/by-2-0",
+          "name": "Datenlizenz Deutschland Namensnennung 2.0"
+        },
         "modified": "2026-06-02T07:56:11.000Z",
         "access_url": "https://genesis.sachsen-anhalt.de/genesis/online?operation=table&code=12511-0002"
       },
       {
         "title": "Einbürgerungen von Ausländerinnen und Ausländern nach\nAufenthaltsdauer in den kreisfreien Städten und Landkreisen",
         "format": "text/html",
+        "license": {
+          "url": "https://www.govdata.de/dl-de/by-2-0",
+          "name": "Datenlizenz Deutschland Namensnennung 2.0"
+        },
         "modified": "2026-06-02T07:59:07.000Z",
         "access_url": "https://genesis.sachsen-anhalt.de/genesis/online?operation=table&code=12511-0003"
       },
       {
         "title": "Einbürgerungen von Ausländerinnen und Ausländern in den\nkreisfreien Städten und Landkreisen",
         "format": "text/html",
+        "license": {
+          "url": "https://www.govdata.de/dl-de/by-2-0",
+          "name": "Datenlizenz Deutschland Namensnennung 2.0"
+        },
         "modified": "2026-06-02T07:59:59.000Z",
         "access_url": "https://genesis.sachsen-anhalt.de/genesis/online?operation=table&code=12511-0004"
       }

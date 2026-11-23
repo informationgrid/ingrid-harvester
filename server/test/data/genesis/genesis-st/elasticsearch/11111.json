@@ -64,6 +64,10 @@
       {
         "title": "Bodenflächen der Gemeinden am 31.12.",
         "format": "text/html",
+        "license": {
+          "url": "https://www.govdata.de/dl-de/by-2-0",
+          "name": "Datenlizenz Deutschland Namensnennung 2.0"
+        },
         "modified": "2025-07-15T09:27:48.000Z",
         "access_url": "https://genesis.sachsen-anhalt.de/genesis/online?operation=table&code=11111-0001"
       }
