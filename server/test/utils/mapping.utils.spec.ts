@@ -84,7 +84,8 @@ describe('ProfileFactory.getIndexMappings() — composed ingrid default mapping'
         // core
         expect(mapping.properties).to.include.keys('id', 'metadata', 'title', 'spatials', 'fulltext');
         // ingrid / opendata
-        expect(mapping.properties).to.include.keys('ingrid', 'dcat', 'distributions');
+        expect(mapping.properties).to.include.keys('ingrid', 'opendata');
+        expect(mapping.properties.opendata.properties).to.have.keys('landing_page', 'legal_basis', 'distributions', 'political_geocoding_level');
         // containers shared between fragments
         expect(mapping.properties.exports.properties).to.have.keys('iso', 'rdf');
         expect(mapping.properties.temporal.properties).to.include.keys('data_temporal', 'status');

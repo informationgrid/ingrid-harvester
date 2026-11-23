@@ -64,6 +64,11 @@ class TestMapper extends ingridMapper<any> {
         return this.defaultKind;
     }
 
+    // ingrid.document_type is required by index-ingrid.json
+    override getDocumentType() {
+        return 'InGridGeoDataset' as const;
+    }
+
     protected override getDocumentBuilders() {
         const builders = super.getDocumentBuilders();
         if (!this.registerDeprecated) {
