@@ -34,13 +34,14 @@ export type IngridOpendataIndexDocument = IndexDocument & {
 export type IngridOpendataFields = {
     exports?: { rdf?: string },
     opendata?: IngridOpendataSpecific,
-    political_geocoding_level_uri?: string,
 };
 
 export type IngridOpendataSpecific = {
     landing_page?: string,
     legal_basis?: string,
     distributions?: IngridOpendataDistribution[],
+    // full URI (dcat-ap.de politicalGeocoding level)
+    political_geocoding_level?: string,
 };
 
 export type IngridOpendataDistribution = {

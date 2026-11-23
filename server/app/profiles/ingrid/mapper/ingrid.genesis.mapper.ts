@@ -130,7 +130,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             distributions: this.baseMapper.getDistributions(),
             dcat: { landingPage: this.baseMapper.getLandingPageUrl() },
             legal_basis: null,
-            political_geocoding_level_uri: this.getPoliticalGeocodingLevelUri(),
+            political_geocoding_level_uri: this.getPoliticalGeocodingLevel(),
             rdf: null, // assigned after
             sort_hash: this.getSortUuid(),
             content: null,
@@ -231,7 +231,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
         return geometry ? [{ geometry, bbox: turfBbox(geometry) }] : [];
     }
 
-    getPoliticalGeocodingLevelUri(): string | undefined {
+    getPoliticalGeocodingLevel(): string | undefined {
         const key = this.baseMapper.getPoliticalGeocodingLevel();
         return key ? POLITICAL_GEOCODING_LEVEL_BASE + key : undefined;
     }
@@ -405,7 +405,7 @@ export class ingridGenesisMapper extends ingridMapper<GenesisMapper> {
             dataset.appendChild(langEl);
         }
 
-        const politicalGeocodingLevelUri = this.getPoliticalGeocodingLevelUri();
+        const politicalGeocodingLevelUri = this.getPoliticalGeocodingLevel();
         if (politicalGeocodingLevelUri) {
             const levelEl = doc.createElement('dcatde:politicalGeocodingLevelURI');
             levelEl.setAttribute('rdf:resource', politicalGeocodingLevelUri);

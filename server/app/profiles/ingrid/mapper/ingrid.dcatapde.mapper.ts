@@ -148,7 +148,7 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> {
         return this.baseMapper.getLegalBasis();
     }
 
-    getPoliticalGeocodingLevelUri(): string {
+    getPoliticalGeocodingLevel(): string {
         return this.baseMapper.getPoliticalGeocodingLevelURI();
     }
 

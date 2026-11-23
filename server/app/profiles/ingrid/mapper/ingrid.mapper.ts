@@ -169,7 +169,6 @@ export abstract class ingridMapper<M extends ingridMapperType>
             ...common,
             exports: { rdf: await this.getRdf() },
             opendata: await this.getOpendata(),
-            political_geocoding_level_uri: this.getPoliticalGeocodingLevelUri(),
         };
     }
 
@@ -198,6 +197,7 @@ export abstract class ingridMapper<M extends ingridMapperType>
             landing_page: this.getLandingPage(),
             legal_basis: this.getLegalBasis(),
             distributions: await this.getDistributions(),
+            political_geocoding_level: this.getPoliticalGeocodingLevel(),
         };
         return Object.values(opendata).some(value => value != null) ? opendata : undefined;
     }
@@ -460,7 +460,7 @@ export abstract class ingridMapper<M extends ingridMapperType>
         return undefined;
     }
 
-    getPoliticalGeocodingLevelUri(): string {
+    getPoliticalGeocodingLevel(): string {
         return undefined;
     }
 

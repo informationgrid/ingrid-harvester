@@ -65,11 +65,11 @@
                             "type": "keyword"
                         }
                     }
+                },
+                "political_geocoding_level": {
+                    "type": "keyword"
                 }
             }
-        },
-        "political_geocoding_level_uri": {
-            "type": "keyword"
         }
     }
 }

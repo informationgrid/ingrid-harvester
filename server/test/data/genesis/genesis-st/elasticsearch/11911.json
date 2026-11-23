@@ -105,10 +105,10 @@
         "modified": "2025-07-15T09:27:48.000Z",
         "access_url": "https://genesis.sachsen-anhalt.de/genesis/online?operation=table&code=11911-0002"
       }
-    ]
+    ],
+    "political_geocoding_level": "http://dcat-ap.de/def/politicalGeocoding/Level/administrativeDistrict"
   },
   "spatials": [],
   "sort_uuid": "91d604c42be8e51a4d7ff8ef968ee271c6835594",
-  "description": "11911 Gemeindeverzeichnis\n\nDas Gemeindeverzeichnis führt jede politisch selbständige\nGemeinde und zeigt die Gliederung des kommunalen\nVerwaltungsaufbaus an einem Stichtag.",
-  "political_geocoding_level_uri": "http://dcat-ap.de/def/politicalGeocoding/Level/administrativeDistrict"
+  "description": "11911 Gemeindeverzeichnis\n\nDas Gemeindeverzeichnis führt jede politisch selbständige\nGemeinde und zeigt die Gliederung des kommunalen\nVerwaltungsaufbaus an einem Stichtag."
 }
