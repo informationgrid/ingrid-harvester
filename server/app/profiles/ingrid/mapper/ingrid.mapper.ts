@@ -165,14 +165,10 @@ export abstract class ingridMapper<M extends ingridMapperType>
 
     private async buildOpendataDocument(): Promise<IngridOpendataIndexDocument> {
         const common = await this.buildCommonFields();
-        const opendata: IngridOpendataSpecific = {
-            landing_page: this.getLandingPage(),
-            legal_basis: this.getLegalBasis(),
-        };
         return {
             ...common,
             exports: { rdf: await this.getRdf() },
-            opendata: Object.values(opendata).some(value => value != null) ? opendata : undefined,
+            opendata: await this.getOpendata(),
             distributions: await this.getDistributions(),
             political_geocoding_level_uri: this.getPoliticalGeocodingLevelUri(),
         };
@@ -195,6 +191,16 @@ export abstract class ingridMapper<M extends ingridMapperType>
         this.executeCustomCode(result);
         ProfileFactoryLoader.get().validateIndexDocument(result, this.getSchemaName());
         return result;
+    }
+
+    // async: the section will hold the async getDistributions(); undefined without any value (no field is required,
+    // unlike ingrid.document_type in getIngrid())
+    async getOpendata(): Promise<IngridOpendataSpecific> {
+        const opendata: IngridOpendataSpecific = {
+            landing_page: this.getLandingPage(),
+            legal_basis: this.getLegalBasis(),
+        };
+        return Object.values(opendata).some(value => value != null) ? opendata : undefined;
     }
 
     getIngrid(): IngridSpecific {
