@@ -89,60 +89,70 @@
   ],
   "keywords": [
     {
+      "id": "https://sns.uba.de/umthes/TH_00051879",
+      "term": "Bodenbedeckung",
+      "source": "umthes"
+    },
+    {
+      "id": "https://sns.uba.de/umthes/TH_00029014",
+      "term": "Boden",
+      "source": "umthes"
+    },
+    {
       "term": "3D-Datenarchiv",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Biogeografische Regionen",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "geografische Gittersysteme",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Höhe",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "DOM",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "DGM",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Profile und digitales Geländemodell",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Befliegung",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Befliegungsdaten",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Vermessung",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "hydrografisch",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "WSV",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Topografiedaten",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Langzeitarchivierung",
-      "source": "frei"
+      "source": "free"
     }
   ],
   "language": "de",

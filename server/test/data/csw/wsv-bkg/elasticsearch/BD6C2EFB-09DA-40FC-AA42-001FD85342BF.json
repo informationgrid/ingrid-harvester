@@ -99,44 +99,49 @@
   ],
   "keywords": [
     {
+      "id": "https://www.eionet.europa.eu/gemet/en/concept/15344",
+      "term": "INSPIRE",
+      "source": "gemet"
+    },
+    {
       "term": "AdVMIS",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Geobasisdaten",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Metadateninformationssystem",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Arbeitsgemeinschaft der Vermessungsverwaltungen der Länder der Bundesrepublik Deutschland",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Geodaten",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Geodaten-Dienst",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Koordinaten",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Metadaten",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Produkte",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Raumbezug",
-      "source": "frei"
+      "source": "free"
     }
   ],
   "language": "de",

@@ -97,51 +97,52 @@
   "keywords": [
     {
       "term": "GCM",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Globale Klimamodelle",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Zirkulation",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "NAO",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "oWLK",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Klimawandel",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Validierung",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "KLIWAS",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "kliwas_projekt401",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "4.01",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "401",
-      "source": "frei"
+      "source": "free"
     },
     {
+      "id": "12",
       "term": "inlandWaters",
-      "source": "iso_topic"
+      "source": "iso_topics"
     }
   ],
   "language": "de",

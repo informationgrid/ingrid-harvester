@@ -716,28 +716,52 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         });
     }
 
+    // codelist key of a keyword: by its text first (as the IGE ISO import), then by the gmx:Anchor url
+    private static keywordCodelistId(codelistId: string, url: string, term: string): string {
+        const codelist = Codelist.getInstance();
+        return codelist.getIdByUrlOrText(codelistId, undefined, term) ?? codelist.getIdByUrlOrText(codelistId, url);
+    }
+
+    // keyword sources and ids as the IGE index export (IngridModelTransformer.getAllKeywords()), by thesaurus title;
+    // keywords of other or no thesauri are 'free'
+    private static readonly KEYWORD_SOURCES: { source: string, matches: (title: string) => boolean, id: (url: string, term: string) => string }[] = [
+        { source: 'inspire_themes', matches: title => title === 'GEMET - INSPIRE themes, version 1.0', id: (url, term) => ingridCswMapper.keywordCodelistId('6100', url, term) },
+        { source: 'inspire_priority_data_set', matches: title => title === 'INSPIRE priority data set', id: (url, term) => ingridCswMapper.keywordCodelistId('6350', url, term) },
+        { source: 'inspire_spatial_scope', matches: title => title === 'Spatial scope', id: (url, term) => ingridCswMapper.keywordCodelistId('6360', url, term) },
+        { source: 'invekos', matches: title => title === 'IACS data', id: url => url },
+        { source: 'gemet', matches: title => title.startsWith('GEMET - Concepts'), id: url => url },
+        { source: 'umthes', matches: title => title === 'UMTHES Thesaurus', id: url => url },
+    ];
+
     getKeywords(): IndexKeyword[] {
-        const keywords: IndexKeyword[] = [];
-        const seenTerms = new Set<string>();
-        const addKeywords = (xpath: string, source: string) => {
-            CswMapper.select(xpath, this.baseMapper.idInfo)?.forEach(node => {
+        const bySource = new Map<string, IndexKeyword[]>();
+        const add = (source: string, term: string, id?: string) => {
+            const items = bySource.get(source) ?? [];
+            if (term && !items.some(item => item.term === term)) {
+                items.push({ term, source, ...(id && { id }) });
+                bySource.set(source, items);
+            }
+        };
+        CswMapper.select('./*/gmd:descriptiveKeywords/gmd:MD_Keywords', this.baseMapper.idInfo)?.forEach(block => {
+            const title = CswMapper.select('./gmd:thesaurusName/gmd:CI_Citation/gmd:title/*[self::gco:CharacterString or self::gmx:Anchor]', block, true)?.textContent?.trim() ?? '';
+            const known = title ? ingridCswMapper.KEYWORD_SOURCES.find(entry => entry.matches(title)) : undefined;
+            CswMapper.select('./gmd:keyword/*[self::gco:CharacterString or self::gmx:Anchor]', block)?.forEach(node => {
                 const term = node.textContent?.trim();
-                if (term && !seenTerms.has(term)) {
-                    seenTerms.add(term);
-                    keywords.push({ term, source });
+                const url = node.getAttribute('xlink:href') || undefined;
+                if (known) {
+                    add(known.source, term, known.id(url, term));
+                }
+                else {
+                    add('free', term);
                 }
             });
-        };
-        // check for INSPIRE themes
-        addKeywords(".//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='GEMET - INSPIRE themes, version 1.0']/gmd:keyword/gco:CharacterString", 'inspire');
-        // check for GEMET keywords
-        addKeywords(".//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='GEMET - Concepts, version 2.1']/gmd:keyword/gco:CharacterString", 'gemet');
-        // check for UMTHES keywords
-        addKeywords(".//gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='UMTHES Thesaurus']/gmd:keyword/gco:CharacterString", 'umthes');
-        // remaining, unclassified keywords
-        addKeywords(".//gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString", 'frei');
-        // ISO topic categories
-        addKeywords('./gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode', 'iso_topic');
+        });
+        CswMapper.select('./gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode', this.baseMapper.idInfo)?.forEach(node => {
+            const term = node.textContent?.trim();
+            add('iso_topics', term, Codelist.getInstance().getId('527', term));
+        });
+        const order = [...ingridCswMapper.KEYWORD_SOURCES.map(entry => entry.source), 'free', 'iso_topics'];
+        const keywords = order.flatMap(source => bySource.get(source) ?? []);
         return keywords.length ? keywords : undefined;
     }
 

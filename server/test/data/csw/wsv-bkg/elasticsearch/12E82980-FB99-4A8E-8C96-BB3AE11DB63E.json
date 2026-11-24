@@ -91,43 +91,43 @@
   "keywords": [
     {
       "term": "Geocoder",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Geokodierung",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Ortsnamen",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Straßennamen",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Adresse",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "geocoding",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "GN250",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "HK-DE",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "invocableSpatialDataService",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "OpenSearch Geo and Time Extensions",
-      "source": "frei"
+      "source": "free"
     }
   ],
   "language": "de",

@@ -240,8 +240,19 @@
   ],
   "keywords": [
     {
+      "id": "105",
       "term": "Adressen",
-      "source": "inspire"
+      "source": "inspire_themes"
+    },
+    {
+      "id": "-1023933682",
+      "term": "Anlagen für die Bewirtschaftung von Abfällen aus der mineralgewinnenden Industrie (Bergbauabfallrichtlinie)",
+      "source": "inspire_priority_data_set"
+    },
+    {
+      "id": "-673152846",
+      "term": "National",
+      "source": "inspire_spatial_scope"
     },
     {
       "term": "Wasser",
@@ -249,31 +260,32 @@
     },
     {
       "term": "Unbekannt",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "inspireidentifiziert",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "opendata",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "AdVMIS",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "HEAL",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Nieders. Abfallgesetz (NAbfG)",
-      "source": "frei"
+      "source": "free"
     },
     {
+      "id": "4",
       "term": "climatologyMeteorologyAtmosphere",
-      "source": "iso_topic"
+      "source": "iso_topics"
     }
   ],
   "language": "de",

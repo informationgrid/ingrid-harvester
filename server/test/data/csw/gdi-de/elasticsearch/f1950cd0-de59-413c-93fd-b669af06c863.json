@@ -132,76 +132,122 @@
   ],
   "keywords": [
     {
+      "id": "108",
       "term": "Gewässernetz",
-      "source": "inspire"
+      "source": "inspire_themes"
+    },
+    {
+      "id": "885989663",
+      "term": "Regional",
+      "source": "inspire_spatial_scope"
+    },
+    {
+      "id": "https://www.eionet.europa.eu/gemet/en/concept/15344",
+      "term": "INSPIRE",
+      "source": "gemet"
+    },
+    {
+      "id": "https://sns.uba.de/umthes/TH_00605479",
+      "term": "Geobasisdaten",
+      "source": "umthes"
+    },
+    {
+      "id": "https://sns.uba.de/umthes/TH_00100288",
+      "term": "Hessen",
+      "source": "umthes"
+    },
+    {
+      "id": "https://sns.uba.de/umthes/_644e8d87",
+      "term": "INSPIRE-Daten",
+      "source": "umthes"
+    },
+    {
+      "id": "https://sns.uba.de/umthes/TH_00658629",
+      "term": "deletedKeyword",
+      "source": "umthes"
+    },
+    {
+      "id": "https://sns.uba.de/umthes/TH_00052321",
+      "term": "ATKIS",
+      "source": "umthes"
+    },
+    {
+      "id": "https://sns.uba.de/umthes/TH_00621215",
+      "term": "hydrography",
+      "source": "umthes"
     },
     {
       "term": "1c349fea-924b-488f-b6a2-e896f40ac897",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "AdV",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "AdVMIS",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "AdV-INSPIRE-Produktspezifikation (2.0.1)",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "AdV-OWS-Basisprofil (1.0.0)",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "HE",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Regional",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "ATKIS Basis-DLM",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Basis-DLM",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Digitales Basis-Landschaftsmodell",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Hydro",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Hydro - Netzwerk",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Hydro - Network",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "deletedKeyword",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "GOVE",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "inspireidentifiziert",
-      "source": "frei"
+      "source": "free"
     },
     {
+      "term": "Erdbeobachtung und Umwelt",
+      "source": "free"
+    },
+    {
+      "id": "12",
       "term": "inlandWaters",
-      "source": "iso_topic"
+      "source": "iso_topics"
     }
   ],
   "language": "de",

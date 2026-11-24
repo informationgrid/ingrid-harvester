@@ -126,80 +126,113 @@
   ],
   "keywords": [
     {
+      "id": "307",
       "term": "Umweltüberwachung",
-      "source": "inspire"
+      "source": "inspire_themes"
+    },
+    {
+      "id": "2069097789",
+      "term": "Messstellen (Wasserrahmenrichtlinie)",
+      "source": "inspire_priority_data_set"
+    },
+    {
+      "id": "-673152846",
+      "term": "National",
+      "source": "inspire_spatial_scope"
+    },
+    {
+      "id": "https://sns.uba.de/umthes/TH_00027410",
+      "term": "Wasserwirtschaft",
+      "source": "umthes"
+    },
+    {
+      "id": "https://sns.uba.de/umthes/TH_00027345",
+      "term": "Wasserstand",
+      "source": "umthes"
+    },
+    {
+      "id": "https://sns.uba.de/umthes/TH_00028760",
+      "term": "Gewässer",
+      "source": "umthes"
     },
     {
       "term": "PEGELONLINE",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "River network (Water Framework Directive)",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Water Management",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Hydrology",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Gewässerkunde",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Wasserüberwachung",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Wasserspiegel",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Pegelstand",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Messstelle",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Wasserstände",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Pegel",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "mobilithek_category_WATERROADS_AND_WATER",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "opendata",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "ENVI",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "inspireidentifiziert",
-      "source": "frei"
+      "source": "free"
     },
     {
+      "term": "Mobilität",
+      "source": "free"
+    },
+    {
+      "id": "17",
       "term": "structure",
-      "source": "iso_topic"
+      "source": "iso_topics"
     },
     {
+      "id": "12",
       "term": "inlandWaters",
-      "source": "iso_topic"
+      "source": "iso_topics"
     },
     {
+      "id": "7",
       "term": "environment",
-      "source": "iso_topic"
+      "source": "iso_topics"
     }
   ],
   "language": "de",

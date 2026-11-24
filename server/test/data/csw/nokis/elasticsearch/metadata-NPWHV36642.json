@@ -135,96 +135,103 @@
   ],
   "keywords": [
     {
+      "id": "307",
       "term": "Environmental monitoring facilities",
-      "source": "inspire"
+      "source": "inspire_themes"
     },
     {
+      "id": "307",
       "term": "Umweltüberwachung",
-      "source": "inspire"
+      "source": "inspire_themes"
     },
     {
+      "id": "885989663",
       "term": "Regional",
-      "source": "frei"
+      "source": "inspire_spatial_scope"
     },
     {
       "term": "Eiderente",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Gastvogel",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Somateria mollissima",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "eider duck",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Eidereend",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Ederfugl",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Nationalpark Niedersächsisches Wattenmeer",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Wadden Sea National Park of Lower Saxonye",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Nordsee",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Niedersächsisches Küstenmeer",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Biologie",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Fauna",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Ornithologie",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "inspiregrundlage",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "INSPIRE",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "opendata",
-      "source": "frei"
+      "source": "free"
     },
     {
+      "id": "2",
       "term": "biota",
-      "source": "iso_topic"
+      "source": "iso_topics"
     },
     {
+      "id": "14",
       "term": "oceans",
-      "source": "iso_topic"
+      "source": "iso_topics"
     },
     {
+      "id": "7",
       "term": "environment",
-      "source": "iso_topic"
+      "source": "iso_topics"
     },
     {
+      "id": "17",
       "term": "structure",
-      "source": "iso_topic"
+      "source": "iso_topics"
     }
   ],
   "language": "de",

@@ -197,16 +197,19 @@
   ],
   "keywords": [
     {
+      "id": "305",
       "term": "Gesundheit und Sicherheit",
-      "source": "inspire"
+      "source": "inspire_themes"
     },
     {
+      "id": "311",
       "term": "Bewirtschaftungsgebiete/Schutzgebiete/geregelte Gebiete und Berichterstattungseinheiten",
-      "source": "inspire"
+      "source": "inspire_themes"
     },
     {
+      "id": "107",
       "term": "Verkehrsnetze",
-      "source": "inspire"
+      "source": "inspire_themes"
     },
     {
       "term": "Bahnlärm",
@@ -314,111 +317,111 @@
     },
     {
       "term": "(WFS) Geoinformation Eisenbahn-Bundesamt",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Isophonenbaender",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Isophonenbaender (bundesweit)",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Verkehrsweg ULR",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Verkehrsweg (erweiterte Kartierung)",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Kartierungskorridor (ULR)",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Kartierungskorridor (erweiterte Kartierung)",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Schallschutzwand",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Gemeindestatistik ULR",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Ballungsraumstatistik ULR",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Beeintraechtigung Flut 2021",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Rangier und Umschlagbahnhof",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Beteiligung 100m-Raster",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Lärmkennziffer (ULR)",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Gesundheitliche Auswirkung - HA HSD (ULR)",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "EBA",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Eisenbahn-Bundesamt",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "LAP",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Runde4",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Schienenverkehrsnetz",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Umgebungslärmkartierung",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Umgebungslärmrichtlinie",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "HUMAN ACTIVITIES AND PRODUCTS, EFFECTS ON THE ENVIRONMENT",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "opendata",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "inspireidentifiziert",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "mobilithek_category_BAHN",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "infoFeatureAccessService",
-      "source": "frei"
+      "source": "free"
     }
   ],
   "language": "de",

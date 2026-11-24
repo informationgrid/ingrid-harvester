@@ -153,32 +153,33 @@
   ],
   "keywords": [
     {
+      "id": "105",
       "term": "Addresses",
-      "source": "inspire"
+      "source": "inspire_themes"
     },
     {
       "term": "infoMapAccessService",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Geonames",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "WMS",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Geographical Names",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "AdVMIS",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "inspireidentifiziert",
-      "source": "frei"
+      "source": "free"
     }
   ],
   "language": "de",

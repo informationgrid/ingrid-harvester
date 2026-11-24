@@ -65,6 +65,9 @@ export class Codelist {
         this.readList("codelist_3385.xml");
         this.readList("codelist_6005.xml");
         this.readList("codelist_6010.xml");
+        this.readList("codelist_6100.xml");
+        this.readList("codelist_6350.xml");
+        this.readList("codelist_6360.xml");
         this.readList("codelist_6400.xml", "id", "de");
         this.readList("codelist_6500.xml");
         // data quality measure types (one codelist per quality type, no ISO value)

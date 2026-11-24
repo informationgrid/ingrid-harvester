@@ -165,44 +165,66 @@
   ],
   "keywords": [
     {
+      "id": "103",
       "term": "Geographical names",
-      "source": "inspire"
+      "source": "inspire_themes"
+    },
+    {
+      "id": "-673152846",
+      "term": "National",
+      "source": "inspire_spatial_scope"
+    },
+    {
+      "id": "https://www.eionet.europa.eu/gemet/en/concept/3999",
+      "term": "hospital",
+      "source": "gemet"
+    },
+    {
+      "id": "https://www.eionet.europa.eu/gemet/en/concept/5401",
+      "term": "mountain",
+      "source": "gemet"
+    },
+    {
+      "id": "https://www.eionet.europa.eu/gemet/en/concept/9161",
+      "term": "watercourse",
+      "source": "gemet"
     },
     {
       "term": "names",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "important buildings",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "administrative units",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "hydography",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "settlement names",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "opendata",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "AdVMIS",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "inspireidentifiziert",
-      "source": "frei"
+      "source": "free"
     },
     {
+      "id": "13",
       "term": "location",
-      "source": "iso_topic"
+      "source": "iso_topics"
     }
   ],
   "language": "de",

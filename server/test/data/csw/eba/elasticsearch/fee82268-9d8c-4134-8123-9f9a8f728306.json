@@ -124,6 +124,11 @@
   ],
   "keywords": [
     {
+      "id": "-673152846",
+      "term": "National",
+      "source": "inspire_spatial_scope"
+    },
+    {
       "term": "Bahnlärm",
       "source": "umthes"
     },
@@ -181,83 +186,79 @@
     },
     {
       "term": "Gesundheitswesen",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Lärm",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Schall",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Bahn",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Schallschutzbauwerke",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Lärmschutzbauwerke",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Lärmkartierung",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Lärmaktionsplanung",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "LAP",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Umgebungslärmkartierung",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Schiene",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Runde4",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Eisenbahn-Bundesamt",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "EBA",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "EG-Umgebungslärmrichtlinie",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "Umgebungslärmrichtlinie",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "HUMAN ACTIVITIES AND PRODUCTS, EFFECTS ON THE ENVIRONMENT",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "opendata",
-      "source": "frei"
+      "source": "free"
     },
     {
       "term": "mobilithek_category_BAHN",
-      "source": "frei"
-    },
-    {
-      "term": "National",
-      "source": "frei"
+      "source": "free"
     }
   ],
   "language": "de",

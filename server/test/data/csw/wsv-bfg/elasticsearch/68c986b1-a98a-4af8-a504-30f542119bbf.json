@@ -56,11 +56,12 @@
   "keywords": [
     {
       "term": "Geologie",
-      "source": "frei"
+      "source": "free"
     },
     {
+      "id": "7",
       "term": "environment",
-      "source": "iso_topic"
+      "source": "iso_topics"
     }
   ],
   "language": "de",
