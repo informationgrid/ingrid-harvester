@@ -69,5 +69,5 @@ export const wfsDefaults: WfsSettings = {
 
 export const wfsCapabilities: ImporterCapabilities = {
     isIncrementalSupported: false,
-    supportedCatalogTypes: ['elasticsearch']
+    supportedCatalogTypes: ['elasticsearch', 'directus']
 };

@@ -59,5 +59,5 @@ export const genesisDefaults: GenesisSettings = {
 
 export const genesisCapabilities: ImporterCapabilities = {
     isIncrementalSupported: false,
-    supportedCatalogTypes: ['elasticsearch', 'piveau']
+    supportedCatalogTypes: ['elasticsearch', 'piveau', 'directus']
 };

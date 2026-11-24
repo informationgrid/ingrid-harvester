@@ -50,5 +50,5 @@ export const cswDefaults: CswSettings = {
 
 export const cswCapabilities: ImporterCapabilities = {
     isIncrementalSupported: true,
-    supportedCatalogTypes: ['csw', 'elasticsearch']
+    supportedCatalogTypes: ['csw', 'elasticsearch', 'directus']
 };
