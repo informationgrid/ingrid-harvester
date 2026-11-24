@@ -1147,22 +1147,20 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             });
         }
 
-        const objectUseConstraint = this.getObjectUseConstraint();
-        if (objectUseConstraint?.license_value?.length) {
-            licenses.push({
-                type: 'useConstraints',
-                items: objectUseConstraint.license_value.map(v => ({ name: v, source: objectUseConstraint.source }))
-            });
+        const useConstraintItems = this.getUseConstraintItems();
+        if (useConstraintItems?.length) {
+            licenses.push({ type: 'useConstraints', items: useConstraintItems });
         }
 
         // not via getObjectAccess() (shared with the deprecated shape): also reads INSPIRE gmx:Anchor values
-        // and resolves codelist 6010, which has no ISO value, by the anchor url or the text
+        // and resolves codelist 6010, which has no ISO value, by the anchor url or the text; a GDI-DE JSON license
+        // text is no access constraint (the license is listed under useConstraints)
         const accessNodes = CswMapper.select('./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:accessConstraints]/*[self::gco:CharacterString or self::gmx:Anchor]', this.baseMapper.idInfo);
         const accessItems = accessNodes?.map(node => {
             const name = node.textContent?.trim();
             const url = node.getAttribute('xlink:href') || undefined;
             return { name, name_ref_uri: this.codelistRef('6010', Codelist.getInstance().getIdByUrlOrText('6010', url, name)) };
-        }).filter(item => item.name);
+        }).filter(item => item.name && !ingridCswMapper.parseLicenseJson(item.name));
         if (accessItems?.length) {
             licenses.push({ type: 'accessConstraints', items: accessItems });
         }
@@ -1269,35 +1267,50 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
         return result?.length ? { terms_of_use_value: result } : undefined;
     }
 
-    // useConstraints/otherConstraints siblings can carry the same license in up to three forms
-    // (GDI-DE convention, see csw.mapper.ts getLicense()/getAccessRights()): the plain license
-    // name/text, a "Quellenvermerk: <source>" free-text line, and a JSON snippet duplicating
-    // name/url plus a "quelle" field. Only the plain text is a real license_value; the other two
-    // just carry the source/attribution for it.
-    getObjectUseConstraint() {
-        let constraints = CswMapper.select("./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:useConstraints]/gmx:Anchor | ./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:useConstraints]/gco:CharacterString", this.baseMapper.idInfo);
-        let texts = constraints?.map(constraint => constraint.textContent).filter(text => text?.trim());
-        if (!texts?.length) return undefined;
-
-        let source: string;
-        let license_value: string[] = [];
-        for (let text of texts) {
-            let trimmed = text.trim();
-            try {
-                let json = JSON.parse(trimmed);
-                source ??= json?.quelle;
-                continue;
-            } catch (ignored) {
-                // not a JSON snippet
-            }
-            let quellenvermerk = trimmed.match(/^Quellenvermerk:\s*(.+)$/);
-            if (quellenvermerk) {
-                source ??= quellenvermerk[1].trim();
+    // GDI-DE convention: a license is written into gmd:otherConstraints as license text, optional note, optional
+    // "Quellenvermerk: <source>" and a JSON { id, name, url, quelle }. As the IGE ISO import
+    // (GeneralMapper.getUseConstraints()): if an element has JSON texts, only these become items (name, codelist 6500
+    // ref by url or name, source from quelle); the plain texts are their human-readable duplicates. Grouped per
+    // MD_LegalConstraints element (not by position as IGE), so a text after its JSON (nokis) is no extra item.
+    getUseConstraintItems(): IngridLicense['items'] {
+        const items: IngridLicense['items'] = [];
+        for (const element of CswMapper.select('./*/gmd:resourceConstraints/*[gmd:useConstraints]', this.baseMapper.idInfo) ?? []) {
+            const texts = CswMapper.select('./gmd:otherConstraints/*[self::gco:CharacterString or self::gmx:Anchor]', element)
+                ?.map(node => node.textContent?.trim()).filter(Boolean) ?? [];
+            const sourceNote = texts.map(text => text.match(/^Quellenvermerk:\s*(.+)$/)?.[1]?.trim()).find(Boolean);
+            const licenses = texts.map(text => ingridCswMapper.parseLicenseJson(text)).filter(Boolean);
+            if (licenses.length) {
+                for (const license of licenses) {
+                    if (!license.name) continue;
+                    items.push({
+                        name: license.name,
+                        name_ref_uri: this.codelistRef('6500', Codelist.getInstance().getIdByUrlOrText('6500', license.url, license.name)),
+                        source: license.quelle || sourceNote,
+                    });
+                }
                 continue;
             }
-            license_value.push(trimmed);
+            for (const text of texts.filter(text => !/^Quellenvermerk:/.test(text))) {
+                items.push({
+                    name: text,
+                    name_ref_uri: this.codelistRef('6500', Codelist.getInstance().getIdByUrlOrText('6500', undefined, text)),
+                    source: sourceNote,
+                });
+            }
         }
-        return license_value.length ? { license_value, source } : undefined;
+        return items.length ? items : undefined;
+    }
+
+    // a GDI-DE JSON license text ({ id, name, url, quelle }), otherwise undefined
+    private static parseLicenseJson(text: string): { id?: string, name?: string, url?: string, quelle?: string } | undefined {
+        if (!text?.startsWith('{')) return undefined;
+        try {
+            const json = JSON.parse(text);
+            return json && typeof json === 'object' && !Array.isArray(json) ? json : undefined;
+        }
+        catch {
+            return undefined;
+        }
     }
 
     getObjectUseConstraintDeprecated() {

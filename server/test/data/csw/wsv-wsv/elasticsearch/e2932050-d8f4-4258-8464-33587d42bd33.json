@@ -27,7 +27,8 @@
         "items": [
           {
             "name": "Datenlizenz Deutschland – Zero – Version 2.0",
-            "source": "© www.pegelonline.wsv.de (2024)"
+            "source": "© www.pegelonline.wsv.de (2024)",
+            "name_ref_uri": "/codelist/6500/25"
           }
         ]
       },

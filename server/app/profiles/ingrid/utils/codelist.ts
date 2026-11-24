@@ -66,6 +66,7 @@ export class Codelist {
         this.readList("codelist_6005.xml");
         this.readList("codelist_6010.xml");
         this.readList("codelist_6400.xml", "id", "de");
+        this.readList("codelist_6500.xml");
         // data quality measure types (one codelist per quality type, no ISO value)
         for (const id of ['7109', '7112', '7113', '7114', '7115', '7120', '7125', '7126', '7127', '7128']) {
             this.readList(`codelist_${id}.xml`);

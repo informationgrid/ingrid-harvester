@@ -36,7 +36,8 @@
         "items": [
           {
             "name": "BSD Lizenz",
-            "source": "Quelle 2"
+            "source": "Quelle 2",
+            "name_ref_uri": "/codelist/6500/20"
           }
         ]
       },
