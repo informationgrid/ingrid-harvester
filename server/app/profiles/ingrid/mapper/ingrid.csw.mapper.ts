@@ -496,7 +496,7 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             description: this.text("./srv:operationDescription/gco:CharacterString", op) ?? undefined,
             access_url: this.text("./srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage/gmd:URL", op) ?? undefined,
         }));
-        const hasAccessConstraints = !!this.getObjectAccess()?.restriction_value?.length;
+        const hasAccessConstraints = this.hasAccessConstraints();
         // TODO: no confirmed ISO source found yet for classifications / environment_description / additional_information / doi
         return {
             type,
@@ -1152,20 +1152,35 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
             licenses.push({ type: 'useConstraints', items: useConstraintItems });
         }
 
-        // not via getObjectAccess() (shared with the deprecated shape): also reads INSPIRE gmx:Anchor values
-        // and resolves codelist 6010, which has no ISO value, by the anchor url or the text; a GDI-DE JSON license
-        // text is no access constraint (the license is listed under useConstraints)
-        const accessNodes = CswMapper.select('./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:accessConstraints]/*[self::gco:CharacterString or self::gmx:Anchor]', this.baseMapper.idInfo);
-        const accessItems = accessNodes?.map(node => {
-            const name = node.textContent?.trim();
-            const url = node.getAttribute('xlink:href') || undefined;
-            return { name, name_ref_uri: this.codelistRef('6010', Codelist.getInstance().getIdByUrlOrText('6010', url, name)) };
-        }).filter(item => item.name && !ingridCswMapper.parseLicenseJson(item.name));
+        const accessItems = this.getAccessConstraintItems();
         if (accessItems?.length) {
             licenses.push({ type: 'accessConstraints', items: accessItems });
         }
 
         return licenses.length ? licenses : undefined;
+    }
+
+    // not via getObjectAccess() (shared with the deprecated shape): also reads INSPIRE gmx:Anchor values
+    // and resolves codelist 6010, which has no ISO value, by the anchor url or the text; a GDI-DE JSON license
+    // text is no access constraint (the license is listed under useConstraints)
+    private getAccessConstraintItems(): IngridLicense['items'] {
+        const accessNodes = CswMapper.select('./*/gmd:resourceConstraints/*/gmd:otherConstraints[../gmd:accessConstraints]/*[self::gco:CharacterString or self::gmx:Anchor]', this.baseMapper.idInfo);
+        return accessNodes?.map(node => {
+            const name = node.textContent?.trim();
+            const url = node.getAttribute('xlink:href') || undefined;
+            return { name, name_ref_uri: this.codelistRef('6010', Codelist.getInstance().getIdByUrlOrText('6010', url, name)) };
+        }).filter(item => item.name && !ingridCswMapper.parseLicenseJson(item.name));
+    }
+
+    // index-ingrid: true if an access constraint is given - "no limitations" (codelist 6010 entry 1,
+    // INSPIRE LimitationsOnPublicAccess/noLimitations) is none; any other 6010 entry, an unknown text or a restriction
+    // code other than otherRestrictions counts as one. Not via getObjectAccess() (deprecated shape, ignores Anchors).
+    private hasAccessConstraints(): boolean {
+        const noLimitations = this.codelistRef('6010', '1');
+        const restrictingItem = this.getAccessConstraintItems()?.some(item => item.name_ref_uri !== noLimitations);
+        const restrictionCodes = CswMapper.select('./*/gmd:resourceConstraints/*/gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue', this.baseMapper.idInfo)
+            ?.map(node => node.textContent?.trim()).filter(Boolean);
+        return !!restrictingItem || !!restrictionCodes?.some(code => code !== 'otherRestrictions');
     }
 
     getConformanceResult(): IngridConformanceResult[] {
