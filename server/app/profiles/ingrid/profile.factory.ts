@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import type { CatalogSettings, CswCatalogSettings, ElasticsearchCatalogSettings, IndexMappingOption, PiveauCatalogSettings } from '@shared/catalog.js';
+import type { CatalogSettings, CswCatalogSettings, DirectusCatalogSettings, ElasticsearchCatalogSettings, IndexMappingOption, PiveauCatalogSettings } from '@shared/catalog.js';
 import log4js from 'log4js';
 import { Catalog, type CatalogColumnType, type CatalogOperation } from '../../catalog/catalog.factory.js';
 import type { CkanMapper } from '../../importer/ckan/ckan.mapper.js';
@@ -139,6 +139,9 @@ export class ingridFactory extends ProfileFactory<ingridSettings, IngridIndexDoc
             case 'csw':
                 const { IngridCswCatalog } = await import('./catalog/csw.catalog.js');
                 return new IngridCswCatalog(catalogSettings as CswCatalogSettings, summary);
+            case 'directus':
+                const { IngridDirectusCatalog } = await import('./catalog/directus.catalog.js');
+                return new IngridDirectusCatalog(catalogSettings as DirectusCatalogSettings, summary);
             case 'piveau':
                 const { PiveauCatalog } = await import('../../catalog/piveau/piveau.catalog.js');
                 return new PiveauCatalog(catalogSettings as PiveauCatalogSettings, summary);

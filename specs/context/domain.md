@@ -7,7 +7,7 @@ updated: 2026-09-28
 
 ## Overview
 
-InGrid Harvester pulls metadata from heterogeneous sources (CSW, WFS, CKAN, JSON, SPARQL, OAI, DCAT-AP.DE, DCAT-AP.PLU, KLD, GENESIS), normalises records into a uniform format, persists to PostgreSQL, and publishes to target catalogs (Elasticsearch, CSW, Piveau). Profile factories (ingrid, diplanung, lvr) tailor behaviour per deployment domain.
+InGrid Harvester pulls metadata from heterogeneous sources (CSW, WFS, CKAN, JSON, SPARQL, OAI, DCAT-AP.DE, DCAT-AP.PLU, KLD, GENESIS), normalises records into a uniform format, persists to PostgreSQL, and publishes to target catalogs (Elasticsearch, CSW, Piveau, Directus). Profile factories (ingrid, diplanung, lvr) tailor behaviour per deployment domain.
 
 ---
 
@@ -16,7 +16,7 @@ InGrid Harvester pulls metadata from heterogeneous sources (CSW, WFS, CKAN, JSON
 | Term | Definition | Aliases |
 |------|-----------|---------|
 | Datasource | Configured external source; identified by numeric `id` and `type` (CSW, WFS, CKAN, …) | Harvester, Importer |
-| Catalog | Target publish system; identified by numeric `id` and `type` (elasticsearch, csw, piveau) | |
+| Catalog | Target publish system; identified by numeric `id` and `type` (elasticsearch, csw, piveau, directus) | |
 | Record | Metadata entry in PostgreSQL; identity: `(identifier, source)` | RecordEntity |
 | Index Document | Elasticsearch-formatted Record (`IndexDocument`) | Dataset |
 | Harvest Run | One scheduled or manual pipeline execution for a datasource | Job |
@@ -46,7 +46,7 @@ InGrid Harvester pulls metadata from heterogeneous sources (CSW, WFS, CKAN, JSON
 **Catalog** — `server/app/catalog/catalog.factory.ts`, `shared/catalog.ts`
 - Identity: numeric `id`, `name`, `type`, `url`
 - Lifecycle per harvest: `prepareImport() → import() → postImport()`
-- Implementations: `ElasticsearchCatalog`, `CswCatalog`, `PiveauCatalog`
+- Implementations: `ElasticsearchCatalog`, `CswCatalog`, `PiveauCatalog`, `DirectusCatalog`
 
 **Record** — `server/app/model/entity.ts`, PostgreSQL `record` table
 - Identity: `(identifier, source)` — UNIQUE constraint

@@ -30,6 +30,7 @@ import SharedFields from "../form-fields/shared.fields";
 import CswType from "../form-fields/csw.type";
 import ElasticsearchType from "../form-fields/elasticsearch.type";
 import PiveauType from "../form-fields/piveau.type";
+import DirectusType from "../form-fields/directus.type";
 import { ConfirmDialogComponent } from "../../shared/confirm-dialog/confirm-dialog.component";
 import { Catalog } from "@shared/catalog";
 import { AuthenticationService } from "../../security/authentication.service";
@@ -66,6 +67,7 @@ export class CatalogOverviewComponent {
     ...CswType.fields(),
     ...ElasticsearchType.fields(),
     ...PiveauType.fields(),
+    ...DirectusType.fields(),
   ];
 
   constructor(

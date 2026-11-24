@@ -133,6 +133,11 @@ export class PostgresUtils extends DatabaseUtils {
         return result.rows.map(row => row.identifier);
     }
 
+    async getDocumentIdsBySourceAndCatalog(source: string, catalog_id: number): Promise<string[]> {
+        let result: pg.QueryResult<any> = await PostgresUtils.pool.query(this.queries.getDocumentIdsBySourceAndCatalog, [source, catalog_id]);
+        return result.rows.map(row => row.id);
+    }
+
     async getServices(source: string): Promise<RecordEntity[]> {
         let result: pg.QueryResult<any> = await this.transactionClient.query(this.queries.getServices, [source]);
         if (result.rowCount == 0) {

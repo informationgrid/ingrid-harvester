@@ -129,7 +129,9 @@
       "title": "Titel",
       "user": "Benutzername",
       "password": "Passwort",
-      "apiKey": "API-Schlüssel"
+      "apiKey": "API-Schlüssel",
+      "catalogId": "Katalog-ID",
+      "batchSize": "Batch-Größe"
     },
     "formHint": {
       "password": "Es wird nur eingestellt, wenn eingegeben.",

@@ -36,6 +36,7 @@ import { ConfigService } from '../../../services/config/ConfigService.js';
 import { camelize, escapeXml } from '../../../utils/misc.utils.js';
 import { ProfileFactoryLoader } from '../../profile.factory.loader.js';
 import { createEsId } from '../ingrid.utils.js';
+import { createIdfForWfs, isCsw, isDeprecatedIngridShape, isWfs, prioritizeAndFilter, resolveCoupling, sortByDocumentId } from './ingrid.bucket.utils.js';
 import type { IngridIndexDocument } from '../model/index.document.js';
 import type { IngridDeprecatedIndexDocument } from '../model/index.document.deprecated.js';
 
@@ -215,7 +216,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
     async processBucket(bucket: Bucket<IndexDocument>, importerSettings: ImporterSettings): Promise<EsOperation[]> {
         let box: EsOperation[] = [];
         // find primary document
-        let { entry, duplicates } = this.prioritizeAndFilter(bucket);
+        let { entry, duplicates } = prioritizeAndFilter(bucket);
         if (!entry?.document) {
             return null;
         }
@@ -228,7 +229,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
                     this.resolveCouplingDeprecated(document as unknown as IngridDeprecatedIndexDocument, service);
                 }
                 else {
-                    this.resolveCoupling(document as IngridIndexDocument, service);
+                    resolveCoupling(document as IngridIndexDocument, service);
                 }
             }
         }
@@ -276,7 +277,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
                 this.createIdfForWfsDeprecated(document as unknown as IngridDeprecatedIndexDocument, duplicates);
             }
             else {
-                this.createIdfForWfs(document as IngridIndexDocument, duplicates);
+                createIdfForWfs(document as IngridIndexDocument, duplicates);
             }
         }
 
@@ -303,49 +304,6 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         return indices;
     }
 
-    private prioritizeAndFilter(bucket: Bucket<IndexDocument>): {
-        entry: BucketDocument<IndexDocument>,
-        duplicates: Map<string | number, BucketDocument<IndexDocument>>
-    } {
-        let mainEntry: BucketDocument<IndexDocument>;
-        let duplicates: Map<string | number, BucketDocument<IndexDocument>> = new Map<string | number, BucketDocument<IndexDocument>>();
-
-        // Special case for WFS: if bucket contains ONLY WFS documents and there is a feature type document,
-        // it should be the main document.
-        let allWfs = true;
-        let featureTypeDocId: string | number = null;
-
-        for (let [id, entry] of bucket.duplicates) {
-            if (!isWfs(entry)) {
-                allWfs = false;
-            }
-            if ((entry.document as any).is_feature_type === true) {
-                featureTypeDocId = id;
-            }
-        }
-
-        if (allWfs && featureTypeDocId !== null) {
-            mainEntry = bucket.duplicates.get(featureTypeDocId);
-            for (let [id, entry] of bucket.duplicates) {
-                if (id !== featureTypeDocId) {
-                    duplicates.set(id, entry);
-                }
-            }
-        }
-        else {
-            for (let [id, entry] of bucket.duplicates) {
-                if (mainEntry == null) {
-                    mainEntry = entry;
-                }
-                else {
-                    duplicates.set(id, entry);
-                }
-            }
-        }
-
-        return { entry: mainEntry, duplicates };
-    }
-
     /**
      * Deduplicate a dataset against a potential duplicate.
      *
@@ -357,55 +315,8 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         return document;
     }
 
-    private resolveCoupling(document: IngridIndexDocument, additionalDoc: any) {
-        if (!additionalDoc) {
-            return;
-        }
-        if (additionalDoc.references?.length) {
-            document.references ??= [];
-            document.references.push(...additionalDoc.references);
-        }
-        // additionalDoc is another already-mapped IngridIndexDocument from the same coupling
-        // (service<->dataset), resolved via the `coupling` table / getBuckets.sql join - only
-        // there (not in a per-record mapper) are both sides of the relationship available at once
-        const additionalDocIsService = additionalDoc.ingrid?.document_type === 'InGridGeoService';
-        const crossReference = {
-            uuid: additionalDoc.id,
-            name: additionalDoc.title,
-            document_type: additionalDoc.ingrid?.document_type,
-            description: additionalDoc.description,
-            // matches the old codelist-2000 labels: 3600 "Gekoppelte Daten" when the coupled
-            // record is the service (viewed from the dataset), 3345 "Basisdaten" when it's the
-            // dataset (viewed from the service) - see codelist_2000.xml
-            reference_type: additionalDocIsService ? 'Gekoppelte Daten' : 'Basisdaten',
-            direction: additionalDocIsService ? 'IN' as const : 'OUT' as const,
-        };
-        document.ingrid.cross_references ??= [];
-        // a service already carries a uuid-only entry per coupled dataset (written by the CSW mapper
-        // from srv:operatesOn) - complete it instead of adding a duplicate
-        const existing = document.ingrid.cross_references.find(ref => ref.uuid === crossReference.uuid);
-        if (existing) {
-            Object.assign(existing, crossReference);
-        }
-        else {
-            document.ingrid.cross_references.push(crossReference);
-        }
-    }
-
-    private createIdfForWfs(document: IngridIndexDocument, duplicates: Map<string | number, BucketDocument<IndexDocument>>) {
-        // create idf
-        let features = [];
-        for (let [id, entry] of duplicates) {
-            let featureDocument = entry.document as IngridIndexDocument;
-            if ((featureDocument as any).is_feature_type === false) {
-                features.push(featureDocument.exports.iso);
-            }
-        }
-        document.idf = document?.idf?.replace('<h2>Features:</h2>', '<h2>Features:</h2>\n' + features.join('\n'));
-    }
-
     // deprecated-shape (IngridDeprecatedIndexDocument) equivalents of resolveCoupling()/createIdfForWfs()
-    // above, ported from the pre-migration catalog (still live on main) - the old shape has no
+    // (ingrid.bucket.utils.ts), ported from the pre-migration catalog (still live on main) - the old shape has no
     // `ingrid.cross_references`/`references`/`exports.iso`, coupling is expressed instead via
     // capabilities_url/refering/object_reference and an IDF cross-reference XML fragment built from
     // t01_object/t011_obj_serv* fields.
@@ -490,37 +401,6 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
         }
         document.idf = document?.idf?.replace('<h2>Features:</h2>', '<h2>Features:</h2>\n' + features.join('\n'));
     }
-}
-
-// checks both the new shape's field (document.metadata.datasource.type) and the deprecated shape's
-// (document.extras.metadata.source.source_type, the same field main's own isCsw/isWfs still read) -
-// exactly one of the two is ever populated, depending on which shape this catalog's mapping produces.
-function isCsw(entry: BucketDocument<IndexDocument>): boolean {
-    const document = entry.document as any;
-    return document.metadata?.datasource?.type === 'csw' || document.extras?.metadata?.source?.source_type === 'csw';
-}
-
-function isWfs(entry: BucketDocument<IndexDocument>): boolean {
-    const document = entry.document as any;
-    return document.metadata?.datasource?.type === 'wfs' || document.extras?.metadata?.source?.source_type === 'wfs';
-}
-
-// true only for IngridDeprecatedIndexDocument (the old flat "ingrid" shape) - the only ingrid-family
-// document shape with a `uuid` but no `id`. opendata-deprecated documents never reach the call sites
-// that use this (isCsw()/isWfs() are always false for CKAN/DCAT-AP.de/Genesis-sourced documents).
-function isDeprecatedIngridShape(document: any): boolean {
-    return 'uuid' in document && !('id' in document);
-}
-
-// the bucket query (getBuckets.sql, a UNION ordered only by anchor_id) returns a bucket's coupled
-// records in arbitrary order - sorting them by document id (deprecated shape: uuid) keeps the
-// references/cross_references that resolveCoupling() appends stable across harvest runs
-function sortByDocumentId(documents: Iterable<any>): any[] {
-    const documentId = (document: any): string => String(document?.id ?? document?.uuid ?? '');
-    return [...documents].sort((a, b) => {
-        const idA = documentId(a), idB = documentId(b);
-        return idA < idB ? -1 : idA > idB ? 1 : 0;
-    });
 }
 
 function escapeIdf(literals: TemplateStringsArray, ...substitutions: any[]) {

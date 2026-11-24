@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import type { CatalogSettings, ElasticsearchCatalogSettings, PiveauCatalogSettings } from '@shared/catalog.js';
+import type { CatalogSettings, DirectusCatalogSettings, ElasticsearchCatalogSettings, PiveauCatalogSettings } from '@shared/catalog.js';
 import * as fs from 'fs';
 import log4js from 'log4js';
 import { Summary } from '../../model/summary.js';
@@ -107,6 +107,9 @@ export class CatalogService {
             }
             else if (existing.type == 'piveau' && settings.type == 'piveau') {
                 MiscUtils.restorePaths(settings as PiveauCatalogSettings, existing as PiveauCatalogSettings, ['settings.apiKey']);
+            }
+            else if (existing.type == 'directus' && settings.type == 'directus') {
+                MiscUtils.restorePaths(settings as DirectusCatalogSettings, existing as DirectusCatalogSettings, ['settings.apiKey']);
             }
             existingSettings[catalogIndex] = settings;
         }

@@ -27,6 +27,7 @@ export default abstract class SharedFields {
                     { label: "CSW", value: "csw" },
                     { label: "Elasticsearch", value: "elasticsearch" },
                     { label: "Piveau", value: "piveau" },
+                    { label: "Directus", value: "directus" },
                   ],
                 },
               },

@@ -7,7 +7,7 @@ updated: 2026-04-24
 
 ## Overview
 
-Monorepo: Node.js/TypeScript server (TsED/Express), Angular web client, shared type library. The server harvests metadata from external sources → persists to PostgreSQL → publishes to target catalogs (Elasticsearch, CSW, Piveau). A profile factory (`ingrid` | `diplanung` | `lvr`) selected at startup determines available importer types, mappers, and catalog implementations.
+Monorepo: Node.js/TypeScript server (TsED/Express), Angular web client, shared type library. The server harvests metadata from external sources → persists to PostgreSQL → publishes to target catalogs (Elasticsearch, CSW, Piveau, Directus). A profile factory (`ingrid` | `diplanung` | `lvr`) selected at startup determines available importer types, mappers, and catalog implementations.
 
 ---
 
@@ -57,7 +57,7 @@ abstract getDatasetColumn(): string
 abstract deleteRecordsForDatasource(sourceId: number): Promise<void>
 abstract deleteCatalog(): Promise<void>
 ```
-Implementations: `ElasticsearchCatalog`, `CswCatalog`, `PiveauCatalog`.
+Implementations: `ElasticsearchCatalog`, `CswCatalog`, `PiveauCatalog`, `DirectusCatalog`.
 
 **`Importer<S extends ImporterSettings>`** — `server/app/importer/importer.ts`
 ```typescript
@@ -91,6 +91,7 @@ Selected via `IMPORTER_PROFILE` env var; loaded once at startup by `ProfileFacto
 |--------|----------|-----------|-------|
 | CSW endpoints | OGC CSW-T 2.0.2 | read + write | `gmd:MD_Metadata` XML |
 | Piveau | REST (DCAT-AP) | write | DCAT-AP data portal |
+| UmweltNAVI Ingest API ("Directus Push-Schnittstelle") | REST (JSON, import sessions) | write | Receives the index documents, post-processes them and stores them in Elasticsearch; `incremental` sessions only (`DirectusCatalog`) |
 | CKAN | CKAN API | read | Dataset metadata |
 | WFS endpoints | OGC WFS | read | Geospatial features |
 | OAI-PMH | OAI-PMH | read | Open archives metadata |
@@ -113,7 +114,7 @@ Selected via `IMPORTER_PROFILE` env var; loaded once at startup by `ProfileFacto
 
 ## Invariants
 
-- **All catalog writes go through the `Catalog` abstract class.** Never write to Elasticsearch, CSW, or Piveau from importers or services directly.
+- **All catalog writes go through the `Catalog` abstract class.** Never write to Elasticsearch, CSW, Piveau, or Directus from importers or services directly.
 - **Every harvest run is transactional.** `beginTransaction` / `commitTransaction` / `rollbackTransaction` bracket the harvest; coverage-check failure rolls back.
 - **Profile is a startup-time singleton.** Resolved once via `ProfileFactoryLoader`; never changed at runtime.
 - **Records are streamed in buckets.** `streamBuckets` async generator pages PostgreSQL results; never load all records into memory.

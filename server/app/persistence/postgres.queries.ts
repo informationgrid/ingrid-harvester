@@ -50,6 +50,7 @@ export class PostgresQueries {
     readonly rollbackSourceImport = this.readFile('rollbackSourceImport');
     readonly getDatasetsBySource = this.readFile('getDatasetsBySource');
     readonly getIdentifiersByCatalog = this.readFile('getIdentifiersByCatalog');
+    readonly getDocumentIdsBySourceAndCatalog = this.readFile('getDocumentIdsBySourceAndCatalog');
     readonly getServices = this.readFile('getServices');
     readonly getBuckets = this.readFile('getBuckets');
     readonly getDatasetIdentifiers = this.readFile('getDatasetIdentifiers');

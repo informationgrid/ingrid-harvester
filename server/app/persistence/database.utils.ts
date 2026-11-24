@@ -92,6 +92,12 @@ export abstract class DatabaseUtils {
 
     abstract getIdentifiersByCatalog(catalog_id: number): Promise<string[]>
 
+    /**
+     * Retrieve the document ids (`dataset.id`, deprecated shape: `dataset.uuid`) of all records of a source
+     * that were harvested for the given catalog - including services.
+     */
+    abstract getDocumentIdsBySourceAndCatalog(source: string, catalog_id: number): Promise<string[]>;
+
     abstract getServices(source: string): Promise<RecordEntity[]>;
 
     abstract ping(): Promise<boolean>;

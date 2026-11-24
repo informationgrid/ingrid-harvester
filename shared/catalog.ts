@@ -60,11 +60,22 @@ export type CswCatalogSettings = CatalogSettings & {
   }
 }
 
+export type DirectusCatalogSettings = CatalogSettings & {
+  settings: {
+    // catalog_id of the UmweltNAVI Ingest API ("Directus Push-Schnittstelle"); `url` is the API base incl. `/ingest/v1`
+    catalogId: string,
+    apiKey?: string,
+    // number of upsert/delete operations sent per request (default 100)
+    batchSize?: number
+  }
+}
+
 export type Catalog = CatalogSettings
   & Partial<PiveauCatalogSettings>
   & Partial<ElasticsearchCatalogSettings>
-  & Partial<CswCatalogSettings>;
+  & Partial<CswCatalogSettings>
+  & Partial<DirectusCatalogSettings>;
 
-export type CatalogType = 'elasticsearch' | 'csw' | 'piveau';
+export type CatalogType = 'elasticsearch' | 'csw' | 'piveau' | 'directus';
 
 export type IndexMappingOption = { label: string; value: string; schemaName?: string };
