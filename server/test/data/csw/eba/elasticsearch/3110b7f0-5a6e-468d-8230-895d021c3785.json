@@ -89,6 +89,20 @@
   },
   "contacts": [
     {
+      "name": "Eisenbahn-Bundesamt",
+      "role": "pointOfContact",
+      "communications": [
+        {
+          "type": "email",
+          "value": "Ref53@eba.bund.de"
+        },
+        {
+          "type": "phone",
+          "value": "+49 228 9826-0"
+        }
+      ]
+    },
+    {
       "code": "D-53175",
       "name": "Eisenbahn-Bundesamt",
       "role": "pointOfContact",

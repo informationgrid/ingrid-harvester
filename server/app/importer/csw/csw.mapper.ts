@@ -1042,13 +1042,12 @@ export class CswMapper extends Mapper<CswSettings> implements ToElasticMapper<In
         return contactPoint; // TODO index all contacts
     }
 
-    async getContactPoints(): Promise<(Contact & { role?: string })[]> {
-        let others = [];
+    async getContactPoints(queries: string[] = [
         // Look up contacts for the dataset first and then the metadata contact
-        let queries = [
-            './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty',
-            './gmd:contact/gmd:CI_ResponsibleParty'
-        ];
+        './gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+        './gmd:contact/gmd:CI_ResponsibleParty'
+    ]): Promise<(Contact & { role?: string })[]> {
+        let others = [];
         for (let i = 0; i < queries.length; i++) {
             let contacts = CswMapper.select(queries[i], this.record);
             for (let j = 0; j < contacts.length; j++) {

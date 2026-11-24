@@ -103,6 +103,52 @@
         }
       ],
       "administrative_area": "Bundesrepublik Deutschland"
+    },
+    {
+      "code": "60598",
+      "name": "Federal Agency for Cartography and Geodesy",
+      "role": "resourceProvider",
+      "street": "Richard-Strauss-Allee 11",
+      "country": "DEU",
+      "locality": "Frankfurt am Main",
+      "communications": [
+        {
+          "type": "email",
+          "value": "mailbox@bkg.bund.de"
+        },
+        {
+          "type": "phone",
+          "value": "+49 69 6333-1"
+        },
+        {
+          "type": "website",
+          "value": "https://www.bkg.bund.de"
+        }
+      ],
+      "administrative_area": "Bundesrepublik Deutschland"
+    },
+    {
+      "code": "04105",
+      "name": "Federal Agency for Cartography and Geodesy",
+      "role": "pointOfContact",
+      "street": "Karl-Rothe-Str. 10-14",
+      "country": "DEU",
+      "locality": "Leipzig",
+      "communications": [
+        {
+          "type": "email",
+          "value": "dlz@bkg.bund.de"
+        },
+        {
+          "type": "phone",
+          "value": "+49 69 6333-2995"
+        },
+        {
+          "type": "website",
+          "value": "https://www.bkg.bund.de"
+        }
+      ],
+      "administrative_area": "Bundesrepublik Deutschland"
     }
   ],
   "keywords": [

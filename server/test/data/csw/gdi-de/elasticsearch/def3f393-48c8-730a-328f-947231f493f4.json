@@ -106,6 +106,17 @@
   },
   "contacts": [
     {
+      "name": "Hessisches Landesamt für Bodenmanagement und Geoinformation",
+      "role": "publisher",
+      "communications": [
+        {
+          "type": "email",
+          "value": "vertrieb-geobasisdaten@hvbg.hessen.de"
+        }
+      ],
+      "administrative_area": "Hessen"
+    },
+    {
       "name": "HLBG",
       "role": "pointOfContact",
       "communications": [

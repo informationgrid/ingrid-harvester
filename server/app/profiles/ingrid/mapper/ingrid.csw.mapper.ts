@@ -684,16 +684,19 @@ export class ingridCswMapper extends ingridMapper<CswMapper> {
     }
 
     async getContacts(): Promise<IndexContact[]> {
-        const contactPoints = await this.baseMapper.getContactPoints();
+        // x-transform: resource contacts of any identification (incl. srv:SV_ServiceIdentification), then the
+        // metadata contacts; distributor contacts (gmd:distributionInfo) are not part of contacts
+        const queries = [
+            './gmd:identificationInfo/*/gmd:pointOfContact/gmd:CI_ResponsibleParty',
+            './gmd:contact/gmd:CI_ResponsibleParty',
+        ];
+        const contactPoints = await this.baseMapper.getContactPoints(queries);
         if (!contactPoints?.length) {
             return undefined;
         }
         // street is read here, not from the shared CswMapper.getContactPoints() (hasStreetAddress is always empty there,
         // fixing it would change other profiles); same parties in the same order as getContactPoints()
-        const parties = [
-            ...CswMapper.select('./gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty', this.baseMapper.record),
-            ...CswMapper.select('./gmd:contact/gmd:CI_ResponsibleParty', this.baseMapper.record),
-        ];
+        const parties = queries.flatMap(query => CswMapper.select(query, this.baseMapper.record));
         const streets = parties.length === contactPoints.length ? parties.map(party => this.getStreet(party)) : [];
         return contactPoints.map((cp, index) => {
             const communications: IndexContact['communications'] = [];
