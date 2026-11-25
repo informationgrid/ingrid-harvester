@@ -124,14 +124,18 @@ export abstract class ingridMapper<M extends ingridMapperType>
     protected abstract getDefaultDocumentKind(): DocumentKind;
 
     private async buildCommonFields() {
+        const modified = this.getModifiedDate()?.toISOString() ?? null;
         return {
             ...this.getCustomEntries(),
             id: this.getGeneratedId(),
             $schema: undefined, // overwritten in createIndexDocument() once the resolved DocumentKind's JSON schema is known
             metadata: {
                 data_type: 'INGRID' as const,
-                created: null,  // TODO: populate from source record
-                modified: this.getModifiedDate()?.toISOString() ?? null,
+                // ISO 19139 / DCAT-AP have no creation date of the metadata record (x-transform: null);
+                // the UmweltNAVI Ingest API requires a value (it drops null and then fails on the missing key)
+                // -> fall back to the modification date
+                created: modified,
+                modified,
                 partner: this.baseMapper.settings.partner?.split(',').map(p => p.trim())[0],
                 provider: this.baseMapper.settings.provider?.split(',').map(p => p.trim())[0],
                 language: this.getMetadataLanguage(),
