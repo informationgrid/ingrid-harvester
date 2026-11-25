@@ -211,6 +211,9 @@ export abstract class Importer<S extends ImporterSettings> {
                         log.error(`Error while importing into catalog ${catalog.settings.name} (id=${catalogId}):`, e);
                         this.summary.errors.push({ type: 'app', error: `Error while importing into catalog ${catalog.settings.name} (id=${catalogId}): ${e.message}` });
                     }
+                    finally {
+                        this.addCatalogStageResults(stageSummary);
+                    }
                 }
                 await this.postHarvestingHandling();
                 observer.next(this.summary.msgComplete());
@@ -263,6 +266,19 @@ export abstract class Importer<S extends ImporterSettings> {
 
     protected async postHarvestingHandling() {
         // For Profile specific Handling
+    }
+
+    /**
+     * Adds the results a catalog reported in its stage summary to the main summary ("default"), which alone
+     * determines the job status, the statistic (harvester_statistic) and the frontend: record errors, warnings
+     * and skipped records of all catalogs are summed up. The stage keeps its values (job history per stage).
+     * errors[] is not added: a record error is counted in numErrors and listed in errors[] (catalog error
+     * pattern), and the frontend counts numErrors + errors.length. The single errors stay in the stage (log).
+     */
+    protected addCatalogStageResults(stage: Summary): void {
+        this.summary.numErrors += stage.numErrors;
+        this.summary.warnings.push(...stage.warnings);
+        this.summary.skippedDocs.push(...stage.skippedDocs);
     }
 
     protected startStage(name: string): Summary {

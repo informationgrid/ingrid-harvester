@@ -186,6 +186,9 @@ export class CswImporter extends Importer<CswSettings> {
                         log.error(`Error while importing into catalog ${catalog.settings.name} (id=${catalogId}):`, e);
                         this.summary.errors.push({ type: 'app', error: `Error while importing into catalog ${catalog.settings.name} (id=${catalogId}): ${e.message}` });
                     }
+                    finally {
+                        this.addCatalogStageResults(stageSummary);
+                    }
                 }
                 await this.postHarvestingHandling();
                 observer.next(this.summary.msgComplete());

@@ -58,7 +58,7 @@ abstract deleteRecordsForDatasource(sourceId: number): Promise<void>
 abstract deleteCatalog(): Promise<void>
 ```
 Implementations: `ElasticsearchCatalog`, `CswCatalog`, `PiveauCatalog`, `DirectusCatalog`.
-A catalog reports into the stage summary it is given (`catalog/<id>`), printed to the server log by `Catalog.process()`. Failed records follow the catalog error pattern in `conventions.md` → Error Handling. The frontend (job status, log dialog) reads only the importer's main summary, so catalog stage errors are not shown there.
+A catalog reports into the stage summary it is given (`catalog/<id>`), printed to the server log by `Catalog.process()`. Failed records follow the catalog error pattern in `conventions.md` → Error Handling. The importer then sums up the stage's `numErrors`, `warnings` and `skippedDocs` in its main summary (`Importer.addCatalogStageResults()`), the only summary read by the job status, `harvester_statistic` and the frontend.
 
 **`Importer<S extends ImporterSettings>`** — `server/app/importer/importer.ts`
 ```typescript

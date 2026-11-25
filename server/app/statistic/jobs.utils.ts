@@ -35,6 +35,16 @@ import { ConfigService } from '../services/config/ConfigService.js';
 const log = log4js.getLogger(import.meta.filename);
 
 
+/**
+ * Total number of errors of a job. The record errors (numErrors) of the catalog stages (`catalog/<id>`) are
+ * already summed up in the main summary (Importer.addCatalogStageResults()), so only their errors[] are added.
+ */
+export function totalNumErrors(globalSummary: Summary, stageSummaries: Summary[] = []): number {
+    const count = (s: Summary, withNumErrors: boolean) => (withNumErrors ? (s?.numErrors ?? 0) : 0) + (s?.errors?.length ?? 0);
+    return count(globalSummary, true)
+        + stageSummaries.reduce((sum, s) => sum + count(s, !s?.stage?.startsWith('catalog/')), 0);
+}
+
 export class JobsUtils {
 
     private indexSettings: IndexSettings;
@@ -83,7 +93,7 @@ export class JobsUtils {
                 status,
                 numDocs: globalSummary?.numDocs ?? 0,
                 numSkipped: globalSummary?.skippedDocs?.length ?? 0,
-                numErrors: allStages.reduce((sum, s) => sum + (s?.numErrors ?? 0) + (s?.errors?.length ?? 0), 0),
+                numErrors: totalNumErrors(globalSummary, stageSummaries),
                 stages,
             }, logMessage.jobId, 1);
             await this.elasticUtils.finishIndex();
