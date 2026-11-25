@@ -167,6 +167,10 @@ export abstract class DirectusCatalog extends Catalog<IndexDocument, DirectusCat
         this.deletes = [];
     }
 
+    /**
+     * Commits the open session and waits for its result. Rejected records (one error each), a failed session
+     * or a timeout are reported in the (stage) summary.
+     */
     private async commitAndWait(): Promise<void> {
         const importId = this.importId;
         await this.client.commit(importId);
@@ -215,10 +219,14 @@ export abstract class DirectusCatalog extends Catalog<IndexDocument, DirectusCat
         }
     }
 
+    /**
+     * Same pattern as CswCatalog: each error counts in numErrors ("Record-Errors"),
+     * is listed as `catalog` error and logged.
+     */
     private addError(message: string): void {
-        log.error(message);
-        this.summary.errors.push({ type: 'app', error: message });
         this.summary.numErrors++;
+        this.summary.errors.push({ type: 'catalog', error: message });
+        log.error(message);
     }
 
     private async abortOpenImport(): Promise<void> {

@@ -152,6 +152,7 @@ describe('IngridDirectusCatalog', function () {
             expect(calls[2].body).to.deep.equal({ delete: [{ id: 'c' }] });
             expect(summary.numDocs).to.equal(2);
             expect(summary.counters).to.deep.equal({ directusReceived: 3, directusProcessed: 3, directusFailed: 0 });
+            expect(summary.numErrors).to.equal(0);
             expect(summary.errors).to.be.empty;
         });
 
@@ -166,9 +167,28 @@ describe('IngridDirectusCatalog', function () {
             await catalog.flushImport();
 
             expect(summary.counters.directusFailed).to.equal(1);
+            // one per rejected record + one for the failed session, as CswCatalog
             expect(summary.numErrors).to.equal(2);
+            expect(summary.errors).to.have.length(2);
+            expect(summary.errors.every(e => e.type == 'catalog')).to.be.true;
             expect(summary.errors[0].error).to.contain("'a'").and.contain('INVALID').and.contain('title missing');
             expect(summary.errors[1].error).to.contain('failed');
+        });
+
+        it('reports one error per rejected record in a completed session', async function () {
+            const catalog = makeCatalog();
+            sessionStates = [session('completed', {
+                operations: { received: { upsert: 2, delete: 0, total: 2 }, processed: 2, failed: 1 },
+                errors: [{ object: { id: 'a' }, code: 'INDEXING_FAILED', message: 'Invalid document' }],
+            })];
+
+            await catalog.importIntoCatalog([{ operation: 'upsert', record: { id: 'a' } }, { operation: 'upsert', record: { id: 'b' } }]);
+            await catalog.flushImport();
+
+            expect(summary.numErrors).to.equal(1);
+            expect(summary.errors).to.have.length(1);
+            expect(summary.errors[0].error).to.contain('INDEXING_FAILED');
+            expect(summary.counters.directusProcessed).to.equal(2);
         });
 
         it('reports an error if the session does not finish in time', async function () {
@@ -179,6 +199,7 @@ describe('IngridDirectusCatalog', function () {
             await catalog.flushImport();
 
             expect(summary.numErrors).to.equal(1);
+            expect(summary.errors).to.have.length(1);
             expect(summary.errors[0].error).to.contain('not finished');
         });
 
@@ -273,6 +294,7 @@ describe('IngridDirectusCatalog', function () {
             const result = await catalog.processBucket(bucket([{ doc: { uuid: 'x' } }]), {} as any);
             expect(result).to.be.null;
             expect(summary.numErrors).to.equal(1);
+            expect(summary.errors).to.deep.equal([{ type: 'catalog', error: summary.errors[0].error }]);
         });
     });
 });

@@ -59,9 +59,9 @@ export class IngridDirectusCatalog extends DirectusCatalog {
         // the deprecated index formats are not supported by the Ingest API
         if (isDeprecatedIngridShape(document)) {
             const msg = `Document ${createEsId(document)} has a deprecated index format and is not sent to Directus catalog '${this.settings.id}'`;
-            log.error(msg);
-            this.summary.errors.push({ type: 'app', error: msg });
             this.summary.numErrors++;
+            this.summary.errors.push({ type: 'catalog', error: msg });
+            log.error(msg);
             return null;
         }
 
