@@ -21,19 +21,24 @@
  * ==================================================
  */
 
-import { Component, input, OnInit } from "@angular/core";
-import { MatExpansionPanel, MatExpansionPanelHeader } from "@angular/material/expansion";
+import {
+  Component,
+  input,
+  OnInit,
+  ChangeDetectionStrategy,
+} from "@angular/core";
+import {
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+} from "@angular/material/expansion";
 import { MatDivider } from "@angular/material/list";
 
 @Component({
   selector: "ingrid-list-item-expandable",
   templateUrl: "./list-item-expandable.component.html",
   styleUrls: ["./list-item-expandable.component.scss"],
-  imports: [
-    MatExpansionPanel,
-    MatExpansionPanelHeader,
-    MatDivider,
-  ],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [MatExpansionPanel, MatExpansionPanelHeader, MatDivider],
 })
 export class ListItemExpandableComponent implements OnInit {
   title = input<string>();

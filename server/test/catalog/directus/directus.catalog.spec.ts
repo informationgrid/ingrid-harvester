@@ -27,7 +27,7 @@ import sinon from 'sinon';
 import type { DirectusCatalogSettings } from '@shared/catalog.js';
 import { Summary } from '../../../app/model/summary.js';
 import { DatabaseFactory } from '../../../app/persistence/database.factory.js';
-import type { Bucket } from '../../../app/persistence/postgres.utils.js';
+import type { Bucket } from '../../../app/model/bucket.js';
 import { IngridDirectusCatalog } from '../../../app/profiles/ingrid/catalog/directus.catalog.js';
 import { ConfigService } from '../../../app/services/config/ConfigService.js';
 import { RequestDelegate } from '../../../app/utils/http-request.utils.js';
@@ -67,7 +67,7 @@ function ingridDoc(id: string, extra: object = {}): any {
 function bucket(docs: { doc: any, deleted?: Date }[], services: any[] = []): Bucket<any> {
     return {
         anchor_id: docs[0].doc.id,
-        duplicates: new Map(docs.map((d, i) => [i + 1, { document: d.doc, deleted: d.deleted }])),
+        documents: new Map(docs.map((d, i) => [i + 1, { document: d.doc, deleted: d.deleted }])),
         operatingServices: new Map(services.map((s, i) => [100 + i, s])),
     };
 }

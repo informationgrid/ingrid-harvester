@@ -21,16 +21,25 @@
  * ==================================================
  */
 
-import { Component, input } from "@angular/core";
+import { Component, input, ChangeDetectionStrategy } from "@angular/core";
 import { MatIcon } from "@angular/material/icon";
 import { MatTooltip } from "@angular/material/tooltip";
 
-export type Status = "success" | "disable" | "cron" | "importing" | "queued" | "error" | "partial" | "cancelled";
+export type Status =
+  | "success"
+  | "disable"
+  | "cron"
+  | "importing"
+  | "queued"
+  | "error"
+  | "partial"
+  | "cancelled";
 
 @Component({
   selector: "ingrid-status-label",
   templateUrl: "./status-label.component.html",
   styleUrls: ["./status-label.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatIcon, MatTooltip],
 })
 export class StatusLabelComponent {

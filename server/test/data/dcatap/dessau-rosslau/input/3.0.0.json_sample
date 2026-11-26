@@ -1,0 +1,176 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@protected": true,
+    "adms": "http://www.w3.org/ns/adms#",
+    "cnt": "http://www.w3.org/2011/content#",
+    "dct": "http://purl.org/dc/terms/",
+    "dash": "http://datashapes.org/dash#",
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "dcatap": "http://data.europa.eu/r5r/",
+    "dcat-us": "http://data.resources.gov/ontology/dcat-us#",
+    "dcat-us-shp": "http://data.resources.gov/shapes/dcat-us#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "dqv": "http://www.w3.org/ns/dqv#",
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "gsp": "http://www.opengis.net/ont/geosparql#",
+    "locn": "http://www.w3.org/ns/locn#",
+    "odrs": "http://schema.theodi.org/odrs#",
+    "org": "http://www.w3c.org/ns/org#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "prov": "http://www.w3.org/ns/prov#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "schema": "http://schema.org/",
+    "sh": "http://www.w3.org/ns/shacl#",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "sdmx-attribute": "http://purl.org/linked-data/sdmx/2009/attribute#",
+    "spdx": "http://spdx.org/rdf/terms#",
+    "vcard": "http://www.w3.org/2006/vcard/ns#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "adms:Identifier": {
+      "@id": "adms:Identifier",
+      "@context": {
+        "schemaAgency": "http://www.w3.org/ns/adms#schemaAgency",
+        "creator": {
+          "@id": "dcterms:creator",
+          "@type": "@id"
+        },
+        "issued": {
+          "@id": "dcterms:issued"
+        },
+        "version": "http://purl.org/dc/terms/version",
+        "notation": "http://www.w3.org/2004/02/skos/core#notation"
+      }
+    }
+  },
+  "@id": "https://www.arcgis.com/home/item.html?id=2427a4958bcf4009b9df0a4b6a367e11",
+  "@type": "dcat:Catalog",
+  "dct:description": "Im Stadtatlas Dessau-Roßlau finden Sie zahlreiche Daten und Informationen zur Stadt Dessau-Roßlau.\nWeitere Informationen erhalten Sie auf der Homepage der Stadt Dessau-Roßlau: https://verwaltung.dessau-rosslau.de/startseite.html null",
+  "dct:title": "Stadtatlas Dessau-Rosslau",
+  "dct:publisher": {
+    "@type": "foaf:Agent",
+    "foaf:name": "Stadt Dessau-Roßlau"
+  },
+  "foaf:homepage": {
+    "@id": "https://open-data.stadtatlas.dessau-rosslau.de"
+  },
+  "dct:language": {
+    "@id": "lang/DEU"
+  },
+  "dct:creator": {
+    "@id": "https://dero.maps.arcgis.com",
+    "@type": "foaf:Agent",
+    "foaf:name": "Stadt Dessau-Roßlau"
+  },
+  "dct:spatial": {
+    "@type": "dct:Location",
+    "dct:bbox": "POLYGON((12.098730884543711,51.98850941385567,12.367196369967617,51.98850941385567,12.367196369967617,51.73166804517168,12.098730884543711,51.73166804517168,12.098730884543711,51.98850941385567))"
+  },
+  "dcat:dataset": [
+    {
+      "@type": "dcat:Dataset",
+      "@id": "a537c7007dd44945bc378eb59e10314c",
+      "dct:identifier": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c",
+      "dct:landingPage": "https://open-data.stadtatlas.dessau-rosslau.de/maps/dero::stadtgliederung-3",
+      "dct:title": "Stadtgliederung",
+      "dct:description": "Stadtteile, Stadtbezirke, Ortschaften, Stadtbezirksbeiräte Seit sich die Städte Dessau und Roßlau im Jahr 2007 zusammenschlossen, ist in der Hauptsatzung der Stadt Dessau-Roßlau festgelegt, dass es zwei Stadtteile gibt: Stadtteil Dessau Stadtteil Roßlau In der Hauptsatzung festgehalten ist außerdem die Bestimmung von 14 Ortschaften: Roßlau, Brambach, Großkühnau, Kleinkühnau, Kleutsch, Kochstedt, Meinsdorf, Mildensee, Mosigkau, Mühlstedt, Rodleben, Sollnitz, Streetz/Natho, Waldersee und die Bildung von 5 Stadtbezirksbeiräten: Stadtbezirksbeirat für die Stadtbezirke Ziebigk und Siedlung Stadtbezirksbeirat für die Stadtbezirke Alten, West und Zoberberg Stadtbezirksbeirat für die Stadtbezirke Süd, Haideburg und Törten Stadtbezirksbeirat für den innerstädtischen Bereich Nord Stadtbezirksbeirat für die Stadtbezirke innerstädtischer Bereich Mitte und innerstädtischer Bereich Süd Grundlage ist die Einteilung der Stadt in 25 Stadtbezirke: Innerstädt. Bereich Nord, Innerstädt. Bereich Mitte, Innerstädt. Bereich Süd, Süd, Haideburg, Törten, Mildensee, Waldersee, Ziebigk, Siedlung, Großkühnau, Kleinkühnau, West, Alten, Kochstedt, Mosigkau, Zoberberg, Kleutsch, Sollnitz, Brambach, Rodleben, Roßlau, Meinsdorf, Mühlstedt, Streetz/Natho.",
+      "dcat:theme": [
+        {
+          "@id": "Statistische Einheiten"
+        }
+      ],
+      "dcat:keyword": "Statistische Einheiten",
+      "dcatap:applicableLegislation": "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services",
+      "foaf:page": {
+        "foaf:Document": "https://www.arcgis.com/sharing/rest/content/items/a537c7007dd44945bc378eb59e10314c/info/metadata/metadata.xml?format=default",
+        "dct:title": "Source metadata",
+        "@type": "foaf:Document"
+      },
+      "dcat:contactPoint": {
+        "vcard:org": "Kreisfreie Stadt Dessau-Roßlau",
+        "vcard:hasEmail": "gis@dessau-rosslau.de",
+        "@id": "https://www.arcgis.com/sharing/rest/community/users/heiko.schrenner?f=json",
+        "vcard:role": "pointOfContact",
+        "@type": "vcard:Kind"
+      },
+      "dct:publisher": {
+        "@type": "foaf:Agent",
+        "foaf:name": "Stadt Dessau-Roßlau"
+      },
+      "dct:location": {
+        "@type": "dcat:bbox",
+        "@value": "POLYGON((12.104646,51.974815,12.369028,51.974815,12.369028,51.732581,12.104646,51.732581,12.104646,51.974815))"
+      },
+      "dct:accessRights": {},
+      "dct:temporal": {
+        "@type": "dcterms:PeriodOfTime",
+        "dct:startDate": {
+          "@type": "xsd:date"
+        },
+        "dct:endDate": {
+          "@type": "xsd:date"
+        }
+      },
+      "dct:subject": [
+        "OpenData",
+        "Verwaltung"
+      ],
+      "dct:provenance": {
+        "@type": "dct:ProvenanceStatement",
+        "@label": {}
+      },
+      "dct:issued": {
+        "@value": "2026-08-07T00:00:00",
+        "@type": "xsd:dateTime"
+      },
+      "dct:modified": {
+        "@value": "2026-08-07T12:26:32.000Z",
+        "@type": "xsd:dateTime"
+      },
+      "dct:language": {
+        "@id": "ger"
+      },
+      "dcat:distribution": [
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://open-data.stadtatlas.dessau-rosslau.de/maps/dero::stadtgliederung-3"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "Web Page",
+          "dct:title": "ArcGIS Hub Dataset",
+          "dct:rights": {
+            "@id": "Datenlizenz Deutschland Namensnennung 2.0 Quellenvermerk: © Stadt Dessau-Roßlau"
+          },
+          "dct:license": {
+            "@id": ""
+          }
+        },
+        {
+          "@type": "dcat:Distribution",
+          "dcat:accessURL": {
+            "@id": "https://www.arcgis.com/home/item.html?id=a537c7007dd44945bc378eb59e10314c"
+          },
+          "dct:format": {
+            "@id": "ftype/HTML"
+          },
+          "dct:description": "A data layer is used to access and display data in a map or scene. Layers support ready-to-use properties and settings of data services.",
+          "dct:title": "ArcGIS Data Layer"
+        },
+        {
+          "@type": "dcat:DataService",
+          "dcat:endpointURL": {
+            "@id": "https://stadtatlas.dessau-rosslau.de/server/rest/services/Verwaltung/Stadtgliederung/FeatureServer"
+          },
+          "dct:conformsTo": {
+            "@id": "GeoServices REST"
+          },
+          "dct:title": "ArcGIS REST service"
+        }
+      ]
+    }
+  ]
+}

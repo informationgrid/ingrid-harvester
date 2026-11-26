@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { ConfigService } from "../config.service";
 import { UntypedFormGroup } from "@angular/forms";
 import { delay } from "rxjs/operators";
@@ -39,6 +39,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
   selector: "app-config-general",
   templateUrl: "./config-general.component.html",
   styleUrls: ["./config-general.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ConfigGeneralComponent implements OnInit {

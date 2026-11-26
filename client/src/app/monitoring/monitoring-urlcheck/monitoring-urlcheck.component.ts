@@ -21,64 +21,69 @@
  * ==================================================
  */
 
-import { urlCheckChart } from '../../charts/reuseableChart';
-import { Chart } from 'chart.js';
-import {Component, inject, AfterViewInit} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { MatDialog } from '@angular/material/dialog';
-import { MonitoringUrlcheckDetailComponent } from './monitoring-urlcheck-detail/monitoring-urlcheck-detail.component';
-import { Observable, lastValueFrom } from 'rxjs';
-import { AuthenticationService } from '../../security/authentication.service';
+import { urlCheckChart } from "../../charts/reuseableChart";
+import { Chart } from "chart.js";
+import {
+  Component,
+  inject,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+} from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { MatDialog } from "@angular/material/dialog";
+import { MonitoringUrlcheckDetailComponent } from "./monitoring-urlcheck-detail/monitoring-urlcheck-detail.component";
+import { Observable, lastValueFrom } from "rxjs";
+import { AuthenticationService } from "../../security/authentication.service";
 
 @Component({
-    selector: 'app-monitoring-urlcheck',
-    templateUrl: './monitoring-urlcheck.component.html',
-    styleUrls: ['./monitoring-urlcheck.component.scss'],
-    standalone: false
+  selector: "app-monitoring-urlcheck",
+  templateUrl: "./monitoring-urlcheck.component.html",
+  styleUrls: ["./monitoring-urlcheck.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class MonitoringUrlCheckComponent implements AfterViewInit {
   private authService = inject(AuthenticationService);
   private http = inject(HttpClient);
   private dialog = inject(MatDialog);
 
-  private chartUrlCheck : Chart;
+  private chartUrlCheck: Chart;
 
   get canStart(): boolean {
-    return !this.authService.hasRole('viewer');
+    return !this.authService.hasRole("viewer");
   }
 
   ngAfterViewInit() {
-    this.draw_chart()
+    this.draw_chart();
   }
   getHarvesterHistory(id: number): Observable<any> {
-    return this.http.get<any>('rest/api/monitoring/urlcheck');
+    return this.http.get<any>("rest/api/monitoring/urlcheck");
   }
 
   public async draw_chart() {
     if (!this.chartUrlCheck) {
       lastValueFrom(this.getHarvesterHistory(6)).then((data) => {
-        this.chartUrlCheck = urlCheckChart('chart_urlcheck', data.history)
+        this.chartUrlCheck = urlCheckChart("chart_urlcheck", data.history);
       });
     } else {
     }
   }
 
   async showDetails(data) {
-    if(data){
+    if (data) {
       const dialogRef = this.dialog.open(MonitoringUrlcheckDetailComponent, {
         data: data,
-        width: '950px',
-        disableClose: true
+        width: "950px",
+        disableClose: true,
       });
     }
   }
-
 
   urlCheck() {
     this.startUrlCheck().subscribe();
   }
 
   startUrlCheck(): Observable<void> {
-    return this.http.post<void>('rest/api/url_check', null);
+    return this.http.post<void>("rest/api/url_check", null);
   }
 }

@@ -28,7 +28,7 @@ import type { License } from '@shared/license.model.js';
 import log4js from 'log4js';
 import { throwError } from 'rxjs';
 import * as xpath from 'xpath';
-import { DCAT_CATEGORY_URL, dcatThemeUriFromKeyword } from '../../dcatapde/dcatapde.utils.js';
+import { DCAT_CATEGORY_URL, dcatThemeUriFromKeyword } from '../../dcatap/dcatap.utils.js';
 import type { Agent, Contact } from '../../../model/agent.js';
 import type { DateRange } from '../../../model/dateRange.js';
 import type { Distribution } from '../../../model/distribution.js';
@@ -810,10 +810,6 @@ export class OaiMapper extends Mapper<OaiSettings> {
             qs: {},
             uri: uri
         };
-
-        if (this.settings.proxy) {
-            config.proxy = this.settings.proxy;
-        }
 
         return config;
     }

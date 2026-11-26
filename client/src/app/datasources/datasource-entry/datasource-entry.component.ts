@@ -21,7 +21,17 @@
  * ==================================================
  */
 
-import { Component, computed, effect, input, output, signal, untracked, ViewChild } from "@angular/core";
+import {
+  Component,
+  computed,
+  effect,
+  input,
+  output,
+  signal,
+  untracked,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { Datasource } from "@shared/datasource";
 import { ImportLogMessage } from "../../../../../server/app/model/import.result";
 import { TranslocoDirective } from "@ngneat/transloco";
@@ -39,6 +49,7 @@ import { DatasourceService } from "../services/datasource.service";
   selector: "harvester-datasource-entry",
   templateUrl: "./datasource-entry.component.html",
   styleUrl: "./datasource-entry.component.scss",
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     TranslocoDirective,
     StatusIndicatorComponent,
@@ -72,7 +83,9 @@ export class DatasourceEntryComponent {
   onCancel = output<void>();
 
   private _cancelling = signal(false);
-  cancelling = computed(() => this._cancelling() || this.importLog()?.cancelling === true);
+  cancelling = computed(
+    () => this._cancelling() || this.importLog()?.cancelling === true,
+  );
 
   isIncrementalSupported = computed(() => {
     return (
@@ -83,7 +96,8 @@ export class DatasourceEntryComponent {
 
   constructor(private datasourceService: DatasourceService) {
     effect(() => {
-      if (this.importLog()?.complete === true) untracked(() => this._cancelling.set(false));
+      if (this.importLog()?.complete === true)
+        untracked(() => this._cancelling.set(false));
     });
   }
 

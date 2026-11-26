@@ -27,8 +27,9 @@ import type { EsCompareOptions } from '../utils/test-utils.js';
 
 // Which deprecated mapping an importer's documents fall into depends on its mapper's default
 // document kind (see the getDefaultDocumentKind() overrides in ingrid.*.mapper.ts: ckan/dcatapde/genesis
-// resolve to 'opendata', csw/wfs to 'ingrid'). Keep in sync when a new opendata-family importer type is added.
-const OPENDATA_IMPORTER_TYPES = new Set(['CKAN', 'DCATAPDE', 'GENESIS']);
+// resolve to 'opendata', csw/wfs to 'ingrid'; dcatap/dcatapde to 'ingrid' with createGeometadata). Keep in sync
+// when a new opendata-family importer type is added.
+const OPENDATA_IMPORTER_TYPES = new Set(['CKAN', 'DCATAP', 'DCATAPDE', 'GENESIS']);
 
 // comparison rules for deprecated-format documents (formerly hard-coded in compareEsDocuments()):
 // `extras` is not compared, the coupling arrays (refering.object_reference, refering_service_uuid)
@@ -44,7 +45,8 @@ const DEPRECATED_COMPARE_OPTIONS: EsCompareOptions = {
  * deprecated-format documents, and compares them with the deprecated format's rules.
  */
 export function withDeprecatedMapping<T extends ImporterSettings>(testCase: ImporterIntegrationTestCase<T>): ImporterIntegrationTestCase<T> {
-    const mappingFile = OPENDATA_IMPORTER_TYPES.has(testCase.settings.type)
+    const createGeometadata = (testCase.settings as { createGeometadata?: boolean }).createGeometadata;
+    const mappingFile = OPENDATA_IMPORTER_TYPES.has(testCase.settings.type) && !createGeometadata
         ? 'opendata-mapping.deprecated'
         : 'default-mapping.deprecated';
     return { ...testCase, mappingFile, compareOptions: DEPRECATED_COMPARE_OPTIONS };

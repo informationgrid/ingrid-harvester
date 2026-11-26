@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { ConfigService } from "../config.service";
 import { forkJoin } from "rxjs";
 import { DatasourceApi } from "../../datasources/services/datasource.api";
@@ -30,6 +30,7 @@ import { DatasourceApi } from "../../datasources/services/datasource.api";
   selector: "app-config-import-export",
   templateUrl: "./config-import-export.component.html",
   styleUrls: ["./config-import-export.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ConfigImportExportComponent implements OnInit {

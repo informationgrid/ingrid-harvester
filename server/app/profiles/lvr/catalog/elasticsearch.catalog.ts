@@ -21,38 +21,63 @@
  * ==================================================
  */
 
+import log4js from 'log4js';
+import type { Observer } from 'rxjs';
 import { ElasticsearchCatalog } from '../../../catalog/elasticsearch/elasticsearch.catalog.js';
 import type { ImporterSettings } from '../../../importer/importer.settings.js';
+import type { Bucket, BucketDocument } from '../../../model/bucket.js';
+import type { ImportLogMessage } from '../../../model/import.result.js';
 import type { EsOperation } from '../../../persistence/elastic.utils.js';
-import type { Bucket, BucketDocument } from '../../../persistence/postgres.utils.js';
 import { createEsId } from '../lvr.utils.js';
-import type { LvrIndexDocument } from '../model/index.document.js';
+import type { LvrIndexDocument, Source } from '../model/index.document.js';
+
+const log = log4js.getLogger(import.meta.filename);
+
+const SOURCE_STALENESS_THRESHOLD_DAYS = parseInt(process.env.SOURCE_STALENESS_THRESHOLD_DAYS ?? '1');
 
 
 export class LvrElasticsearchCatalog extends ElasticsearchCatalog<LvrIndexDocument> {
+
+    private existingSources: Map<string, Source> = new Map();
+
+    async prepareImport(transactionHandle: any, importerSettings: ImporterSettings, observer: Observer<ImportLogMessage>): Promise<void> {
+        await super.prepareImport(transactionHandle, importerSettings, observer);
+
+        // fetch all existing documents' source info in one scroll
+        const generator = this.elastic.scroll<LvrIndexDocument>(this.settings.settings.index, ['id', 'lvr.source']);
+
+        for await (const doc of generator) {
+            if (doc.lvr?.source) {
+                this.existingSources.set(doc.id, {
+                    ...doc.lvr.source,
+                    last_available: doc.lvr.source.last_available ? new Date(doc.lvr.source.last_available) : undefined
+                });
+            }
+        }
+    }
 
     async processBucket(bucket: Bucket<LvrIndexDocument>, importerSettings: ImporterSettings): Promise<EsOperation[]> {
         let box: EsOperation[] = [];
 
         // find primary document
         let { entry, duplicates } = this.prioritizeAndFilter(bucket);
-        let document = entry.document;
+        let mainDocument = entry.document;
 
         // shortcut - if all documents in the bucket should be deleted, delete the document from ES
         let deleteDocument = entry.deleted != null;
-        bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.deleted != null);
+        bucket.documents.forEach(duplicate => deleteDocument &&= duplicate.deleted != null);
         if (deleteDocument) {
-            return [{ operation: 'delete', _id: createEsId(document) }];
+            return [{ operation: 'delete', _id: createEsId(mainDocument) }];
         }
 
         // deduplication
         for (let [id, duplicate] of duplicates) {
-            let old_id = createEsId(document);
+            let old_id = createEsId(mainDocument);
             let duplicate_id = createEsId(duplicate.document);
-            document = this.deduplicate(document, duplicate.document);
-            let document_id = createEsId(document);
-            document.extras.metadata.merged_from ??= [];
-            document.extras.metadata.merged_from.push(duplicate_id);
+            mainDocument = this.deduplicate(mainDocument, duplicate.document);
+            let document_id = createEsId(mainDocument);
+            mainDocument.extras.metadata.merged_from ??= [];
+            mainDocument.extras.metadata.merged_from.push(duplicate_id);
             // remove dataset with old_id if it differs from the newly created id
             if (old_id != document_id) {
                 box.push({ operation: 'delete', _id: old_id });
@@ -63,7 +88,41 @@ export class LvrElasticsearchCatalog extends ElasticsearchCatalog<LvrIndexDocume
             }
         }
 
-        box.push({ operation: 'index', _id: createEsId(document), document });
+        const esId = createEsId(mainDocument);
+
+        // special checks if source.display_url is empty: keep/update document or delete it?
+        if (!mainDocument.lvr.source?.display_url) {
+            const existing = this.existingSources.get(esId);
+
+            // if document does not already exist, don't create it
+            if (!existing) {
+                this.summary.skippedDocs.push(mainDocument.id);
+                log.warn(`Display URL was not accessible for document ${esId}, and no existing source information is available. Skipping document.`);
+                return box;
+            }
+
+            const isStale = !existing.last_available || (Date.now() - existing.last_available.getTime()) 
+                    > SOURCE_STALENESS_THRESHOLD_DAYS * 24 * 60 * 60 * 1000;
+            // if the source is stale (no sufficiently current URL available), delete the document
+            const lastAvailableStr = existing.last_available?.toISOString() ?? 'never';
+            if (isStale) {
+                this.summary.skippedDocs.push(mainDocument.id);
+                log.warn(`Deleting document ${esId} due to stale source (last URL availability: ${lastAvailableStr})`);
+                box.push({ operation: 'delete', _id: esId });
+                return box;
+            }
+            // otherwise use last available source information
+            else {
+                log.warn(`Display URL was not accessible for document ${esId}, reusing existing source (last URL availability: ${lastAvailableStr})`);
+                mainDocument.lvr.source = existing;
+            }
+        }
+        else {
+            // if the source exists: reset last_available to now
+            mainDocument.lvr.source.last_available = new Date();
+        }
+
+        box.push({ operation: 'index', _id: esId, document: mainDocument });
         return box;
     }
 
@@ -73,7 +132,7 @@ export class LvrElasticsearchCatalog extends ElasticsearchCatalog<LvrIndexDocume
     } {
         // initialize records map
         let records: Map<string, Map<string | number, BucketDocument<LvrIndexDocument>>> = new Map<string, Map<string | number, BucketDocument<LvrIndexDocument>>>();
-        for (let [id, entry] of bucket.duplicates) {
+        for (let [id, entry] of bucket.documents) {
             let sourceType = entry.document.extras?.metadata?.source?.source_type;
             let sourceMap = records.get(sourceType);
             if (sourceMap == null) {
@@ -86,7 +145,7 @@ export class LvrElasticsearchCatalog extends ElasticsearchCatalog<LvrIndexDocume
         let mainEntry: BucketDocument<LvrIndexDocument>;
         let duplicates: Map<string | number, BucketDocument<LvrIndexDocument>> = new Map<string | number, BucketDocument<LvrIndexDocument>>();
 
-        for (let [id, entry] of bucket.duplicates) {
+        for (let [id, entry] of bucket.documents) {
             if (mainEntry == null) {
                 mainEntry = entry;
             }

@@ -1,7 +1,7 @@
 import { FormlyFieldConfig } from "@ngx-formly/core";
 import { SharedFields } from "../shared.fields";
 
-export abstract class DcatType {
+export abstract class DcatapdeType {
   static fields(): FormlyFieldConfig[] {
     return [
       {

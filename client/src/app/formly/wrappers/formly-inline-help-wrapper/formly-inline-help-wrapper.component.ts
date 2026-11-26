@@ -26,6 +26,7 @@ import {
   Component,
   TemplateRef,
   ViewChild,
+  ChangeDetectionStrategy,
 } from "@angular/core";
 import { FieldTypeConfig, FieldWrapper } from "@ngx-formly/core";
 import { ContextHelpButtonComponent } from "../../../shared/context-help/context-help-button/context-help-button.component";
@@ -33,6 +34,7 @@ import { ContextHelpButtonComponent } from "../../../shared/context-help/context
 @Component({
   selector: "formly-inline-help-wrapper",
   templateUrl: "./formly-inline-help-wrapper.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ContextHelpButtonComponent],
 })
 export class FormlyInlineHelpWrapperComponent

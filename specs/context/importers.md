@@ -155,3 +155,5 @@ classDiagram
 ```
 
 Level-3 mappers implement `DocumentFactory<TargetDoc>` and **wrap** a Level-2 mapper instance rather than extending it. They are instantiated by the profile factory's `getDocumentFactory(mapper)`.
+
+Import status: `Summary.msgComplete()` returns `error` on errors, else `partial` if more records are in `skippedDocs` than in `filteredDocs`, else `success`. Records skipped on purpose by `Mapper.shouldBeSkipped()` (filter settings) belong to both lists, so they reduce the "imported" count without making the import partial (currently filled by the DCAT-AP importers).

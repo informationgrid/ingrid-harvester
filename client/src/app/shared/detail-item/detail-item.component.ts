@@ -21,7 +21,12 @@
  * ==================================================
  */
 
-import { Component, input, output } from "@angular/core";
+import {
+  Component,
+  input,
+  output,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { MatIcon } from "@angular/material/icon";
 import { MatIconButton } from "@angular/material/button";
 
@@ -29,6 +34,7 @@ import { MatIconButton } from "@angular/material/button";
   selector: "ingrid-detail-item",
   templateUrl: "./detail-item.component.html",
   styleUrls: ["./detail-item.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatIcon, MatIconButton],
 })
 export class DetailItemComponent {

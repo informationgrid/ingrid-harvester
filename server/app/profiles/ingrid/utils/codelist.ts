@@ -149,6 +149,10 @@ export class Codelist {
         }
         return undefined;
     }
+    getEntries(codelistId): { id: string, value: string, data: string }[] {
+        return this.lists[codelistId] ?? [];
+    }
+
     getByData(codelistId, data){
         if(data && Object.keys(this.lists).includes(codelistId)) {
             const entry = this.lists[codelistId].find(entry => entry.data === data);

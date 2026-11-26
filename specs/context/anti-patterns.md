@@ -2,7 +2,7 @@
 type: context
 topic: anti-patterns
 status: draft
-updated: 2026-04-28
+updated: 2026-10-12
 ---
 
 ## AP-001: Leaving stub implementations in production code
@@ -32,6 +32,16 @@ updated: 2026-04-28
 **Why it's wrong:** "Do not use ASCII art" covers this; the code-block wrapper does not make it acceptable.
 
 **Use instead:** Mermaid — `classDiagram` for hierarchies, `flowchart` for sequences, `erDiagram` for data models.
+
+---
+
+## AP-004: Unguarded `model.x` in Formly string expressions inside keyed field groups
+
+**Pattern:** `expressions: { hide: "!model.hasPassword" }` on a field whose parent is a keyed group (e.g. `key: "settings"`).
+
+**Why it's wrong:** With `resetOnHide`, Formly deletes the group's value while the group is hidden, so `model` is `undefined` when the expression first runs. The resulting `TypeError` is rethrown by Formly and leaves its expression check locked — no further expressions in the form are evaluated (fields don't show/hide anymore). This only shows up for new (empty) models, not when editing existing data.
+
+**Use instead:** Optional chaining: `"!model?.hasPassword"`.
 
 <!-- Add new anti-patterns as they are discovered:
 ## AP-NNN: Short title

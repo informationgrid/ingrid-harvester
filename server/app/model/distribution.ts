@@ -46,4 +46,6 @@ export interface Distribution {
         url?: string;
         attribution_by_text?: string;
     };
+    availability?: string;
+    languages?: string[];
 }

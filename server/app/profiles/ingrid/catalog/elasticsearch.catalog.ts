@@ -31,7 +31,7 @@ import type { IndexDocument } from '../../../model/index.document.js';
 import { ElasticsearchFactory } from '../../../persistence/elastic.factory.js';
 import { validateDocument } from '../../../persistence/elastic.validation.js';
 import type { EsOperation } from '../../../persistence/elastic.utils.js';
-import type { Bucket, BucketDocument } from '../../../persistence/postgres.utils.js';
+import type { Bucket, BucketDocument } from '../../../model/bucket.js';
 import { ConfigService } from '../../../services/config/ConfigService.js';
 import { camelize, escapeXml } from '../../../utils/misc.utils.js';
 import { ProfileFactoryLoader } from '../../profile.factory.loader.js';
@@ -236,7 +236,7 @@ export class IngridElasticsearchCatalog extends ElasticsearchCatalog {
 
         // shortcut - if all documents in the bucket should be deleted, delete the document from ES
         let deleteDocument = entry.deleted != null;
-        bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.deleted != null);
+        bucket.documents.forEach(duplicate => deleteDocument &&= duplicate.deleted != null);
         if (deleteDocument) {
             return [{ operation: 'delete', _index: this.settings.settings.index, _id: document.id }];
         }

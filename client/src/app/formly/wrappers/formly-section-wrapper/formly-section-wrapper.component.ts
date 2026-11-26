@@ -21,7 +21,7 @@
  * ==================================================
  */
 
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { FieldTypeConfig, FieldWrapper } from "@ngx-formly/core";
 import { MatDivider } from "@angular/material/list";
 import { ContextHelpButtonComponent } from "../../../shared/context-help/context-help-button/context-help-button.component";
@@ -30,6 +30,7 @@ import { ContextHelpButtonComponent } from "../../../shared/context-help/context
   selector: "formly-section-wrapper",
   templateUrl: "./formly-section-wrapper.component.html",
   styleUrls: ["./formly-section-wrapper.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatDivider, ContextHelpButtonComponent],
 })
 export class FormlySectionWrapperComponent extends FieldWrapper<FieldTypeConfig> {}

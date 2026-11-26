@@ -21,7 +21,13 @@
  * ==================================================
  */
 
-import { Component, input, output, ViewChild } from "@angular/core";
+import {
+  Component,
+  input,
+  output,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import type { JobEntry } from "@shared/job";
 import {
   CdkFixedSizeVirtualScroll,
@@ -43,6 +49,7 @@ import { TranslocoDirective } from "@ngneat/transloco";
   selector: "harvester-job-entry",
   templateUrl: "./job-entry.component.html",
   styleUrls: ["./job-entry.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CdkFixedSizeVirtualScroll,
     CdkVirtualForOf,

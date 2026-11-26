@@ -41,6 +41,7 @@ import {
   HTTP_INTERCEPTORS,
   provideHttpClient,
   withInterceptorsFromDi,
+  withXhr,
 } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ConfigService } from "./config.service";
@@ -164,7 +165,7 @@ const appRoutes: Routes = routes;
     },
     { provide: MAT_CARD_CONFIG, useValue: { appearance: "raised" } },
     KeycloakService,
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withXhr(), withInterceptorsFromDi()),
     provideFormlyCore({
       types: [
         { name: "toggle", component: FormlyToggleTypeComponent },

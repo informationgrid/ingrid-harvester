@@ -21,8 +21,18 @@
  * ==================================================
  */
 
-import { Component, Inject, OnInit } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent } from "@angular/material/dialog";
+import {
+  Component,
+  Inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from "@angular/core";
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+} from "@angular/material/dialog";
 import { DialogHeaderComponent } from "../dialog-header/dialog-header.component";
 import { MatButton } from "@angular/material/button";
 import { CdkDrag, CdkDragHandle } from "@angular/cdk/drag-drop";
@@ -31,6 +41,7 @@ import { CdkDrag, CdkDragHandle } from "@angular/cdk/drag-drop";
   selector: "app-confirm-dialog",
   templateUrl: "./confirm-dialog.component.html",
   styleUrls: ["./confirm-dialog.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     DialogHeaderComponent,
     MatDialogContent,

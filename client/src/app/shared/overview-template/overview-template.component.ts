@@ -21,13 +21,14 @@
  * ==================================================
  */
 
-import { Component, input } from "@angular/core";
+import { Component, input, ChangeDetectionStrategy } from "@angular/core";
 import { ContextHelpDirective } from "../context-help/context-help.directive";
 
 @Component({
   selector: "ingrid-overview-template",
   templateUrl: "./overview-template.component.html",
   styleUrls: ["./overview-template.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ContextHelpDirective],
 })
 export class OverviewTemplateComponent {

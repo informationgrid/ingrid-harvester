@@ -50,13 +50,11 @@ export type ImporterSettings = {
     id?: number,                          // internal database ID of this harvester configuration; backend-only
     maxConcurrent: number,                // max simultaneous HTTP requests during harvest; UI-configurable
     maxRecords?: number,                  // max records fetched per request page; UI-configurable
-    proxy?: string,                       // HTTP proxy URL for outbound requests; backend-only (global config)
     showCompleteSummaryInfo?: boolean,    // if true, log includes full harvest detail instead of summary; backend-only
     skipUrlCheckOnHarvest?: boolean,      // if true, skips availability check for distribution URLs; backend-only
     startPosition?: number,               // page offset to start harvesting from (1-based); UI-configurable
     type: string,                         // importer type identifier (e.g. 'CSW', 'WFS'); UI-configurable (set at creation, read-only after)
     whitelistedIds?: string[],            // IDs to always include even if also blacklisted; UI-configurable
-    rejectUnauthorizedSSL?: boolean,      // if false, ignores invalid SSL certificates; backend-only (global config)
     rules?: {
         containsDocumentsWithData?: boolean,          // if true, only include records that have at least one downloadable distribution; UI-configurable
         containsDocumentsWithDataBlacklist?: string   // comma-separated file formats to exclude from the data-download check; UI-configurable
@@ -70,7 +68,7 @@ export type ImporterCapabilities = {
     supportedCatalogTypes: CatalogType[];
 };
 
-export type ImporterType = 'CKAN' | 'CSW' | 'DCATAPDE' | 'DCATAPPLU' | 'GENESIS' | 'JSON' | 'KLD' | 'OAI' | 'SPARQL' | 'WFS' | 'WFS.FIS' | 'WFS.MS' | 'WFS.XPLAN' | 'WFS.XPLAN.SYN';
+export type ImporterType = 'CKAN' | 'CSW' | 'DCATAP' | 'DCATAPDE' | 'DCATAPPLU' | 'GENESIS' | 'JSON' | 'KLD' | 'OAI' | 'SPARQL' | 'WFS' | 'WFS.FIS' | 'WFS.MS' | 'WFS.XPLAN' | 'WFS.XPLAN.SYN';
 
 export type ImporterTypeInfo = {
     type: ImporterType;
@@ -89,7 +87,6 @@ export const defaultImporterSettings: ImporterSettings = {
     startPosition: 1,
     // catalogId: null,
     catalogIds: [],
-    rejectUnauthorizedSSL: true,
     rules: {
         containsDocumentsWithData: false
     },

@@ -81,11 +81,6 @@ export abstract class Importer<S extends ImporterSettings> {
         this.summary = new Summary('harvest', this.settings);
         this.database = DatabaseFactory.getDatabaseUtils(this.generalConfig.database, this.summary);
         this.elastic = ElasticsearchFactory.getElasticUtils(this.generalConfig.elasticsearch, this.summary);
-
-        // override harvester-specific setting if the general config param is set
-        if (this.generalConfig.allowAllUnauthorizedSSL) {
-            this.settings.rejectUnauthorizedSSL = false;
-        }
     }
 
     public cancel(isUserCancelled: boolean = true): void {

@@ -1519,6 +1519,10 @@
           "type": "text",
           "analyzer": "ngram",
           "search_analyzer": "german"
+        },
+        "keyword": {
+          "type": "keyword",
+          "normalizer": "lowercase"
         }
       },
       "analyzer": "german"

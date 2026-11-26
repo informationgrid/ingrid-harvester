@@ -21,20 +21,26 @@
  * ==================================================
  */
 
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA} from "@angular/material/dialog";
-import {ImportLogMessage} from "../../../../../server/app/model/import.result";
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import {
+  Component,
+  Inject,
+  OnInit,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from "@angular/core";
+import { MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { ImportLogMessage } from "../../../../../server/app/model/import.result";
+import { CdkVirtualScrollViewport } from "@angular/cdk/scrolling";
 
 @Component({
-    selector: 'app-dialog-log',
-    templateUrl: './dialog-log.component.html',
-    styleUrls: ['./dialog-log.component.scss'],
-    standalone: false
+  selector: "app-dialog-log",
+  templateUrl: "./dialog-log.component.html",
+  styleUrls: ["./dialog-log.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class DialogLogComponent implements OnInit {
-
-  @ViewChild(CdkVirtualScrollViewport, {static: false})
+  @ViewChild(CdkVirtualScrollViewport, { static: false })
   viewPort: CdkVirtualScrollViewport;
 
   appErrors: string[] = [];
@@ -44,14 +50,19 @@ export class DialogLogComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
     const message: ImportLogMessage = data.content;
-    this.appErrors = (message.summary.errors ?? []).filter(e => e.type === 'app').map(e => e.error);
-    this.databaseErrors = (message.summary.errors ?? []).filter(e => e.type === 'database').map(e => e.error);
-    this.elasticsearchErrors = (message.summary.errors ?? []).filter(e => e.type === 'elastic').map(e => e.error);
+    this.appErrors = (message.summary.errors ?? [])
+      .filter((e) => e.type === "app")
+      .map((e) => e.error);
+    this.databaseErrors = (message.summary.errors ?? [])
+      .filter((e) => e.type === "database")
+      .map((e) => e.error);
+    this.elasticsearchErrors = (message.summary.errors ?? [])
+      .filter((e) => e.type === "elastic")
+      .map((e) => e.error);
     this.appWarnings = message.summary.warnings;
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   getInitialIndex() {
     if (this.appErrors.length > 0) {

@@ -21,128 +21,14 @@
  * ==================================================
  */
 
-import turfBbox from '@turf/bbox';
-import log4js from 'log4js';
-import { DcatapdeMapper } from "../../../importer/dcatapde/dcatapde.mapper.js";
-import type { IndexContact, IndexSpatial } from '../../../model/index.document.js';
-import type { IngridOpendataDistribution } from "../model/opendataindex.document.js";
-import type { IngridOpendataDeprecatedIndexDocument } from "../model/opendataindex.document.deprecated.js";
-import { ingridMapper, type DocumentKind } from './ingrid.mapper.js';
-import { Codelist } from "../utils/codelist.js";
+import type { DcatapdeMapper } from '../../../importer/dcatapde/dcatapde.mapper.js';
+import type { IndexContact } from '../../../model/index.document.js';
+import { ingridDcatapMapper } from './ingrid.dcatap.mapper.js';
 
-const log = log4js.getLogger(import.meta.filename);
-
-export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> {
-
-    protected getDefaultDocumentKind(): DocumentKind {
-        return 'opendata';
-    }
-
-    protected override getDocumentBuilders() {
-        return {
-            ...super.getDocumentBuilders(),
-            'opendata-deprecated': () => this.buildOpendataDeprecatedDocument(),
-        };
-    }
-
-    // the pre-migration ("opendata") document shape - see ingridCkanMapper's equivalent for context;
-    // same shape, wired to DCAT-AP.de's own data sources.
-    private async buildOpendataDeprecatedDocument(): Promise<IngridOpendataDeprecatedIndexDocument> {
-        const settings = this.baseMapper.settings;
-        let result: IngridOpendataDeprecatedIndexDocument = {
-            ...this.getCustomEntries(),
-            iPlugId: settings.iPlugId,
-            partner: settings.partner?.split(',').map(p => p.trim()),
-            provider: settings.provider?.split(',').map(p => p.trim()),
-            organisation: this.transformToIgcDomainId(settings.provider, "111"),
-            datatype: settings.datatype?.split(',').map(p => p.trim()) ?? ["default"],
-            dataSourceName: settings.dataSourceName,
-            boost: settings.boost,
-            isfolder: "false",
-            metadata: {
-                created: null,
-                modified: this.getModifiedDate(),
-            },
-            id: this.getGeneratedId(),
-            uuid: this.getGeneratedId(),
-            modified: this.getModifiedDate(),
-            collection: {
-                name: settings.dataSourceName,
-            },
-            extras: {
-                metadata: {
-                    harvested: this.baseMapper.getHarvestingDate(),
-                    harvesting_errors: null,
-                    issued: null,
-                    is_valid: null,
-                    modified: null,
-                    source: this.baseMapper.getMetadataSource(),
-                    merged_from: []
-                }
-            },
-            sort_hash: this.getSortUuid(),
-            content: null, // assigned after
-            rdf: null, // assigned after
-            t01_object: {
-                obj_id: this.getGeneratedId()
-            },
-            title: this.getTitle(),
-            description: this.baseMapper.getDescription(),
-            dcat: {
-                landingPage: this.baseMapper.getLandingPage(),
-            },
-            contacts: this.getOldContacts(),
-            keywords: this.getKeywords(),
-            legal_basis: this.baseMapper.getLegalBasis(),
-            // getDistributions() was retyped for the new shape (IngridOpendataDistribution) - bypass
-            // it and go straight to the base importer mapper, matching the old field layout.
-            distributions: await this.baseMapper.getDistributions(),
-            political_geocoding_level_uri: this.baseMapper.getPoliticalGeocodingLevelURI(),
-            spatial: {
-                geometries: [this.baseMapper.getSpatial()]
-            },
-            temporal: {
-                "accrual_periodicity": "",
-                "accrual_periodicity_key": ""
-            },
-        };
-        result.content = this.getContent(result);
-        // add "rdf" at the end, so it does not get included in the "content" array
-        result.rdf = "<?xml version='1.0' encoding='UTF-8'?><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">" + this.getHarvestedData() + "</rdf:RDF>";
-        return result;
-    }
-
-    private getOldContacts(): any[] {
-        const withRole = (role: string) => (contact: any) => ({ role: this.getRoleId(role), ...contact });
-        return [
-            ...this.baseMapper.getPublisher().map(withRole("publisher")),
-            ...this.baseMapper.getCreator().map(withRole("creator")),
-            ...this.baseMapper.getMaintainer().map(withRole("maintainer")),
-            ...this.baseMapper.getOriginator().map(withRole("originator")),
-        ];
-    }
-
-    private getRoleId(role: string) {
-        switch (role) {
-            case "publisher": return 10;
-            case "creator": return 11;
-            case "maintainer": return 2;
-            case "originator": return 6;
-        }
-        return role;
-    }
-
-    getDescription(): string {
-        return this.baseMapper.getDescription();
-    }
-
-    async getRdf(): Promise<string> {
-        return "<?xml version='1.0' encoding='UTF-8'?><rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">" + this.getHarvestedData() + "</rdf:RDF>";
-    }
-
-    getLandingPage(): string {
-        return this.baseMapper.getLandingPage();
-    }
+/**
+ * Index document of a DCAT-AP.de dataset: `ingridDcatapMapper` plus the `dcatde:` properties.
+ */
+export class ingridDcatapdeMapper extends ingridDcatapMapper<DcatapdeMapper> {
 
     getLegalBasis(): string {
         return this.baseMapper.getLegalBasis();
@@ -152,75 +38,17 @@ export class ingridDcatapdeMapper extends ingridMapper<DcatapdeMapper> {
         return this.baseMapper.getPoliticalGeocodingLevelURI();
     }
 
-    getSpatials(): IndexSpatial[] {
-        const geometry = this.baseMapper.getSpatial();
-        return geometry ? [{ geometry, bbox: turfBbox(geometry) }] : undefined;
-    }
-
-    getKeywords() {
-        let result = [];
-        let keywords = this.baseMapper.getKeywords();
-        let themes = this.baseMapper.getThemes();
-        keywords?.forEach(keyword => {
-            if (this.hasValue(keyword) && !result.some(r => r.term === keyword)) {
-                result.push({
-                    term: keyword,
-                    id: "",
-                    source: "FREE",
-                });
-            }
-        });
-        themes?.forEach(theme => {
-            if (this.hasValue(theme)) {
-                theme = theme.substring(theme.lastIndexOf("/") + 1)
-                const themeEntry = Codelist.getInstance().getByData("6400", theme)
-                if(!result.some(r => r.id === themeEntry.id && r.source === "THEMES")) {
-                    result.push({
-                        term: themeEntry.value,
-                        id: themeEntry.id,
-                        source: "THEMES",
-                    });
-                }
-            }
-        });
-        return result;
-    }
-
-    async getContacts(): Promise<IndexContact[]> {
-        const toContact = (role: string) => (agent: { name: string, homepage?: string, mbox?: string }): IndexContact => {
-            const communications: IndexContact['communications'] = [];
-            if (agent.mbox) communications.push({ type: 'email', value: agent.mbox });
-            if (agent.homepage) communications.push({ type: 'website', value: agent.homepage });
-            return {
-                role,
-                name: agent.name,
-                communications: communications.length ? communications : undefined,
-            };
-        };
+    protected getOldContacts(): any[] {
         return [
-            ...this.baseMapper.getPublisher().map(toContact('publisher')),
-            ...this.baseMapper.getCreator().map(toContact('creator')),
-            ...this.baseMapper.getMaintainer().map(toContact('maintainer')),
-            ...this.baseMapper.getOriginator().map(toContact('originator')),
+            ...super.getOldContacts(),
+            ...this.baseMapper.getOriginator().map(contact => {return {role: this.getRoleId("originator"), ...contact}}),
         ];
     }
 
-    getIDF() {
-        return null;
-    }
-
-    async getDistributions(): Promise<IngridOpendataDistribution[]> {
-        const distributions = await this.baseMapper.getDistributions();
-        // DcatapdeMapper also sets languages and availability, which the base Distribution type does not declare
-        return (distributions as (typeof distributions[number] & { languages?: string[], availability?: string })[])?.map(d => ({
-            format: d.format?.[0],
-            access_url: d.accessURL ?? d.access_url,
-            modified: d.modified?.toISOString(),
-            title: d.title,
-            description: d.description,
-            license: this.getDistributionLicense(d.license),
-            languages: d.languages?.length ? d.languages : undefined,
-            availability: d.availability || undefined,
-        }));
+    async getContacts(): Promise<IndexContact[]> {
+        return [
+            ...await super.getContacts(),
+            ...this.baseMapper.getOriginator().map(this.toIndexContact('originator')),
+        ];
     }
 }

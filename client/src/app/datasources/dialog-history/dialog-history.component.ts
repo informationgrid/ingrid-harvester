@@ -21,51 +21,55 @@
  * ==================================================
  */
 
-import { historyChart } from '../../charts/reuseableChart';
-import { AfterViewInit, Component, Inject, OnInit } from '@angular/core';
-import { Chart, registerables } from 'chart.js';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { UntypedFormBuilder } from '@angular/forms';
-
-
+import { historyChart } from "../../charts/reuseableChart";
+import {
+  AfterViewInit,
+  Component,
+  Inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from "@angular/core";
+import { Chart, registerables } from "chart.js";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { UntypedFormBuilder } from "@angular/forms";
 
 @Component({
-    selector: 'app-dialog-history',
-    templateUrl: './dialog-history.component.html',
-    styleUrls: ['./dialog-history.component.scss'],
-    standalone: false
+  selector: "app-dialog-history",
+  templateUrl: "./dialog-history.component.html",
+  styleUrls: ["./dialog-history.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class DialogHistoryComponent implements OnInit, AfterViewInit {
-
-  dialogTitle = 'Harvester Historie: ';
+  dialogTitle = "Harvester Historie: ";
 
   data;
 
   chart;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public history: any,
-              public dialogRef: MatDialogRef<DialogHistoryComponent>,
-              private formBuilder: UntypedFormBuilder) {
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public history: any,
+    public dialogRef: MatDialogRef<DialogHistoryComponent>,
+    private formBuilder: UntypedFormBuilder,
+  ) {
     this.data = history;
-    this.dialogTitle += this.data.harvester
+    this.dialogTitle += this.data.harvester;
     Chart.register(...registerables);
   }
 
-  ngOnInit() {
-  }
-  
+  ngOnInit() {}
+
   ngOnDestroy(): void {
     // Destroy chart instance when the component is destroyed
     if (this.chart) {
       this.chart.destroy();
     }
   }
-  
+
   ngAfterViewInit() {
     if (this.chart) {
       this.chart.destroy(); // Destroy the existing chart instance
     }
-    this.chart = historyChart('chart', this.data.history)
+    this.chart = historyChart("chart", this.data.history);
   }
-
 }

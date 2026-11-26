@@ -21,13 +21,14 @@
  * ==================================================
  */
 
-import { Component, input } from "@angular/core";
+import { Component, input, ChangeDetectionStrategy } from "@angular/core";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 
 @Component({
   selector: "ingrid-circular-progress-indicator",
   templateUrl: "./circular-progress-indicator.component.html",
   styleUrls: ["./circular-progress-indicator.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatProgressSpinner],
 })
 export class CircularProgressIndicatorComponent {

@@ -37,6 +37,14 @@ export const ISO_639_1_TO_3: Record<string, string> = {
     sl: 'SLV', ga: 'GLE', mt: 'MLT',
 };
 
+/**
+ * @returns the last path segment (or fragment) of an IRI, URI-decoded
+ */
+export function getLastPathSegment(iri: string): string {
+    const segment = iri.replace(/[/#]+$/, '');
+    return decodeURIComponent(segment.substring(Math.max(segment.lastIndexOf('/'), segment.lastIndexOf('#')) + 1));
+}
+
 // TODO: refactor into a mapping file
 export function dcatThemeUriFromKeyword(keyword: string): string {
     if (!keyword) return null;

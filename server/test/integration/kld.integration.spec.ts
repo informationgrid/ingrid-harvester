@@ -23,7 +23,7 @@
 
 import type { KldSettings } from '../../app/importer/kld/kld.settings.js';
 import kldKuladigSettings from '../data/kld/kuladig/config.json' with { type: 'json' };
-import { runImporterIntegrationTest, setupIntegrationTestLifecycle } from '../utils/integration-test-runner.js';
+import { runImporterIntegrationTest, setupIntegrationTestLifecycle, type HttpMockRule } from '../utils/integration-test-runner.js';
 
 describe('KLD Integration Tests', function () {
     this.timeout(60000);
@@ -42,8 +42,8 @@ describe('KLD Integration Tests', function () {
     });
 });
 
-function createKuladigMocks(...ids: string[]): any[] {
-    const mocks = [];
+function createKuladigMocks(...ids: string[]): HttpMockRule[] {
+    const mocks: HttpMockRule[] = [];
     mocks.push({
         match: { url: 'https://www.kuladig.de/api/public/Objekt' },
         fixture: 'input/Objekt.json'
@@ -52,6 +52,9 @@ function createKuladigMocks(...ids: string[]): any[] {
         mocks.push({
             match: { url: `https://www.kuladig.de/api/public/Objekt/${id}` },
             fixture: `input/${id}.json`
+        });
+        mocks.push({
+            match: { url: `https://www.kuladig.de/Objektansicht/${id}` },
         });
     }
     return mocks;

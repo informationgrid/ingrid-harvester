@@ -24,22 +24,21 @@
 import type { CswCatalogSettings } from '@shared/catalog.js';
 import { XMLSerializer } from '@xmldom/xmldom';
 import log4js from 'log4js';
-import type { Observer } from "rxjs";
-import type { ImporterSettings } from "../../importer/importer.settings.js";
-import { namespaces } from "../../importer/namespaces.js";
-import type { ImportLogMessage } from "../../model/import.result.js";
-import type { Summary } from "../../model/summary.js";
-import type { Bucket, BucketDocument } from '../../persistence/postgres.utils.js';
-import { RequestDelegate } from "../../utils/http-request.utils.js";
-import { getDomParser } from "../../utils/misc.utils.js";
+import type { Observer } from 'rxjs';
+import type { ImporterSettings } from '../../importer/importer.settings.js';
+import { namespaces } from '../../importer/namespaces.js';
+import type { Bucket, PrioritizedBucket } from '../../model/bucket.js';
+import type { ImportLogMessage } from '../../model/import.result.js';
+import type { Summary } from '../../model/summary.js';
+import { RequestDelegate } from '../../utils/http-request.utils.js';
+import { getDomParser } from '../../utils/misc.utils.js';
 import { Catalog, type CatalogOperation } from '../catalog.factory.js';
 
 const log = log4js.getLogger('CswCatalog');
 
 export type CswDataset = {
     uuid: string,
-    dataset: string,
-    modified?: Date
+    dataset: string
 }
 
 export type CswCatalogOperation = CatalogOperation & {
@@ -70,13 +69,13 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
     }
 
     async processBucket(bucket: Bucket<CswDataset>, importerSettings: ImporterSettings): Promise<CswCatalogOperation[]> {
-        const { document: record } = this.prioritizeAndFilter(bucket);
+        const { mainDocument } = this.prioritizeAndFilter(bucket);
         const additionalKeywords = this.getAdditionalKeywords(importerSettings);
-        const enrichedXml = this.addTraceability(record.dataset, this.transactionTimestamp, importerSettings.id, additionalKeywords);
+        const enrichedXml = this.addTraceability(mainDocument.dataset, this.transactionTimestamp, importerSettings.id, additionalKeywords);
         return [{
-            uuid: record.uuid,
+            uuid: mainDocument.uuid,
             serializedXml: enrichedXml,
-            isUpdate: this.existingIds.has(record.uuid)
+            isUpdate: this.existingIds.has(mainDocument.uuid)
         }];
     }
 
@@ -115,7 +114,7 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         return 'dataset_csw';
     }
 
-    async deleteStaleRecords(datasourceId: number): Promise<void> {
+    private async deleteStaleRecords(datasourceId: number): Promise<void> {
         log.info(`Post-import stale cleanup for source '${datasourceId}' in CSW catalog '${this.settings.id}'`);
         const targetUrl = this.buildTargetUrl();
 
@@ -266,6 +265,7 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         return this.paginatedGetRecords(this.settings.url, (start, max) => `<?xml version="1.0" encoding="UTF-8"?>
 <csw:GetRecords xmlns:csw="${namespaces.CSW}"
                 xmlns:dc="${namespaces.DC}"
+                xmlns:ogc="${namespaces.OGC}"
                 service="CSW"
                 version="2.0.2"
                 resultType="results"
@@ -273,6 +273,12 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
                 maxRecords="${max}">
     <csw:Query typeNames="csw:Record">
         <csw:ElementSetName>brief</csw:ElementSetName>
+        <ogc:SortBy>
+            <ogc:SortProperty>
+                <ogc:PropertyName>apiso:Identifier</ogc:PropertyName>
+                <ogc:SortOrder>ASC</ogc:SortOrder>
+            </ogc:SortProperty>
+        </ogc:SortBy>
     </csw:Query>
 </csw:GetRecords>`);
     }
@@ -466,25 +472,20 @@ export abstract class CswCatalog extends Catalog<CswDataset, CswCatalogSettings,
         return { success: true, inserted, updated, deleted };
     }
 
-    private prioritizeAndFilter(bucket: Bucket<CswDataset>): {
-        document: CswDataset,
-        duplicates: Map<string | number, CswDataset>
-    } {
-        let main: { id: string | number, document: CswDataset } | null = null;
-        const duplicates = new Map<string | number, CswDataset>();
+    private prioritizeAndFilter(bucket: Bucket<CswDataset>): PrioritizedBucket<CswDataset> {
+        let mainDocument = bucket.documents.get(bucket.anchor_id)?.document;
+        const documents: Map<string | number, CswDataset> = new Map<string | number, CswDataset>();
 
-        for (const [id, entry] of bucket.duplicates) {
+        for (const [id, entry] of bucket.documents) {
             const document = entry.document;
-            if (main === null) {
-                main = { id, document };
-            } else if (document.modified && (!main.document.modified || document.modified > main.document.modified)) {
-                duplicates.set(main.id, main.document);
-                main = { id, document };
-            } else {
-                duplicates.set(id, document);
+            if (mainDocument == null && document.uuid != null) {
+                mainDocument = document;
+            }
+            else if (document !== mainDocument) {
+                documents.set(id, document);
             }
         }
 
-        return { document: main?.document, duplicates };
+        return { mainDocument, documents };
     }
 }

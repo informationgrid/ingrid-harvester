@@ -25,7 +25,6 @@ import type { DOMParser } from '@xmldom/xmldom';
 import type { Geometry } from 'geojson';
 import iconv from 'iconv-lite';
 import log4js from 'log4js';
-import type { Response } from 'node-fetch';
 import pLimit from 'p-limit';
 import type { Observer } from 'rxjs';
 import * as xpath from 'xpath';
@@ -34,6 +33,7 @@ import type { RecordEntity } from '../../model/entity.js';
 import type { ImportLogMessage } from '../../model/import.result.js';
 import type { IndexDocument } from '../../model/index.document.js';
 import { ProfileFactoryLoader } from '../../profiles/profile.factory.loader.js';
+import { HarvestRunCancelledError } from '../../utils/cancellation.utils.js';
 import * as GeoJsonUtils from '../../utils/geojson.utils.js';
 import type { RequestOptions, WfsParameters } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
@@ -41,7 +41,6 @@ import * as MiscUtils from '../../utils/misc.utils.js';
 import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
 import { firstElementChild, getExtendedNsMap, getNsMap } from '../../utils/xpath.utils.js';
 import { Importer } from '../importer.js';
-import { HarvestRunCancelledError } from '../../utils/cancellation.utils.js';
 import { WfsMapper } from './wfs.mapper.js';
 import { wfsDefaults, type WfsSettings } from './wfs.settings.js';
 
@@ -80,7 +79,7 @@ export class WfsImporter extends Importer<WfsSettings> {
         let capabilitiesResponse: Response = await capabilitiesRequestDelegate.doRequest();
         let contentType = capabilitiesResponse.headers.get('content-type')?.split(';');
         let charset = contentType?.find(ct => ct.toLowerCase().startsWith('charset'))?.split('=')?.[1];
-        let responseBody: Buffer | string = await capabilitiesResponse.buffer();
+        let responseBody: Buffer | string = Buffer.from(await capabilitiesResponse.arrayBuffer());
         if (!charset || charset.toLowerCase() == "utf-8") {
             responseBody = responseBody.toString();
         }
@@ -213,6 +212,7 @@ export class WfsImporter extends Importer<WfsSettings> {
     }
 
     async extractFeatureType(featureTypeName: string, featureTypeNode: Node, featureTypeDescriptionNode: Node, generalInfo: FeatureInfo) {
+        this.summary.numDocs++;
         generalInfo.geometryType = this.extractGeometryType(generalInfo.select, featureTypeDescriptionNode);
         let mapper = this.getMapper(new Date(), featureTypeNode, generalInfo);
         let documentFactory = ProfileFactoryLoader.get().getDocumentFactory(mapper);
@@ -268,7 +268,10 @@ export class WfsImporter extends Importer<WfsSettings> {
             }
         }
         for (let i = 0; i < features.length; i++) {
-            this.summary.numDocs++;
+            // count FeatureTypes instead of features if harvesting FeatureTypes
+            if (!this.settings.harvestTypes) {
+                this.summary.numDocs++;
+            }
 
             // TODO use ID-property from settings (tbi)
             let gmlId = (features[i] as Element).getAttributeNS(nsMap['gml'], 'id');
@@ -276,7 +279,9 @@ export class WfsImporter extends Importer<WfsSettings> {
                 gmlId = firstElementChild(features[i]).getAttributeNS(nsMap['gml'], 'id');
             }
             if (!gmlId || !this.filterUtils.isIdAllowed(gmlId)) {
-                this.summary.skippedDocs.push(gmlId);
+                if (!this.settings.harvestTypes) {
+                    this.summary.skippedDocs.push(gmlId);
+                }
                 continue;
             }
 
@@ -310,7 +315,7 @@ export class WfsImporter extends Importer<WfsSettings> {
                     original_document: mapper.getHarvestedData()
                 };
                 promises.push(this.addEntityToBulk(entity));
-            } else {
+            } else if (!this.settings.harvestTypes) {
                 this.summary.skippedDocs.push(gmlId);
             }
             // disable updating feature count if harvesting FeatureTypes
@@ -361,8 +366,6 @@ export class WfsImporter extends Importer<WfsSettings> {
             uri: settings.sourceURL,
             json: false,
             headers: RequestDelegate.wfsRequestHeaders(),
-            proxy: settings.proxy || null,
-            rejectUnauthorized: settings.rejectUnauthorizedSSL,
             resolveWithFullResponse: settings.resolveWithFullResponse ?? false,
             timeout: settings.timeout
         };

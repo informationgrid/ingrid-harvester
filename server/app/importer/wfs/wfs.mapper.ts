@@ -24,7 +24,6 @@
 import type { Geometry, Point } from 'geojson';
 import log4js from 'log4js';
 import { throwError } from 'rxjs';
-import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
 import type { Agent, Contact } from '../../model/agent.js';
 import type { Catalog } from '../../model/dcatApPlu.model.js';
 import type { Distribution } from '../../model/distribution.js';
@@ -36,6 +35,7 @@ import { RequestDelegate } from '../../utils/http-request.utils.js';
 import type { XPathNodeSelect } from '../../utils/xpath.utils.js';
 import { Mapper } from '../mapper.js';
 import type { MetadataSource } from '../mapper.js';
+import type { ToElasticMapper } from '../to.elastic.mapper.js';
 import type { FeatureInfo, FeatureTypeInfo } from './wfs.importer.js';
 import type { WfsSettings } from './wfs.settings.js';
 
@@ -259,10 +259,6 @@ export class WfsMapper extends Mapper<WfsSettings> implements ToElasticMapper<In
             qs: {},
             uri: uri
         };
-
-        if (this.settings.proxy) {
-            config.proxy = this.settings.proxy;
-        }
 
         return config;
     }

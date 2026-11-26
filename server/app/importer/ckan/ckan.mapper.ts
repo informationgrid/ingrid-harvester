@@ -30,7 +30,7 @@ import log4js from 'log4js';
 import { marked } from 'marked';
 import { throwError } from 'rxjs';
 import mapping from "../../../mappings.json" with { type: "json" };
-import type { ToElasticMapper } from '../../importer/to.elastic.mapper.js';
+import type { ToElasticMapper } from '../to.elastic.mapper.js';
 import type { Agent } from '../../model/agent.js';
 import type { DateRange } from '../../model/dateRange.js';
 import type { Distribution } from '../../model/distribution.js';
@@ -41,7 +41,7 @@ import { DcatPeriodicityUtils } from '../../utils/dcat.periodicity.utils.js';
 import type { CkanParameters, CkanParametersListWithResources, RequestOptions, RequestPaging } from '../../utils/http-request.utils.js';
 import { RequestDelegate } from '../../utils/http-request.utils.js';
 import { UrlUtils } from '../../utils/url.utils.js';
-import { DCAT_CATEGORY_URL } from '../dcatapde/dcatapde.utils.js';
+import { DCAT_CATEGORY_URL } from '../dcatap/dcatap.utils.js';
 import { Mapper, type MetadataSource } from '../mapper.js';
 import { namespaces } from "../namespaces.js";
 import type { ToDcatapdeMapper } from "../to.dcatapde.mapper.js";
@@ -377,28 +377,31 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
     }
 
     async getDcatapde(): Promise<string> {
-        const doc = this.dom.createDocument(namespaces.RDF, 'RDF', null);
+        const doc = this.dom.createDocument(namespaces.RDF, 'rdf:RDF', null);
         const rdfRoot = doc.documentElement;
-        const dataset = doc.createElementNS(namespaces.DCAT, 'Dataset');
+        for (const ns of ['RDF', 'DCAT', 'DCT']) {
+            rdfRoot.setAttributeNS(namespaces.XMLNS, "xmlns:" + ns.toLowerCase(), namespaces[ns]);
+        }
+        const dataset = doc.createElementNS(namespaces.DCAT, 'dcat:Dataset');
         rdfRoot.appendChild(dataset);
 
-        dataset.appendChild(doc.createElementNS(namespaces.DCT, "title")).textContent = this.getTitle();
-        dataset.appendChild(doc.createElementNS(namespaces.DCT, "description")).textContent = this.getDescription();
-        dataset.appendChild(doc.createElementNS(namespaces.DCT, "identifier")).textContent = this.getGeneratedId();
+        dataset.appendChild(doc.createElementNS(namespaces.DCT, "dct:title")).textContent = this.getTitle();
+        dataset.appendChild(doc.createElementNS(namespaces.DCT, "dct:description")).textContent = this.getDescription();
+        dataset.appendChild(doc.createElementNS(namespaces.DCT, "dct:identifier")).textContent = this.getGeneratedId();
 
         const keywords = this.getKeywords();
         for(const keyword of keywords) {
-            dataset.appendChild(doc.createElementNS(namespaces.DCAT, "keyword")).textContent = keyword;
+            dataset.appendChild(doc.createElementNS(namespaces.DCAT, "dcat:keyword")).textContent = keyword;
         }
 
         const distributions = await this.getDistributions();
         for (const distribution of distributions) {
-            const dist = dataset.appendChild(doc.createElementNS(namespaces.DCAT, "distribution")).appendChild(doc.createElementNS(namespaces.DCAT, "Distribution"));
-            if(distribution.title) dist.appendChild(doc.createElementNS(namespaces.DCT, "title")).textContent = distribution.title;
-            if(distribution.description) dist.appendChild(doc.createElementNS(namespaces.DCT, "description")).textContent = distribution.description;
+            const dist = dataset.appendChild(doc.createElementNS(namespaces.DCAT, "dcat:distribution")).appendChild(doc.createElementNS(namespaces.DCAT, "dcat:Distribution"));
+            if(distribution.title) dist.appendChild(doc.createElementNS(namespaces.DCT, "dct:title")).textContent = distribution.title;
+            if(distribution.description) dist.appendChild(doc.createElementNS(namespaces.DCT, "dct:description")).textContent = distribution.description;
             if(distribution.access_url) {
-                const accessUrl = dist.appendChild(doc.createElementNS(namespaces.DCAT, "accessURL"));
-                accessUrl.setAttributeNS(namespaces.RDF, "resource", distribution.access_url);
+                const accessUrl = dist.appendChild(doc.createElementNS(namespaces.DCAT, "dcat:accessURL"));
+                accessUrl.setAttributeNS(namespaces.RDF, "rdf:resource", distribution.access_url);
             }
         }
 
@@ -406,7 +409,7 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
         for(const theme of themes) {
             let themeUri = theme
             if(!theme.startsWith("http://publications.europa.eu/resource/authority/data-theme/")) themeUri = "http://publications.europa.eu/resource/authority/data-theme/" + theme;
-            const themeNode = dataset.appendChild(doc.createElementNS(namespaces.DCAT, "theme"));
+            const themeNode = dataset.appendChild(doc.createElementNS(namespaces.DCAT, "dcat:theme"));
             themeNode.setAttribute("rdf:ressource", themeUri);
         }
 
@@ -570,10 +573,6 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
             uri: uri
         };
 
-        if (this.settings.proxy) {
-            config.proxy = this.settings.proxy;
-        }
-
         return config;
     }
 
@@ -643,8 +642,6 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
                 uri: settings.sourceURL + '/api/3/action/current_package_list_with_resources',
                 json: true,
                 headers: RequestDelegate.defaultRequestHeaders(),
-                proxy: settings.proxy || null,
-                rejectUnauthorized: settings.rejectUnauthorizedSSL,
                 qs: <CkanParametersListWithResources> {
                     offset: settings.startPosition,
                     limit: settings.maxRecords
@@ -666,8 +663,6 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
                 uri: settings.sourceURL + '/api/action/package_search', // See http://docs.ckan.org/en/ckan-2.7.3/api/
                 json: true,
                 headers: RequestDelegate.defaultRequestHeaders(),
-                proxy: settings.proxy || null,
-                rejectUnauthorized: settings.rejectUnauthorizedSSL,
                 qs,
                 timeout: settings.timeout
             };
@@ -681,8 +676,6 @@ export class CkanMapper extends Mapper<CkanSettings> implements ToElasticMapper<
             uri: settings.sourceURL + '/api/3/action/package_list', // See http://docs.ckan.org/en/ckan-2.7.3/api/
             json: true,
             headers: RequestDelegate.defaultRequestHeaders(),
-            proxy: settings.proxy || null,
-            rejectUnauthorized: settings.rejectUnauthorizedSSL,
             qs: <CkanParametersListWithResources> {
                 offset: settings.startPosition,
                 limit: settings.maxRecords

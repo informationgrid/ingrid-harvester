@@ -29,7 +29,7 @@ export abstract class IngridProfile {
                 props: {
                   label: "iPlugId",
                   required: true,
-                  maxLength: 24,
+                  maxLength: 256,
                   pattern: "^[a-zA-Z0-9_\\-\\.]*$",
                 },
                 validation: {

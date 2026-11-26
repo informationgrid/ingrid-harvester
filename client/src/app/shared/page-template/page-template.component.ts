@@ -21,13 +21,19 @@
  * ==================================================
  */
 
-import { Component, Input, OnInit } from "@angular/core";
+import {
+  Component,
+  Input,
+  OnInit,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 
 @Component({
   selector: "page-template",
   templateUrl: "./page-template.component.html",
   styleUrl: "./page-template.component.scss",
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class PageTemplateComponent implements OnInit {
   @Input() label = "";
@@ -35,9 +41,7 @@ export class PageTemplateComponent implements OnInit {
   @Input() hasMainHeader = true;
   @Input() fixHeight = false;
 
-  constructor() {
-  }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 }

@@ -22,11 +22,10 @@
  */
 
 import * as fs from 'fs';
-import fetch from 'node-fetch';
 import log4js from 'log4js';
-import { ConfigService } from '../services/config/ConfigService.js';
+import { fetch } from 'undici';
 import type { RequestOptions } from './http-request.utils.js';
-import { RequestDelegate } from './http-request.utils.js';
+import { getDispatcher, RequestDelegate } from './http-request.utils.js';
 
 const log = log4js.getLogger(import.meta.filename);
 
@@ -34,7 +33,8 @@ export class UrlUtils {
 
     private static MAPPINGS_FILE = "mappings.json";
 
-    static cache: { [url: string]: boolean } = {};
+    private static cache: { [url: string]: { value: boolean; timestamp: number } } = {};
+    private static URL_CACHE_TTL_MS = 60 * 60 * 1000;
 
     private static formatMapping = UrlUtils.getFormatMapping();
 
@@ -42,7 +42,7 @@ export class UrlUtils {
         if (url instanceof URL) {
             url = url.hostname + url.pathname;
         }
-        let response = await fetch(url, { method: 'HEAD' });
+        let response = await fetch(url, { method: 'HEAD', signal: AbortSignal.timeout(10000), dispatcher: getDispatcher() });
         return response.status;
     }
 
@@ -64,7 +64,7 @@ export class UrlUtils {
      * or undefined otherwise
      */
     static async urlWithProtocolFor(requestConfig: RequestOptions, skip = false, fullCheck = false): Promise<string> {
-        let url = <string>requestConfig.uri;
+        let url = requestConfig.uri;
         if (skip) {
             return url;
         }
@@ -102,15 +102,10 @@ export class UrlUtils {
      * @param requestConfig the configuration to use for HTTP requests
      * @private
      */
-    private static async checkUrlWithProtocol(requestConfig: RequestOptions): Promise<boolean> {
-        let urlResult = UrlUtils.cache[<string>requestConfig.uri];
-        if (urlResult !== undefined) {
-            return urlResult;
-        }
-        let generalConfig = ConfigService.getGeneralSettings();
-        requestConfig.proxy = generalConfig.proxy;
-        if (generalConfig.allowAllUnauthorizedSSL) {
-            requestConfig.rejectUnauthorized = false;
+    static async checkUrlWithProtocol(requestConfig: RequestOptions): Promise<boolean> {
+        const urlResult = UrlUtils.cache[<string>requestConfig.uri];
+        if (urlResult !== undefined && Date.now() - urlResult.timestamp < UrlUtils.URL_CACHE_TTL_MS) {
+            return urlResult.value;
         }
         requestConfig.method = 'HEAD';
         requestConfig.resolveWithFullResponse = true;
@@ -129,7 +124,8 @@ export class UrlUtils {
                 log.warn(`Error occured while testing URL '${requestConfig.uri}'. Original error message was: ${message}`);
             }
         }
-        UrlUtils.cache[<string>requestConfig.uri] = found;
+        // populate cache with the result of the URL check
+        UrlUtils.cache[<string>requestConfig.uri] = { value: found, timestamp: Date.now() };
         return found;
     }
 

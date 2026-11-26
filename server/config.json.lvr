@@ -10,7 +10,6 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
@@ -50,7 +49,6 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
@@ -90,7 +88,6 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": null
     },
@@ -130,7 +127,6 @@
     "dateSourceFormats": [],
     "blacklistedIds": [],
     "whitelistedIds": [],
-    "rejectUnauthorizedSSL": true,
     "rules": {
       "containsDocumentsWithData": false
     },

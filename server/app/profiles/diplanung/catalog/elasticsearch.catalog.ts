@@ -25,7 +25,7 @@ import { ElasticsearchCatalog } from '../../../catalog/elasticsearch/elasticsear
 import type { ImporterSettings } from '../../../importer/importer.settings.js';
 import type { Distribution } from '../../../model/distribution.js';
 import type { EsOperation } from '../../../persistence/elastic.utils.js';
-import type { Bucket, BucketDocument } from '../../../persistence/postgres.utils.js';
+import type { Bucket, BucketDocument } from '../../../model/bucket.js';
 import * as GeoJsonUtils from '../../../utils/geojson.utils.js';
 import * as MiscUtils from '../../../utils/misc.utils.js';
 import { createEsId } from '../diplanung.utils.js';
@@ -52,7 +52,7 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog<Diplanun
 
         // shortcut - if all documents in the bucket should be deleted, delete the document from ES
         let deleteDocument = entry.deleted != null;
-        bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.deleted != null);
+        bucket.documents.forEach(duplicate => deleteDocument &&= duplicate.deleted != null);
         if (deleteDocument) {
             return [{ operation: 'delete', _id: createEsId(document) }];
         }
@@ -90,7 +90,7 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog<Diplanun
     } {
         // initialize records map
         let records: Map<string, Map<string | number, BucketDocument<DiplanungIndexDocument>>> = new Map<string, Map<string | number, BucketDocument<DiplanungIndexDocument>>>();
-        for (let [id, entry] of bucket.duplicates) {
+        for (let [id, entry] of bucket.documents) {
             let sourceType = entry.document.extras?.metadata?.source?.source_type;
             let sourceMap = records.get(sourceType);
             if (sourceMap == null) {
@@ -153,7 +153,7 @@ export class DiplanungElasticsearchCatalog extends ElasticsearchCatalog<Diplanun
         }
         // prio 6: handle all other cases -
         else {
-            for (let [id, entry] of bucket.duplicates) {
+            for (let [id, entry] of bucket.documents) {
                 if (mainEntry == null) {
                     mainEntry = entry;
                 }

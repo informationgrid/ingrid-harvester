@@ -21,18 +21,16 @@
  * ==================================================
  */
 
-import * as xpath from 'xpath';
-import * as GeoJsonUtils from '../utils/geojson.utils.js';
-import * as MiscUtils from './misc.utils.js';
-import type { XPathNodeSelect } from './xpath.utils.js';
-import { getNsMap } from './xpath.utils.js';
-import { ConfigService } from '../services/config/ConfigService.js';
-import type { Distribution } from '../model/distribution.js';
 import type { DOMParser } from '@xmldom/xmldom';
 import type { Geometry } from 'geojson';
-import type { RequestOptions } from './http-request.utils.js';
+import * as xpath from 'xpath';
+import type { Distribution } from '../model/distribution.js';
+import * as GeoJsonUtils from '../utils/geojson.utils.js';
 import { RequestDelegate } from './http-request.utils.js';
+import * as MiscUtils from './misc.utils.js';
 import { UrlUtils } from './url.utils.js';
+import type { XPathNodeSelect } from './xpath.utils.js';
+import { getNsMap } from './xpath.utils.js';
 
 const OGC_QUERY_PARAMS = ['request', 'service', 'version'];
 
@@ -51,8 +49,7 @@ export async function parseWfsFeatureCollection(url: string, typeNames: string, 
             typeNames
         },
         size: 8*1024*1024,   // 8 MB max
-        timeout: 60000,
-        ...getProxyConfig()
+        timeout: 60000
     });
     let dom = domParser.parseFromString(xmlResponse);
     let nsMap = getNsMap(dom);
@@ -88,8 +85,7 @@ export async function getWfsFeatureTypeMap(url: string): Promise<{ [key: string]
     let featureTypeMap = {};
     let response = await RequestDelegate.doRequest({
         uri: url,
-        qs: { service: 'WFS', request: 'GetCapabilities' },
-        ...getProxyConfig()
+        qs: { service: 'WFS', request: 'GetCapabilities' }
     });
     let dom = domParser.parseFromString(response);
     const select = <XPathNodeSelect>xpath.useNamespaces(getNsMap(dom));
@@ -124,8 +120,7 @@ export async function getWmsLayerNameMap(url: string): Promise<{ [key: string]: 
     let layerNameMap = {};
     let response = await RequestDelegate.doRequest({
         uri: url,
-        qs: { service: 'WMS', request: 'GetCapabilities' },
-        ...getProxyConfig()
+        qs: { service: 'WMS', request: 'GetCapabilities' }
     });
     let dom = domParser.parseFromString(response);
 
@@ -271,12 +266,4 @@ function transmutateDistribution(distribution: Distribution, source: string, tar
     }, {});
     createdDistribution.isSynthetic = true;
     return createdDistribution;
-}
-
-export function getProxyConfig(): Partial<RequestOptions> {
-    let config = ConfigService.getGeneralSettings();
-    return {
-        proxy: config.proxy || null,
-        rejectUnauthorized: !config.allowAllUnauthorizedSSL
-    }
 }

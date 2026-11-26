@@ -21,7 +21,12 @@
  * ==================================================
  */
 
-import { Component, Inject, signal } from "@angular/core";
+import {
+  Component,
+  Inject,
+  signal,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { FormGroup, UntypedFormGroup } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { ConfigService } from "../../config/config.service";
@@ -30,8 +35,9 @@ import { SharedFields } from "./fields/shared.fields";
 import { IngridProfile } from "./fields/profiles/ingrid.profile";
 import { CkanType } from "./fields/types/ckan.type";
 import { CswType } from "./fields/types/csw.type";
-import { DcatType } from "./fields/types/dcat.type";
-import { DecatappluType } from "./fields/types/dcatapplu.type";
+import { DcatapType } from "./fields/types/dcatap.type";
+import { DcatapdeType } from "./fields/types/dcatapdeType";
+import { DcatappluType } from "./fields/types/dcatapplu.type";
 import { JsonType } from "./fields/types/json.type";
 import { KldType } from "./fields/types/kld.type";
 import { OaiType } from "./fields/types/oai.type";
@@ -45,6 +51,7 @@ import { DatasourceService } from "../services/datasource.service";
   selector: "app-dialog-edit",
   templateUrl: "./dialog-edit.component.html",
   styleUrls: ["./dialog-edit.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DialogEditComponent {
@@ -61,8 +68,9 @@ export class DialogEditComponent {
     ...IngridProfile.fields(),
     ...CkanType.fields(),
     ...CswType.fields(),
-    ...DcatType.fields(),
-    ...DecatappluType.fields(),
+    ...DcatapdeType.fields(),
+    ...DcatapType.fields(),
+    ...DcatappluType.fields(),
     ...JsonType.fields(),
     ...KldType.fields(),
     ...OaiType.fields(),
@@ -133,7 +141,7 @@ export class DialogEditComponent {
     const values = { ...oldValues, ...newValues };
 
     // Reverse values to the server format.
-    if (values.additionalSettings) {
+    if (Array.isArray(values.additionalSettings)) {
       values.additionalSettings = values.additionalSettings.reduce(
         (acc, cur) => {
           acc[cur.key] = cur.value;

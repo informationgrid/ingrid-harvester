@@ -26,7 +26,7 @@ import type { ZdmWfsMapper } from './zdm.wfs.mapper.js';
 
 export class ZdmIdfGenerator extends IdfGenerator {
 
-    protected mapper: ZdmWfsMapper;
+    declare protected mapper: ZdmWfsMapper;
 
     constructor(profileMapper: ZdmWfsMapper) {
         super(profileMapper);

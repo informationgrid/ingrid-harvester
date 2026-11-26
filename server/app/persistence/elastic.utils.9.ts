@@ -34,7 +34,7 @@ const log = log4js.getLogger(import.meta.filename);
 
 export class ElasticsearchUtils9 extends ElasticsearchUtils {
 
-    protected client: Client;
+    declare protected client: Client;
 
     constructor(config: ElasticsearchConfiguration, summary: Summary) {
         config.prefix ??= '';
@@ -348,17 +348,14 @@ export class ElasticsearchUtils9 extends ElasticsearchUtils {
             ignore_unavailable: true,
             size: 5000,
             _source: false,
-            docvalue_fields: fields,
+            _source_includes: fields,
             query
         });
         for await (const result of scrollSearch) {
             const hits = result.body.hits.hits;
             if (hits) {
                 for (const hit of hits) {
-                    const flatHit = Object.fromEntries(
-                        Object.entries(hit.fields || {}).map(([k, v]) => [k, Array.isArray(v) ? v[0] : v])
-                    );
-                    yield flatHit as T;
+                    yield hit._source as T;
                 }
             }
         }

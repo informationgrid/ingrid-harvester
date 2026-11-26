@@ -22,7 +22,7 @@
  */
 
 import type { IndexDocument } from '../../../model/index.document.js';
-import type { Bucket, BucketDocument } from '../../../persistence/postgres.utils.js';
+import type { Bucket, BucketDocument } from '../../../model/bucket.js';
 import type { IngridIndexDocument } from '../model/index.document.js';
 
 // Bucket processing helpers shared by the ingrid catalogs that receive whole index documents
@@ -71,7 +71,7 @@ export function prioritizeAndFilter(bucket: Bucket<IndexDocument>): {
     let allWfs = true;
     let featureTypeDocId: string | number = null;
 
-    for (let [id, entry] of bucket.duplicates) {
+    for (let [id, entry] of bucket.documents) {
         if (!isWfs(entry)) {
             allWfs = false;
         }
@@ -81,15 +81,15 @@ export function prioritizeAndFilter(bucket: Bucket<IndexDocument>): {
     }
 
     if (allWfs && featureTypeDocId !== null) {
-        mainEntry = bucket.duplicates.get(featureTypeDocId);
-        for (let [id, entry] of bucket.duplicates) {
+        mainEntry = bucket.documents.get(featureTypeDocId);
+        for (let [id, entry] of bucket.documents) {
             if (id !== featureTypeDocId) {
                 duplicates.set(id, entry);
             }
         }
     }
     else {
-        for (let [id, entry] of bucket.duplicates) {
+        for (let [id, entry] of bucket.documents) {
             if (mainEntry == null) {
                 mainEntry = entry;
             }

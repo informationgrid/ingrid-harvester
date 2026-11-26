@@ -21,7 +21,12 @@
  * ==================================================
  */
 
-import { Component, computed, input } from "@angular/core";
+import {
+  Component,
+  computed,
+  input,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { ImportLogMessage } from "../../../../../../server/app/model/import.result";
 import { TranslocoDirective } from "@ngneat/transloco";
 import { CircularProgressIndicatorComponent } from "../../../shared/circular-progress-indicator/circular-progress-indicator.component";
@@ -30,6 +35,7 @@ import { CircularProgressIndicatorComponent } from "../../../shared/circular-pro
   selector: "harvester-progress-indicator",
   templateUrl: "./progress-indicator.component.html",
   styleUrls: ["./progress-indicator.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [TranslocoDirective, CircularProgressIndicatorComponent],
 })
 export class ProgressIndicatorComponent {

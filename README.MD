@@ -11,16 +11,6 @@ Standalone component that collects data from diverse sources and stores it in El
 
 The InGrid Harvester runs two components in a single docker container: the actual `server` application and the admin `client`. It depends on an Elasticsearch instance and a PostgreSQL installation.
 
-## General steps
-
-* Check out this repo
-* Add readonly wemove docker hub credentials to your docker setup
-    ```bash
-    sudo docker login docker-registry.wemove.com
-    Username: readonly
-    Password: readonly
-    ```
-
 ## Configuration
 
 ### General notes
@@ -55,9 +45,9 @@ You can use the same setup as outlined in the section `Test setup` below, but wi
 ### Running in a terminal
 
 Prerequisites:
-* node.js v16
+* NodeJS v22
 * Postgresql >= v14
-* Elasticsearch >= 6
+* Elasticsearch >= 8
 
 You may wish to run the server and the client outside of the docker container, for debugging and faster deployment/development purposes. Currently you have to change some files to achieve this, outlined below:
 

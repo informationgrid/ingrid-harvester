@@ -21,7 +21,13 @@
  * ==================================================
  */
 
-import { Component, Inject, signal, ViewChild } from "@angular/core";
+import {
+  Component,
+  Inject,
+  signal,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { DatasourceApi } from "../services/datasource.api";
 import type { JobEntry } from "@shared/job";
@@ -41,13 +47,15 @@ type LogLine = {
   selector: "app-dialog-jobs",
   templateUrl: "./dialog-jobs.component.html",
   styleUrls: ["./dialog-jobs.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class DialogJobsComponent {
   logsByJobId = signal<Record<string, JobLog>>({});
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { harvester: string; jobs: JobEntry[] },
+    @Inject(MAT_DIALOG_DATA)
+    public data: { harvester: string; jobs: JobEntry[] },
     private api: DatasourceApi,
   ) {}
 

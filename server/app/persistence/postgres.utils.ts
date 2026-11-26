@@ -24,41 +24,22 @@
 import type { DatabaseConfiguration } from '@shared/general-config.settings.js';
 import log4js from 'log4js';
 import pg from 'pg';
-import Cursor from "pg-cursor";
-import type { Observer } from "rxjs";
+import Cursor from 'pg-cursor';
+import type { Observer } from 'rxjs';
 import type { CatalogColumnType } from '../catalog/catalog.factory.js';
+import type { Bucket, BucketDocument } from '../model/bucket.js';
 import type { Distribution } from '../model/distribution.js';
 import type { CouplingEntity, Entity, RecordEntity } from '../model/entity.js';
 import type { ImportLogMessage } from '../model/import.result.js';
 import type { IndexDocument } from '../model/index.document.js';
 import type { Summary } from '../model/summary.js';
 import { ProfileFactoryLoader } from '../profiles/profile.factory.loader.js';
+import { HarvestRunCancelledError, cancellationSignalStorage } from '../utils/cancellation.utils.js';
 import type { BulkResponse } from './database.utils.js';
 import { DatabaseUtils } from './database.utils.js';
-import { HarvestRunCancelledError, cancellationSignalStorage } from '../utils/cancellation.utils.js';
 import type { PostgresQueries } from './postgres.queries.js';
 
 const log = log4js.getLogger(import.meta.filename);
-
-/**
- * Contains a primary dataset, a list of duplicates, and a list of services operating on the primary dataset.
- */
-export interface Bucket<T> {
-    anchor_id: string | number,
-    duplicates: Map<string | number, BucketDocument<T>>,
-    operatingServices: Map<string | number, Distribution>
-}
-
-/**
- * A document within a bucket, carrying the per-record metadata (DB columns)
- * alongside the document instead of inside it.
- */
-export interface BucketDocument<T> {
-    document: T,
-    issued?: Date,
-    modified?: Date,
-    deleted?: Date,
-}
 
 export class PostgresUtils extends DatabaseUtils {
 
@@ -213,13 +194,13 @@ export class PostgresUtils extends DatabaseUtils {
                     }
                     currentBucket = {
                         anchor_id: row.anchor_id,
-                        duplicates: new Map<string | number, BucketDocument<T>>(),
+                        documents: new Map<string | number, BucketDocument<T>>(),
                         operatingServices: new Map<string | number, Distribution>()
                     };
                 }
                 if (datasetColumn != 'dataset') {
-                    currentBucket.duplicates.set(row.id, {
-                        document: { uuid: row.identifier, dataset: row.dataset, modified: row.modified } as any,
+                    currentBucket.documents.set(row.id, {
+                        document: { uuid: row.identifier, dataset: row.dataset } as any,
                         modified: row.modified,
                         deleted: row.deleted,
                     });
@@ -231,7 +212,7 @@ export class PostgresUtils extends DatabaseUtils {
                     }
                     // add index document to current bucket
                     else {
-                        currentBucket.duplicates.set(row.id, {
+                        currentBucket.documents.set(row.id, {
                             document: row.dataset,
                             issued: row.issued,
                             modified: row.modified,

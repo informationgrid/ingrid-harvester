@@ -45,13 +45,14 @@ import centroid from '@turf/centroid';
 import combine from '@turf/combine';
 import * as xpath from 'xpath';
 // import flatten from '@turf/flatten';
+import { geojsonToWKT, wktToGeoJSON } from '@terraformer/wkt';
 import turfFlatten from "@turf/flatten";
 import turfFlip from '@turf/flip';
 import type { AllGeoJSON } from '@turf/helpers';
 import rewind from '@turf/rewind';
 import simplify from '@turf/simplify';
 import deepEqual from "deep-equal";
-import type { Feature, FeatureCollection, Geometry, GeometryCollection, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon } from 'geojson';
+import type { Feature, FeatureCollection, Geometry, GeometryCollection, MultiLineString, MultiPoint, MultiPolygon, Point } from 'geojson';
 import proj4 from "proj4";
 import proj4jsMappings from '../../proj4.json' with { type: 'json' };
 import { firstElementChild } from './xpath.utils.js';
@@ -161,20 +162,64 @@ export function getCentroid(spatial: Geometry): Point {
     return centroid(modifiedSpatial)?.geometry;
 }
 
+export function fromWkt(wkt: string): Geometry | undefined {
+    if (!wkt || typeof wkt !== 'string') {
+        return undefined;
+    }
+    try {
+        let cleanWkt = wkt.trim();
+        // strip any CRS prefix if present (e.g. <http://.../4326> POINT(...) or SRID=4326;POINT(...))
+        cleanWkt = cleanWkt.replace(/^<[^>]+>\s*/, '').replace(/^srid=\d+;\s*/i, '').trim();
+        // normalize WKT keywords to uppercase for @terraformer/wkt parser compatibility
+        cleanWkt = cleanWkt.replace(/\b(point|linestring|polygon|multipoint|multilinestring|multipolygon|geometrycollection|empty|z|m|zm)\b/gi, (m) => m.toUpperCase());
+        // normalize comma-separated coordinate lists (e.g. ArcGIS Hub output: POLYGON((x1,y1,x2,y2,...)))
+        cleanWkt = cleanWkt.replace(/\(([^()]+)\)/g, (match, inner) => {
+            const trimmed = inner.trim();
+            const nums = trimmed.match(/[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?/g);
+            if (!nums || nums.length < 2) return match;
+            const commas = (trimmed.match(/,/g) || []).length;
+            if (commas >= (nums.length / 2) && nums.length % 2 === 0 && commas === nums.length - 1) {
+                const pairs = [];
+                for (let i = 0; i < nums.length; i += 2) {
+                    pairs.push(nums[i] + ' ' + nums[i + 1]);
+                }
+                return '(' + pairs.join(', ') + ')';
+            }
+            return match;
+        });
+
+        let geom = wktToGeoJSON(cleanWkt) as Geometry;
+        if (!geom || !geom.type) {
+            return undefined;
+        }
+        if (!('coordinates' in geom) && !('geometries' in geom)) {
+            return undefined;
+        }
+
+        try {
+            geom = rewind(geom) as Geometry;
+        }
+        catch (ignored) {}
+        try {
+            geom.bbox = bbox(geom);
+        }
+        catch (ignored) {}
+        return geom;
+    }
+    catch (e) {
+        return undefined;
+    }
+}
+
 export function toWkt(geometry: Geometry): string {
     if (!geometry) {
         return undefined;
     }
-    switch (geometry.type) {
-        case 'Point':
-            return `POINT(${(<Point>geometry).coordinates.join(' ')})`;
-        case 'Polygon':
-            const rings = (<Polygon>geometry).coordinates
-                .map(ring => '(' + ring.map(pos => pos.join(' ')).join(', ') + ')')
-                .join(', ');
-            return `POLYGON(${rings})`;
-        default:
-            return undefined;
+    try {
+        return geojsonToWKT(geometry);
+    }
+    catch (e) {
+        return undefined;
     }
 }
 

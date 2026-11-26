@@ -25,7 +25,7 @@ import log4js from 'log4js';
 import { DirectusCatalog, type DirectusOperation } from '../../../catalog/directus/directus.catalog.js';
 import type { ImporterSettings } from '../../../importer/importer.settings.js';
 import type { IndexDocument } from '../../../model/index.document.js';
-import type { Bucket } from '../../../persistence/postgres.utils.js';
+import type { Bucket } from '../../../model/bucket.js';
 import { ProfileFactoryLoader } from '../../profile.factory.loader.js';
 import { createEsId } from '../ingrid.utils.js';
 import type { IngridIndexDocument } from '../model/index.document.js';
@@ -74,7 +74,7 @@ export class IngridDirectusCatalog extends DirectusCatalog {
 
         // shortcut - if all documents in the bucket should be deleted, delete the document
         let deleteDocument = entry.deleted != null;
-        bucket.duplicates.forEach(duplicate => deleteDocument &&= duplicate.deleted != null);
+        bucket.documents.forEach(duplicate => deleteDocument &&= duplicate.deleted != null);
         if (deleteDocument) {
             return [{ operation: 'delete', record: { id: createEsId(document) } }];
         }

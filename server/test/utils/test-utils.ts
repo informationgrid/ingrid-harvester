@@ -55,8 +55,9 @@ export interface EsCompareOptions {
     xml?: string[];
 }
 
-// live index format: compared strictly; `extras` is excluded for the lvr profile's documents
-const DEFAULT_COMPARE_OPTIONS: Required<EsCompareOptions> = { excluded: ['extras'], unordered: [], xml: [] };
+// live index format: compared strictly; `extras` and `lvr.source.last_available` (set to the harvest time) are excluded
+// for the lvr profile's documents
+const DEFAULT_COMPARE_OPTIONS: Required<EsCompareOptions> = { excluded: ['extras', 'lvr.source.last_available'], unordered: [], xml: [] };
 
 /**
  * Compares two elasticsearch documents; options override the defaults per rule.
@@ -164,6 +165,7 @@ function areXmlNodesEqual(a: Node, b: Node): boolean {
     }
     return true;
 }
+
 
 export function prepareStoredData(repeat: number, data: any): any[] {
     let storedData = [];

@@ -21,24 +21,30 @@
  * ==================================================
  */
 
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {IndicesService} from '../indices.service';
-import {forkJoin, Observable} from 'rxjs';
-import {Index} from '@shared/index.model';
-import {tap} from 'rxjs/operators';
-import {ConfirmDialogComponent} from '../../shared/confirm-dialog/confirm-dialog.component';
-import {MatDialog} from '@angular/material/dialog';
-import {ConfigService} from "../../config/config.service";
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from "@angular/core";
+import { IndicesService } from "../indices.service";
+import { forkJoin, Observable } from "rxjs";
+import { Index } from "@shared/index.model";
+import { tap } from "rxjs/operators";
+import { ConfirmDialogComponent } from "../../shared/confirm-dialog/confirm-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
+import { ConfigService } from "../../config/config.service";
+import { CdkVirtualScrollViewport } from "@angular/cdk/scrolling";
 
 @Component({
-    selector: 'app-indices-list',
-    templateUrl: './indices-list.component.html',
-    styleUrls: ['./indices-list.component.scss'],
-    standalone: false
+  selector: "app-indices-list",
+  templateUrl: "./indices-list.component.html",
+  styleUrls: ["./indices-list.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class IndicesListComponent implements OnInit {
-  @ViewChild(CdkVirtualScrollViewport, {static: false})
+  @ViewChild(CdkVirtualScrollViewport, { static: false })
   viewPort: CdkVirtualScrollViewport;
 
   indices: Observable<Index[]>;
@@ -50,28 +56,36 @@ export class IndicesListComponent implements OnInit {
   searchString = "";
   marked = false;
 
-  constructor(private dialog: MatDialog, private indicesService: IndicesService) {
-  }
+  constructor(
+    private dialog: MatDialog,
+    private indicesService: IndicesService,
+  ) {}
 
   ngOnInit() {
     this.updateIndices();
   }
 
   deleteIndex(name: string) {
-    this.dialog.open(ConfirmDialogComponent, {data: 'Wollen Sie den Index "' + name + '" wirklich löschen?'}).afterClosed().subscribe(result => {
-      if (result) {
-        this.indicesService.deleteIndex(name).subscribe(() => {
-          this.updateIndices();
-        });
-      }
-    });
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        data: 'Wollen Sie den Index "' + name + '" wirklich löschen?',
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.indicesService.deleteIndex(name).subscribe(() => {
+            this.updateIndices();
+          });
+        }
+      });
   }
 
   exportIndex(name: string) {
-    forkJoin([
-      this.indicesService.exportIndex(name)
-    ]).subscribe(result => {
-      ConfigService.downLoadFile(name+'.json', JSON.stringify(result[0], null, 2));
+    forkJoin([this.indicesService.exportIndex(name)]).subscribe((result) => {
+      ConfigService.downLoadFile(
+        name + ".json",
+        JSON.stringify(result[0], null, 2),
+      );
     });
   }
 
@@ -80,50 +94,51 @@ export class IndicesListComponent implements OnInit {
   }
 
   private updateIndices() {
-    this.indices = this.indicesService.get()
+    this.indices = this.indicesService
+      .get()
       .pipe(
-        tap(indices => indices.sort((a, b) => a.name.localeCompare(b.name)))
+        tap((indices) => indices.sort((a, b) => a.name.localeCompare(b.name))),
       );
   }
 
   async sendSearchRequest(indexName: string) {
     this.resetKeywordSearch();
     this.indicesService.search(indexName);
-    this.searchResult.subscribe(data => {
-      let formattedJsonString = JSON.stringify(data, null, 4);
-      this.searchResultLines = formattedJsonString.split('\n');
-    }, (error => console.error('Error getting index:', error)));
+    this.searchResult.subscribe(
+      (data) => {
+        let formattedJsonString = JSON.stringify(data, null, 4);
+        this.searchResultLines = formattedJsonString.split("\n");
+      },
+      (error) => console.error("Error getting index:", error),
+    );
   }
 
   searchForStringInPreview(value: string) {
-    if (value == "" || value == null || value == undefined ) {
+    if (value == "" || value == null || value == undefined) {
       this.resetKeywordSearch();
-      return
+      return;
     }
     if (value == this.searchString) {
       this.scrollToSearchHit("next");
-      return
+      return;
     } else {
       this.searchString = value;
     }
-
 
     this.searchHitsCount = 0;
     this.searchHits = [];
 
     this.searchResultLines.map((line, i) => {
-      if(line.includes(value))
-
+      if (line.includes(value))
         this.searchHits.push({
           index: i,
-          line: line
-        })
+          line: line,
+        });
     });
 
-    if(this.searchHits.length > 0) {
+    if (this.searchHits.length > 0) {
       this.scrollToSearchHit("next");
     }
-
   }
 
   scrollToSearchHit(direction: String) {
@@ -140,7 +155,7 @@ export class IndicesListComponent implements OnInit {
       }
     }
     let searchOffset = 2;
-    let currentIndex = this.searchHits[this.searchHitsCount-1].index;
+    let currentIndex = this.searchHits[this.searchHitsCount - 1].index;
     this.viewPort.scrollToIndex(currentIndex - searchOffset);
   }
 
@@ -149,5 +164,4 @@ export class IndicesListComponent implements OnInit {
     this.searchHitsCount = 0;
     this.searchString = "";
   }
-
 }

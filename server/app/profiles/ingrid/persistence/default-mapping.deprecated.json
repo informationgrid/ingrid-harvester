@@ -83,6 +83,10 @@
                     "type":  "text",
                     "analyzer": "edge_ngram",
                     "search_analyzer": "german"
+                },
+                "keyword": {
+                    "type": "keyword",
+                    "normalizer": "lowercase"
                 }
             }
         },
