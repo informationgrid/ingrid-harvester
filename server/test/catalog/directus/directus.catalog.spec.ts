@@ -244,6 +244,20 @@ describe('IngridDirectusCatalog', function () {
                 { delete: [{ id: 'c' }] },
             ]);
             expect(ops('POST', '/commit')).to.have.length(1);
+            // no polling of the session (user action)
+            expect(ops('GET', '/imports/imp-1')).to.be.empty;
+        });
+
+        it('deleteRecordsForDatasource returns right away while Directus is still processing', async function () {
+            sandbox.stub(ConfigService, 'getHarvesters').returns([{ id: 3, sourceURL: 'http://csw.test' } as any]);
+            database.getDocumentIdsBySourceAndCatalog.resolves(['a']);
+            sessionStates = [session('processing')];
+            const catalog = makeCatalog();
+
+            await catalog.deleteRecordsForDatasource(3);
+
+            expect(ops('POST', '/commit')).to.have.length(1);
+            expect(summary.errors).to.be.empty;
         });
 
         it('deleteRecordsForDatasource does nothing for an unknown datasource', async function () {
@@ -254,12 +268,54 @@ describe('IngridDirectusCatalog', function () {
             expect(database.getDocumentIdsBySourceAndCatalog.called).to.be.false;
         });
 
-        it('deleteCatalog commits an empty full session', async function () {
+        it('deleteCatalog deletes the records of every datasource still connected to the catalog', async function () {
+            sandbox.stub(ConfigService, 'getHarvesters').returns([
+                { id: 1, sourceURL: 'http://one.test', catalogIds: [7] },
+                { id: 2, sourceURL: 'http://two.test', catalogIds: [5, 7] },
+                { id: 3, sourceURL: 'http://other.test', catalogIds: [5] },
+            ] as any);
+            database.getDocumentIdsBySourceAndCatalog.withArgs('http://one.test', 7).resolves(['a']);
+            database.getDocumentIdsBySourceAndCatalog.withArgs('http://two.test', 7).resolves(['b', 'c']);
+            const catalog = makeCatalog();
+
+            await catalog.deleteCatalog();
+
+            expect(database.getDocumentIdsBySourceAndCatalog.callCount).to.equal(2);
+            expect(calls.filter(c => c.uri == IMPORTS).map(c => c.body)).to.deep.equal([{ mode: 'incremental' }, { mode: 'incremental' }]);
+            expect(ops('POST', '/operations').map(c => c.body)).to.deep.equal([
+                { delete: [{ id: 'a' }] },
+                { delete: [{ id: 'b' }, { id: 'c' }] },
+            ]);
+            expect(ops('POST', '/commit')).to.have.length(2);
+            // no polling of the session (user action)
+            expect(calls.filter(c => c.method == 'GET')).to.be.empty;
+        });
+
+        it('deleteCatalog sends nothing to Directus without a connected datasource', async function () {
+            sandbox.stub(ConfigService, 'getHarvesters').returns([{ id: 3, sourceURL: 'http://other.test', catalogIds: [5] }] as any);
             const catalog = makeCatalog();
             await catalog.deleteCatalog();
-            expect(calls[0].body).to.deep.equal({ mode: 'full' });
-            expect(ops('POST', '/operations')).to.be.empty;
-            expect(ops('POST', '/commit')).to.have.length(1);
+            expect(calls).to.be.empty;
+            expect(database.getDocumentIdsBySourceAndCatalog.called).to.be.false;
+        });
+
+        it('deleteCatalog aborts the session and rethrows if Directus rejects the commit', async function () {
+            sandbox.stub(ConfigService, 'getHarvesters').returns([{ id: 1, sourceURL: 'http://one.test', catalogIds: [7] }] as any);
+            database.getDocumentIdsBySourceAndCatalog.resolves(['a']);
+            (RequestDelegate.doRequest as sinon.SinonStub).callsFake(async (config: any) => {
+                const call: Call = { method: config.method, uri: config.uri, body: config.body ? JSON.parse(config.body) : undefined, headers: config.headers };
+                calls.push(call);
+                if (call.method == 'POST' && call.uri == IMPORTS) return response(201, session('waiting'));
+                if (call.method == 'POST' && call.uri.endsWith('/operations')) return response(202);
+                if (call.method == 'POST' && call.uri.endsWith('/commit')) return response(400, 'Invalid request');
+                if (call.method == 'DELETE') return response(200);
+                return response(404, 'not found');
+            });
+            const catalog = makeCatalog();
+
+            await expect(catalog.deleteCatalog()).to.be.rejectedWith('400');
+
+            expect(ops('DELETE', '/imports/imp-1')).to.have.length(1);
         });
     });
 

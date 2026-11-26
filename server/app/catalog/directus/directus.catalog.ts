@@ -50,7 +50,8 @@ const FINAL_STATES: DirectusSessionState[] = ['completed', 'failed', 'skipped'];
  * Harvested documents are always transferred in an `incremental` import session: one catalog can be fed by
  * several datasources, and a `full` session would remove the records of all datasources not part of this run.
  * The session is started with the first batch of operations and committed in `flushImport()`; afterwards the
- * session state is polled and its result is reported in the summary.
+ * session state is polled and its result is reported in the summary. `full` sessions are never used: only one
+ * `full` import per Directus catalog can run at a time, and it blocks all `incremental` imports meanwhile.
  * Reference: ingrid-editor `DirectusIndexer.kt`.
  */
 export abstract class DirectusCatalog extends Catalog<IndexDocument, DirectusCatalogSettings, DirectusOperation> {
@@ -127,22 +128,28 @@ export abstract class DirectusCatalog extends Catalog<IndexDocument, DirectusCat
         }
         try {
             await this.importIntoCatalog(ids.map(id => ({ operation: 'delete', record: { id } })));
-            await this.flushImport();
-            log.info(`Deleted ${ids.length} records of datasource '${sourceId}' from Directus catalog '${this.settings.id}'`);
+            await this.sendOperations('incremental');
+            // no polling: called by a user action (HTTP request), Directus processes the session asynchronously
+            const importId = await this.commit();
+            log.info(`Sent ${ids.length} delete operations of datasource '${sourceId}' to Directus catalog '${this.settings.id}' (import session ${importId} committed, processed asynchronously by Directus)`);
         }
         catch (e) {
+            log.error(`Could not delete the records of datasource '${sourceId}' from Directus catalog '${this.settings.id}': ${e.message}`);
             await this.abortOpenImport();
             throw e;
         }
     }
 
     /**
-     * An empty `full` import session removes all records of the Directus catalog.
+     * Deletes the records of the datasources still connected to this catalog (deleteRecordsForDatasource());
+     * the records of disconnected datasources were deleted when they were disconnected.
+     * Without a connected datasource nothing is sent to Directus. On an error the catalog must not be removed (rethrown).
      */
     async deleteCatalog(): Promise<void> {
-        await this.ensureImportStarted('full');
-        await this.commitAndWait();
-        log.info(`Deleted all records of Directus catalog '${this.settings.id}'`);
+        const datasources = ConfigService.getHarvesters().filter(datasource => datasource.catalogIds?.includes(this.settings.id));
+        for (const datasource of datasources) {
+            await this.deleteRecordsForDatasource(datasource.id);
+        }
     }
 
     getDatasetColumn(): string {
@@ -172,13 +179,21 @@ export abstract class DirectusCatalog extends Catalog<IndexDocument, DirectusCat
      * or a timeout are reported in the (stage) summary.
      */
     private async commitAndWait(): Promise<void> {
-        const importId = this.importId;
-        await this.client.commit(importId);
-        this.reset();
+        const importId = await this.commit();
         const session = await this.waitForResult(importId);
         if (session) {
             this.reportSession(session);
         }
+    }
+
+    /**
+     * Commits the open session without waiting for its result and returns its id.
+     */
+    private async commit(): Promise<string> {
+        const importId = this.importId;
+        await this.client.commit(importId);
+        this.reset();
+        return importId;
     }
 
     /**
